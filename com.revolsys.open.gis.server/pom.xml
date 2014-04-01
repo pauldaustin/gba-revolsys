@@ -7,7 +7,7 @@
     <groupId>com.revolsys.open</groupId>
 
 
-    <version>TRUNK-SNAPSHOT</version>
+    <version>2014.03.31-GBA1</version>
   </parent>
   <groupId>com.revolsys.open</groupId>
 
@@ -15,7 +15,7 @@
   <artifactId>com.revolsys.open.gis.server</artifactId>
   <packaging>war</packaging>
   <name>GIS Server</name>
-  <version>TRUNK-SNAPSHOT</version>
+  <version>2014.03.31-GBA1</version>
   <dependencies>
   	<dependency>
   		<groupId>com.revolsys.open</groupId>
