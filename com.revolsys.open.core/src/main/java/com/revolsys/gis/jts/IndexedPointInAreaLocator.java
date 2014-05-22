@@ -94,8 +94,15 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
   @Override
   public Location locate(final double x, final double y) {
     final GeometryFactory geometryFactory = getGeometryFactory();
+    double resolutionXy = geometryFactory.getScaleXY();
+    if (resolutionXy != 0) {
+      resolutionXy = 1 / resolutionXy;
+    }
+    final double minY = y - resolutionXy;
+    final double maxY = y + resolutionXy;
+
     final PointInArea visitor = new PointInArea(geometryFactory, x, y);
-    index.query(y, y, visitor);
+    index.query(minY, maxY, visitor);
 
     return visitor.getLocation();
   }
