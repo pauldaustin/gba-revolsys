@@ -10,7 +10,7 @@
   <parent>
     <artifactId>com.revolsys.open.parent</artifactId>
     <groupId>com.revolsys.open</groupId>
-    <version>2014.05.22-GBA1</version>
+    <version>TRUNK-SNAPSHOT</version>
   </parent>
   <licenses>
     <license>
