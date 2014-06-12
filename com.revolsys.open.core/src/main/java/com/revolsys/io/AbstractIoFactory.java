@@ -92,6 +92,10 @@ public abstract class AbstractIoFactory implements IoFactory {
     return name;
   }
 
+  public boolean isAvailable() {
+    return true;
+  }
+
   @Override
   public String toString() {
     return getName();

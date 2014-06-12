@@ -7,7 +7,8 @@ import java.util.Map;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.swing.map.layer.raster.GeoReferencedImage;
+import com.revolsys.raster.BufferedGeoReferencedImage;
+import com.revolsys.raster.GeoReferencedImage;
 
 public abstract class MapTile {
   private final double resolution;
@@ -72,7 +73,7 @@ public abstract class MapTile {
       return null;
     } else {
       final BoundingBox boundingBox = getBoundingBox();
-      return new GeoReferencedImage(boundingBox, bufferedImage);
+      return new BufferedGeoReferencedImage(boundingBox, bufferedImage);
     }
   }
 

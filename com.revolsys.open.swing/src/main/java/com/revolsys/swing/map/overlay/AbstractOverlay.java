@@ -416,6 +416,10 @@ public class AbstractOverlay extends JComponent implements
     return snapPoint;
   }
 
+  public Map<Point, Set<CloseLocation>> getSnapPointLocationMap() {
+    return snapPointLocationMap;
+  }
+
   public Viewport2D getViewport() {
     return this.viewport;
   }
@@ -657,6 +661,10 @@ public class AbstractOverlay extends JComponent implements
 
   protected void setSnapPoint(final Point snapPoint) {
     this.snapPoint = snapPoint;
+  }
+
+  public void setSnapPointIndex(final int snapPointIndex) {
+    this.snapPointIndex = snapPointIndex;
   }
 
   public void setXorGeometry(final Geometry xorGeometry) {

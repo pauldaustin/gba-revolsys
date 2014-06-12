@@ -12,12 +12,20 @@ public class ImageViewport extends Viewport2D {
 
   private final Graphics2D graphics;
 
-  public ImageViewport(final Project project, final int width,
-    final int height, final BoundingBox boundingBox) {
+  public ImageViewport(final Viewport2D parentViewport) {
+    this(parentViewport, parentViewport.getProject(),
+      parentViewport.getViewWidthPixels(),
+      parentViewport.getViewHeightPixels(), parentViewport.getBoundingBox());
+  }
+
+  public ImageViewport(final Viewport2D parentViewport, final Project project,
+    final int width, final int height, final BoundingBox boundingBox) {
     super(project, width, height, boundingBox);
-    this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    this.image = new BufferedImage(width, height,
+      BufferedImage.TYPE_INT_ARGB_PRE);
     this.graphics = (Graphics2D)this.image.getGraphics();
   }
+
 
   @Override
   protected void finalize() throws Throwable {
@@ -34,4 +42,6 @@ public class ImageViewport extends Viewport2D {
   public BufferedImage getImage() {
     return this.image;
   }
+
+
 }

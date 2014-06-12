@@ -8,13 +8,14 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
 
 import com.revolsys.gis.cs.BoundingBox;
+import com.revolsys.raster.BufferedGeoReferencedImage;
+import com.revolsys.raster.GeoReferencedImage;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.Layer;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.NullLayer;
 import com.revolsys.swing.map.layer.Project;
-import com.revolsys.swing.map.layer.raster.GeoReferencedImage;
 import com.revolsys.swing.map.layer.raster.GeoReferencedImageLayerRenderer;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.Property;
@@ -83,15 +84,16 @@ public class LayerRendererOverlay extends JComponent implements
           final BoundingBox boundingBox = this.viewport.getBoundingBox();
           final int viewWidthPixels = this.viewport.getViewWidthPixels();
           final int viewHeightPixels = this.viewport.getViewHeightPixels();
-          final GeoReferencedImage loadImage = new GeoReferencedImage(
+          final GeoReferencedImage loadImage = new BufferedGeoReferencedImage(
             boundingBox, viewWidthPixels, viewHeightPixels);
           this.imageWorker = new LayerRendererOverlaySwingWorker(this,
             loadImage);
           Invoke.worker(this.imageWorker);
         }
       }
-      GeoReferencedImageLayerRenderer.render(this.viewport, (Graphics2D)g,
-        image);
+      if (image != null) {
+        render((Graphics2D)g);
+      }
     }
   }
 
@@ -124,6 +126,10 @@ public class LayerRendererOverlay extends JComponent implements
     if (layer != null) {
       layer.refresh();
     }
+  }
+
+  private void render(final Graphics2D graphics) {
+    GeoReferencedImageLayerRenderer.render(viewport, graphics, image, false);
   }
 
   public void setImage(final LayerRendererOverlaySwingWorker imageWorker) {

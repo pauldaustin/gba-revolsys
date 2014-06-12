@@ -46,6 +46,8 @@ public final class EpsgCoordinateSystems {
 
   private static int nextSrid = 2000000;
 
+  private static final Map<Integer, LinearUnit> linearUnits = new LinkedHashMap<Integer, LinearUnit>();
+
   private static void addCoordinateSystem(
     final CoordinateSystem coordinateSystem) {
     final Integer id = coordinateSystem.getId();
@@ -213,6 +215,10 @@ public final class EpsgCoordinateSystems {
     } else {
       return Integer.valueOf(value);
     }
+  }
+
+  public static LinearUnit getLinearUnit(final int id) {
+    return linearUnits.get(id);
   }
 
   private static Map<String, Object> getParameters(final String parametersString) {
@@ -432,7 +438,6 @@ public final class EpsgCoordinateSystems {
   }
 
   private static Map<Integer, LinearUnit> loadLinearUnits() {
-    final Map<Integer, LinearUnit> linearUnits = new LinkedHashMap<Integer, LinearUnit>();
     final InputStream resource = EpsgCoordinateSystems.class.getResourceAsStream("/com/revolsys/gis/cs/epsg/linearunit.csv");
     if (resource != null) {
       try {

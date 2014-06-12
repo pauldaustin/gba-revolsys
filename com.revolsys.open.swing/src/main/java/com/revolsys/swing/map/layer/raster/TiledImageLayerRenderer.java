@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.raster.GeoReferencedImage;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.AbstractLayerRenderer;
 import com.revolsys.swing.map.layer.AbstractTiledImageLayer;
@@ -97,7 +98,8 @@ public class TiledImageLayerRenderer extends
           }
         }
         final GeoReferencedImage image = cachedTile.getImage(geometryFactory);
-        GeoReferencedImageLayerRenderer.render(viewport, graphics, image);
+        // render(viewport, graphics, image);
+        GeoReferencedImageLayerRenderer.render(viewport, graphics, image, false);
       }
     }
     synchronized (loadingTasks) {

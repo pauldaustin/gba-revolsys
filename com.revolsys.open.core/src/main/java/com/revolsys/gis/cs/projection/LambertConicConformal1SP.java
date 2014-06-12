@@ -3,6 +3,7 @@ package com.revolsys.gis.cs.projection;
 import com.revolsys.gis.cs.Datum;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
+import com.revolsys.gis.cs.ProjectionParameterNames;
 import com.revolsys.gis.cs.Spheroid;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.vividsolutions.jts.algorithm.Angle;
@@ -32,16 +33,16 @@ public class LambertConicConformal1SP implements CoordinatesProjection {
   public LambertConicConformal1SP(final ProjectedCoordinateSystem cs) {
     final GeographicCoordinateSystem geographicCS = cs.getGeographicCoordinateSystem();
     final Datum datum = geographicCS.getDatum();
-    this.scaleFactor = cs.getDoubleParameter("scale_factor_at_natural_origin");
+    this.scaleFactor = cs.getDoubleParameter(ProjectionParameterNames.SCALE_FACTOR);
 
     final Spheroid spheroid = datum.getSpheroid();
-    this.x0 = cs.getDoubleParameter("false_easting");
-    this.y0 = cs.getDoubleParameter("false_northing");
+    this.x0 = cs.getDoubleParameter(ProjectionParameterNames.FALSE_EASTING);
+    this.y0 = cs.getDoubleParameter(ProjectionParameterNames.FALSE_NORTHING);
 
-    final double longitudeOfNaturalOrigin = cs.getDoubleParameter("longitude_of_natural_origin");
+    final double longitudeOfNaturalOrigin = cs.getDoubleParameter(ProjectionParameterNames.LONGITUDE_OF_CENTER);
     this.lambda0 = Math.toRadians(longitudeOfNaturalOrigin);
 
-    final double latitudeOfNaturalOrigin = cs.getDoubleParameter("latitude_of_natural_origin");
+    final double latitudeOfNaturalOrigin = cs.getDoubleParameter(ProjectionParameterNames.LATITUDE_OF_CENTER);
     final double phi0 = Math.toRadians(latitudeOfNaturalOrigin);
 
     this.a = spheroid.getSemiMajorAxis();
