@@ -22,7 +22,6 @@ import org.gdal.gdal.ColorTable;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.Driver;
 import org.gdal.gdal.gdal;
-import org.gdal.gdal.gdalJNI;
 import org.gdal.gdalconst.gdalconst;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.gdal.ogr.ogr;
@@ -46,27 +45,34 @@ import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.OS;
 
 public class Gdal {
+  private static boolean available = false;
   static {
-    gdal.SetConfigOption("CPL_TMPDIR", System.getProperty("java.io.tmpdir"));
+    try {
 
-    osr.UseExceptions();
-    ogr.UseExceptions();
+      gdal.SetConfigOption("CPL_TMPDIR", System.getProperty("java.io.tmpdir"));
 
-    String defaultDriverPath = null;
-    if (OS.isMac()) {
-      defaultDriverPath = "/usr/local/lib/gdalplugins";
+      osr.UseExceptions();
+      ogr.UseExceptions();
+
+      String defaultDriverPath = null;
+      if (OS.isMac()) {
+        defaultDriverPath = "/usr/local/lib/gdalplugins";
+      }
+      setGdalProperty("GDAL_DRIVER_PATH", defaultDriverPath);
+      setGdalProperty("GDAL_DATA", null);
+
+      gdal.SetConfigOption("GDAL_PAM", "Yes");
+
+      gdal.AllRegister();
+
+      ogr.RegisterAll();
+
+      available = true;
+      addGeoreferencedImageFactory("ECW", "ECW", "ecw", "image/ecw");
+      addGeoreferencedImageFactory("JP2ECW", "JPEG 2000", "jp2", "image/jp2");
+    } catch (final Throwable e) {
+      e.printStackTrace();
     }
-    setGdalProperty("GDAL_DRIVER_PATH", defaultDriverPath);
-    setGdalProperty("GDAL_DATA", null);
-
-    gdal.SetConfigOption("GDAL_PAM", "Yes");
-
-    gdal.AllRegister();
-
-    ogr.RegisterAll();
-
-    addGeoreferencedImageFactory("ECW", "ECW", "ecw", "image/ecw");
-    addGeoreferencedImageFactory("JP2ECW", "JPEG 2000", "jp2", "image/jp2");
   }
 
   private static void addGeoreferencedImageFactory(
@@ -100,11 +106,17 @@ public class Gdal {
   }
 
   /**
-   * <p>Convert the overview raster from {@link Dataset} to a {@link BufferedImage}.
-   * The result image will be the dimensions of the overview raster.</p>
-
-   * @param dataset The image dataset.
-   * @param overviewIndex The index of the overview raster data. Use -1 for the whole image.
+   * <p>
+   * Convert the overview raster from {@link Dataset} to a
+   * {@link BufferedImage} . The result image will be the dimensions of the
+   * overview raster.
+   * </p>
+   * 
+   * @param dataset
+   *            The image dataset.
+   * @param overviewIndex
+   *            The index of the overview raster data. Use -1 for the whole
+   *            image.
    * @return The buffered image
    */
   public static BufferedImage getBufferedImage(final Dataset dataset,
@@ -113,17 +125,28 @@ public class Gdal {
   }
 
   /**
-   * <p>Convert the overview raster from {@link Dataset} to a {@link BufferedImage}. The raster
-   * will be clipped to the sourceOffsetX,sourceOffsetY -> sourceWidth, sourceHeight rectangle.
-   * The clip rectangle will be adjusted to fit inside the bounds of the source image.
-   * The result image will be the dimensions of sourceWidth, sourceHeight.</p>
-
-   * @param dataset The image dataset.
-   * @param overviewIndex The index of the overview raster data. Use -1 for the whole image.
-   * @param sourceOffsetX The x location of the clip rectangle. 
-   * @param sourceOffsetY The y location of the clip rectangle. 
-   * @param sourceWidth The width of the clip rectangle. Use -1 to auto calculate.
-   * @param sourceHeight The height of the clip rectangle. Use -1 to auto calculate.
+   * <p>
+   * Convert the overview raster from {@link Dataset} to a
+   * {@link BufferedImage} . The raster will be clipped to the
+   * sourceOffsetX,sourceOffsetY -> sourceWidth, sourceHeight rectangle. The
+   * clip rectangle will be adjusted to fit inside the bounds of the source
+   * image. The result image will be the dimensions of sourceWidth,
+   * sourceHeight.
+   * </p>
+   * 
+   * @param dataset
+   *            The image dataset.
+   * @param overviewIndex
+   *            The index of the overview raster data. Use -1 for the whole
+   *            image.
+   * @param sourceOffsetX
+   *            The x location of the clip rectangle.
+   * @param sourceOffsetY
+   *            The y location of the clip rectangle.
+   * @param sourceWidth
+   *            The width of the clip rectangle. Use -1 to auto calculate.
+   * @param sourceHeight
+   *            The height of the clip rectangle. Use -1 to auto calculate.
    * @return The buffered image.
    */
   public static BufferedImage getBufferedImage(final Dataset dataset,
@@ -134,19 +157,32 @@ public class Gdal {
   }
 
   /**
-   * <p>Convert the overview raster from {@link Dataset} to a {@link BufferedImage}. The raster
-   * will be clipped to the sourceOffsetX,sourceOffsetY -> sourceWidth, sourceHeight rectangle.
-   * The clip rectangle will be adjusted to fit inside the bounds of the source image.
-   * The result image will scaled to the the dimensions of targetWidth, targetHeight.</p>
-
-   * @param dataset The image dataset.
-   * @param overviewIndex The index of the overview raster data. Use -1 for the whole image.
-   * @param sourceOffsetX The x location of the clip rectangle. 
-   * @param sourceOffsetY The y location of the clip rectangle. 
-   * @param sourceWidth The width of the clip rectangle. Use -1 to auto calculate.
-   * @param sourceHeight The height of the clip rectangle. Use -1 to auto calculate.
-  * @param targetWidth The width of the result image. Use -1 to auto calculate.
-   * @param targetHeight The height of the result image. Use -1 to auto calculate.
+   * <p>
+   * Convert the overview raster from {@link Dataset} to a
+   * {@link BufferedImage} . The raster will be clipped to the
+   * sourceOffsetX,sourceOffsetY -> sourceWidth, sourceHeight rectangle. The
+   * clip rectangle will be adjusted to fit inside the bounds of the source
+   * image. The result image will scaled to the the dimensions of targetWidth,
+   * targetHeight.
+   * </p>
+   * 
+   * @param dataset
+   *            The image dataset.
+   * @param overviewIndex
+   *            The index of the overview raster data. Use -1 for the whole
+   *            image.
+   * @param sourceOffsetX
+   *            The x location of the clip rectangle.
+   * @param sourceOffsetY
+   *            The y location of the clip rectangle.
+   * @param sourceWidth
+   *            The width of the clip rectangle. Use -1 to auto calculate.
+   * @param sourceHeight
+   *            The height of the clip rectangle. Use -1 to auto calculate.
+   * @param targetWidth
+   *            The width of the result image. Use -1 to auto calculate.
+   * @param targetHeight
+   *            The height of the result image. Use -1 to auto calculate.
    * @return The buffered image.
    */
   public static BufferedImage getBufferedImage(final Dataset dataset,
@@ -399,7 +435,7 @@ public class Gdal {
   }
 
   public static boolean isAvailable() {
-    return gdalJNI.isAvailable();
+    return available;
   }
 
   /**

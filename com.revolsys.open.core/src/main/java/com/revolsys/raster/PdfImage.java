@@ -20,7 +20,7 @@ public class PdfImage extends JaiGeoReferencedImage {
 
   public PdfImage(final Resource imageResource) {
     super(imageResource);
-    setRenderedImage(createBufferedImage());
+    createBufferedImage();
   }
 
   protected BufferedImage createBufferedImage() {
@@ -65,6 +65,7 @@ public class PdfImage extends JaiGeoReferencedImage {
             graphics.dispose();
             image = viewportImage;
           }
+          setRenderedImage(image);
           final BoundingBox boundingBox = PdfUtil.getViewportBoundingBox(
             mediaBox, viewport);
           setBoundingBox(boundingBox);

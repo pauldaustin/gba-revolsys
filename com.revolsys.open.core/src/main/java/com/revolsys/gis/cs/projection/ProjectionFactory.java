@@ -27,23 +27,23 @@ public final class ProjectionFactory {
   private static final Map<String, Class<? extends CoordinatesProjection>> projectionClasses = new HashMap<String, Class<? extends CoordinatesProjection>>();
 
   static {
-    registerCoordinatesProjection("Albers_Equal_Area",
+    registerCoordinatesProjection(Projection.ALBERS_EQUAL_AREA,
       AlbersConicEqualArea.class);
-    registerCoordinatesProjection("Albers", AlbersConicEqualArea.class);
-    registerCoordinatesProjection("Transverse_Mercator",
+    registerCoordinatesProjection(Projection.TRANSVERSE_MERCATOR,
       TransverseMercator.class);
-    registerCoordinatesProjection("Mercator", Mercator1SP.class);
-    registerCoordinatesProjection("Popular_Visualisation_Pseudo_Mercator",
-      WebMercator.class);
-    registerCoordinatesProjection("Mercator_(1SP)", Mercator1SP.class);
-    registerCoordinatesProjection("Mercator_(2SP)", Mercator2SP.class);
-    registerCoordinatesProjection("Mercator_(1SP)_(Spherical)",
+    registerCoordinatesProjection(Projection.MERCATOR, Mercator1SP.class);
+    registerCoordinatesProjection(
+      Projection.POPULAR_VISUALISATION_PSEUDO_MERCATOR, WebMercator.class);
+    registerCoordinatesProjection(Projection.MERCATOR_1SP, Mercator1SP.class);
+    registerCoordinatesProjection(Projection.MERCATOR_2SP, Mercator2SP.class);
+    registerCoordinatesProjection(Projection.MERCATOR_1SP_SPHERICAL,
       Mercator1SPSpherical.class);
-    registerCoordinatesProjection("Lambert_Conic_Conformal_(1SP)",
+    registerCoordinatesProjection(Projection.LAMBERT_CONIC_CONFORMAL_1SP,
       LambertConicConformal1SP.class);
-    registerCoordinatesProjection("Lambert_Conic_Conformal_(2SP)",
+    registerCoordinatesProjection(Projection.LAMBERT_CONIC_CONFORMAL_2SP,
       LambertConicConformal.class);
-    registerCoordinatesProjection("Lambert_Conic_Conformal_(2SP_Belgium)",
+    registerCoordinatesProjection(
+      Projection.LAMBERT_CONIC_CONFORMAL_2SP_BELGIUM,
       LambertConicConformal.class);
   }
 
@@ -185,7 +185,7 @@ public final class ProjectionFactory {
     if (coordinateSystem instanceof ProjectedCoordinateSystem) {
       final ProjectedCoordinateSystem projectedCoordinateSystem = (ProjectedCoordinateSystem)coordinateSystem;
       final Projection projection = projectedCoordinateSystem.getProjection();
-      final String projectionName = projection.getName();
+      final String projectionName = projection.getNormalizedName();
       synchronized (projectionClasses) {
         final Class<? extends CoordinatesProjection> projectionClass = projectionClasses.get(projectionName);
         if (projectionClass == null) {

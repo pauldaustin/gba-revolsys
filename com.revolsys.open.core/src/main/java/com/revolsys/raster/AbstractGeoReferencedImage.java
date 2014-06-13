@@ -220,11 +220,12 @@ public abstract class AbstractGeoReferencedImage extends
     }
   }
 
-  public void drawRenderedImage(final RenderedImage renderedImage,
-    final BoundingBox imageBoundingBox, final Graphics2D graphics,
+  public synchronized void drawRenderedImage(final RenderedImage renderedImage,
+    BoundingBox imageBoundingBox, final Graphics2D graphics,
     final BoundingBox viewBoundingBox, final int viewWidth,
     final boolean useTransform) {
     if (renderedImage != null) {
+      imageBoundingBox = imageBoundingBox.convert(viewBoundingBox.getGeometryFactory());
       final int imageWidth = renderedImage.getWidth();
       final int imageHeight = renderedImage.getHeight();
       if (imageWidth > 0 && imageHeight > 0) {
@@ -273,7 +274,6 @@ public abstract class AbstractGeoReferencedImage extends
             }
           }
         } catch (final Throwable e) {
-          e.printStackTrace();
         } finally {
           graphics.setTransform(transform);
         }
@@ -296,7 +296,7 @@ public abstract class AbstractGeoReferencedImage extends
       return new AffineTransform();
     } else {
       final double[] affineTransformMatrix = calculateLSM(boundingBox,
-        imageWidth, imageHeight, mappings);
+        getImageWidth(), getImageHeight(), mappings);
       final double translateX = affineTransformMatrix[2];
       final double translateY = affineTransformMatrix[5];
       final double scaleX = affineTransformMatrix[0];

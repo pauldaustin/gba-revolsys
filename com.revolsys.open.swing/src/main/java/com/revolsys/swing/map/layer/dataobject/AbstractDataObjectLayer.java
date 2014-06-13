@@ -1898,8 +1898,10 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   protected void setGeometryFactory(final GeometryFactory geometryFactory) {
     super.setGeometryFactory(geometryFactory);
     if (geometryFactory != null && this.boundingBox.isEmpty()) {
-      this.boundingBox = geometryFactory.getCoordinateSystem()
-        .getAreaBoundingBox();
+      final CoordinateSystem coordinateSystem = geometryFactory.getCoordinateSystem();
+      if (coordinateSystem != null) {
+        this.boundingBox = coordinateSystem.getAreaBoundingBox();
+      }
     }
   }
 

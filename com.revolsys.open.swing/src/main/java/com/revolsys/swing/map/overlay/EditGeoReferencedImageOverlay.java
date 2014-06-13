@@ -801,8 +801,8 @@ public class EditGeoReferencedImageOverlay extends AbstractOverlay {
           if (hotSpot.contains(targetPoint)) {
             closeTargetPointIndexes.add(i);
           }
+          i++;
         }
-        i++;
         moveTiePointIndex = 0;
         moveTiePointEventPoint = event.getPoint();
         if (setMoveTiePointToolTip()) {

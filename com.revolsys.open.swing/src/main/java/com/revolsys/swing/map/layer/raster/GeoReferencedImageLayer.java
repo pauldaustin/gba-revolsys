@@ -355,15 +355,18 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     }
   }
 
-  public Point sourcePixelToTargetPoint(final Coordinates sourcePixel) {
+  public Point sourcePixelToTargetPoint(final MappedLocation tiePoint) {
+    final Coordinates sourcePixel = tiePoint.getSourcePixel();
     final BoundingBox boundingBox = getBoundingBox();
     final double[] coordinates = new double[] {
       sourcePixel.getX(), sourcePixel.getY()
     };
     final AffineTransform transform = image.getAffineTransformation(boundingBox);
-    transform.transform(coordinates, 0, coordinates, 0, 1);
+    if (!showOriginalImage) {
+      transform.transform(coordinates, 0, coordinates, 0, 1);
+    }
     final double imageX = coordinates[0];
-    final double imageY = coordinates[0];
+    final double imageY = coordinates[1];
     final GeoReferencedImage image = getImage();
     final double xPercent = imageX / image.getImageWidth();
     final double yPercent = imageY / image.getImageHeight();
@@ -376,11 +379,6 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     final GeometryFactory geometryFactory = boundingBox.getGeometryFactory();
     final Point imagePoint = geometryFactory.createPoint(modelX, modelY);
     return imagePoint;
-  }
-
-  public Point sourcePixelToTargetPoint(final MappedLocation tiePoint) {
-    final Coordinates sourcePixel = tiePoint.getSourcePixel();
-    return sourcePixelToTargetPoint(sourcePixel);
   }
 
   public Coordinates targetPointToSourcePixel(Point targetPoint) {
@@ -403,11 +401,13 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     final double[] coordinates = new double[] {
       imageX, imageY
     };
-    try {
-      final AffineTransform transform = image.getAffineTransformation(
-        boundingBox).createInverse();
-      transform.transform(coordinates, 0, coordinates, 0, 1);
-    } catch (final NoninvertibleTransformException e) {
+    if (!isShowOriginalImage()) {
+      try {
+        final AffineTransform transform = image.getAffineTransformation(
+          boundingBox).createInverse();
+        transform.transform(coordinates, 0, coordinates, 0, 1);
+      } catch (final NoninvertibleTransformException e) {
+      }
     }
     return new DoubleCoordinates(coordinates);
   }

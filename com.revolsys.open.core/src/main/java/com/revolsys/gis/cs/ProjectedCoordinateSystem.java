@@ -267,7 +267,7 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
       final String name = param.getKey().intern();
       final Object value = param.getValue();
 
-      parameters.put(name, value);
+      this.parameters.put(name, value);
 
       final String normalizedName = ProjectionParameterNames.getParameterName(name);
       normalizedParameters.put(normalizedName, value);

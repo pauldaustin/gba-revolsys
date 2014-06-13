@@ -603,7 +603,6 @@ public class LayerGroup extends AbstractLayer implements List<Layer>,
       final GeoReferencedImageLayer layer = new GeoReferencedImageLayer(
         properties);
       add(layer);
-      layer.setEditable(true);
     } else if (AbstractDataObjectReaderFactory.hasDataObjectReaderFactory(urlString)) {
       final DataObjectFileLayer layer = new DataObjectFileLayer(properties);
       final GeometryStyleRenderer renderer = layer.getRenderer();

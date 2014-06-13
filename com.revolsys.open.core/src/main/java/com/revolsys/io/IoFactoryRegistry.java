@@ -14,7 +14,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -25,8 +24,6 @@ import com.revolsys.util.CollectionUtil;
 
 public class IoFactoryRegistry {
   private static IoFactoryRegistry instance = new IoFactoryRegistry();
-
-  private static final Logger LOG = LoggerFactory.getLogger(IoFactoryRegistry.class);
 
   public static void clearInstance() {
     instance = null;
@@ -65,6 +62,11 @@ public class IoFactoryRegistry {
   private final Map<String, String> extensionMimeTypeMap = new HashMap<String, String>();
 
   public IoFactoryRegistry() {
+    synchronized (IoFactoryRegistry.class) {
+      if (instance == null) {
+        instance = this;
+      }
+    }
     final ClassLoader classLoader = IoFactoryRegistry.class.getClassLoader();
     try {
       final Enumeration<URL> urls = classLoader.getResources("META-INF/com.revolsys.io.IoFactory.properties");
@@ -83,21 +85,24 @@ public class IoFactoryRegistry {
                   final IoFactory factory = ((Class<IoFactory>)factoryClass).newInstance();
                   addFactory(factory);
                 } else {
-                  LOG.error(factoryClassName + " is not a subclass of "
-                    + IoFactory.class);
+                  LoggerFactory.getLogger(IoFactoryRegistry.class).error(
+                    factoryClassName + " is not a subclass of "
+                      + IoFactory.class);
                 }
               } catch (final Throwable e) {
-                LOG.error("Unable to load: " + factoryClassName, e);
+                LoggerFactory.getLogger(IoFactoryRegistry.class).error(
+                  "Unable to load: " + factoryClassName, e);
               }
             }
           }
         } catch (final Throwable e) {
-          LOG.error("Unable to load: " + resourceUrl, e);
+          LoggerFactory.getLogger(IoFactoryRegistry.class).error(
+            "Unable to load: " + resourceUrl, e);
         }
       }
     } catch (final IOException e) {
-      LOG.error("Unable to load META-INF/com.revolsys.io.MapWriter.properties",
-        e);
+      LoggerFactory.getLogger(IoFactoryRegistry.class).error(
+        "Unable to load META-INF/com.revolsys.io.MapWriter.properties", e);
     }
   }
 
@@ -251,8 +256,8 @@ public class IoFactoryRegistry {
     if (factoryClass == null || fileExtension == null) {
       return false;
     } else {
-      return getFileExtensions(factoryClass).contains(
-        fileExtension.toLowerCase());
+      final Set<String> fileExtensions = getFileExtensions(factoryClass);
+      return fileExtensions.contains(fileExtension.toLowerCase());
     }
   }
 

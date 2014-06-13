@@ -43,11 +43,11 @@ public class GdalImage extends AbstractGeoReferencedImage {
       if (srid > 0 && srid < 2000000) {
         setGeometryFactory(GeometryFactory.getFactory(srid, 2));
       } else {
-        setGeometryFactory(GeometryFactory.getFactory(3005, 2));
+        setGeometryFactory(GeometryFactory.getFactory(epsgCoordinateSystem));
       }
     }
     setBoundingBox(geoTransform[0], geoTransform[3], geoTransform[1],
-      geoTransform[5]);
+      -geoTransform[5]);
     postConstruct();
   }
 
@@ -88,7 +88,6 @@ public class GdalImage extends AbstractGeoReferencedImage {
           }
         }
       }
-
       final double scale = srcWidth / imageBoundingBox.getWidth();
       final int clipXoff = (int)Math.floor((clipBoundingBox.getMinX() - imageBoundingBox.getMinX())
         * scale);
