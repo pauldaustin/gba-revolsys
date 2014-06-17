@@ -61,12 +61,14 @@ public class Statistics {
     add(name, 1);
   }
 
-  public synchronized void add(final String name, final long count) {
+  public synchronized boolean add(final String name, final long count) {
     final Long oldCount = counts.get(name);
     if (oldCount == null) {
       counts.put(name, count);
+      return true;
     } else {
       counts.put(name, oldCount + count);
+      return false;
     }
   }
 
@@ -88,6 +90,14 @@ public class Statistics {
     sb.append("\t");
     sb.append(totalCount);
     sb.append("\n");
+  }
+
+  public synchronized void clearCounts() {
+    counts.clear();
+  }
+
+  public synchronized void clearCounts(final String typeName) {
+    counts.remove(typeName);
   }
 
   public synchronized void connect() {
@@ -122,12 +132,14 @@ public class Statistics {
     return logCounts;
   }
 
-  public synchronized void logCounts() {
-    if (isLogCounts()) {
-      final StringBuffer sb = new StringBuffer();
-      addCountsText(sb);
-      log.info(sb.toString());
+  public synchronized String logCounts() {
+    final StringBuffer sb = new StringBuffer();
+    addCountsText(sb);
+    final String string = sb.toString();
+    if (isLogCounts() && !counts.isEmpty()) {
+      log.info(string);
     }
+    return string;
   }
 
   public void setLogCounts(final boolean logCounts) {
