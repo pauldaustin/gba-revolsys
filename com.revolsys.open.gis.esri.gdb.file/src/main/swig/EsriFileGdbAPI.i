@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <stdio.h>
 #include "time.h"
 #include "FileGDBAPI.h"
 
@@ -18,22 +19,32 @@ std::string wstring2string(std::wstring wstr) {
 fgdbError checkResult(fgdbError error) {
   if (error) {
      std::wstring errorString;
-     FileGDBAPI::ErrorInfo::GetErrorDescription(error, errorString);
-     std::stringstream message;
-     message << error << "\t" << wstring2string(errorString);
-     FileGDBAPI::ErrorInfo::ClearErrors();
-     throw std::runtime_error(message.str());
+     if (FileGDBAPI::ErrorInfo::GetErrorDescription(error, errorString) == S_FALSE) {
+       throw std::runtime_error("Unknown error");
+     } else {
+       std::stringstream message;
+       message << error << "\t" << wstring2string(errorString);
+       FileGDBAPI::ErrorInfo::ClearErrors();
+       throw std::runtime_error(message.str());
+     }
   }
   return error;
 }
 
-void handleRuntimeError(JNIEnv *jenv, const std::runtime_error e) {
+void handleException(JNIEnv *jenv, const std::exception e) {
   std::stringstream message;
   message << e.what() ;
   jclass clazz = jenv->FindClass("java/lang/RuntimeException");
   jenv->ThrowNew(clazz, message.str().c_str());
 }
   
+void handleException(JNIEnv *jenv, const std::runtime_error e) {
+  std::stringstream message;
+  message << e.what() ;
+  jclass clazz = jenv->FindClass("java/lang/RuntimeException");
+  jenv->ThrowNew(clazz, message.str().c_str());
+}
+
 %}
 
 %pragma(java) jniclassimports=%{
@@ -43,6 +54,7 @@ import com.revolsys.jar.ClasspathNativeLibraryUtil;
 %pragma(java) jniclasscode=%{
   static {
     ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+    EsriFileGdb.setMaxOpenFiles(2048);
   }
 %}
 %define EXT_FILEGDB_API
@@ -98,7 +110,9 @@ import com.revolsys.jar.ClasspathNativeLibraryUtil;
   try {
     $action;
   } catch (const std::runtime_error& e) {
-    handleRuntimeError(jenv, e);
+    handleException(jenv, e);
+  } catch (const std::exception& e) {
+    handleException(jenv, e);
   }
 }
 
@@ -111,6 +125,13 @@ import com.revolsys.jar.ClasspathNativeLibraryUtil;
 %newobject createGeodatabase;
 %newobject openGeodatabase;
 %inline {
+ 
+  void setMaxOpenFiles(int maxOpenFiles) {
+#ifdef _WIN32
+    _setmaxstdio(maxOpenFiles);
+#endif
+  }
+  
   FileGDBAPI::Geodatabase* createGeodatabase(const std::wstring& path) {
     FileGDBAPI::Geodatabase* value = new FileGDBAPI::Geodatabase();
     checkResult(FileGDBAPI::CreateGeodatabase(path, *value));
@@ -385,7 +406,10 @@ import com.revolsys.jar.ClasspathNativeLibraryUtil;
     const time_t time = (time_t)date;
     struct tm* tm_time = localtime(&time);
     if (tm_time == 0) {
-      throw std::runtime_error("Invalid date " + date);
+      std::stringstream message;
+      message << "Invalid date ";
+      message << date;
+      throw std::runtime_error(message.str());
     } else {
       struct tm value;
       value = *tm_time;
