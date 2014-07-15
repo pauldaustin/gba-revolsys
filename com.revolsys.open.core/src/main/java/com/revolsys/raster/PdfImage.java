@@ -19,8 +19,8 @@ import com.revolsys.spring.SpringUtil;
 public class PdfImage extends JaiGeoReferencedImage {
 
   public PdfImage(final Resource imageResource) {
-    super(imageResource);
-    createBufferedImage();
+    setImageResource(imageResource);
+    setRenderedImage(createBufferedImage());
   }
 
   protected BufferedImage createBufferedImage() {
@@ -65,7 +65,6 @@ public class PdfImage extends JaiGeoReferencedImage {
             graphics.dispose();
             image = viewportImage;
           }
-          setRenderedImage(image);
           final BoundingBox boundingBox = PdfUtil.getViewportBoundingBox(
             mediaBox, viewport);
           setBoundingBox(boundingBox);

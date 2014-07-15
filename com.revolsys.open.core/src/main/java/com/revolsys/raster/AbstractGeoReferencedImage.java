@@ -100,7 +100,7 @@ public abstract class AbstractGeoReferencedImage extends
     }
 
     for (int j = numRow / 2; j < numRow; ++j) {
-      final MappedLocation mappedLocation = mappings.get(j - (numRow / 2));
+      final MappedLocation mappedLocation = mappings.get(j - numRow / 2);
       final Coordinates sourcePoint = mappedLocation.getSourcePixel();
       final double x = sourcePoint.getX();
       final double y = imageHeight - sourcePoint.getY();
@@ -156,7 +156,7 @@ public abstract class AbstractGeoReferencedImage extends
     }
 
     for (int j = numRow / 2; j < numRow; ++j) {
-      final MappedLocation mappedLocation = mappings.get(j - (numRow / 2));
+      final MappedLocation mappedLocation = mappings.get(j - numRow / 2);
       final Coordinates targetPixel = mappedLocation.getTargetPixel(
         boundingBox, imageWidth, imageHeight);
       final double y = imageHeight - targetPixel.getY();
@@ -196,7 +196,7 @@ public abstract class AbstractGeoReferencedImage extends
 
   protected void addOverviewSize(final int width, final int height) {
     final Dimension size = new Dimension(width, height);
-    overviewSizes.add(size);
+    this.overviewSizes.add(size);
   }
 
   @Override
@@ -256,7 +256,7 @@ public abstract class AbstractGeoReferencedImage extends
             if (imageScreenWidth > 0 && imageScreenHeight > 0) {
 
               graphics.translate(screenX, screenY);
-              if ((renderedImage instanceof BufferedImage) && !useTransform) {
+              if (renderedImage instanceof BufferedImage && !useTransform) {
                 final BufferedImage bufferedImage = (BufferedImage)renderedImage;
                 graphics.drawImage(bufferedImage, 0, 0, imageScreenWidth,
                   imageScreenHeight, null);
@@ -373,7 +373,7 @@ public abstract class AbstractGeoReferencedImage extends
   }
 
   public File getFile() {
-    return file;
+    return this.file;
   }
 
   @Override
@@ -437,7 +437,13 @@ public abstract class AbstractGeoReferencedImage extends
   public int getImageHeight() {
     if (this.imageHeight == -1) {
       if (this.renderedImage != null) {
-        this.imageHeight = this.renderedImage.getHeight();
+        try {
+          this.imageHeight = this.renderedImage.getHeight();
+        } catch (final Throwable t) {
+          LoggerFactory.getLogger(getClass()).error(
+            "Unable to get image height");
+          this.imageHeight = 0;
+        }
       }
     }
     return this.imageHeight;
@@ -452,7 +458,13 @@ public abstract class AbstractGeoReferencedImage extends
   public int getImageWidth() {
     if (this.imageWidth == -1) {
       if (this.renderedImage != null) {
-        this.imageWidth = this.renderedImage.getWidth();
+        try {
+          this.imageWidth = this.renderedImage.getWidth();
+        } catch (final Throwable t) {
+          LoggerFactory.getLogger(getClass())
+            .error("Unable to get image width");
+          this.imageWidth = 0;
+        }
       }
     }
     return this.imageWidth;
@@ -460,7 +472,7 @@ public abstract class AbstractGeoReferencedImage extends
 
   @Override
   public List<Dimension> getOverviewSizes() {
-    return overviewSizes;
+    return this.overviewSizes;
   }
 
   @Override
