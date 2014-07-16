@@ -26,6 +26,7 @@ import javax.swing.Icon;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
@@ -53,11 +54,6 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
-
-  private static final AffineTransform NOOP_TRANSFORM = AffineTransform.getTranslateInstance(
-    0, 0);
-
-  private static final Icon ICON = SilkIconLoader.getIcon("style_text");
 
   public static String getLabel(final DataObject object, final TextStyle style) {
     if (object == null) {
@@ -340,7 +336,12 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
                 bounds.getY() - 1, width + 4, height + 2));
             }
 
-            if (textBoxOpacity > 0 && textBoxOpacity < 255) {
+            Boolean directDisplay = Boolean.FALSE;
+            if (viewport != null) {
+              directDisplay = viewport.getProperty(DIRECT_DISPLAY);
+            }
+            if (!BooleanStringConverter.isTrue(directDisplay)
+              && textBoxOpacity > 0 && textBoxOpacity < 255) {
               graphics.setComposite(AlphaComposite.SrcOut);
             } else {
               graphics.setComposite(AlphaComposite.SrcOver);
@@ -385,6 +386,13 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
       }
     }
   }
+
+  public static final String DIRECT_DISPLAY = "DIRECT_DISPLAY";
+
+  private static final AffineTransform NOOP_TRANSFORM = AffineTransform.getTranslateInstance(
+    0, 0);
+
+  private static final Icon ICON = SilkIconLoader.getIcon("style_text");
 
   private TextStyle style;
 

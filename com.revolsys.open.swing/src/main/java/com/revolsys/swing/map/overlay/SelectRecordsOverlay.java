@@ -27,6 +27,7 @@ import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.renderer.AbstractDataObjectLayerRenderer;
+import com.revolsys.swing.map.layer.dataobject.renderer.TextStyleRenderer;
 import com.revolsys.swing.parallel.Invoke;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
@@ -34,8 +35,8 @@ import com.vividsolutions.jts.geom.Point;
 public class SelectRecordsOverlay extends AbstractOverlay {
   protected static final BasicStroke BOX_STROKE = new BasicStroke(2,
     BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2, new float[] {
-      6, 6
-    }, 0f);
+    6, 6
+  }, 0f);
 
   private static final Color COLOR_BOX = WebColors.Green;
 
@@ -161,7 +162,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
 
   @Override
   public void mouseClicked(final MouseEvent event) {
-    if (event.getClickCount() == 1 && selectCursor != null) {
+    if (event.getClickCount() == 1 && this.selectCursor != null) {
       final int x = event.getX();
       final int y = event.getY();
       final double[] location = getViewport().toModelCoordinates(x, y);
@@ -188,7 +189,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
 
   @Override
   public void mouseExited(final MouseEvent event) {
-    selectCursor = null;
+    this.selectCursor = null;
   }
 
   @Override
@@ -224,24 +225,29 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   protected void paintHighlighted(final Graphics2D graphics2d,
     final LayerGroup layerGroup) {
     final Viewport2D viewport = getViewport();
-    final GeometryFactory viewportGeometryFactory = getViewportGeometryFactory();
-    for (final Layer layer : layerGroup.getLayers()) {
-      if (layer instanceof LayerGroup) {
-        final LayerGroup childGroup = (LayerGroup)layer;
-        paintHighlighted(graphics2d, childGroup);
-      } else if (layer instanceof AbstractDataObjectLayer) {
-        final AbstractDataObjectLayer dataObjectLayer = (AbstractDataObjectLayer)layer;
-        for (final LayerDataObject record : dataObjectLayer.getHighlightedRecords()) {
-          if (record != null && dataObjectLayer.isVisible(record)) {
-            final Geometry geometry = record.getGeometryValue();
-            final AbstractDataObjectLayerRenderer layerRenderer = layer.getRenderer();
-            layerRenderer.renderSelectedRecord(viewport, graphics2d,
-              dataObjectLayer, record);
-            HIGHLIGHT_RENDERER.paintSelected(viewport, viewportGeometryFactory,
-              graphics2d, geometry);
+    viewport.setProperty(TextStyleRenderer.DIRECT_DISPLAY, Boolean.TRUE);
+    try {
+      final GeometryFactory viewportGeometryFactory = getViewportGeometryFactory();
+      for (final Layer layer : layerGroup.getLayers()) {
+        if (layer instanceof LayerGroup) {
+          final LayerGroup childGroup = (LayerGroup)layer;
+          paintHighlighted(graphics2d, childGroup);
+        } else if (layer instanceof AbstractDataObjectLayer) {
+          final AbstractDataObjectLayer dataObjectLayer = (AbstractDataObjectLayer)layer;
+          for (final LayerDataObject record : dataObjectLayer.getHighlightedRecords()) {
+            if (record != null && dataObjectLayer.isVisible(record)) {
+              final Geometry geometry = record.getGeometryValue();
+              final AbstractDataObjectLayerRenderer layerRenderer = layer.getRenderer();
+              layerRenderer.renderSelectedRecord(viewport, graphics2d,
+                dataObjectLayer, record);
+              HIGHLIGHT_RENDERER.paintSelected(viewport,
+                viewportGeometryFactory, graphics2d, geometry);
+            }
           }
         }
       }
+    } finally {
+      viewport.setProperty(TextStyleRenderer.DIRECT_DISPLAY, Boolean.FALSE);
     }
   }
 
@@ -258,30 +264,35 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   protected void paintSelected(final Graphics2D graphics2d,
     final LayerGroup layerGroup) {
     final Viewport2D viewport = getViewport();
-    final GeometryFactory viewportGeometryFactory = getViewportGeometryFactory();
-    for (final Layer layer : layerGroup.getLayers()) {
-      if (layer instanceof LayerGroup) {
-        final LayerGroup childGroup = (LayerGroup)layer;
-        paintSelected(graphics2d, childGroup);
-      } else if (layer instanceof AbstractDataObjectLayer) {
-        final AbstractDataObjectLayer dataObjectLayer = (AbstractDataObjectLayer)layer;
-        final AbstractDataObjectLayerRenderer layerRenderer = layer.getRenderer();
-        if (dataObjectLayer.isSelectable()) {
-          for (final LayerDataObject record : dataObjectLayer.getSelectedRecords()) {
-            if (record != null && dataObjectLayer.isVisible(record)) {
-              if (!dataObjectLayer.isHighlighted(record)) {
-                if (!dataObjectLayer.isDeleted(record)) {
-                  final Geometry geometry = record.getGeometryValue();
-                  layerRenderer.renderSelectedRecord(viewport, graphics2d,
-                    dataObjectLayer, record);
-                  SELECT_RENDERER.paintSelected(viewport,
-                    viewportGeometryFactory, graphics2d, geometry);
+    viewport.setProperty(TextStyleRenderer.DIRECT_DISPLAY, Boolean.TRUE);
+    try {
+      final GeometryFactory viewportGeometryFactory = getViewportGeometryFactory();
+      for (final Layer layer : layerGroup.getLayers()) {
+        if (layer instanceof LayerGroup) {
+          final LayerGroup childGroup = (LayerGroup)layer;
+          paintSelected(graphics2d, childGroup);
+        } else if (layer instanceof AbstractDataObjectLayer) {
+          final AbstractDataObjectLayer dataObjectLayer = (AbstractDataObjectLayer)layer;
+          final AbstractDataObjectLayerRenderer layerRenderer = layer.getRenderer();
+          if (dataObjectLayer.isSelectable()) {
+            for (final LayerDataObject record : dataObjectLayer.getSelectedRecords()) {
+              if (record != null && dataObjectLayer.isVisible(record)) {
+                if (!dataObjectLayer.isHighlighted(record)) {
+                  if (!dataObjectLayer.isDeleted(record)) {
+                    final Geometry geometry = record.getGeometryValue();
+                    layerRenderer.renderSelectedRecord(viewport, graphics2d,
+                      dataObjectLayer, record);
+                    SELECT_RENDERER.paintSelected(viewport,
+                      viewportGeometryFactory, graphics2d, geometry);
+                  }
                 }
               }
             }
           }
         }
       }
+    } finally {
+      viewport.setProperty(TextStyleRenderer.DIRECT_DISPLAY, Boolean.FALSE);
     }
   }
 
@@ -339,7 +350,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   }
 
   public boolean selectBoxFinish(final MouseEvent event) {
-    if (event.getButton() == selectBoxButton) {
+    if (event.getButton() == this.selectBoxButton) {
       if (clearOverlayAction(ACTION_SELECT_RECORDS)) {
         // Convert first point to envelope top left in map coords.
         final int minX = (int)this.selectBox.getMinX();
@@ -369,12 +380,12 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   }
 
   public boolean selectBoxStart(final MouseEvent event) {
-    if (selectCursor != null || SwingUtil.isControlOrMetaDown(event)) {
+    if (this.selectCursor != null || SwingUtil.isControlOrMetaDown(event)) {
       if (setOverlayAction(ACTION_SELECT_RECORDS)) {
-        if (selectBoxCursor == null) {
-          selectCursor = CURSOR_SELECT_BOX;
+        if (this.selectBoxCursor == null) {
+          this.selectCursor = CURSOR_SELECT_BOX;
         }
-        this.selectBoxCursor = selectCursor;
+        this.selectBoxCursor = this.selectCursor;
         this.selectBoxButton = event.getButton();
         this.selectBoxFirstPoint = event.getPoint();
         this.selectBox = new Rectangle2D.Double();
@@ -416,7 +427,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   protected void setSelectCursor(final InputEvent event) {
     Cursor cursor = null;
     if (SwingUtil.isControlOrMetaDown(event)
-      || isOverlayAction(ACTION_SELECT_RECORDS)) {
+        || isOverlayAction(ACTION_SELECT_RECORDS)) {
       if (SwingUtil.isShiftDown(event)) {
         cursor = CURSOR_SELECT_BOX_ADD;
       } else if (SwingUtil.isAltDown(event)) {
