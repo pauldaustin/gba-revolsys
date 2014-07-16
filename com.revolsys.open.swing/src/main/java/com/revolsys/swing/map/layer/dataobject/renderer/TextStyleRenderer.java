@@ -1,7 +1,9 @@
 package com.revolsys.swing.map.layer.dataobject.renderer;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -215,6 +217,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
     final Geometry geometry, final TextStyle style) {
     final String label = getLabel(object, style);
     if (StringUtils.hasText(label) && geometry != null || viewport == null) {
+
       final CoordinatesWithOrientation point = getTextLocation(viewport,
         geometry, style);
       if (point != null) {
@@ -225,6 +228,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
           savedUseModelUnits = viewport.setUseModelCoordinates(false, graphics);
         }
         final Paint paint = graphics.getPaint();
+        final Composite composite = graphics.getComposite();
         try {
           graphics.setBackground(Color.BLACK);
           style.setTextStyle(viewport, graphics);
@@ -327,14 +331,31 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
             if (Math.abs(orientation) > 90) {
               graphics.rotate(Math.PI, maxWidth / 2, -height / 4);
             }
-            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-              RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+
+            final int textBoxOpacity = style.getTextBoxOpacity();
+            final Color textBoxColor = style.getTextBoxColor();
+            if (textBoxOpacity > 0 && textBoxColor != null) {
+              graphics.setColor(textBoxColor);
+              graphics.fill(new Rectangle2D.Double(bounds.getX() - 2,
+                bounds.getY() - 1, width + 4, height + 2));
+            }
+
+            if (textBoxOpacity > 0 && textBoxOpacity < 255) {
+              graphics.setComposite(AlphaComposite.SrcOut);
+            } else {
+              graphics.setComposite(AlphaComposite.SrcOver);
+            }
+
             final double textHaloRadius = Viewport2D.toDisplayValue(viewport,
               style.getTextHaloRadius());
             if (textHaloRadius > 0) {
+              graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+              graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
               final Stroke savedStroke = graphics.getStroke();
               final Stroke outlineStroke = new BasicStroke(
-                (float)textHaloRadius, BasicStroke.CAP_BUTT,
+                (float)(textHaloRadius + 1), BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_BEVEL);
               graphics.setColor(style.getTextHaloFill());
               graphics.setStroke(outlineStroke);
@@ -347,22 +368,16 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
               graphics.setStroke(savedStroke);
             }
 
-            final Color textBoxColor = style.getTextBoxColor();
-            if (textBoxColor != null) {
-              graphics.setColor(textBoxColor);
-              graphics.fill(new Rectangle2D.Double(bounds.getX() - 2,
-                bounds.getY() - 1, width + 4, height + 2));
-            }
-
             graphics.setColor(style.getTextFill());
             graphics.drawString(line, (float)0, (float)0);
             graphics.setTransform(lineTransform);
-            graphics.translate(0, (leading + descent));
+            graphics.translate(0, leading + descent);
           }
           graphics.setTransform(savedTransform);
 
         } finally {
           graphics.setPaint(paint);
+          graphics.setComposite(composite);
           if (viewport != null) {
             viewport.setUseModelCoordinates(savedUseModelUnits, graphics);
           }
@@ -388,7 +403,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
   @Override
   public TextStyleRenderer clone() {
     final TextStyleRenderer clone = (TextStyleRenderer)super.clone();
-    clone.style = style.clone();
+    clone.style = this.style.clone();
     return clone;
   }
 
