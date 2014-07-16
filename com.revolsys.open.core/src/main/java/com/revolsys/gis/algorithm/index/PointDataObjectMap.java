@@ -15,7 +15,6 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.parallel.channel.Channel;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
@@ -45,35 +44,53 @@ public class PointDataObjectMap {
    */
   public void add(final DataObject object) {
     final Point point = object.getGeometryValue();
-    final Coordinates coordinates = CoordinatesUtil.get(point);
-    final List<DataObject> objects = getObjectInternal(coordinates);
+    final List<DataObject> objects = getOrCreateObjects(point);
     objects.add(object);
-    if (comparator != null) {
-      Collections.sort(objects, comparator);
+    if (this.comparator != null) {
+      Collections.sort(objects, this.comparator);
     }
-    size++;
+    this.size++;
   }
 
   public void clear() {
-    size = 0;
-    objectMap = new HashMap<Coordinates, List<DataObject>>();
+    this.size = 0;
+    this.objectMap = new HashMap<Coordinates, List<DataObject>>();
   }
 
   public boolean containsKey(final Point point) {
-    final Coordinates coordinates = CoordinatesUtil.get(point);
-    return objectMap.containsKey(coordinates);
+    final Coordinates coordinates = getCoordinates(point);
+    return this.objectMap.containsKey(coordinates);
   }
 
   public List<DataObject> getAll() {
     final List<DataObject> objects = new ArrayList<DataObject>();
-    for (final List<DataObject> objectsAtPoint : objectMap.values()) {
+    for (final List<DataObject> objectsAtPoint : this.objectMap.values()) {
       objects.addAll(objectsAtPoint);
     }
     return objects;
   }
 
   public Set<Coordinates> getCoordinates() {
-    return Collections.unmodifiableSet(objectMap.keySet());
+    return Collections.unmodifiableSet(this.objectMap.keySet());
+  }
+
+  private Coordinates getCoordinates(final Coordinates point) {
+    final double x = point.getX();
+    final double y = point.getY();
+    final Coordinates coordinates = new DoubleCoordinates(x, y);
+    return coordinates;
+  }
+
+  private Coordinates getCoordinates(final Geometry geometry) {
+    final Coordinates coordinates = CoordinatesUtil.get(geometry);
+    return getCoordinates(coordinates);
+  }
+
+  private Coordinates getCoordinates(final Point point) {
+    final double x = point.getX();
+    final double y = point.getY();
+    final Coordinates coordinates = new DoubleCoordinates(x, y);
+    return coordinates;
   }
 
   public DataObject getFirstMatch(final DataObject object,
@@ -104,19 +121,9 @@ public class PointDataObjectMap {
     return filteredObjects;
   }
 
-  protected List<DataObject> getObjectInternal(final Coordinates coordinates) {
-    List<DataObject> objects = objectMap.get(coordinates);
-    if (objects == null) {
-      objects = new ArrayList<DataObject>(1);
-      final Coordinates indexCoordinates = new DoubleCoordinates(
-        coordinates.getX(), coordinates.getY());
-      objectMap.put(indexCoordinates, objects);
-    }
-    return objects;
-  }
-
-  public List<DataObject> getObjects(final Coordinates coordinates) {
-    final List<DataObject> objects = objectMap.get(coordinates);
+  public List<DataObject> getObjects(Coordinates coordinates) {
+    coordinates = getCoordinates(coordinates);
+    final List<DataObject> objects = this.objectMap.get(coordinates);
     if (objects == null) {
       return Collections.emptyList();
     } else {
@@ -131,37 +138,46 @@ public class PointDataObjectMap {
   }
 
   public List<DataObject> getObjects(final Point point) {
-    final Coordinates coordinates = CoordinatesUtil.get(point);
+    final Coordinates coordinates = getCoordinates(point);
     final List<DataObject> objects = getObjects(coordinates);
+    return objects;
+  }
+
+  protected List<DataObject> getOrCreateObjects(final Point point) {
+    final Coordinates indexCoordinates = getCoordinates(point);
+    List<DataObject> objects = this.objectMap.get(indexCoordinates);
+    if (objects == null) {
+      objects = new ArrayList<DataObject>(1);
+      this.objectMap.put(indexCoordinates, objects);
+    }
     return objects;
   }
 
   public void initialize(final Point point) {
     if (!isRemoveEmptyLists()) {
-      final Coordinates coordinates = CoordinatesUtil.get(point);
-      getObjectInternal(coordinates);
+      getOrCreateObjects(point);
     }
   }
 
   public boolean isRemoveEmptyLists() {
-    return removeEmptyLists;
+    return this.removeEmptyLists;
   }
 
   public void remove(final DataObject object) {
     final Geometry geometry = object.getGeometryValue();
-    final Coordinates coordinates = CoordinatesUtil.get(geometry);
-    final List<DataObject> objects = objectMap.get(coordinates);
+    final Coordinates coordinates = getCoordinates(geometry);
+    final List<DataObject> objects = this.objectMap.get(coordinates);
     if (objects != null) {
       objects.remove(object);
       if (objects.isEmpty()) {
         if (isRemoveEmptyLists()) {
-          objectMap.remove(coordinates);
+          this.objectMap.remove(coordinates);
         }
-      } else if (comparator != null) {
-        Collections.sort(objects, comparator);
+      } else if (this.comparator != null) {
+        Collections.sort(objects, this.comparator);
       }
     }
-    size--;
+    this.size--;
   }
 
   public void setRemoveEmptyLists(final boolean removeEmptyLists) {
@@ -169,16 +185,14 @@ public class PointDataObjectMap {
   }
 
   public int size() {
-    return size;
+    return this.size;
   }
 
   public void sort(final DataObject object) {
-    if (comparator != null) {
-      final Geometry geometry = object.getGeometryValue();
-      final Coordinate coordinate = geometry.getCoordinate();
-      final List<DataObject> objects = objectMap.get(coordinate);
+    if (this.comparator != null) {
+      final List<DataObject> objects = getObjects(object);
       if (objects != null) {
-        Collections.sort(objects, comparator);
+        Collections.sort(objects, this.comparator);
       }
     }
   }
