@@ -42,7 +42,7 @@ public class Value extends QueryValue {
   @Override
   public int appendParameters(final int index, final PreparedStatement statement) {
     try {
-      return jdbcAttribute.setPreparedStatementValue(statement, index,
+      return this.jdbcAttribute.setPreparedStatementValue(statement, index,
         this.queryValue);
     } catch (final SQLException e) {
       throw new RuntimeException("Unable to set value: " + this.queryValue, e);
@@ -73,7 +73,7 @@ public class Value extends QueryValue {
       final Class<?> typeClass = dataType.getJavaClass();
       if (newValue == null || !typeClass.isAssignableFrom(newValue.getClass())) {
         throw new IllegalArgumentException(this.queryValue + " is not a valid "
-          + typeClass);
+            + typeClass);
       } else {
         this.queryValue = newValue;
       }
@@ -91,24 +91,24 @@ public class Value extends QueryValue {
   }
 
   public Object getDisplayValue() {
-    return displayValue;
+    return this.displayValue;
   }
 
   public JdbcAttribute getJdbcAttribute() {
-    return jdbcAttribute;
+    return this.jdbcAttribute;
   }
 
   public Object getQueryValue() {
-    return queryValue;
+    return this.queryValue;
   }
 
   @Override
   public String getStringValue(final Map<String, Object> record) {
     final Object value = getValue(record);
-    if (attribute == null) {
+    if (this.attribute == null) {
       return StringConverterRegistry.toString(value);
     } else {
-      final Class<?> typeClass = attribute.getTypeClass();
+      final Class<?> typeClass = this.attribute.getTypeClass();
       return StringConverterRegistry.toString(typeClass, value);
     }
   }
@@ -129,9 +129,9 @@ public class Value extends QueryValue {
 
     } else {
       if (attribute instanceof JdbcAttribute) {
-        jdbcAttribute = (JdbcAttribute)attribute;
+        this.jdbcAttribute = (JdbcAttribute)attribute;
       } else {
-        jdbcAttribute = JdbcAttribute.createAttribute(this.queryValue);
+        this.jdbcAttribute = JdbcAttribute.createAttribute(this.queryValue);
       }
 
       CodeTable codeTable = null;
@@ -146,7 +146,9 @@ public class Value extends QueryValue {
               codeTable = null;
             }
           }
-          if (codeTable != null) {
+          if (codeTable == null) {
+            convert(attribute);
+          } else {
             final Object id = codeTable.getId(this.queryValue);
             if (id == null) {
               this.displayValue = this.queryValue;

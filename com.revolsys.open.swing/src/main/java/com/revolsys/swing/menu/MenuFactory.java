@@ -20,7 +20,7 @@ import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentFactory;
 
 public class MenuFactory extends AbstractObjectWithProperties implements
-  ComponentFactory<JMenuItem> {
+ComponentFactory<JMenuItem> {
 
   private final Map<String, List<ComponentFactory<?>>> groups = new HashMap<String, List<ComponentFactory<?>>>();
 
@@ -257,6 +257,14 @@ public class MenuFactory extends AbstractObjectWithProperties implements
   @Override
   public Icon getIcon() {
     return null;
+  }
+
+  public int getItemCount() {
+    int count = 0;
+    for (final List<ComponentFactory<?>> factories : this.groups.values()) {
+      count += factories.size();
+    }
+    return count;
   }
 
   @Override

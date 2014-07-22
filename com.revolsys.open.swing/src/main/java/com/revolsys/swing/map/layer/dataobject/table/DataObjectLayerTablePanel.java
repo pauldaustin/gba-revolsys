@@ -16,6 +16,9 @@ import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.property.DirectionalAttributes;
+import com.revolsys.gis.data.model.types.DataType;
+import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
@@ -23,6 +26,7 @@ import com.revolsys.swing.action.enablecheck.InvokeMethodEnableCheck;
 import com.revolsys.swing.action.enablecheck.ObjectPropertyEnableCheck;
 import com.revolsys.swing.action.enablecheck.OrEnableCheck;
 import com.revolsys.swing.dnd.ClipboardUtil;
+import com.revolsys.swing.map.form.DataObjectLayerForm;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
@@ -61,8 +65,8 @@ public class DataObjectLayerTablePanel extends TablePanel implements
     final DataObjectLayerTable table) {
     super(table);
     this.layer = layer;
-    tableCellEditor = table.getTableCellEditor();
-    tableCellEditor.setPopupMenu(getMenu());
+    this.tableCellEditor = table.getTableCellEditor();
+    this.tableCellEditor.setPopupMenu(getMenu());
     table.getTableCellEditor().addMouseListener(this);
     table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     this.tableModel = getTableModel();
@@ -120,6 +124,34 @@ public class DataObjectLayerTablePanel extends TablePanel implements
       menu.addMenuItemTitleIcon("dnd", "Paste Geometry", "geometry_paste",
         new AndEnableCheck(editableEnableCheck, new InvokeMethodEnableCheck(
           this, "canPasteRecordGeometry")), this, "pasteGeometry");
+
+      final MenuFactory editMenu = new MenuFactory("Edit Record Operations");
+      final DataType geometryDataType = metaData.getGeometryAttribute()
+        .getType();
+      if (geometryDataType == DataTypes.LINE_STRING
+        || geometryDataType == DataTypes.MULTI_LINE_STRING) {
+        if (DirectionalAttributes.getProperty(metaData)
+          .hasDirectionalAttributes()) {
+          editMenu.addMenuItemTitleIcon("geometry",
+            DataObjectLayerForm.FLIP_RECORD_NAME,
+            DataObjectLayerForm.FLIP_RECORD_ICON, editableEnableCheck, this,
+            "flipRecordOrientation");
+          editMenu.addMenuItemTitleIcon("geometry",
+            DataObjectLayerForm.FLIP_LINE_ORIENTATION_NAME,
+            DataObjectLayerForm.FLIP_LINE_ORIENTATION_ICON,
+            editableEnableCheck, this, "flipLineOrientation");
+          editMenu.addMenuItemTitleIcon("geometry",
+            DataObjectLayerForm.FLIP_FIELDS_NAME,
+            DataObjectLayerForm.FLIP_FIELDS_ICON, editableEnableCheck, this,
+            "flipFields");
+        } else {
+          editMenu.addMenuItemTitleIcon("geometry", "Flip Line Orientation",
+            "flip_line", editableEnableCheck, this, "flipLineOrientation");
+        }
+      }
+      if (editMenu.getItemCount() > 0) {
+        menu.addComponentFactory("record", 2, editMenu);
+      }
     }
 
     // Toolbar
@@ -142,8 +174,8 @@ public class DataObjectLayerTablePanel extends TablePanel implements
     toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits",
       attributeFilterPanel, "showAdvancedFilter");
 
-    final EnableCheck hasFilter = new ObjectPropertyEnableCheck(tableModel,
-      "hasFilter");
+    final EnableCheck hasFilter = new ObjectPropertyEnableCheck(
+      this.tableModel, "hasFilter");
 
     toolBar.addButton("search", "Clear Search", "filter_delete", hasFilter,
       attributeFilterPanel, "clear");
@@ -184,7 +216,7 @@ public class DataObjectLayerTablePanel extends TablePanel implements
 
   public void copyFieldValue() {
     if (isEditingCurrentCell()) {
-      final JComponent editorComponent = tableCellEditor.getEditorComponent();
+      final JComponent editorComponent = this.tableCellEditor.getEditorComponent();
       SwingUtil.dndCopy(editorComponent);
     } else {
       final DataObjectRowTableModel model = getTableModel();
@@ -205,7 +237,7 @@ public class DataObjectLayerTablePanel extends TablePanel implements
 
   public void cutFieldValue() {
     if (isEditingCurrentCell()) {
-      final JComponent editorComponent = tableCellEditor.getEditorComponent();
+      final JComponent editorComponent = this.tableCellEditor.getEditorComponent();
       SwingUtil.dndCut(editorComponent);
     }
   }
@@ -222,8 +254,25 @@ public class DataObjectLayerTablePanel extends TablePanel implements
     }
   }
 
+  public void flipFields() {
+    final DataObject record = getEventRowObject();
+    final DirectionalAttributes property = DirectionalAttributes.getProperty(record);
+    property.reverseAttributes(record);
+  }
+
+  public void flipLineOrientation() {
+    final DataObject record = getEventRowObject();
+    final DirectionalAttributes property = DirectionalAttributes.getProperty(record);
+    property.reverseGeometry(record);
+  }
+
+  public void flipRecordOrientation() {
+    final DataObject record = getEventRowObject();
+    DirectionalAttributes.reverse(record);
+  }
+
   public Collection<? extends String> getColumnNames() {
-    return layer.getColumnNames();
+    return this.layer.getColumnNames();
   }
 
   protected LayerDataObject getEventRowObject() {
@@ -252,14 +301,14 @@ public class DataObjectLayerTablePanel extends TablePanel implements
   public void mouseClicked(final MouseEvent e) {
     super.mouseClicked(e);
     if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
-      tableCellEditor.stopCellEditing();
+      this.tableCellEditor.stopCellEditing();
       editRecord();
     }
   }
 
   public void pasteFieldValue() {
     if (isEditingCurrentCell()) {
-      final JComponent editorComponent = tableCellEditor.getEditorComponent();
+      final JComponent editorComponent = this.tableCellEditor.getEditorComponent();
       SwingUtil.dndPaste(editorComponent);
     }
   }

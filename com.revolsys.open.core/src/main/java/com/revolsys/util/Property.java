@@ -264,6 +264,36 @@ public final class Property {
     }
   }
 
+  private static boolean hasText(final CharSequence string) {
+    final int length = string.length();
+    for (int i = 0; i < length; i++) {
+      final char character = string.charAt(i);
+      if (!Character.isWhitespace(character)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean hasValue(final CharSequence string) {
+    if (string == null) {
+      return false;
+    } else {
+      return hasText(string);
+    }
+  }
+
+  public static boolean hasValue(final Object value) {
+    if (value == null) {
+      return false;
+    } else if (value instanceof CharSequence) {
+      final CharSequence string = (CharSequence)value;
+      return hasText(string);
+    } else {
+      return true;
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public static <V> V invoke(final Object object, final String methodName,
     final Object... parameterArray) {
