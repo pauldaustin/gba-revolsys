@@ -35,8 +35,8 @@ import com.vividsolutions.jts.geom.Point;
 public class SelectRecordsOverlay extends AbstractOverlay {
   protected static final BasicStroke BOX_STROKE = new BasicStroke(2,
     BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2, new float[] {
-    6, 6
-  }, 0f);
+      6, 6
+    }, 0f);
 
   private static final Color COLOR_BOX = WebColors.Green;
 
@@ -134,9 +134,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
       selectBoxClear(event);
       repaint();
     } else if (keyCode == KeyEvent.VK_CONTROL || keyCode == KeyEvent.VK_META) {
-      if (!hasOverlayAction()) {
-        setSelectCursor(event);
-      }
+      setSelectCursor(event);
     } else if (keyCode == KeyEvent.VK_SHIFT) {
       setSelectCursor(event);
     } else if (keyCode == KeyEvent.VK_ALT) {
@@ -427,7 +425,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   protected void setSelectCursor(final InputEvent event) {
     Cursor cursor = null;
     if (SwingUtil.isControlOrMetaDown(event)
-        || isOverlayAction(ACTION_SELECT_RECORDS)) {
+      || isOverlayAction(ACTION_SELECT_RECORDS)) {
       if (SwingUtil.isShiftDown(event)) {
         cursor = CURSOR_SELECT_BOX_ADD;
       } else if (SwingUtil.isAltDown(event)) {

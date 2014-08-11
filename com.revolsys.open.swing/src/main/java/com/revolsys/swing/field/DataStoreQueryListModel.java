@@ -38,7 +38,7 @@ public class DataStoreQueryListModel implements ListModel {
 
   private String searchText = "";
 
-  private int maxResults = 10;
+  private int maxResults = Integer.MAX_VALUE;
 
   public DataStoreQueryListModel(final DataObjectStore dataStore,
     final String displayAttributeName, final List<Query> queries) {
@@ -101,7 +101,7 @@ public class DataStoreQueryListModel implements ListModel {
           final BinaryCondition binaryCondition = (BinaryCondition)whereCondition;
           if (binaryCondition.getOperator().equalsIgnoreCase("like")) {
             final String likeString = "%"
-                + searchParam.toUpperCase().replaceAll("[^A-Z0-9 ]", "%") + "%";
+              + searchParam.toUpperCase().replaceAll("[^A-Z0-9 ]", "%") + "%";
             Q.setValue(0, binaryCondition, likeString);
           } else {
             Q.setValue(0, binaryCondition, searchParam);
