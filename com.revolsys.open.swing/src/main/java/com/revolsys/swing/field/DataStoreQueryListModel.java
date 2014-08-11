@@ -21,6 +21,7 @@ import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Q;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.Reader;
+import com.revolsys.util.Property;
 
 public class DataStoreQueryListModel implements ListModel {
 
@@ -91,43 +92,47 @@ public class DataStoreQueryListModel implements ListModel {
   }
 
   protected List<DataObject> getObjects(final String searchParam) {
-    final Map<String, DataObject> allObjects = new TreeMap<String, DataObject>();
-    for (Query query : this.queries) {
-      if (allObjects.size() < this.maxResults) {
-        query = query.clone();
-        query.addOrderBy(this.displayAttributeName, true);
-        final Condition whereCondition = query.getWhereCondition();
-        if (whereCondition instanceof BinaryCondition) {
-          final BinaryCondition binaryCondition = (BinaryCondition)whereCondition;
-          if (binaryCondition.getOperator().equalsIgnoreCase("like")) {
-            final String likeString = "%"
-              + searchParam.toUpperCase().replaceAll("[^A-Z0-9 ]", "%") + "%";
-            Q.setValue(0, binaryCondition, likeString);
-          } else {
-            Q.setValue(0, binaryCondition, searchParam);
-          }
-        }
-        query.setLimit(this.maxResults);
-        final Reader<DataObject> reader = this.dataStore.query(query);
-        try {
-          final List<DataObject> objects = reader.read();
-          for (final DataObject object : objects) {
-            if (allObjects.size() < this.maxResults) {
-              final String key = object.getString(this.displayAttributeName);
-              if (!allObjects.containsKey(key)) {
-                if (searchParam.equals(key)) {
-                  this.selectedItem = object;
-                }
-                allObjects.put(key, object);
-              }
+    if (Property.hasValue(searchParam) && searchParam.length() >= 2) {
+      final Map<String, DataObject> allObjects = new TreeMap<String, DataObject>();
+      for (Query query : this.queries) {
+        if (allObjects.size() < this.maxResults) {
+          query = query.clone();
+          query.addOrderBy(this.displayAttributeName, true);
+          final Condition whereCondition = query.getWhereCondition();
+          if (whereCondition instanceof BinaryCondition) {
+            final BinaryCondition binaryCondition = (BinaryCondition)whereCondition;
+            if (binaryCondition.getOperator().equalsIgnoreCase("like")) {
+              final String likeString = "%"
+                  + searchParam.toUpperCase().replaceAll("[^A-Z0-9 ]", "%") + "%";
+              Q.setValue(0, binaryCondition, likeString);
+            } else {
+              Q.setValue(0, binaryCondition, searchParam);
             }
           }
-        } finally {
-          reader.close();
+          query.setLimit(this.maxResults);
+          final Reader<DataObject> reader = this.dataStore.query(query);
+          try {
+            final List<DataObject> objects = reader.read();
+            for (final DataObject object : objects) {
+              if (allObjects.size() < this.maxResults) {
+                final String key = object.getString(this.displayAttributeName);
+                if (!allObjects.containsKey(key)) {
+                  if (searchParam.equals(key)) {
+                    this.selectedItem = object;
+                  }
+                  allObjects.put(key, object);
+                }
+              }
+            }
+          } finally {
+            reader.close();
+          }
         }
       }
+      return new ArrayList<DataObject>(allObjects.values());
+    } else {
+      return Collections.emptyList();
     }
-    return new ArrayList<DataObject>(allObjects.values());
   }
 
   public String getSearchText() {
