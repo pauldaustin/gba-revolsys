@@ -46,7 +46,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectLayerTablePanel extends TablePanel implements
-  PropertyChangeListener {
+PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   public static final String FILTER_GEOMETRY = "filter_geometry";
@@ -73,12 +73,12 @@ public class DataObjectLayerTablePanel extends TablePanel implements
     final DataObjectMetaData metaData = layer.getMetaData();
     final boolean hasGeometry = metaData.getGeometryAttributeIndex() != -1;
     final EnableCheck deletableEnableCheck = new DataObjectRowPropertyEnableCheck(
-      "deletable");
+        "deletable");
 
     final EnableCheck modifiedEnableCheck = new DataObjectRowPropertyEnableCheck(
-      "modified");
+        "modified");
     final EnableCheck deletedEnableCheck = new DataObjectRowPropertyEnableCheck(
-      "deleted");
+        "deleted");
     final EnableCheck notEnableCheck = new DataObjectRowPropertyEnableCheck(
       "deleted", false);
     final OrEnableCheck modifiedOrDeleted = new OrEnableCheck(
@@ -108,10 +108,10 @@ public class DataObjectLayerTablePanel extends TablePanel implements
 
     menu.addMenuItem("record", DataObjectRowRunnable.createAction(
       "Revert Empty Fields", "field_empty_revert", modifiedEnableCheck,
-      "revertEmptyFields"));
+        "revertEmptyFields"));
 
     menu.addMenuItemTitleIcon("dnd", "Copy Record", "page_copy", this,
-      "copyRecord");
+        "copyRecord");
 
     menu.addMenuItemTitleIcon("dataTransfer", "Cut Field Value", "cut",
       cellEditingEnableCheck, this, "cutFieldValue");
@@ -127,15 +127,15 @@ public class DataObjectLayerTablePanel extends TablePanel implements
 
       final MenuFactory editMenu = new MenuFactory("Edit Record Operations");
       final DataType geometryDataType = metaData.getGeometryAttribute()
-        .getType();
+          .getType();
       if (geometryDataType == DataTypes.LINE_STRING
-        || geometryDataType == DataTypes.MULTI_LINE_STRING) {
+          || geometryDataType == DataTypes.MULTI_LINE_STRING) {
         if (DirectionalAttributes.getProperty(metaData)
-          .hasDirectionalAttributes()) {
+            .hasDirectionalAttributes()) {
           editMenu.addMenuItemTitleIcon("geometry",
             DataObjectLayerForm.FLIP_RECORD_NAME,
             DataObjectLayerForm.FLIP_RECORD_ICON, editableEnableCheck, this,
-            "flipRecordOrientation");
+              "flipRecordOrientation");
           editMenu.addMenuItemTitleIcon("geometry",
             DataObjectLayerForm.FLIP_LINE_ORIENTATION_NAME,
             DataObjectLayerForm.FLIP_LINE_ORIENTATION_ICON,
@@ -143,7 +143,7 @@ public class DataObjectLayerTablePanel extends TablePanel implements
           editMenu.addMenuItemTitleIcon("geometry",
             DataObjectLayerForm.FLIP_FIELDS_NAME,
             DataObjectLayerForm.FLIP_FIELDS_ICON, editableEnableCheck, this,
-            "flipFields");
+              "flipFields");
         } else {
           editMenu.addMenuItemTitleIcon("geometry", "Flip Line Orientation",
             "flip_line", editableEnableCheck, this, "flipLineOrientation");
@@ -165,10 +165,10 @@ public class DataObjectLayerTablePanel extends TablePanel implements
     toolBar.addComponent("count", new TableRowCount(this.tableModel));
 
     toolBar.addButtonTitleIcon("table", "Refresh", "table_refresh", this,
-      "refresh");
+        "refresh");
 
     final AttributeFilterPanel attributeFilterPanel = new AttributeFilterPanel(
-      this);
+      this, this.tableModel);
     toolBar.addComponent("search", attributeFilterPanel);
 
     toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits",
@@ -355,8 +355,8 @@ public class DataObjectLayerTablePanel extends TablePanel implements
     if (geometry != null) {
       final GeometryFactory geometryFactory = project.getGeometryFactory();
       final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry)
-        .convert(geometryFactory)
-        .expandPercent(0.1);
+          .convert(geometryFactory)
+          .expandPercent(0.1);
       project.setViewBoundingBox(boundingBox);
     }
   }

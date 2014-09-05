@@ -61,18 +61,19 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
   }
 
   protected void firePropertyChange(final PropertyChangeEvent event) {
-    propertyChangeSupport.firePropertyChange(event);
+    this.propertyChangeSupport.firePropertyChange(event);
   }
 
   protected void firePropertyChange(final String propertyName, final int index,
     final Object oldValue, final Object newValue) {
-    propertyChangeSupport.fireIndexedPropertyChange(propertyName, index,
+    this.propertyChangeSupport.fireIndexedPropertyChange(propertyName, index,
       oldValue, newValue);
   }
 
   protected void firePropertyChange(final String propertyName,
     final Object oldValue, final Object newValue) {
-    propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    this.propertyChangeSupport.firePropertyChange(propertyName, oldValue,
+      newValue);
   }
 
   public String getFieldName(final int attributeIndex) {
@@ -83,12 +84,12 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
   public abstract String getFieldName(int rowIndex, int columnIndex);
 
   public DataObjectMetaData getMetaData() {
-    return metaData;
+    return this.metaData;
   }
 
   @Override
   public PropertyChangeSupport getPropertyChangeSupport() {
-    return propertyChangeSupport;
+    return this.propertyChangeSupport;
   }
 
   public Set<String> getReadOnlyFieldNames() {

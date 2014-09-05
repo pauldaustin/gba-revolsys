@@ -54,16 +54,8 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class DataObjectLayerTableModel extends DataObjectRowTableModel
-  implements SortableTableModel, PropertyChangeListener,
-  PropertyChangeSupportProxy {
-
-  private static final long serialVersionUID = 1L;
-
-  public static final String MODE_ALL = "all";
-
-  public static final String MODE_SELECTED = "selected";
-
-  public static final String MODE_EDITS = "edits";
+implements SortableTableModel, PropertyChangeListener,
+PropertyChangeSupportProxy {
 
   public static DataObjectLayerTable createTable(
     final AbstractDataObjectLayer layer) {
@@ -97,6 +89,14 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     }
   }
 
+  private static final long serialVersionUID = 1L;
+
+  public static final String MODE_ALL = "all";
+
+  public static final String MODE_SELECTED = "selected";
+
+  public static final String MODE_EDITS = "edits";
+
   private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
     this);
 
@@ -118,7 +118,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   private SwingWorker<?, ?> loadObjectsWorker;
 
   private Map<Integer, List<LayerDataObject>> pageCache = new LruMap<Integer, List<LayerDataObject>>(
-    5);
+      5);
 
   private String attributeFilterMode = MODE_ALL;
 
@@ -164,7 +164,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   @Override
   public String getColumnName(final int columnIndex) {
     final String fieldName = getFieldName(columnIndex);
-    return layer.getFieldTitle(fieldName);
+    return this.layer.getFieldTitle(fieldName);
   }
 
   public Condition getFilter() {
@@ -189,7 +189,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   }
 
   public final ListSelectionModel getHighlightedModel() {
-    return highlightedModel;
+    return this.highlightedModel;
   }
 
   public AbstractDataObjectLayer getLayer() {
@@ -242,10 +242,10 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
         synchronized (getSync()) {
           if (this.loadObjectsWorker == null) {
             this.loadObjectsWorker = Invoke.background("Loading records "
-              + getTypeName(), this, "loadPages", refreshIndex);
+                + getTypeName(), this, "loadPages", this.refreshIndex);
           }
         }
-        return loadingRecord;
+        return this.loadingRecord;
       } else {
         if (recordNumber < page.size()) {
           final LayerDataObject object = page.get(recordNumber);
@@ -263,7 +263,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   @Override
   public PropertyChangeSupport getPropertyChangeSupport() {
-    return propertyChangeSupport;
+    return this.propertyChangeSupport;
   }
 
   @SuppressWarnings("unchecked")
@@ -293,7 +293,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
         if (this.countLoaded) {
           int count = this.rowCount;
           if (!this.attributeFilterMode.equals(MODE_SELECTED)
-            && !this.attributeFilterMode.equals(MODE_EDITS)) {
+              && !this.attributeFilterMode.equals(MODE_EDITS)) {
             final AbstractDataObjectLayer layer = getLayer();
             final int newRecordCount = layer.getNewRecordCount();
             count += newRecordCount;
@@ -303,7 +303,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
         } else {
           if (this.rowCountWorker == null) {
             this.rowCountWorker = Invoke.background("Query row count "
-              + this.layer.getName(), this, "loadRowCount", this.refreshIndex);
+                + this.layer.getName(), this, "loadRowCount", this.refreshIndex);
           }
           return 0;
         }
@@ -313,9 +313,9 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   protected int getRowCountInternal() {
     if (this.attributeFilterMode.equals(MODE_SELECTED)) {
-      synchronized (selectedSync) {
+      synchronized (this.selectedSync) {
         this.selectedRecords = new ArrayList<LayerDataObject>(
-          getLayerSelectedRecords());
+            getLayerSelectedRecords());
         return this.selectedRecords.size();
       }
     } else if (this.attributeFilterMode.equals(MODE_EDITS)) {
@@ -326,9 +326,9 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   }
 
   protected LayerDataObject getSelectedRecord(final int index) {
-    synchronized (selectedSync) {
-      if (index < selectedRecords.size()) {
-        return selectedRecords.get(index);
+    synchronized (this.selectedSync) {
+      if (index < this.selectedRecords.size()) {
+        return this.selectedRecords.get(index);
       } else {
         return null;
       }
@@ -354,7 +354,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   @Override
   public boolean isEditable() {
-    return super.isEditable() && layer.isEditable();
+    return super.isEditable() && this.layer.isEditable();
   }
 
   public boolean isFilterByBoundingBox() {
@@ -369,7 +369,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   public boolean isSelected(final boolean selected, final int rowIndex,
     final int columnIndex) {
     final LayerDataObject object = getRecord(rowIndex);
-    return layer.isSelected(object);
+    return this.layer.isSelected(object);
   }
 
   protected LayerDataObject loadLayerRecord(int row) {
@@ -423,7 +423,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
       final String propertyName = e.getPropertyName();
       if (Arrays.asList("query", "editable", "recordInserted",
         "recordsInserted", "recordDeleted", "recordsChanged").contains(
-        propertyName)) {
+          propertyName)) {
         refresh();
       } else if ("recordUpdated".equals(propertyName)) {
         repaint();
@@ -505,9 +505,10 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
       } else {
         refresh();
       }
-      propertyChangeSupport.firePropertyChange("filter", oldValue, this.filter);
+      this.propertyChangeSupport.firePropertyChange("filter", oldValue,
+        this.filter);
       final boolean hasFilter = isHasFilter();
-      propertyChangeSupport.firePropertyChange("hasFilter", !hasFilter,
+      this.propertyChangeSupport.firePropertyChange("hasFilter", !hasFilter,
         hasFilter);
       return true;
     }
@@ -528,7 +529,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     final List<LayerDataObject> records) {
     synchronized (getSync()) {
       if (this.refreshIndex == refreshIndex) {
-        pageCache.put(pageNumber, records);
+        this.pageCache.put(pageNumber, records);
         this.loadingPageNumbers.remove(pageNumber);
         fireTableRowsUpdated(pageNumber * this.pageSize,
           Math.min(getRowCount(), (pageNumber + 1) * this.pageSize - 1));
@@ -621,9 +622,9 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     } else if (sortOrder == SortOrder.DESCENDING) {
       orderBy = Collections.singletonMap(attributeName, false);
     } else {
-      orderBy = Collections.emptyMap();
+      orderBy = Collections.singletonMap(attributeName, true);
     }
-    if (sync == null) {
+    if (this.sync == null) {
       this.orderBy = orderBy;
     } else {
       synchronized (getSync()) {

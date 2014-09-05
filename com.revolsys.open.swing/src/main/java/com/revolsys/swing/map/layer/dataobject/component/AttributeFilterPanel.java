@@ -52,9 +52,9 @@ import com.revolsys.swing.field.QueryWhereConditionField;
 import com.revolsys.swing.field.TextField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
-import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTablePanel;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
 import com.revolsys.swing.parallel.Invoke;
+import com.revolsys.swing.table.TablePanel;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
@@ -81,7 +81,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
 
   private final AbstractDataObjectLayer layer;
 
-  private final ComboBox numericOperatorField = new ComboBox("=", "<>", "Like",
+  private final ComboBox numericOperatorField = new ComboBox("=", "<>",
     "IS NULL", "IS NOT NULL", "<", "<=", ">", ">=");
 
   private final ComboBox dateOperatorField = new ComboBox("=", "<>", "IS NULL",
@@ -107,9 +107,10 @@ ItemListener, DocumentListener, PropertyChangeListener {
 
   private Attribute attribute;
 
-  public AttributeFilterPanel(final DataObjectLayerTablePanel tablePanel) {
-    this.tableModel = tablePanel.getTableModel();
-    this.layer = tablePanel.getLayer();
+  public AttributeFilterPanel(final TablePanel tablePanel,
+    final DataObjectLayerTableModel tableModel) {
+    this.tableModel = tableModel;
+    this.layer = tableModel.getLayer();
     this.metaData = this.layer.getMetaData();
 
     this.whereLabel = new JLabel();
@@ -122,7 +123,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
     this.whereLabel.setBackground(WebColors.White);
     add(this.whereLabel);
 
-    this.attributeNames = new ArrayList<String>(tablePanel.getColumnNames());
+    this.attributeNames = new ArrayList<String>(this.layer.getColumnNames());
     this.attributeNames.remove(this.metaData.getGeometryAttributeName());
     final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(
       this.layer);
@@ -467,7 +468,6 @@ ItemListener, DocumentListener, PropertyChangeListener {
     if (!EqualsRegistry.equal(searchFieldName, this.previousSearchFieldName)) {
       this.previousSearchFieldName = searchFieldName;
       this.layer.setProperty("searchField", searchFieldName);
-      this.codeTable = this.metaData.getCodeTableByColumn(searchFieldName);
       final DataObjectMetaData metaData = this.tableModel.getMetaData();
       this.attribute = metaData.getAttribute(searchFieldName);
       final Class<?> attributeClass = this.attribute.getTypeClass();
@@ -475,10 +475,14 @@ ItemListener, DocumentListener, PropertyChangeListener {
         this.nameField.getSelectedItem())) {
         this.nameField.setFieldValue(searchFieldName);
       }
+      if (searchFieldName.equals(metaData.getIdAttributeName())) {
+        this.codeTable = null;
+      } else {
+        this.codeTable = this.metaData.getCodeTableByColumn(searchFieldName);
+      }
 
       ComboBox operatorField;
-      if (this.codeTable != null
-          && !searchFieldName.equals(metaData.getIdAttributeName())) {
+      if (this.codeTable != null) {
         operatorField = this.codeTableOperatorField;
       } else if (Number.class.isAssignableFrom(attributeClass)) {
         operatorField = this.numericOperatorField;

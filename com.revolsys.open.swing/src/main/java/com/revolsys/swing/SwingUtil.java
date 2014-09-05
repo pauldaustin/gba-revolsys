@@ -7,10 +7,16 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.LayoutManager;
 import java.awt.MenuContainer;
 import java.awt.MenuItem;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.SplashScreen;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -38,8 +44,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -82,10 +90,6 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class SwingUtil {
-  public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
-
-  public static final Font BOLD_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 11);
-
   public static void addAction(final JComponent component,
     final KeyStroke keyStroke, final String actionKey, final Object object,
     final String methodName, final Object... parameters) {
@@ -150,6 +154,15 @@ public class SwingUtil {
     final TextField field = new TextField(fieldName, value, length);
     field.setEditable(false);
     container.add(field);
+  }
+
+  public static Rectangle applyInsets(final Rectangle bounds,
+    final Insets insets) {
+    final int x = bounds.x + insets.left;
+    final int y = bounds.y + insets.top;
+    final int width = bounds.width - insets.left - insets.right;
+    final int height = bounds.height - insets.top - insets.bottom;
+    return new Rectangle(x, y, width, height);
   }
 
   public static void autoAdjustPosition(final Window window) {
@@ -455,6 +468,53 @@ public class SwingUtil {
 
   }
 
+  public static Rectangle getScreenBounds(Component component) {
+    if (component == null) {
+      component = SwingUtil.getActiveWindow();
+    }
+    final Point mousePosition;
+    if (component == null) {
+      mousePosition = null;
+    } else {
+      mousePosition = component.getMousePosition();
+      if (mousePosition != null) {
+        SwingUtilities.convertPointToScreen(mousePosition, component);
+      }
+    }
+    return getScreenBounds(mousePosition);
+  }
+
+  /**
+   * Get the screen rectangle in which the mouse is in. If the mouse is outside all bounds return the current screen.
+   *
+   * @param point
+   * @return
+   */
+  public static Rectangle getScreenBounds(final Point point) {
+    Rectangle firstBounds = null;
+    final GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    for (final GraphicsDevice device : graphicsEnvironment.getScreenDevices()) {
+      for (final GraphicsConfiguration config : device.getConfigurations()) {
+        final Rectangle bounds = config.getBounds();
+
+        if (point != null && bounds.contains(point)) {
+          final Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(
+            config);
+          return applyInsets(bounds, insets);
+        } else if (firstBounds == null) {
+          firstBounds = bounds;
+        }
+      }
+    }
+    final GraphicsDevice defaultScreenDevice = graphicsEnvironment.getDefaultScreenDevice();
+    for (final GraphicsConfiguration config : defaultScreenDevice.getConfigurations()) {
+      final Rectangle bounds = config.getBounds();
+      final Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(config);
+      return applyInsets(bounds, insets);
+    }
+    return firstBounds;
+  }
+
   public static int getTabIndex(final JTabbedPane tabs, final String title) {
     for (int i = 0; i < tabs.getTabCount(); i++) {
       if (tabs.getTitleAt(i).equals(title)) {
@@ -563,7 +623,7 @@ public class SwingUtil {
    * Check to see if the event is for the left mouse button and the Alt key is pressed.
    * Also allows the right mouse button with the control key down. This is so it can
    * work via Citrix Receiver.
-   * 
+   *
    * @param event
    * @return
    */
@@ -740,6 +800,18 @@ public class SwingUtil {
     }
   }
 
+  public static void setLocationCentre(final Rectangle bounds,
+    final Window window) {
+    final int x = (bounds.width - window.getWidth()) / 2;
+    final int y = (bounds.height - window.getHeight()) / 2;
+    window.setLocation(x, y);
+  }
+
+  public static void setLocationCentre(final Window window) {
+    final Rectangle bounds = getScreenBounds((Component)null);
+    setLocationCentre(bounds, window);
+  }
+
   public static void setMaximumWidth(final JComponent component, final int width) {
     final Dimension preferredSize = component.getPreferredSize();
     final Dimension size = new Dimension(width, preferredSize.height);
@@ -806,5 +878,27 @@ public class SwingUtil {
       }
     }
   }
+
+  public static void showErrorDialog(final Window window, final String title,
+    final String message, final Throwable e) {
+    final String exceptionMessage = e.getMessage().replaceAll("\n", "<br />");
+    final String errorMessage = "<html><body><p style=\"margin-bottom: 10px\"><strong>"
+      + message + "</strong></p><pre>" + exceptionMessage + "</pre></body></p>";
+
+    final JScrollPane scrollPane = new JScrollPane(new JLabel(errorMessage));
+    final Dimension preferredSize = scrollPane.getPreferredSize();
+    final Rectangle bounds = SwingUtil.getScreenBounds(window);
+    final int width = Math.min(bounds.width - 200, preferredSize.width + 20);
+    final int height = Math.min(bounds.height - 100, preferredSize.height + 20);
+
+    scrollPane.setPreferredSize(new Dimension(width, height));
+
+    JOptionPane.showMessageDialog(window, scrollPane, title,
+      JOptionPane.ERROR_MESSAGE);
+  }
+
+  public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
+
+  public static final Font BOLD_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 11);
 
 }

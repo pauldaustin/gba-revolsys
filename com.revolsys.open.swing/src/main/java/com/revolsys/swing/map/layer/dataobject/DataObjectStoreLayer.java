@@ -52,13 +52,13 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "dataStore", "Data Store", DataObjectStoreLayer.class, "create");
-
   public static AbstractDataObjectLayer create(
     final Map<String, Object> properties) {
     return new DataObjectStoreLayer(properties);
   }
+
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
+    "dataStore", "Data Store", DataObjectStoreLayer.class, "create");
 
   private BoundingBox boundingBox = new BoundingBox();
 
@@ -84,8 +84,8 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     setExists(exists);
     setType("dataStore");
 
-    setMetaData(dataStore.getMetaData(typePath));
     setTypePath(typePath);
+    setMetaData(dataStore.getMetaData(typePath));
   }
 
   public DataObjectStoreLayer(final Map<String, ? extends Object> properties) {
@@ -165,7 +165,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     if (username != null) {
       SwingUtil.addReadOnlyTextField(panel, "Data Store Username", username);
     }
-    SwingUtil.addReadOnlyTextField(panel, "Type Path", typePath);
+    SwingUtil.addReadOnlyTextField(panel, "Type Path", this.typePath);
 
     GroupLayoutUtil.makeColumns(panel, 2, true);
     return panel;
@@ -248,7 +248,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
   @Override
   public void delete() {
-    if (dataStore != null) {
+    if (this.dataStore != null) {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties != null) {
         final Map<String, Object> config = new HashMap<String, Object>();
@@ -290,43 +290,51 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
   @Override
   protected boolean doInitialize() {
-    final Map<String, String> connectionProperties = getProperty("connection");
-    if (connectionProperties == null) {
-      LoggerFactory.getLogger(getClass())
+    DataObjectStore dataStore = this.dataStore;
+    if (dataStore == null) {
+      final Map<String, String> connectionProperties = getProperty("connection");
+      if (connectionProperties == null) {
+        LoggerFactory.getLogger(getClass())
         .error(
           "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
-            + getPath());
-    } else {
-      final Map<String, Object> config = new HashMap<String, Object>();
-      config.put("connection", connectionProperties);
-      final DataObjectStore dataStore = DataObjectStoreConnectionManager.getDataStore(config);
-
-      final String typePath = getTypePath();
-      if (dataStore == null) {
-        LoggerFactory.getLogger(getClass()).error(
-          "Unable to create data store for layer: " + getPath());
+              + getPath());
+        return false;
       } else {
-        try {
-          dataStore.initialize();
-        } catch (final Throwable e) {
-          throw new RuntimeException(
-            "Unable to iniaitlize data store for layer " + getPath(), e);
-        }
+        final Map<String, Object> config = new HashMap<String, Object>();
+        config.put("connection", connectionProperties);
+        dataStore = DataObjectStoreConnectionManager.getDataStore(config);
 
-        setDataStore(dataStore);
-
-        final DataObjectMetaData metaData = dataStore.getMetaData(typePath);
-
-        if (metaData == null) {
+        if (dataStore == null) {
           LoggerFactory.getLogger(getClass()).error(
-            "Cannot find table " + typePath + " for layer " + getPath());
+            "Unable to create data store for layer: " + getPath());
+          return false;
         } else {
-          setMetaData(metaData);
-          return true;
+          try {
+            dataStore.initialize();
+          } catch (final Throwable e) {
+            throw new RuntimeException(
+              "Unable to iniaitlize data store for layer " + getPath(), e);
+          }
+
+          setDataStore(dataStore);
         }
       }
     }
-    return false;
+    DataObjectMetaData metaData = this.getMetaData();
+    if (metaData == null) {
+      metaData = dataStore.getMetaData(this.typePath);
+      if (metaData == null) {
+        LoggerFactory.getLogger(getClass()).error(
+          "Cannot find table " + this.typePath + " for layer " + getPath());
+        return false;
+      } else {
+        setMetaData(metaData);
+        return true;
+      }
+    } else {
+      return true;
+    }
+
   }
 
   @SuppressWarnings({
@@ -424,7 +432,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
       synchronized (this.sync) {
         final BoundingBox loadBoundingBox = boundingBox.expandPercent(0.2);
         if (!this.boundingBox.contains(boundingBox)
-          && !this.loadingBoundingBox.contains(boundingBox)) {
+            && !this.loadingBoundingBox.contains(boundingBox)) {
           if (this.loadingWorker != null) {
             this.loadingWorker.cancel(true);
           }
@@ -459,8 +467,8 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     final boolean deleted = isDeleted(record);
     final PlatformTransactionManager transactionManager = getDataStore().getTransactionManager();
     try (
-      Transaction transaction = new Transaction(transactionManager,
-        Propagation.REQUIRES_NEW)) {
+        Transaction transaction = new Transaction(transactionManager,
+          Propagation.REQUIRES_NEW)) {
       try {
 
         if (isExists()) {
@@ -471,7 +479,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
               final String idAttributeName = getMetaData().getIdAttributeName();
               final String idString = record.getIdString();
               if (this.deletedRecordIds.contains(idString)
-                || super.isDeleted(record)) {
+                  || super.isDeleted(record)) {
                 record.setState(DataObjectState.Deleted);
                 writer.write(record);
               } else if (super.isModified(record)) {
@@ -479,7 +487,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
               } else if (isNew(record)) {
                 Object id = record.getIdValue();
                 if (id == null && StringUtils.hasText(idAttributeName)) {
-                  id = dataStore.createPrimaryIdValue(typePath);
+                  id = dataStore.createPrimaryIdValue(this.typePath);
                   record.setValue(idAttributeName, id);
                 }
 
@@ -510,7 +518,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     "unchecked", "rawtypes"
   })
   protected <V extends LayerDataObject> List<V> getCachedRecords() {
-    synchronized (cachedRecords) {
+    synchronized (this.cachedRecords) {
       final List<V> cachedRecords = new ArrayList(this.cachedRecords.values());
       return cachedRecords;
 
@@ -722,7 +730,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     final boolean deleted = super.postSaveDeletedRecord(record);
     if (deleted) {
       final String id = record.getIdString();
-      deletedRecordIds.remove(id);
+      this.deletedRecordIds.remove(id);
     }
     return deleted;
   }
