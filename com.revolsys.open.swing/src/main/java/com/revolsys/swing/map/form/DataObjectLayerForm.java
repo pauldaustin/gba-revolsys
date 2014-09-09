@@ -103,8 +103,8 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class DataObjectLayerForm extends JPanel implements
-  PropertyChangeListener, CellEditorListener, FocusListener,
-  PropertyChangeSupportProxy, WindowListener {
+PropertyChangeListener, CellEditorListener, FocusListener,
+PropertyChangeSupportProxy, WindowListener {
 
   public static final String FLIP_FIELDS_ICON = "flip_fields";
 
@@ -278,8 +278,8 @@ public class DataObjectLayerForm extends JPanel implements
     if (field instanceof ComboBox) {
       final ComboBox comboBox = (ComboBox)field;
       comboBox.getEditor()
-        .getEditorComponent()
-        .addFocusListener(new WeakFocusListener(this));
+      .getEditorComponent()
+      .addFocusListener(new WeakFocusListener(this));
     } else {
       ((JComponent)field).addFocusListener(new WeakFocusListener(this));
     }
@@ -411,7 +411,7 @@ public class DataObjectLayerForm extends JPanel implements
     final JScrollPane scrollPane = addTab("All Fields", table);
     int maxHeight = 500;
     for (final GraphicsDevice device : GraphicsEnvironment.getLocalGraphicsEnvironment()
-      .getScreenDevices()) {
+        .getScreenDevices()) {
       final GraphicsConfiguration graphicsConfiguration = device.getDefaultConfiguration();
       final Rectangle bounds = graphicsConfiguration.getBounds();
 
@@ -432,7 +432,7 @@ public class DataObjectLayerForm extends JPanel implements
       addField(geometryAttributeName, this.geometryCoordinatesPanel);
       final JPanel panel = new JPanel(new GridLayout(1, 1));
 
-      SwingUtil.setTitledBorder(geometryCoordinatesPanel, "Coordinates");
+      SwingUtil.setTitledBorder(this.geometryCoordinatesPanel, "Coordinates");
       panel.add(this.geometryCoordinatesPanel);
 
       addTab("Geometry", panel);
@@ -473,12 +473,12 @@ public class DataObjectLayerForm extends JPanel implements
 
     }
     final EnableCheck canUndo = new ObjectPropertyEnableCheck(this.undoManager,
-      "canUndo");
+        "canUndo");
     final EnableCheck canRedo = new ObjectPropertyEnableCheck(this.undoManager,
-      "canRedo");
+        "canRedo");
 
     final EnableCheck modifiedOrDeleted = new ObjectPropertyEnableCheck(this,
-      "modifiedOrDeleted");
+        "modifiedOrDeleted");
 
     this.toolBar.addButton("changes", "Revert Record", "arrow_revert",
       modifiedOrDeleted, this, "revertChanges");
@@ -502,9 +502,9 @@ public class DataObjectLayerForm extends JPanel implements
     if (hasGeometry) {
       final DataType geometryDataType = geometryAttribute.getType();
       if (geometryDataType == DataTypes.LINE_STRING
-        || geometryDataType == DataTypes.MULTI_LINE_STRING) {
+          || geometryDataType == DataTypes.MULTI_LINE_STRING) {
         if (DirectionalAttributes.getProperty(metaData)
-          .hasDirectionalAttributes()) {
+            .hasDirectionalAttributes()) {
           this.toolBar.addButton("geometry", FLIP_RECORD_NAME,
             FLIP_RECORD_ICON, editable, this, "flipRecordOrientation");
           this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME,
@@ -581,26 +581,26 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public void destroy() {
-    addOkButton = null;
-    allAttributes = null;
-    dataStore = null;
-    fieldInValidMessage.clear();
-    for (final Field field : fields.values()) {
+    this.addOkButton = null;
+    this.allAttributes = null;
+    this.dataStore = null;
+    this.fieldInValidMessage.clear();
+    for (final Field field : this.fields.values()) {
       Property.removeAllListeners(field);
     }
-    fields.clear();
-    fieldTabIndex.clear();
-    fieldToNameMap.clear();
-    fieldValidMap.clear();
-    geometryCoordinatesPanel = null;
-    metaData = null;
-    object = null;
-    propertyChangeSupport = null;
-    readOnlyFieldNames.clear();
-    tabInvalidFieldMap.clear();
-    tabs = null;
-    toolBar = null;
-    undoManager = null;
+    this.fields.clear();
+    this.fieldTabIndex.clear();
+    this.fieldToNameMap.clear();
+    this.fieldValidMap.clear();
+    this.geometryCoordinatesPanel = null;
+    this.metaData = null;
+    this.object = null;
+    this.propertyChangeSupport = null;
+    this.readOnlyFieldNames.clear();
+    this.tabInvalidFieldMap.clear();
+    this.tabs = null;
+    this.toolBar = null;
+    this.undoManager = null;
     final Container parent = getParent();
     if (parent != null) {
       parent.remove(this);
@@ -752,7 +752,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public Set<String> getFieldsToValidate() {
-    return fieldsToValidate.get();
+    return this.fieldsToValidate.get();
   }
 
   protected Map<String, Integer> getFieldTabIndex() {
@@ -958,7 +958,7 @@ public class DataObjectLayerForm extends JPanel implements
     final AbstractDataObjectLayer layer = getLayer();
     if (layer != null) {
       final Map<String, Object> newValues = new LinkedHashMap<String, Object>(
-        map);
+          map);
       final Collection<String> ignorePasteFields = layer.getProperty("ignorePasteFields");
       if (ignorePasteFields != null) {
         newValues.keySet().removeAll(ignorePasteFields);
@@ -1161,7 +1161,7 @@ public class DataObjectLayerForm extends JPanel implements
     this.fieldValues.put(fieldName, value);
     final JComponent field = (JComponent)getField(fieldName);
     if (oldValue == null & value != null
-      || !EqualsRegistry.equal(value, oldValue)) {
+        || !EqualsRegistry.equal(value, oldValue)) {
       changed = true;
     }
     final Object objectValue = this.object.getValue(fieldName);
@@ -1201,6 +1201,7 @@ public class DataObjectLayerForm extends JPanel implements
   public void setObject(final LayerDataObject object) {
     final boolean undo = this.undoManager.setEventsEnabled(false);
     final boolean validate = setFieldValidationEnabled(false);
+    System.out.println(object);
     try {
       this.object = object;
       this.allAttributes.setObject(object);
@@ -1228,13 +1229,13 @@ public class DataObjectLayerForm extends JPanel implements
   public void setTabColor(final int index, final Color foregroundColor) {
     if (index > -1) {
       if (foregroundColor == null) {
-        tabs.setTabComponentAt(index, null);
+        this.tabs.setTabComponentAt(index, null);
       } else {
         if (SwingUtilities.isEventDispatchThread()) {
           final JLabel label = new JLabel(this.tabs.getTitleAt(index));
           label.setOpaque(false);
           label.setForeground(foregroundColor);
-          tabs.setTabComponentAt(index, label);
+          this.tabs.setTabComponentAt(index, label);
         } else {
           Invoke.later(this, "setTabColor", index, foregroundColor);
         }
@@ -1281,7 +1282,7 @@ public class DataObjectLayerForm extends JPanel implements
       this, "actionAddCancel");
     buttons.add(addCancelButton);
     this.addOkButton = InvokeMethodAction.createButton("OK", this,
-      "actionAddOk");
+        "actionAddOk");
     buttons.add(this.addOkButton);
 
     dialog.pack();
@@ -1297,7 +1298,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public void updateFocussedField() {
-    final Field field = fields.get(focussedFieldName);
+    final Field field = this.fields.get(this.focussedFieldName);
     if (field != null) {
       field.updateFieldValue();
     }
