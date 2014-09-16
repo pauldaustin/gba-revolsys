@@ -54,8 +54,8 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class DataObjectLayerTableModel extends DataObjectRowTableModel
-implements SortableTableModel, PropertyChangeListener,
-PropertyChangeSupportProxy {
+  implements SortableTableModel, PropertyChangeListener,
+  PropertyChangeSupportProxy {
 
   public static DataObjectLayerTable createTable(
     final AbstractDataObjectLayer layer) {
@@ -118,7 +118,7 @@ PropertyChangeSupportProxy {
   private SwingWorker<?, ?> loadObjectsWorker;
 
   private Map<Integer, List<LayerDataObject>> pageCache = new LruMap<Integer, List<LayerDataObject>>(
-      5);
+    5);
 
   private String attributeFilterMode = MODE_ALL;
 
@@ -242,7 +242,7 @@ PropertyChangeSupportProxy {
         synchronized (getSync()) {
           if (this.loadObjectsWorker == null) {
             this.loadObjectsWorker = Invoke.background("Loading records "
-                + getTypeName(), this, "loadPages", this.refreshIndex);
+              + getTypeName(), this, "loadPages", this.refreshIndex);
           }
         }
         return this.loadingRecord;
@@ -293,7 +293,7 @@ PropertyChangeSupportProxy {
         if (this.countLoaded) {
           int count = this.rowCount;
           if (!this.attributeFilterMode.equals(MODE_SELECTED)
-              && !this.attributeFilterMode.equals(MODE_EDITS)) {
+            && !this.attributeFilterMode.equals(MODE_EDITS)) {
             final AbstractDataObjectLayer layer = getLayer();
             final int newRecordCount = layer.getNewRecordCount();
             count += newRecordCount;
@@ -303,7 +303,7 @@ PropertyChangeSupportProxy {
         } else {
           if (this.rowCountWorker == null) {
             this.rowCountWorker = Invoke.background("Query row count "
-                + this.layer.getName(), this, "loadRowCount", this.refreshIndex);
+              + this.layer.getName(), this, "loadRowCount", this.refreshIndex);
           }
           return 0;
         }
@@ -315,7 +315,7 @@ PropertyChangeSupportProxy {
     if (this.attributeFilterMode.equals(MODE_SELECTED)) {
       synchronized (this.selectedSync) {
         this.selectedRecords = new ArrayList<LayerDataObject>(
-            getLayerSelectedRecords());
+          getLayerSelectedRecords());
         return this.selectedRecords.size();
       }
     } else if (this.attributeFilterMode.equals(MODE_EDITS)) {
@@ -423,7 +423,7 @@ PropertyChangeSupportProxy {
       final String propertyName = e.getPropertyName();
       if (Arrays.asList("query", "editable", "recordInserted",
         "recordsInserted", "recordDeleted", "recordsChanged").contains(
-          propertyName)) {
+        propertyName)) {
         refresh();
       } else if ("recordUpdated".equals(propertyName)) {
         repaint();
