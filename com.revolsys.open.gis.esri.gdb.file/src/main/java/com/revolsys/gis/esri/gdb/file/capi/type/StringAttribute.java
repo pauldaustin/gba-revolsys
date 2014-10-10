@@ -13,13 +13,13 @@ public class StringAttribute extends AbstractFileGdbAttribute {
   public StringAttribute(final Field field) {
     super(field.getName(), DataTypes.STRING, field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
-        || !field.isIsNullable());
+      || !field.isIsNullable());
   }
 
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    CapiFileGdbDataObjectStore dataStore = getDataStore();
+    final CapiFileGdbDataObjectStore dataStore = getDataStore();
     if (dataStore.isNull(row, name)) {
       return null;
     } else {
@@ -44,7 +44,7 @@ public class StringAttribute extends AbstractFileGdbAttribute {
     } else {
       String string = value.toString();
       if (string.length() > getLength()) {
-        LoggerFactory.getLogger(getClass()).error(
+        LoggerFactory.getLogger(getClass()).warn(
           "Value is to long for: " + this + ":" + string);
         string = string.substring(0, getLength());
       }
