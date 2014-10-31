@@ -11,6 +11,7 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
+import com.revolsys.util.OS;
 
 public class SearchField extends JXSearchField implements FocusListener, Field {
   private static final long serialVersionUID = 1L;
@@ -88,7 +89,8 @@ public class SearchField extends JXSearchField implements FocusListener, Field {
   }
 
   @Override
-  public void setFieldInvalid(final String message, final Color foregroundColor, Color backgroundColor) {
+  public void setFieldInvalid(final String message,
+    final Color foregroundColor, final Color backgroundColor) {
     setForeground(foregroundColor);
     setSelectedTextColor(foregroundColor);
     setBackground(backgroundColor);
@@ -136,6 +138,15 @@ public class SearchField extends JXSearchField implements FocusListener, Field {
   @Override
   public void setUndoManager(final UndoManager undoManager) {
     this.undoManager.setParent(undoManager);
+  }
+
+  @Override
+  public void setUseNativeSearchFieldIfPossible(
+    boolean useNativeSearchFieldIfPossible) {
+    if (OS.isMac()) {
+      useNativeSearchFieldIfPossible = false;
+    }
+    super.setUseNativeSearchFieldIfPossible(useNativeSearchFieldIfPossible);
   }
 
   @Override
