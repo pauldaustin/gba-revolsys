@@ -32,8 +32,6 @@ import com.revolsys.util.Property;
 
 public class LoggingEventPanel extends JPanel {
 
-  private static final long serialVersionUID = 1L;
-
   public static void showDialog(final Component component,
     final Class<?> category, final String message, final Throwable e) {
     final LoggingEvent event = new LoggingEvent(Logger.class.getName(),
@@ -60,6 +58,8 @@ public class LoggingEventPanel extends JPanel {
     dialog.pack();
     dialog.setVisible(true);
   }
+
+  private static final long serialVersionUID = 1L;
 
   public LoggingEventPanel(final LoggingEvent event) {
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -94,16 +94,20 @@ public class LoggingEventPanel extends JPanel {
     addLabel(fieldName);
 
     String stringValue = StringConverterRegistry.toString(value);
-    if (!StringUtils.hasText(stringValue)) {
-      stringValue = "-";
-    }
+
     if (fieldName.equals("message")) {
+      if (stringValue == null) {
+        stringValue = "";
+      }
       final TextArea textArea = SwingUtil.createTextArea(
-        Math.min(20, value.toString().split("\n").length), 80);
+        Math.min(20, stringValue.split("\n").length), 80);
       textArea.setEditable(false);
-      textArea.append(value.toString());
+      textArea.append(stringValue);
       add(textArea);
     } else {
+      if (!StringUtils.hasText(stringValue)) {
+        stringValue = "-";
+      }
       final TextField field = SwingUtil.createTextField(Math.min(80,
         stringValue.length()));
       field.setEditable(false);
