@@ -10,8 +10,10 @@ import javax.swing.event.EventListenerList;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import com.revolsys.util.Reorderable;
+
 public class BaseListModel<T> extends ArrayList<T> implements ListModel,
-  Serializable {
+Serializable, Reorderable {
   private static final long serialVersionUID = 1L;
 
   protected EventListenerList listenerList = new EventListenerList();
@@ -185,6 +187,16 @@ public class BaseListModel<T> extends ArrayList<T> implements ListModel,
     }
     super.removeRange(fromIndex, toIndex);
     fireIntervalRemoved(this, fromIndex, toIndex);
+  }
+
+  @Override
+  public void reorder(final int fromIndex, int toIndex) {
+    if (fromIndex < toIndex) {
+      toIndex--;
+    }
+    final T value = get(fromIndex);
+    remove(fromIndex);
+    add(toIndex, value);
   }
 
   @Override
