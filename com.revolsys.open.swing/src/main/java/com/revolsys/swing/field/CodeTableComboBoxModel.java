@@ -9,17 +9,15 @@ import java.util.Set;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
+import javax.swing.SwingUtilities;
 
 import com.revolsys.gis.data.model.codes.CodeTable;
+import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class CodeTableComboBoxModel extends AbstractListModel<Object> implements
-  ComboBoxModel<Object>, PropertyChangeListener, Closeable {
-  private static final long serialVersionUID = 1L;
-
-  public static final Object NULL = new Object();
-
+ComboBoxModel<Object>, PropertyChangeListener, Closeable {
   public static ComboBox create(final String fieldName,
     final CodeTable codeTable, final boolean allowNull) {
     final CodeTableComboBoxModel model = new CodeTableComboBoxModel(codeTable,
@@ -33,6 +31,10 @@ public class CodeTableComboBoxModel extends AbstractListModel<Object> implements
       renderer);
     return comboBox;
   }
+
+  private static final long serialVersionUID = 1L;
+
+  public static final Object NULL = new Object();
 
   private Object selectedItem;
 
@@ -53,9 +55,9 @@ public class CodeTableComboBoxModel extends AbstractListModel<Object> implements
 
   @Override
   public void close() {
-    Property.removeListener(codeTable, "valuesChanged", this);
-    codeTable = null;
-    selectedItem = null;
+    Property.removeListener(this.codeTable, "valuesChanged", this);
+    this.codeTable = null;
+    this.selectedItem = null;
   }
 
   @Override
@@ -86,7 +88,7 @@ public class CodeTableComboBoxModel extends AbstractListModel<Object> implements
 
   @Override
   public int getSize() {
-    if (codeTable == null) {
+    if (this.codeTable == null) {
       return 0;
     } else {
       int size = this.codeTable.getCodes().size();
@@ -101,14 +103,18 @@ public class CodeTableComboBoxModel extends AbstractListModel<Object> implements
   public void propertyChange(final PropertyChangeEvent event) {
     if (event.getPropertyName().equals("valuesChanged")) {
       final int size = getSize();
-      fireContentsChanged(this, 0, size);
+      if (SwingUtilities.isEventDispatchThread()) {
+        fireContentsChanged(this, 0, size);
+      } else {
+        Invoke.later(this, "fireContentsChanged", 0, size);
+      }
     }
   }
 
   @Override
   public void setSelectedItem(final Object item) {
     if (this.selectedItem != null && !this.selectedItem.equals(item)
-      || this.selectedItem == null && item != null) {
+        || this.selectedItem == null && item != null) {
       this.selectedItem = item;
       fireContentsChanged(this, -1, -1);
     }
