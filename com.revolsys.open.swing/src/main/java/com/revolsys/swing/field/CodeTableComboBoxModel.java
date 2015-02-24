@@ -61,6 +61,12 @@ ComboBoxModel<Object>, PropertyChangeListener, Closeable {
   }
 
   @Override
+  public void fireContentsChanged(final Object source, final int index0,
+    final int index1) {
+    super.fireContentsChanged(source, index0, index1);
+  }
+
+  @Override
   public Object getElementAt(int index) {
     if (this.allowNull) {
       if (index == 0) {
