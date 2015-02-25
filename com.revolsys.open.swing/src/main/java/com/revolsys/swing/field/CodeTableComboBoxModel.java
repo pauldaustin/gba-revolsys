@@ -112,7 +112,7 @@ ComboBoxModel<Object>, PropertyChangeListener, Closeable {
       if (SwingUtilities.isEventDispatchThread()) {
         fireContentsChanged(this, 0, size);
       } else {
-        Invoke.later(this, "fireContentsChanged", 0, size);
+        Invoke.later(this, "fireContentsChanged", this, 0, size);
       }
     }
   }
