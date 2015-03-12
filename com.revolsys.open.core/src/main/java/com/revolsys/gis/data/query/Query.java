@@ -133,12 +133,12 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
   }
 
   public void addOrderBy(final String column, final boolean ascending) {
-    orderBy.put(column, ascending);
+    this.orderBy.put(column, ascending);
   }
 
   @Deprecated
   public void addParameter(final Object value) {
-    parameters.add(value);
+    this.parameters.add(value);
   }
 
   public void and(final Condition condition) {
@@ -158,10 +158,10 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     try {
       final Query clone = (Query)super.clone();
       clone.attributeNames = new ArrayList<String>(clone.attributeNames);
-      clone.parameters = new ArrayList<Object>(parameters);
-      clone.orderBy = new HashMap<String, Boolean>(orderBy);
-      if (whereCondition != null) {
-        clone.whereCondition = whereCondition.clone();
+      clone.parameters = new ArrayList<Object>(this.parameters);
+      clone.orderBy = new HashMap<String, Boolean>(this.orderBy);
+      if (this.whereCondition != null) {
+        clone.whereCondition = this.whereCondition.clone();
       }
       if (!clone.getAttributeNames().isEmpty() || clone.whereCondition != null) {
         clone.sql = null;
@@ -173,59 +173,67 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
   }
 
   public List<String> getAttributeNames() {
-    return attributeNames;
+    return this.attributeNames;
   }
 
   public BoundingBox getBoundingBox() {
-    return boundingBox;
+    return this.boundingBox;
   }
 
   public String getFromClause() {
-    return fromClause;
+    return this.fromClause;
   }
 
   public Geometry getGeometry() {
-    return geometry;
+    return this.geometry;
   }
 
   public int getLimit() {
-    return limit;
+    return this.limit;
   }
 
   public DataObjectMetaData getMetaData() {
-    return metaData;
+    return this.metaData;
   }
 
   public int getOffset() {
-    return offset;
+    return this.offset;
   }
 
   public Map<String, Boolean> getOrderBy() {
-    return orderBy;
+    return this.orderBy;
   }
 
   public List<Object> getParameters() {
-    return parameters;
+    return this.parameters;
   }
 
   public String getSql() {
-    return sql;
+    return this.sql;
   }
 
   public String getTypeName() {
-    return typeName;
+    return this.typeName;
   }
 
   public String getTypeNameAlias() {
-    return typePathAlias;
+    return this.typePathAlias;
+  }
+
+  public String getWhere() {
+    if (this.whereCondition == null) {
+      return null;
+    } else {
+      return this.whereCondition.toFormattedString();
+    }
   }
 
   public Condition getWhereCondition() {
-    return whereCondition;
+    return this.whereCondition;
   }
 
   public boolean isLockResults() {
-    return lockResults;
+    return this.lockResults;
   }
 
   public void setAttributeNames(final List<String> attributeNames) {
@@ -308,14 +316,14 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
   public String toString() {
     try {
       final StringBuffer string = new StringBuffer();
-      if (sql == null) {
+      if (this.sql == null) {
         string.append(JdbcUtils.getSelectSql(this));
       } else {
-        string.append(sql);
+        string.append(this.sql);
       }
-      if (!parameters.isEmpty()) {
+      if (!this.parameters.isEmpty()) {
         string.append(" ");
-        string.append(parameters);
+        string.append(this.parameters);
       }
       return string.toString();
     } catch (final Throwable t) {
