@@ -2,7 +2,8 @@ package com.revolsys.gis.postgresql;
 
 import java.util.Map;
 
-import org.postgresql.geometric.PGbox;
+import org.postgis.PGbox2d;
+import org.postgis.Point;
 
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
@@ -37,7 +38,7 @@ public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
         final double x2 = boundingBox.getMaxX();
         final double y2 = boundingBox.getMaxY();
 
-        final PGbox box = new PGbox(x1, y1, x2, y2);
+        final PGbox2d box = new PGbox2d(new Point(x1, y1), new Point(x2, y2));
         query.and(new BinaryCondition(geometryAttributeName, "&&", box));
         setQuery(query);
       }
