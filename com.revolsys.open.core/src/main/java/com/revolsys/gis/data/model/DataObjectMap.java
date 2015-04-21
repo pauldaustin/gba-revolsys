@@ -6,15 +6,17 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.revolsys.data.record.Record;
+
 public class DataObjectMap extends AbstractMap<String, Object> {
-  private DataObject object;
+  private Record object;
 
   private LinkedHashSet<Entry<String, Object>> entries;
 
   public DataObjectMap() {
   }
 
-  public DataObjectMap(final DataObject object) {
+  public DataObjectMap(final Record object) {
     this.object = object;
   }
 
@@ -92,7 +94,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
     return value;
   }
 
-  public void setObject(final DataObject object) {
+  public void setObject(final Record object) {
     this.object = object;
   }
 

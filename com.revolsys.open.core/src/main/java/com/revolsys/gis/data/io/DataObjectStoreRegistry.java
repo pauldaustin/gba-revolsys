@@ -5,21 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataObjectStoreRegistry {
-  private Map<String, DataObjectStore> dataStores = new HashMap<String, DataObjectStore>();
+  private Map<String, RecordStore> dataStores = new HashMap<String, RecordStore>();
 
-  public void addDataStore(final String name, final DataObjectStore dataStore) {
+  public void addDataStore(final String name, final RecordStore dataStore) {
     this.dataStores.put(name, dataStore);
   }
 
-  public DataObjectStore getDataObjectStore(final String name) {
+  public RecordStore getDataObjectStore(final String name) {
     return dataStores.get(name);
   }
 
-  public Map<String, DataObjectStore> getDataStores() {
+  public Map<String, RecordStore> getDataStores() {
     return Collections.unmodifiableMap(dataStores);
   }
 
-  public void setDataStores(final Map<String, DataObjectStore> dataStores) {
+  public void setDataStores(final Map<String, RecordStore> dataStores) {
     this.dataStores = dataStores;
   }
 

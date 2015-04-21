@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.map.form.DataObjectLayerForm;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
@@ -107,7 +107,7 @@ public class DataObjectLayerAttributesTableModel extends
     final Object source = event.getSource();
     if (source == this.object) {
       final String propertyName = event.getPropertyName();
-      final DataObjectMetaData metaData = getMetaData();
+      final RecordDefinition metaData = getMetaData();
       final int index = metaData.getAttributeIndex(propertyName);
       if (index > -1) {
         try {

@@ -11,12 +11,12 @@ import java.util.Map;
 
 import org.springframework.asm.Type;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 
-public class JdbcAttribute extends Attribute {
+public class JdbcAttribute extends FieldDefinition {
 
   public static JdbcAttribute createAttribute(final Object value) {
     if (value == null) {
@@ -98,14 +98,14 @@ public class JdbcAttribute extends Attribute {
   }
 
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final DataObject object) throws SQLException {
+    final int columnIndex, final Record object) throws SQLException {
     final Object value = resultSet.getObject(columnIndex);
     object.setValue(getIndex(), value);
     return columnIndex + 1;
   }
 
   public int setInsertPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final DataObject object) throws SQLException {
+    final int parameterIndex, final Record object) throws SQLException {
     final String name = getName();
     final Object value = object.getValue(name);
     return setPreparedStatementValue(statement, parameterIndex, value);

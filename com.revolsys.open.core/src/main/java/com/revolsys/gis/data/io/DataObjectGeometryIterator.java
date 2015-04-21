@@ -3,15 +3,15 @@ package com.revolsys.gis.data.io;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 import com.revolsys.io.DelegatingObjectWithProperties;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectGeometryIterator extends DelegatingObjectWithProperties
   implements Iterator<Geometry> {
-  private Iterator<DataObject> iterator;
+  private Iterator<Record> iterator;
 
-  public DataObjectGeometryIterator(final Iterator<DataObject> iterator) {
+  public DataObjectGeometryIterator(final Iterator<Record> iterator) {
     super(iterator);
     this.iterator = iterator;
   }
@@ -30,7 +30,7 @@ public class DataObjectGeometryIterator extends DelegatingObjectWithProperties
   @Override
   public Geometry next() {
     if (iterator.hasNext()) {
-      final DataObject dataObject = iterator.next();
+      final Record dataObject = iterator.next();
       return dataObject.getGeometryValue();
     } else {
       throw new NoSuchElementException();

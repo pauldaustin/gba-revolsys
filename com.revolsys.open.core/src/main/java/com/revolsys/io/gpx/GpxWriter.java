@@ -12,12 +12,12 @@ import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.gis.cs.projection.CoordinateProjectionUtil;
 import com.revolsys.gis.cs.projection.CoordinatesOperation;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -30,7 +30,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
-public class GpxWriter extends AbstractWriter<DataObject> {
+public class GpxWriter extends AbstractWriter<Record> {
 
   private String commentAttribute = "comment";
 
@@ -100,7 +100,7 @@ public class GpxWriter extends AbstractWriter<DataObject> {
   }
 
   @Override
-  public void write(final DataObject object) {
+  public void write(final Record object) {
     try {
       final Geometry geometry = object.getGeometryValue();
       if (geometry instanceof Point) {
@@ -113,7 +113,7 @@ public class GpxWriter extends AbstractWriter<DataObject> {
     }
   }
 
-  private void writeAttributes(final DataObject object) {
+  private void writeAttributes(final Record object) {
     final Object time = object.getValue("timestamp");
     if (time != null) {
       if (time instanceof Date) {
@@ -130,7 +130,7 @@ public class GpxWriter extends AbstractWriter<DataObject> {
     writeElement(object, GpxConstants.DESCRIPTION_ELEMENT, descriptionAttribute);
   }
 
-  private void writeElement(final DataObject object, final QName tag,
+  private void writeElement(final Record object, final QName tag,
     final String attributeName) {
     final String name = object.getValue(attributeName);
     if (name != null && name.length() > 0) {
@@ -138,7 +138,7 @@ public class GpxWriter extends AbstractWriter<DataObject> {
     }
   }
 
-  private void writeTrack(final DataObject object) throws IOException {
+  private void writeTrack(final Record object) throws IOException {
     out.startTag(GpxConstants.TRACK_ELEMENT);
     final LineString line = object.getGeometryValue();
     final int srid = line.getSRID();
@@ -167,7 +167,7 @@ public class GpxWriter extends AbstractWriter<DataObject> {
     out.endTag(GpxConstants.TRACK_ELEMENT);
   }
 
-  private void writeWaypoint(final DataObject wayPoint) throws IOException {
+  private void writeWaypoint(final Record wayPoint) throws IOException {
     out.startTag(GpxConstants.WAYPOINT_ELEMENT);
     final Point point = wayPoint.getGeometryValue();
     final Coordinate coordinate = point.getCoordinate();

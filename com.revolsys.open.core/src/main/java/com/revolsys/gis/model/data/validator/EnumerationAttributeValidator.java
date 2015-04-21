@@ -20,8 +20,8 @@
  */
 package com.revolsys.gis.model.data.validator;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.types.EnumerationDataType;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.EnumerationDataType;
 
 public class EnumerationAttributeValidator implements AttributeValueValidator {
 
@@ -32,7 +32,7 @@ public class EnumerationAttributeValidator implements AttributeValueValidator {
   }
 
   @Override
-  public boolean isValid(final Attribute attributeDefinition, final Object value) {
+  public boolean isValid(final FieldDefinition attributeDefinition, final Object value) {
     if (value != null) {
       final String stringValue = value.toString();
       return dataType.getAllowedValues().contains(stringValue);

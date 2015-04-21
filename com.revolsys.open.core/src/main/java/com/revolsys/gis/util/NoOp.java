@@ -1,6 +1,6 @@
 package com.revolsys.gis.util;
 
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.model.coordinates.Coordinates;
@@ -21,12 +21,12 @@ public class NoOp {
     }
   }
 
-  public static void equals(final DataObject object, final double x,
+  public static void equals(final Record object, final double x,
     final double y) {
     equals(object.getGeometryValue(), x, y);
   }
 
-  public static void equals(final DataObject object, final Double x,
+  public static void equals(final Record object, final Double x,
     final Double y) {
     equals(object.getGeometryValue(), x, y);
   }
@@ -61,7 +61,7 @@ public class NoOp {
     }
   }
 
-  public static void idNull(final DataObject object) {
+  public static void idNull(final Record object) {
     if (object.getIdValue() == null) {
       noOp();
     }
@@ -85,7 +85,7 @@ public class NoOp {
     }
   }
 
-  public static void modified(final DataObject object) {
+  public static void modified(final Record object) {
     if (object.getState() == DataObjectState.Modified) {
       noOp();
     }
@@ -100,7 +100,7 @@ public class NoOp {
   public static void noOp() {
   }
 
-  public static void typePath(final DataObject object, final String typePath) {
+  public static void typePath(final Record object, final String typePath) {
     final String typePath2 = object.getMetaData().getPath();
     equals(typePath2, typePath);
   }

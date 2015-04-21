@@ -10,12 +10,12 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -67,7 +67,7 @@ public class ArcSdeStGeometryAttribute extends JdbcAttribute {
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final DataObject object) throws SQLException {
+    final int columnIndex, final Record object) throws SQLException {
     final int geometryType = resultSet.getInt(columnIndex);
     if (!resultSet.wasNull()) {
       final int numPoints = resultSet.getInt(columnIndex + 1);

@@ -8,13 +8,13 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
-public class MoepBinaryReader extends AbstractReader<DataObject> implements
+public class MoepBinaryReader extends AbstractReader<Record> implements
   DataObjectReader {
 
   private MoepBinaryIterator iterator;
@@ -62,7 +62,7 @@ public class MoepBinaryReader extends AbstractReader<DataObject> implements
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return MoepConstants.META_DATA;
   }
 

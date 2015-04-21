@@ -5,22 +5,22 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
 public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
   public static final String PROPERTY_NAME = EqualIgnoreAttributes.class.getName()
     + ".propertyName";
 
-  public static EqualIgnoreAttributes getProperty(final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+  public static EqualIgnoreAttributes getProperty(final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     return getProperty(metaData);
   }
 
   public static EqualIgnoreAttributes getProperty(
-    final DataObjectMetaData metaData) {
+    final RecordDefinition metaData) {
     EqualIgnoreAttributes property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new EqualIgnoreAttributes();
@@ -76,7 +76,7 @@ public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
   }
 
   @Override
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     super.setMetaData(metaData);
     if (attributeNames.contains(DataObjectEquals.EXCLUDE_ID)) {
       final String idAttributeName = metaData.getIdAttributeName();

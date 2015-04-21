@@ -32,7 +32,7 @@ public class DataObjectStoreFactoryRegistry {
    * @return
    */
   @SuppressWarnings("unchecked")
-  public static <T extends DataObjectStore> T createDataObjectStore(
+  public static <T extends RecordStore> T createDataObjectStore(
     final Map<String, ? extends Object> connectionProperties) {
     final String url = (String)connectionProperties.get("url");
     final DataObjectStoreFactory factory = getDataStoreFactory(url);
@@ -45,7 +45,7 @@ public class DataObjectStoreFactoryRegistry {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T extends DataObjectStore> T createDataObjectStore(
+  public static <T extends RecordStore> T createDataObjectStore(
     final String url) {
     final DataObjectStoreFactory factory = getDataStoreFactory(url);
     if (factory == null) {
@@ -109,7 +109,7 @@ public class DataObjectStoreFactoryRegistry {
   }
 
   public static void setConnectionProperties(
-    final DataObjectStore dataObjectStore, final Map<String, Object> properties) {
+    final RecordStore dataObjectStore, final Map<String, Object> properties) {
     final DirectFieldAccessor dataSourceBean = new DirectFieldAccessor(
       dataObjectStore);
     for (final Entry<String, Object> property : properties.entrySet()) {

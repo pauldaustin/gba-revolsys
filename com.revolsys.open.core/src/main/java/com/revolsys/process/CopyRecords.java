@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.gis.data.io.DataObjectStore;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
@@ -16,9 +16,9 @@ import com.revolsys.util.CompareUtil;
 
 public class CopyRecords extends AbstractProcess {
 
-  private DataObjectStore targetDataStore;
+  private RecordStore targetDataStore;
 
-  private DataObjectStore sourceDataStore;
+  private RecordStore sourceDataStore;
 
   private String typePath;
 
@@ -29,16 +29,16 @@ public class CopyRecords extends AbstractProcess {
   public CopyRecords() {
   }
 
-  public CopyRecords(final DataObjectStore sourceDataStore,
-    final String typePath, final DataObjectStore targetDataStore,
+  public CopyRecords(final RecordStore sourceDataStore,
+    final String typePath, final RecordStore targetDataStore,
     final boolean hasSequence) {
     this(sourceDataStore, typePath, new HashMap<String, Boolean>(),
       targetDataStore, hasSequence);
   }
 
-  public CopyRecords(final DataObjectStore sourceDataStore,
+  public CopyRecords(final RecordStore sourceDataStore,
     final String typePath, final Map<String, Boolean> orderBy,
-    final DataObjectStore targetDataStore, final boolean hasSequence) {
+    final RecordStore targetDataStore, final boolean hasSequence) {
     this.sourceDataStore = sourceDataStore;
     this.typePath = typePath;
     this.orderBy = orderBy;
@@ -50,11 +50,11 @@ public class CopyRecords extends AbstractProcess {
     return orderBy;
   }
 
-  public DataObjectStore getSourceDataStore() {
+  public RecordStore getSourceDataStore() {
     return sourceDataStore;
   }
 
-  public DataObjectStore getTargetDataStore() {
+  public RecordStore getTargetDataStore() {
     return targetDataStore;
   }
 
@@ -71,11 +71,11 @@ public class CopyRecords extends AbstractProcess {
     try {
       final Query query = new Query(typePath);
       query.setOrderBy(orderBy);
-      final Reader<DataObject> reader = sourceDataStore.query(query);
+      final Reader<Record> reader = sourceDataStore.query(query);
       try {
-        final Writer<DataObject> targetWriter = targetDataStore.createWriter();
+        final Writer<Record> targetWriter = targetDataStore.createWriter();
         try {
-          final DataObjectMetaData targetMetaData = targetDataStore.getMetaData(typePath);
+          final RecordDefinition targetMetaData = targetDataStore.getMetaData(typePath);
           if (targetMetaData == null) {
             LoggerFactory.getLogger(getClass()).error(
               "Cannot find target table: " + typePath);
@@ -83,7 +83,7 @@ public class CopyRecords extends AbstractProcess {
             if (hasSequence) {
               final String idAttributeName = targetMetaData.getIdAttributeName();
               Object maxId = targetDataStore.createPrimaryIdValue(typePath);
-              for (final DataObject sourceRecord : reader) {
+              for (final Record sourceRecord : reader) {
                 final Object sourceId = sourceRecord.getValue(idAttributeName);
                 while (CompareUtil.compare(maxId, sourceId) < 0) {
                   maxId = targetDataStore.createPrimaryIdValue(typePath);
@@ -91,7 +91,7 @@ public class CopyRecords extends AbstractProcess {
                 targetWriter.write(sourceRecord);
               }
             } else {
-              for (final DataObject sourceRecord : reader) {
+              for (final Record sourceRecord : reader) {
                 targetWriter.write(sourceRecord);
               }
             }
@@ -111,11 +111,11 @@ public class CopyRecords extends AbstractProcess {
     this.hasSequence = hasSequence;
   }
 
-  public void setSourceDataStore(final DataObjectStore sourceDataStore) {
+  public void setSourceDataStore(final RecordStore sourceDataStore) {
     this.sourceDataStore = sourceDataStore;
   }
 
-  public void setTargetDataStore(final DataObjectStore targetDataStore) {
+  public void setTargetDataStore(final RecordStore targetDataStore) {
     this.targetDataStore = targetDataStore;
   }
 

@@ -3,8 +3,8 @@ package com.revolsys.gis.data.model.filter;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.Geometry2DEquals;
 import com.vividsolutions.jts.geom.Geometry;
@@ -15,17 +15,17 @@ import com.vividsolutions.jts.geom.Geometry;
  * 
  * @author Paul Austin
  */
-public class DataObjectEquals2DFilter implements Filter<DataObject> {
+public class DataObjectEquals2DFilter implements Filter<Record> {
   private final Collection<String> equalExclude = new HashSet<String>();
 
   /** The update feature to find a match for. */
-  private final DataObject searchObject;
+  private final Record searchObject;
 
-  public DataObjectEquals2DFilter(final DataObject searchObject) {
+  public DataObjectEquals2DFilter(final Record searchObject) {
     this(searchObject, null);
   }
 
-  public DataObjectEquals2DFilter(final DataObject searchObject,
+  public DataObjectEquals2DFilter(final Record searchObject,
     final Collection<String> equalExclude) {
     this.searchObject = searchObject;
     if (equalExclude != null) {
@@ -34,7 +34,7 @@ public class DataObjectEquals2DFilter implements Filter<DataObject> {
   }
 
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Geometry serachGeometry = searchObject.getGeometryValue();
     final Geometry geometry = object.getGeometryValue();
 

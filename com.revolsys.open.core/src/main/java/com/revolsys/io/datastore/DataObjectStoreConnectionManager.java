@@ -12,7 +12,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistryManager;
@@ -33,7 +33,7 @@ public class DataObjectStoreConnectionManager
   }
 
   // TODO make this garbage collectable with reference counting.
-  private static Map<Map<String, Object>, DataObjectStore> dataStoreByConfig = new HashMap<Map<String, Object>, DataObjectStore>();
+  private static Map<Map<String, Object>, RecordStore> dataStoreByConfig = new HashMap<Map<String, Object>, RecordStore>();
 
   private static Map<Map<String, Object>, AtomicInteger> dataStoreCounts = new HashMap<Map<String, Object>, AtomicInteger>();
 
@@ -41,7 +41,7 @@ public class DataObjectStoreConnectionManager
     return INSTANCE;
   }
 
-  public static <V extends DataObjectStore> V getDataStore(final File file) {
+  public static <V extends RecordStore> V getDataStore(final File file) {
     final Map<String, String> connectionProperties = Collections.singletonMap(
       "url", FileUtil.toUrlString(file));
     final Map<String, Object> config = Collections.<String, Object> singletonMap(
@@ -55,12 +55,12 @@ public class DataObjectStoreConnectionManager
    * @return
    */
   @SuppressWarnings("unchecked")
-  public static <T extends DataObjectStore> T getDataStore(
+  public static <T extends RecordStore> T getDataStore(
     final Map<String, ? extends Object> config) {
     @SuppressWarnings("rawtypes")
     final Map<String, Object> configClone = (Map)JavaBeanUtil.clone(config);
     synchronized (dataStoreByConfig) {
-      DataObjectStore dataStore = dataStoreByConfig.get(configClone);
+      RecordStore dataStore = dataStoreByConfig.get(configClone);
       if (dataStore == null) {
         final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone.get("connection");
         final String name = (String)connectionProperties.get("name");
@@ -85,7 +85,7 @@ public class DataObjectStoreConnectionManager
     }
   }
 
-  public static DataObjectStore getDataStore(final String name) {
+  public static RecordStore getDataStore(final String name) {
     final DataObjectStoreConnectionManager connectionManager = get();
     final List<DataObjectStoreConnectionRegistry> registries = new ArrayList<DataObjectStoreConnectionRegistry>();
     registries.addAll(connectionManager.getConnectionRegistries());
@@ -108,7 +108,7 @@ public class DataObjectStoreConnectionManager
     @SuppressWarnings("rawtypes")
     final Map<String, Object> configClone = (Map)JavaBeanUtil.clone(config);
     synchronized (dataStoreByConfig) {
-      final DataObjectStore dataStore = dataStoreByConfig.get(configClone);
+      final RecordStore dataStore = dataStoreByConfig.get(configClone);
       if (dataStore != null) {
         final AtomicInteger count = dataStoreCounts.get(configClone);
         if (count.decrementAndGet() == 0) {

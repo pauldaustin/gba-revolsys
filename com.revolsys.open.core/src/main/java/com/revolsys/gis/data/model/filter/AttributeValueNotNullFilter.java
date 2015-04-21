@@ -1,7 +1,7 @@
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectUtil;
 
 /**
@@ -9,7 +9,7 @@ import com.revolsys.gis.data.model.DataObjectUtil;
  * 
  * @author Paul Austin
  */
-public class AttributeValueNotNullFilter implements Filter<DataObject> {
+public class AttributeValueNotNullFilter implements Filter<Record> {
 
   /** The property name, or path to match. */
   private String attributeName;
@@ -28,7 +28,7 @@ public class AttributeValueNotNullFilter implements Filter<DataObject> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Object propertyValue = DataObjectUtil.getAttributeByPath(object,
       attributeName);
     return propertyValue != null;

@@ -60,14 +60,14 @@ import org.springframework.util.StringUtils;
 import com.revolsys.awt.WebColors;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.io.DataObjectStore;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
+import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.property.DirectionalAttributes;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
@@ -124,7 +124,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   private DataObjectLayerAttributesTableModel allAttributes;
 
-  private DataObjectStore dataStore;
+  private RecordStore dataStore;
 
   private boolean editable = true;
 
@@ -152,7 +152,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   private AbstractDataObjectLayer layer;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private LayerDataObject object;
 
@@ -178,7 +178,7 @@ public class DataObjectLayerForm extends JPanel implements
     setLayout(new BorderLayout());
     setName(layer.getName());
     this.layer = layer;
-    final DataObjectMetaData metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getMetaData();
     setMetaData(metaData);
     addToolBar(layer);
 
@@ -231,7 +231,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   protected ObjectLabelField addCodeTableLabelField(final String fieldName) {
-    final DataObjectStore dataStore = getDataStore();
+    final RecordStore dataStore = getDataStore();
     final CodeTable codeTable = dataStore.getCodeTableByColumn(fieldName);
     final ObjectLabelField field = new ObjectLabelField(fieldName, codeTable);
     field.setFont(SwingUtil.FONT);
@@ -442,8 +442,8 @@ public class DataObjectLayerForm extends JPanel implements
   public ToolBar addToolBar(final AbstractDataObjectLayer layer) {
     this.toolBar = new ToolBar();
     add(this.toolBar, BorderLayout.NORTH);
-    final DataObjectMetaData metaData = getMetaData();
-    final Attribute geometryAttribute = metaData.getGeometryAttribute();
+    final RecordDefinition metaData = getMetaData();
+    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
     final boolean hasGeometry = geometryAttribute != null;
     final EnableCheck editable = new ObjectPropertyEnableCheck(this, "editable");
 
@@ -699,7 +699,7 @@ public class DataObjectLayerForm extends JPanel implements
     return string;
   }
 
-  public DataObjectStore getDataStore() {
+  public RecordStore getDataStore() {
     if (this.dataStore == null) {
       if (this.metaData == null) {
         return null;
@@ -806,7 +806,7 @@ public class DataObjectLayerForm extends JPanel implements
     return this.layer;
   }
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return this.metaData;
   }
 
@@ -1007,7 +1007,7 @@ public class DataObjectLayerForm extends JPanel implements
             }
             final String propertyName = event.getPropertyName();
             final Object value = event.getNewValue();
-            final DataObjectMetaData metaData = getMetaData();
+            final RecordDefinition metaData = getMetaData();
             if ("errorsUpdated".equals(propertyName)) {
               updateErrors();
             } else if (metaData.hasAttribute(propertyName)) {
@@ -1047,7 +1047,7 @@ public class DataObjectLayerForm extends JPanel implements
     }
   }
 
-  protected void setDataStore(final DataObjectStore dataStore) {
+  protected void setDataStore(final RecordStore dataStore) {
     this.dataStore = dataStore;
   }
 
@@ -1150,7 +1150,7 @@ public class DataObjectLayerForm extends JPanel implements
     final boolean validate) {
     boolean changed = false;
     final Object oldValue = getFieldValue(fieldName);
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     if (metaData != null) {
       try {
         final Class<?> attributeClass = metaData.getAttributeClass(fieldName);
@@ -1182,14 +1182,14 @@ public class DataObjectLayerForm extends JPanel implements
     }
   }
 
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     this.metaData = metaData;
     setDataStore(metaData.getDataStore());
     final String idAttributeName = metaData.getIdAttributeName();
     if (StringUtils.hasText(idAttributeName)) {
       this.readOnlyFieldNames.add(idAttributeName);
     }
-    for (final Attribute attribute : metaData.getAttributes()) {
+    for (final FieldDefinition attribute : metaData.getAttributes()) {
       if (attribute.isRequired()) {
         final String name = attribute.getName();
         addRequiredFieldNames(name);

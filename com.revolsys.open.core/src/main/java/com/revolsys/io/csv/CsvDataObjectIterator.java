@@ -11,22 +11,22 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.Attribute;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class CsvDataObjectIterator extends AbstractIterator<DataObject>
+public class CsvDataObjectIterator extends AbstractIterator<Record>
   implements DataObjectIterator {
 
   private String pointXAttributeName;
@@ -47,7 +47,7 @@ public class CsvDataObjectIterator extends AbstractIterator<DataObject>
   private BufferedReader in;
 
   /** The metadata for the data being read by this iterator. */
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private Resource resource;
 
@@ -66,10 +66,10 @@ public class CsvDataObjectIterator extends AbstractIterator<DataObject>
   }
 
   private void createMetaData(final String[] fieldNames) throws IOException {
-    final List<Attribute> attributes = new ArrayList<Attribute>();
+    final List<FieldDefinition> attributes = new ArrayList<FieldDefinition>();
     for (final String name : fieldNames) {
       final DataType type = DataTypes.STRING;
-      attributes.add(new Attribute(name, type, false));
+      attributes.add(new FieldDefinition(name, type, false));
     }
     hasPointFields = StringUtils.hasText(pointXAttributeName)
       && StringUtils.hasText(pointYAttributeName);
@@ -83,7 +83,7 @@ public class CsvDataObjectIterator extends AbstractIterator<DataObject>
       if (!StringUtils.hasText(geometryColumnName)) {
         geometryColumnName = "GEOMETRY";
       }
-      final Attribute geometryAttribute = new Attribute(geometryColumnName,
+      final FieldDefinition geometryAttribute = new FieldDefinition(geometryColumnName,
         geometryType, true);
       attributes.add(geometryAttribute);
       if (geometryFactory == null) {
@@ -93,7 +93,7 @@ public class CsvDataObjectIterator extends AbstractIterator<DataObject>
         geometryFactory);
     }
     final String filename = FileUtil.getBaseName(resource.getFilename());
-    metaData = new DataObjectMetaDataImpl(filename, getProperties(), attributes);
+    metaData = new RecordDefinitionImpl(filename, getProperties(), attributes);
   }
 
   /**
@@ -138,12 +138,12 @@ public class CsvDataObjectIterator extends AbstractIterator<DataObject>
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
   @Override
-  protected DataObject getNext() {
+  protected Record getNext() {
     try {
       final String[] record = readNextRecord();
       if (record != null && record.length > 0) {
@@ -177,8 +177,8 @@ public class CsvDataObjectIterator extends AbstractIterator<DataObject>
    * @param record The record.
    * @return The DataObject.
    */
-  private DataObject parseDataObject(final String[] record) {
-    final DataObject object = dataObjectFactory.createDataObject(metaData);
+  private Record parseDataObject(final String[] record) {
+    final Record object = dataObjectFactory.createDataObject(metaData);
     for (int i = 0; i < metaData.getAttributeCount(); i++) {
       String value = null;
       if (i < record.length) {

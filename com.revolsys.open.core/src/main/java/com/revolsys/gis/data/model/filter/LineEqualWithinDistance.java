@@ -1,13 +1,13 @@
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.graph.linestring.LineStringRelate;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineEqualWithinDistance implements Filter<LineString> {
 
-  public static Filter<DataObject> getFilter(final DataObject object,
+  public static Filter<Record> getFilter(final Record object,
     final double maxDistance) {
     final LineString line = object.getGeometryValue();
     final LineEqualWithinDistance lineFilter = new LineEqualWithinDistance(

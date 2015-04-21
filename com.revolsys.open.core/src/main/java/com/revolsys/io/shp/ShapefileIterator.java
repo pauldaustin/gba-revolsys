@@ -11,17 +11,17 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.gis.io.EndianInputStream;
 import com.revolsys.gis.io.EndianMappedByteBuffer;
 import com.revolsys.gis.io.LittleEndianRandomAccessFile;
@@ -33,7 +33,7 @@ import com.revolsys.parallel.process.InvokeMethodRunnable;
 import com.revolsys.spring.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class ShapefileIterator extends AbstractIterator<DataObject> implements
+public class ShapefileIterator extends AbstractIterator<Record> implements
   DataObjectIterator {
 
   private boolean closeFile = true;
@@ -48,7 +48,7 @@ public class ShapefileIterator extends AbstractIterator<DataObject> implements
 
   private boolean mappedFile;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private final String name;
 
@@ -62,7 +62,7 @@ public class ShapefileIterator extends AbstractIterator<DataObject> implements
 
   private String typeName;
 
-  private DataObjectMetaData returnMetaData;
+  private RecordDefinition returnMetaData;
 
   public ShapefileIterator(final Resource resource,
     final DataObjectFactory factory) throws IOException {
@@ -176,13 +176,13 @@ public class ShapefileIterator extends AbstractIterator<DataObject> implements
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
   @Override
-  protected DataObject getNext() {
-    DataObject record;
+  protected Record getNext() {
+    Record record;
     try {
       if (xbaseIterator != null) {
         if (xbaseIterator.hasNext()) {
@@ -208,7 +208,7 @@ public class ShapefileIterator extends AbstractIterator<DataObject> implements
     if (returnMetaData == null) {
       return record;
     } else {
-      final DataObject copy = dataObjectFactory.createDataObject(returnMetaData);
+      final Record copy = dataObjectFactory.createDataObject(returnMetaData);
       copy.setValues(record);
       return copy;
     }
@@ -264,7 +264,7 @@ public class ShapefileIterator extends AbstractIterator<DataObject> implements
     }
   }
 
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     this.returnMetaData = metaData;
   }
 
@@ -303,7 +303,7 @@ public class ShapefileIterator extends AbstractIterator<DataObject> implements
   public void updateMetaData() {
     assert this.metaData == null : "Cannot override metaData when set";
     if (xbaseIterator != null) {
-      final DataObjectMetaDataImpl metaData = xbaseIterator.getMetaData();
+      final RecordDefinitionImpl metaData = xbaseIterator.getMetaData();
       this.metaData = metaData;
       if (metaData.getGeometryAttributeIndex() == -1) {
         DataType geometryType = DataTypes.GEOMETRY;

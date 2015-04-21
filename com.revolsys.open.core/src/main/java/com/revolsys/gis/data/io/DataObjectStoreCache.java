@@ -9,19 +9,19 @@ import java.util.Map;
 import com.revolsys.gis.cs.BoundingBox;
 
 public class DataObjectStoreCache {
-  public static DataObjectStoreCache getCache(final DataObjectStore dataStore) {
+  public static DataObjectStoreCache getCache(final RecordStore dataStore) {
     return new DataObjectStoreCache(dataStore);
   }
 
   private final Map<BoundingBox, List> cachedObejcts = Collections.synchronizedMap(new HashMap<BoundingBox, List>());
 
-  private final DataObjectStore dataStore;
+  private final RecordStore dataStore;
 
   private final Map<BoundingBox, DataStoreQueryTask> loadTasks = new LinkedHashMap<BoundingBox, DataStoreQueryTask>();
 
   private String typePath;
 
-  public DataObjectStoreCache(final DataObjectStore dataStore) {
+  public DataObjectStoreCache(final RecordStore dataStore) {
     this.dataStore = dataStore;
   }
 

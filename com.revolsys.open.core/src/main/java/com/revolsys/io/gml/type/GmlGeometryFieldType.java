@@ -2,8 +2,8 @@ package com.revolsys.io.gml.type;
 
 import javax.xml.namespace.QName;
 
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;

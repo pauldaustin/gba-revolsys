@@ -10,13 +10,13 @@ import javax.swing.tree.TreeNode;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.PathUtil;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
@@ -45,14 +45,14 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
   @Override
   protected List<TreeNode> doLoadChildren() {
     final List<TreeNode> children = new ArrayList<TreeNode>();
-    final DataObjectStore dataStore = getDataStore();
+    final RecordStore dataStore = getDataStore();
     if (dataStore != null) {
       final DataObjectStoreSchema schema = dataStore.getSchema(schemaPath);
       if (schema != null) {
-        for (final DataObjectMetaData metaData : schema.getTypes()) {
+        for (final RecordDefinition metaData : schema.getTypes()) {
           final String typeName = metaData.getPath();
           String geometryType = null;
-          final Attribute geometryAttribute = metaData.getGeometryAttribute();
+          final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
           if (geometryAttribute != null) {
             geometryType = geometryAttribute.getType().toString();
           }
@@ -65,7 +65,7 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
     return children;
   }
 
-  public DataObjectStore getDataStore() {
+  public RecordStore getDataStore() {
     final TreeNode parent = getParentNode();
     if (parent instanceof DataObjectStoreProxy) {
       final DataObjectStoreProxy proxy = (DataObjectStoreProxy)parent;

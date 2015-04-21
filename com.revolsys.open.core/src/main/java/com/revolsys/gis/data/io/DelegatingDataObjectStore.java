@@ -10,11 +10,11 @@ import javax.annotation.PreDestroy;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.collection.ResultPager;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.Query;
@@ -47,7 +47,7 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public void addStatistic(final String statisticName, final DataObject object) {
+  public void addStatistic(final String statisticName, final Record object) {
     dataStore.addStatistic(statisticName, object);
   }
 
@@ -69,12 +69,12 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public DataObject create(final DataObjectMetaData objectMetaData) {
+  public Record create(final RecordDefinition objectMetaData) {
     return dataStore.create(objectMetaData);
   }
 
   @Override
-  public DataObject create(final String typePath) {
+  public Record create(final String typePath) {
     return dataStore.create(typePath);
   }
 
@@ -95,12 +95,12 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public Writer<DataObject> createWriter() {
+  public Writer<Record> createWriter() {
     return dataStore.createWriter();
   }
 
   @Override
-  public void delete(final DataObject object) {
+  public void delete(final Record object) {
     dataStore.delete(object);
   }
 
@@ -110,7 +110,7 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public void deleteAll(final Collection<DataObject> objects) {
+  public void deleteAll(final Collection<Record> objects) {
     dataStore.deleteAll(objects);
   }
 
@@ -159,12 +159,12 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final DataObjectMetaData objectMetaData) {
+  public RecordDefinition getMetaData(final RecordDefinition objectMetaData) {
     return dataStore.getMetaData(objectMetaData);
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final String typePath) {
+  public RecordDefinition getMetaData(final String typePath) {
     return dataStore.getMetaData(typePath);
   }
 
@@ -229,12 +229,12 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public List<DataObjectMetaData> getTypes(final String namespace) {
+  public List<RecordDefinition> getTypes(final String namespace) {
     return dataStore.getTypes(namespace);
   }
 
   @Override
-  public Writer<DataObject> getWriter() {
+  public Writer<Record> getWriter() {
     return dataStore.getWriter();
   }
 
@@ -250,12 +250,12 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public void insert(final DataObject dataObject) {
+  public void insert(final Record dataObject) {
     dataStore.insert(dataObject);
   }
 
   @Override
-  public void insertAll(final Collection<DataObject> objects) {
+  public void insertAll(final Collection<Record> objects) {
     dataStore.insertAll(objects);
   }
 
@@ -265,14 +265,14 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public DataObject load(final String typePath, final Object... id) {
+  public Record load(final String typePath, final Object... id) {
     return dataStore.load(typePath, id);
   }
 
   @Override
   protected void loadSchemaDataObjectMetaData(
     final DataObjectStoreSchema schema,
-    final Map<String, DataObjectMetaData> metaDataMap) {
+    final Map<String, RecordDefinition> metaDataMap) {
   }
 
   @Override
@@ -280,38 +280,38 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public DataObject lock(final String typePath, final Object id) {
+  public Record lock(final String typePath, final Object id) {
     return dataStore.lock(typePath, id);
   }
 
   @Override
-  public ResultPager<DataObject> page(final Query query) {
+  public ResultPager<Record> page(final Query query) {
     return dataStore.page(query);
   }
 
   @Override
-  public Reader<DataObject> query(final DataObjectFactory dataObjectFactory,
+  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
     final String typePath, final Geometry geometry) {
     return dataStore.query(dataObjectFactory, typePath, geometry);
   }
 
   @Override
-  public Reader<DataObject> query(final List<?> queries) {
+  public Reader<Record> query(final List<?> queries) {
     return dataStore.query(queries);
   }
 
   @Override
-  public Reader<DataObject> query(final Query... queries) {
+  public Reader<Record> query(final Query... queries) {
     return dataStore.query(queries);
   }
 
   @Override
-  public Reader<DataObject> query(final String path) {
+  public Reader<Record> query(final String path) {
     return dataStore.query(path);
   }
 
   @Override
-  public DataObject queryFirst(final Query query) {
+  public Record queryFirst(final Query query) {
     return dataStore.queryFirst(query);
   }
 
@@ -384,12 +384,12 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public void update(final DataObject object) {
+  public void update(final Record object) {
     dataStore.update(object);
   }
 
   @Override
-  public void updateAll(final Collection<DataObject> objects) {
+  public void updateAll(final Collection<Record> objects) {
     dataStore.updateAll(objects);
   }
 }

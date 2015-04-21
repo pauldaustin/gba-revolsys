@@ -6,24 +6,24 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
-public class ListDataObjectReader extends AbstractReader<DataObject> implements
+public class ListDataObjectReader extends AbstractReader<Record> implements
   DataObjectReader {
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
-  private List<DataObject> objects = new ArrayList<DataObject>();
+  private List<Record> objects = new ArrayList<Record>();
 
-  public ListDataObjectReader(final DataObjectMetaData metaData,
-    final Collection<? extends DataObject> objects) {
+  public ListDataObjectReader(final RecordDefinition metaData,
+    final Collection<? extends Record> objects) {
     this.metaData = metaData;
-    this.objects = new ArrayList<DataObject>(objects);
+    this.objects = new ArrayList<Record>(objects);
   }
 
-  public ListDataObjectReader(final DataObjectMetaData metaData,
-    final DataObject... objects) {
+  public ListDataObjectReader(final RecordDefinition metaData,
+    final Record... objects) {
     this(metaData, Arrays.asList(objects));
   }
 
@@ -34,12 +34,12 @@ public class ListDataObjectReader extends AbstractReader<DataObject> implements
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
   @Override
-  public Iterator<DataObject> iterator() {
+  public Iterator<Record> iterator() {
     return objects.iterator();
   }
 

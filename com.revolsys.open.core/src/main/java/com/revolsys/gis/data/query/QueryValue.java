@@ -31,8 +31,8 @@ import com.akiban.sql.parser.UserTypeConstantNode;
 import com.akiban.sql.parser.ValueNode;
 import com.akiban.sql.parser.ValueNodeList;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.functions.Function;
 import com.revolsys.util.ExceptionUtil;
@@ -54,7 +54,7 @@ public abstract class QueryValue implements Cloneable {
     return clonedValues;
   }
 
-  public static Condition parseWhere(final DataObjectMetaData metaData,
+  public static Condition parseWhere(final RecordDefinition metaData,
     final String whereClause) {
     try {
       final StatementNode statement = new SQLParser().parseStatement("SELECT * FROM "
@@ -78,7 +78,7 @@ public abstract class QueryValue implements Cloneable {
 
   @SuppressWarnings("unchecked")
   public static <V extends QueryValue> V toQueryValue(
-    final DataObjectMetaData metaData, final ValueNode expression) {
+    final RecordDefinition metaData, final ValueNode expression) {
     if (expression instanceof BetweenOperatorNode) {
       final BetweenOperatorNode betweenExpression = (BetweenOperatorNode)expression;
       final ValueNode leftValueNode = betweenExpression.getLeftOperand();
@@ -101,7 +101,7 @@ public abstract class QueryValue implements Cloneable {
       final Column column = toQueryValue(metaData, leftValueNode);
       final Value min = toQueryValue(metaData, betweenExpressionStart);
       final Value max = toQueryValue(metaData, betweenExpressionEnd);
-      final Attribute attribute = metaData.getAttribute(column.getName());
+      final FieldDefinition attribute = metaData.getAttribute(column.getName());
       min.convert(attribute);
       max.convert(attribute);
       return (V)new Between(column, min, max);
@@ -134,7 +134,7 @@ public abstract class QueryValue implements Cloneable {
             final Column column = (Column)leftCondition;
 
             final String name = column.getName();
-            final Attribute attribute = metaData.getAttribute(name);
+            final FieldDefinition attribute = metaData.getAttribute(name);
             final Object value = ((Value)rightCondition).getValue();
             if (value == null) {
               throw new IllegalArgumentException("Values can't be null for "
@@ -193,7 +193,7 @@ public abstract class QueryValue implements Cloneable {
       final ColumnReference column = (ColumnReference)expression;
       String columnName = column.getColumnName();
       columnName = columnName.replaceAll("\"", "");
-      final Attribute attribute = metaData.getAttribute(columnName);
+      final FieldDefinition attribute = metaData.getAttribute(columnName);
       if (attribute == null) {
         throw new IllegalArgumentException("Invalid column name " + columnName);
       } else {

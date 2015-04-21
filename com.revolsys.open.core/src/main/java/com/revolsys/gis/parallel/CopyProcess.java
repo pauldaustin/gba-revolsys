@@ -6,20 +6,20 @@ import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.model.ArrayRecord;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 
-public class CopyProcess extends BaseInOutProcess<DataObject, DataObject> {
+public class CopyProcess extends BaseInOutProcess<Record, Record> {
 
   private String typeName;
 
   private DataObjectMetaDataFactory metaDataFactory;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private Map<String, Map<Object, Object>> valueMaps = new HashMap<String, Map<Object, Object>>();
 
@@ -28,12 +28,12 @@ public class CopyProcess extends BaseInOutProcess<DataObject, DataObject> {
   public CopyProcess() {
   }
 
-  protected DataObject copy(final DataObject object) {
-    DataObject targetObject;
+  protected Record copy(final Record object) {
+    Record targetObject;
     if (metaData == null) {
       targetObject = object;
     } else {
-      targetObject = new ArrayDataObject(metaData);
+      targetObject = new ArrayRecord(metaData);
       for (final String attributeName : metaData.getAttributeNames()) {
         copyAttribute(object, attributeName, targetObject, attributeName);
       }
@@ -49,8 +49,8 @@ public class CopyProcess extends BaseInOutProcess<DataObject, DataObject> {
     return targetObject;
   }
 
-  private void copyAttribute(final DataObject sourceObject,
-    final String sourceAttributeName, final DataObject targetObject,
+  private void copyAttribute(final Record sourceObject,
+    final String sourceAttributeName, final Record targetObject,
     final String targetAttributeName) {
     Object value = sourceObject.getValueByPath(sourceAttributeName);
     final Map<Object, Object> valueMap = valueMaps.get(targetAttributeName);
@@ -67,7 +67,7 @@ public class CopyProcess extends BaseInOutProcess<DataObject, DataObject> {
     return attributeMap;
   }
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
@@ -93,9 +93,9 @@ public class CopyProcess extends BaseInOutProcess<DataObject, DataObject> {
   }
 
   @Override
-  protected void process(final Channel<DataObject> in,
-    final Channel<DataObject> out, final DataObject object) {
-    final DataObject targetObject = copy(object);
+  protected void process(final Channel<Record> in,
+    final Channel<Record> out, final Record object) {
+    final Record targetObject = copy(object);
     out.write(targetObject);
   }
 
@@ -103,7 +103,7 @@ public class CopyProcess extends BaseInOutProcess<DataObject, DataObject> {
     this.attributeMap = attributeMap;
   }
 
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     this.metaData = metaData;
   }
 

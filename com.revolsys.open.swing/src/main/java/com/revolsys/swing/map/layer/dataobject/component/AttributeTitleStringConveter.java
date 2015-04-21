@@ -9,7 +9,7 @@ import javax.swing.ListCellRenderer;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.Attribute;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
 
 public class AttributeTitleStringConveter extends ObjectToStringConverter
@@ -33,8 +33,8 @@ public class AttributeTitleStringConveter extends ObjectToStringConverter
 
   @Override
   public String getPreferredStringForItem(final Object item) {
-    if (item instanceof Attribute) {
-      final Attribute attribute = (Attribute)item;
+    if (item instanceof FieldDefinition) {
+      final FieldDefinition attribute = (FieldDefinition)item;
       return layer.getFieldTitle(attribute.getName());
     } else if (item instanceof String) {
       final String attributeName = (String)item;

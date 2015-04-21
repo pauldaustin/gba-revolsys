@@ -9,9 +9,9 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.io.PathUtil;
 import com.revolsys.util.CollectionUtil;
@@ -51,11 +51,11 @@ public abstract class JdbcDdlWriter implements Cloneable {
     return out;
   }
 
-  public String getSequenceName(final DataObjectMetaData metaData) {
+  public String getSequenceName(final RecordDefinition metaData) {
     throw new UnsupportedOperationException();
   }
 
-  public String getTableAlias(final DataObjectMetaData metaData) {
+  public String getTableAlias(final RecordDefinition metaData) {
     final String shortName = ShortNameProperty.getShortName(metaData);
     if (shortName == null) {
       final String path = metaData.getPath();
@@ -82,8 +82,8 @@ public abstract class JdbcDdlWriter implements Cloneable {
     this.out = out;
   }
 
-  public void writeAddForeignKeyConstraint(final DataObjectMetaData metaData,
-    final String attributeName, final DataObjectMetaData referencedMetaData) {
+  public void writeAddForeignKeyConstraint(final RecordDefinition metaData,
+    final String attributeName, final RecordDefinition referencedMetaData) {
     final String typePath = metaData.getPath();
     final String referencedTypeName = referencedMetaData.getPath();
     final String referencedAttributeName = referencedMetaData.getIdAttributeName();
@@ -93,9 +93,9 @@ public abstract class JdbcDdlWriter implements Cloneable {
       referencedTypeName, referencedAttributeName);
   }
 
-  public void writeAddForeignKeyConstraint(final DataObjectMetaData metaData,
+  public void writeAddForeignKeyConstraint(final RecordDefinition metaData,
     final String attributeName, final String referenceTablePrefix,
-    final DataObjectMetaData referencedMetaData) {
+    final RecordDefinition referencedMetaData) {
     final String typePath = metaData.getPath();
     final String referencedTypeName = referencedMetaData.getPath();
     final String referencedAttributeName = referencedMetaData.getIdAttributeName();
@@ -121,7 +121,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     out.println(");");
   }
 
-  public void writeAddPrimaryKeyConstraint(final DataObjectMetaData metaData) {
+  public void writeAddPrimaryKeyConstraint(final RecordDefinition metaData) {
     final String idAttributeName = metaData.getIdAttributeName();
     if (idAttributeName != null) {
       final String typePath = metaData.getPath();
@@ -141,12 +141,12 @@ public abstract class JdbcDdlWriter implements Cloneable {
     out.println(");");
   }
 
-  public abstract void writeColumnDataType(final Attribute attribute);
+  public abstract void writeColumnDataType(final FieldDefinition attribute);
 
   public void writeCreateSchema(final String schemaName) {
   }
 
-  public String writeCreateSequence(final DataObjectMetaData metaData) {
+  public String writeCreateSequence(final RecordDefinition metaData) {
     final String sequenceName = getSequenceName(metaData);
     writeCreateSequence(sequenceName);
     return sequenceName;
@@ -158,14 +158,14 @@ public abstract class JdbcDdlWriter implements Cloneable {
     out.println(";");
   }
 
-  public void writeCreateTable(final DataObjectMetaData metaData) {
+  public void writeCreateTable(final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
     out.println();
     out.print("CREATE TABLE ");
     writeTableName(typePath);
     out.println(" (");
     for (int i = 0; i < metaData.getAttributeCount(); i++) {
-      final Attribute attribute = metaData.getAttribute(i);
+      final FieldDefinition attribute = metaData.getAttribute(i);
       if (i > 0) {
         out.println(",");
       }
@@ -187,7 +187,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
 
     writeGeometryMetaData(metaData);
 
-    final Attribute idAttribute = metaData.getIdAttribute();
+    final FieldDefinition idAttribute = metaData.getIdAttribute();
     if (idAttribute != null) {
       if (Number.class.isAssignableFrom(idAttribute.getType().getJavaClass())) {
         writeCreateSequence(metaData);
@@ -210,7 +210,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     out.println(");");
   }
 
-  public abstract void writeGeometryMetaData(final DataObjectMetaData metaData);
+  public abstract void writeGeometryMetaData(final RecordDefinition metaData);
 
   public void writeGrant(final String typePath, final String username,
     final boolean select, final boolean insert, final boolean update,
@@ -239,8 +239,8 @@ public abstract class JdbcDdlWriter implements Cloneable {
 
   }
 
-  public void writeInsert(final DataObject row) {
-    final DataObjectMetaData metaData = row.getMetaData();
+  public void writeInsert(final Record row) {
+    final RecordDefinition metaData = row.getMetaData();
     final String typePath = metaData.getPath();
     out.print("INSERT INTO ");
     writeTableName(typePath);
@@ -272,15 +272,15 @@ public abstract class JdbcDdlWriter implements Cloneable {
 
   }
 
-  public void writeInserts(final List<DataObject> rows) {
-    for (final DataObject row : rows) {
+  public void writeInserts(final List<Record> rows) {
+    for (final Record row : rows) {
       writeInsert(row);
     }
 
   }
 
-  public void writeResetSequence(final DataObjectMetaData metaData,
-    final List<DataObject> values) {
+  public void writeResetSequence(final RecordDefinition metaData,
+    final List<Record> values) {
     throw new UnsupportedOperationException();
   }
 

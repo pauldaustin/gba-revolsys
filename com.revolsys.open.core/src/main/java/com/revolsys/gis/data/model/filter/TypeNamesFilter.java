@@ -3,11 +3,11 @@ package com.revolsys.gis.data.model.filter;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 
-public class TypeNamesFilter implements Filter<DataObject> {
+public class TypeNamesFilter implements Filter<Record> {
 
   private final Set<String> typePaths = new HashSet<String>();
 
@@ -19,8 +19,8 @@ public class TypeNamesFilter implements Filter<DataObject> {
   }
 
   @Override
-  public boolean accept(final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+  public boolean accept(final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     final String typePath = metaData.getPath();
     return typePaths.contains(typePath);
   }

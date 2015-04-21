@@ -12,13 +12,13 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.property.DirectionalAttributes;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
@@ -70,7 +70,7 @@ PropertyChangeListener {
     table.getTableCellEditor().addMouseListener(this);
     table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     this.tableModel = getTableModel();
-    final DataObjectMetaData metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getMetaData();
     final boolean hasGeometry = metaData.getGeometryAttributeIndex() != -1;
     final EnableCheck deletableEnableCheck = new DataObjectRowPropertyEnableCheck(
         "deletable");
@@ -255,19 +255,19 @@ PropertyChangeListener {
   }
 
   public void flipFields() {
-    final DataObject record = getEventRowObject();
+    final Record record = getEventRowObject();
     final DirectionalAttributes property = DirectionalAttributes.getProperty(record);
     property.reverseAttributes(record);
   }
 
   public void flipLineOrientation() {
-    final DataObject record = getEventRowObject();
+    final Record record = getEventRowObject();
     final DirectionalAttributes property = DirectionalAttributes.getProperty(record);
     property.reverseGeometry(record);
   }
 
   public void flipRecordOrientation() {
-    final DataObject record = getEventRowObject();
+    final Record record = getEventRowObject();
     DirectionalAttributes.reverse(record);
   }
 
@@ -349,7 +349,7 @@ PropertyChangeListener {
   }
 
   public void zoomToRecord() {
-    final DataObject object = getEventRowObject();
+    final Record object = getEventRowObject();
     final Project project = this.layer.getProject();
     final Geometry geometry = object.getGeometryValue();
     if (geometry != null) {

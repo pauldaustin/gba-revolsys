@@ -3,8 +3,8 @@ package com.revolsys.gis.data.model.comparator;
 import java.util.Comparator;
 import java.util.List;
 
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.util.CompareUtil;
 
@@ -15,27 +15,27 @@ import com.revolsys.util.CompareUtil;
  * 
  * @author Paul Austin
  */
-public class EqualAttributeCountComparator implements Comparator<DataObject> {
-  private final DataObject object;
+public class EqualAttributeCountComparator implements Comparator<Record> {
+  private final Record object;
 
   private final boolean invert;
 
   private final List<String> attributeNames;
 
-  public EqualAttributeCountComparator(final DataObject object) {
+  public EqualAttributeCountComparator(final Record object) {
     this(object, false);
   }
 
-  public EqualAttributeCountComparator(final DataObject object,
+  public EqualAttributeCountComparator(final Record object,
     final boolean invert) {
     this.object = object;
-    final DataObjectMetaData metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getMetaData();
     attributeNames = metaData.getAttributeNames();
     this.invert = invert;
   }
 
   @Override
-  public int compare(final DataObject object1, final DataObject object2) {
+  public int compare(final Record object1, final Record object2) {
     final int compare;
     if (object1 == null) {
       if (object2 == null) {

@@ -6,17 +6,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class CsvDirectoryWriter extends AbstractWriter<DataObject> {
+public class CsvDirectoryWriter extends AbstractWriter<Record> {
   private File directory;
 
-  private final Map<DataObjectMetaData, CsvDataObjectWriter> writers = new HashMap<DataObjectMetaData, CsvDataObjectWriter>();
+  private final Map<RecordDefinition, CsvDataObjectWriter> writers = new HashMap<RecordDefinition, CsvDataObjectWriter>();
 
   public CsvDirectoryWriter() {
   }
@@ -47,8 +47,8 @@ public class CsvDirectoryWriter extends AbstractWriter<DataObject> {
     return directory;
   }
 
-  private CsvDataObjectWriter getWriter(final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+  private CsvDataObjectWriter getWriter(final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     CsvDataObjectWriter writer = writers.get(metaData);
     if (writer == null) {
       try {
@@ -80,7 +80,7 @@ public class CsvDirectoryWriter extends AbstractWriter<DataObject> {
   }
 
   @Override
-  public void write(final DataObject object) {
+  public void write(final Record object) {
 
     final CsvDataObjectWriter writer = getWriter(object);
     writer.write(object);

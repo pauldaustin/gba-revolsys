@@ -45,6 +45,10 @@ import bibliothek.gui.dock.common.mode.ExtendedMode;
 
 import com.revolsys.beans.InvokeMethodCallable;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
 import com.revolsys.gis.cs.BoundingBox;
@@ -52,19 +56,15 @@ import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.ListDataObjectReader;
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryDistanceFilter;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.data.model.property.DirectionalAttributes;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -286,11 +286,11 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
 
   private Object editSync;
 
-  private final Map<DataObject, Component> forms = new HashMap<DataObject, Component>();
+  private final Map<Record, Component> forms = new HashMap<Record, Component>();
 
-  private final Map<DataObject, Window> formWindows = new HashMap<DataObject, Window>();
+  private final Map<Record, Window> formWindows = new HashMap<Record, Window>();
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private final List<LayerDataObject> modifiedRecords = new ArrayList<LayerDataObject>();
 
@@ -310,7 +310,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     this("");
   }
 
-  public AbstractDataObjectLayer(final DataObjectMetaData metaData) {
+  public AbstractDataObjectLayer(final RecordDefinition metaData) {
     this(metaData.getTypeName());
     setMetaData(metaData);
   }
@@ -344,7 +344,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   @Override
   public void addComplete(final AbstractOverlay overlay, final Geometry geometry) {
     if (geometry != null) {
-      final DataObjectMetaData metaData = getMetaData();
+      final RecordDefinition metaData = getMetaData();
       final String geometryAttributeName = metaData.getGeometryAttributeName();
       final Map<String, Object> parameters = new HashMap<String, Object>();
       parameters.put(geometryAttributeName, geometry);
@@ -381,8 +381,8 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   public void addNewRecord() {
-    final DataObjectMetaData metaData = getMetaData();
-    final Attribute geometryAttribute = metaData.getGeometryAttribute();
+    final RecordDefinition metaData = getMetaData();
+    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
     if (geometryAttribute == null) {
       showAddForm(null);
     } else {
@@ -511,10 +511,10 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
 
   public void copyRecordsToClipboard(final List<LayerDataObject> records) {
     if (!records.isEmpty()) {
-      final DataObjectMetaData metaData = getMetaData();
-      final List<DataObject> copies = new ArrayList<DataObject>();
+      final RecordDefinition metaData = getMetaData();
+      final List<Record> copies = new ArrayList<Record>();
       for (final LayerDataObject record : records) {
-        copies.add(new ArrayDataObject(record));
+        copies.add(new ArrayRecord(record));
       }
       final DataObjectReader reader = new ListDataObjectReader(metaData, copies);
       final DataObjectReaderTransferable transferable = new DataObjectReaderTransferable(
@@ -529,7 +529,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   @Override
-  public LayerDataObject createDataObject(final DataObjectMetaData metaData) {
+  public LayerDataObject createDataObject(final RecordDefinition metaData) {
     if (metaData.equals(getMetaData())) {
       return new LayerDataObject(this);
     } else {
@@ -572,7 +572,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
 
   protected void createPropertiesPanelFields(
     final TabbedValuePanel propertiesPanel) {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     final BaseJxTable fieldTable = DataObjectMetaDataTableModel.createTable(metaData);
 
     final BasePanel fieldPanel = new BasePanel(new BorderLayout());
@@ -889,7 +889,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
       if (this.columnNames == null) {
         final Set<String> columnNames = new LinkedHashSet<String>(
           this.columnNameOrder);
-        final DataObjectMetaData metaData = getMetaData();
+        final RecordDefinition metaData = getMetaData();
         final List<String> attributeNames = metaData.getAttributeNames();
         columnNames.addAll(attributeNames);
         this.columnNames = new ArrayList<String>(columnNames);
@@ -903,7 +903,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     return getGeometryFactory().getCoordinateSystem();
   }
 
-  public DataObjectStore getDataStore() {
+  public RecordStore getDataStore() {
     return getMetaData().getDataStore();
   }
 
@@ -928,7 +928,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
 
   public String getFieldTitle(final String fieldName) {
     if (isUseFieldTitles()) {
-      final DataObjectMetaData metaData = getMetaData();
+      final RecordDefinition metaData = getMetaData();
       return metaData.getAttributeTitle(fieldName);
     } else {
       return fieldName;
@@ -944,11 +944,11 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   public DataType getGeometryType() {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     if (metaData == null) {
       return null;
     } else {
-      final Attribute geometryAttribute = metaData.getGeometryAttribute();
+      final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
       if (geometryAttribute == null) {
         return null;
       } else {
@@ -996,8 +996,8 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
    * @param record2
    * @return
    */
-  public DataObject getMergedRecord(final Coordinates point,
-    final DataObject record1, final DataObject record2) {
+  public Record getMergedRecord(final Coordinates point,
+    final Record record1, final Record record2) {
     if (record1 == record2) {
       return record1;
     } else {
@@ -1032,12 +1032,12 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
         final Map<String, Object> newValues = property.getMergedMap(point,
           record1, record2);
         newValues.remove(getIdAttributeName());
-        return new ArrayDataObject(getMetaData(), newValues);
+        return new ArrayRecord(getMetaData(), newValues);
       }
     }
   }
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return this.metaData;
   }
 
@@ -1073,8 +1073,8 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
         }
         if (reader != null) {
           final MapPanel parentComponent = MapPanel.get(getProject());
-          final DataObjectMetaData metaData = getMetaData();
-          final Attribute geometryAttribute = metaData.getGeometryAttribute();
+          final RecordDefinition metaData = getMetaData();
+          final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
           if (geometryAttribute != null) {
             DataType geometryDataType = null;
             Class<?> layerGeometryClass = null;
@@ -1083,7 +1083,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
             layerGeometryClass = geometryDataType.getJavaClass();
 
             Geometry geometry = null;
-            for (final DataObject sourceRecord : reader) {
+            for (final Record sourceRecord : reader) {
               if (geometry == null) {
                 final Geometry sourceGeometry = sourceRecord.getGeometryValue();
                 if (sourceGeometry == null) {
@@ -1163,7 +1163,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   public int getRowCount() {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     final Query query = new Query(metaData);
     return getRowCount(query);
   }
@@ -1176,7 +1176,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   @Override
   public BoundingBox getSelectedBoundingBox() {
     BoundingBox boundingBox = super.getSelectedBoundingBox();
-    for (final DataObject record : getSelectedRecords()) {
+    for (final Record record : getSelectedRecords()) {
       final Geometry geometry = record.getGeometryValue();
       boundingBox = boundingBox.expandToInclude(geometry);
     }
@@ -1410,7 +1410,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     }
   }
 
-  public boolean isLayerRecord(final DataObject record) {
+  public boolean isLayerRecord(final Record record) {
     if (record == null) {
       return false;
     } else if (record.getMetaData() == getMetaData()) {
@@ -1502,10 +1502,10 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
         }
       }
       final List<LayerDataObject> newRecords = new ArrayList<LayerDataObject>();
-      final List<DataObject> regectedRecords = new ArrayList<DataObject>();
+      final List<Record> regectedRecords = new ArrayList<Record>();
       if (reader != null) {
-        final DataObjectMetaData metaData = getMetaData();
-        final Attribute geometryAttribute = metaData.getGeometryAttribute();
+        final RecordDefinition metaData = getMetaData();
+        final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
         DataType geometryDataType = null;
         Class<?> layerGeometryClass = null;
         final GeometryFactory geometryFactory = getGeometryFactory();
@@ -1517,14 +1517,14 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
         if (ignorePasteFields == null) {
           ignorePasteFields = Collections.emptySet();
         }
-        for (final DataObject sourceRecord : reader) {
+        for (final Record sourceRecord : reader) {
           final Map<String, Object> newValues = new LinkedHashMap<String, Object>(
             sourceRecord);
 
           Geometry sourceGeometry = sourceRecord.getGeometryValue();
           for (final Iterator<String> iterator = newValues.keySet().iterator(); iterator.hasNext();) {
             final String attributeName = iterator.next();
-            final Attribute attribute = metaData.getAttribute(attributeName);
+            final FieldDefinition attribute = metaData.getAttribute(attributeName);
             if (attribute == null) {
               iterator.remove();
             } else if (ignorePasteFields != null) {
@@ -1923,7 +1923,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     }
   }
 
-  protected void setMetaData(final DataObjectMetaData metaData) {
+  protected void setMetaData(final RecordDefinition metaData) {
     this.metaData = metaData;
     if (metaData != null) {
       setGeometryFactory(metaData.getGeometryFactory());
@@ -1959,7 +1959,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   public void setQuery(final Query query) {
     final Query oldValue = this.query;
     if (query == null) {
-      final DataObjectMetaData metaData = getMetaData();
+      final RecordDefinition metaData = getMetaData();
       if (metaData == null) {
         this.query = null;
       } else {
@@ -2007,7 +2007,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   public void setSelectedRecordsById(final Object id) {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     if (metaData != null) {
       final String idAttributeName = metaData.getIdAttributeName();
       if (idAttributeName == null) {
@@ -2366,7 +2366,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     }
   }
 
-  public void zoomToObject(final DataObject record) {
+  public void zoomToObject(final Record record) {
     final Geometry geometry = record.getGeometryValue();
 
     zoomTo(geometry);

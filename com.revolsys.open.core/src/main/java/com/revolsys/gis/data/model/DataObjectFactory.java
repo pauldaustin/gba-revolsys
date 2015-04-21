@@ -20,6 +20,8 @@
  */
 package com.revolsys.gis.data.model;
 
+import com.revolsys.data.record.Record;
+
 /**
  * A DataObject factory
  * 
@@ -33,5 +35,5 @@ public interface DataObjectFactory {
    * @param metaData The metadata used to create the instance.
    * @return The DataObject instance.
    */
-  DataObject createDataObject(DataObjectMetaData metaData);
+  Record createDataObject(RecordDefinition metaData);
 }

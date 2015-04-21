@@ -4,14 +4,14 @@ import java.io.Writer;
 
 import javax.xml.namespace.QName;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperties;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.revolsys.io.PathUtil;
@@ -19,7 +19,7 @@ import com.revolsys.io.gml.type.GmlFieldType;
 import com.revolsys.io.gml.type.GmlFieldTypeRegistry;
 import com.revolsys.io.xml.XmlWriter;
 
-public class GmlDataObjectWriter extends AbstractWriter<DataObject> implements
+public class GmlDataObjectWriter extends AbstractWriter<Record> implements
   GmlConstants {
   public static final void srsName(final XmlWriter out,
     final GeometryFactory geometryFactory) {
@@ -32,7 +32,7 @@ public class GmlDataObjectWriter extends AbstractWriter<DataObject> implements
 
   private GeometryFactory geometryFactory;
 
-  private final DataObjectMetaData metaData;
+  private final RecordDefinition metaData;
 
   private boolean opened;
 
@@ -42,7 +42,7 @@ public class GmlDataObjectWriter extends AbstractWriter<DataObject> implements
 
   private final String namespaceUri;
 
-  public GmlDataObjectWriter(final DataObjectMetaData metaData, final Writer out) {
+  public GmlDataObjectWriter(final RecordDefinition metaData, final Writer out) {
     this.metaData = metaData;
     this.out = new XmlWriter(out);
     qualifiedName = metaData.getProperty(DataObjectMetaDataProperties.QUALIFIED_NAME);
@@ -104,12 +104,12 @@ public class GmlDataObjectWriter extends AbstractWriter<DataObject> implements
   }
 
   @Override
-  public void write(final DataObject object) {
+  public void write(final Record object) {
     if (!opened) {
       writeHeader();
     }
     out.startTag(FEATURE_MEMBER);
-    final DataObjectMetaData metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getMetaData();
     QName qualifiedName = metaData.getProperty(DataObjectMetaDataProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
       final String typeName = metaData.getPath();
@@ -121,7 +121,7 @@ public class GmlDataObjectWriter extends AbstractWriter<DataObject> implements
     }
     out.startTag(qualifiedName);
 
-    for (final Attribute attribute : metaData.getAttributes()) {
+    for (final FieldDefinition attribute : metaData.getAttributes()) {
       final String attributeName = attribute.getName();
       out.startTag(namespaceUri, attributeName);
       final Object value = object.getValue(attributeName);

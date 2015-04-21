@@ -20,8 +20,8 @@
  */
 package com.revolsys.gis.model.data.validator;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
 
 public class DataObjectAttributeValidator implements AttributeValueValidator {
   private final DataObjectValidator validator;
@@ -35,8 +35,8 @@ public class DataObjectAttributeValidator implements AttributeValueValidator {
   }
 
   @Override
-  public boolean isValid(final Attribute attributeDefinition, final Object value) {
-    if (value instanceof DataObject) {
+  public boolean isValid(final FieldDefinition attributeDefinition, final Object value) {
+    if (value instanceof Record) {
       return validator.isValid(value);
     } else {
       return false;

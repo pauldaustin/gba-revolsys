@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.model.DataObject;
 
 public class SimpleCodeTable extends AbstractCodeTable {
 
@@ -15,7 +15,7 @@ public class SimpleCodeTable extends AbstractCodeTable {
     final SimpleCodeTable codeTable = new SimpleCodeTable(name);
     final DataObjectReader reader = AbstractDataObjectReaderFactory.dataObjectReader(resource);
     try {
-      for (final DataObject codeObject : reader) {
+      for (final Record codeObject : reader) {
         final Object id = codeObject.getValue(0);
         final List<Object> values = new ArrayList<Object>();
         final int attributeCount = codeObject.getMetaData().getAttributeCount();

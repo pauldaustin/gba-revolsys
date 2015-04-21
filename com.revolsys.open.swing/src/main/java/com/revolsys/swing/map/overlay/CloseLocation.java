@@ -1,7 +1,7 @@
 package com.revolsys.swing.map.overlay;
 
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
 import com.revolsys.gis.model.geometry.util.IndexedLineSegment;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
@@ -72,7 +72,7 @@ public class CloseLocation {
     return this.layer;
   }
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return this.layer.getMetaData();
   }
 
@@ -108,7 +108,7 @@ public class CloseLocation {
   }
 
   public String getTypePath() {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     return metaData.getPath();
   }
 
@@ -121,7 +121,7 @@ public class CloseLocation {
     final StringBuffer string = new StringBuffer();
     string.append(getTypePath());
     string.append(", ");
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     string.append(metaData.getIdAttributeName());
     string.append("=");
     final Object id = getId();

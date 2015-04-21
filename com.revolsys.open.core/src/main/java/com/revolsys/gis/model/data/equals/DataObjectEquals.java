@@ -3,10 +3,10 @@ package com.revolsys.gis.model.data.equals;
 import java.util.Collection;
 import java.util.Map;
 
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.model.RecordDefinition;
 
-public class DataObjectEquals implements Equals<DataObject> {
+public class DataObjectEquals implements Equals<Record> {
   public static final String EXCLUDE_GEOMETRY = DataObjectEquals.class.getName()
     + ".excludeGeometry";
 
@@ -14,8 +14,8 @@ public class DataObjectEquals implements Equals<DataObject> {
     + ".excludeId";
 
   public static boolean equalAttributes(
-    final Collection<String> excludedAttributes, final DataObject object1,
-    final DataObject object2, final Collection<String> attributeNames) {
+    final Collection<String> excludedAttributes, final Record object1,
+    final Record object2, final Collection<String> attributeNames) {
     for (final String attributeName : attributeNames) {
       if (!equals(excludedAttributes, object1, object2, attributeName)) {
         return false;
@@ -24,8 +24,8 @@ public class DataObjectEquals implements Equals<DataObject> {
     return true;
   }
 
-  public static boolean equalAttributes(final DataObject object1,
-    final DataObject object2, final Collection<String> attributeNames) {
+  public static boolean equalAttributes(final Record object1,
+    final Record object2, final Collection<String> attributeNames) {
     for (final String attributeName : attributeNames) {
       if (!equals(object1, object2, attributeName)) {
         return false;
@@ -34,7 +34,7 @@ public class DataObjectEquals implements Equals<DataObject> {
     return true;
   }
 
-  public static boolean equalAttributes(final DataObject object1,
+  public static boolean equalAttributes(final Record object1,
     final Map<String, Object> values2) {
     if (object1 == null) {
       return values2 == null;
@@ -52,9 +52,9 @@ public class DataObjectEquals implements Equals<DataObject> {
   }
 
   public static boolean equals(final Collection<String> excludedAttributes,
-    final DataObject object1, final DataObject object2,
+    final Record object1, final Record object2,
     final String attributeName) {
-    final DataObjectMetaData metaData = object1.getMetaData();
+    final RecordDefinition metaData = object1.getMetaData();
     if (excludedAttributes.contains(attributeName)) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_ID)
@@ -70,14 +70,14 @@ public class DataObjectEquals implements Equals<DataObject> {
     }
   }
 
-  public static boolean equals(final DataObject object1,
-    final DataObject object2, final String attributeName) {
+  public static boolean equals(final Record object1,
+    final Record object2, final String attributeName) {
     final Object value1 = object1.getValue(attributeName);
     final Object value2 = object2.getValue(attributeName);
     return EqualsInstance.INSTANCE.equals(value1, value2);
   }
 
-  public static boolean isAttributeIgnored(final DataObjectMetaData metaData,
+  public static boolean isAttributeIgnored(final RecordDefinition metaData,
     final Collection<String> excludedAttributes, final String attributeName) {
     if (excludedAttributes.contains(attributeName)) {
       return true;
@@ -95,11 +95,11 @@ public class DataObjectEquals implements Equals<DataObject> {
   private EqualsRegistry equalsRegistry;
 
   @Override
-  public boolean equals(final DataObject object1, final DataObject object2,
+  public boolean equals(final Record object1, final Record object2,
     final Collection<String> excludedAttributes) {
     if (object1 != null && object2 != null) {
-      final DataObjectMetaData metaData1 = object1.getMetaData();
-      final DataObjectMetaData metaData2 = object2.getMetaData();
+      final RecordDefinition metaData1 = object1.getMetaData();
+      final RecordDefinition metaData2 = object2.getMetaData();
       if (metaData1.getPath().equals(metaData2.getPath())) {
         if (metaData1.getAttributeCount() == metaData2.getAttributeCount()) {
           final int idIndex = metaData1.getIdAttributeIndex();

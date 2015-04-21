@@ -17,11 +17,11 @@ import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.postgis.Polygon;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -108,7 +108,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcAttribute {
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final DataObject object) throws SQLException {
+    final int columnIndex, final Record object) throws SQLException {
     final Object oracleValue = resultSet.getObject(columnIndex);
     final Object value = toJava(oracleValue);
     object.setValue(getIndex(), value);
@@ -117,7 +117,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcAttribute {
 
   @Override
   public int setInsertPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final DataObject object) throws SQLException {
+    final int parameterIndex, final Record object) throws SQLException {
     final String name = getName();
     final Object value = object.getValue(name);
     final Object jdbcValue = getInsertUpdateValue(value);

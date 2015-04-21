@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.PathUtil;
 import com.revolsys.util.ExceptionUtil;
@@ -20,7 +20,7 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
 
   private Reference<AbstractDataObjectStore> dataStore;
 
-  private Map<String, DataObjectMetaData> metaDataCache = new TreeMap<String, DataObjectMetaData>();
+  private Map<String, RecordDefinition> metaDataCache = new TreeMap<String, RecordDefinition>();
 
   private String path;
 
@@ -33,12 +33,12 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
     this.path = path;
   }
 
-  public void addMetaData(final DataObjectMetaData metaData) {
+  public void addMetaData(final RecordDefinition metaData) {
     addMetaData(metaData.getPath(), metaData);
   }
 
   protected void addMetaData(final String typePath,
-    final DataObjectMetaData metaData) {
+    final RecordDefinition metaData) {
     metaDataCache.put(typePath.toUpperCase(), metaData);
   }
 
@@ -46,7 +46,7 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
   @PreDestroy
   public void close() {
     if (metaDataCache != null) {
-      for (final DataObjectMetaData metaData : metaDataCache.values()) {
+      for (final RecordDefinition metaData : metaDataCache.values()) {
         metaData.destroy();
       }
       metaDataCache.clear();
@@ -57,13 +57,13 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
     super.close();
   }
 
-  public synchronized DataObjectMetaData findMetaData(final String typePath) {
-    final DataObjectMetaData metaData = metaDataCache.get(typePath);
+  public synchronized RecordDefinition findMetaData(final String typePath) {
+    final RecordDefinition metaData = metaDataCache.get(typePath);
     return metaData;
   }
 
   @SuppressWarnings("unchecked")
-  public <V extends DataObjectStore> V getDataStore() {
+  public <V extends RecordStore> V getDataStore() {
     if (dataStore == null) {
       return null;
     } else {
@@ -85,20 +85,20 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
     }
   }
 
-  public synchronized DataObjectMetaData getMetaData(String typePath) {
+  public synchronized RecordDefinition getMetaData(String typePath) {
     typePath = typePath.toUpperCase();
     if (typePath.startsWith(path + "/") || path.equals("/")) {
       if (metaDataCache.isEmpty()) {
         refreshMetaData();
       }
-      final DataObjectMetaData metaData = metaDataCache.get(typePath.toUpperCase());
+      final RecordDefinition metaData = metaDataCache.get(typePath.toUpperCase());
       return metaData;
     } else {
       return null;
     }
   }
 
-  protected Map<String, DataObjectMetaData> getMetaDataCache() {
+  protected Map<String, RecordDefinition> getMetaDataCache() {
     return metaDataCache;
   }
 
@@ -118,11 +118,11 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
     return new ArrayList<String>(metaDataCache.keySet());
   }
 
-  public List<DataObjectMetaData> getTypes() {
+  public List<RecordDefinition> getTypes() {
     if (metaDataCache.isEmpty()) {
       refreshMetaData();
     }
-    return new ArrayList<DataObjectMetaData>(metaDataCache.values());
+    return new ArrayList<RecordDefinition>(metaDataCache.values());
   }
 
   public void refreshMetaData() {

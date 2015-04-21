@@ -7,10 +7,10 @@ import java.util.Set;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Writer;
@@ -19,13 +19,13 @@ import com.revolsys.spring.SpringUtil;
 public abstract class AbstractDataObjectIoFactory extends
   AbstractDataObjectReaderFactory implements DataObjectWriterFactory {
 
-  public static Writer<DataObject> dataObjectWriter(
-    final DataObjectMetaData metaData, final Resource resource) {
+  public static Writer<Record> dataObjectWriter(
+    final RecordDefinition metaData, final Resource resource) {
     final DataObjectWriterFactory writerFactory = getDataObjectWriterFactory(resource);
     if (writerFactory == null) {
       return null;
     } else {
-      final Writer<DataObject> writer = writerFactory.createDataObjectWriter(
+      final Writer<Record> writer = writerFactory.createDataObjectWriter(
         metaData, resource);
       return writer;
     }
@@ -58,8 +58,8 @@ public abstract class AbstractDataObjectIoFactory extends
    * @return The writer.
    */
   @Override
-  public Writer<DataObject> createDataObjectWriter(
-    final DataObjectMetaData metaData, final Resource resource) {
+  public Writer<Record> createDataObjectWriter(
+    final RecordDefinition metaData, final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
     final String baseName = FileUtil.getBaseName(fileName);
@@ -67,8 +67,8 @@ public abstract class AbstractDataObjectIoFactory extends
   }
 
   @Override
-  public Writer<DataObject> createDataObjectWriter(final String baseName,
-    final DataObjectMetaData metaData, final OutputStream outputStream) {
+  public Writer<Record> createDataObjectWriter(final String baseName,
+    final RecordDefinition metaData, final OutputStream outputStream) {
     return createDataObjectWriter(baseName, metaData, outputStream,
       FileUtil.UTF8);
   }

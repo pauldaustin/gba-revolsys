@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.projection.CoordinatesListProjectionUtil;
 import com.revolsys.gis.cs.projection.CoordinatesOperation;
 import com.revolsys.gis.cs.projection.GeometryOperation;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
@@ -98,7 +98,7 @@ public class BoundingBox extends Envelope implements Cloneable {
     return new BoundingBox();
   }
 
-  public static BoundingBox getBoundingBox(final DataObject object) {
+  public static BoundingBox getBoundingBox(final Record object) {
     if (object == null) {
       return new BoundingBox();
     } else {
@@ -118,7 +118,7 @@ public class BoundingBox extends Envelope implements Cloneable {
   }
 
   public static BoundingBox getBoundingBox(
-    final GeometryFactory geometryFactory, final DataObject object) {
+    final GeometryFactory geometryFactory, final Record object) {
     final BoundingBox boundingBox = getBoundingBox(object);
     return boundingBox.convert(geometryFactory);
   }
@@ -662,7 +662,7 @@ public class BoundingBox extends Envelope implements Cloneable {
     }
   }
 
-  public BoundingBox expandToInclude(final DataObject object) {
+  public BoundingBox expandToInclude(final Record object) {
     if (object != null) {
       final Geometry geometry = object.getGeometryValue();
       return expandToInclude(geometry);
@@ -953,7 +953,7 @@ public class BoundingBox extends Envelope implements Cloneable {
     }
   }
 
-  public boolean intersects(final DataObject record) {
+  public boolean intersects(final Record record) {
     final BoundingBox boundingBox = getBoundingBox(record);
     return intersects(boundingBox);
   }

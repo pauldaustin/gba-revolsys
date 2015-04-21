@@ -3,9 +3,9 @@ package com.revolsys.io.geojson;
 import java.io.BufferedWriter;
 import java.io.Writer;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.io.AbstractWriter;
@@ -21,7 +21,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class GeoJsonDataObjectWriter extends AbstractWriter<DataObject>
+public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
   implements GeoJsonConstants {
 
   boolean initialized = false;
@@ -296,7 +296,7 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<DataObject>
   }
 
   @Override
-  public void write(final DataObject object) {
+  public void write(final Record object) {
     if (initialized) {
       out.endAttribute();
     } else {
@@ -307,7 +307,7 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<DataObject>
     type(FEATURE);
     final Geometry mainGeometry = object.getGeometryValue();
     writeSrid(mainGeometry);
-    final DataObjectMetaData metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getMetaData();
     final int geometryIndex = metaData.getGeometryAttributeIndex();
     boolean geometryWritten = false;
     out.endAttribute();

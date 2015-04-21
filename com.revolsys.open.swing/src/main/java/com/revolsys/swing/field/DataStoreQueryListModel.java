@@ -14,8 +14,8 @@ import javax.swing.event.ListDataListener;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectStore;
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Q;
@@ -25,30 +25,30 @@ import com.revolsys.util.Property;
 
 public class DataStoreQueryListModel implements ListModel {
 
-  private final DataObjectStore dataStore;
+  private final RecordStore dataStore;
 
   private final String displayAttributeName;
 
   protected EventListenerList listDataListeners = new EventListenerList();
 
-  private List<DataObject> objects = new ArrayList<DataObject>();
+  private List<Record> objects = new ArrayList<Record>();
 
   private final List<Query> queries = new ArrayList<Query>();
 
-  private DataObject selectedItem;
+  private Record selectedItem;
 
   private String searchText = "";
 
   private int maxResults = Integer.MAX_VALUE;
 
-  public DataStoreQueryListModel(final DataObjectStore dataStore,
+  public DataStoreQueryListModel(final RecordStore dataStore,
     final String displayAttributeName, final List<Query> queries) {
     this.dataStore = dataStore;
     this.queries.addAll(queries);
     this.displayAttributeName = displayAttributeName;
   }
 
-  public DataStoreQueryListModel(final DataObjectStore dataStore,
+  public DataStoreQueryListModel(final RecordStore dataStore,
     final String displayAttributeName, final Query... queries) {
     this(dataStore, displayAttributeName, Arrays.asList(queries));
   }
@@ -79,7 +79,7 @@ public class DataStoreQueryListModel implements ListModel {
   }
 
   @Override
-  public DataObject getElementAt(final int index) {
+  public Record getElementAt(final int index) {
     return this.objects.get(index);
   }
 
@@ -87,13 +87,13 @@ public class DataStoreQueryListModel implements ListModel {
     return this.listDataListeners.getListeners(ListDataListener.class);
   }
 
-  public List<DataObject> getObjects() {
+  public List<Record> getObjects() {
     return this.objects;
   }
 
-  protected List<DataObject> getObjects(final String searchParam) {
+  protected List<Record> getObjects(final String searchParam) {
     if (Property.hasValue(searchParam) && searchParam.length() >= 2) {
-      final Map<String, DataObject> allObjects = new TreeMap<String, DataObject>();
+      final Map<String, Record> allObjects = new TreeMap<String, Record>();
       for (Query query : this.queries) {
         if (allObjects.size() < this.maxResults) {
           query = query.clone();
@@ -110,10 +110,10 @@ public class DataStoreQueryListModel implements ListModel {
             }
           }
           query.setLimit(this.maxResults);
-          final Reader<DataObject> reader = this.dataStore.query(query);
+          final Reader<Record> reader = this.dataStore.query(query);
           try {
-            final List<DataObject> objects = reader.read();
-            for (final DataObject object : objects) {
+            final List<Record> objects = reader.read();
+            for (final Record object : objects) {
               if (allObjects.size() < this.maxResults) {
                 final String key = object.getString(this.displayAttributeName);
                 if (!allObjects.containsKey(key)) {
@@ -129,7 +129,7 @@ public class DataStoreQueryListModel implements ListModel {
           }
         }
       }
-      return new ArrayList<DataObject>(allObjects.values());
+      return new ArrayList<Record>(allObjects.values());
     } else {
       return Collections.emptyList();
     }
@@ -139,7 +139,7 @@ public class DataStoreQueryListModel implements ListModel {
     return this.searchText;
   }
 
-  public DataObject getSelectedItem() {
+  public Record getSelectedItem() {
     return this.selectedItem;
   }
 

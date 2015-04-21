@@ -22,7 +22,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
 import com.revolsys.collection.ThreadSharedAttributes;
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.DataObjectMap;
 import com.revolsys.parallel.ThreadInterruptedException;
 import com.revolsys.parallel.ThreadUtil;
@@ -32,7 +32,7 @@ import com.revolsys.parallel.process.BaseInProcess;
 import com.revolsys.parallel.tools.ScriptExecutorRunnable;
 import com.revolsys.util.JexlUtil;
 
-public class ScriptExecutorProcess extends BaseInProcess<DataObject> implements
+public class ScriptExecutorProcess extends BaseInProcess<Record> implements
   BeanFactoryAware {
   private static final Logger LOG = LoggerFactory.getLogger(ScriptExecutorProcess.class);
 
@@ -69,7 +69,7 @@ public class ScriptExecutorProcess extends BaseInProcess<DataObject> implements
     }
   }
 
-  private void executeScript(final DataObject object) {
+  private void executeScript(final Record object) {
     try {
       final JexlContext context = new HashMapContext();
       final Map<String, Object> vars = new HashMap<String, Object>(attributes);
@@ -130,7 +130,7 @@ public class ScriptExecutorProcess extends BaseInProcess<DataObject> implements
   }
 
   @Override
-  protected void postRun(final Channel<DataObject> in) {
+  protected void postRun(final Channel<Record> in) {
     tasks.clear();
     if (executor != null) {
       executor.shutdownNow();
@@ -138,7 +138,7 @@ public class ScriptExecutorProcess extends BaseInProcess<DataObject> implements
   }
 
   @Override
-  protected void process(final Channel<DataObject> in, final DataObject object) {
+  protected void process(final Channel<Record> in, final Record object) {
     executeScript(object);
   }
 

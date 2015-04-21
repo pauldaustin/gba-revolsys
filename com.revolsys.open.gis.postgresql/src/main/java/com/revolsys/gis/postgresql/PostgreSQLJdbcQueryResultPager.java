@@ -10,10 +10,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
@@ -24,7 +24,7 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
 
   private Integer numResults;
 
-  private List<DataObject> results = null;
+  private List<Record> results = null;
 
   public PostgreSQLJdbcQueryResultPager(final JdbcDataObjectStore dataStore,
     final Map<String, Object> properties, final Query query) {
@@ -32,10 +32,10 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
   }
 
   @Override
-  public List<DataObject> getList() {
+  public List<Record> getList() {
     synchronized (this) {
       if (results == null) {
-        final ArrayList<DataObject> results = new ArrayList<DataObject>();
+        final ArrayList<Record> results = new ArrayList<Record>();
         final int pageSize = getPageSize();
         final int pageNumber = getPageNumber();
         if (pageNumber != -1) {
@@ -52,9 +52,9 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
           try {
             final JdbcDataObjectStore dataStore = getDataStore();
             final DataObjectFactory dataObjectFactory = getDataObjectFactory();
-            final DataObjectMetaData metaData = getMetaData();
+            final RecordDefinition metaData = getMetaData();
             if (metaData != null) {
-              final List<Attribute> attributes = metaData.getAttributes();
+              final List<FieldDefinition> attributes = metaData.getAttributes();
 
               final PreparedStatement statement = connection.prepareStatement(sql);
               try {
@@ -64,7 +64,7 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
                   if (resultSet.next()) {
                     int i = 0;
                     do {
-                      final DataObject object = JdbcQueryIterator.getNextObject(
+                      final Record object = JdbcQueryIterator.getNextObject(
                         dataStore, metaData, attributes, dataObjectFactory,
                         resultSet);
                       results.add(object);

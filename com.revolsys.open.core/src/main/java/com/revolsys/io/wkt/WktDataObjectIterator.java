@@ -7,19 +7,19 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.Attribute;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class WktDataObjectIterator extends AbstractIterator<DataObject>
+public class WktDataObjectIterator extends AbstractIterator<Record>
   implements DataObjectIterator {
 
   private DataObjectFactory factory;
@@ -28,7 +28,7 @@ public class WktDataObjectIterator extends AbstractIterator<DataObject>
 
   private WktParser wktParser;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   public WktDataObjectIterator(final DataObjectFactory factory,
     final Resource resource) throws IOException {
@@ -50,7 +50,7 @@ public class WktDataObjectIterator extends AbstractIterator<DataObject>
   @Override
   protected void doInit() {
     GeometryFactory geometryFactory;
-    final Attribute geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
     if (geometryAttribute == null) {
       geometryFactory = GeometryFactory.getFactory();
     } else {
@@ -68,19 +68,19 @@ public class WktDataObjectIterator extends AbstractIterator<DataObject>
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
   @Override
-  protected DataObject getNext() {
+  protected Record getNext() {
     try {
       final String wkt = in.readLine();
       final Geometry geometry = wktParser.parseGeometry(wkt);
       if (geometry == null) {
         throw new NoSuchElementException();
       } else {
-        final DataObject object = factory.createDataObject(getMetaData());
+        final Record object = factory.createDataObject(getMetaData());
         object.setGeometryValue(geometry);
         return object;
       }

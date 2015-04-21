@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.FileUtil;
@@ -15,9 +15,9 @@ import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
 
 public class DataObjectDirectoryReader extends
-  AbstractDirectoryReader<DataObject> implements DataObjectMetaDataFactory {
+  AbstractDirectoryReader<Record> implements DataObjectMetaDataFactory {
 
-  private final Map<String, DataObjectMetaData> typePathMetaDataMap = new HashMap<String, DataObjectMetaData>();
+  private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
 
   private Statistics statistics = new Statistics();
 
@@ -25,7 +25,7 @@ public class DataObjectDirectoryReader extends
   }
 
   protected void addMetaData(final DataObjectReader reader) {
-    final DataObjectMetaData metaData = reader.getMetaData();
+    final RecordDefinition metaData = reader.getMetaData();
     if (metaData != null) {
       final String path = metaData.getPath();
       typePathMetaDataMap.put(path, metaData);
@@ -33,7 +33,7 @@ public class DataObjectDirectoryReader extends
   }
 
   @Override
-  protected Reader<DataObject> createReader(final Resource resource) {
+  protected Reader<Record> createReader(final Resource resource) {
     final IoFactoryRegistry registry = IoFactoryRegistry.getInstance();
     final String filename = resource.getFilename();
     final String extension = FileUtil.getFileNameExtension(filename);
@@ -45,8 +45,8 @@ public class DataObjectDirectoryReader extends
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final String path) {
-    final DataObjectMetaData metaData = typePathMetaDataMap.get(path);
+  public RecordDefinition getMetaData(final String path) {
+    final RecordDefinition metaData = typePathMetaDataMap.get(path);
     return metaData;
   }
 
@@ -61,8 +61,8 @@ public class DataObjectDirectoryReader extends
    * @exception NoSuchElementException If the reader has no more data objects.
    */
   @Override
-  public DataObject next() {
-    final DataObject record = super.next();
+  public Record next() {
+    final Record record = super.next();
     statistics.add(record);
     return record;
   }

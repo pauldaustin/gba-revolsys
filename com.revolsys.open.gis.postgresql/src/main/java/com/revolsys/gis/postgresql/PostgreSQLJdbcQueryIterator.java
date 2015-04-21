@@ -7,7 +7,7 @@ import org.postgis.Point;
 
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
@@ -25,7 +25,7 @@ public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
     BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox != null) {
       final String typePath = query.getTypeName();
-      final DataObjectMetaData metaData = getMetaData();
+      final RecordDefinition metaData = getMetaData();
       if (metaData == null) {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
       } else {

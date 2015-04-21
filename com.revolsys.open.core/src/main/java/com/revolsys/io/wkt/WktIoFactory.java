@@ -7,12 +7,12 @@ import java.nio.charset.Charset;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
@@ -37,8 +37,8 @@ public class WktIoFactory extends AbstractDataObjectAndGeometryIoFactory
   }
 
   @Override
-  public Writer<DataObject> createDataObjectWriter(final String baseName,
-    final DataObjectMetaData metaData, final OutputStream outputStream,
+  public Writer<Record> createDataObjectWriter(final String baseName,
+    final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
     return new WktDataObjectWriter(metaData, writer);

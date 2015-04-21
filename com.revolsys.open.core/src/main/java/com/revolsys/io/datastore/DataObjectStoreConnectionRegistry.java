@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistry;
 import com.revolsys.io.json.JsonMapIoFactory;
@@ -68,7 +68,7 @@ public class DataObjectStoreConnectionRegistry extends
     addConnection(connection);
   }
 
-  public void addConnection(final String name, final DataObjectStore dataStore) {
+  public void addConnection(final String name, final RecordStore dataStore) {
     final DataObjectStoreConnection connection = new DataObjectStoreConnection(
       this, name, dataStore);
     addConnection(connection);

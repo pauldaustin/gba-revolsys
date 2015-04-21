@@ -3,14 +3,16 @@ package com.revolsys.gis.data.model;
 import java.util.Arrays;
 import java.util.List;
 
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+
 public class FixedValueDataObject extends BaseDataObject {
   private static final long serialVersionUID = 1L;
 
-  private static final DataObjectMetaData META_DATA = new DataObjectMetaDataImpl();
+  private static final RecordDefinition META_DATA = new RecordDefinitionImpl();
 
   private final Object value;
 
-  public FixedValueDataObject(final DataObjectMetaData metaData,
+  public FixedValueDataObject(final RecordDefinition metaData,
     final Object value) {
     super(metaData);
     this.value = value;

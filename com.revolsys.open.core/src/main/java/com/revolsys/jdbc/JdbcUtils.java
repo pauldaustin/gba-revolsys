@@ -25,10 +25,10 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectStore;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.PathUtil;
@@ -39,7 +39,7 @@ public final class JdbcUtils {
   private static final Logger LOG = Logger.getLogger(JdbcUtils.class);
 
   public static void addAttributeName(final StringBuffer sql,
-    final String tablePrefix, final Attribute attribute) {
+    final String tablePrefix, final FieldDefinition attribute) {
     if (attribute instanceof JdbcAttribute) {
       final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
       jdbcAttribute.addColumnName(sql, tablePrefix);
@@ -49,24 +49,24 @@ public final class JdbcUtils {
   }
 
   public static void addColumnNames(final StringBuffer sql,
-    final DataObjectMetaData metaData, final String tablePrefix) {
+    final RecordDefinition metaData, final String tablePrefix) {
     for (int i = 0; i < metaData.getAttributeCount(); i++) {
       if (i > 0) {
         sql.append(", ");
       }
-      final Attribute attribute = metaData.getAttribute(i);
+      final FieldDefinition attribute = metaData.getAttribute(i);
       addAttributeName(sql, tablePrefix, attribute);
     }
   }
 
   public static void addColumnNames(final StringBuffer sql,
-    final DataObjectMetaData metaData, final String tablePrefix,
+    final RecordDefinition metaData, final String tablePrefix,
     final List<String> attributeNames, boolean hasColumns) {
     for (final String attributeName : attributeNames) {
       if (hasColumns) {
         sql.append(", ");
       }
-      final Attribute attribute = metaData.getAttribute(attributeName);
+      final FieldDefinition attribute = metaData.getAttribute(attributeName);
       if (attribute == null) {
         sql.append(attributeName);
       } else {
@@ -144,7 +144,7 @@ public final class JdbcUtils {
     }
   }
 
-  public static String createSelectSql(final DataObjectMetaData metaData,
+  public static String createSelectSql(final RecordDefinition metaData,
     final String tablePrefix, final String fromClause,
     final boolean lockResults, final List<String> attributeNames,
     final Query query, final Map<String, Boolean> orderBy) {
@@ -303,10 +303,10 @@ public final class JdbcUtils {
 
     String sql = query.getSql();
     final Map<String, Boolean> orderBy = query.getOrderBy();
-    DataObjectMetaData metaData = query.getMetaData();
+    RecordDefinition metaData = query.getMetaData();
     if (sql == null) {
       if (metaData == null) {
-        metaData = new DataObjectMetaDataImpl(tableName);
+        metaData = new RecordDefinitionImpl(tableName);
         // throw new IllegalArgumentException("Unknown table name " +
         // tableName);
       }
@@ -357,7 +357,7 @@ public final class JdbcUtils {
     }
   }
 
-  public static void lockTable(final DataObjectStore dataStore,
+  public static void lockTable(final RecordStore dataStore,
     final String typePath) {
     if (dataStore instanceof JdbcDataObjectStore) {
       final JdbcDataObjectStore jdbcDataStore = (JdbcDataObjectStore)dataStore;

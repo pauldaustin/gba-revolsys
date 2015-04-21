@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 import org.jdesktop.swingx.VerticalLayout;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
@@ -36,8 +36,8 @@ public class MarkerStylePanel extends BaseStylePanel implements
     this.geometryStyleRenderer = markerStyleRenderer;
     this.markerStyle = markerStyleRenderer.getStyle().clone();
     final AbstractDataObjectLayer layer = markerStyleRenderer.getLayer();
-    final DataObjectMetaData metaData = layer.getMetaData();
-    final Attribute geometryAttribute = metaData.getGeometryAttribute();
+    final RecordDefinition metaData = layer.getMetaData();
+    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
 
     if (geometryAttribute != null) {
 

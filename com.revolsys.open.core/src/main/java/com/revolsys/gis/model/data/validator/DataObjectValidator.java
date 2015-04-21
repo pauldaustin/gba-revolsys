@@ -26,12 +26,12 @@ import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
-import com.revolsys.gis.data.model.types.EnumerationDataType;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
+import com.revolsys.data.types.EnumerationDataType;
+import com.revolsys.gis.data.model.RecordDefinition;
 
 public class DataObjectValidator {
   private static final Logger log = Logger.getLogger(DataObjectValidator.class);
@@ -104,15 +104,15 @@ public class DataObjectValidator {
 
   public boolean isValid(final Object object) {
     // TODO does not do checks from super classes
-    if (object instanceof DataObject) {
-      final DataObject dataObject = (DataObject)object;
+    if (object instanceof Record) {
+      final Record dataObject = (Record)object;
       boolean valid = true;
 
-      final DataObjectMetaData type = dataObject.getMetaData();
+      final RecordDefinition type = dataObject.getMetaData();
       for (int i = 0; i < type.getAttributeCount(); i++) {
         final Object value = dataObject.getValue(i);
         final DataType dataType = type.getAttributeType(i);
-        final Attribute attribDef = type.getAttribute(i);
+        final FieldDefinition attribDef = type.getAttribute(i);
         final String attributeName = type.getAttributeName(i);
 
         if (value == null) {

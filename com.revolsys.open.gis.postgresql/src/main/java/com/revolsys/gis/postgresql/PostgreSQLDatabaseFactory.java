@@ -15,7 +15,7 @@ import org.postgresql.ds.PGPoolingDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jdbc.io.JdbcDatabaseFactory;
 import com.revolsys.util.JavaBeanUtil;
@@ -98,7 +98,7 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public Class<? extends DataObjectStore> getDataObjectStoreInterfaceClass(
+  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
     return JdbcDataObjectStore.class;
   }

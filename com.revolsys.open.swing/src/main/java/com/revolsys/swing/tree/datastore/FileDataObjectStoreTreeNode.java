@@ -16,7 +16,7 @@ import javax.swing.tree.TreeNode;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
@@ -99,7 +99,7 @@ public class FileDataObjectStoreTreeNode extends FileTreeNode implements
   @Override
   protected List<TreeNode> doLoadChildren() {
     final List<TreeNode> children = new ArrayList<TreeNode>();
-    final DataObjectStore dataStore = getDataStore();
+    final RecordStore dataStore = getDataStore();
     for (final DataObjectStoreSchema schema : dataStore.getSchemas()) {
       final String schemaPath = schema.getPath();
 
@@ -112,7 +112,7 @@ public class FileDataObjectStoreTreeNode extends FileTreeNode implements
 
   @Override
   @SuppressWarnings("unchecked")
-  public <V extends DataObjectStore> V getDataStore() {
+  public <V extends RecordStore> V getDataStore() {
     final File file = getUserData();
     return (V)DataObjectStoreConnectionManager.getDataStore(file);
   }

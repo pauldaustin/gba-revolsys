@@ -3,12 +3,12 @@ package com.revolsys.gis.oracle.esri;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.Attribute;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
 import com.revolsys.jdbc.io.JdbcConstants;
@@ -26,7 +26,7 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcAttributeAdder {
   }
 
   @Override
-  public Attribute addAttribute(final DataObjectMetaDataImpl metaData,
+  public FieldDefinition addAttribute(final RecordDefinitionImpl metaData,
     final String name, final String dataTypeName, final int sqlType,
     final int length, final int scale, final boolean required,
     final String description) {
@@ -60,7 +60,7 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcAttributeAdder {
     final GeometryFactory geometryFactory = JdbcAttributeAdder.getColumnProperty(
       schema, typePath, columnName, JdbcAttributeAdder.GEOMETRY_FACTORY);
 
-    final Attribute attribute = new ArcSdeStGeometryAttribute(name, dataType,
+    final FieldDefinition attribute = new ArcSdeStGeometryAttribute(name, dataType,
       required, description, null, spatialReference, numAxis);
 
     metaData.addAttribute(attribute);

@@ -28,8 +28,8 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Column;
@@ -77,7 +77,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
 
   private final TextField searchTextField;
 
-  private final DataObjectMetaData metaData;
+  private final RecordDefinition metaData;
 
   private final AbstractDataObjectLayer layer;
 
@@ -105,7 +105,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
 
   private boolean settingFilter = false;
 
-  private Attribute attribute;
+  private FieldDefinition attribute;
 
   public AttributeFilterPanel(final TablePanel tablePanel,
     final DataObjectLayerTableModel tableModel) {
@@ -468,7 +468,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
     if (!EqualsRegistry.equal(searchFieldName, this.previousSearchFieldName)) {
       this.previousSearchFieldName = searchFieldName;
       this.layer.setProperty("searchField", searchFieldName);
-      final DataObjectMetaData metaData = this.tableModel.getMetaData();
+      final RecordDefinition metaData = this.tableModel.getMetaData();
       this.attribute = metaData.getAttribute(searchFieldName);
       final Class<?> attributeClass = this.attribute.getTypeClass();
       if (!EqualsRegistry.equal(searchFieldName,

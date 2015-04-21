@@ -20,12 +20,12 @@
  */
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectGeometryFilter<G extends Geometry> implements
-  Filter<DataObject> {
+  Filter<Record> {
   private Filter<G> filter;
 
   public DataObjectGeometryFilter() {
@@ -37,7 +37,7 @@ public class DataObjectGeometryFilter<G extends Geometry> implements
 
   @Override
   @SuppressWarnings("unchecked")
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final G geometry = (G)object.getGeometryValue();
     if (filter.accept(geometry)) {
       return true;

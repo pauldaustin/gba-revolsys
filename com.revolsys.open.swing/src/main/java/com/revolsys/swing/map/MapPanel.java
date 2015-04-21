@@ -30,10 +30,10 @@ import javax.swing.undo.UndoableEdit;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.awt.WebColors;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.action.enablecheck.ObjectPropertyEnableCheck;
 import com.revolsys.swing.component.BasePanel;
@@ -890,7 +890,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     setBoundingBox(boundingBox);
   }
 
-  public void zoomTo(final DataObject object) {
+  public void zoomTo(final Record object) {
     if (object != null) {
       final Geometry geometry = object.getGeometryValue();
       zoomTo(geometry);

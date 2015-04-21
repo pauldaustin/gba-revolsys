@@ -13,11 +13,11 @@ import oracle.spatial.geometry.JGeometry;
 import oracle.sql.ARRAY;
 import oracle.sql.STRUCT;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -89,7 +89,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final DataObject object) throws SQLException {
+    final int columnIndex, final Record object) throws SQLException {
     Geometry value;
     final int geometryType = resultSet.getInt(columnIndex);
     final int numAxis = geometryType / 1000;
@@ -122,7 +122,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
 
   @Override
   public int setInsertPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final DataObject object) throws SQLException {
+    final int parameterIndex, final Record object) throws SQLException {
     final String name = getName();
     final Object value = object.getValue(name);
     if (value == null) {

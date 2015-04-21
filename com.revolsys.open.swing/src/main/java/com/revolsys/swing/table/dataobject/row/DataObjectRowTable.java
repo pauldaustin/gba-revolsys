@@ -13,9 +13,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
 import com.revolsys.swing.map.layer.dataobject.table.predicate.ErrorPredicate;
@@ -61,12 +61,12 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
 
   }
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     final DataObjectRowTableModel model = (DataObjectRowTableModel)getModel();
     return model.getMetaData();
   }
 
-  public DataObject getSelectedRecord() {
+  public Record getSelectedRecord() {
     final int row = getSelectedRow();
     if (row == -1) {
       return null;
@@ -96,13 +96,13 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
   protected void initializeColumnPreferredWidth(final TableColumn column) {
     super.initializeColumnPreferredWidth(column);
     final DataObjectRowTableModel model = getTableModel();
-    final DataObjectMetaData metaData = model.getMetaData();
+    final RecordDefinition metaData = model.getMetaData();
     final int viewIndex = column.getModelIndex();
     final int attributesOffset = model.getAttributesOffset();
     if (viewIndex < attributesOffset) {
       final String attributeName = model.getFieldName(viewIndex
         - attributesOffset);
-      final Attribute attribute = metaData.getAttribute(attributeName);
+      final FieldDefinition attribute = metaData.getAttribute(attributeName);
       if (attribute != null) {
         Integer columnWidth = attribute.getProperty("tableColumnWidth");
         final String columnName = attribute.getTitle();
@@ -121,7 +121,7 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
   public void mouseClicked(final MouseEvent e) {
     if (e.getSource() == getTableHeader()) {
       final DataObjectRowTableModel model = (DataObjectRowTableModel)getModel();
-      final DataObjectMetaData metaData = model.getMetaData();
+      final RecordDefinition metaData = model.getMetaData();
       final int column = columnAtPoint(e.getPoint());
       if (column > -1 && SwingUtilities.isLeftMouseButton(e)) {
         final int index = convertColumnIndexToModel(column);

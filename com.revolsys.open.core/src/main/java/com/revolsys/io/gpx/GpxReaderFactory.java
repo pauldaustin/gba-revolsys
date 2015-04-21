@@ -9,7 +9,7 @@ import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.io.DataObjectReader;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 
 public class GpxReaderFactory extends
   AbstractDataObjectAndGeometryReaderFactory {
@@ -21,7 +21,7 @@ public class GpxReaderFactory extends
   }
 
   public DataObjectReader createDataObjectReader(
-    final DataObjectMetaData metaData, final Resource resource,
+    final RecordDefinition metaData, final Resource resource,
     final DataObjectFactory factory) {
     throw new UnsupportedOperationException();
   }

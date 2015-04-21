@@ -1,7 +1,7 @@
 package com.revolsys.gis.data.io;
 
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 
 public class DataObjectStoreSchemaProxy extends DataObjectStoreSchema {
   private final DataObjectStoreSchema schema;
@@ -14,12 +14,12 @@ public class DataObjectStoreSchemaProxy extends DataObjectStoreSchema {
   }
 
   @Override
-  public synchronized DataObjectMetaData findMetaData(final String typePath) {
-    DataObjectMetaData metaData = super.findMetaData(typePath);
+  public synchronized RecordDefinition findMetaData(final String typePath) {
+    RecordDefinition metaData = super.findMetaData(typePath);
     if (metaData == null) {
       metaData = schema.findMetaData(typePath);
       if (metaData != null) {
-        metaData = new DataObjectMetaDataImpl(getDataStore(), this,
+        metaData = new RecordDefinitionImpl(getDataStore(), this,
           metaData);
         addMetaData(typePath, metaData);
       }
@@ -28,12 +28,12 @@ public class DataObjectStoreSchemaProxy extends DataObjectStoreSchema {
   }
 
   @Override
-  public synchronized DataObjectMetaData getMetaData(final String typePath) {
-    DataObjectMetaData metaData = findMetaData(typePath);
+  public synchronized RecordDefinition getMetaData(final String typePath) {
+    RecordDefinition metaData = findMetaData(typePath);
     if (metaData == null) {
       metaData = schema.getMetaData(typePath);
       if (metaData != null) {
-        metaData = new DataObjectMetaDataImpl(getDataStore(), this,
+        metaData = new RecordDefinitionImpl(getDataStore(), this,
           metaData);
         addMetaData(typePath, metaData);
       }

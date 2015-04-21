@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.io.AbstractMultipleIteratorReader;
 
-public class FileGdbReader extends AbstractMultipleIteratorReader<DataObject> {
+public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
 
   private List<String> typePaths = new ArrayList<String>();
 
-  private final CapiFileGdbDataObjectStore dataStore;
+  private final CapiFileGdbRecordStore dataStore;
 
   private BoundingBox boundingBox;
 
   private int index = 0;
 
-  public FileGdbReader(final CapiFileGdbDataObjectStore dataStore) {
+  public FileGdbReader(final CapiFileGdbRecordStore dataStore) {
     this.dataStore = dataStore;
   }
 
@@ -27,7 +27,7 @@ public class FileGdbReader extends AbstractMultipleIteratorReader<DataObject> {
   }
 
   @Override
-  protected AbstractIterator<DataObject> getNextIterator() {
+  protected AbstractIterator<Record> getNextIterator() {
     if (index < typePaths.size()) {
       final String typePath = typePaths.get(index);
       final FileGdbQueryIterator iterator = new FileGdbQueryIterator(dataStore,

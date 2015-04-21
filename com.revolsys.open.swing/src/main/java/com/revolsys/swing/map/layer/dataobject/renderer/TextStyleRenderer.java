@@ -28,11 +28,11 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.Record;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.CoordinatesWithOrientation;
@@ -55,7 +55,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
 
-  public static String getLabel(final DataObject object, final TextStyle style) {
+  public static String getLabel(final Record object, final TextStyle style) {
     if (object == null) {
       return "Text";
     } else {
@@ -209,7 +209,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
   }
 
   public static final void renderText(final Viewport2D viewport,
-    final Graphics2D graphics, final DataObject object,
+    final Graphics2D graphics, final Record object,
     final Geometry geometry, final TextStyle style) {
     final String label = getLabel(object, style);
     if (StringUtils.hasText(label) && geometry != null || viewport == null) {

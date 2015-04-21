@@ -9,32 +9,32 @@ import java.util.NoSuchElementException;
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.types.DataType;
+import com.revolsys.gis.data.model.ArrayRecord;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.FileUtil;
 
-public class JsonDataObjectIterator extends AbstractIterator<DataObject>
+public class JsonDataObjectIterator extends AbstractIterator<Record>
   implements DataObjectIterator {
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private JsonMapIterator iterator;
 
-  public JsonDataObjectIterator(final DataObjectMetaData metaData,
+  public JsonDataObjectIterator(final RecordDefinition metaData,
     final InputStream in) {
     this(metaData, FileUtil.createUtf8Reader(in));
   }
 
-  public JsonDataObjectIterator(final DataObjectMetaData metaData,
+  public JsonDataObjectIterator(final RecordDefinition metaData,
     final Reader in) {
     this(metaData, in, false);
   }
 
-  public JsonDataObjectIterator(final DataObjectMetaData metaData,
+  public JsonDataObjectIterator(final RecordDefinition metaData,
     final Reader in, final boolean single) {
     this.metaData = metaData;
     try {
@@ -52,16 +52,16 @@ public class JsonDataObjectIterator extends AbstractIterator<DataObject>
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
   @Override
-  protected DataObject getNext() throws NoSuchElementException {
+  protected Record getNext() throws NoSuchElementException {
     if (iterator.hasNext()) {
       final Map<String, Object> map = iterator.next();
-      final DataObject object = new ArrayDataObject(metaData);
-      for (final Attribute attribute : metaData.getAttributes()) {
+      final Record object = new ArrayRecord(metaData);
+      for (final FieldDefinition attribute : metaData.getAttributes()) {
         final String name = attribute.getName();
         final Object value = map.get(name);
         if (value != null) {

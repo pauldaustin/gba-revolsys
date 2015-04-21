@@ -4,6 +4,8 @@ import java.util.Map;
 
 import org.apache.commons.jexl.JexlContext;
 
+import com.revolsys.data.record.Record;
+
 public class DataObjectJexlContext implements JexlContext {
 
   private final DataObjectMap map = new DataObjectMap();
@@ -11,7 +13,7 @@ public class DataObjectJexlContext implements JexlContext {
   public DataObjectJexlContext() {
   }
 
-  public DataObjectJexlContext(final DataObject object) {
+  public DataObjectJexlContext(final Record object) {
     this.map.setObject(object);
   }
 
@@ -20,7 +22,7 @@ public class DataObjectJexlContext implements JexlContext {
     return map;
   }
 
-  public void setObject(final DataObject object) {
+  public void setObject(final Record object) {
     this.map.setObject(object);
   }
 

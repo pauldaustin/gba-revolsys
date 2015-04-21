@@ -24,15 +24,15 @@ import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ListResultPager;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.collection.ThreadSharedAttributes;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.codes.CodeTableProperty;
@@ -54,12 +54,12 @@ import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractDataObjectStore extends
-  AbstractObjectWithProperties implements DataObjectStore {
+  AbstractObjectWithProperties implements RecordStore {
 
-  public static DataObjectStore close(
-    final Collection<DataObjectStore> dataStores) {
+  public static RecordStore close(
+    final Collection<RecordStore> dataStores) {
     final List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
-    for (final DataObjectStore dataStore : dataStores) {
+    for (final RecordStore dataStore : dataStores) {
       if (dataStore != null) {
         try {
           dataStore.close();
@@ -74,7 +74,7 @@ public abstract class AbstractDataObjectStore extends
     return null;
   }
 
-  public static DataObjectStore close(final DataObjectStore... dataStores) {
+  public static RecordStore close(final RecordStore... dataStores) {
     return close(Arrays.asList(dataStores));
   }
 
@@ -152,14 +152,14 @@ public abstract class AbstractDataObjectStore extends
     }
   }
 
-  protected void addMetaData(final DataObjectMetaData metaData) {
+  protected void addMetaData(final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
     final String schemaName = PathUtil.getPath(typePath);
     final DataObjectStoreSchema schema = getSchema(schemaName);
     schema.addMetaData(metaData);
   }
 
-  protected void addMetaDataProperties(final DataObjectMetaDataImpl metaData) {
+  protected void addMetaDataProperties(final RecordDefinitionImpl metaData) {
     final String typePath = metaData.getPath();
     for (final DataObjectMetaDataProperty property : commonMetaDataProperties) {
       final DataObjectMetaDataProperty clonedProperty = property.clone();
@@ -174,7 +174,7 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public void addStatistic(final String statisticName, final DataObject object) {
+  public void addStatistic(final String statisticName, final Record object) {
     if (statistics != null) {
       statistics.add(statisticName, object);
     }
@@ -218,13 +218,13 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public DataObject copy(final DataObject record) {
-    final DataObjectMetaData metaData = getMetaData(record.getMetaData());
+  public Record copy(final Record record) {
+    final RecordDefinition metaData = getMetaData(record.getMetaData());
     final DataObjectFactory dataObjectFactory = this.dataObjectFactory;
     if (metaData == null || dataObjectFactory == null) {
       return null;
     } else {
-      final DataObject copy = dataObjectFactory.createDataObject(metaData);
+      final Record copy = dataObjectFactory.createDataObject(metaData);
       copy.setValues(record);
       copy.setIdValue(null);
       return copy;
@@ -232,20 +232,20 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public DataObject create(final DataObjectMetaData objectMetaData) {
-    final DataObjectMetaData metaData = getMetaData(objectMetaData);
+  public Record create(final RecordDefinition objectMetaData) {
+    final RecordDefinition metaData = getMetaData(objectMetaData);
     final DataObjectFactory dataObjectFactory = this.dataObjectFactory;
     if (metaData == null || dataObjectFactory == null) {
       return null;
     } else {
-      final DataObject object = dataObjectFactory.createDataObject(metaData);
+      final Record object = dataObjectFactory.createDataObject(metaData);
       return object;
     }
   }
 
   @Override
-  public DataObject create(final String typePath) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+  public Record create(final String typePath) {
+    final RecordDefinition metaData = getMetaData(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -254,14 +254,14 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public DataObject create(final String typePath,
+  public Record create(final String typePath,
     final Map<String, ? extends Object> values) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     if (metaData == null) {
       throw new IllegalArgumentException("Cannot find table " + typePath
         + " for " + this);
     } else {
-      final DataObject record = create(metaData);
+      final Record record = create(metaData);
       if (record != null) {
         record.setValues(values);
         final String idAttributeName = metaData.getIdAttributeName();
@@ -277,7 +277,7 @@ public abstract class AbstractDataObjectStore extends
 
   }
 
-  public AbstractIterator<DataObject> createIterator(final Query query,
+  public AbstractIterator<Record> createIterator(final Query query,
     Map<String, Object> properties) {
     if (properties == null) {
       properties = Collections.emptyMap();
@@ -285,11 +285,11 @@ public abstract class AbstractDataObjectStore extends
     if (query == null) {
       return null;
     } else {
-      final DataObjectMetaData metaData = query.getMetaData();
+      final RecordDefinition metaData = query.getMetaData();
       if (metaData != null) {
         final DataStoreIteratorFactory metaDataIteratorFactory = metaData.getProperty("dataStoreIteratorFactory");
         if (metaDataIteratorFactory != null) {
-          final AbstractIterator<DataObject> iterator = metaDataIteratorFactory.createIterator(
+          final AbstractIterator<Record> iterator = metaDataIteratorFactory.createIterator(
             this, query, properties);
           if (iterator != null) {
             return iterator;
@@ -324,8 +324,8 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public DataObject createWithId(final DataObjectMetaData metaData) {
-    final DataObject record = create(metaData);
+  public Record createWithId(final RecordDefinition metaData) {
+    final Record record = create(metaData);
     if (record != null) {
       final String idAttributeName = metaData.getIdAttributeName();
       if (StringUtils.hasText(idAttributeName)) {
@@ -338,16 +338,16 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public void delete(final DataObject object) {
+  public void delete(final Record object) {
     throw new UnsupportedOperationException("Delete not supported");
   }
 
   @Override
   public int delete(final Query query) {
     int i = 0;
-    final Reader<DataObject> reader = query(query);
+    final Reader<Record> reader = query(query);
     try {
-      for (final DataObject object : reader) {
+      for (final Record object : reader) {
         delete(object);
         i++;
       }
@@ -358,13 +358,13 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public void deleteAll(final Collection<DataObject> objects) {
-    for (final DataObject object : objects) {
+  public void deleteAll(final Collection<Record> objects) {
+    for (final Record object : objects) {
       delete(object);
     }
   }
 
-  protected DataObjectMetaData findMetaData(final String typePath) {
+  protected RecordDefinition findMetaData(final String typePath) {
     final String schemaName = PathUtil.getPath(typePath);
     final DataObjectStoreSchema schema = getSchema(schemaName);
     if (schema == null) {
@@ -376,7 +376,7 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public CodeTable getCodeTable(final String typePath) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -428,14 +428,14 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final DataObjectMetaData objectMetaData) {
+  public RecordDefinition getMetaData(final RecordDefinition objectMetaData) {
     final String typePath = objectMetaData.getPath();
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     return metaData;
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final String typePath) {
+  public RecordDefinition getMetaData(final String typePath) {
     final String schemaName = PathUtil.getPath(typePath);
     final DataObjectStoreSchema schema = getSchema(schemaName);
     if (schema == null) {
@@ -526,8 +526,8 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public List<DataObjectMetaData> getTypes(final String namespace) {
-    final List<DataObjectMetaData> types = new ArrayList<DataObjectMetaData>();
+  public List<RecordDefinition> getTypes(final String namespace) {
+    final List<RecordDefinition> types = new ArrayList<RecordDefinition>();
     for (final String typePath : getTypeNames(namespace)) {
       types.add(getMetaData(typePath));
     }
@@ -545,12 +545,12 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public Writer<DataObject> getWriter() {
+  public Writer<Record> getWriter() {
     return createWriter();
   }
 
   @Override
-  public Writer<DataObject> getWriter(final boolean throwExceptions) {
+  public Writer<Record> getWriter(final boolean throwExceptions) {
     return getWriter();
   }
 
@@ -566,13 +566,13 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public void insert(final DataObject dataObject) {
+  public void insert(final Record dataObject) {
     throw new UnsupportedOperationException("Insert not supported");
   }
 
   @Override
-  public void insertAll(final Collection<DataObject> objects) {
-    for (final DataObject object : objects) {
+  public void insertAll(final Collection<Record> objects) {
+    for (final Record object : objects) {
       insert(object);
     }
   }
@@ -583,8 +583,8 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public DataObject load(final String typePath, final Object... id) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+  public Record load(final String typePath, final Object... id) {
+    final RecordDefinition metaData = getMetaData(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -600,7 +600,7 @@ public abstract class AbstractDataObjectStore extends
         for (int i = 0; i < idAttributeNames.size(); i++) {
           final String name = idAttributeNames.get(i);
           final Object value = id[i];
-          final Attribute attribute = metaData.getAttribute(name);
+          final FieldDefinition attribute = metaData.getAttribute(name);
           query.and(Q.equal(attribute, value));
         }
         return queryFirst(query);
@@ -609,14 +609,14 @@ public abstract class AbstractDataObjectStore extends
   }
 
   protected abstract void loadSchemaDataObjectMetaData(
-    DataObjectStoreSchema schema, Map<String, DataObjectMetaData> metaDataMap);
+    DataObjectStoreSchema schema, Map<String, RecordDefinition> metaDataMap);
 
   protected abstract void loadSchemas(
     Map<String, DataObjectStoreSchema> schemaMap);
 
   @Override
-  public DataObject lock(final String typePath, final Object id) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+  public Record lock(final String typePath, final Object id) {
+    final RecordDefinition metaData = getMetaData(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -633,27 +633,27 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public ResultPager<DataObject> page(final Query query) {
-    final Reader<DataObject> results = query(query);
-    final List<DataObject> list = results.read();
-    return new ListResultPager<DataObject>(list);
+  public ResultPager<Record> page(final Query query) {
+    final Reader<Record> results = query(query);
+    final List<Record> list = results.read();
+    return new ListResultPager<Record>(list);
   }
 
   @Override
-  public Reader<DataObject> query(final DataObjectFactory dataObjectFactory,
+  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
     final String typePath, final Geometry geometry) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     final Query query = new Query(typePath);
     query.setBoundingBox(boundingBox);
     query.setProperty("dataObjectFactory", dataObjectFactory);
-    final Reader<DataObject> reader = query(query);
-    final Filter<DataObject> filter = new DataObjectGeometryIntersectsFilter(
+    final Reader<Record> reader = query(query);
+    final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(
       geometry);
-    return new FilterReader<DataObject>(filter, reader);
+    return new FilterReader<Record>(filter, reader);
   }
 
   @Override
-  public Reader<DataObject> query(final DataObjectFactory dataObjectFactory,
+  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
     final String typePath, final Geometry geometry, final double distance) {
     final Geometry searchGeometry;
     if (geometry == null || geometry.isEmpty() || distance <= 0) {
@@ -670,7 +670,7 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public Reader<DataObject> query(final List<?> queries) {
+  public Reader<Record> query(final List<?> queries) {
     final List<Query> queryObjects = new ArrayList<Query>();
     for (final Object object : queries) {
       if (object instanceof Query) {
@@ -687,12 +687,12 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public Reader<DataObject> query(final Query... queries) {
+  public Reader<Record> query(final Query... queries) {
     return query(Arrays.asList(queries));
   }
 
   @Override
-  public Reader<DataObject> query(final String path) {
+  public Reader<Record> query(final String path) {
     final DataObjectStoreSchema schema = getSchema(path);
     if (schema == null) {
       final Query query = new Query(path);
@@ -707,25 +707,25 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public Reader<DataObject> query(final String typePath, final Geometry geometry) {
+  public Reader<Record> query(final String typePath, final Geometry geometry) {
     final DataObjectFactory dataObjectFactory = getDataObjectFactory();
     return query(dataObjectFactory, typePath, geometry);
   }
 
   @Override
-  public Reader<DataObject> query(final String typePath,
+  public Reader<Record> query(final String typePath,
     final Geometry geometry, final double distance) {
     final DataObjectFactory dataObjectFactory = getDataObjectFactory();
     return query(dataObjectFactory, typePath, geometry, distance);
   }
 
   @Override
-  public DataObject queryFirst(final Query query) {
-    final Reader<DataObject> reader = query(query);
+  public Record queryFirst(final Query query) {
+    final Reader<Record> reader = query(query);
     try {
-      final Iterator<DataObject> iterator = reader.iterator();
+      final Iterator<Record> iterator = reader.iterator();
       if (iterator.hasNext()) {
-        final DataObject object = iterator.next();
+        final Record object = iterator.next();
         return object;
       } else {
         return null;
@@ -821,13 +821,13 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public void update(final DataObject object) {
+  public void update(final Record object) {
     throw new UnsupportedOperationException("Update not supported");
   }
 
   @Override
-  public void updateAll(final Collection<DataObject> objects) {
-    for (final DataObject object : objects) {
+  public void updateAll(final Collection<Record> objects) {
+    for (final Record object : objects) {
       update(object);
     }
   }

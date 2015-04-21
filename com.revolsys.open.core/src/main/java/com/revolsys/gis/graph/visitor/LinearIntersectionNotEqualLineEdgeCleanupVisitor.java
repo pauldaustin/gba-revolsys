@@ -13,10 +13,10 @@ import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.NotFilter;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryFilter;
 import com.revolsys.gis.graph.DataObjectGraph;
 import com.revolsys.gis.graph.Edge;
@@ -36,7 +36,7 @@ import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
-  AbstractVisitor<Edge<DataObject>> implements ObjectProcessor<DataObjectGraph> {
+  AbstractVisitor<Edge<Record>> implements ObjectProcessor<DataObjectGraph> {
 
   private static final Logger LOG = LoggerFactory.getLogger(EqualTypeAndLineEdgeCleanupVisitor.class);
 
@@ -46,10 +46,10 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
 
   private Statistics duplicateStatistics;
 
-  private Comparator<DataObject> newerComparator;
+  private Comparator<Record> newerComparator;
 
   public LinearIntersectionNotEqualLineEdgeCleanupVisitor() {
-    super.setComparator(new EdgeLengthComparator<DataObject>(true));
+    super.setComparator(new EdgeLengthComparator<Record>(true));
   }
 
   @PreDestroy
@@ -64,7 +64,7 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
     return equalExcludeAttributes;
   }
 
-  public Comparator<DataObject> getNewerComparator() {
+  public Comparator<Record> getNewerComparator() {
     return newerComparator;
   }
 
@@ -95,7 +95,7 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
   }
 
   @Override
-  public void setComparator(final Comparator<Edge<DataObject>> comparator) {
+  public void setComparator(final Comparator<Edge<Record>> comparator) {
     throw new IllegalArgumentException("Cannot override comparator");
   }
 
@@ -110,54 +110,54 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
     this.equalExcludeAttributes.add(DataObjectEquals.EXCLUDE_GEOMETRY);
   }
 
-  public void setNewerComparator(final Comparator<DataObject> newerComparator) {
+  public void setNewerComparator(final Comparator<Record> newerComparator) {
     this.newerComparator = newerComparator;
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public boolean visit(final Edge<DataObject> edge) {
+  public boolean visit(final Edge<Record> edge) {
     final String typePath = edge.getTypeName();
 
-    final Graph<DataObject> graph = edge.getGraph();
+    final Graph<Record> graph = edge.getGraph();
     final LineString line = edge.getLine();
 
-    final AndFilter<Edge<DataObject>> attributeAndGeometryFilter = new AndFilter<Edge<DataObject>>();
+    final AndFilter<Edge<Record>> attributeAndGeometryFilter = new AndFilter<Edge<Record>>();
 
-    attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<DataObject>(
+    attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(
       typePath));
 
-    final Filter<Edge<DataObject>> filter = getFilter();
+    final Filter<Edge<Record>> filter = getFilter();
     if (filter != null) {
       attributeAndGeometryFilter.addFilter(filter);
     }
 
-    final Filter<DataObject> notEqualLineFilter = new NotFilter<DataObject>(
+    final Filter<Record> notEqualLineFilter = new NotFilter<Record>(
       new DataObjectGeometryFilter<LineString>(
         new EqualFilter<LineString>(line)));
 
     final DataObjectGeometryFilter<LineString> linearIntersectionFilter = new DataObjectGeometryFilter<LineString>(
       new LinearIntersectionFilter(line));
 
-    attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<DataObject>(
-      new AndFilter<DataObject>(notEqualLineFilter, linearIntersectionFilter)));
+    attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(
+      new AndFilter<Record>(notEqualLineFilter, linearIntersectionFilter)));
 
-    final List<Edge<DataObject>> intersectingEdges = graph.getEdges(
+    final List<Edge<Record>> intersectingEdges = graph.getEdges(
       attributeAndGeometryFilter, line);
 
     if (!intersectingEdges.isEmpty()) {
       if (intersectingEdges.size() == 1 && line.getLength() > 10) {
         final CoordinatesList points = CoordinatesListUtil.get(line);
         if (points.size() > 2) {
-          final Edge<DataObject> edge2 = intersectingEdges.get(0);
+          final Edge<Record> edge2 = intersectingEdges.get(0);
           final LineString line2 = edge2.getLine();
           final CoordinatesList points2 = CoordinatesListUtil.get(line2);
 
           if (middleCoordinatesEqual(points, points2)) {
             final boolean firstEqual = points.equal(0, points2, 0, 2);
             if (!firstEqual) {
-              final Node<DataObject> fromNode1 = edge.getFromNode();
-              final Node<DataObject> fromNode2 = edge2.getFromNode();
+              final Node<Record> fromNode1 = edge.getFromNode();
+              final Node<Record> fromNode2 = edge2.getFromNode();
               if (fromNode1.distance(fromNode2) < 2) {
                 graph.moveNodesToMidpoint(typePath, fromNode1, fromNode2);
                 return true;
@@ -166,8 +166,8 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
             final boolean lastEqual = points.equal(points.size() - 1, points2,
               points.size() - 1, 2);
             if (!lastEqual) {
-              final Node<DataObject> toNode1 = edge.getToNode();
-              final Node<DataObject> toNode2 = edge2.getToNode();
+              final Node<Record> toNode1 = edge.getToNode();
+              final Node<Record> toNode2 = edge2.getToNode();
               if (toNode1.distance(toNode2) < 2) {
                 graph.moveNodesToMidpoint(typePath, toNode1, toNode2);
                 return true;

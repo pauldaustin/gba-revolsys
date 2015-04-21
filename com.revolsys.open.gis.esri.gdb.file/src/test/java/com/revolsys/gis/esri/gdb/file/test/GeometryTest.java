@@ -2,16 +2,16 @@ package com.revolsys.gis.esri.gdb.file.test;
 
 import java.io.File;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.Attribute;
+import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
-import com.revolsys.gis.esri.gdb.file.FileGdbDataObjectStore;
-import com.revolsys.gis.esri.gdb.file.FileGdbDataObjectStoreFactory;
+import com.revolsys.gis.esri.gdb.file.FileGdbRecordStore;
+import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
@@ -41,24 +41,24 @@ public class GeometryTest {
     final File file = new File("target/test-data/" + name + ".gdb");
     FileUtil.deleteDirectory(file);
 
-    DataObjectMetaDataImpl metaData = new DataObjectMetaDataImpl(name);
+    RecordDefinitionImpl metaData = new RecordDefinitionImpl(name);
     metaData.addAttribute("ID", DataTypes.INT, true);
-    final Attribute geometryAttribute = metaData.addAttribute("Geometry",
+    final FieldDefinition geometryAttribute = metaData.addAttribute("Geometry",
       geometryDataType, true);
     geometryAttribute.setProperty(AttributeProperties.GEOMETRY_FACTORY,
       geometryFactory);
     metaData.setIdAttributeName("ID");
 
-    final FileGdbDataObjectStore dataStore = FileGdbDataObjectStoreFactory.create(file);
+    final FileGdbRecordStore dataStore = FileGdbRecordStoreFactory.create(file);
     dataStore.initialize();
-    metaData = (DataObjectMetaDataImpl)dataStore.getMetaData(metaData);
-    final DataObject object = new ArrayDataObject(metaData);
+    metaData = (RecordDefinitionImpl)dataStore.getMetaData(metaData);
+    final Record object = new ArrayRecord(metaData);
     object.setIdValue(1);
     object.setGeometryValue(geometry);
 
     dataStore.insert(object);
 
-    final DataObject object2 = dataStore.load(name, 1);
+    final Record object2 = dataStore.load(name, 1);
     if (!EqualsInstance.INSTANCE.equals(object, object2)) {
       System.out.println("Not Equal");
       System.out.println(object);

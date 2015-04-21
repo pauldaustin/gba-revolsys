@@ -11,10 +11,10 @@ import java.util.UUID;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectStore;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
 import com.revolsys.gis.data.query.And;
@@ -33,7 +33,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
   public static final String PROPERTY_NAME = CodeTableProperty.class.getName();
 
   public static final CodeTableProperty getProperty(
-    final DataObjectMetaData metaData) {
+    final RecordDefinition metaData) {
     final CodeTableProperty property = metaData.getProperty(PROPERTY_NAME);
     return property;
   }
@@ -44,11 +44,11 @@ public class CodeTableProperty extends AbstractCodeTable implements
 
   private List<String> attributeAliases = new ArrayList<String>();
 
-  private DataObjectStore dataStore;
+  private RecordStore dataStore;
 
   private boolean loadAll = true;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private List<String> valueAttributeNames = DEFAULT_ATTRIBUTE_NAMES;
 
@@ -73,7 +73,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
     attributeAliases.add(columnName);
   }
 
-  public void addValue(final DataObject code) {
+  public void addValue(final Record code) {
     final Object id = code.getValue(getIdAttributeName());
     final List<Object> values = new ArrayList<Object>();
     for (final String attributeName : this.valueAttributeNames) {
@@ -83,8 +83,8 @@ public class CodeTableProperty extends AbstractCodeTable implements
     addValue(id, values);
   }
 
-  protected void addValues(final Iterable<DataObject> allCodes) {
-    for (final DataObject code : allCodes) {
+  protected void addValues(final Iterable<Record> allCodes) {
+    for (final Record code : allCodes) {
       addValue(code);
     }
   }
@@ -101,11 +101,11 @@ public class CodeTableProperty extends AbstractCodeTable implements
   protected synchronized Object createId(final List<Object> values) {
     if (createMissingCodes) {
       // TODO prevent duplicates from other threads/processes
-      final DataObject code = dataStore.create(typePath);
-      final DataObjectMetaData metaData = code.getMetaData();
+      final Record code = dataStore.create(typePath);
+      final RecordDefinition metaData = code.getMetaData();
       Object id = dataStore.createPrimaryIdValue(typePath);
       if (id == null) {
-        final Attribute idAttribute = metaData.getIdAttribute();
+        final FieldDefinition idAttribute = metaData.getIdAttribute();
         if (idAttribute != null) {
           if (Number.class.isAssignableFrom(idAttribute.getType()
             .getJavaClass())) {
@@ -158,7 +158,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
     return creationTimestampAttributeName;
   }
 
-  public DataObjectStore getDataStore() {
+  public RecordStore getDataStore() {
     return dataStore;
   }
 
@@ -195,7 +195,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
@@ -239,15 +239,15 @@ public class CodeTableProperty extends AbstractCodeTable implements
         threadLoading.set(Boolean.TRUE);
         loading = true;
         try {
-          final DataObjectMetaData metaData = dataStore.getMetaData(typePath);
+          final RecordDefinition metaData = dataStore.getMetaData(typePath);
           final Query query = new Query(typePath);
           query.setAttributeNames(metaData.getAttributeNames());
           for (final String order : orderBy) {
             query.addOrderBy(order, true);
           }
           try (
-            Reader<DataObject> reader = dataStore.query(query)) {
-            final List<DataObject> codes = reader.read();
+            Reader<Record> reader = dataStore.query(query)) {
+            final List<Record> codes = reader.read();
             dataStore.getStatistics()
               .getStatistics("query")
               .add(typePath, -codes.size());
@@ -283,16 +283,16 @@ public class CodeTableProperty extends AbstractCodeTable implements
           if (value == null) {
             and.add(Q.isNull(attributeName));
           } else {
-            final Attribute attribute = metaData.getAttribute(attributeName);
+            final FieldDefinition attribute = metaData.getAttribute(attributeName);
             and.add(Q.equal(attribute, value));
           }
           i++;
         }
       }
       query.setWhereCondition(and);
-      final Reader<DataObject> reader = dataStore.query(query);
+      final Reader<Record> reader = dataStore.query(query);
       try {
-        final List<DataObject> codes = reader.read();
+        final List<Record> codes = reader.read();
         dataStore.getStatistics()
           .getStatistics("query")
           .add(typePath, -codes.size());
@@ -317,7 +317,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
       loadAll();
       values = getValueById(id);
     } else {
-      final DataObject code = dataStore.load(typePath, id);
+      final Record code = dataStore.load(typePath, id);
       if (code != null) {
         addValue(code);
         values = getValueById(id);
@@ -360,7 +360,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
   }
 
   @Override
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     if (this.metaData != metaData) {
       if (this.metaData != null) {
         this.metaData.setProperty(getPropertyName(), null);

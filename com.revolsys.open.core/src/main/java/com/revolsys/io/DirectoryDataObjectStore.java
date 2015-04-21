@@ -9,14 +9,14 @@ import javax.annotation.PostConstruct;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
 import com.revolsys.gis.data.io.AbstractDataObjectStore;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.filter.DirectoryFilenameFilter;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
@@ -26,13 +26,13 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
 
   private boolean createMissingTables = true;
 
-  private final Map<String, Writer<DataObject>> writers = new HashMap<String, Writer<DataObject>>();
+  private final Map<String, Writer<Record>> writers = new HashMap<String, Writer<Record>>();
 
   private File directory;
 
   private String fileExtension;
 
-  private Writer<DataObject> writer;
+  private Writer<Record> writer;
 
   private boolean createMissingDataStore = true;
 
@@ -46,7 +46,7 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   public void close() {
     directory = null;
     if (writers != null) {
-      for (final Writer<DataObject> writer : writers.values()) {
+      for (final Writer<Record> writer : writers.values()) {
         writer.close();
       }
       writers.clear();
@@ -59,7 +59,7 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public Writer<DataObject> createWriter() {
+  public Writer<Record> createWriter() {
     return new DirectoryDataObjectStoreWriter(this);
   }
 
@@ -72,8 +72,8 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final DataObjectMetaData objectMetaData) {
-    final DataObjectMetaData metaData = super.getMetaData(objectMetaData);
+  public RecordDefinition getMetaData(final RecordDefinition objectMetaData) {
+    final RecordDefinition metaData = super.getMetaData(objectMetaData);
     if (metaData == null && createMissingTables) {
       final String typePath = objectMetaData.getPath();
       final String schemaName = PathUtil.getPath(typePath);
@@ -86,10 +86,10 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
       if (!schemaDirectory.exists()) {
         schemaDirectory.mkdirs();
       }
-      final DataObjectMetaDataImpl newMetaData = new DataObjectMetaDataImpl(
+      final RecordDefinitionImpl newMetaData = new RecordDefinitionImpl(
         this, schema, typePath);
-      for (final Attribute attribute : objectMetaData.getAttributes()) {
-        final Attribute newAttribute = new Attribute(attribute);
+      for (final FieldDefinition attribute : objectMetaData.getAttributes()) {
+        final FieldDefinition newAttribute = new FieldDefinition(attribute);
         newMetaData.addAttribute(newAttribute);
       }
       schema.addMetaData(newMetaData);
@@ -103,7 +103,7 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public synchronized Writer<DataObject> getWriter() {
+  public synchronized Writer<Record> getWriter() {
     if (writer == null && directory != null) {
       writer = new DirectoryDataObjectStoreWriter(this);
     }
@@ -120,10 +120,10 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public synchronized void insert(final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+  public synchronized void insert(final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     final String typePath = metaData.getPath();
-    Writer<DataObject> writer = writers.get(typePath);
+    Writer<Record> writer = writers.get(typePath);
     if (writer == null) {
       final String schemaName = PathUtil.getPath(typePath);
       final File subDirectory = new File(getDirectory(), schemaName);
@@ -149,7 +149,7 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
     return createMissingTables;
   }
 
-  protected DataObjectMetaData loadMetaData(final String schemaName,
+  protected RecordDefinition loadMetaData(final String schemaName,
     final File file) {
     throw new UnsupportedOperationException();
   }
@@ -157,14 +157,14 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   @Override
   protected void loadSchemaDataObjectMetaData(
     final DataObjectStoreSchema schema,
-    final Map<String, DataObjectMetaData> metaDataMap) {
+    final Map<String, RecordDefinition> metaDataMap) {
     final String schemaName = schema.getPath();
     final File subDirectory = new File(directory, schemaName);
     final File[] files = subDirectory.listFiles(new ExtensionFilenameFilter(
       fileExtension));
     if (files != null) {
       for (final File file : files) {
-        final DataObjectMetaData metaData = loadMetaData(schemaName, file);
+        final RecordDefinition metaData = loadMetaData(schemaName, file);
         if (metaData != null) {
           final String typePath = metaData.getPath();
           metaDataMap.put(typePath, metaData);
@@ -185,7 +185,7 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public Reader<DataObject> query(final DataObjectFactory dataObjectFactory,
+  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
     final String typePath, final Geometry geometry) {
     throw new UnsupportedOperationException();
   }

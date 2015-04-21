@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.Attribute;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.ShortNameProperty;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDdlWriter;
@@ -28,7 +28,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
   }
 
   @Override
-  public String getSequenceName(final DataObjectMetaData metaData) {
+  public String getSequenceName(final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
     final String schema = JdbcUtils.getSchemaName(typePath);
     final ShortNameProperty shortNameProperty = ShortNameProperty.getProperty(metaData);
@@ -48,7 +48,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
     }
   }
 
-  public void writeAddGeometryColumn(final DataObjectMetaData metaData) {
+  public void writeAddGeometryColumn(final RecordDefinition metaData) {
     final PrintWriter out = getOut();
     final String typePath = metaData.getPath();
     String schemaName = JdbcUtils.getSchemaName(typePath);
@@ -56,7 +56,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       schemaName = "public";
     }
     final String tableName = PathUtil.getName(typePath);
-    final Attribute geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
@@ -120,7 +120,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
   }
 
   @Override
-  public void writeColumnDataType(final Attribute attribute) {
+  public void writeColumnDataType(final FieldDefinition attribute) {
     final PrintWriter out = getOut();
     final DataType dataType = attribute.getType();
     if (dataType == DataTypes.BOOLEAN) {
@@ -174,7 +174,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
   }
 
   @Override
-  public void writeGeometryMetaData(final DataObjectMetaData metaData) {
+  public void writeGeometryMetaData(final RecordDefinition metaData) {
     final PrintWriter out = getOut();
     final String typePath = metaData.getPath();
     String schemaName = JdbcUtils.getSchemaName(typePath);
@@ -182,7 +182,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       schemaName = "public";
     }
     final String tableName = PathUtil.getName(typePath);
-    final Attribute geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
@@ -220,11 +220,11 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
 
   @Override
   public void writeResetSequence(
-    final DataObjectMetaData metaData,
-    final List<DataObject> values) {
+    final RecordDefinition metaData,
+    final List<Record> values) {
     final PrintWriter out = getOut();
     Long nextValue = 0L;
-    for (final DataObject object : values) {
+    for (final Record object : values) {
       final Object id = object.getIdValue();
       if (id instanceof Number) {
         final Number number = (Number)id;

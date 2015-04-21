@@ -4,11 +4,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.util.CompareUtil;
 
-public class DataObjectAttributeComparator implements Comparator<DataObject> {
+public class DataObjectAttributeComparator implements Comparator<Record> {
   private List<String> attributeNames;
 
   private boolean invert;
@@ -33,7 +33,7 @@ public class DataObjectAttributeComparator implements Comparator<DataObject> {
   }
 
   @Override
-  public int compare(final DataObject object1, final DataObject object2) {
+  public int compare(final Record object1, final Record object2) {
     for (final String attributeName : attributeNames) {
       final int compare = compare(object1, object2, attributeName);
       if (compare != 0) {
@@ -44,7 +44,7 @@ public class DataObjectAttributeComparator implements Comparator<DataObject> {
     return 0;
   }
 
-  public int compare(final DataObject object1, final DataObject object2,
+  public int compare(final Record object1, final Record object2,
     final String attributeName) {
     final Comparable<Object> value1 = DataObjectUtil.getAttributeByPath(
       object1, attributeName);

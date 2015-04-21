@@ -3,23 +3,23 @@ package com.revolsys.gis.data.io;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.Reader;
 import com.revolsys.parallel.process.AbstractProcess;
 
 public class DataStoreQueryTask extends AbstractProcess {
 
-  private final DataObjectStore dataStore;
+  private final RecordStore dataStore;
 
   private final BoundingBox boundingBox;
 
-  private List<DataObject> objects;
+  private List<Record> objects;
 
   private final String path;
 
-  public DataStoreQueryTask(final DataObjectStore dataStore, final String path,
+  public DataStoreQueryTask(final RecordStore dataStore, final String path,
     final BoundingBox boundingBox) {
     this.dataStore = dataStore;
     this.path = path;
@@ -37,12 +37,12 @@ public class DataStoreQueryTask extends AbstractProcess {
 
   @Override
   public void run() {
-    objects = new ArrayList<DataObject>();
+    objects = new ArrayList<Record>();
     final Query query = new Query(path);
     query.setBoundingBox(boundingBox);
-    final Reader<DataObject> reader = dataStore.query(query);
+    final Reader<Record> reader = dataStore.query(query);
     try {
-      for (final DataObject object : reader) {
+      for (final Record object : reader) {
         try {
           objects.add(object);
         } catch (final NullPointerException e) {

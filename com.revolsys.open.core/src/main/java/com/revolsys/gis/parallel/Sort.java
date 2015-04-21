@@ -5,16 +5,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 
-public class Sort extends BaseInOutProcess<DataObject, DataObject> {
+public class Sort extends BaseInOutProcess<Record, Record> {
 
-  private Comparator<DataObject> comparator;
+  private Comparator<Record> comparator;
 
-  private final List<DataObject> objects = new ArrayList<DataObject>();
+  private final List<Record> objects = new ArrayList<Record>();
 
   private String attributeName;
 
@@ -22,24 +22,24 @@ public class Sort extends BaseInOutProcess<DataObject, DataObject> {
     return attributeName;
   }
 
-  public Comparator<DataObject> getComparator() {
+  public Comparator<Record> getComparator() {
     return comparator;
   }
 
   @Override
-  protected void postRun(final Channel<DataObject> in,
-    final Channel<DataObject> out) {
+  protected void postRun(final Channel<Record> in,
+    final Channel<Record> out) {
     if (comparator != null) {
       Collections.sort(objects, comparator);
     }
-    for (final DataObject object : objects) {
+    for (final Record object : objects) {
       out.write(object);
     }
   }
 
   @Override
-  protected void process(final Channel<DataObject> in,
-    final Channel<DataObject> out, final DataObject object) {
+  protected void process(final Channel<Record> in,
+    final Channel<Record> out, final Record object) {
     objects.add(object);
   }
 
@@ -48,7 +48,7 @@ public class Sort extends BaseInOutProcess<DataObject, DataObject> {
     this.comparator = new DataObjectAttributeComparator(attributeName);
   }
 
-  public void setComparator(final Comparator<DataObject> comparator) {
+  public void setComparator(final Comparator<Record> comparator) {
     this.comparator = comparator;
   }
 

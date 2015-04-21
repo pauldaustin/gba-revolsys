@@ -7,12 +7,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTable;
@@ -22,9 +22,9 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectListLayer extends AbstractDataObjectLayer {
 
-  public static DataObjectMetaDataImpl createMetaData(final String name,
+  public static RecordDefinitionImpl createMetaData(final String name,
     final GeometryFactory geometryFactory, final DataType geometryType) {
-    final DataObjectMetaDataImpl metaData = new DataObjectMetaDataImpl(name);
+    final RecordDefinitionImpl metaData = new RecordDefinitionImpl(name);
     metaData.addAttribute("GEOMETRY", geometryType, true);
     metaData.setGeometryFactory(geometryFactory);
     return metaData;
@@ -35,7 +35,7 @@ public class DataObjectListLayer extends AbstractDataObjectLayer {
   public DataObjectListLayer() {
   }
 
-  public DataObjectListLayer(final DataObjectMetaData metaData) {
+  public DataObjectListLayer(final RecordDefinition metaData) {
     super(metaData);
     setEditable(true);
   }
@@ -47,7 +47,7 @@ public class DataObjectListLayer extends AbstractDataObjectLayer {
   public DataObjectListLayer(final String name,
     final GeometryFactory geometryFactory, final DataType geometryType) {
     super(name);
-    final DataObjectMetaDataImpl metaData = createMetaData(name,
+    final RecordDefinitionImpl metaData = createMetaData(name,
       geometryFactory, geometryType);
     setMetaData(metaData);
   }

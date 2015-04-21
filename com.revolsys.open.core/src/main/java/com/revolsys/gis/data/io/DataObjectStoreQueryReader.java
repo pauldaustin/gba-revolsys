@@ -11,13 +11,13 @@ import javax.annotation.PreDestroy;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.data.query.SqlCondition;
 
-public class DataObjectStoreQueryReader extends IteratorReader<DataObject>
+public class DataObjectStoreQueryReader extends IteratorReader<Record>
   implements DataObjectReader {
 
   private AbstractDataObjectStore dataStore;
@@ -54,7 +54,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<DataObject>
     whereClause = null;
   }
 
-  protected AbstractIterator<DataObject> createQueryIterator(final int i) {
+  protected AbstractIterator<Record> createQueryIterator(final int i) {
     if (i < queries.size()) {
       final Query query = queries.get(i);
       if (StringUtils.hasText(whereClause)) {
@@ -64,7 +64,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<DataObject>
         query.setBoundingBox(boundingBox);
       }
 
-      final AbstractIterator<DataObject> iterator = dataStore.createIterator(
+      final AbstractIterator<Record> iterator = dataStore.createIterator(
         query, getProperties());
       return iterator;
     }
@@ -80,7 +80,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<DataObject>
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return ((DataObjectIterator)iterator()).getMetaData();
   }
 
@@ -97,7 +97,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<DataObject>
   public void open() {
     if (typePaths != null) {
       for (final String tableName : typePaths) {
-        final DataObjectMetaData metaData = dataStore.getMetaData(tableName);
+        final RecordDefinition metaData = dataStore.getMetaData(tableName);
         if (metaData != null) {
           Query query;
           if (boundingBox == null) {

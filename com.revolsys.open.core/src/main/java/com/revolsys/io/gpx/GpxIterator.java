@@ -22,11 +22,11 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -47,7 +47,7 @@ public class GpxIterator implements DataObjectIterator {
 
   private static final Logger log = Logger.getLogger(GpxIterator.class);
 
-  private DataObject currentDataObject;
+  private Record currentDataObject;
 
   private DataObjectFactory dataObjectFactory;
 
@@ -69,7 +69,7 @@ public class GpxIterator implements DataObjectIterator {
 
   private int index = 0;
 
-  private final Queue<DataObject> objects = new LinkedList<DataObject>();
+  private final Queue<Record> objects = new LinkedList<Record>();
 
   public GpxIterator(final File file) throws IOException, XMLStreamException {
     this(new FileReader(file));
@@ -115,7 +115,7 @@ public class GpxIterator implements DataObjectIterator {
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return GpxConstants.GPX_TYPE;
   }
 
@@ -152,7 +152,7 @@ public class GpxIterator implements DataObjectIterator {
   }
 
   @Override
-  public DataObject next() {
+  public Record next() {
     if (hasNext()) {
       loadNextObject = true;
       return currentDataObject;
@@ -161,7 +161,7 @@ public class GpxIterator implements DataObjectIterator {
     }
   }
 
-  protected Object parseAttribute(final DataObject dataObject) {
+  protected Object parseAttribute(final Record dataObject) {
     final String attributeName = in.getLocalName();
     final String stringValue = StaxUtils.getElementText(in);
     Object value;
@@ -213,7 +213,7 @@ public class GpxIterator implements DataObjectIterator {
   // return attribute;
   // }
 
-  private DataObject parseDataObject() throws XMLStreamException {
+  private Record parseDataObject() throws XMLStreamException {
     if (!objects.isEmpty()) {
       return objects.remove();
     } else {
@@ -237,9 +237,9 @@ public class GpxIterator implements DataObjectIterator {
     }
   }
 
-  protected DataObject parsePoint(final String featureType, final double index)
+  protected Record parsePoint(final String featureType, final double index)
     throws XMLStreamException {
-    final DataObject dataObject = dataObjectFactory.createDataObject(GpxConstants.GPX_TYPE);
+    final Record dataObject = dataObjectFactory.createDataObject(GpxConstants.GPX_TYPE);
     dataObject.setValue("dataset_name", baseName);
     dataObject.setValue("index", index);
     dataObject.setValue("feature_type", featureType);
@@ -269,20 +269,20 @@ public class GpxIterator implements DataObjectIterator {
     return dataObject;
   }
 
-  private DataObject parseRoute() throws XMLStreamException {
+  private Record parseRoute() throws XMLStreamException {
     index++;
-    final DataObject dataObject = dataObjectFactory.createDataObject(GpxConstants.GPX_TYPE);
+    final Record dataObject = dataObjectFactory.createDataObject(GpxConstants.GPX_TYPE);
     dataObject.setValue("dataset_name", baseName);
     dataObject.setValue("index", index);
     dataObject.setValue("feature_type", "rte");
-    final List<DataObject> pointObjects = new ArrayList<DataObject>();
+    final List<Record> pointObjects = new ArrayList<Record>();
     int numAxis = 2;
     while (in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (in.getName().equals(GpxConstants.EXTENSION_ELEMENT)) {
         StaxUtils.skipSubTree(in);
       } else if (in.getName().equals(GpxConstants.ROUTE_POINT_ELEMENT)) {
         final double pointIndex = index + (pointObjects.size() + 1.0) / 10000;
-        final DataObject pointObject = parseRoutPoint(pointIndex);
+        final Record pointObject = parseRoutPoint(pointIndex);
         pointObjects.add(pointObject);
         final Point point = pointObject.getGeometryValue();
         final Coordinates coordinates = CoordinatesUtil.get(point);
@@ -294,7 +294,7 @@ public class GpxIterator implements DataObjectIterator {
     final CoordinatesList points = new DoubleCoordinatesList(
       pointObjects.size(), numAxis);
     for (int i = 0; i < points.size(); i++) {
-      final DataObject pointObject = pointObjects.get(i);
+      final Record pointObject = pointObjects.get(i);
       final Point point = pointObject.getGeometryValue();
       final Coordinates coordinates = CoordinatesUtil.get(point);
       for (int j = 0; j < numAxis; j++) {
@@ -314,15 +314,15 @@ public class GpxIterator implements DataObjectIterator {
     return dataObject;
   }
 
-  private DataObject parseRoutPoint(final double index)
+  private Record parseRoutPoint(final double index)
     throws XMLStreamException {
     final String featureType = "rtept";
     return parsePoint(featureType, index);
   }
 
-  private DataObject parseTrack() throws XMLStreamException {
+  private Record parseTrack() throws XMLStreamException {
     index++;
-    final DataObject dataObject = dataObjectFactory.createDataObject(GpxConstants.GPX_TYPE);
+    final Record dataObject = dataObjectFactory.createDataObject(GpxConstants.GPX_TYPE);
     dataObject.setValue("dataset_name", baseName);
     dataObject.setValue("index", index);
     dataObject.setValue("feature_type", "trk");
@@ -398,7 +398,7 @@ public class GpxIterator implements DataObjectIterator {
     return new DoubleCoordinatesList(numAxis, points);
   }
 
-  private DataObject parseWaypoint() throws XMLStreamException {
+  private Record parseWaypoint() throws XMLStreamException {
     index++;
     final String featureType = "wpt";
     return parsePoint(featureType, index);

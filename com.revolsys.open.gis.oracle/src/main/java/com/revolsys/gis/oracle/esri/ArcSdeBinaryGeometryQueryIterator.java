@@ -18,20 +18,20 @@ import com.esri.sde.sdk.client.SeShape;
 import com.esri.sde.sdk.client.SeShapeFilter;
 import com.esri.sde.sdk.client.SeSqlConstruct;
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 
 public class ArcSdeBinaryGeometryQueryIterator extends
-  AbstractIterator<DataObject> {
+  AbstractIterator<Record> {
 
   private SeConnection connection;
 
@@ -39,11 +39,11 @@ public class ArcSdeBinaryGeometryQueryIterator extends
 
   private JdbcDataObjectStore dataStore;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private SeQuery seQuery;
 
-  private List<Attribute> attributes = new ArrayList<Attribute>();
+  private List<FieldDefinition> attributes = new ArrayList<FieldDefinition>();
 
   private Query query;
 
@@ -112,7 +112,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
             this.attributes.addAll(this.metaData.getAttributes());
             attributeNames.addAll(this.metaData.getAttributeNames());
           } else {
-            final Attribute attribute = this.metaData.getAttribute(attributeName);
+            final FieldDefinition attribute = this.metaData.getAttribute(attributeName);
             if (attribute != null) {
               this.attributes.add(attribute);
             }
@@ -150,7 +150,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
 
       final String typePath = this.query.getTypeNameAlias();
       if (typePath != null) {
-        final DataObjectMetaDataImpl newMetaData = ((DataObjectMetaDataImpl)this.metaData).clone();
+        final RecordDefinitionImpl newMetaData = ((RecordDefinitionImpl)this.metaData).clone();
         newMetaData.setName(typePath);
         this.metaData = newMetaData;
       }
@@ -160,7 +160,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
     }
   }
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     if (this.metaData == null) {
       hasNext();
     }
@@ -168,12 +168,12 @@ public class ArcSdeBinaryGeometryQueryIterator extends
   }
 
   @Override
-  protected DataObject getNext() throws NoSuchElementException {
+  protected Record getNext() throws NoSuchElementException {
     try {
       if (this.seQuery != null) {
         final SeRow row = this.seQuery.fetch();
         if (row != null) {
-          final DataObject object = getNextRecord(metaData, row);
+          final Record object = getNextRecord(metaData, row);
           if (this.statistics != null) {
             this.statistics.add(object);
           }
@@ -194,9 +194,9 @@ public class ArcSdeBinaryGeometryQueryIterator extends
     }
   }
 
-  private DataObject getNextRecord(final DataObjectMetaData metaData,
+  private Record getNextRecord(final RecordDefinition metaData,
     final SeRow row) {
-    final DataObject object = this.dataObjectFactory.createDataObject(metaData);
+    final Record object = this.dataObjectFactory.createDataObject(metaData);
     if (object != null) {
       object.setState(DataObjectState.Initalizing);
       for (int columnIndex = 0; columnIndex < this.attributes.size(); columnIndex++) {

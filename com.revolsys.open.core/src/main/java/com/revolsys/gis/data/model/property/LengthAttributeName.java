@@ -2,22 +2,22 @@ package com.revolsys.gis.data.model.property;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LengthAttributeName extends AbstractDataObjectMetaDataProperty {
   public static final String PROPERTY_NAME = LengthAttributeName.class.getName()
     + ".propertyName";
 
-  public static LengthAttributeName getProperty(final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+  public static LengthAttributeName getProperty(final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     return getProperty(metaData);
   }
 
   public static LengthAttributeName getProperty(
-    final DataObjectMetaData metaData) {
+    final RecordDefinition metaData) {
     LengthAttributeName property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new LengthAttributeName();
@@ -26,7 +26,7 @@ public class LengthAttributeName extends AbstractDataObjectMetaDataProperty {
     return property;
   }
 
-  public static void setObjectLength(final DataObject object) {
+  public static void setObjectLength(final Record object) {
     final LengthAttributeName property = getProperty(object);
     property.setLength(object);
   }
@@ -53,7 +53,7 @@ public class LengthAttributeName extends AbstractDataObjectMetaDataProperty {
     this.attributeName = attributeName;
   }
 
-  public void setLength(final DataObject object) {
+  public void setLength(final Record object) {
     if (StringUtils.hasText(attributeName)) {
       final LineString line = object.getGeometryValue();
       final double length = line.getLength();

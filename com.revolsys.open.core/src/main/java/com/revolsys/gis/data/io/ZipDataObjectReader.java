@@ -6,14 +6,14 @@ import java.io.IOException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipUtil;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 
-public class ZipDataObjectReader extends DelegatingReader<DataObject> implements
+public class ZipDataObjectReader extends DelegatingReader<Record> implements
   DataObjectReader {
   private DataObjectReader reader;
 
@@ -50,7 +50,7 @@ public class ZipDataObjectReader extends DelegatingReader<DataObject> implements
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return reader.getMetaData();
   }
 

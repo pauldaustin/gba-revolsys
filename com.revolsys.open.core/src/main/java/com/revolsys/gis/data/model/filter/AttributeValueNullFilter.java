@@ -1,14 +1,14 @@
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 
 /**
  * Filter DataObjects by the the attribute having a null value.
  * 
  * @author Paul Austin
  */
-public class AttributeValueNullFilter implements Filter<DataObject> {
+public class AttributeValueNullFilter implements Filter<Record> {
 
   /** The property name, or path to match. */
   private String attributeName;
@@ -27,7 +27,7 @@ public class AttributeValueNullFilter implements Filter<DataObject> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Object propertyValue = object.getValue(attributeName);
     return propertyValue == null;
   }

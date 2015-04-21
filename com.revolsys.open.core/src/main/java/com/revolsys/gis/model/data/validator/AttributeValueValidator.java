@@ -20,8 +20,8 @@
  */
 package com.revolsys.gis.model.data.validator;
 
-import com.revolsys.gis.data.model.Attribute;
+import com.revolsys.data.record.schema.FieldDefinition;
 
 public interface AttributeValueValidator {
-  boolean isValid(Attribute attributeDefinition, Object value);
+  boolean isValid(FieldDefinition attributeDefinition, Object value);
 }

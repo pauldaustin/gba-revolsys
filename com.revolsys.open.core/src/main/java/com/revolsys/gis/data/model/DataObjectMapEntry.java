@@ -2,19 +2,21 @@ package com.revolsys.gis.data.model;
 
 import java.util.Map.Entry;
 
+import com.revolsys.data.record.Record;
+
 public class DataObjectMapEntry implements Entry<String, Object> {
-  private final DataObject object;
+  private final Record object;
 
   private final int index;
 
-  public DataObjectMapEntry(final DataObject object, final int index) {
+  public DataObjectMapEntry(final Record object, final int index) {
     this.object = object;
     this.index = index;
   }
 
   @Override
   public String getKey() {
-    final DataObjectMetaData metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getMetaData();
     return metaData.getAttributeName(index);
   }
 

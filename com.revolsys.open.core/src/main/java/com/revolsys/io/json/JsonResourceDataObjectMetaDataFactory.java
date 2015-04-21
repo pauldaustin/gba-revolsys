@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
@@ -20,7 +20,7 @@ public class JsonResourceDataObjectMetaDataFactory extends
   AbstractObjectWithProperties implements ApplicationContextAware,
   DataObjectMetaDataFactory {
 
-  private final Map<String, DataObjectMetaData> metaDataMap = new HashMap<String, DataObjectMetaData>();
+  private final Map<String, RecordDefinition> metaDataMap = new HashMap<String, RecordDefinition>();
 
   private String locationPattern;
 
@@ -31,7 +31,7 @@ public class JsonResourceDataObjectMetaDataFactory extends
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final String typePath) {
+  public RecordDefinition getMetaData(final String typePath) {
     return metaDataMap.get(typePath);
   }
 
@@ -39,7 +39,7 @@ public class JsonResourceDataObjectMetaDataFactory extends
   public void init() {
     try {
       for (final Resource resource : applicationContext.getResources(locationPattern)) {
-        final DataObjectMetaData metaData = MapObjectFactoryRegistry.toObject(resource);
+        final RecordDefinition metaData = MapObjectFactoryRegistry.toObject(resource);
         final String name = metaData.getPath();
         metaDataMap.put(name, metaData);
       }

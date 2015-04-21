@@ -3,35 +3,35 @@ package com.revolsys.gis.data.model.filter;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectEqualsFilter implements Filter<DataObject> {
+public class DataObjectEqualsFilter implements Filter<Record> {
   private EqualsRegistry equalsRegistry = EqualsInstance.INSTANCE;
 
   private final Collection<String> equalExclude = new HashSet<String>();
 
-  private final DataObject searchObject;
+  private final Record searchObject;
 
-  public DataObjectEqualsFilter(final DataObject searchObject) {
+  public DataObjectEqualsFilter(final Record searchObject) {
     this(null, searchObject, null);
   }
 
-  public DataObjectEqualsFilter(final DataObject searchObject,
+  public DataObjectEqualsFilter(final Record searchObject,
     final Collection<String> equalExclude) {
     this(null, searchObject, equalExclude);
   }
 
   public DataObjectEqualsFilter(final EqualsRegistry equalsRegistry,
-    final DataObject searchObject) {
+    final Record searchObject) {
     this(null, searchObject, null);
   }
 
   public DataObjectEqualsFilter(final EqualsRegistry equalsRegistry,
-    final DataObject searchObject, final Collection<String> equalExclude) {
+    final Record searchObject, final Collection<String> equalExclude) {
     if (equalsRegistry != null) {
       this.equalsRegistry = equalsRegistry;
     }
@@ -42,7 +42,7 @@ public class DataObjectEqualsFilter implements Filter<DataObject> {
   }
 
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Geometry serachGeometry = searchObject.getGeometryValue();
     final Geometry geometry = object.getGeometryValue();
 

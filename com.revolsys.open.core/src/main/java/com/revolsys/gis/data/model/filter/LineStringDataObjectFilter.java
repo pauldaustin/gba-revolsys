@@ -1,11 +1,11 @@
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LineStringDataObjectFilter implements Filter<DataObject> {
+public class LineStringDataObjectFilter implements Filter<Record> {
 
   public static final LineStringDataObjectFilter FILTER = new LineStringDataObjectFilter();
 
@@ -13,7 +13,7 @@ public class LineStringDataObjectFilter implements Filter<DataObject> {
   }
 
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Geometry geometry = object.getGeometryValue();
     return geometry instanceof LineString;
   }

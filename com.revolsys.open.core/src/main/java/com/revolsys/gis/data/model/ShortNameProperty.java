@@ -1,18 +1,20 @@
 package com.revolsys.gis.data.model;
 
+import com.revolsys.data.record.Record;
+
 public class ShortNameProperty extends AbstractDataObjectMetaDataProperty {
   static final String PROPERTY_NAME = "http://revolsys.com/gis/shortName";
 
-  public static ShortNameProperty getProperty(final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+  public static ShortNameProperty getProperty(final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     return getProperty(metaData);
   }
 
-  public static ShortNameProperty getProperty(final DataObjectMetaData metaData) {
+  public static ShortNameProperty getProperty(final RecordDefinition metaData) {
     return metaData.getProperty(PROPERTY_NAME);
   }
 
-  public static String getShortName(final DataObject object) {
+  public static String getShortName(final Record object) {
     final ShortNameProperty property = getProperty(object);
     if (property == null) {
       return null;
@@ -21,7 +23,7 @@ public class ShortNameProperty extends AbstractDataObjectMetaDataProperty {
     }
   }
 
-  public static String getShortName(final DataObjectMetaData metaData) {
+  public static String getShortName(final RecordDefinition metaData) {
     final ShortNameProperty property = getProperty(metaData);
     if (property == null) {
       return null;

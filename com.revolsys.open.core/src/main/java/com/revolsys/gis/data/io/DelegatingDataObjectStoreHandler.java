@@ -9,7 +9,7 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 public class DelegatingDataObjectStoreHandler implements InvocationHandler {
-  public static <T extends DataObjectStore> T create(final String label,
+  public static <T extends RecordStore> T create(final String label,
     final Class<T> interfaceClass, final T dataStore) {
     final ClassLoader classLoader = dataStore.getClass().getClassLoader();
     final Class<?>[] interfaces = new Class<?>[] {
@@ -24,7 +24,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T extends DataObjectStore> T create(final String label,
+  public static <T extends RecordStore> T create(final String label,
     final Map<String, ? extends Object> config) {
     final ClassLoader classLoader = Thread.currentThread()
       .getContextClassLoader();
@@ -46,7 +46,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
 
   private Map<String, Object> config;
 
-  private DataObjectStore dataStore;
+  private RecordStore dataStore;
 
   private String label;
 
@@ -54,7 +54,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
   }
 
   public DelegatingDataObjectStoreHandler(final String label,
-    final DataObjectStore dataStore) {
+    final RecordStore dataStore) {
     this.label = label;
     this.dataStore = dataStore;
   }
@@ -65,16 +65,16 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
     this.config = new HashMap<String, Object>(config);
   }
 
-  protected DataObjectStore createDataStore() {
+  protected RecordStore createDataStore() {
     if (config != null) {
-      final DataObjectStore dataStore = DataObjectStoreFactoryRegistry.createDataObjectStore(config);
+      final RecordStore dataStore = DataObjectStoreFactoryRegistry.createDataObjectStore(config);
       return dataStore;
     } else {
       throw new UnsupportedOperationException("Data store must be set manually");
     }
   }
 
-  public DataObjectStore getDataStore() {
+  public RecordStore getDataStore() {
     if (dataStore == null) {
       dataStore = createDataStore();
       dataStore.initialize();
@@ -102,14 +102,14 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
       return equal;
     } else if (method.getName().equals("close") && numArgs == 0) {
       if (dataStore != null) {
-        final DataObjectStore dataStore = getDataStore();
+        final RecordStore dataStore = getDataStore();
 
         dataStore.close();
         this.dataStore = null;
       }
       return null;
     } else {
-      final DataObjectStore dataStore = getDataStore();
+      final RecordStore dataStore = getDataStore();
       return method.invoke(dataStore, args);
     }
   }

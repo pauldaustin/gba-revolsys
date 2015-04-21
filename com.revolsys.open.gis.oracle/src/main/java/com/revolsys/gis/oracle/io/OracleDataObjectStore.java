@@ -12,16 +12,16 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.Attribute;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.ShortNameProperty;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.data.query.SqlCondition;
 import com.revolsys.gis.oracle.esri.ArcSdeBinaryGeometryDataStoreExtension;
@@ -79,14 +79,14 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
     final BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox != null) {
       final String typePath = query.getTypeName();
-      final DataObjectMetaData metaData = getMetaData(typePath);
+      final RecordDefinition metaData = getMetaData(typePath);
       if (metaData == null) {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
       } else if (metaData.getGeometryAttribute() == null) {
         return query;
       } else {
         query = query.clone();
-        final Attribute geometryAttribute = metaData.getGeometryAttribute();
+        final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
         final String geometryColumnName = geometryAttribute.getName();
         final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
 
@@ -117,20 +117,20 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
     return query;
   }
 
-  public AbstractIterator<DataObject> createOracleIterator(
+  public AbstractIterator<Record> createOracleIterator(
     final OracleDataObjectStore dataStore, final Query query,
     final Map<String, Object> properties) {
     return new OracleJdbcQueryIterator(dataStore, query, properties);
   }
 
   @Override
-  public String getGeneratePrimaryKeySql(final DataObjectMetaData metaData) {
+  public String getGeneratePrimaryKeySql(final RecordDefinition metaData) {
     final String sequenceName = getSequenceName(metaData);
     return sequenceName + ".NEXTVAL";
   }
 
   @Override
-  public Object getNextPrimaryKey(final DataObjectMetaData metaData) {
+  public Object getNextPrimaryKey(final RecordDefinition metaData) {
     final String sequenceName = getSequenceName(metaData);
     return getNextPrimaryKey(sequenceName);
   }
@@ -155,7 +155,7 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
     return super.getRowCount(query);
   }
 
-  public String getSequenceName(final DataObjectMetaData metaData) {
+  public String getSequenceName(final RecordDefinition metaData) {
     if (metaData == null) {
       return null;
     } else {
@@ -246,7 +246,7 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
   }
 
   @Override
-  public ResultPager<DataObject> page(final Query query) {
+  public ResultPager<Record> page(final Query query) {
     return new OracleJdbcQueryResultPager(this, getProperties(), query);
   }
 

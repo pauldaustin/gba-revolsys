@@ -15,7 +15,7 @@ import org.jdesktop.swingx.JXTextField;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.types.DataType;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.menu.PopupMenu;

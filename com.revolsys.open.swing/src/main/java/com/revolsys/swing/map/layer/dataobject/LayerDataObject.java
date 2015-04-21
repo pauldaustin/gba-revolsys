@@ -6,15 +6,15 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.model.ArrayRecord;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.util.Property;
 
-public class LayerDataObject extends ArrayDataObject {
+public class LayerDataObject extends ArrayRecord {
   private static final long serialVersionUID = 1L;
 
   private final AbstractDataObjectLayer layer;
@@ -132,7 +132,7 @@ public class LayerDataObject extends ArrayDataObject {
     if (getState() == DataObjectState.Initalizing) {
       return true;
     } else {
-      final DataObjectMetaData metaData = getMetaData();
+      final RecordDefinition metaData = getMetaData();
       final String name = metaData.getAttributeName(index);
       return isValid(name);
     }
@@ -143,7 +143,7 @@ public class LayerDataObject extends ArrayDataObject {
     if (getState() == DataObjectState.Initalizing) {
       return true;
     } else {
-      final Attribute attribute = getMetaData().getAttribute(name);
+      final FieldDefinition attribute = getMetaData().getAttribute(name);
       if (attribute != null && attribute.isRequired()) {
         final Object value = getValue(name);
         if (value == null || value instanceof String
@@ -182,7 +182,7 @@ public class LayerDataObject extends ArrayDataObject {
 
   @Override
   public void setValue(final int index, final Object value) {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     final String attributeName = metaData.getAttributeName(index);
 
     final Object oldValue = getValue(index);

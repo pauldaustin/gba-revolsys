@@ -1,14 +1,16 @@
 package com.revolsys.gis.data.model;
 
+import com.revolsys.data.record.Record;
+
 public class GlobalIdProperty extends AbstractDataObjectMetaDataProperty {
   static final String PROPERTY_NAME = "http://revolsys.com/gis/globalId";
 
-  public static GlobalIdProperty getProperty(final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+  public static GlobalIdProperty getProperty(final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     return getProperty(metaData);
   }
 
-  public static GlobalIdProperty getProperty(final DataObjectMetaData metaData) {
+  public static GlobalIdProperty getProperty(final RecordDefinition metaData) {
     if (metaData == null) {
       return null;
     } else {
@@ -44,7 +46,7 @@ public class GlobalIdProperty extends AbstractDataObjectMetaDataProperty {
   }
 
   @Override
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     if (attributeName == null) {
       attributeName = metaData.getIdAttributeName();
     }

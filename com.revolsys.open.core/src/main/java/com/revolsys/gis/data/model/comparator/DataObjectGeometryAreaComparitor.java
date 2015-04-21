@@ -2,11 +2,11 @@ package com.revolsys.gis.data.model.comparator;
 
 import java.util.Comparator;
 
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class DataObjectGeometryAreaComparitor implements Comparator<DataObject> {
+public class DataObjectGeometryAreaComparitor implements Comparator<Record> {
 
   private boolean clockwise = false;
 
@@ -22,7 +22,7 @@ public class DataObjectGeometryAreaComparitor implements Comparator<DataObject> 
   }
 
   @Override
-  public int compare(final DataObject object1, final DataObject object2) {
+  public int compare(final Record object1, final Record object2) {
     if (object1 == object2) {
       return 0;
     }

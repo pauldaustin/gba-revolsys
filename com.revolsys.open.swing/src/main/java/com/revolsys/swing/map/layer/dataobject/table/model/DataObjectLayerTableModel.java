@@ -23,9 +23,9 @@ import javax.swing.SwingWorker;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.collection.LruMap;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Cast;
@@ -59,7 +59,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   public static DataObjectLayerTable createTable(
     final AbstractDataObjectLayer layer) {
-    final DataObjectMetaData metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getMetaData();
     if (metaData == null) {
       return null;
     } else {
@@ -268,7 +268,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   @SuppressWarnings("unchecked")
   @Override
-  public <V extends DataObject> V getRecord(final int row) {
+  public <V extends Record> V getRecord(final int row) {
     if (row < 0) {
       return null;
     } else if (this.attributeFilterMode.equals(MODE_SELECTED)) {

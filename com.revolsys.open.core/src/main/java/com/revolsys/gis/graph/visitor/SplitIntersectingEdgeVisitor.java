@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 import com.revolsys.collection.Visitor;
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterUtil;
 import com.revolsys.gis.algorithm.linematch.LineMatchGraph;
 import com.revolsys.gis.algorithm.linematch.LineSegmentMatch;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.graph.filter.LineFilter;
@@ -23,7 +23,7 @@ import com.revolsys.gis.model.data.equals.Geometry3DExactEquals;
 import com.revolsys.gis.model.geometry.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 
-public class SplitIntersectingEdgeVisitor implements Visitor<Edge<DataObject>> {
+public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
 
   public static final String MTACHED = "mtached";
   static {
@@ -144,15 +144,15 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<DataObject>> {
    * @return True
    */
   @Override
-  public boolean visit(final Edge<DataObject> edge) {
+  public boolean visit(final Edge<Record> edge) {
     final LineString line = edge.getLine();
-    final List<Edge<DataObject>> intersectEdges = EdgeIntersectsLinearlyEdgeVisitor.getEdges(
+    final List<Edge<Record>> intersectEdges = EdgeIntersectsLinearlyEdgeVisitor.getEdges(
       edge.getGraph(), edge);
     if (!intersectEdges.isEmpty()) {
-      final Filter<Edge<DataObject>> edgeEqualFilter = new LineFilter<DataObject>(
+      final Filter<Edge<Record>> edgeEqualFilter = new LineFilter<Record>(
         new EqualFilter<LineString>(line));
       FilterUtil.remove(intersectEdges, edgeEqualFilter);
-      for (final Edge<DataObject> edge2 : intersectEdges) {
+      for (final Edge<Record> edge2 : intersectEdges) {
         if (!edge2.isRemoved()) {
           final LineString line2 = edge2.getLine();
           final List<List<LineString>> lines = getSplitLines(line, line2);

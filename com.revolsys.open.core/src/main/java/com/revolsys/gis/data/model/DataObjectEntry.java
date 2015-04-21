@@ -2,13 +2,15 @@ package com.revolsys.gis.data.model;
 
 import java.util.Map.Entry;
 
+import com.revolsys.data.record.Record;
+
 public class DataObjectEntry implements Entry<String, Object> {
 
-  private final DataObject dataObject;
+  private final Record dataObject;
 
   private final int index;
 
-  public DataObjectEntry(final DataObject dataObject, final int index) {
+  public DataObjectEntry(final Record dataObject, final int index) {
     this.dataObject = dataObject;
     this.index = index;
   }

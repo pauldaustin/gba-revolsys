@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.ctc.wstx.util.ExceptionUtil;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
@@ -20,9 +20,9 @@ public class CollectionValue extends QueryValue {
 
   private JdbcAttribute jdbcAttribute;
 
-  private Attribute attribute;
+  private FieldDefinition attribute;
 
-  public CollectionValue(final Attribute attribute,
+  public CollectionValue(final FieldDefinition attribute,
     final Collection<? extends Object> values) {
     setAttribute(attribute);
     for (final Object value : values) {
@@ -105,7 +105,7 @@ public class CollectionValue extends QueryValue {
     }
   }
 
-  public Attribute getAttribute() {
+  public FieldDefinition getAttribute() {
     return attribute;
   }
 
@@ -128,7 +128,7 @@ public class CollectionValue extends QueryValue {
   public List<Object> getValues() {
     CodeTable codeTable = null;
     if (attribute != null) {
-      final DataObjectMetaData metaData = attribute.getMetaData();
+      final RecordDefinition metaData = attribute.getMetaData();
       final String fieldName = attribute.getName();
       codeTable = metaData.getCodeTableByColumn(fieldName);
     }
@@ -151,7 +151,7 @@ public class CollectionValue extends QueryValue {
     return values;
   }
 
-  public void setAttribute(final Attribute attribute) {
+  public void setAttribute(final FieldDefinition attribute) {
     this.attribute = attribute;
     if (attribute == null) {
       this.jdbcAttribute = null;

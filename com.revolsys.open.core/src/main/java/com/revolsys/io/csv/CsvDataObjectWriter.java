@@ -5,24 +5,24 @@ import java.io.Writer;
 
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.types.DataType;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.types.DataType;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
 
-public class CsvDataObjectWriter extends AbstractWriter<DataObject> {
+public class CsvDataObjectWriter extends AbstractWriter<Record> {
   /** The writer */
   private final PrintWriter out;
 
-  private final DataObjectMetaData metaData;
+  private final RecordDefinition metaData;
 
   /**
    * Constructs CSVReader with supplied separator and quote char.
    * 
    * @param reader The reader to the CSV file.
    */
-  public CsvDataObjectWriter(final DataObjectMetaData metaData, final Writer out) {
+  public CsvDataObjectWriter(final RecordDefinition metaData, final Writer out) {
     this.metaData = metaData;
     this.out = new PrintWriter(out);
     for (int i = 0; i < metaData.getAttributeCount(); i++) {
@@ -56,7 +56,7 @@ public class CsvDataObjectWriter extends AbstractWriter<DataObject> {
   }
 
   @Override
-  public void write(final DataObject object) {
+  public void write(final Record object) {
     for (int i = 0; i < metaData.getAttributeCount(); i++) {
       if (i > 0) {
         out.print(',');

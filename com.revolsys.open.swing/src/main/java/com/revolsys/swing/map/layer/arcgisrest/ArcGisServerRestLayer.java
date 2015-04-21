@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.format.esri.map.rest.ArcGisServerRestClient;
+import com.revolsys.format.esri.map.rest.MapServer;
+import com.revolsys.format.esri.map.rest.map.TileInfo;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.io.esri.map.rest.ArcGisServerRestClient;
-import com.revolsys.io.esri.map.rest.MapServer;
-import com.revolsys.io.esri.map.rest.map.TileInfo;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapSerializerUtil;

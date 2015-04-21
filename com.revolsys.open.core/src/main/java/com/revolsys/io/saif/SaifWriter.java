@@ -40,8 +40,8 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
@@ -59,12 +59,12 @@ import com.revolsys.io.saif.util.OsnSerializer;
  * @author Paul Austin
  * @see SaifReader
  */
-public class SaifWriter extends AbstractWriter<DataObject> {
+public class SaifWriter extends AbstractWriter<Record> {
   private static final String GLOBAL_METADATA = "/GlobalMetadata";
 
   private static final Logger log = Logger.getLogger(SaifWriter.class);
 
-  private DataObjectMetaData annotatedSpatialDataSetType;
+  private RecordDefinition annotatedSpatialDataSetType;
 
   private final Map<String, String> compositeTypeNames = new HashMap<String, String>();
 
@@ -94,7 +94,7 @@ public class SaifWriter extends AbstractWriter<DataObject> {
 
   private final Map<String, OsnSerializer> serializers = new HashMap<String, OsnSerializer>();
 
-  private DataObjectMetaData spatialDataSetType;
+  private RecordDefinition spatialDataSetType;
 
   private File tempDirectory;
 
@@ -295,12 +295,12 @@ public class SaifWriter extends AbstractWriter<DataObject> {
   public void flush() {
   }
 
-  private DataObjectMetaData getCompositeType(final String typePath) {
+  private RecordDefinition getCompositeType(final String typePath) {
     String compositeTypeName = compositeTypeNames.get(typePath);
     if (compositeTypeName == null) {
       compositeTypeName = typePath + "Composite";
     }
-    final DataObjectMetaData compisteType = dataObjectMetaDataFactory.getMetaData(String.valueOf(compositeTypeName));
+    final RecordDefinition compisteType = dataObjectMetaDataFactory.getMetaData(String.valueOf(compositeTypeName));
     return compisteType;
   }
 
@@ -366,7 +366,7 @@ public class SaifWriter extends AbstractWriter<DataObject> {
     if (serializer == null) {
       initialize();
       try {
-        final DataObjectMetaData compositeType = getCompositeType(typePath);
+        final RecordDefinition compositeType = getCompositeType(typePath);
         if (compositeType != null) {
           final String objectSubsetName = getObjectSubsetName(typePath);
           if (maxSubsetSize != Long.MAX_VALUE) {
@@ -579,9 +579,9 @@ public class SaifWriter extends AbstractWriter<DataObject> {
    * .model.data.DataObject)
    */
   @Override
-  public void write(final DataObject object) {
+  public void write(final Record object) {
     try {
-      final DataObjectMetaData type = object.getMetaData();
+      final RecordDefinition type = object.getMetaData();
       final OsnSerializer serializer = getSerializer(type.getPath());
       if (serializer != null) {
         serializer.serializeDataObject(object);

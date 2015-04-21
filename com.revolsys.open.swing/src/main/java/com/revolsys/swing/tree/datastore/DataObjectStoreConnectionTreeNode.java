@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.tree.TreeNode;
 
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
@@ -59,7 +59,7 @@ public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode
   @Override
   protected List<TreeNode> doLoadChildren() {
     final List<TreeNode> children = new ArrayList<TreeNode>();
-    final DataObjectStore dataStore = getDataStore();
+    final RecordStore dataStore = getDataStore();
     if (dataStore != null) {
       for (final DataObjectStoreSchema schema : dataStore.getSchemas()) {
         final String schemaPath = schema.getPath();
@@ -79,7 +79,7 @@ public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode
 
   @Override
   @SuppressWarnings("unchecked")
-  public <V extends DataObjectStore> V getDataStore() {
+  public <V extends RecordStore> V getDataStore() {
     final DataObjectStoreConnection connection = getConnection();
     return (V)connection.getDataStore();
   }

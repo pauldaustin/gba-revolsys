@@ -11,11 +11,11 @@ import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.context.HashMapContext;
 
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.data.model.DataObjectMap;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 import com.revolsys.util.JexlUtil;
@@ -27,17 +27,17 @@ import com.vividsolutions.jts.operation.buffer.BufferParameters;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 public class CreateObjectsWithinDistanceOfGeometry extends
-  BaseInOutProcess<DataObject, DataObject> {
+  BaseInOutProcess<Record, Record> {
 
   private Map<String, Object> attributes = new HashMap<String, Object>();
 
   private double distance;
 
-  private Channel<DataObject> geometryIn;
+  private Channel<Record> geometryIn;
 
-  private List<DataObject> geometryObjects = new ArrayList<DataObject>();
+  private List<Record> geometryObjects = new ArrayList<Record>();
 
-  private Map<DataObjectMetaData, Map<DataObjectMetaData, PreparedGeometry>> metaDataGeometryMap = new HashMap<DataObjectMetaData, Map<DataObjectMetaData, PreparedGeometry>>();
+  private Map<RecordDefinition, Map<RecordDefinition, PreparedGeometry>> metaDataGeometryMap = new HashMap<RecordDefinition, Map<RecordDefinition, PreparedGeometry>>();
 
   private String typePathTemplate;
 
@@ -65,26 +65,26 @@ public class CreateObjectsWithinDistanceOfGeometry extends
     return distance;
   }
 
-  public Channel<DataObject> getGeometryIn() {
+  public Channel<Record> getGeometryIn() {
     if (geometryIn == null) {
-      setGeometryIn(new Channel<DataObject>());
+      setGeometryIn(new Channel<Record>());
     }
     return geometryIn;
   }
 
-  public List<DataObject> getGeometryObjects() {
+  public List<Record> getGeometryObjects() {
     return geometryObjects;
   }
 
-  private final Map<DataObjectMetaData, PreparedGeometry> getMetaDataGeometries(
-    final DataObjectMetaData metaData) {
-    Map<DataObjectMetaData, PreparedGeometry> metaDataGeometries = metaDataGeometryMap.get(metaData);
+  private final Map<RecordDefinition, PreparedGeometry> getMetaDataGeometries(
+    final RecordDefinition metaData) {
+    Map<RecordDefinition, PreparedGeometry> metaDataGeometries = metaDataGeometryMap.get(metaData);
     if (metaDataGeometries == null) {
       final PreparedGeometryFactory preparedGeometryFactory = new PreparedGeometryFactory();
-      metaDataGeometries = new LinkedHashMap<DataObjectMetaData, PreparedGeometry>();
-      DataObjectMetaData newMetaData;
+      metaDataGeometries = new LinkedHashMap<RecordDefinition, PreparedGeometry>();
+      RecordDefinition newMetaData;
       PreparedGeometry preparedGeometry;
-      for (final DataObject object : geometryObjects) {
+      for (final Record object : geometryObjects) {
         Geometry geometry = object.getGeometryValue();
         if (geometry != null) {
           final JexlContext context = new HashMapContext();
@@ -95,7 +95,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends
           context.setVars(vars);
           final String typePath = (String)JexlUtil.evaluateExpression(context,
             typePathTemplateExpression);
-          newMetaData = new DataObjectMetaDataImpl(typePath,
+          newMetaData = new RecordDefinitionImpl(typePath,
             metaData.getAttributes());
           if (distance > 0) {
             final BufferOp buffer = new BufferOp(geometry,
@@ -117,9 +117,9 @@ public class CreateObjectsWithinDistanceOfGeometry extends
     return typePathTemplate;
   }
 
-  private void initializeGeometries(final Channel<DataObject> geometryIn) {
+  private void initializeGeometries(final Channel<Record> geometryIn) {
     if (geometryIn != null) {
-      for (final DataObject object : geometryIn) {
+      for (final Record object : geometryIn) {
         geometryObjects.add(object);
       }
     }
@@ -130,25 +130,25 @@ public class CreateObjectsWithinDistanceOfGeometry extends
   }
 
   @Override
-  protected void preRun(final Channel<DataObject> in,
-    final Channel<DataObject> out) {
+  protected void preRun(final Channel<Record> in,
+    final Channel<Record> out) {
     initializeGeometries(geometryIn);
   }
 
   @Override
-  protected void process(final Channel<DataObject> in,
-    final Channel<DataObject> out, final DataObject object) {
+  protected void process(final Channel<Record> in,
+    final Channel<Record> out, final Record object) {
     if (writeOriginal) {
       out.write(object);
     }
-    final DataObjectMetaData metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getMetaData();
     final Geometry geometryValue = object.getGeometryValue();
-    final Map<DataObjectMetaData, PreparedGeometry> metaDataGeometries = getMetaDataGeometries(metaData);
-    for (final Entry<DataObjectMetaData, PreparedGeometry> metaDataGeometry : metaDataGeometries.entrySet()) {
-      final DataObjectMetaData newMetaData = metaDataGeometry.getKey();
+    final Map<RecordDefinition, PreparedGeometry> metaDataGeometries = getMetaDataGeometries(metaData);
+    for (final Entry<RecordDefinition, PreparedGeometry> metaDataGeometry : metaDataGeometries.entrySet()) {
+      final RecordDefinition newMetaData = metaDataGeometry.getKey();
       final PreparedGeometry intersectsGeometry = metaDataGeometry.getValue();
       if (intersectsGeometry.intersects(geometryValue)) {
-        final DataObject newObject = new ArrayDataObject(newMetaData, object);
+        final Record newObject = new ArrayRecord(newMetaData, object);
         out.write(newObject);
       }
     }
@@ -162,12 +162,12 @@ public class CreateObjectsWithinDistanceOfGeometry extends
     this.distance = distance;
   }
 
-  public void setGeometryIn(final Channel<DataObject> geometryIn) {
+  public void setGeometryIn(final Channel<Record> geometryIn) {
     this.geometryIn = geometryIn;
     geometryIn.readConnect();
   }
 
-  public void setGeometryObjects(final List<DataObject> geometryObjects) {
+  public void setGeometryObjects(final List<Record> geometryObjects) {
     this.geometryObjects = geometryObjects;
   }
 

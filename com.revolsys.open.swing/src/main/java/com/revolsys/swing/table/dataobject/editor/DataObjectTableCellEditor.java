@@ -23,8 +23,8 @@ import javax.swing.table.TableCellEditor;
 import org.jdesktop.swingx.JXTable;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.types.DataType;
+import com.revolsys.data.types.DataType;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.listener.Listener;
@@ -104,7 +104,7 @@ public class DataObjectTableCellEditor extends AbstractCellEditor implements
     oldValue = value;
     final AbstractDataObjectTableModel model = (AbstractDataObjectTableModel)table.getModel();
     this.attributeName = model.getFieldName(rowIndex, columnIndex);
-    final DataObjectMetaData metaData = model.getMetaData();
+    final RecordDefinition metaData = model.getMetaData();
     dataType = metaData.getAttributeType(attributeName);
     this.editorComponent = (JComponent)SwingUtil.createField(metaData,
       this.attributeName, true);

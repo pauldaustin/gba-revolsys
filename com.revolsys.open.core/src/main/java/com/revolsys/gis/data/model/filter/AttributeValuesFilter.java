@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 
@@ -14,7 +14,7 @@ import com.revolsys.gis.model.data.equals.EqualsInstance;
  * 
  * @author Paul Austin
  */
-public class AttributeValuesFilter implements Filter<DataObject> {
+public class AttributeValuesFilter implements Filter<Record> {
   private boolean allowNulls;
 
   /** The attributeName name, or path to match. */
@@ -72,7 +72,7 @@ public class AttributeValuesFilter implements Filter<DataObject> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Object propertyValue = DataObjectUtil.getAttributeByPath(object,
       attributeName);
     if (propertyValue == null) {

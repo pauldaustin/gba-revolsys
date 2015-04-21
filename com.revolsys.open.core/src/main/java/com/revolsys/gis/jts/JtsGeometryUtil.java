@@ -14,9 +14,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
@@ -705,8 +705,8 @@ public final class JtsGeometryUtil {
     }
   }
 
-  public static DataObject getGeometryFeature(final Geometry geometry) {
-    return (DataObject)getGeometryProperty(geometry, FEATURE_PROPERTY);
+  public static Record getGeometryFeature(final Geometry geometry) {
+    return (Record)getGeometryProperty(geometry, FEATURE_PROPERTY);
   }
 
   @SuppressWarnings("unchecked")
@@ -1411,7 +1411,7 @@ public final class JtsGeometryUtil {
   }
 
   public static void setGeometryFeature(final Geometry geometry,
-    final DataObject feature) {
+    final Record feature) {
     setGeometryProperty(geometry, FEATURE_PROPERTY, feature);
   }
 

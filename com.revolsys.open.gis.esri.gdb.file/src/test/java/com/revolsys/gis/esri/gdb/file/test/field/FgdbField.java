@@ -2,12 +2,12 @@ package com.revolsys.gis.esri.gdb.file.test.field;
 
 import java.io.IOException;
 
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.types.DataType;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
 import com.revolsys.io.EndianInput;
 
-public class FgdbField extends Attribute {
+public class FgdbField extends FieldDefinition {
 
   public FgdbField(final String name, final DataType type,
     final boolean required) {
@@ -23,7 +23,7 @@ public class FgdbField extends Attribute {
     throw new UnsupportedOperationException();
   }
 
-  public boolean setValue(final DataObject record, final EndianInput in)
+  public boolean setValue(final Record record, final EndianInput in)
     throws IOException {
     final Object value = read(in);
     final String name = getName();

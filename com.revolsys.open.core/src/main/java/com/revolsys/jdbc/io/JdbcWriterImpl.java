@@ -16,10 +16,10 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 
-import com.revolsys.gis.data.io.DataObjectStore;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.model.GlobalIdProperty;
 import com.revolsys.gis.io.StatisticsMap;
@@ -28,7 +28,7 @@ import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
 import com.revolsys.transaction.Transaction;
 
-public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
+public class JdbcWriterImpl extends AbstractWriter<Record> implements
   JdbcWriter {
   private static final Logger LOG = Logger.getLogger(JdbcWriterImpl.class);
 
@@ -46,7 +46,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
 
   private String label;
 
-  private DataObjectMetaData lastMetaData;
+  private RecordDefinition lastMetaData;
 
   private boolean quoteColumnNames = true;
 
@@ -141,10 +141,10 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     JdbcUtils.commit(connection);
   }
 
-  private void delete(final DataObject object) throws SQLException {
-    final DataObjectMetaData objectType = object.getMetaData();
+  private void delete(final Record object) throws SQLException {
+    final RecordDefinition objectType = object.getMetaData();
     final String typePath = objectType.getPath();
-    final DataObjectMetaData metaData = getDataObjectMetaData(typePath);
+    final RecordDefinition metaData = getDataObjectMetaData(typePath);
     flushIfRequired(metaData);
     PreparedStatement statement = typeDeleteStatementMap.get(typePath);
     if (statement == null) {
@@ -253,7 +253,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     }
   }
 
-  private void flushIfRequired(final DataObjectMetaData metaData) {
+  private void flushIfRequired(final RecordDefinition metaData) {
     if (flushBetweenTypes && metaData != lastMetaData) {
       flush();
       lastMetaData = metaData;
@@ -264,11 +264,11 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     return batchSize;
   }
 
-  private DataObjectMetaData getDataObjectMetaData(final String typePath) {
+  private RecordDefinition getDataObjectMetaData(final String typePath) {
     if (dataStore == null) {
       return null;
     } else {
-      final DataObjectMetaData metaData = dataStore.getMetaData(typePath);
+      final RecordDefinition metaData = dataStore.getMetaData(typePath);
       return metaData;
     }
   }
@@ -277,7 +277,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     return dataSource;
   }
 
-  private String getDeleteSql(final DataObjectMetaData type) {
+  private String getDeleteSql(final RecordDefinition type) {
     final String typePath = type.getPath();
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     String sql = typeDeleteSqlMap.get(typePath);
@@ -310,7 +310,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     return sql;
   }
 
-  private String getGeneratePrimaryKeySql(final DataObjectMetaData metaData) {
+  private String getGeneratePrimaryKeySql(final RecordDefinition metaData) {
     return dataStore.getGeneratePrimaryKeySql(metaData);
   }
 
@@ -321,7 +321,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     return hints;
   }
 
-  private String getInsertSql(final DataObjectMetaData type,
+  private String getInsertSql(final RecordDefinition type,
     final boolean generatePrimaryKey) {
     final String typePath = type.getPath();
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
@@ -405,7 +405,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     return sqlSuffix;
   }
 
-  private String getUpdateSql(final DataObjectMetaData type) {
+  private String getUpdateSql(final RecordDefinition type) {
     final String typePath = type.getPath();
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     String sql = typeUpdateSqlMap.get(typePath);
@@ -420,9 +420,9 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
       }
       sqlBuffer.append(tableName);
       sqlBuffer.append(" set ");
-      final List<Attribute> idAttributes = type.getIdAttributes();
+      final List<FieldDefinition> idAttributes = type.getIdAttributes();
       boolean first = true;
-      for (final Attribute attribute : type.getAttributes()) {
+      for (final FieldDefinition attribute : type.getAttributes()) {
         if (!idAttributes.contains(attribute)) {
           final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
           if (first) {
@@ -435,7 +435,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
       }
       sqlBuffer.append(" where ");
       first = true;
-      for (final Attribute idAttribute : idAttributes) {
+      for (final FieldDefinition idAttribute : idAttributes) {
         if (first) {
           first = false;
         } else {
@@ -456,10 +456,10 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     return sql;
   }
 
-  private void insert(final DataObject object) throws SQLException {
-    final DataObjectMetaData objectType = object.getMetaData();
+  private void insert(final Record object) throws SQLException {
+    final RecordDefinition objectType = object.getMetaData();
     final String typePath = objectType.getPath();
-    final DataObjectMetaData metaData = getDataObjectMetaData(typePath);
+    final RecordDefinition metaData = getDataObjectMetaData(typePath);
     flushIfRequired(metaData);
     final String idAttributeName = metaData.getIdAttributeName();
     final boolean hasId = idAttributeName != null;
@@ -484,8 +484,8 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     dataStore.addStatistic("Insert", object);
   }
 
-  private void insert(final DataObject object, final String typePath,
-    final DataObjectMetaData metaData) throws SQLException {
+  private void insert(final Record object, final String typePath,
+    final RecordDefinition metaData) throws SQLException {
     PreparedStatement statement = typeInsertStatementMap.get(typePath);
     if (statement == null) {
       final String sql = getInsertSql(metaData, false);
@@ -497,7 +497,7 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
       }
     }
     int parameterIndex = 1;
-    for (final Attribute attribute : metaData.getAttributes()) {
+    for (final FieldDefinition attribute : metaData.getAttributes()) {
       final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
       parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement,
         parameterIndex, object);
@@ -517,8 +517,8 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     }
   }
 
-  private void insertSequence(final DataObject object, final String typePath,
-    final DataObjectMetaData metaData) throws SQLException {
+  private void insertSequence(final Record object, final String typePath,
+    final RecordDefinition metaData) throws SQLException {
     PreparedStatement statement = typeInsertSequenceStatementMap.get(typePath);
     if (statement == null) {
       final String sql = getInsertSql(metaData, true);
@@ -530,8 +530,8 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
       }
     }
     int parameterIndex = 1;
-    final Attribute idAttribute = metaData.getIdAttribute();
-    for (final Attribute attribute : metaData.getAttributes()) {
+    final FieldDefinition idAttribute = metaData.getIdAttribute();
+    for (final FieldDefinition attribute : metaData.getAttributes()) {
       if (attribute != idAttribute) {
         final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
         parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(
@@ -650,10 +650,10 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
     }
   }
 
-  private void update(final DataObject object) throws SQLException {
-    final DataObjectMetaData objectType = object.getMetaData();
+  private void update(final Record object) throws SQLException {
+    final RecordDefinition objectType = object.getMetaData();
     final String typePath = objectType.getPath();
-    final DataObjectMetaData metaData = getDataObjectMetaData(typePath);
+    final RecordDefinition metaData = getDataObjectMetaData(typePath);
     flushIfRequired(metaData);
     PreparedStatement statement = typeUpdateStatementMap.get(typePath);
     if (statement == null) {
@@ -666,15 +666,15 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
       }
     }
     int parameterIndex = 1;
-    final List<Attribute> idAttributes = metaData.getIdAttributes();
-    for (final Attribute attribute : metaData.getAttributes()) {
+    final List<FieldDefinition> idAttributes = metaData.getIdAttributes();
+    for (final FieldDefinition attribute : metaData.getAttributes()) {
       if (!idAttributes.contains(attribute)) {
         final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
         parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(
           statement, parameterIndex, object);
       }
     }
-    for (final Attribute idAttribute : idAttributes) {
+    for (final FieldDefinition idAttribute : idAttributes) {
       final JdbcAttribute jdbcAttribute = (JdbcAttribute)idAttribute;
       parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement,
         parameterIndex, object);
@@ -697,10 +697,10 @@ public class JdbcWriterImpl extends AbstractWriter<DataObject> implements
   }
 
   @Override
-  public synchronized void write(final DataObject object) {
+  public synchronized void write(final Record object) {
     try {
-      final DataObjectMetaData metaData = object.getMetaData();
-      final DataObjectStore dataStore = metaData.getDataStore();
+      final RecordDefinition metaData = object.getMetaData();
+      final RecordStore dataStore = metaData.getDataStore();
       final DataObjectState state = object.getState();
       if (dataStore != this.dataStore) {
         if (state != DataObjectState.Deleted) {

@@ -4,16 +4,16 @@ import java.sql.PreparedStatement;
 import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.Attribute;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 
 public class Column extends QueryValue {
 
   private final String name;
 
-  private Attribute attribute;
+  private FieldDefinition attribute;
 
-  public Column(final Attribute attribute) {
+  public Column(final FieldDefinition attribute) {
     this.name = attribute.getName();
     this.attribute = attribute;
   }
@@ -47,7 +47,7 @@ public class Column extends QueryValue {
     }
   }
 
-  public Attribute getAttribute() {
+  public FieldDefinition getAttribute() {
     return attribute;
   }
 

@@ -14,14 +14,14 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.ShortNameProperty;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.PathUtil;
@@ -35,7 +35,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
   public static final List<String> POSTGRESQL_INTERNAL_SCHEMAS = Arrays.asList(
     "information_schema", "pg_catalog", "pg_toast_temp_1");
 
-  public static final AbstractIterator<DataObject> createPostgreSQLIterator(
+  public static final AbstractIterator<Record> createPostgreSQLIterator(
     final PostgreSQLDataObjectStore dataStore, final Query query,
     final Map<String, Object> properties) {
     return new PostgreSQLJdbcQueryIterator(dataStore, query, properties);
@@ -74,13 +74,13 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
   }
 
   @Override
-  public String getGeneratePrimaryKeySql(final DataObjectMetaData metaData) {
+  public String getGeneratePrimaryKeySql(final RecordDefinition metaData) {
     final String sequenceName = getSequenceName(metaData);
     return "nextval('" + sequenceName + "')";
   }
 
   @Override
-  public Object getNextPrimaryKey(final DataObjectMetaData metaData) {
+  public Object getNextPrimaryKey(final RecordDefinition metaData) {
     final String sequenceName = getSequenceName(metaData);
     return getNextPrimaryKey(sequenceName);
   }
@@ -102,7 +102,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
     BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox != null) {
       final String typePath = query.getTypeName();
-      final DataObjectMetaData metaData = getMetaData(typePath);
+      final RecordDefinition metaData = getMetaData(typePath);
       if (metaData == null) {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
       } else {
@@ -124,7 +124,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
     return super.getRowCount(query);
   }
 
-  public String getSequenceName(final DataObjectMetaData metaData) {
+  public String getSequenceName(final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
     final String schema = getDatabaseSchemaName(PathUtil.getPath(typePath));
     final String shortName = ShortNameProperty.getShortName(metaData);
@@ -228,7 +228,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
   }
 
   @Override
-  public ResultPager<DataObject> page(final Query query) {
+  public ResultPager<Record> page(final Query query) {
     return new PostgreSQLJdbcQueryResultPager(this, getProperties(), query);
   }
 

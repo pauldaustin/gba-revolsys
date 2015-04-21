@@ -9,21 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.jdbc.JdbcUtils;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class Query extends AbstractObjectWithProperties implements Cloneable {
   private static void addFilter(final Query query,
-    final DataObjectMetaData metaData, final Map<String, ?> filter,
+    final RecordDefinition metaData, final Map<String, ?> filter,
     final AbstractMultiCondition multipleCondition) {
     if (filter != null && !filter.isEmpty()) {
       for (final Entry<String, ?> entry : filter.entrySet()) {
         final String name = entry.getKey();
-        final Attribute attribute = metaData.getAttribute(name);
+        final FieldDefinition attribute = metaData.getAttribute(name);
         if (attribute == null) {
           final Object value = entry.getValue();
           if (value == null) {
@@ -50,7 +50,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     }
   }
 
-  public static Query and(final DataObjectMetaData metaData,
+  public static Query and(final RecordDefinition metaData,
     final Map<String, ?> filter) {
     final Query query = new Query(metaData);
     final Condition[] conditions = {};
@@ -59,9 +59,9 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return query;
   }
 
-  public static Query equal(final DataObjectMetaData metaData,
+  public static Query equal(final RecordDefinition metaData,
     final String name, final Object value) {
-    final Attribute attribute = metaData.getAttribute(name);
+    final FieldDefinition attribute = metaData.getAttribute(name);
     if (attribute == null) {
       return null;
     } else {
@@ -73,7 +73,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     }
   }
 
-  public static Query or(final DataObjectMetaData metaData,
+  public static Query or(final RecordDefinition metaData,
     final Map<String, ?> filter) {
     final Query query = new Query(metaData);
     final Condition[] conditions = {};
@@ -94,7 +94,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
 
   private boolean lockResults = false;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private int offset = 0;
 
@@ -113,12 +113,12 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
   public Query() {
   }
 
-  public Query(final DataObjectMetaData metaData) {
+  public Query(final RecordDefinition metaData) {
     this(metaData.getPath());
     this.metaData = metaData;
   }
 
-  public Query(final DataObjectMetaData metaData, final Condition whereCondition) {
+  public Query(final RecordDefinition metaData, final Condition whereCondition) {
     this(metaData);
     this.whereCondition = whereCondition;
   }
@@ -192,7 +192,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return this.limit;
   }
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return this.metaData;
   }
 
@@ -264,7 +264,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     this.lockResults = lockResults;
   }
 
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     this.metaData = metaData;
   }
 

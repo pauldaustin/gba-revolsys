@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.graph.attribute.NodeAttributes;
 import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -31,9 +31,9 @@ import com.vividsolutions.jts.geom.Point;
 public class Node<T> extends AbstractCoordinates implements AttributedObject,
   Externalizable {
   public static List<Coordinates> getCoordinates(
-    final Collection<Node<DataObject>> nodes) {
+    final Collection<Node<Record>> nodes) {
     final List<Coordinates> points = new ArrayList<Coordinates>(nodes.size());
-    for (final Node<DataObject> node : nodes) {
+    for (final Node<Record> node : nodes) {
       final Coordinates point = node.cloneCoordinates();
       points.add(point);
     }

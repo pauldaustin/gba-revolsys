@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreFactory;
 
 public class JdbcDataObjectStoreFactory implements DataObjectStoreFactory {
@@ -33,7 +33,7 @@ public class JdbcDataObjectStoreFactory implements DataObjectStoreFactory {
   }
 
   @Override
-  public Class<? extends DataObjectStore> getDataObjectStoreInterfaceClass(
+  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
     return JdbcDataObjectStore.class;
   }

@@ -9,14 +9,14 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.DirectoryDataObjectStore;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
@@ -38,7 +38,7 @@ public class CsvDataObjectIoFactory extends AbstractDataObjectIoFactory
   }
 
   @Override
-  public DataObjectStore createDataObjectStore(
+  public RecordStore createDataObjectStore(
     final Map<String, ? extends Object> connectionProperties) {
     final String url = (String)connectionProperties.get("url");
     final Resource resource = SpringUtil.getResource(url);
@@ -47,8 +47,8 @@ public class CsvDataObjectIoFactory extends AbstractDataObjectIoFactory
   }
 
   @Override
-  public Writer<DataObject> createDataObjectWriter(final String baseName,
-    final DataObjectMetaData metaData, final OutputStream outputStream,
+  public Writer<Record> createDataObjectWriter(final String baseName,
+    final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
     final OutputStreamWriter writer = new OutputStreamWriter(outputStream,
       charset);
@@ -57,9 +57,9 @@ public class CsvDataObjectIoFactory extends AbstractDataObjectIoFactory
   }
 
   @Override
-  public Class<? extends DataObjectStore> getDataObjectStoreInterfaceClass(
+  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
-    return DataObjectStore.class;
+    return RecordStore.class;
   }
 
   @Override

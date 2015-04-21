@@ -23,18 +23,18 @@ package com.revolsys.gis.data.model.filter;
 import java.util.Collection;
 import java.util.List;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterUtil;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectGeometryIntersectsFilter implements Filter<DataObject> {
+public class DataObjectGeometryIntersectsFilter implements Filter<Record> {
   @SuppressWarnings({
     "rawtypes", "unchecked"
   })
-  public static <D extends DataObject> List<D> filter(
+  public static <D extends Record> List<D> filter(
     final Collection<D> collection, final BoundingBox boundingBox) {
     final Filter filter = new DataObjectGeometryIntersectsFilter(boundingBox);
     return FilterUtil.filter(collection, filter);
@@ -60,7 +60,7 @@ public class DataObjectGeometryIntersectsFilter implements Filter<DataObject> {
   }
 
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     try {
       final Geometry matchGeometry = object.getGeometryValue();
       final Geometry convertedGeometry = geometryFactory.copy(matchGeometry);

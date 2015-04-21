@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 
 /**
@@ -15,7 +15,7 @@ import com.revolsys.gis.data.model.codes.CodeTable;
  * 
  * @author Paul Austin
  */
-public class DataObjectCodeTableValueFilter implements Filter<DataObject> {
+public class DataObjectCodeTableValueFilter implements Filter<Record> {
   /** The attributeName name, or path to match. */
   private String attributeName;
 
@@ -45,12 +45,12 @@ public class DataObjectCodeTableValueFilter implements Filter<DataObject> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Object propertyValue = object.getValue(attributeName);
     if (values.contains(propertyValue)) {
       return true;
     } else {
-      final DataObjectMetaData metaData = object.getMetaData();
+      final RecordDefinition metaData = object.getMetaData();
       final CodeTable codeTable = metaData.getCodeTableByColumn(attributeName);
       if (codeTable != null) {
         final Object codeValue = codeTable.getValue((Number)propertyValue);

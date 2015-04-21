@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.codes.CodeTableProperty;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
 import com.revolsys.util.CollectionUtil;
@@ -26,9 +26,9 @@ public class Value extends QueryValue {
 
   private Object displayValue;
 
-  private Attribute attribute;
+  private FieldDefinition attribute;
 
-  public Value(final Attribute attribute, final Object value) {
+  public Value(final FieldDefinition attribute, final Object value) {
     this.queryValue = value;
     this.displayValue = value;
     setAttribute(attribute);
@@ -59,7 +59,7 @@ public class Value extends QueryValue {
     return (Value)super.clone();
   }
 
-  public void convert(final Attribute attribute) {
+  public void convert(final FieldDefinition attribute) {
     if (attribute instanceof JdbcAttribute) {
       this.jdbcAttribute = (JdbcAttribute)attribute;
     }
@@ -123,7 +123,7 @@ public class Value extends QueryValue {
     return (V)this.queryValue;
   }
 
-  public void setAttribute(final Attribute attribute) {
+  public void setAttribute(final FieldDefinition attribute) {
     this.attribute = attribute;
     if (attribute == null) {
 
@@ -136,7 +136,7 @@ public class Value extends QueryValue {
 
       CodeTable codeTable = null;
       if (attribute != null) {
-        final DataObjectMetaData metaData = attribute.getMetaData();
+        final RecordDefinition metaData = attribute.getMetaData();
         if (metaData != null) {
           final String fieldName = attribute.getName();
           codeTable = metaData.getCodeTableByColumn(fieldName);

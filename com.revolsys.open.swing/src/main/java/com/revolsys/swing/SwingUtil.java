@@ -61,11 +61,11 @@ import org.springframework.util.StringUtils;
 import com.revolsys.awt.WebColors;
 import com.revolsys.beans.MethodInvoker;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.data.types.DataTypes;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
-import com.revolsys.gis.data.model.types.DataType;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.io.FileUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.border.TitledBorder;
@@ -295,10 +295,10 @@ public class SwingUtil {
 
   @SuppressWarnings("unchecked")
   public static <T extends Field> T createField(
-    final DataObjectMetaData metaData, final String fieldName,
+    final RecordDefinition metaData, final String fieldName,
     final boolean editable) {
     Field field;
-    final Attribute attribute = metaData.getAttribute(fieldName);
+    final FieldDefinition attribute = metaData.getAttribute(fieldName);
     if (attribute == null) {
       throw new IllegalArgumentException("Cannot find field " + fieldName);
     } else {

@@ -6,9 +6,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.graph.attribute.InvokeMethodObjectAttributeProxy;
 import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
@@ -23,12 +23,12 @@ public class PseudoNodeProperty extends AbstractDataObjectMetaDataProperty {
     + ".propertyName";
 
   public static AbstractDataObjectMetaDataProperty getProperty(
-    final DataObject object) {
-    final DataObjectMetaData metaData = object.getMetaData();
+    final Record object) {
+    final RecordDefinition metaData = object.getMetaData();
     return getProperty(metaData);
   }
 
-  public static PseudoNodeProperty getProperty(final DataObjectMetaData metaData) {
+  public static PseudoNodeProperty getProperty(final RecordDefinition metaData) {
     PseudoNodeProperty property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new PseudoNodeProperty();
@@ -43,14 +43,14 @@ public class PseudoNodeProperty extends AbstractDataObjectMetaDataProperty {
   public PseudoNodeProperty() {
   }
 
-  public PseudoNodeAttribute createAttribute(final Node<DataObject> node) {
+  public PseudoNodeAttribute createAttribute(final Node<Record> node) {
     return new PseudoNodeAttribute(node, getTypePath(), equalExcludeAttributes);
   }
 
-  public PseudoNodeAttribute getAttribute(final Node<DataObject> node) {
+  public PseudoNodeAttribute getAttribute(final Node<Record> node) {
     final String attributeName = PseudoNodeProperty.PROPERTY_NAME;
     if (!node.hasAttribute(attributeName)) {
-      final ObjectAttributeProxy<PseudoNodeAttribute, Node<DataObject>> proxy = new InvokeMethodObjectAttributeProxy<PseudoNodeAttribute, Node<DataObject>>(
+      final ObjectAttributeProxy<PseudoNodeAttribute, Node<Record>> proxy = new InvokeMethodObjectAttributeProxy<PseudoNodeAttribute, Node<Record>>(
         this, "createAttribute", Node.class);
       node.setAttribute(attributeName, proxy);
     }
@@ -78,7 +78,7 @@ public class PseudoNodeProperty extends AbstractDataObjectMetaDataProperty {
   }
 
   @Override
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     super.setMetaData(metaData);
   }
 

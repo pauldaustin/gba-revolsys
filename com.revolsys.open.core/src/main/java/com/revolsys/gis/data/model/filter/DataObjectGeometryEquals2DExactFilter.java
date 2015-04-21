@@ -20,12 +20,12 @@
  */
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectGeometryEquals2DExactFilter implements
-  Filter<DataObject> {
+  Filter<Record> {
   private final Geometry geometry;
 
   public DataObjectGeometryEquals2DExactFilter(final Geometry geometry) {
@@ -33,7 +33,7 @@ public class DataObjectGeometryEquals2DExactFilter implements
   }
 
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Geometry matchGeometry = object.getGeometryValue();
     if (geometry.equalsExact(matchGeometry)) {
       return true;

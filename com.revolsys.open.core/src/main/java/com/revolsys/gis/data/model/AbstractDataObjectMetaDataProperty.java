@@ -2,7 +2,7 @@ package com.revolsys.gis.data.model;
 
 public abstract class AbstractDataObjectMetaDataProperty implements
   DataObjectMetaDataProperty {
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   @Override
   public AbstractDataObjectMetaDataProperty clone() {
@@ -16,12 +16,12 @@ public abstract class AbstractDataObjectMetaDataProperty implements
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
   @Override
-  public void setMetaData(final DataObjectMetaData metaData) {
+  public void setMetaData(final RecordDefinition metaData) {
     if (this.metaData != null) {
       this.metaData.setProperty(getPropertyName(), null);
     }

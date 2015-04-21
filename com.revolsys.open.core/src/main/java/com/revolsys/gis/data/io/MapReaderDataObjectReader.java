@@ -5,18 +5,18 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.types.DataType;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataType;
+import com.revolsys.gis.data.model.ArrayRecord;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.Reader;
 
-public class MapReaderDataObjectReader extends AbstractReader<DataObject>
-  implements DataObjectReader, Iterator<DataObject> {
+public class MapReaderDataObjectReader extends AbstractReader<Record>
+  implements DataObjectReader, Iterator<Record> {
 
-  private final DataObjectMetaData metaData;
+  private final RecordDefinition metaData;
 
   private final Reader<Map<String, Object>> mapReader;
 
@@ -24,7 +24,7 @@ public class MapReaderDataObjectReader extends AbstractReader<DataObject>
 
   private Iterator<Map<String, Object>> mapIterator;
 
-  public MapReaderDataObjectReader(final DataObjectMetaData metaData,
+  public MapReaderDataObjectReader(final RecordDefinition metaData,
     final Reader<Map<String, Object>> mapReader) {
     this.metaData = metaData;
     this.mapReader = mapReader;
@@ -36,7 +36,7 @@ public class MapReaderDataObjectReader extends AbstractReader<DataObject>
   }
 
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
@@ -49,16 +49,16 @@ public class MapReaderDataObjectReader extends AbstractReader<DataObject>
   }
 
   @Override
-  public Iterator<DataObject> iterator() {
+  public Iterator<Record> iterator() {
     return this;
   }
 
   @Override
-  public DataObject next() {
+  public Record next() {
     if (hasNext()) {
       final Map<String, Object> source = mapIterator.next();
-      final DataObject target = new ArrayDataObject(metaData);
-      for (final Attribute attribute : metaData.getAttributes()) {
+      final Record target = new ArrayRecord(metaData);
+      for (final FieldDefinition attribute : metaData.getAttributes()) {
         final String name = attribute.getName();
         final Object value = source.get(name);
         if (value != null) {

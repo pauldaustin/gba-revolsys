@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterUtil;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
@@ -20,9 +20,9 @@ import com.vividsolutions.jts.geom.Point;
 
 public class PointDataObjectMap {
 
-  private Comparator<DataObject> comparator;
+  private Comparator<Record> comparator;
 
-  private Map<Coordinates, List<DataObject>> objectMap = new HashMap<Coordinates, List<DataObject>>();
+  private Map<Coordinates, List<Record>> objectMap = new HashMap<Coordinates, List<Record>>();
 
   private int size = 0;
 
@@ -31,20 +31,20 @@ public class PointDataObjectMap {
   public PointDataObjectMap() {
   }
 
-  public PointDataObjectMap(final Comparator<DataObject> comparator) {
+  public PointDataObjectMap(final Comparator<Record> comparator) {
     this.comparator = comparator;
   }
 
   /**
-   * Add a {@link Point} {@link DataObject} to the list of objects at the given
+   * Add a {@link Point} {@link Record} to the list of objects at the given
    * coordinate.
    * 
    * @param pointObjects The map of point objects.
    * @param object The object to add.
    */
-  public void add(final DataObject object) {
+  public void add(final Record object) {
     final Point point = object.getGeometryValue();
-    final List<DataObject> objects = getOrCreateObjects(point);
+    final List<Record> objects = getOrCreateObjects(point);
     objects.add(object);
     if (this.comparator != null) {
       Collections.sort(objects, this.comparator);
@@ -54,7 +54,7 @@ public class PointDataObjectMap {
 
   public void clear() {
     this.size = 0;
-    this.objectMap = new HashMap<Coordinates, List<DataObject>>();
+    this.objectMap = new HashMap<Coordinates, List<Record>>();
   }
 
   public boolean containsKey(final Point point) {
@@ -62,9 +62,9 @@ public class PointDataObjectMap {
     return this.objectMap.containsKey(coordinates);
   }
 
-  public List<DataObject> getAll() {
-    final List<DataObject> objects = new ArrayList<DataObject>();
-    for (final List<DataObject> objectsAtPoint : this.objectMap.values()) {
+  public List<Record> getAll() {
+    final List<Record> objects = new ArrayList<Record>();
+    for (final List<Record> objectsAtPoint : this.objectMap.values()) {
       objects.addAll(objectsAtPoint);
     }
     return objects;
@@ -93,10 +93,10 @@ public class PointDataObjectMap {
     return coordinates;
   }
 
-  public DataObject getFirstMatch(final DataObject object,
-    final Filter<DataObject> filter) {
-    final List<DataObject> objects = getObjects(object);
-    for (final DataObject matchObject : objects) {
+  public Record getFirstMatch(final Record object,
+    final Filter<Record> filter) {
+    final List<Record> objects = getObjects(object);
+    for (final Record matchObject : objects) {
       if (filter.accept(matchObject)) {
         return matchObject;
       }
@@ -104,8 +104,8 @@ public class PointDataObjectMap {
     return null;
   }
 
-  public <V extends DataObject> V getFirstMatch(final Point point) {
-    final List<DataObject> objects = getObjects(point);
+  public <V extends Record> V getFirstMatch(final Point point) {
+    final List<Record> objects = getObjects(point);
     if (objects.isEmpty()) {
       return null;
     } else {
@@ -114,40 +114,40 @@ public class PointDataObjectMap {
 
   }
 
-  public List<DataObject> getMatches(final DataObject object,
-    final Filter<DataObject> filter) {
-    final List<DataObject> objects = getObjects(object);
-    final List<DataObject> filteredObjects = FilterUtil.filter(objects, filter);
+  public List<Record> getMatches(final Record object,
+    final Filter<Record> filter) {
+    final List<Record> objects = getObjects(object);
+    final List<Record> filteredObjects = FilterUtil.filter(objects, filter);
     return filteredObjects;
   }
 
-  public List<DataObject> getObjects(Coordinates coordinates) {
+  public List<Record> getObjects(Coordinates coordinates) {
     coordinates = getCoordinates(coordinates);
-    final List<DataObject> objects = this.objectMap.get(coordinates);
+    final List<Record> objects = this.objectMap.get(coordinates);
     if (objects == null) {
       return Collections.emptyList();
     } else {
-      return new ArrayList<DataObject>(objects);
+      return new ArrayList<Record>(objects);
     }
   }
 
-  public List<DataObject> getObjects(final DataObject object) {
+  public List<Record> getObjects(final Record object) {
     final Point point = object.getGeometryValue();
-    final List<DataObject> objects = getObjects(point);
+    final List<Record> objects = getObjects(point);
     return objects;
   }
 
-  public List<DataObject> getObjects(final Point point) {
+  public List<Record> getObjects(final Point point) {
     final Coordinates coordinates = getCoordinates(point);
-    final List<DataObject> objects = getObjects(coordinates);
+    final List<Record> objects = getObjects(coordinates);
     return objects;
   }
 
-  protected List<DataObject> getOrCreateObjects(final Point point) {
+  protected List<Record> getOrCreateObjects(final Point point) {
     final Coordinates indexCoordinates = getCoordinates(point);
-    List<DataObject> objects = this.objectMap.get(indexCoordinates);
+    List<Record> objects = this.objectMap.get(indexCoordinates);
     if (objects == null) {
-      objects = new ArrayList<DataObject>(1);
+      objects = new ArrayList<Record>(1);
       this.objectMap.put(indexCoordinates, objects);
     }
     return objects;
@@ -163,10 +163,10 @@ public class PointDataObjectMap {
     return this.removeEmptyLists;
   }
 
-  public void remove(final DataObject object) {
+  public void remove(final Record object) {
     final Geometry geometry = object.getGeometryValue();
     final Coordinates coordinates = getCoordinates(geometry);
-    final List<DataObject> objects = this.objectMap.get(coordinates);
+    final List<Record> objects = this.objectMap.get(coordinates);
     if (objects != null) {
       objects.remove(object);
       if (objects.isEmpty()) {
@@ -188,20 +188,20 @@ public class PointDataObjectMap {
     return this.size;
   }
 
-  public void sort(final DataObject object) {
+  public void sort(final Record object) {
     if (this.comparator != null) {
-      final List<DataObject> objects = getObjects(object);
+      final List<Record> objects = getObjects(object);
       if (objects != null) {
         Collections.sort(objects, this.comparator);
       }
     }
   }
 
-  public void write(final Channel<DataObject> out) {
+  public void write(final Channel<Record> out) {
     if (out != null) {
       for (final Coordinates coordinates : getCoordinates()) {
-        final List<DataObject> objects = getObjects(coordinates);
-        for (final DataObject object : objects) {
+        final List<Record> objects = getObjects(coordinates);
+        for (final Record object : objects) {
           out.write(object);
         }
       }

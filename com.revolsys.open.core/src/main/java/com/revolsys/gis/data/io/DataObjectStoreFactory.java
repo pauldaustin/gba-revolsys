@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 public interface DataObjectStoreFactory {
-  DataObjectStore createDataObjectStore(
+  RecordStore createDataObjectStore(
     Map<String, ? extends Object> connectionProperties);
 
-  Class<? extends DataObjectStore> getDataObjectStoreInterfaceClass(
+  Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
     Map<String, ? extends Object> connectionProperties);
 
   List<String> getFileExtensions();

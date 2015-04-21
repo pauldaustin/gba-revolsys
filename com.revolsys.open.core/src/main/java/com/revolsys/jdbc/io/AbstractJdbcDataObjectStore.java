@@ -31,24 +31,24 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.converter.string.BooleanStringConverter;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.gis.data.io.AbstractDataObjectStore;
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.Attribute;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaData;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.model.GlobalIdProperty;
 import com.revolsys.gis.data.model.codes.AbstractCodeTable;
-import com.revolsys.gis.data.model.types.DataTypes;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.data.query.SqlCondition;
 import com.revolsys.io.PathUtil;
@@ -65,7 +65,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   DataObjectStoreExtension {
   public static final List<String> DEFAULT_PERMISSIONS = Arrays.asList("SELECT");
 
-  public static final AbstractIterator<DataObject> createJdbcIterator(
+  public static final AbstractIterator<Record> createJdbcIterator(
     final AbstractJdbcDataObjectStore dataStore, final Query query,
     final Map<String, Object> properties) {
     return new JdbcQueryIterator(dataStore, query, properties);
@@ -143,7 +143,7 @@ public abstract class AbstractJdbcDataObjectStore extends
     allSchemaNames.add(schemaName.toUpperCase());
   }
 
-  protected void addAttribute(final DataObjectMetaDataImpl metaData,
+  protected void addAttribute(final RecordDefinitionImpl metaData,
     final String name, final String dataType, final int sqlType,
     final int length, final int scale, final boolean required,
     final String description) {
@@ -156,7 +156,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   protected void addAttribute(final ResultSetMetaData resultSetMetaData,
-    final DataObjectMetaDataImpl metaData, final String name, final int i,
+    final RecordDefinitionImpl metaData, final String name, final int i,
     final String description) throws SQLException {
     final String dataType = resultSetMetaData.getColumnTypeName(i);
     final int sqlType = resultSetMetaData.getColumnType(i);
@@ -209,7 +209,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   @SuppressWarnings("unchecked")
   @Override
   public <T> T createPrimaryIdValue(final String typePath) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     final GlobalIdProperty globalIdProperty = GlobalIdProperty.getProperty(metaData);
     if (globalIdProperty == null) {
       return (T)getNextPrimaryKey(metaData);
@@ -243,7 +243,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public void delete(final DataObject record) {
+  public void delete(final Record record) {
     final DataObjectState state = DataObjectState.Deleted;
     write(record, state);
   }
@@ -251,7 +251,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   @Override
   public int delete(final Query query) {
     final String typeName = query.getTypeName();
-    DataObjectMetaData metaData = query.getMetaData();
+    RecordDefinition metaData = query.getMetaData();
     if (metaData == null) {
       if (typeName != null) {
         metaData = getMetaData(typeName);
@@ -309,7 +309,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public void deleteAll(final Collection<DataObject> records) {
+  public void deleteAll(final Collection<Record> records) {
     writeAll(records, DataObjectState.Deleted);
   }
 
@@ -345,11 +345,11 @@ public abstract class AbstractJdbcDataObjectStore extends
   public JdbcAttribute getAttribute(final String schemaName,
     final String tableName, final String columnName) {
     final String typePath = PathUtil.toPath(schemaName, tableName);
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     if (metaData == null) {
       return null;
     } else {
-      final Attribute attribute = metaData.getAttribute(columnName);
+      final FieldDefinition attribute = metaData.getAttribute(columnName);
       return (JdbcAttribute)attribute;
     }
   }
@@ -387,7 +387,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   public List<String> getColumnNames(final String typePath) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     return metaData.getAttributeNames();
   }
 
@@ -469,7 +469,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public String getGeneratePrimaryKeySql(final DataObjectMetaData metaData) {
+  public String getGeneratePrimaryKeySql(final RecordDefinition metaData) {
     throw new UnsupportedOperationException(
       "Cannot create SQL to generate Primary Key for " + metaData);
   }
@@ -479,7 +479,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   public String getIdAttributeName(final String typePath) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -488,12 +488,12 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final String typePath,
+  public RecordDefinition getMetaData(final String typePath,
     final ResultSetMetaData resultSetMetaData) {
     try {
       final String schemaName = PathUtil.getPath(typePath);
       final DataObjectStoreSchema schema = getSchema(schemaName);
-      final DataObjectMetaDataImpl metaData = new DataObjectMetaDataImpl(this,
+      final RecordDefinitionImpl metaData = new RecordDefinitionImpl(this,
         schema, typePath);
 
       final String idAttributeName = getIdAttributeName(typePath);
@@ -554,7 +554,7 @@ public abstract class AbstractJdbcDataObjectStore extends
     }
   }
 
-  protected String getSequenceInsertSql(final DataObjectMetaData metaData) {
+  protected String getSequenceInsertSql(final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     String sql = sequenceTypeSqlMap.get(typePath);
@@ -678,28 +678,28 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public void initialize(final DataObjectStore dataStore,
+  public void initialize(final RecordStore dataStore,
     final Map<String, Object> connectionProperties) {
   }
 
   @Override
-  public void insert(final DataObject record) {
+  public void insert(final Record record) {
     write(record, DataObjectState.New);
   }
 
   @Override
-  public void insertAll(final Collection<DataObject> records) {
+  public void insertAll(final Collection<Record> records) {
     writeAll(records, DataObjectState.New);
   }
 
   @Override
   public boolean isEditable(final String typePath) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     return metaData.getIdAttributeIndex() != -1;
   }
 
   @Override
-  public boolean isEnabled(final DataObjectStore dataStore) {
+  public boolean isEnabled(final RecordStore dataStore) {
     return true;
   }
 
@@ -759,7 +759,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   @Override
   protected synchronized void loadSchemaDataObjectMetaData(
     final DataObjectStoreSchema schema,
-    final Map<String, DataObjectMetaData> metaDataMap) {
+    final Map<String, RecordDefinition> metaDataMap) {
 
     final String schemaName = schema.getPath();
     final String dbSchemaName = getDatabaseSchemaName(schemaName);
@@ -778,7 +778,7 @@ public abstract class AbstractJdbcDataObjectStore extends
         final String tableName = dbTableName.toUpperCase();
         final String typePath = PathUtil.toPath(schemaName, tableName);
         tableNameMap.put(typePath, dbTableName);
-        final DataObjectMetaDataImpl metaData = new DataObjectMetaDataImpl(
+        final RecordDefinitionImpl metaData = new RecordDefinitionImpl(
           this, schema, typePath);
         final String description = tableDescriptionMap.get(dbTableName);
         metaData.setDescription(description);
@@ -795,7 +795,7 @@ public abstract class AbstractJdbcDataObjectStore extends
           final String tableName = columnsRs.getString("TABLE_NAME")
             .toUpperCase();
           final String typePath = PathUtil.toPath(schemaName, tableName);
-          final DataObjectMetaDataImpl metaData = (DataObjectMetaDataImpl)metaDataMap.get(typePath);
+          final RecordDefinitionImpl metaData = (RecordDefinitionImpl)metaDataMap.get(typePath);
           if (metaData != null) {
             final String name = columnsRs.getString("COLUMN_NAME")
               .toUpperCase();
@@ -814,10 +814,10 @@ public abstract class AbstractJdbcDataObjectStore extends
           }
         }
 
-        for (final DataObjectMetaData metaData : schema.getTypes()) {
+        for (final RecordDefinition metaData : schema.getTypes()) {
           final String typePath = metaData.getPath();
           final List<String> idAttributeNames = idAttributeNameMap.get(typePath);
-          ((DataObjectMetaDataImpl)metaData).setIdAttributeNames(idAttributeNames);
+          ((RecordDefinitionImpl)metaData).setIdAttributeNames(idAttributeNames);
         }
 
       } finally {
@@ -831,8 +831,8 @@ public abstract class AbstractJdbcDataObjectStore extends
       releaseConnection(connection);
     }
 
-    for (final DataObjectMetaData metaData : metaDataMap.values()) {
-      addMetaDataProperties((DataObjectMetaDataImpl)metaData);
+    for (final RecordDefinition metaData : metaDataMap.values()) {
+      addMetaDataProperties((RecordDefinitionImpl)metaData);
     }
   }
 
@@ -883,7 +883,7 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public ResultPager<DataObject> page(final Query query) {
+  public ResultPager<Record> page(final Query query) {
     return new JdbcQueryResultPager(this, getProperties(), query);
   }
 
@@ -899,9 +899,9 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public Reader<DataObject> query(final DataObjectFactory dataObjectFactory,
+  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
     final String typePath, Geometry geometry) {
-    final DataObjectMetaData metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getMetaData(typePath);
     final JdbcAttribute geometryAttribute = (JdbcAttribute)metaData.getGeometryAttribute();
     final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
     geometry = ProjectionFactory.convert(geometry, geometryFactory);
@@ -989,16 +989,16 @@ public abstract class AbstractJdbcDataObjectStore extends
   }
 
   @Override
-  public void update(final DataObject record) {
+  public void update(final Record record) {
     write(record, null);
   }
 
   @Override
-  public void updateAll(final Collection<DataObject> records) {
+  public void updateAll(final Collection<Record> records) {
     writeAll(records, null);
   }
 
-  protected void write(final DataObject record, final DataObjectState state) {
+  protected void write(final Record record, final DataObjectState state) {
     try (
       Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
@@ -1017,7 +1017,7 @@ public abstract class AbstractJdbcDataObjectStore extends
     }
   }
 
-  protected DataObject write(final JdbcWriter writer, DataObject record,
+  protected Record write(final JdbcWriter writer, Record record,
     final DataObjectState state) {
     if (state == DataObjectState.New) {
       if (record.getState() != state) {
@@ -1037,7 +1037,7 @@ public abstract class AbstractJdbcDataObjectStore extends
     return record;
   }
 
-  protected void writeAll(final Collection<DataObject> records,
+  protected void writeAll(final Collection<Record> records,
     final DataObjectState state) {
     try (
       Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
@@ -1046,7 +1046,7 @@ public abstract class AbstractJdbcDataObjectStore extends
       // rolled back.
       try (
         final JdbcWriter writer = getWriter(true)) {
-        for (final DataObject record : records) {
+        for (final Record record : records) {
           write(writer, record, state);
         }
       } catch (final RuntimeException e) {

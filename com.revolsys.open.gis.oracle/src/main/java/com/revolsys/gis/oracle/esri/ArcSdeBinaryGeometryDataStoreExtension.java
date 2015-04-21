@@ -5,11 +5,11 @@ import java.util.Map.Entry;
 
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.oracle.io.OracleSdoGeometryJdbcAttribute;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
@@ -23,7 +23,7 @@ DataObjectStoreExtension {
   }
 
   @Override
-  public void initialize(final DataObjectStore dataStore,
+  public void initialize(final RecordStore dataStore,
     final Map<String, Object> connectionProperties) {
     try {
       this.sdeUtil = new ArcSdeBinaryGeometryDataStoreUtil(dataStore,
@@ -34,14 +34,14 @@ DataObjectStoreExtension {
   }
 
   @Override
-  public boolean isEnabled(final DataObjectStore dataStore) {
+  public boolean isEnabled(final RecordStore dataStore) {
     return ArcSdeConstants.isSdeAvailable(dataStore) && this.sdeUtil != null;
   }
 
   @Override
   public void postProcess(final DataObjectStoreSchema schema) {
     final AbstractJdbcDataObjectStore dataStore = (AbstractJdbcDataObjectStore)schema.getDataStore();
-    for (final DataObjectMetaData metaData : schema.getTypes()) {
+    for (final RecordDefinition metaData : schema.getTypes()) {
       final String typePath = metaData.getPath();
       final Map<String, Map<String, Object>> typeColumnProperties = JdbcAttributeAdder.getTypeColumnProperties(
         schema, typePath);
@@ -49,7 +49,7 @@ DataObjectStoreExtension {
         final String columnName = columnEntry.getKey();
         final Map<String, Object> columnProperties = columnEntry.getValue();
         if (ArcSdeConstants.SDEBINARY.equals(columnProperties.get(ArcSdeConstants.GEOMETRY_COLUMN_TYPE))) {
-          final Attribute attribute = metaData.getAttribute(columnName);
+          final FieldDefinition attribute = metaData.getAttribute(columnName);
           if (!(attribute instanceof OracleSdoGeometryJdbcAttribute)) {
             if (this.sdeUtil == null) {
               LoggerFactory.getLogger(getClass())

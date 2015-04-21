@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.Attribute;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 
 public class In extends Condition {
@@ -16,7 +16,7 @@ public class In extends Condition {
 
   private CollectionValue values;
 
-  public In(final Attribute attribute, final Collection<? extends Object> values) {
+  public In(final FieldDefinition attribute, final Collection<? extends Object> values) {
     this(attribute.getName(), new CollectionValue(attribute, values));
   }
 
@@ -24,7 +24,7 @@ public class In extends Condition {
     this.left = left;
     if (left instanceof Column) {
       final Column column = (Column)left;
-      final Attribute attribute = column.getAttribute();
+      final FieldDefinition attribute = column.getAttribute();
       if (attribute != null) {
         values.setAttribute(attribute);
       }

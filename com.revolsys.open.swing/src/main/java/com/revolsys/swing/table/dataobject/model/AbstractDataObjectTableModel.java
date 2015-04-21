@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
@@ -27,7 +27,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
 
   private static final long serialVersionUID = 1L;
 
-  private DataObjectMetaData metaData;
+  private RecordDefinition metaData;
 
   private Set<String> readOnlyFieldNames = new HashSet<String>();
 
@@ -40,7 +40,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     this(null);
   }
 
-  public AbstractDataObjectTableModel(final DataObjectMetaData metaData) {
+  public AbstractDataObjectTableModel(final RecordDefinition metaData) {
     this.metaData = metaData;
   }
 
@@ -77,13 +77,13 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
   }
 
   public String getFieldName(final int attributeIndex) {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     return metaData.getAttributeName(attributeIndex);
   }
 
   public abstract String getFieldName(int rowIndex, int columnIndex);
 
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return this.metaData;
   }
 
@@ -116,7 +116,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     this.editable = editable;
   }
 
-  protected void setMetaData(final DataObjectMetaData metaData) {
+  protected void setMetaData(final RecordDefinition metaData) {
     if (metaData != this.metaData) {
       this.metaData = metaData;
       fireTableStructureChanged();
@@ -134,7 +134,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
   public String toDisplayValue(final int rowIndex, final int attributeIndex,
     final Object objectValue) {
     String text;
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     final String idFieldName = metaData.getIdAttributeName();
     final String name = getFieldName(attributeIndex);
     if (objectValue == null) {
@@ -180,7 +180,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
         return null;
       }
     }
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     final String name = getFieldName(attributeIndex);
     final CodeTable codeTable = metaData.getCodeTableByColumn(name);
     if (codeTable == null) {

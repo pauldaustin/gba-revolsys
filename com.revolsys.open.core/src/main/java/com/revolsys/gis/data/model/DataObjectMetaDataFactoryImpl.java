@@ -29,20 +29,20 @@ import com.revolsys.io.AbstractObjectWithProperties;
 public class DataObjectMetaDataFactoryImpl extends AbstractObjectWithProperties
   implements DataObjectMetaDataFactory {
 
-  private final Map<String, DataObjectMetaData> types = new LinkedHashMap<String, DataObjectMetaData>();
+  private final Map<String, RecordDefinition> types = new LinkedHashMap<String, RecordDefinition>();
 
-  public void addMetaData(final DataObjectMetaData type) {
+  public void addMetaData(final RecordDefinition type) {
     if (type != null) {
       types.put(type.getPath(), type);
     }
   }
 
   @Override
-  public DataObjectMetaData getMetaData(final String path) {
+  public RecordDefinition getMetaData(final String path) {
     return types.get(path);
   }
 
-  public Collection<DataObjectMetaData> getTypes() {
+  public Collection<RecordDefinition> getTypes() {
     return types.values();
   }
 }

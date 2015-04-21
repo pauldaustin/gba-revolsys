@@ -8,22 +8,22 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 import com.revolsys.util.Property;
 
 public class DataObjectStoreFactoryBean extends
-  AbstractFactoryBean<DataObjectStore> {
+  AbstractFactoryBean<RecordStore> {
 
   private Map<String, Object> config = new LinkedHashMap<String, Object>();
 
   private Map<String, Object> properties = new LinkedHashMap<String, Object>();
 
   @Override
-  protected DataObjectStore createInstance() throws Exception {
-    final DataObjectStore dataObjectStore = DataObjectStoreFactoryRegistry.createDataObjectStore(config);
+  protected RecordStore createInstance() throws Exception {
+    final RecordStore dataObjectStore = DataObjectStoreFactoryRegistry.createDataObjectStore(config);
     Property.set(dataObjectStore, properties);
     dataObjectStore.initialize();
     return dataObjectStore;
   }
 
   @Override
-  protected void destroyInstance(final DataObjectStore dataObjectStore)
+  protected void destroyInstance(final RecordStore dataObjectStore)
     throws Exception {
     dataObjectStore.close();
     properties = null;
@@ -36,7 +36,7 @@ public class DataObjectStoreFactoryBean extends
 
   @Override
   public Class<?> getObjectType() {
-    return DataObjectStore.class;
+    return RecordStore.class;
   }
 
   public Map<String, Object> getProperties() {

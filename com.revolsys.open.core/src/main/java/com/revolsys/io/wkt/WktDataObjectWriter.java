@@ -3,28 +3,28 @@ package com.revolsys.io.wkt;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
 
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.Attribute;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class WktDataObjectWriter extends AbstractWriter<DataObject> {
+public class WktDataObjectWriter extends AbstractWriter<Record> {
 
-  private final DataObjectMetaData metaData;
+  private final RecordDefinition metaData;
 
   private final PrintWriter out;
 
   private boolean open;
 
-  public WktDataObjectWriter(final DataObjectMetaData metaData,
+  public WktDataObjectWriter(final RecordDefinition metaData,
     final java.io.Writer out) {
     this.metaData = metaData;
     this.out = new PrintWriter(new BufferedWriter(out));
-    final Attribute geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
       setProperty(IoConstants.GEOMETRY_FACTORY, geometryFactory);
@@ -48,7 +48,7 @@ public class WktDataObjectWriter extends AbstractWriter<DataObject> {
   }
 
   @Override
-  public void write(final DataObject object) {
+  public void write(final Record object) {
     if (!open) {
       open = true;
     }

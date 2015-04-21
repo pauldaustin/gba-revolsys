@@ -7,8 +7,8 @@ import java.util.Map;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
 import com.revolsys.gis.geometry.io.AbstractGeometryReaderFactory;
 import com.revolsys.io.IoFactoryRegistry;
@@ -79,7 +79,7 @@ public abstract class AbstractDataObjectAndGeometryReaderFactory extends
    * @return The reader.
    */
   @Override
-  public Reader<DataObject> createDirectoryDataObjectReader() {
+  public Reader<Record> createDirectoryDataObjectReader() {
     final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
     return directoryReader;
@@ -93,7 +93,7 @@ public abstract class AbstractDataObjectAndGeometryReaderFactory extends
    * @return The reader for the file.
    */
   @Override
-  public Reader<DataObject> createDirectoryDataObjectReader(final File directory) {
+  public Reader<Record> createDirectoryDataObjectReader(final File directory) {
     return createDirectoryDataObjectReader(directory, dataObjectFactory);
   }
 
@@ -106,7 +106,7 @@ public abstract class AbstractDataObjectAndGeometryReaderFactory extends
    * @return The reader for the file.
    */
   @Override
-  public Reader<DataObject> createDirectoryDataObjectReader(
+  public Reader<Record> createDirectoryDataObjectReader(
     final File directory, final DataObjectFactory dataObjectFactory) {
     final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
@@ -116,8 +116,8 @@ public abstract class AbstractDataObjectAndGeometryReaderFactory extends
 
   @Override
   public GeometryReader createGeometryReader(final Resource resource) {
-    final Reader<DataObject> dataObjectReader = createDataObjectReader(resource);
-    final Iterator<DataObject> dataObjectIterator = dataObjectReader.iterator();
+    final Reader<Record> dataObjectReader = createDataObjectReader(resource);
+    final Iterator<Record> dataObjectIterator = dataObjectReader.iterator();
     final DataObjectGeometryIterator iterator = new DataObjectGeometryIterator(
       dataObjectIterator);
     final GeometryReader geometryReader = new GeometryReader(iterator);

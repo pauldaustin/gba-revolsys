@@ -8,7 +8,7 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreFactoryRegistry;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
 import com.revolsys.io.FileUtil;
@@ -20,13 +20,13 @@ public class DataObjectStoreConnection implements MapSerializer {
 
   private String name;
 
-  private DataObjectStore dataStore;
+  private RecordStore dataStore;
 
   private DataObjectStoreConnectionRegistry registry;
 
   public DataObjectStoreConnection(
     final DataObjectStoreConnectionRegistry registry, final String name,
-    final DataObjectStore dataStore) {
+    final RecordStore dataStore) {
     this.registry = registry;
     this.name = name;
     this.dataStore = dataStore;
@@ -54,7 +54,7 @@ public class DataObjectStoreConnection implements MapSerializer {
 
   }
 
-  public DataObjectStore getDataStore() {
+  public RecordStore getDataStore() {
     synchronized (this) {
       if (dataStore == null) {
         try {
@@ -81,7 +81,7 @@ public class DataObjectStoreConnection implements MapSerializer {
   }
 
   public List<DataObjectStoreSchema> getSchemas() {
-    final DataObjectStore dataStore = getDataStore();
+    final RecordStore dataStore = getDataStore();
     if (dataStore == null) {
       return Collections.emptyList();
     } else {

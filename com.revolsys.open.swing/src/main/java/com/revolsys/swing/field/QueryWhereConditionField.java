@@ -64,9 +64,9 @@ import com.akiban.sql.parser.ValueNode;
 import com.akiban.sql.parser.ValueNodeList;
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.And;
 import com.revolsys.gis.data.query.Between;
@@ -102,7 +102,7 @@ public class QueryWhereConditionField extends ValueField implements
 
   private static final long serialVersionUID = 1L;
 
-  public static JComponent createSearchField(final Attribute attribute,
+  public static JComponent createSearchField(final FieldDefinition attribute,
     final CodeTable codeTable) {
     if (attribute == null) {
       return new TextField(20);
@@ -110,7 +110,7 @@ public class QueryWhereConditionField extends ValueField implements
       final String name = attribute.getName();
       final Class<?> typeClass = attribute.getTypeClass();
       final String searchFieldFactory = attribute.getProperty("searchFieldFactory");
-      final DataObjectMetaData metaData = attribute.getMetaData();
+      final RecordDefinition metaData = attribute.getMetaData();
       if (metaData == null) {
         return new TextField(20);
       } else {
@@ -152,7 +152,7 @@ public class QueryWhereConditionField extends ValueField implements
 
   private final PropertyChangeListener listener;
 
-  private final DataObjectMetaData metaData;
+  private final RecordDefinition metaData;
 
   private final ComboBox rightUnaryConditionOperator;
 
@@ -189,7 +189,7 @@ public class QueryWhereConditionField extends ValueField implements
     this.originalFilter = filter;
     this.listener = listener;
     metaData = layer.getMetaData();
-    final List<Attribute> attributes = metaData.getAttributes();
+    final List<FieldDefinition> attributes = metaData.getAttributes();
 
     fieldNamesList = new ComboBox(new AttributeTitleStringConveter(layer),
       false, attributes);
@@ -314,7 +314,7 @@ public class QueryWhereConditionField extends ValueField implements
       whereTextField.setText(query);
     }
     final String searchField = layer.getProperty("searchField");
-    final Attribute searchAttribute = metaData.getAttribute(searchField);
+    final FieldDefinition searchAttribute = metaData.getAttribute(searchField);
     if (searchAttribute == null) {
       fieldNamesList.setSelectedIndex(0);
     } else {
@@ -328,7 +328,7 @@ public class QueryWhereConditionField extends ValueField implements
   }
 
   public void actionAddBinaryCondition() {
-    final Attribute attribute = (Attribute)fieldNamesList.getSelectedItem();
+    final FieldDefinition attribute = (FieldDefinition)fieldNamesList.getSelectedItem();
     if (attribute != null) {
       final String operator = (String)binaryConditionOperator.getSelectedItem();
       if (StringUtils.hasText(operator)) {
@@ -382,7 +382,7 @@ public class QueryWhereConditionField extends ValueField implements
   }
 
   public void actionAddInCondition() {
-    final Attribute attribute = (Attribute)fieldNamesList.getSelectedItem();
+    final FieldDefinition attribute = (FieldDefinition)fieldNamesList.getSelectedItem();
     if (attribute != null) {
       Object fieldValue = ((Field)inConditionField).getFieldValue();
       if (fieldValue != null) {
@@ -437,7 +437,7 @@ public class QueryWhereConditionField extends ValueField implements
   }
 
   public void actionAddLikeCondition() {
-    final Attribute attribute = (Attribute)fieldNamesList.getSelectedItem();
+    final FieldDefinition attribute = (FieldDefinition)fieldNamesList.getSelectedItem();
     if (attribute != null) {
       final Object fieldValue = ((Field)likeConditionField).getFieldValue();
       if (fieldValue != null) {
@@ -470,7 +470,7 @@ public class QueryWhereConditionField extends ValueField implements
   }
 
   public void actionAddRightUnaryCondition() {
-    final Attribute attribute = (Attribute)fieldNamesList.getSelectedItem();
+    final FieldDefinition attribute = (FieldDefinition)fieldNamesList.getSelectedItem();
     if (attribute != null) {
       final String operator = (String)rightUnaryConditionOperator.getSelectedItem();
       if (StringUtils.hasText(operator)) {
@@ -558,7 +558,7 @@ public class QueryWhereConditionField extends ValueField implements
   public void itemStateChanged(final ItemEvent event) {
     if (event.getSource() == fieldNamesList) {
       if (event.getStateChange() == ItemEvent.SELECTED) {
-        final Attribute attribute = (Attribute)event.getItem();
+        final FieldDefinition attribute = (FieldDefinition)event.getItem();
         final String name = attribute.getName();
         codeTable = metaData.getCodeTableByColumn(name);
         final JComponent binaryConditionField = createSearchField(attribute,
@@ -741,7 +741,7 @@ public class QueryWhereConditionField extends ValueField implements
       final Column column = toQueryValue(leftValueNode);
       final Value min = toQueryValue(betweenExpressionStart);
       final Value max = toQueryValue(betweenExpressionEnd);
-      final Attribute attribute = metaData.getAttribute(column.getName());
+      final FieldDefinition attribute = metaData.getAttribute(column.getName());
       min.convert(attribute);
       max.convert(attribute);
       return (V)new Between(column, min, max);
@@ -780,7 +780,7 @@ public class QueryWhereConditionField extends ValueField implements
               final Column column = (Column)leftCondition;
 
               final String name = column.getName();
-              final Attribute attribute = metaData.getAttribute(name);
+              final FieldDefinition attribute = metaData.getAttribute(name);
               final CodeTable codeTable = metaData.getCodeTableByColumn(name);
               if (codeTable == null || attribute == metaData.getIdAttribute()) {
                 final Class<?> typeClass = attribute.getTypeClass();
@@ -836,7 +836,7 @@ public class QueryWhereConditionField extends ValueField implements
       final ColumnReference column = (ColumnReference)expression;
       String columnName = column.getColumnName();
       columnName = columnName.replaceAll("\"", "");
-      final Attribute attribute = metaData.getAttribute(columnName);
+      final FieldDefinition attribute = metaData.getAttribute(columnName);
       if (attribute == null) {
         setInvalidMessage("Invalid column name " + columnName);
       } else {

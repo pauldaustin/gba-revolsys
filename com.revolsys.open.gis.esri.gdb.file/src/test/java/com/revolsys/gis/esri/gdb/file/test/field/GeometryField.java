@@ -2,9 +2,9 @@ package com.revolsys.gis.esri.gdb.file.test.field;
 
 import java.io.IOException;
 
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.gis.esri.gdb.file.test.FgdbReader;
 import com.revolsys.io.EndianInput;
 import com.vividsolutions.jts.geom.Geometry;

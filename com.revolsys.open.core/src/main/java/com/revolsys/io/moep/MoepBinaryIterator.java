@@ -10,10 +10,10 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectFactory;
 import com.revolsys.gis.grid.Bcgs20000RectangularMapGrid;
 import com.revolsys.gis.grid.UtmRectangularMapGrid;
@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 public class MoepBinaryIterator extends AbstractObjectWithProperties implements
-  Iterator<DataObject> {
+  Iterator<Record> {
   private static final int COMPLEX_LINE = 3;
 
   private static final int CONSTRUCTION_COMPLEX_LINE = 5;
@@ -52,7 +52,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
     return orientation;
   }
 
-  public static void setGeometryProperties(final DataObject object) {
+  public static void setGeometryProperties(final Record object) {
     final Geometry geometry = object.getGeometryValue();
     final Number angle = object.getValue(MoepConstants.ANGLE);
     if (angle != null) {
@@ -83,7 +83,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   private byte coordinateBytes;
 
-  private DataObject currentDataObject;
+  private Record currentDataObject;
 
   private final DataObjectFactory dataObjectFactory;
 
@@ -175,7 +175,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
     }
   }
 
-  protected DataObject loadDataObject() throws IOException {
+  protected Record loadDataObject() throws IOException {
     final int featureKey = read();
     if (featureKey != 255) {
 
@@ -195,7 +195,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
       final int extraParams = featureKey % 100 / 10;
       final int featureType = featureKey % 10;
       final byte numBytes = (byte)read();
-      final DataObject object = dataObjectFactory.createDataObject(MoepConstants.META_DATA);
+      final Record object = dataObjectFactory.createDataObject(MoepConstants.META_DATA);
       object.setValue(MoepConstants.MAPSHEET_NAME, mapsheet);
       object.setValue(MoepConstants.FEATURE_CODE, featureCode);
       object.setValue(MoepConstants.ORIGINAL_FILE_TYPE, originalFileType);
@@ -315,7 +315,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
     setProperty(IoConstants.GEOMETRY_FACTORY, factory);
   }
 
-  protected DataObject loadNextRecord() {
+  protected Record loadNextRecord() {
     try {
       return loadDataObject();
     } catch (final IOException e) {
@@ -330,7 +330,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
    * @exception NoSuchElementException If the reader has no more data objects.
    */
   @Override
-  public DataObject next() {
+  public Record next() {
     if (hasNext()) {
       loadNextObject = true;
       return currentDataObject;
@@ -393,7 +393,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   }
 
-  private void readLineString(final int extraParams, final DataObject object)
+  private void readLineString(final int extraParams, final Record object)
     throws IOException {
     int numCoords = 0;
     if (extraParams == 2 || extraParams == 4) {
@@ -442,7 +442,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
   public void remove() {
   }
 
-  private void setAdmissionHistory(final DataObject object,
+  private void setAdmissionHistory(final Record object,
     final char reasonForChange) {
     if (directoryReader != null) {
       object.setValue(MoepConstants.ADMIT_SOURCE_DATE,
@@ -458,7 +458,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
       String.valueOf(reasonForChange));
   }
 
-  private void setRetirementHistory(final DataObject object,
+  private void setRetirementHistory(final Record object,
     final char reasonForChange) {
     if (directoryReader != null) {
       object.setValue(MoepConstants.RETIRE_SOURCE_DATE,

@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.ResultPager;
-import com.revolsys.gis.data.io.DataObjectStore;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.data.record.Record;
+import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.query.Or;
 import com.revolsys.gis.data.query.Q;
@@ -26,9 +26,9 @@ import com.revolsys.ui.html.view.TabElementContainer;
 import com.revolsys.ui.web.utils.HttpServletUtils;
 import com.revolsys.util.JavaBeanUtil;
 
-public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
+public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<Record> {
 
-  private DataObjectStore dataStore;
+  private RecordStore dataStore;
 
   private String tableName;
 
@@ -83,7 +83,7 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
   public Map<String, Object> createDataTableMap(
     final HttpServletRequest request, final String pageName,
     final Map<String, Object> parameters) {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     Query query = (Query)parameters.get("query");
     if (query == null) {
       final Map<String, Object> filter = (Map<String, Object>)parameters.get("filter");
@@ -116,7 +116,7 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
     }
     final Map<String, Boolean> orderBy = getDataTableSortOrder(request);
     query.setOrderBy(orderBy);
-    final ResultPager<DataObject> pager = getResultPager(query);
+    final ResultPager<Record> pager = getResultPager(query);
     try {
       return createDataTableMap(request, pager, pageName);
     } finally {
@@ -131,12 +131,12 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
   }
 
   @Override
-  protected DataObject createObject() {
+  protected Record createObject() {
     return dataStore.create(tableName);
   }
 
   public void deleteObject(final Object id) {
-    final DataObject object = loadObject(id);
+    final Record object = loadObject(id);
     if (object != null) {
       dataStore.delete(object);
     }
@@ -150,15 +150,15 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
     tableName = null;
   }
 
-  public DataObjectStore getDataStore() {
+  public RecordStore getDataStore() {
     return dataStore;
   }
 
-  protected DataObjectMetaData getMetaData() {
+  protected RecordDefinition getMetaData() {
     return getDataStore().getMetaData(getTableName());
   }
 
-  public ResultPager<DataObject> getResultPager(final Query query) {
+  public ResultPager<Record> getResultPager(final Query query) {
     return dataStore.page(query);
   }
 
@@ -167,30 +167,30 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
   }
 
   @Override
-  protected void insertObject(final DataObject object) {
+  protected void insertObject(final Record object) {
     if (object.getIdValue() == null) {
       object.setIdValue(dataStore.createPrimaryIdValue(tableName));
     }
     dataStore.insert(object);
   }
 
-  protected boolean isPropertyUnique(final DataObject object,
+  protected boolean isPropertyUnique(final Record object,
     final String attributeName) {
     final String value = object.getValue(attributeName);
-    final DataObjectStore dataStore = getDataStore();
-    final DataObjectMetaData metaData = dataStore.getMetaData(tableName);
+    final RecordStore dataStore = getDataStore();
+    final RecordDefinition metaData = dataStore.getMetaData(tableName);
     if (metaData == null) {
       return true;
     } else {
       final Query query = Query.equal(metaData, attributeName, value);
-      final Reader<DataObject> results = dataStore.query(query);
-      final List<DataObject> objects = results.read();
+      final Reader<Record> results = dataStore.query(query);
+      final List<Record> objects = results.read();
       if (object.getState() == DataObjectState.New) {
         return objects.isEmpty();
       } else {
         final Object id = object.getIdValue();
-        for (final Iterator<DataObject> iterator = objects.iterator(); iterator.hasNext();) {
-          final DataObject matchedObject = iterator.next();
+        for (final Iterator<Record> iterator = objects.iterator(); iterator.hasNext();) {
+          final Record matchedObject = iterator.next();
           final Object matchedId = matchedObject.getIdValue();
           if (EqualsInstance.INSTANCE.equals(id, matchedId)) {
             iterator.remove();
@@ -202,16 +202,16 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
   }
 
   @Override
-  public DataObject loadObject(final Object id) {
+  public Record loadObject(final Object id) {
     return loadObject(tableName, id);
   }
 
-  public DataObject loadObject(final String typeName, final Object id) {
-    final DataObject object = dataStore.load(typeName, id);
+  public Record loadObject(final String typeName, final Object id) {
+    final Record object = dataStore.load(typeName, id);
     return object;
   }
 
-  public void setDataStore(final DataObjectStore dataStore) {
+  public void setDataStore(final RecordStore dataStore) {
     this.dataStore = dataStore;
   }
 
@@ -220,7 +220,7 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<DataObject> {
   }
 
   @Override
-  protected void updateObject(final DataObject object) {
+  protected void updateObject(final Record object) {
     dataStore.update(object);
   }
 }

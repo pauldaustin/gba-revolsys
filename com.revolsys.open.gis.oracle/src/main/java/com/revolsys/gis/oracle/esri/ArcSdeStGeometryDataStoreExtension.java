@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.DataObjectStore;
+import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.DataObjectMetaData;
+import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.oracle.io.OracleDataObjectStore;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
@@ -26,7 +26,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
   }
 
   @Override
-  public void initialize(final DataObjectStore dataStore,
+  public void initialize(final RecordStore dataStore,
     final Map<String, Object> connectionProperties) {
     final OracleDataObjectStore oracleDataStore = (OracleDataObjectStore)dataStore;
     final JdbcAttributeAdder stGeometryAttributeAdder = new ArcSdeStGeometryAttributeAdder(
@@ -37,7 +37,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
   }
 
   @Override
-  public boolean isEnabled(final DataObjectStore dataStore) {
+  public boolean isEnabled(final RecordStore dataStore) {
     return ArcSdeConstants.isSdeAvailable(dataStore);
   }
 
@@ -137,7 +137,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
   @Override
   public void postProcess(final DataObjectStoreSchema schema) {
     final String schemaName = schema.getName();
-    for (final DataObjectMetaData metaData : schema.getTypes()) {
+    for (final RecordDefinition metaData : schema.getTypes()) {
       final String typePath = metaData.getPath();
       final Integer registrationId = JdbcAttributeAdder.getTableProperty(
         schema, typePath, ArcSdeConstants.REGISTRATION_ID);
@@ -152,7 +152,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
 
   @Override
   public void preProcess(final DataObjectStoreSchema schema) {
-    final DataObjectStore dataStore = schema.getDataStore();
+    final RecordStore dataStore = schema.getDataStore();
     final OracleDataObjectStore oracleDataStore = (OracleDataObjectStore)dataStore;
     try {
       final Connection connection = oracleDataStore.getSqlConnection();

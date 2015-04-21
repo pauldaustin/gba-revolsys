@@ -1,13 +1,13 @@
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class GeometryValueFilter implements Filter<DataObject> {
+public class GeometryValueFilter implements Filter<Record> {
   private final Geometry geometry;
 
-  public GeometryValueFilter(final DataObject object) {
+  public GeometryValueFilter(final Record object) {
     this(object.getGeometryValue());
   }
 
@@ -16,7 +16,7 @@ public class GeometryValueFilter implements Filter<DataObject> {
   }
 
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Geometry value = object.getGeometryValue();
     if (value == geometry) {
       return true;

@@ -12,11 +12,11 @@ import javax.swing.ImageIcon;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.filter.AcceptAllFilter;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.filter.MultipleAttributeValuesFilter;
 import com.vividsolutions.jts.geom.TopologyException;
 import com.revolsys.io.map.MapSerializerUtil;
@@ -58,9 +58,9 @@ public abstract class AbstractDataObjectLayerRenderer extends
     }
   }
 
-  private static final AcceptAllFilter<DataObject> DEFAULT_FILTER = new AcceptAllFilter<DataObject>();
+  private static final AcceptAllFilter<Record> DEFAULT_FILTER = new AcceptAllFilter<Record>();
 
-  public static Filter<DataObject> getFilter(
+  public static Filter<Record> getFilter(
     final AbstractDataObjectLayer layer, final Map<String, Object> style) {
     @SuppressWarnings("unchecked")
     Map<String, Object> filterDefinition = (Map<String, Object>)style.get("filter");
@@ -125,7 +125,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
     return getRenderer(layer, null, style);
   }
 
-  private Filter<DataObject> filter = DEFAULT_FILTER;
+  private Filter<Record> filter = DEFAULT_FILTER;
 
   public AbstractDataObjectLayerRenderer(final String type, final String name,
     final AbstractDataObjectLayer layer, final LayerRenderer<?> parent) {
@@ -268,7 +268,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
         final AbstractDataObjectLayer layer = getLayer();
         filter = new SqlLayerFilter(layer, query);
       } else {
-        filter = new AcceptAllFilter<DataObject>();
+        filter = new AcceptAllFilter<Record>();
       }
     }
   }

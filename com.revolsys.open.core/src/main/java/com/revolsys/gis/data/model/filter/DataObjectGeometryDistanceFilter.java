@@ -20,11 +20,11 @@
  */
 package com.revolsys.gis.data.model.filter;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectGeometryDistanceFilter implements Filter<DataObject> {
+public class DataObjectGeometryDistanceFilter implements Filter<Record> {
   /** The geometry to compare the data objects to to. */
   private final Geometry geometry;
 
@@ -44,7 +44,7 @@ public class DataObjectGeometryDistanceFilter implements Filter<DataObject> {
   }
 
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     final Geometry matchGeometry = object.getGeometryValue();
     final double distance = matchGeometry.distance(geometry);
     if (distance <= maxDistance) {

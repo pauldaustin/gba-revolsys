@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObject;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 
@@ -14,7 +14,7 @@ import com.revolsys.gis.model.data.equals.EqualsInstance;
  * 
  * @author Paul Austin
  */
-public class MultipleAttributeValuesFilter implements Filter<DataObject> {
+public class MultipleAttributeValuesFilter implements Filter<Record> {
   /** The values to match. */
   private Map<String, ? extends Object> values = Collections.emptyMap();
 
@@ -30,7 +30,7 @@ public class MultipleAttributeValuesFilter implements Filter<DataObject> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final DataObject object) {
+  public boolean accept(final Record object) {
     for (final Entry<String, ? extends Object> entry : values.entrySet()) {
       final String attributeName = entry.getKey();
       final Object value = entry.getValue();

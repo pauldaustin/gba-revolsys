@@ -4,47 +4,47 @@ import java.util.Arrays;
 
 import junit.framework.Assert;
 
-import com.revolsys.gis.data.model.ArrayDataObject;
-import com.revolsys.gis.data.model.Attribute;
-import com.revolsys.gis.data.model.DataObject;
-import com.revolsys.gis.data.model.DataObjectMetaDataImpl;
-import com.revolsys.gis.data.model.types.DataTypes;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.types.DataTypes;
+import com.revolsys.gis.data.model.ArrayRecord;
 
 public class QueryValueTest {
   public static void main(final String[] args) {
     new QueryValueTest().run();
   }
 
-  private final DataObjectMetaDataImpl metaData;
+  private final RecordDefinitionImpl metaData;
 
-  private final Attribute idAttribute;
+  private final FieldDefinition idAttribute;
 
-  private final DataObject record;
+  private final Record record;
 
-  private final Attribute nameAttribute;
+  private final FieldDefinition nameAttribute;
 
-  private final Attribute descriptionAttribute;
+  private final FieldDefinition descriptionAttribute;
 
   public QueryValueTest() {
-    metaData = new DataObjectMetaDataImpl("Test");
+    metaData = new RecordDefinitionImpl("Test");
     idAttribute = metaData.addAttribute("ID", DataTypes.INT, true);
     nameAttribute = metaData.addAttribute("NAME", DataTypes.STRING, 255, true);
     descriptionAttribute = metaData.addAttribute("DESCRIPTION",
       DataTypes.STRING, 255, false);
 
-    record = new ArrayDataObject(metaData);
+    record = new ArrayRecord(metaData);
     record.setValue("ID", 10);
     record.setValue("NAME", "foobar");
   }
 
   public void assertConditionFalse(final Condition trueCondition1,
-    final DataObject record) {
+    final Record record) {
     final boolean result1 = trueCondition1.accept(record);
     Assert.assertFalse(result1);
   }
 
   public void assertConditionTrue(final Condition trueCondition1,
-    final DataObject record) {
+    final Record record) {
     final boolean result1 = trueCondition1.accept(record);
     Assert.assertTrue(result1);
   }

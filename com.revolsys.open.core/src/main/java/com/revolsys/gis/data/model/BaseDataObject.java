@@ -21,8 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
+import com.revolsys.data.types.DataType;
 import com.revolsys.gis.data.model.codes.CodeTable;
-import com.revolsys.gis.data.model.types.DataType;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -30,12 +32,12 @@ import com.revolsys.util.JavaBeanUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class BaseDataObject extends AbstractMap<String, Object>
-  implements DataObject, Cloneable, Serializable {
+  implements Record, Cloneable, Serializable {
   /** Seialization version */
   private static final long serialVersionUID = 2704226494490082708L;
 
   /** The metaData defining the object type. */
-  private transient DataObjectMetaData metaData;
+  private transient RecordDefinition metaData;
 
   protected DataObjectState state = DataObjectState.Initalizing;
 
@@ -44,7 +46,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    * 
    * @param metaData The metaData defining the object type.
    */
-  public BaseDataObject(final DataObjectMetaData metaData) {
+  public BaseDataObject(final RecordDefinition metaData) {
     this.metaData = metaData;
   }
 
@@ -66,7 +68,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   @SuppressWarnings("unchecked")
   @Override
-  public int compareTo(final DataObject other) {
+  public int compareTo(final Record other) {
     if (this == other) {
       return 0;
     } else {
@@ -122,7 +124,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   }
 
   public String getAttributeTitle(final String name) {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     return metaData.getAttributeTitle(name);
   }
 
@@ -153,7 +155,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    */
   @Override
   public DataObjectFactory getFactory() {
-    final DataObjectMetaData metaData = getMetaData();
+    final RecordDefinition metaData = getMetaData();
     if (metaData == null) {
       return null;
     } else {
@@ -234,7 +236,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    * @return The meta data.
    */
   @Override
-  public DataObjectMetaData getMetaData() {
+  public RecordDefinition getMetaData() {
     return metaData;
   }
 
@@ -303,8 +305,8 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
     Object propertyValue = this;
     for (int i = 0; i < propertyPath.length && propertyValue != null; i++) {
       final String propertyName = propertyPath[i];
-      if (propertyValue instanceof DataObject) {
-        final DataObject dataObject = (DataObject)propertyValue;
+      if (propertyValue instanceof Record) {
+        final Record dataObject = (Record)propertyValue;
 
         if (dataObject.hasAttribute(propertyName)) {
           propertyValue = dataObject.getValue(propertyName);
@@ -413,7 +415,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   private void readObject(final ObjectInputStream ois)
     throws ClassNotFoundException, IOException {
     final int metaDataInstanceId = ois.readInt();
-    metaData = DataObjectMetaDataImpl.getMetaData(metaDataInstanceId);
+    metaData = RecordDefinitionImpl.getMetaData(metaDataInstanceId);
     ois.defaultReadObject();
   }
 
@@ -478,12 +480,12 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
         if (objectValue == null) {
           final DataType attributeType = metaData.getAttributeType(key);
           if (attributeType != null) {
-            if (attributeType.getJavaClass() == DataObject.class) {
+            if (attributeType.getJavaClass() == Record.class) {
               final String typePath = attributeType.getName();
               final DataObjectMetaDataFactory metaDataFactory = metaData.getDataObjectMetaDataFactory();
-              final DataObjectMetaData subMetaData = metaDataFactory.getMetaData(typePath);
+              final RecordDefinition subMetaData = metaDataFactory.getMetaData(typePath);
               final DataObjectFactory dataObjectFactory = subMetaData.getDataObjectFactory();
-              final DataObject subObject = dataObjectFactory.createDataObject(subMetaData);
+              final Record subObject = dataObjectFactory.createDataObject(subMetaData);
               subObject.setValue(subKey, value);
               setValue(key, subObject);
             }
@@ -492,8 +494,8 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
           if (objectValue instanceof Geometry) {
             final Geometry geometry = (Geometry)objectValue;
             JtsGeometryUtil.setGeometryProperty(geometry, subKey, value);
-          } else if (objectValue instanceof DataObject) {
-            final DataObject object = (DataObject)objectValue;
+          } else if (objectValue instanceof Record) {
+            final Record object = (Record)objectValue;
             object.setValue(subKey, value);
           } else {
             JavaBeanUtil.setProperty(objectValue, subKey.toString(), value);
@@ -505,7 +507,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   @Override
   public <T> T setValueByPath(final CharSequence attributePath,
-    final DataObject source, final String sourceAttributePath) {
+    final Record source, final String sourceAttributePath) {
     @SuppressWarnings("unchecked")
     final T value = (T)source.getValueByPath(sourceAttributePath);
     setValueByPath(attributePath, value);
@@ -560,7 +562,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   }
 
   @Override
-  public void setValues(final DataObject object) {
+  public void setValues(final Record object) {
     for (final String name : this.metaData.getAttributeNames()) {
       final Object value = JavaBeanUtil.clone(object.getValue(name));
       setValue(name, value);
@@ -569,7 +571,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   }
 
   @Override
-  public void setValues(final DataObject object,
+  public void setValues(final Record object,
     final Collection<String> attributesNames) {
     for (final String attributeName : attributesNames) {
       final Object oldValue = getValue(attributeName);

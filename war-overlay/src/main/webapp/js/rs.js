@@ -294,25 +294,31 @@ $(document).ready(
           var formWrapper = this;
           var form = $('form', this);
           var validate = form.validate({
-            errorContainer : $('div.errorContainer', formWrapper),
-            errorLabelContainer: 'div.errorContainer ul',
-            wrapper : 'li',
-            errorPlacement: function(label, element) {
-              label.addClass('errorMessage');
-              label.insertAfter(element);
-            },
+            errorElement: "span",
+            errorClass: "help-block",
             highlight : function(element, errorClass, validClass) {
+              $(element).closest('.form-group').removeClass('has-sucess');
+                $(element).closest('.form-group').addClass('has-error');
               $(element).closest('div.fieldComponent').addClass('invalid');
               $(element).addClass(errorClass).removeClass(validClass);
               $(element.form).find("label[for=" + element.id + "]").addClass(
                 errorClass);
             },
             unhighlight : function(element, errorClass, validClass) {
+              $(element).closest('.form-group').addClass('has-success');
+                $(element).closest('.form-group').removeClass('has-error');
               $(element).closest('div.fieldComponent').removeClass('invalid');
               $(element).removeClass(errorClass).addClass(validClass);
               $(element.form).find("label[for=" + element.id + "]").removeClass(
                 errorClass);
-            }
+            },
+            errorPlacement: function (error, element) {
+              if (element.parent('.input-group').length || element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
+                  error.insertBefore(element.parent());
+              } else {
+                  error.insertAfter(element);
+              }
+          }
           });
           if ($(formWrapper).hasClass('formInvalid')) {
             validate.form();

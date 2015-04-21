@@ -22,7 +22,7 @@ package com.revolsys.gis.io;
 
 import java.util.Iterator;
 
-import com.revolsys.gis.data.model.DataObject;
+import com.revolsys.data.record.Record;
 
 /**
  * <p>
@@ -55,7 +55,7 @@ import com.revolsys.gis.data.model.DataObject;
  * @author Paul Austin
  * @see Writer<DataObject>
  */
-public interface DataObjectIterator extends Iterator<DataObject> {
+public interface DataObjectIterator extends Iterator<Record> {
 
   /**
    * Close the connection to the data store.
@@ -63,7 +63,7 @@ public interface DataObjectIterator extends Iterator<DataObject> {
   void close();
 
   @Override
-  DataObject next();
+  Record next();
 
   void open();
 
