@@ -3,7 +3,7 @@ package com.revolsys.io.moep;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.AbstractObjectWithProperties;
 
@@ -12,7 +12,7 @@ public class MoepDataObjectMetaDataFactory extends AbstractObjectWithProperties
   private static final Map<String, RecordDefinition> META_DATA_CACHE = new HashMap<String, RecordDefinition>();
 
   @Override
-  public RecordDefinition getMetaData(final String typePath) {
+  public RecordDefinition getRecordDefinition(final String typePath) {
     synchronized (META_DATA_CACHE) {
       RecordDefinition metaData = META_DATA_CACHE.get(typePath);
       if (metaData == null) {

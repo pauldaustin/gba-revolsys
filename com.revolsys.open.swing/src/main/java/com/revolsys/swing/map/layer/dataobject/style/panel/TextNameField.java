@@ -14,8 +14,8 @@ import javax.swing.text.Document;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.ValueField;

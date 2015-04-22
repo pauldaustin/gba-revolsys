@@ -98,6 +98,48 @@ public final class CollectionUtil {
     }
   }
 
+  public static void append(final StringBuilder string,
+    final Collection<? extends Object> values) {
+    append(string, values, ",");
+  }
+
+  public static void append(final StringBuilder buffer,
+    final Collection<? extends Object> values, final boolean skipNulls,
+    final String separator) {
+    boolean first = true;
+    for (final Object value : values) {
+      final String string = StringConverterRegistry.toString(value);
+      if (!skipNulls || Property.hasValue(string)) {
+        if (first) {
+          first = false;
+        } else {
+          buffer.append(separator);
+        }
+        if (string != null) {
+          buffer.append(string);
+        }
+      }
+    }
+  }
+
+  public static void append(final StringBuilder buffer,
+    final Collection<? extends Object> values, final String separator) {
+    boolean first = true;
+    for (final Object value : values) {
+      if (value != null) {
+        final String string = StringConverterRegistry.toString(value);
+        if (Property.hasValue(string)) {
+          if (first) {
+            first = false;
+          } else {
+            buffer.append(separator);
+          }
+          buffer.append(string);
+        }
+      }
+    }
+  }
+
   public static List<? extends Object> arrayToList(final Object value) {
     final List<Object> list = new ArrayList<Object>();
     if (value instanceof boolean[]) {
@@ -213,7 +255,7 @@ public final class CollectionUtil {
   /**
    * Get the value for the key from the map. If the value was null return
    * default Value instead.
-   * 
+   *
    * @param map The map.
    * @param key The key to return the value for.
    * @param defaultValue The default value.
@@ -553,11 +595,11 @@ public final class CollectionUtil {
                 }
               }
             }
-          break;
+            break;
 
           default:
             buffer.append(c);
-          break;
+            break;
         }
       }
       return buffer.toString();
@@ -567,7 +609,7 @@ public final class CollectionUtil {
   public static <K extends Comparable<K>, V extends Comparable<V>> Map<K, V> sortByValues(
     final Map<K, V> map) {
     final MapValueComparator<K, V> comparator = new MapValueComparator<K, V>(
-      map);
+        map);
     final Map<K, V> sortedMap = new TreeMap<K, V>(comparator);
     sortedMap.putAll(map);
     return new LinkedHashMap<K, V>(sortedMap);
@@ -643,7 +685,7 @@ public final class CollectionUtil {
   /**
    * Convert the collection to a string, using the "," separator between each
    * value. Nulls will be the empty string "".
-   * 
+   *
    * @param values The values.
    * @param separator The separator.
    * @return The string.
@@ -655,7 +697,7 @@ public final class CollectionUtil {
   /**
    * Convert the collection to a string, using the separator between each value.
    * Nulls will be the empty string "".
-   * 
+   *
    * @param separator The separator.
    * @param values The values.
    * @return The string.

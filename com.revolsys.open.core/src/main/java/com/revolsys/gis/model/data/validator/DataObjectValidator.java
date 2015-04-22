@@ -28,10 +28,10 @@ import org.apache.log4j.Logger;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.data.types.EnumerationDataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 
 public class DataObjectValidator {
   private static final Logger log = Logger.getLogger(DataObjectValidator.class);
@@ -108,7 +108,7 @@ public class DataObjectValidator {
       final Record dataObject = (Record)object;
       boolean valid = true;
 
-      final RecordDefinition type = dataObject.getMetaData();
+      final RecordDefinition type = dataObject.getRecordDefinition();
       for (int i = 0; i < type.getAttributeCount(); i++) {
         final Object value = dataObject.getValue(i);
         final DataType dataType = type.getAttributeType(i);
@@ -132,7 +132,7 @@ public class DataObjectValidator {
                 log.error("Attribute " + attributeName + " '" + value
                   + "' is not a valid value for type '" + dataType + "'");
               }
-              valid = (i == dataObject.getMetaData()
+              valid = (i == dataObject.getRecordDefinition()
                 .getGeometryAttributeIndex());
             }
           }

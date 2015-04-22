@@ -31,8 +31,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.PathUtil;
 import com.revolsys.parallel.channel.Channel;
@@ -95,7 +95,7 @@ public class AddDefaultValuesProcess extends
   }
 
   private void process(final Record dataObject) {
-    final RecordDefinition type = dataObject.getMetaData();
+    final RecordDefinition type = dataObject.getRecordDefinition();
 
     boolean process = true;
     if (schemaName != null) {
@@ -150,13 +150,13 @@ public class AddDefaultValuesProcess extends
         final String subKey = key.substring(dotIndex + 1);
         final Object attributeValue = dataObject.getValue(attributeName);
         if (attributeValue == null) {
-          final RecordDefinition type = dataObject.getMetaData();
+          final RecordDefinition type = dataObject.getRecordDefinition();
           final int attrIndex = type.getAttributeIndex(attributeName);
           final DataType dataType = type.getAttributeType(attrIndex);
           final Class<?> typeClass = dataType.getJavaClass();
           if (typeClass == Record.class) {
 
-            final RecordDefinition subClass = metaDataFactory.getMetaData(dataType.getName());
+            final RecordDefinition subClass = metaDataFactory.getRecordDefinition(dataType.getName());
             final Record subObject = subClass.createDataObject();
             setDefaultValue(subObject, subKey, value);
             dataObject.setValue(attributeName, subObject);
@@ -165,7 +165,7 @@ public class AddDefaultValuesProcess extends
         } else if (attributeValue instanceof Record) {
           final Record subObject = (Record)attributeValue;
           setDefaultValue(subObject, subKey, value);
-        } else if (!attributeName.equals(dataObject.getMetaData()
+        } else if (!attributeName.equals(dataObject.getRecordDefinition()
           .getGeometryAttributeName())) {
           log.error("Attribute '" + attributeName + "' must be a DataObject");
         }

@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.util.Property;
@@ -30,11 +30,11 @@ public class LayerDataObject extends ArrayRecord {
    * Internal method to revert the records values to the original 
    */
   protected synchronized void cancelChanges() {
-    DataObjectState newState = getState();
-    if (newState != DataObjectState.New) {
-      newState = DataObjectState.Persisted;
+    RecordState newState = getState();
+    if (newState != RecordState.New) {
+      newState = RecordState.Persisted;
     }
-    setState(DataObjectState.Initalizing);
+    setState(RecordState.Initalizing);
 
     if (this.originalValues != null) {
       super.setValues(this.originalValues);
@@ -75,7 +75,7 @@ public class LayerDataObject extends ArrayRecord {
   }
 
   public boolean isDeleted() {
-    return getState() == DataObjectState.Deleted;
+    return getState() == RecordState.Deleted;
   }
 
   public boolean isGeometryEditable() {
@@ -91,7 +91,7 @@ public class LayerDataObject extends ArrayRecord {
     if (this.originalValues == null) {
       return false;
     } else {
-      final String attributeName = getMetaData().getAttributeName(index);
+      final String attributeName = getRecordDefinition().getAttributeName(index);
       return isModified(attributeName);
     }
   }
@@ -129,10 +129,10 @@ public class LayerDataObject extends ArrayRecord {
 
   @Override
   public boolean isValid(final int index) {
-    if (getState() == DataObjectState.Initalizing) {
+    if (getState() == RecordState.Initalizing) {
       return true;
     } else {
-      final RecordDefinition metaData = getMetaData();
+      final RecordDefinition metaData = getRecordDefinition();
       final String name = metaData.getAttributeName(index);
       return isValid(name);
     }
@@ -140,10 +140,10 @@ public class LayerDataObject extends ArrayRecord {
 
   @Override
   public boolean isValid(final String name) {
-    if (getState() == DataObjectState.Initalizing) {
+    if (getState() == RecordState.Initalizing) {
       return true;
     } else {
-      final FieldDefinition attribute = getMetaData().getAttribute(name);
+      final FieldDefinition attribute = getRecordDefinition().getAttribute(name);
       if (attribute != null && attribute.isRequired()) {
         final Object value = getValue(name);
         if (value == null || value instanceof String
@@ -156,18 +156,18 @@ public class LayerDataObject extends ArrayRecord {
   }
 
   public LayerDataObject revertChanges() {
-    if (this.originalValues != null || getState() == DataObjectState.Deleted) {
+    if (this.originalValues != null || getState() == RecordState.Deleted) {
       cancelChanges();
       final AbstractDataObjectLayer layer = getLayer();
       layer.revertChanges(this);
-      firePropertyChange("state", DataObjectState.Modified,
-        DataObjectState.Persisted);
+      firePropertyChange("state", RecordState.Modified,
+        RecordState.Persisted);
     }
     return this;
   }
 
   public void revertEmptyFields() {
-    for (final String fieldName : getMetaData().getAttributeNames()) {
+    for (final String fieldName : getRecordDefinition().getFieldNames()) {
       final Object value = getValue(fieldName);
       if (Property.isEmpty(value)) {
         if (!layer.isFieldUserReadOnly(fieldName)) {
@@ -182,21 +182,21 @@ public class LayerDataObject extends ArrayRecord {
 
   @Override
   public void setValue(final int index, final Object value) {
-    final RecordDefinition metaData = getMetaData();
+    final RecordDefinition metaData = getRecordDefinition();
     final String attributeName = metaData.getAttributeName(index);
 
     final Object oldValue = getValue(index);
     if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {
       final AbstractDataObjectLayer layer = getLayer();
-      final DataObjectState state = getState();
-      if (DataObjectState.Initalizing.equals(state)) {
+      final RecordState state = getState();
+      if (RecordState.Initalizing.equals(state)) {
         // Allow modification on initialization
-      } else if (DataObjectState.New.equals(state)) {
+      } else if (RecordState.New.equals(state)) {
         if (!layer.isCanAddRecords()) {
           throw new IllegalStateException(
             "Adding new objects is not supported for layer " + layer);
         }
-      } else if (DataObjectState.Deleted.equals(state)) {
+      } else if (RecordState.Deleted.equals(state)) {
         throw new IllegalStateException(
           "Cannot edit a deleted object for layer " + layer);
       } else {
@@ -207,7 +207,7 @@ public class LayerDataObject extends ArrayRecord {
               this.originalValues.remove(attributeName);
               if (this.originalValues.isEmpty()) {
                 this.originalValues = null;
-                setState(DataObjectState.Persisted);
+                setState(RecordState.Persisted);
               }
             }
           } else {
@@ -222,7 +222,7 @@ public class LayerDataObject extends ArrayRecord {
         }
       }
       super.setValue(index, value);
-      if (!DataObjectState.Initalizing.equals(state)) {
+      if (!RecordState.Initalizing.equals(state)) {
         firePropertyChange(attributeName, oldValue, value);
         layer.updateRecordState(this);
       }

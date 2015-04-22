@@ -7,8 +7,8 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
@@ -34,7 +34,7 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
       targetObject = object;
     } else {
       targetObject = new ArrayRecord(metaData);
-      for (final String attributeName : metaData.getAttributeNames()) {
+      for (final String attributeName : metaData.getFieldNames()) {
         copyAttribute(object, attributeName, targetObject, attributeName);
       }
       if (attributeMap != null) {
@@ -88,7 +88,7 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
   protected void init() {
     super.init();
     if (metaData == null) {
-      metaData = metaDataFactory.getMetaData(typeName);
+      metaData = metaDataFactory.getRecordDefinition(typeName);
     }
   }
 

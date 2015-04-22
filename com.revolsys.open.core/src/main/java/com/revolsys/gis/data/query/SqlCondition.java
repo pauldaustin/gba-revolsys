@@ -22,8 +22,8 @@ public class SqlCondition extends Condition {
     this.sql = sql;
   }
 
-  public SqlCondition(final String sql, final FieldDefinition parameterAttribute,
-    final Object parameterValue) {
+  public SqlCondition(final String sql,
+    final FieldDefinition parameterAttribute, final Object parameterValue) {
     this(sql, Arrays.asList(parameterAttribute), Arrays.asList(parameterValue));
   }
 
@@ -32,7 +32,8 @@ public class SqlCondition extends Condition {
     final List<Object> parameterValues) {
     this.sql = sql;
     this.parameterValues = new ArrayList<Object>(parameterValues);
-    this.parameterAttributes = new ArrayList<FieldDefinition>(parameterAttributes);
+    this.parameterAttributes = new ArrayList<FieldDefinition>(
+      parameterAttributes);
   }
 
   public SqlCondition(final String sql, final Object... parameters) {
@@ -41,13 +42,13 @@ public class SqlCondition extends Condition {
   }
 
   public void addParameter(final Object value) {
-    parameterValues.add(value);
-    parameterAttributes.add(null);
+    this.parameterValues.add(value);
+    this.parameterAttributes.add(null);
   }
 
   public void addParameter(final Object value, final FieldDefinition attribute) {
     addParameter(value);
-    parameterAttributes.set(parameterAttributes.size() - 1, attribute);
+    this.parameterAttributes.set(this.parameterAttributes.size() - 1, attribute);
   }
 
   public void addParameters(final List<Object> parameters) {
@@ -62,11 +63,11 @@ public class SqlCondition extends Condition {
 
   @Override
   public int appendParameters(int index, final PreparedStatement statement) {
-    for (int i = 0; i < parameterValues.size(); i++) {
-      final Object value = parameterValues.get(i);
+    for (int i = 0; i < this.parameterValues.size(); i++) {
+      final Object value = this.parameterValues.get(i);
       JdbcAttribute jdbcAttribute = null;
-      if (i < parameterAttributes.size()) {
-        final FieldDefinition attribute = parameterAttributes.get(i);
+      if (i < this.parameterAttributes.size()) {
+        final FieldDefinition attribute = this.parameterAttributes.get(i);
         if (attribute instanceof JdbcAttribute) {
           jdbcAttribute = (JdbcAttribute)attribute;
 
@@ -86,13 +87,14 @@ public class SqlCondition extends Condition {
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
-    buffer.append(sql);
+  public void appendSql(final StringBuilder buffer) {
+    buffer.append(this.sql);
   }
 
   @Override
   public SqlCondition clone() {
-    return new SqlCondition(sql, parameterAttributes, parameterValues);
+    return new SqlCondition(this.sql, this.parameterAttributes,
+      this.parameterValues);
   }
 
   @Override
@@ -110,11 +112,11 @@ public class SqlCondition extends Condition {
   }
 
   public List<Object> getParameterValues() {
-    return parameterValues;
+    return this.parameterValues;
   }
 
   public String getSql() {
-    return sql;
+    return this.sql;
   }
 
   @Override

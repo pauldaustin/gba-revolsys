@@ -3,6 +3,7 @@ package com.revolsys.gis.data.model;
 import java.util.Arrays;
 import java.util.List;
 
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 
 public class FixedValueDataObject extends BaseDataObject {

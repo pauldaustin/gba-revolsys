@@ -2,7 +2,7 @@ package com.revolsys.gis.data.model.comparator;
 
 import java.util.Comparator;
 
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectMetaDataNameComparator implements
   Comparator<RecordDefinition> {

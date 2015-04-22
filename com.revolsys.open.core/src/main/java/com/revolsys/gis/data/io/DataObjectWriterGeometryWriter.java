@@ -3,8 +3,8 @@ package com.revolsys.gis.data.io;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.Writer;

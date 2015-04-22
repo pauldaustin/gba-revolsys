@@ -6,8 +6,8 @@ import java.io.Writer;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
 
@@ -64,7 +64,7 @@ public class CsvDataObjectWriter extends AbstractWriter<Record> {
       final Object value = object.getValue(i);
       if (value != null) {
         final String name = metaData.getAttributeName(i);
-        final DataType dataType = metaData.getAttributeType(name);
+        final DataType dataType = metaData.getFieldType(name);
 
         @SuppressWarnings("unchecked")
         final Class<Object> dataTypeClass = (Class<Object>)dataType.getJavaClass();

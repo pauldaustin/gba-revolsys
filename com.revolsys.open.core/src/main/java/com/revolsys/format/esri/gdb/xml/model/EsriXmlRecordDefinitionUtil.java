@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataType;
@@ -19,14 +20,13 @@ import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldTypeRegistry;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.io.PathUtil;
 import com.revolsys.util.CollectionUtil;
 
-public class EsriXmlDataObjectMetaDataUtil implements
+public class EsriXmlRecordDefinitionUtil implements
   EsriGeodatabaseXmlConstants {
-  private static final String DE_TABLE_PROPERTY = EsriXmlDataObjectMetaDataUtil.class
+  private static final String DE_TABLE_PROPERTY = EsriXmlRecordDefinitionUtil.class
     + ".DETable";
 
   public static final EsriGeodatabaseXmlFieldTypeRegistry FIELD_TYPES = EsriGeodatabaseXmlFieldTypeRegistry.INSTANCE;
@@ -76,9 +76,9 @@ public class EsriXmlDataObjectMetaDataUtil implements
     final FieldDefinition attribute = new FieldDefinition(fieldName, dataType, length,
       scale, required);
 
-    metaData.addAttribute(attribute);
+    metaData.addField(attribute);
     if (fieldName.equals(tableName + "_ID")) {
-      metaData.setIdAttributeName(fieldName);
+      metaData.setIdFieldName(fieldName);
     }
   }
 
@@ -199,7 +199,7 @@ public class EsriXmlDataObjectMetaDataUtil implements
   public static DETable createDETable(final String schemaPath,
     final RecordDefinition metaData, final SpatialReference spatialReference) {
     DETable table;
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     boolean hasGeometry = false;
     DataType geometryDataType = null;
     GeometryType shapeType = null;
@@ -265,7 +265,7 @@ public class EsriXmlDataObjectMetaDataUtil implements
 
     addObjectIdField(table);
     final FieldDefinition idAttribute = metaData.getIdAttribute();
-    for (final FieldDefinition attribute : metaData.getAttributes()) {
+    for (final FieldDefinition attribute : metaData.getFields()) {
       if (attribute == geometryAttribute) {
         addGeometryField(shapeType, table, attribute);
       } else {
@@ -353,13 +353,13 @@ public class EsriXmlDataObjectMetaDataUtil implements
         final List<Field> indexFields = index.getFields();
         final Field indexField = CollectionUtil.get(indexFields, 0);
         final String idName = indexField.getName();
-        metaData.setIdAttributeName(idName);
+        metaData.setIdFieldName(idName);
       }
     }
     if (deTable instanceof DEFeatureClass) {
       final DEFeatureClass featureClass = (DEFeatureClass)deTable;
       final String shapeFieldName = featureClass.getShapeFieldName();
-      metaData.setGeometryAttributeName(shapeFieldName);
+      metaData.setGeometryFieldName(shapeFieldName);
       final SpatialReference spatialReference = featureClass.getSpatialReference();
       GeometryFactory geometryFactory = spatialReference.getGeometryFactory();
       if (featureClass.isHasM()) {
@@ -369,8 +369,8 @@ public class EsriXmlDataObjectMetaDataUtil implements
         geometryFactory = GeometryFactory.getFactory(geometryFactory.getSRID(),
           3, geometryFactory.getScaleXY(), geometryFactory.getScaleZ());
       }
-      final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
-      geometryAttribute.setProperty(AttributeProperties.GEOMETRY_FACTORY,
+      final FieldDefinition geometryAttribute = metaData.getGeometryField();
+      geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
         geometryFactory);
     }
 

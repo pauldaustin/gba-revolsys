@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.util.Property;
 

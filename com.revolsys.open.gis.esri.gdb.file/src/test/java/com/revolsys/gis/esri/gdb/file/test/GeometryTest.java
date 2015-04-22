@@ -9,7 +9,7 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.AttributeProperties;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStore;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
@@ -45,13 +45,13 @@ public class GeometryTest {
     metaData.addAttribute("ID", DataTypes.INT, true);
     final FieldDefinition geometryAttribute = metaData.addAttribute("Geometry",
       geometryDataType, true);
-    geometryAttribute.setProperty(AttributeProperties.GEOMETRY_FACTORY,
+    geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
       geometryFactory);
-    metaData.setIdAttributeName("ID");
+    metaData.setIdFieldName("ID");
 
     final FileGdbRecordStore dataStore = FileGdbRecordStoreFactory.create(file);
     dataStore.initialize();
-    metaData = (RecordDefinitionImpl)dataStore.getMetaData(metaData);
+    metaData = (RecordDefinitionImpl)dataStore.getRecordDefinition(metaData);
     final Record object = new ArrayRecord(metaData);
     object.setIdValue(1);
     object.setGeometryValue(geometry);

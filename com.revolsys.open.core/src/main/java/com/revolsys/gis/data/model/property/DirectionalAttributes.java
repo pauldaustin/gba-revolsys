@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -81,7 +81,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
   }
 
   public static DirectionalAttributes getProperty(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);
   }
 
@@ -102,7 +102,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
   }
 
   public static boolean hasProperty(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     return metaData.getProperty(PROPERTY_NAME) != null;
   }
 
@@ -263,7 +263,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     if (forwardsIndicators != null) {
       final RecordDefinition metaData = getMetaData();
       final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(metaData);
-      for (final String attributeName : metaData.getAttributeNames()) {
+      for (final String attributeName : metaData.getFieldNames()) {
         if (!DataObjectEquals.isAttributeIgnored(metaData,
           equalExcludeAttributes, attributeName)
           && !equalIgnore.isAttributeIgnored(attributeName)) {
@@ -404,7 +404,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     final Collection<String> equalExcludeAttributes) {
     final RecordDefinition metaData = getMetaData();
     final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(metaData);
-    for (final String attributeName : metaData.getAttributeNames()) {
+    for (final String attributeName : metaData.getFieldNames()) {
       if (!equalExcludeAttributes.contains(attributeName)
         && !equalIgnore.isAttributeIgnored(attributeName)) {
         if (!equals(attributeName, object1, object2, equalExcludeAttributes)) {
@@ -502,7 +502,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     if (forwardsIndicators != null) {
       final Set<String> attributeNames = new LinkedHashSet<String>();
       final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(metaData);
-      for (final String attributeName : metaData.getAttributeNames()) {
+      for (final String attributeName : metaData.getFieldNames()) {
         if (!equalExcludeAttributes.contains(attributeName)
           && !equalIgnore.isAttributeIgnored(attributeName)) {
           if (!canMerge(attributeName, point, object1, object2,
@@ -632,7 +632,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
       object1);
     setStartAttributes(startObject, newValues);
     setEndAttributes(endObject, newValues);
-    final RecordDefinition metaData = object1.getMetaData();
+    final RecordDefinition metaData = object1.getRecordDefinition();
     final String geometryAttributeName = metaData.getGeometryAttributeName();
     newValues.put(geometryAttributeName, newLine);
     return newValues;

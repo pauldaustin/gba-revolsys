@@ -3,28 +3,31 @@ package com.revolsys.gis.data.io;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.revolsys.data.record.schema.AbstractRecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
+
 public class DataObjectStoreSchemaMapProxy extends
-  TreeMap<String, DataObjectStoreSchema> {
+  TreeMap<String, RecordStoreSchema> {
 
   /**
    * 
    */
   private static final long serialVersionUID = -1711922998363200190L;
 
-  private final Map<String, DataObjectStoreSchema> map;
+  private final Map<String, RecordStoreSchema> map;
 
-  private final AbstractDataObjectStore dataObjectStore;
+  private final AbstractRecordStore dataObjectStore;
 
   public DataObjectStoreSchemaMapProxy(
-    final AbstractDataObjectStore dataObjectStore,
-    final Map<String, DataObjectStoreSchema> map) {
+    final AbstractRecordStore dataObjectStore,
+    final Map<String, RecordStoreSchema> map) {
     this.dataObjectStore = dataObjectStore;
     this.map = map;
   }
 
   @Override
-  public DataObjectStoreSchema get(final Object key) {
-    DataObjectStoreSchema schema = super.get(key);
+  public RecordStoreSchema get(final Object key) {
+    RecordStoreSchema schema = super.get(key);
     if (schema == null) {
       schema = map.get(key);
       if (schema != null) {
@@ -37,8 +40,8 @@ public class DataObjectStoreSchemaMapProxy extends
   }
 
   @Override
-  public DataObjectStoreSchema put(final String key,
-    final DataObjectStoreSchema schema) {
+  public RecordStoreSchema put(final String key,
+    final RecordStoreSchema schema) {
     final DataObjectStoreSchemaProxy schemaProxy = new DataObjectStoreSchemaProxy(
       dataObjectStore, key, schema);
     map.put(key, schema);

@@ -5,7 +5,7 @@ import javax.swing.JTable;
 import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.revolsys.comparator.NumericComparator;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.dataobject.editor.DataObjectTableCellEditor;
 import com.revolsys.swing.table.dataobject.renderer.SingleDataObjectTableCellRenderer;
@@ -32,7 +32,7 @@ public abstract class AbstractSingleDataObjectTableModel extends
     final RecordDefinition metaData = model.getMetaData();
 
     int maxTitleWidth = 100;
-    for (final String fieldName : metaData.getAttributeNames()) {
+    for (final String fieldName : metaData.getFieldNames()) {
       final String title = model.getFieldTitle(fieldName);
       final int titleWidth = Math.max(title.length(), fieldName.length()) * 8;
       if (titleWidth > maxTitleWidth) {
@@ -126,7 +126,7 @@ public abstract class AbstractSingleDataObjectTableModel extends
     if (columnIndex == 2) {
       if (isEditable()) {
         final RecordDefinition metaData = getMetaData();
-        if (rowIndex == metaData.getIdAttributeIndex()) {
+        if (rowIndex == metaData.getIdFieldIndex()) {
           return false;
         } else {
           final String attributeName = getFieldName(rowIndex);

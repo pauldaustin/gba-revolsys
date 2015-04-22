@@ -3,16 +3,16 @@ package com.revolsys.gis.data.model.comparator;
 import java.util.Comparator;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectTypeNameComparator implements Comparator<Record> {
   public static int compareTypeNames(final Record object1,
     final Record object2) {
-    final RecordDefinition metaData1 = object1.getMetaData();
+    final RecordDefinition metaData1 = object1.getRecordDefinition();
     final String typePath1 = metaData1.getPath();
     final String name1 = typePath1.toString();
 
-    final RecordDefinition metaData2 = object2.getMetaData();
+    final RecordDefinition metaData2 = object2.getRecordDefinition();
     final String typePath2 = metaData2.getPath();
     final String name2 = typePath2.toString();
 

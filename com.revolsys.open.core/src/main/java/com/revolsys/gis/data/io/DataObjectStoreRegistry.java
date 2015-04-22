@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.revolsys.data.record.schema.RecordStore;
+
 public class DataObjectStoreRegistry {
   private Map<String, RecordStore> dataStores = new HashMap<String, RecordStore>();
 

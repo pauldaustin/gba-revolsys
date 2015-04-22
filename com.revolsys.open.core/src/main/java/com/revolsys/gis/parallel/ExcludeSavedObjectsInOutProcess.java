@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.parallel.channel.Channel;
@@ -33,7 +33,7 @@ public class ExcludeSavedObjectsInOutProcess extends
     if (id == null) {
       return null;
     } else {
-      final RecordDefinition metaData = object.getMetaData();
+      final RecordDefinition metaData = object.getRecordDefinition();
       return metaData.getPath() + "." + id;
     }
   }

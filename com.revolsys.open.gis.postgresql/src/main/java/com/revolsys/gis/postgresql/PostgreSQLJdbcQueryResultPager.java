@@ -11,9 +11,9 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
@@ -51,10 +51,10 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
           }
           try {
             final JdbcDataObjectStore dataStore = getDataStore();
-            final DataObjectFactory dataObjectFactory = getDataObjectFactory();
+            final RecordFactory dataObjectFactory = getDataObjectFactory();
             final RecordDefinition metaData = getMetaData();
             if (metaData != null) {
-              final List<FieldDefinition> attributes = metaData.getAttributes();
+              final List<FieldDefinition> attributes = metaData.getFields();
 
               final PreparedStatement statement = connection.prepareStatement(sql);
               try {

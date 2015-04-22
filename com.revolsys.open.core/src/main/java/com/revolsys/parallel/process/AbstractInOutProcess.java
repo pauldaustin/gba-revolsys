@@ -6,10 +6,9 @@ import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.channel.ChannelDataStore;
 import com.revolsys.parallel.channel.ClosedException;
 import com.revolsys.parallel.channel.store.Buffer;
-import com.revolsys.parallel.channel.store.ZeroBuffer;
 
 public abstract class AbstractInOutProcess<I, O> extends AbstractProcess
-  implements InOutProcess<I, O> {
+implements InOutProcess<I, O> {
 
   private Channel<I> in;
 
@@ -28,22 +27,18 @@ public abstract class AbstractInOutProcess<I, O> extends AbstractProcess
   }
 
   protected ChannelDataStore<I> createInDataStore() {
-    if (inBufferSize == 0) {
-      return new ZeroBuffer<I>();
-    } else if (inBufferSize < 0) {
+    if (this.inBufferSize <= 0) {
       return new Buffer<I>();
     } else {
-      return new Buffer<I>(inBufferSize);
+      return new Buffer<I>(this.inBufferSize);
     }
   }
 
   protected ChannelDataStore<O> createOutDataStore() {
-    if (outBufferSize == 0) {
-      return new ZeroBuffer<O>();
-    } else if (outBufferSize < 0) {
+    if (this.outBufferSize <= 0) {
       return new Buffer<O>();
     } else {
-      return new Buffer<O>(outBufferSize);
+      return new Buffer<O>(this.outBufferSize);
     }
   }
 
@@ -55,17 +50,17 @@ public abstract class AbstractInOutProcess<I, O> extends AbstractProcess
    */
   @Override
   public Channel<I> getIn() {
-    if (in == null) {
+    if (this.in == null) {
       final String channelName = getBeanName() + ".in";
       final ChannelDataStore<I> buffer = createInDataStore();
       final Channel<I> channel = new Channel<I>(channelName, buffer);
       setIn(channel);
     }
-    return in;
+    return this.in;
   }
 
   public int getInBufferSize() {
-    return inBufferSize;
+    return this.inBufferSize;
   }
 
   /**
@@ -73,17 +68,17 @@ public abstract class AbstractInOutProcess<I, O> extends AbstractProcess
    */
   @Override
   public Channel<O> getOut() {
-    if (out == null) {
+    if (this.out == null) {
       final String channelName = getBeanName() + ".out";
       final ChannelDataStore<O> buffer = createOutDataStore();
       final Channel<O> channel = new Channel<O>(channelName, buffer);
       setOut(channel);
     }
-    return out;
+    return this.out;
   }
 
   public int getOutBufferSize() {
-    return outBufferSize;
+    return this.outBufferSize;
   }
 
   protected void init() {
@@ -96,7 +91,7 @@ public abstract class AbstractInOutProcess<I, O> extends AbstractProcess
     try {
       log.debug("Start");
       init();
-      run(in, out);
+      run(this.in, this.out);
     } catch (final ClosedException e) {
       log.debug("Shutdown");
     } catch (final ThreadDeath e) {
@@ -105,11 +100,11 @@ public abstract class AbstractInOutProcess<I, O> extends AbstractProcess
       log.error(e.getMessage(), e);
       hasError = true;
     } finally {
-      if (in != null) {
-        in.readDisconnect();
+      if (this.in != null) {
+        this.in.readDisconnect();
       }
-      if (out != null) {
-        out.writeDisconnect();
+      if (this.out != null) {
+        this.out.writeDisconnect();
       }
       destroy();
     }

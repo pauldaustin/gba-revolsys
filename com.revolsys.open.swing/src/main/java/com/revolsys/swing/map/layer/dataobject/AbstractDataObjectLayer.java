@@ -45,8 +45,12 @@ import bibliothek.gui.dock.common.mode.ExtendedMode;
 
 import com.revolsys.beans.InvokeMethodCallable;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.filter.Filter;
@@ -56,12 +60,8 @@ import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.ListDataObjectReader;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryDistanceFilter;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.data.model.property.DirectionalAttributes;
@@ -117,7 +117,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 public abstract class AbstractDataObjectLayer extends AbstractLayer implements
-  DataObjectFactory, AddGeometryCompleteAction {
+  RecordFactory, AddGeometryCompleteAction {
 
   public static final String FORM_FACTORY_EXPRESSION = "formFactoryExpression";
 
@@ -382,7 +382,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
 
   public void addNewRecord() {
     final RecordDefinition metaData = getMetaData();
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute == null) {
       showAddForm(null);
     } else {
@@ -529,7 +529,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   @Override
-  public LayerDataObject createDataObject(final RecordDefinition metaData) {
+  public LayerDataObject createRecord(final RecordDefinition metaData) {
     if (metaData.equals(getMetaData())) {
       return new LayerDataObject(this);
     } else {
@@ -610,15 +610,15 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   public LayerDataObject createRecord(final Map<String, Object> values) {
 
     if (!isReadOnly() && isEditable() && isCanAddRecords()) {
-      final LayerDataObject record = createDataObject(getMetaData());
-      record.setState(DataObjectState.Initalizing);
+      final LayerDataObject record = createRecord(getMetaData());
+      record.setState(RecordState.Initalizing);
       try {
         if (values != null && !values.isEmpty()) {
           record.setValues(values);
           record.setIdValue(null);
         }
       } finally {
-        record.setState(DataObjectState.New);
+        record.setState(RecordState.New);
       }
       synchronized (this.newRecords) {
         this.newRecords.add(record);
@@ -696,7 +696,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
           }
         }
       }
-      record.setState(DataObjectState.Deleted);
+      record.setState(RecordState.Deleted);
       unSelectRecords(record);
       removeFromIndex(record);
     }
@@ -716,7 +716,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
           synchronized (this.newRecords) {
             if (removeSame(this.newRecords, record)) {
               unSelectRecords(record);
-              record.setState(DataObjectState.Deleted);
+              record.setState(RecordState.Deleted);
             }
           }
         }
@@ -890,7 +890,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
         final Set<String> columnNames = new LinkedHashSet<String>(
           this.columnNameOrder);
         final RecordDefinition metaData = getMetaData();
-        final List<String> attributeNames = metaData.getAttributeNames();
+        final List<String> attributeNames = metaData.getFieldNames();
         columnNames.addAll(attributeNames);
         this.columnNames = new ArrayList<String>(columnNames);
         updateColumnNames();
@@ -904,7 +904,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   public RecordStore getDataStore() {
-    return getMetaData().getDataStore();
+    return getMetaData().getRecordStore();
   }
 
   public int getDeletedRecordCount() {
@@ -948,7 +948,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     if (metaData == null) {
       return null;
     } else {
-      final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+      final FieldDefinition geometryAttribute = metaData.getGeometryField();
       if (geometryAttribute == null) {
         return null;
       } else {
@@ -968,7 +968,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   public String getIdAttributeName() {
-    return getMetaData().getIdAttributeName();
+    return getMetaData().getIdFieldName();
   }
 
   public DataObjectQuadTree getIndex() {
@@ -1074,7 +1074,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
         if (reader != null) {
           final MapPanel parentComponent = MapPanel.get(getProject());
           final RecordDefinition metaData = getMetaData();
-          final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+          final FieldDefinition geometryAttribute = metaData.getGeometryField();
           if (geometryAttribute != null) {
             DataType geometryDataType = null;
             Class<?> layerGeometryClass = null;
@@ -1220,7 +1220,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   }
 
   public boolean hasGeometryAttribute() {
-    return getMetaData().getGeometryAttribute() != null;
+    return getMetaData().getGeometryField() != null;
   }
 
   protected boolean hasPermission(final String permission) {
@@ -1278,7 +1278,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
    */
   protected LayerDataObject internalCancelChanges(final LayerDataObject record) {
     if (record != null) {
-      final boolean isNew = record.getState() == DataObjectState.New;
+      final boolean isNew = record.getState() == RecordState.New;
       record.cancelChanges();
       if (!isNew) {
         return record;
@@ -1305,7 +1305,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
 
   protected boolean internalSaveChanges(final LayerDataObject record) {
     try {
-      final DataObjectState originalState = record.getState();
+      final RecordState originalState = record.getState();
       final boolean saved = doSaveChanges(record);
       if (saved) {
         postSaveChanges(originalState, record);
@@ -1413,7 +1413,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   public boolean isLayerRecord(final Record record) {
     if (record == null) {
       return false;
-    } else if (record.getMetaData() == getMetaData()) {
+    } else if (record.getRecordDefinition() == getMetaData()) {
       return true;
     } else {
       return false;
@@ -1505,7 +1505,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
       final List<Record> regectedRecords = new ArrayList<Record>();
       if (reader != null) {
         final RecordDefinition metaData = getMetaData();
-        final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+        final FieldDefinition geometryAttribute = metaData.getGeometryField();
         DataType geometryDataType = null;
         Class<?> layerGeometryClass = null;
         final GeometryFactory geometryFactory = getGeometryFactory();
@@ -1568,7 +1568,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     addSelectedRecords(newRecords);
   }
 
-  protected void postSaveChanges(final DataObjectState originalState,
+  protected void postSaveChanges(final RecordState originalState,
     final LayerDataObject record) {
     postSaveDeletedRecord(record);
     postSaveModifiedRecord(record);
@@ -2009,7 +2009,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   public void setSelectedRecordsById(final Object id) {
     final RecordDefinition metaData = getMetaData();
     if (metaData != null) {
-      final String idAttributeName = metaData.getIdAttributeName();
+      final String idAttributeName = metaData.getIdFieldName();
       if (idAttributeName == null) {
         clearSelectedRecords();
       } else {
@@ -2077,7 +2077,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
             return null;
           } else {
             String title;
-            if (record.getState() == DataObjectState.New) {
+            if (record.getState() == RecordState.New) {
               title = "Add NEW " + getName();
             } else if (isCanEditRecords()) {
               title = "Edit " + getName() + " #" + id;
@@ -2328,16 +2328,16 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
 
   protected void updateColumnNames() {
     if (this.columnNames != null && this.metaData != null) {
-      final List<String> attributeNames = this.metaData.getAttributeNames();
+      final List<String> attributeNames = this.metaData.getFieldNames();
       this.columnNames.retainAll(attributeNames);
     }
   }
 
   protected void updateRecordState(final LayerDataObject record) {
-    final DataObjectState state = record.getState();
-    if (state == DataObjectState.Modified) {
+    final RecordState state = record.getState();
+    if (state == RecordState.Modified) {
       addModifiedRecord(record);
-    } else if (state == DataObjectState.Persisted) {
+    } else if (state == RecordState.Persisted) {
       postSaveModifiedRecord(record);
     }
   }

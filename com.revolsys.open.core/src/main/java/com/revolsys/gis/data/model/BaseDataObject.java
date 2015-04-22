@@ -21,7 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.data.model.codes.CodeTable;
@@ -39,7 +42,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   /** The metaData defining the object type. */
   private transient RecordDefinition metaData;
 
-  protected DataObjectState state = DataObjectState.Initalizing;
+  protected RecordState state = RecordState.Initalizing;
 
   /**
    * Construct a new empty BaseDataObject using the metaData.
@@ -59,7 +62,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   public BaseDataObject clone() {
     try {
       final BaseDataObject newObject = (BaseDataObject)super.clone();
-      newObject.setState(DataObjectState.New);
+      newObject.setState(RecordState.New);
       return newObject;
     } catch (final CloneNotSupportedException e) {
       throw new RuntimeException("Unable to clone", e);
@@ -72,7 +75,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
     if (this == other) {
       return 0;
     } else {
-      final int metaDataCompare = getMetaData().compareTo(other.getMetaData());
+      final int metaDataCompare = getRecordDefinition().compareTo(other.getRecordDefinition());
       if (metaDataCompare == 0) {
         final Object id1 = getIdValue();
         final Object id2 = other.getIdValue();
@@ -106,7 +109,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   @Override
   public void delete() {
-    getMetaData().delete(this);
+    getRecordDefinition().delete(this);
   }
 
   @Override
@@ -124,7 +127,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   }
 
   public String getAttributeTitle(final String name) {
-    final RecordDefinition metaData = getMetaData();
+    final RecordDefinition metaData = getRecordDefinition();
     return metaData.getAttributeTitle(name);
   }
 
@@ -154,8 +157,8 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    * @return The factory.
    */
   @Override
-  public DataObjectFactory getFactory() {
-    final RecordDefinition metaData = getMetaData();
+  public RecordFactory getFactory() {
+    final RecordDefinition metaData = getRecordDefinition();
     if (metaData == null) {
       return null;
     } else {
@@ -187,12 +190,12 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   @Override
   public Integer getIdInteger() {
-    return getInteger(metaData.getIdAttributeName());
+    return getInteger(metaData.getIdFieldName());
   }
 
   @Override
   public String getIdString() {
-    return getString(metaData.getIdAttributeName());
+    return getString(metaData.getIdFieldName());
   }
 
   /**
@@ -203,7 +206,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   @Override
   @SuppressWarnings("unchecked")
   public <T extends Object> T getIdValue() {
-    final int index = metaData.getIdAttributeIndex();
+    final int index = metaData.getIdFieldIndex();
     return (T)getValue(index);
   }
 
@@ -236,7 +239,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    * @return The meta data.
    */
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return metaData;
   }
 
@@ -251,7 +254,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   }
 
   @Override
-  public DataObjectState getState() {
+  public RecordState getState() {
     return state;
   }
 
@@ -276,7 +279,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   @Override
   public String getTypeName() {
-    return getMetaData().getPath();
+    return getRecordDefinition().getPath();
   }
 
   /**
@@ -386,9 +389,9 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   @Override
   public boolean isModified() {
-    if (getState() == DataObjectState.New) {
+    if (getState() == RecordState.New) {
       return true;
-    } else if (getState() == DataObjectState.Modified) {
+    } else if (getState() == RecordState.Modified) {
       return true;
     } else {
       return false;
@@ -438,8 +441,8 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    */
   @Override
   public void setIdValue(final Object id) {
-    final int index = metaData.getIdAttributeIndex();
-    if (state == DataObjectState.New || state == DataObjectState.Initalizing) {
+    final int index = metaData.getIdFieldIndex();
+    if (state == RecordState.New || state == RecordState.Initalizing) {
       setValue(index, id);
     } else {
       final Object oldId = getValue(index);
@@ -451,7 +454,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   }
 
   @Override
-  public void setState(final DataObjectState state) {
+  public void setState(final RecordState state) {
     // TODO make this more secure
     this.state = state;
   }
@@ -478,14 +481,14 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
           name.length());
         final Object objectValue = getValue(key);
         if (objectValue == null) {
-          final DataType attributeType = metaData.getAttributeType(key);
+          final DataType attributeType = metaData.getFieldType(key);
           if (attributeType != null) {
             if (attributeType.getJavaClass() == Record.class) {
               final String typePath = attributeType.getName();
               final DataObjectMetaDataFactory metaDataFactory = metaData.getDataObjectMetaDataFactory();
-              final RecordDefinition subMetaData = metaDataFactory.getMetaData(typePath);
-              final DataObjectFactory dataObjectFactory = subMetaData.getDataObjectFactory();
-              final Record subObject = dataObjectFactory.createDataObject(subMetaData);
+              final RecordDefinition subMetaData = metaDataFactory.getRecordDefinition(typePath);
+              final RecordFactory dataObjectFactory = subMetaData.getDataObjectFactory();
+              final Record subObject = dataObjectFactory.createRecord(subMetaData);
               subObject.setValue(subKey, value);
               setValue(key, subObject);
             }
@@ -522,7 +525,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
     String codeTableAttributeName;
     String codeTableValueName = null;
     if (dotIndex == -1) {
-      if (name.equals(getMetaData().getIdAttributeName())) {
+      if (name.equals(getRecordDefinition().getIdFieldName())) {
         codeTableAttributeName = null;
       } else {
         codeTableAttributeName = name;
@@ -563,7 +566,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   @Override
   public void setValues(final Record object) {
-    for (final String name : this.metaData.getAttributeNames()) {
+    for (final String name : this.metaData.getFieldNames()) {
       final Object value = JavaBeanUtil.clone(object.getValue(name));
       setValue(name, value);
     }
@@ -634,7 +637,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   protected void updateState() {
     switch (state) {
       case Persisted:
-        state = DataObjectState.Modified;
+        state = RecordState.Modified;
       break;
       case Deleted:
         throw new IllegalStateException(

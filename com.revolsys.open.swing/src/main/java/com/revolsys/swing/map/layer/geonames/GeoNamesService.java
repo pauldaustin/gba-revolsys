@@ -11,12 +11,12 @@ import java.util.Map;
 import javax.measure.unit.SI;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.PathUtil;
 import com.revolsys.io.json.JsonParser;
 import com.revolsys.util.UrlUtil;
@@ -152,7 +152,7 @@ public class GeoNamesService {
     final List<Map<String, Object>> names = (List<Map<String, Object>>)result.get("geonames");
     for (final Map<String, Object> name : names) {
       final Record dataObject = metaData.createDataObject();
-      for (final String attributeName : metaData.getAttributeNames()) {
+      for (final String attributeName : metaData.getFieldNames()) {
         final Object value = name.get(attributeName);
         if (value != null) {
           dataObject.setValue(attributeName, value);

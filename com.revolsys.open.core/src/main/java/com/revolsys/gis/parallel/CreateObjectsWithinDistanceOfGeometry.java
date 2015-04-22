@@ -12,10 +12,10 @@ import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.context.HashMapContext;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.data.model.DataObjectMap;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 import com.revolsys.util.JexlUtil;
@@ -96,7 +96,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends
           final String typePath = (String)JexlUtil.evaluateExpression(context,
             typePathTemplateExpression);
           newMetaData = new RecordDefinitionImpl(typePath,
-            metaData.getAttributes());
+            metaData.getFields());
           if (distance > 0) {
             final BufferOp buffer = new BufferOp(geometry,
               new BufferParameters(1, 3, 2, 1.0D));
@@ -141,7 +141,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends
     if (writeOriginal) {
       out.write(object);
     }
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final Geometry geometryValue = object.getGeometryValue();
     final Map<RecordDefinition, PreparedGeometry> metaDataGeometries = getMetaDataGeometries(metaData);
     for (final Entry<RecordDefinition, PreparedGeometry> metaDataGeometry : metaDataGeometries.entrySet()) {

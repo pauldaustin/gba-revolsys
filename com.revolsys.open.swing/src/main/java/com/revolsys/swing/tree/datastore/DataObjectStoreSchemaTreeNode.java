@@ -11,12 +11,12 @@ import javax.swing.tree.TreeNode;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.PathUtil;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
@@ -47,12 +47,12 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
     final List<TreeNode> children = new ArrayList<TreeNode>();
     final RecordStore dataStore = getDataStore();
     if (dataStore != null) {
-      final DataObjectStoreSchema schema = dataStore.getSchema(schemaPath);
+      final RecordStoreSchema schema = dataStore.getSchema(schemaPath);
       if (schema != null) {
         for (final RecordDefinition metaData : schema.getTypes()) {
           final String typeName = metaData.getPath();
           String geometryType = null;
-          final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+          final FieldDefinition geometryAttribute = metaData.getGeometryField();
           if (geometryAttribute != null) {
             geometryType = geometryAttribute.getType().toString();
           }

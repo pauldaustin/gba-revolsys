@@ -10,9 +10,9 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.vividsolutions.jts.geom.Geometry;
@@ -99,9 +99,9 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements
   public void write(final Record object) {
     open();
     writer.startTag(PLACEMARK);
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final int geometryIndex = metaData.getGeometryAttributeIndex();
-    final int idIndex = metaData.getIdAttributeIndex();
+    final int idIndex = metaData.getIdFieldIndex();
 
     final String nameAttribute = getProperty(PLACEMARK_NAME_ATTRIBUTE_PROPERTY);
     String name = null;

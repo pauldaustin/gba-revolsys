@@ -19,20 +19,20 @@ public class LeftUnaryCondition extends Condition {
 
   @Override
   public int appendParameters(final int index, final PreparedStatement statement) {
-    return value.appendParameters(index, statement);
+    return this.value.appendParameters(index, statement);
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
-    buffer.append(operator);
+  public void appendSql(final StringBuilder buffer) {
+    buffer.append(this.operator);
     buffer.append(" ");
-    value.appendSql(buffer);
+    this.value.appendSql(buffer);
   }
 
   @Override
   public LeftUnaryCondition clone() {
     final LeftUnaryCondition clone = (LeftUnaryCondition)super.clone();
-    clone.value = value.clone();
+    clone.value = this.value.clone();
     return clone;
   }
 
@@ -50,21 +50,21 @@ public class LeftUnaryCondition extends Condition {
   }
 
   public String getOperator() {
-    return operator;
+    return this.operator;
   }
 
   @SuppressWarnings("unchecked")
   public <V extends QueryValue> V getQueryValue() {
-    return (V)value;
+    return (V)this.value;
   }
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return Collections.singletonList(value);
+    return Collections.singletonList(this.value);
   }
 
   @Override
   public String toString() {
-    return operator + " " + value;
+    return this.operator + " " + this.value;
   }
 }

@@ -27,7 +27,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public boolean containsKey(final Object name) {
-    return object.getMetaData().hasAttribute(name.toString());
+    return object.getRecordDefinition().hasAttribute(name.toString());
   }
 
   @Override
@@ -69,7 +69,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public Set<String> keySet() {
-    return new LinkedHashSet<String>(object.getMetaData().getAttributeNames());
+    return new LinkedHashSet<String>(object.getRecordDefinition().getFieldNames());
   }
 
   @Override
@@ -100,7 +100,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public int size() {
-    return object.getMetaData().getAttributeCount();
+    return object.getRecordDefinition().getAttributeCount();
   }
 
   @Override

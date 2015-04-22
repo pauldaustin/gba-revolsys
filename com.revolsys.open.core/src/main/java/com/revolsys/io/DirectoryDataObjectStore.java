@@ -10,19 +10,19 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.AbstractRecordStore;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
-import com.revolsys.gis.data.io.AbstractDataObjectStore;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.filter.DirectoryFilenameFilter;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DirectoryDataObjectStore extends AbstractDataObjectStore {
+public class DirectoryDataObjectStore extends AbstractRecordStore {
 
   private boolean createMissingTables = true;
 
@@ -72,14 +72,14 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public RecordDefinition getMetaData(final RecordDefinition objectMetaData) {
-    final RecordDefinition metaData = super.getMetaData(objectMetaData);
+  public RecordDefinition getRecordDefinition(final RecordDefinition objectMetaData) {
+    final RecordDefinition metaData = super.getRecordDefinition(objectMetaData);
     if (metaData == null && createMissingTables) {
       final String typePath = objectMetaData.getPath();
       final String schemaName = PathUtil.getPath(typePath);
-      DataObjectStoreSchema schema = getSchema(schemaName);
+      RecordStoreSchema schema = getSchema(schemaName);
       if (schema == null && createMissingTables) {
-        schema = new DataObjectStoreSchema(this, schemaName);
+        schema = new RecordStoreSchema(this, schemaName);
         addSchema(schema);
       }
       final File schemaDirectory = new File(directory, schemaName);
@@ -88,9 +88,9 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
       }
       final RecordDefinitionImpl newMetaData = new RecordDefinitionImpl(
         this, schema, typePath);
-      for (final FieldDefinition attribute : objectMetaData.getAttributes()) {
+      for (final FieldDefinition attribute : objectMetaData.getFields()) {
         final FieldDefinition newAttribute = new FieldDefinition(attribute);
-        newMetaData.addAttribute(newAttribute);
+        newMetaData.addField(newAttribute);
       }
       schema.addMetaData(newMetaData);
     }
@@ -121,7 +121,7 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
 
   @Override
   public synchronized void insert(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final String typePath = metaData.getPath();
     Writer<Record> writer = writers.get(typePath);
     if (writer == null) {
@@ -156,7 +156,7 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
 
   @Override
   protected void loadSchemaDataObjectMetaData(
-    final DataObjectStoreSchema schema,
+    final RecordStoreSchema schema,
     final Map<String, RecordDefinition> metaDataMap) {
     final String schemaName = schema.getPath();
     final File subDirectory = new File(directory, schemaName);
@@ -174,23 +174,23 @@ public class DirectoryDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  protected void loadSchemas(final Map<String, DataObjectStoreSchema> schemaMap) {
+  protected void loadSchemas(final Map<String, RecordStoreSchema> schemaMap) {
     final File[] directories = directory.listFiles(new DirectoryFilenameFilter());
     if (directories != null) {
       for (final File subDirectory : directories) {
         final String directoryName = FileUtil.getFileName(subDirectory);
-        addSchema(new DataObjectStoreSchema(this, directoryName));
+        addSchema(new RecordStoreSchema(this, directoryName));
       }
     }
   }
 
   @Override
-  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
+  public Reader<Record> query(final RecordFactory dataObjectFactory,
     final String typePath, final Geometry geometry) {
     throw new UnsupportedOperationException();
   }
 
-  public void setCreateMissingDataStore(final boolean createMissingDataStore) {
+  public void setCreateMissingRecordStore(final boolean createMissingDataStore) {
     this.createMissingDataStore = createMissingDataStore;
   }
 

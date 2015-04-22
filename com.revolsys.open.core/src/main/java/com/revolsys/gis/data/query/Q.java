@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.query.functions.F;
 
 public class Q {

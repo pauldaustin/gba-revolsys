@@ -21,17 +21,14 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.WeakCache;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObjectFactory;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.ValueMetaDataProperty;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.io.AbstractObjectWithProperties;
@@ -81,7 +78,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   private Map<String, CodeTable> codeTableByColumnMap = new HashMap<String, CodeTable>();
 
-  private DataObjectFactory dataObjectFactory = new ArrayDataObjectFactory();
+  private RecordFactory dataObjectFactory = new ArrayDataObjectFactory();
 
   private DataObjectMetaDataFactory dataObjectMetaDataFactory;
 
@@ -112,7 +109,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   private final Map<String, Collection<Object>> restrictions = new HashMap<String, Collection<Object>>();
 
-  private DataObjectStoreSchema schema;
+  private RecordStoreSchema schema;
 
   private final List<RecordDefinition> superClasses = new ArrayList<RecordDefinition>();
 
@@ -128,11 +125,11 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     for (final Object object : fields) {
       if (object instanceof FieldDefinition) {
         final FieldDefinition field = (FieldDefinition)object;
-        addAttribute(field.clone());
+        addField(field.clone());
       } else if (object instanceof Map) {
         final Map<String, Object> fieldProperties = (Map<String, Object>)object;
         final FieldDefinition field = FieldDefinition.create(fieldProperties);
-        addAttribute(field);
+        addField(field);
       }
     }
     final Map<String, Object> geometryFactoryDef = (Map<String, Object>)properties.get("geometryFactory");
@@ -143,25 +140,25 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   public RecordDefinitionImpl(final RecordDefinition metaData) {
-    this(metaData.getPath(), metaData.getProperties(), metaData.getAttributes());
-    setIdAttributeIndex(metaData.getIdAttributeIndex());
+    this(metaData.getPath(), metaData.getProperties(), metaData.getFields());
+    setIdAttributeIndex(metaData.getIdFieldIndex());
     METADATA_CACHE.put(this.instanceId, this);
   }
 
   public RecordDefinitionImpl(final RecordStore dataObjectStore,
-    final DataObjectStoreSchema schema, final RecordDefinition metaData) {
+    final RecordStoreSchema schema, final RecordDefinition metaData) {
     this(metaData);
     this.dataStore = new WeakReference<RecordStore>(dataObjectStore);
-    this.dataObjectFactory = dataObjectStore.getDataObjectFactory();
+    this.dataObjectFactory = dataObjectStore.getRecordFactory();
     this.schema = schema;
     METADATA_CACHE.put(this.instanceId, this);
   }
 
   public RecordDefinitionImpl(final RecordStore dataObjectStore,
-    final DataObjectStoreSchema schema, final String typePath) {
+    final RecordStoreSchema schema, final String typePath) {
     this(typePath);
     this.dataStore = new WeakReference<RecordStore>(dataObjectStore);
-    this.dataObjectFactory = dataObjectStore.getDataObjectFactory();
+    this.dataObjectFactory = dataObjectStore.getRecordFactory();
     this.schema = schema;
     METADATA_CACHE.put(this.instanceId, this);
   }
@@ -190,13 +187,13 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     final Map<String, Object> properties, final List<FieldDefinition> attributes) {
     this.path = name;
     for (final FieldDefinition attribute : attributes) {
-      addAttribute(attribute.clone());
+      addField(attribute.clone());
     }
     cloneProperties(properties);
     METADATA_CACHE.put(this.instanceId, this);
   }
 
-  public void addAttribute(final FieldDefinition attribute) {
+  public void addField(final FieldDefinition attribute) {
     final int index = this.attributeNames.size();
     final String name = attribute.getName();
     String lowerName;
@@ -240,7 +237,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   public FieldDefinition addAttribute(final String name, final DataType type,
     final boolean required) {
     final FieldDefinition attribute = new FieldDefinition(name, type, required);
-    addAttribute(attribute);
+    addField(attribute);
     return attribute;
   }
 
@@ -248,7 +245,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     final int length, final boolean required) {
     final FieldDefinition attribute = new FieldDefinition(name, type, length,
       required);
-    addAttribute(attribute);
+    addField(attribute);
     return attribute;
   }
 
@@ -256,7 +253,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     final int length, final int scale, final boolean required) {
     final FieldDefinition attribute = new FieldDefinition(name, type, length,
       scale, required);
-    addAttribute(attribute);
+    addField(attribute);
     return attribute;
   }
 
@@ -322,17 +319,17 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   @Override
   public Record createDataObject() {
-    final DataObjectFactory dataObjectFactory = this.dataObjectFactory;
+    final RecordFactory dataObjectFactory = this.dataObjectFactory;
     if (dataObjectFactory == null) {
       return null;
     } else {
-      return dataObjectFactory.createDataObject(this);
+      return dataObjectFactory.createRecord(this);
     }
   }
 
   @Override
   public void delete(final Record dataObject) {
-    final RecordStore dataStore = getDataStore();
+    final RecordStore dataStore = getRecordStore();
     if (dataStore == null) {
       throw new UnsupportedOperationException();
     } else {
@@ -359,7 +356,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     this.geometryAttributeIndexes.clear();
     this.geometryAttributeNames.clear();
     this.restrictions.clear();
-    this.schema = new DataObjectStoreSchema();
+    this.schema = new RecordStoreSchema();
     this.superClasses.clear();
   }
 
@@ -385,7 +382,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   @Override
   public Class<?> getAttributeClass(final CharSequence name) {
-    final DataType dataType = getAttributeType(name);
+    final DataType dataType = getFieldType(name);
     if (dataType == null) {
       return Object.class;
     } else {
@@ -450,12 +447,12 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public List<String> getAttributeNames() {
+  public List<String> getFieldNames() {
     return new ArrayList<String>(this.attributeNames);
   }
 
   @Override
-  public List<FieldDefinition> getAttributes() {
+  public List<FieldDefinition> getFields() {
     return new ArrayList<FieldDefinition>(this.attributes);
   }
 
@@ -478,14 +475,14 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   @Override
   public List<String> getAttributeTitles() {
     final List<String> titles = new ArrayList<String>();
-    for (final FieldDefinition attribute : getAttributes()) {
+    for (final FieldDefinition attribute : getFields()) {
       titles.add(attribute.getTitle());
     }
     return titles;
   }
 
   @Override
-  public DataType getAttributeType(final CharSequence name) {
+  public DataType getFieldType(final CharSequence name) {
     final int index = getAttributeIndex(name);
     if (index == -1) {
       return null;
@@ -502,27 +499,27 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   @Override
   public CodeTable getCodeTableByColumn(final String column) {
-    final RecordStore dataStore = getDataStore();
+    final RecordStore dataStore = getRecordStore();
     if (dataStore == null) {
       return null;
     } else {
       CodeTable codeTable = this.codeTableByColumnMap.get(column);
       if (codeTable == null && dataStore != null) {
-        codeTable = dataStore.getCodeTableByColumn(column);
+        codeTable = dataStore.getCodeTableByFieldName(column);
       }
       return codeTable;
     }
   }
 
   @Override
-  public DataObjectFactory getDataObjectFactory() {
+  public RecordFactory getDataObjectFactory() {
     return this.dataObjectFactory;
   }
 
   @Override
   public DataObjectMetaDataFactory getDataObjectMetaDataFactory() {
     if (this.dataObjectMetaDataFactory == null) {
-      final RecordStore dataStore = getDataStore();
+      final RecordStore dataStore = getRecordStore();
       return dataStore;
     } else {
       return this.dataObjectMetaDataFactory;
@@ -530,7 +527,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public RecordStore getDataStore() {
+  public RecordStore getRecordStore() {
     if (this.dataStore == null) {
       return null;
     } else {
@@ -553,7 +550,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public FieldDefinition getGeometryAttribute() {
+  public FieldDefinition getGeometryField() {
     if (this.geometryAttributeIndex == -1) {
       return null;
     } else {
@@ -583,11 +580,11 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   @Override
   public GeometryFactory getGeometryFactory() {
-    final FieldDefinition geometryAttribute = getGeometryAttribute();
+    final FieldDefinition geometryAttribute = getGeometryField();
     if (geometryAttribute == null) {
       return null;
     } else {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
       return geometryFactory;
     }
   }
@@ -602,7 +599,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public int getIdAttributeIndex() {
+  public int getIdFieldIndex() {
     return this.idAttributeIndex;
   }
 
@@ -612,7 +609,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public String getIdAttributeName() {
+  public String getIdFieldName() {
     return getAttributeName(this.idAttributeIndex);
   }
 
@@ -640,7 +637,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     return this.restrictions;
   }
 
-  public DataObjectStoreSchema getSchema() {
+  public RecordStoreSchema getSchema() {
     return this.schema;
   }
 
@@ -709,7 +706,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
       this.attributeMap.put(lowerName, newAttribute);
       newAttribute.setIndex(index);
     } else {
-      addAttribute(newAttribute);
+      addField(newAttribute);
     }
   }
 
@@ -743,16 +740,16 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     this.geometryAttributeIndex = geometryAttributeIndex;
   }
 
-  public void setGeometryAttributeName(final String name) {
+  public void setGeometryFieldName(final String name) {
     final int id = getAttributeIndex(name);
     setGeometryAttributeIndex(id);
   }
 
   @Override
   public void setGeometryFactory(final GeometryFactory geometryFactory) {
-    final FieldDefinition geometryAttribute = getGeometryAttribute();
+    final FieldDefinition geometryAttribute = getGeometryField();
     if (geometryAttribute != null) {
-      geometryAttribute.setProperty(AttributeProperties.GEOMETRY_FACTORY,
+      geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
         geometryFactory);
     }
   }
@@ -765,12 +762,12 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     this.idAttributeIndexes.clear();
     this.idAttributeIndexes.add(idAttributeIndex);
     this.idAttributeNames.clear();
-    this.idAttributeNames.add(getIdAttributeName());
+    this.idAttributeNames.add(getIdFieldName());
     this.idAttributes.clear();
     this.idAttributes.add(getIdAttribute());
   }
 
-  public void setIdAttributeName(final String name) {
+  public void setIdFieldName(final String name) {
     final int id = getAttributeIndex(name);
     setIdAttributeIndex(id);
   }
@@ -779,7 +776,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     if (names != null) {
       if (names.size() == 1) {
         final String name = CollectionUtil.get(names, 0);
-        setIdAttributeName(name);
+        setIdFieldName(name);
       } else {
         for (final String name : names) {
           final int index = getAttributeIndex(name);
@@ -837,7 +834,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     map.put("path", path);
     final GeometryFactory geometryFactory = getGeometryFactory();
     MapSerializerUtil.add(map, "geometryFactory", geometryFactory, null);
-    final List<FieldDefinition> attributes = getAttributes();
+    final List<FieldDefinition> attributes = getFields();
     MapSerializerUtil.add(map, "fields", attributes);
     return map;
   }

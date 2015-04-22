@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.jdbc.JdbcUtils;
 import com.vividsolutions.jts.geom.Geometry;
@@ -163,7 +163,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
       if (this.whereCondition != null) {
         clone.whereCondition = this.whereCondition.clone();
       }
-      if (!clone.getAttributeNames().isEmpty() || clone.whereCondition != null) {
+      if (!clone.getFieldNames().isEmpty() || clone.whereCondition != null) {
         clone.sql = null;
       }
       return clone;
@@ -172,7 +172,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     }
   }
 
-  public List<String> getAttributeNames() {
+  public List<String> getFieldNames() {
     return this.attributeNames;
   }
 
@@ -192,7 +192,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return this.limit;
   }
 
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return this.metaData;
   }
 

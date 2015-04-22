@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.vividsolutions.jts.geom.Geometry;
@@ -48,7 +48,7 @@ public class CsvDirectoryWriter extends AbstractWriter<Record> {
   }
 
   private CsvDataObjectWriter getWriter(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     CsvDataObjectWriter writer = writers.get(metaData);
     if (writer == null) {
       try {

@@ -3,8 +3,8 @@ package com.revolsys.gis.data.model.property;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LengthAttributeName extends AbstractDataObjectMetaDataProperty {
@@ -12,7 +12,7 @@ public class LengthAttributeName extends AbstractDataObjectMetaDataProperty {
     + ".propertyName";
 
   public static LengthAttributeName getProperty(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);
   }
 

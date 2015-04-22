@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Column;
@@ -193,7 +193,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
       if (!StringUtils.hasText(searchField)) {
         searchField = this.layer.getProperty("searchField");
         if (!StringUtils.hasText(searchField)) {
-          searchField = this.metaData.getAttributeNames().get(0);
+          searchField = this.metaData.getFieldNames().get(0);
         }
       }
       setSearchFieldName(searchField);
@@ -475,7 +475,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
         this.nameField.getSelectedItem())) {
         this.nameField.setFieldValue(searchFieldName);
       }
-      if (searchFieldName.equals(metaData.getIdAttributeName())) {
+      if (searchFieldName.equals(metaData.getIdFieldName())) {
         this.codeTable = null;
       } else {
         this.codeTable = this.metaData.getCodeTableByColumn(searchFieldName);

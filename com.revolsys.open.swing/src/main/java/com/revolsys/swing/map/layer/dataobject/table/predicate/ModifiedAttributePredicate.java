@@ -14,7 +14,7 @@ import org.jdesktop.swingx.decorator.HighlightPredicate;
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.table.dataobject.model.DataObjectRowTableModel;
@@ -59,7 +59,7 @@ public class ModifiedAttributePredicate implements HighlightPredicate {
         final String attributeName = this.model.getFieldName(columnIndex);
         final boolean highlighted = layerObject.isModified(attributeName);
         if (highlighted) {
-          final RecordDefinition metaData = layerObject.getMetaData();
+          final RecordDefinition metaData = layerObject.getRecordDefinition();
           final String fieldName = metaData.getAttributeName(columnIndex);
           final Object originalValue = layerObject.getOriginalValue(fieldName);
           final CodeTable codeTable = metaData.getCodeTableByColumn(fieldName);

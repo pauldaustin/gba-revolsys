@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.io;
+package com.revolsys.data.record.schema;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,9 +8,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.collection.ResultPager;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.Query;
@@ -62,15 +61,15 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   CodeTable getCodeTable(String typePath);
 
-  CodeTable getCodeTableByColumn(String columnName);
+  CodeTable getCodeTableByFieldName(String columnName);
 
   Map<String, CodeTable> getCodeTableByColumnMap();
 
-  DataObjectFactory getDataObjectFactory();
+  RecordFactory getRecordFactory();
 
   String getLabel();
 
-  RecordDefinition getMetaData(RecordDefinition metaData);
+  RecordDefinition getRecordDefinition(RecordDefinition metaData);
 
   /**
    * Get the meta data for the specified type.
@@ -79,18 +78,18 @@ public interface RecordStore extends DataObjectMetaDataFactory,
    * @return The meta data.
    */
   @Override
-  RecordDefinition getMetaData(String typePath);
+  RecordDefinition getRecordDefinition(String typePath);
 
   int getRowCount(Query query);
 
-  DataObjectStoreSchema getSchema(final String schemaName);
+  RecordStoreSchema getSchema(final String schemaName);
 
   /**
    * Get the list of name space names provided by the data store.
    * 
    * @return The name space names.
    */
-  List<DataObjectStoreSchema> getSchemas();
+  List<RecordStoreSchema> getSchemas();
 
   StatisticsMap getStatistics();
 
@@ -132,10 +131,10 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   ResultPager<Record> page(Query query);
 
-  Reader<Record> query(DataObjectFactory dataObjectFactory,
+  Reader<Record> query(RecordFactory dataObjectFactory,
     String typePath, Geometry geometry);
 
-  Reader<Record> query(DataObjectFactory dataObjectFactory,
+  Reader<Record> query(RecordFactory dataObjectFactory,
     String typePath, Geometry geometry, double distance);
 
   Reader<Record> query(List<?> queries);
@@ -150,7 +149,7 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   Record queryFirst(Query query);
 
-  void setDataObjectFactory(DataObjectFactory dataObjectFactory);
+  void setDataObjectFactory(RecordFactory dataObjectFactory);
 
   void setLabel(String label);
 

@@ -8,9 +8,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
@@ -53,7 +53,7 @@ public class MoepDirectoryReader extends DataObjectDirectoryReader implements
   }
 
   @Override
-  public RecordDefinition getMetaData(final String typePath) {
+  public RecordDefinition getRecordDefinition(final String typePath) {
     if (typePath.equals(MoepConstants.TYPE_NAME)) {
       return MoepConstants.META_DATA;
     } else {

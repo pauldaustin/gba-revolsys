@@ -15,7 +15,7 @@ import javax.swing.table.TableModel;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
 import com.revolsys.swing.map.layer.dataobject.table.predicate.ErrorPredicate;

@@ -18,8 +18,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.data.io.DataObjectReaderFactory;
-import com.revolsys.gis.data.io.DataObjectStoreFactory;
-import com.revolsys.gis.data.io.DataObjectStoreFactoryRegistry;
+import com.revolsys.gis.data.io.RecordStoreFactory;
+import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;
 import com.revolsys.io.IoFactoryRegistry;
@@ -106,8 +106,8 @@ public class AddFileLayerAction extends AbstractAction {
 
   private void getFileDataStoreFilters(final List<FileFilter> fileFilters,
     final Set<String> allExtensions) {
-    final List<DataObjectStoreFactory> factories = DataObjectStoreFactoryRegistry.getFileDataStoreFactories();
-    for (final DataObjectStoreFactory factory : factories) {
+    final List<RecordStoreFactory> factories = RecordStoreFactoryRegistry.getFileDataStoreFactories();
+    for (final RecordStoreFactory factory : factories) {
       final List<String> fileExtensions = factory.getFileExtensions();
       String description = factory.getName();
       description += " (" + CollectionUtil.toString(fileExtensions) + ")";

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.graph.attribute.InvokeMethodObjectAttributeProxy;
 import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
@@ -24,7 +24,7 @@ public class PseudoNodeProperty extends AbstractDataObjectMetaDataProperty {
 
   public static AbstractDataObjectMetaDataProperty getProperty(
     final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);
   }
 

@@ -1,19 +1,19 @@
 package com.revolsys.gis.esri.gdb.file;
 
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 
 public interface FileGdbRecordStore extends RecordStore {
 
   void deleteGeodatabase();
 
   @Override
-  RecordDefinition getMetaData(RecordDefinition metaData);
+  RecordDefinition getRecordDefinition(RecordDefinition recordDefinition);
 
   @Override
   void initialize();
 
-  void setCreateMissingDataStore(boolean createMissingDataStore);
+  void setCreateMissingRecordStore(boolean createMissingRecordStore);
 
   void setCreateMissingTables(boolean createMissingTables);
 

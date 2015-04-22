@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.ResultPager;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.query.Or;
 import com.revolsys.gis.data.query.Q;
 import com.revolsys.gis.data.query.Query;
@@ -155,7 +155,7 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<Record> {
   }
 
   protected RecordDefinition getMetaData() {
-    return getDataStore().getMetaData(getTableName());
+    return getDataStore().getRecordDefinition(getTableName());
   }
 
   public ResultPager<Record> getResultPager(final Query query) {
@@ -178,14 +178,14 @@ public class DataObjectHtmlUiBuilder extends HtmlUiBuilder<Record> {
     final String attributeName) {
     final String value = object.getValue(attributeName);
     final RecordStore dataStore = getDataStore();
-    final RecordDefinition metaData = dataStore.getMetaData(tableName);
+    final RecordDefinition metaData = dataStore.getRecordDefinition(tableName);
     if (metaData == null) {
       return true;
     } else {
       final Query query = Query.equal(metaData, attributeName, value);
       final Reader<Record> results = dataStore.query(query);
       final List<Record> objects = results.read();
-      if (object.getState() == DataObjectState.New) {
+      if (object.getState() == RecordState.New) {
         return objects.isEmpty();
       } else {
         final Object id = object.getIdValue();

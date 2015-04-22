@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
 public class ListDataObjectReader extends AbstractReader<Record> implements

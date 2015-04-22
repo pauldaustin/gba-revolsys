@@ -66,7 +66,7 @@ public class JdbcAttribute extends FieldDefinition {
     this.sqlType = sqlType;
   }
 
-  public void addColumnName(final StringBuffer sql, final String tablePrefix) {
+  public void addColumnName(final StringBuilder sql, final String tablePrefix) {
     if (tablePrefix != null) {
       sql.append(tablePrefix);
       sql.append(".");
@@ -74,16 +74,16 @@ public class JdbcAttribute extends FieldDefinition {
     sql.append(getName());
   }
 
-  public void addInsertStatementPlaceHolder(final StringBuffer sql,
+  public void addInsertStatementPlaceHolder(final StringBuilder sql,
     final boolean generateKeys) {
     addStatementPlaceHolder(sql);
   }
 
-  public void addSelectStatementPlaceHolder(final StringBuffer sql) {
+  public void addSelectStatementPlaceHolder(final StringBuilder sql) {
     addStatementPlaceHolder(sql);
   }
 
-  public void addStatementPlaceHolder(final StringBuffer sql) {
+  public void addStatementPlaceHolder(final StringBuilder sql) {
     sql.append('?');
   }
 
@@ -94,7 +94,7 @@ public class JdbcAttribute extends FieldDefinition {
   }
 
   public int getSqlType() {
-    return sqlType;
+    return this.sqlType;
   }
 
   public int setAttributeValueFromResultSet(final ResultSet resultSet,

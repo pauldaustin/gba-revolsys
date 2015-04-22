@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.geometry.io.GeometryWriterFactory;
 import com.revolsys.io.Writer;

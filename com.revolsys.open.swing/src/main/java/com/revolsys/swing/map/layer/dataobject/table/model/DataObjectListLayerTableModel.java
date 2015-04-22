@@ -10,8 +10,8 @@ import java.util.Set;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.swing.listener.InvokeMethodListener;
 import com.revolsys.swing.map.layer.dataobject.DataObjectListLayer;
@@ -42,7 +42,7 @@ public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
   private List<LayerDataObject> records = Collections.emptyList();
 
   public DataObjectListLayerTableModel(final DataObjectListLayer layer) {
-    this(layer, layer.getMetaData().getAttributeNames());
+    this(layer, layer.getMetaData().getFieldNames());
   }
 
   public DataObjectListLayerTableModel(final DataObjectListLayer layer,
@@ -96,7 +96,7 @@ public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
     if (isEditable()) {
       final String columnName = getColumnName(columnIndex);
       final RecordDefinition metaData = getMetaData();
-      final DataType dataType = metaData.getAttributeType(columnName);
+      final DataType dataType = metaData.getFieldType(columnName);
       if (Geometry.class.isAssignableFrom(dataType.getJavaClass())) {
         return false;
       } else {

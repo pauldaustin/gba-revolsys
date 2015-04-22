@@ -4,7 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 
 /**
@@ -28,7 +30,7 @@ public class ArrayRecord extends BaseDataObject {
    * @param object The object to clone.
    */
   public ArrayRecord(final Record object) {
-    this(object.getMetaData(), object);
+    this(object.getRecordDefinition(), object);
   }
 
   /**
@@ -52,7 +54,7 @@ public class ArrayRecord extends BaseDataObject {
       setValuesByPath(defaultValues);
       setValues(values);
     }
-    setState(DataObjectState.New);
+    setState(RecordState.New);
   }
 
   /**

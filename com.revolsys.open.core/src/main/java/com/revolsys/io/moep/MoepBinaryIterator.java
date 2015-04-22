@@ -11,10 +11,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
-import com.revolsys.gis.data.model.DataObjectFactory;
 import com.revolsys.gis.grid.Bcgs20000RectangularMapGrid;
 import com.revolsys.gis.grid.UtmRectangularMapGrid;
 import com.revolsys.gis.jts.JtsGeometryUtil;
@@ -85,7 +85,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   private Record currentDataObject;
 
-  private final DataObjectFactory dataObjectFactory;
+  private final RecordFactory dataObjectFactory;
 
   private final MoepDirectoryReader directoryReader;
 
@@ -109,7 +109,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   public MoepBinaryIterator(final MoepDirectoryReader directoryReader,
     final String fileName, final InputStream in,
-    final DataObjectFactory dataObjectFactory) {
+    final RecordFactory dataObjectFactory) {
     this.directoryReader = directoryReader;
     this.dataObjectFactory = dataObjectFactory;
     switch (fileName.charAt(fileName.length() - 5)) {
@@ -195,7 +195,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
       final int extraParams = featureKey % 100 / 10;
       final int featureType = featureKey % 10;
       final byte numBytes = (byte)read();
-      final Record object = dataObjectFactory.createDataObject(MoepConstants.META_DATA);
+      final Record object = dataObjectFactory.createRecord(MoepConstants.META_DATA);
       object.setValue(MoepConstants.MAPSHEET_NAME, mapsheet);
       object.setValue(MoepConstants.FEATURE_CODE, featureCode);
       object.setValue(MoepConstants.ORIGINAL_FILE_TYPE, originalFileType);

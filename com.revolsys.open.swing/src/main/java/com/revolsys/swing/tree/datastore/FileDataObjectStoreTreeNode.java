@@ -16,10 +16,10 @@ import javax.swing.tree.TreeNode;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
 import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
@@ -100,7 +100,7 @@ public class FileDataObjectStoreTreeNode extends FileTreeNode implements
   protected List<TreeNode> doLoadChildren() {
     final List<TreeNode> children = new ArrayList<TreeNode>();
     final RecordStore dataStore = getDataStore();
-    for (final DataObjectStoreSchema schema : dataStore.getSchemas()) {
+    for (final RecordStoreSchema schema : dataStore.getSchemas()) {
       final String schemaPath = schema.getPath();
 
       final DataObjectStoreSchemaTreeNode schemaNode = new DataObjectStoreSchemaTreeNode(

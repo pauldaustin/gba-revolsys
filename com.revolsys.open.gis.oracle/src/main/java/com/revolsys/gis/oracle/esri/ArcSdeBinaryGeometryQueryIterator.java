@@ -18,14 +18,14 @@ import com.esri.sde.sdk.client.SeShape;
 import com.esri.sde.sdk.client.SeShapeFilter;
 import com.esri.sde.sdk.client.SeSqlConstruct;
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
@@ -35,7 +35,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
 
   private SeConnection connection;
 
-  private DataObjectFactory dataObjectFactory;
+  private RecordFactory dataObjectFactory;
 
   private JdbcDataObjectStore dataStore;
 
@@ -58,7 +58,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
     this.sdeUtil = sdeUtil;
     this.dataObjectFactory = query.getProperty("dataObjectFactory");
     if (this.dataObjectFactory == null) {
-      this.dataObjectFactory = dataStore.getDataObjectFactory();
+      this.dataObjectFactory = dataStore.getRecordFactory();
     }
     this.dataStore = dataStore;
     this.query = query;
@@ -88,10 +88,10 @@ public class ArcSdeBinaryGeometryQueryIterator extends
   @Override
   protected void doInit() {
     String tableName = this.dataStore.getDatabaseQualifiedTableName(this.query.getTypeName());
-    this.metaData = this.query.getMetaData();
+    this.metaData = this.query.getRecordDefinition();
     if (this.metaData == null) {
       if (tableName != null) {
-        this.metaData = this.dataStore.getMetaData(tableName);
+        this.metaData = this.dataStore.getRecordDefinition(tableName);
         this.query.setMetaData(this.metaData);
 
       }
@@ -102,15 +102,15 @@ public class ArcSdeBinaryGeometryQueryIterator extends
     try {
 
       final List<String> attributeNames = new ArrayList<String>(
-        this.query.getAttributeNames());
+        this.query.getFieldNames());
       if (attributeNames.isEmpty()) {
-        this.attributes.addAll(this.metaData.getAttributes());
-        attributeNames.addAll(this.metaData.getAttributeNames());
+        this.attributes.addAll(this.metaData.getFields());
+        attributeNames.addAll(this.metaData.getFieldNames());
       } else {
         for (final String attributeName : attributeNames) {
           if (attributeName.equals("*")) {
-            this.attributes.addAll(this.metaData.getAttributes());
-            attributeNames.addAll(this.metaData.getAttributeNames());
+            this.attributes.addAll(this.metaData.getFields());
+            attributeNames.addAll(this.metaData.getFieldNames());
           } else {
             final FieldDefinition attribute = this.metaData.getAttribute(attributeName);
             if (attribute != null) {
@@ -196,13 +196,13 @@ public class ArcSdeBinaryGeometryQueryIterator extends
 
   private Record getNextRecord(final RecordDefinition metaData,
     final SeRow row) {
-    final Record object = this.dataObjectFactory.createDataObject(metaData);
+    final Record object = this.dataObjectFactory.createRecord(metaData);
     if (object != null) {
-      object.setState(DataObjectState.Initalizing);
+      object.setState(RecordState.Initalizing);
       for (int columnIndex = 0; columnIndex < this.attributes.size(); columnIndex++) {
         sdeUtil.setValueFromRow(object, row, columnIndex);
       }
-      object.setState(DataObjectState.Persisted);
+      object.setState(RecordState.Persisted);
       this.dataStore.addStatistic("query", object);
     }
     return object;

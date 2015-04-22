@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.io;
+package com.revolsys.data.record.schema;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -11,25 +11,25 @@ import java.util.TreeMap;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.PathUtil;
 import com.revolsys.util.ExceptionUtil;
 
-public class DataObjectStoreSchema extends AbstractObjectWithProperties {
+public class RecordStoreSchema extends AbstractObjectWithProperties {
 
-  private Reference<AbstractDataObjectStore> dataStore;
+  private Reference<AbstractRecordStore> dataStore;
 
   private Map<String, RecordDefinition> metaDataCache = new TreeMap<String, RecordDefinition>();
 
   private String path;
 
-  public DataObjectStoreSchema() {
+  public RecordStoreSchema() {
   }
 
-  public DataObjectStoreSchema(final AbstractDataObjectStore dataStore,
+  public RecordStoreSchema(final AbstractRecordStore dataStore,
     final String path) {
-    this.dataStore = new WeakReference<AbstractDataObjectStore>(dataStore);
+    this.dataStore = new WeakReference<AbstractRecordStore>(dataStore);
     this.path = path;
   }
 
@@ -74,7 +74,7 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
   public GeometryFactory getGeometryFactory() {
     final GeometryFactory geometryFactory = getProperty("geometryFactory");
     if (geometryFactory == null) {
-      final AbstractDataObjectStore dataStore = getDataStore();
+      final AbstractRecordStore dataStore = getDataStore();
       if (dataStore == null) {
         return GeometryFactory.getFactory();
       } else {
@@ -85,7 +85,7 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
     }
   }
 
-  public synchronized RecordDefinition getMetaData(String typePath) {
+  public synchronized RecordDefinition getRecordDefinition(String typePath) {
     typePath = typePath.toUpperCase();
     if (typePath.startsWith(path + "/") || path.equals("/")) {
       if (metaDataCache.isEmpty()) {
@@ -126,7 +126,7 @@ public class DataObjectStoreSchema extends AbstractObjectWithProperties {
   }
 
   public void refreshMetaData() {
-    final AbstractDataObjectStore dataStore = getDataStore();
+    final AbstractRecordStore dataStore = getDataStore();
     if (dataStore != null) {
       final Collection<DataObjectStoreExtension> extensions = dataStore.getDataStoreExtensions();
       for (final DataObjectStoreExtension extension : extensions) {

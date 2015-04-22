@@ -20,14 +20,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.data.query.Query;
@@ -85,7 +85,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     setType("dataStore");
 
     setTypePath(typePath);
-    setMetaData(dataStore.getMetaData(typePath));
+    setMetaData(dataStore.getRecordDefinition(typePath));
   }
 
   public DataObjectStoreLayer(final Map<String, ? extends Object> properties) {
@@ -99,7 +99,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     final String id = getId(record);
     if (id == null) {
       records.add(record);
-    } else if (record.getState() == DataObjectState.Deleted) {
+    } else if (record.getState() == RecordState.Deleted) {
       return false;
     } else {
       synchronized (this.cachedRecords) {
@@ -107,7 +107,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
         if (cachedRecord == null) {
           records.add(record);
         } else {
-          if (cachedRecord.getState() == DataObjectState.Deleted) {
+          if (cachedRecord.getState() == RecordState.Deleted) {
             return false;
           } else {
             records.add(cachedRecord);
@@ -272,7 +272,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   @Override
   public void deleteRecord(final LayerDataObject record) {
     if (isLayerRecord(record)) {
-      record.setState(DataObjectState.Deleted);
+      record.setState(RecordState.Deleted);
       unSelectRecords(record);
       final String id = getId(record);
       if (StringUtils.hasText(id)) {
@@ -322,7 +322,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     }
     RecordDefinition metaData = this.getMetaData();
     if (metaData == null) {
-      metaData = dataStore.getMetaData(this.typePath);
+      metaData = dataStore.getRecordDefinition(this.typePath);
       if (metaData == null) {
         LoggerFactory.getLogger(getClass()).error(
           "Cannot find table " + this.typePath + " for layer " + getPath());
@@ -476,11 +476,11 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
           if (dataStore != null) {
             final Writer<Record> writer = dataStore.createWriter();
             try {
-              final String idAttributeName = getMetaData().getIdAttributeName();
+              final String idAttributeName = getMetaData().getIdFieldName();
               final String idString = record.getIdString();
               if (this.deletedRecordIds.contains(idString)
                   || super.isDeleted(record)) {
-                record.setState(DataObjectState.Deleted);
+                record.setState(RecordState.Deleted);
                 writer.write(record);
               } else if (super.isModified(record)) {
                 writer.write(record);
@@ -497,7 +497,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
               writer.close();
             }
             if (!deleted) {
-              record.setState(DataObjectState.Persisted);
+              record.setState(RecordState.Persisted);
             }
             return true;
           }
@@ -546,15 +546,15 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   private LayerDataObject getCacheRecord(final String id,
     final LayerDataObject record) {
     if (StringUtils.hasText(id) && record != null && isLayerRecord(record)) {
-      if (record.getState() == DataObjectState.New) {
+      if (record.getState() == RecordState.New) {
         return record;
-      } else if (record.getState() == DataObjectState.Deleted) {
+      } else if (record.getState() == RecordState.Deleted) {
         return record;
       } else {
         synchronized (this.cachedRecords) {
           if (this.cachedRecords.containsKey(id)) {
             final LayerDataObject cachedRecord = this.cachedRecords.get(id);
-            if (cachedRecord.getState() == DataObjectState.Deleted) {
+            if (cachedRecord.getState() == RecordState.Deleted) {
               this.cachedRecords.remove(id);
             }
             return cachedRecord;
@@ -600,7 +600,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   @Override
   public LayerDataObject getRecordById(final Object id) {
     final RecordDefinition metaData = getMetaData();
-    final String idAttributeName = metaData.getIdAttributeName();
+    final String idAttributeName = metaData.getIdFieldName();
     if (idAttributeName == null) {
       LoggerFactory.getLogger(getClass()).error(
         this.typePath + " does not have a primary key");
@@ -642,7 +642,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
       final Polygon polygon = convertedBoundingBox.toPolygon();
       try {
         for (final LayerDataObject record : queryObjects) {
-          if (!record.getState().equals(DataObjectState.Deleted)) {
+          if (!record.getState().equals(RecordState.Deleted)) {
             final Geometry geometry = record.getGeometryValue();
             if (geometry.intersects(polygon)) {
               allObjects.add(record);
@@ -696,7 +696,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
   @Override
   protected LayerDataObject internalCancelChanges(final LayerDataObject record) {
-    if (record.getState() == DataObjectState.Deleted) {
+    if (record.getState() == RecordState.Deleted) {
       final String id = getId(record);
       if (StringUtils.hasText(id)) {
         this.deletedRecordIds.remove(id);
@@ -717,10 +717,10 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   }
 
   @Override
-  protected void postSaveChanges(final DataObjectState originalState,
+  protected void postSaveChanges(final RecordState originalState,
     final LayerDataObject record) {
     super.postSaveChanges(originalState, record);
-    if (originalState == DataObjectState.New) {
+    if (originalState == RecordState.New) {
       getCacheRecord(record);
     }
   }
@@ -765,15 +765,15 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   private LayerDataObject removeCacheRecord(final String id,
     final LayerDataObject record) {
     if (StringUtils.hasText(id) && record != null && isLayerRecord(record)) {
-      if (record.getState() == DataObjectState.New) {
+      if (record.getState() == RecordState.New) {
         return record;
-      } else if (record.getState() == DataObjectState.Deleted) {
+      } else if (record.getState() == RecordState.Deleted) {
         return record;
       } else {
         synchronized (this.cachedRecords) {
           if (this.cachedRecords.containsKey(id)) {
             final LayerDataObject cachedRecord = this.cachedRecords.remove(id);
-            if (cachedRecord.getState() == DataObjectState.Deleted) {
+            if (cachedRecord.getState() == RecordState.Deleted) {
               this.cachedRecords.remove(id);
             }
             return cachedRecord;
@@ -863,7 +863,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
       if (isExists()) {
         final RecordStore dataStore = getDataStore();
         if (dataStore != null) {
-          final RecordDefinition metaData = dataStore.getMetaData(typePath);
+          final RecordDefinition metaData = dataStore.getRecordDefinition(typePath);
           if (metaData != null) {
 
             setMetaData(metaData);

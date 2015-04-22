@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.table.BaseJxTable;
 
 public class DataObjectMetaDataTableModel extends AbstractTableModel {

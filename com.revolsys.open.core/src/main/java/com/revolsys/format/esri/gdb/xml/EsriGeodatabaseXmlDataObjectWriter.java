@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldType;
@@ -19,8 +20,7 @@ import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCsWktWriter;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.PathUtil;
 import com.revolsys.io.xml.XmlConstants;
@@ -87,7 +87,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
     out.startTag(VALUES);
     out.attribute(XsiConstants.TYPE, VALUES_TYPE);
 
-    for (final FieldDefinition attribute : metaData.getAttributes()) {
+    for (final FieldDefinition attribute : metaData.getFields()) {
       final String attributeName = attribute.getName();
       final Object value = object.getValue(attributeName);
       final DataType type = attribute.getType();
@@ -109,7 +109,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
   private void writeDataElement(final RecordDefinition metaData,
     final Geometry geometry) {
     final String dataElementType;
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     boolean hasGeometry = false;
     DataType geometryDataType = null;
     if (geometryAttribute != null) {
@@ -215,7 +215,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
       out.element(FEATURE_TYPE, FEATURE_TYPE_SIMPLE);
       out.element(SHAPE_TYPE, geometryType);
       out.element(SHAPE_FIELD_NAME, geometryAttribute.getName());
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
       out.element(HAS_M, false);
       out.element(HAS_Z, geometryFactory.hasZ());
       out.element(HAS_SPATIAL_INDEX, false);
@@ -277,7 +277,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
         out.element(PRECISION, precision);
         out.element(SCALE, attribute.getScale());
 
-        final GeometryFactory geometryFactory = attribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+        final GeometryFactory geometryFactory = attribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
         if (geometryFactory != null) {
           out.startTag(GEOMETRY_DEF);
           out.attribute(XsiConstants.TYPE, GEOMETRY_DEF_TYPE);
@@ -304,7 +304,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
     out.startTag(FIELD_ARRAY);
     out.attribute(XsiConstants.TYPE, FIELD_ARRAY_TYPE);
 
-    for (final FieldDefinition attribute : metaData.getAttributes()) {
+    for (final FieldDefinition attribute : metaData.getFields()) {
       writeField(attribute);
     }
     if (metaData.getAttribute("OBJECTID") == null) {

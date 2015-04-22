@@ -23,8 +23,8 @@ public class DirectoryDataObjectStoreWriter extends AbstractWriter<Record> {
   public void write(final Record object) {
     if (object != null) {
       try {
-        final boolean currentDataStore = object.getMetaData()
-          .getDataStore() == dataStore;
+        final boolean currentDataStore = object.getRecordDefinition()
+          .getRecordStore() == dataStore;
         switch (object.getState()) {
           case New:
             dataStore.insert(object);

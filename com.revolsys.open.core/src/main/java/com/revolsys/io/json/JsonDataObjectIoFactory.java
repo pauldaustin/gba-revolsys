@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryWriterFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.io.Writer;
@@ -53,7 +53,7 @@ public class JsonDataObjectIoFactory extends
   }
 
   public static final String toString(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final StringWriter writer = new StringWriter();
     final JsonDataObjectWriter dataObjectWriter = new JsonDataObjectWriter(
       metaData, writer);

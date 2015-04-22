@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 
 public class CopyValues extends
@@ -43,7 +43,7 @@ public class CopyValues extends
         value = source.getValueByPath(sourceName);
       }
       if (value != null) {
-        final RecordDefinition targetMetaData = target.getMetaData();
+        final RecordDefinition targetMetaData = target.getRecordDefinition();
         final CodeTable codeTable = targetMetaData.getCodeTableByColumn(targetName);
         if (codeTable == null) {
           target.setValue(targetName, value);

@@ -1,7 +1,7 @@
 package com.revolsys.gis.data.io;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectIteratorReader extends IteratorReader<Record>
   implements DataObjectReader {

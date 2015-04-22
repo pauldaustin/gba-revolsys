@@ -16,11 +16,11 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.DataObjectFactory;
 import com.revolsys.gis.io.EndianInputStream;
 import com.revolsys.gis.io.EndianMappedByteBuffer;
 import com.revolsys.gis.io.LittleEndianRandomAccessFile;
@@ -64,7 +64,7 @@ public class XbaseIterator extends AbstractIterator<Record> implements
 
   private int currentDeletedCount = 0;
 
-  private DataObjectFactory dataObjectFactory;
+  private RecordFactory dataObjectFactory;
 
   private int deletedCount = 0;
 
@@ -93,7 +93,7 @@ public class XbaseIterator extends AbstractIterator<Record> implements
   private String typeName;
 
   public XbaseIterator(final Resource resource,
-    final DataObjectFactory dataObjectFactory) throws IOException {
+    final RecordFactory dataObjectFactory) throws IOException {
     this.typeName = "/" + typeName;
     this.resource = resource;
 
@@ -113,7 +113,7 @@ public class XbaseIterator extends AbstractIterator<Record> implements
   }
 
   public XbaseIterator(final Resource in,
-    final DataObjectFactory dataObjectFactory, final Runnable initCallback)
+    final RecordFactory dataObjectFactory, final Runnable initCallback)
     throws IOException {
     this(in, dataObjectFactory);
     this.initCallback = initCallback;
@@ -289,7 +289,7 @@ public class XbaseIterator extends AbstractIterator<Record> implements
     if (in.read(recordBuffer) != recordBuffer.length) {
       throw new IllegalStateException("Unexpected end of mappedFile");
     }
-    final Record object = dataObjectFactory.createDataObject(metaData);
+    final Record object = dataObjectFactory.createRecord(metaData);
     int startIndex = 0;
     for (int i = 0; i < metaData.getAttributeCount(); i++) {
       int len = metaData.getAttributeLength(i);

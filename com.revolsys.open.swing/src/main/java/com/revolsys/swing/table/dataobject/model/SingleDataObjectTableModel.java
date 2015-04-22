@@ -24,7 +24,7 @@ public class SingleDataObjectTableModel extends
 
   public SingleDataObjectTableModel(final Record object,
     final boolean editable) {
-    super(object.getMetaData(), editable);
+    super(object.getRecordDefinition(), editable);
     this.object = object;
   }
 
@@ -43,7 +43,7 @@ public class SingleDataObjectTableModel extends
 
   public void setObject(final Record object) {
     if (object != this.object) {
-      setMetaData(object.getMetaData());
+      setMetaData(object.getRecordDefinition());
       this.object = object;
       fireTableDataChanged();
     }

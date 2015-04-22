@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 
 /**
@@ -50,7 +50,7 @@ public class DataObjectCodeTableValueFilter implements Filter<Record> {
     if (values.contains(propertyValue)) {
       return true;
     } else {
-      final RecordDefinition metaData = object.getMetaData();
+      final RecordDefinition metaData = object.getRecordDefinition();
       final CodeTable codeTable = metaData.getCodeTableByColumn(attributeName);
       if (codeTable != null) {
         final Object codeValue = codeTable.getValue((Number)propertyValue);

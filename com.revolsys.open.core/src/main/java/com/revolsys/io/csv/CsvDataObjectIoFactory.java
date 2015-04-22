@@ -10,19 +10,19 @@ import java.util.Map;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.io.RecordStoreFactory;
 import com.revolsys.io.DirectoryDataObjectStore;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
 public class CsvDataObjectIoFactory extends AbstractDataObjectIoFactory
-  implements DataObjectStoreFactory {
+  implements RecordStoreFactory {
   public CsvDataObjectIoFactory() {
     super(CsvConstants.DESCRIPTION, false, true, true);
     addMediaTypeAndFileExtension(CsvConstants.MEDIA_TYPE,
@@ -31,14 +31,14 @@ public class CsvDataObjectIoFactory extends AbstractDataObjectIoFactory
 
   @Override
   public DataObjectReader createDataObjectReader(final Resource resource,
-    final DataObjectFactory dataObjectFactory) {
+    final RecordFactory dataObjectFactory) {
     final CsvDataObjectIterator iterator = new CsvDataObjectIterator(resource,
       dataObjectFactory);
     return new DataObjectIteratorReader(iterator);
   }
 
   @Override
-  public RecordStore createDataObjectStore(
+  public RecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
     final String url = (String)connectionProperties.get("url");
     final Resource resource = SpringUtil.getResource(url);
@@ -57,7 +57,7 @@ public class CsvDataObjectIoFactory extends AbstractDataObjectIoFactory
   }
 
   @Override
-  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
+  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
     return RecordStore.class;
   }

@@ -7,12 +7,12 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
@@ -55,9 +55,9 @@ public class OracleDdlWriter extends JdbcDdlWriter {
       schemaName = "public";
     }
     final String tableName = PathUtil.getName(typePath);
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
       String geometryType = "GEOMETRY";
       final DataType dataType = geometryAttribute.getType();
@@ -175,9 +175,9 @@ public class OracleDdlWriter extends JdbcDdlWriter {
     final String typePath = metaData.getPath();
     final String schemaName = JdbcUtils.getSchemaName(typePath);
     final String tableName = PathUtil.getName(typePath);
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
       final int numAxis = geometryFactory.getNumAxis();
       final DataType dataType = geometryAttribute.getType();

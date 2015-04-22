@@ -7,8 +7,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipUtil;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
@@ -20,7 +20,7 @@ public class ZipDataObjectReader extends DelegatingReader<Record> implements
   private File directory;
 
   public ZipDataObjectReader(final Resource resource,
-    final String fileExtension, final DataObjectFactory factory) {
+    final String fileExtension, final RecordFactory factory) {
     try {
       final String baseName = FileUtil.getBaseName(resource.getFilename());
       final String zipEntryName = baseName + "." + fileExtension;
@@ -55,7 +55,7 @@ public class ZipDataObjectReader extends DelegatingReader<Record> implements
   }
 
   protected boolean openFile(final Resource resource,
-    final DataObjectFactory factory, final String zipEntryName) {
+    final RecordFactory factory, final String zipEntryName) {
     final File file = new File(directory, zipEntryName);
     if (file.exists()) {
       final FileSystemResource fileResource = new FileSystemResource(file);

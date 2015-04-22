@@ -5,10 +5,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreFactory;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.gis.data.io.RecordStoreFactory;
 
-public interface JdbcDatabaseFactory extends DataObjectStoreFactory {
+public interface JdbcDatabaseFactory extends RecordStoreFactory {
 
   boolean canHandleUrl(String url);
 
@@ -17,13 +17,13 @@ public interface JdbcDatabaseFactory extends DataObjectStoreFactory {
   JdbcDataObjectStore createDataObjectStore(DataSource dataSource);
 
   @Override
-  JdbcDataObjectStore createDataObjectStore(
+  JdbcDataObjectStore createRecordStore(
     Map<String, ? extends Object> connectionProperties);
 
   DataSource createDataSource(Map<String, ? extends Object> connectionProperties);
 
   @Override
-  Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
+  Class<? extends RecordStore> getRecordStoreInterfaceClass(
     Map<String, ? extends Object> connectionProperties);
 
   List<String> getProductNames();

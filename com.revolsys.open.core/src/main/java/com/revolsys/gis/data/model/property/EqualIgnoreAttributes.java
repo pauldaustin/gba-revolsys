@@ -6,8 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
 public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
@@ -15,7 +15,7 @@ public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
     + ".propertyName";
 
   public static EqualIgnoreAttributes getProperty(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);
   }
 
@@ -79,7 +79,7 @@ public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
   public void setMetaData(final RecordDefinition metaData) {
     super.setMetaData(metaData);
     if (attributeNames.contains(DataObjectEquals.EXCLUDE_ID)) {
-      final String idAttributeName = metaData.getIdAttributeName();
+      final String idAttributeName = metaData.getIdFieldName();
       attributeNames.add(idAttributeName);
     }
     if (attributeNames.contains(DataObjectEquals.EXCLUDE_GEOMETRY)) {

@@ -1,7 +1,7 @@
 package com.revolsys.swing.map.overlay;
 
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
 import com.revolsys.gis.model.geometry.util.IndexedLineSegment;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
@@ -56,7 +56,7 @@ public class CloseLocation {
   }
 
   public String getIdAttributeName() {
-    return getMetaData().getIdAttributeName();
+    return getMetaData().getIdFieldName();
   }
 
   public String getIndexString() {
@@ -122,7 +122,7 @@ public class CloseLocation {
     string.append(getTypePath());
     string.append(", ");
     final RecordDefinition metaData = getMetaData();
-    string.append(metaData.getIdAttributeName());
+    string.append(metaData.getIdFieldName());
     string.append("=");
     final Object id = getId();
     string.append(id);

@@ -9,11 +9,11 @@ import java.util.Map.Entry;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.Reader;
 import com.revolsys.spring.SpringUtil;
 

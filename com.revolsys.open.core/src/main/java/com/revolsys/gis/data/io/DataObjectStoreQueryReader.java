@@ -12,15 +12,16 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.AbstractRecordStore;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.data.query.SqlCondition;
 
 public class DataObjectStoreQueryReader extends IteratorReader<Record>
   implements DataObjectReader {
 
-  private AbstractDataObjectStore dataStore;
+  private AbstractRecordStore dataStore;
 
   private List<Query> queries = new ArrayList<Query>();
 
@@ -34,7 +35,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
     setIterator(new DataStoreMultipleQueryIterator(this));
   }
 
-  public DataObjectStoreQueryReader(final AbstractDataObjectStore dataStore) {
+  public DataObjectStoreQueryReader(final AbstractRecordStore dataStore) {
     this();
     setDataStore(dataStore);
   }
@@ -75,7 +76,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
     return boundingBox;
   }
 
-  public AbstractDataObjectStore getDataStore() {
+  public AbstractRecordStore getDataStore() {
     return dataStore;
   }
 
@@ -97,7 +98,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
   public void open() {
     if (typePaths != null) {
       for (final String tableName : typePaths) {
-        final RecordDefinition metaData = dataStore.getMetaData(tableName);
+        final RecordDefinition metaData = dataStore.getRecordDefinition(tableName);
         if (metaData != null) {
           Query query;
           if (boundingBox == null) {
@@ -118,7 +119,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
     this.boundingBox = boundingBox;
   }
 
-  public void setDataStore(final AbstractDataObjectStore dataStore) {
+  public void setDataStore(final AbstractRecordStore dataStore) {
     this.dataStore = dataStore;
   }
 

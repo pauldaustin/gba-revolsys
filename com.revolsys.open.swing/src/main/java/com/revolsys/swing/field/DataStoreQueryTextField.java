@@ -46,9 +46,9 @@ import com.revolsys.awt.WebColors;
 import com.revolsys.collection.LruMap;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Equal;
 import com.revolsys.gis.data.query.Q;
 import com.revolsys.gis.data.query.Query;
@@ -105,8 +105,8 @@ public class DataStoreQueryTextField extends TextField implements
     final String displayAttributeName, final List<Query> queries) {
     super(displayAttributeName);
     this.metaData = metaData;
-    this.dataStore = metaData.getDataStore();
-    this.idAttributeName = metaData.getIdAttributeName();
+    this.dataStore = metaData.getRecordStore();
+    this.idAttributeName = metaData.getIdFieldName();
     this.displayAttributeName = displayAttributeName;
 
     final Document document = getDocument();
@@ -156,7 +156,7 @@ public class DataStoreQueryTextField extends TextField implements
 
   public DataStoreQueryTextField(final RecordStore dataStore,
     final String typeName, final String displayAttributeName) {
-    this(dataStore.getMetaData(typeName), displayAttributeName, new Query(
+    this(dataStore.getRecordDefinition(typeName), displayAttributeName, new Query(
       typeName, new Equal(F.upper(displayAttributeName), new Value(null))),
       new Query(typeName, Q.iLike(displayAttributeName, "")));
   }

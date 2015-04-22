@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
 
 public class ArcSdeObjectIdJdbcAttribute extends JdbcAttribute {
@@ -16,7 +16,7 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcAttribute {
     final String rowIdColumn) {
     final JdbcAttribute objectIdAttribute = (JdbcAttribute)metaData.getAttribute(rowIdColumn);
     if (objectIdAttribute != null
-      && !(objectIdAttribute instanceof ArcSdeObjectIdJdbcAttribute)) {
+        && !(objectIdAttribute instanceof ArcSdeObjectIdJdbcAttribute)) {
       final String name = objectIdAttribute.getName();
       final String description = objectIdAttribute.getDescription();
       final Map<String, Object> properties = objectIdAttribute.getProperties();
@@ -26,9 +26,9 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcAttribute {
       newObjectIdAttribute.setMetaData(metaData);
       final RecordDefinitionImpl metaDataImpl = (RecordDefinitionImpl)metaData;
       metaDataImpl.replaceAttribute(objectIdAttribute, newObjectIdAttribute);
-      if (metaData.getIdAttributeName() == null
-        && metaData.getIdAttributeNames().isEmpty()) {
-        metaDataImpl.setIdAttributeName(name);
+      if (metaData.getIdFieldName() == null
+          && metaData.getIdAttributeNames().isEmpty()) {
+        metaDataImpl.setIdFieldName(name);
       }
     }
   }
@@ -52,7 +52,7 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcAttribute {
    * function.
    */
   @Override
-  public void addInsertStatementPlaceHolder(final StringBuffer sql,
+  public void addInsertStatementPlaceHolder(final StringBuilder sql,
     final boolean generateKeys) {
     sql.append(" sde.version_user_ddl.next_row_id('");
     sql.append(this.schemaName);

@@ -7,11 +7,11 @@ import java.nio.charset.Charset;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.OutputStreamResource;
 
@@ -24,7 +24,7 @@ public class XBaseDataObjectIoFactory extends AbstractDataObjectIoFactory {
 
   @Override
   public DataObjectReader createDataObjectReader(final Resource resource,
-    final DataObjectFactory dataObjectFactory) {
+    final RecordFactory dataObjectFactory) {
     try {
       final XbaseIterator iterator = new XbaseIterator(resource,
         dataObjectFactory);

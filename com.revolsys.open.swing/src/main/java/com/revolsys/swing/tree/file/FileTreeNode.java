@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
 import com.revolsys.gis.data.io.DataObjectReaderFactory;
-import com.revolsys.gis.data.io.DataObjectStoreFactoryRegistry;
+import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;
@@ -221,7 +221,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
   }
 
   public static boolean isDataStore(final File file) {
-    final Set<String> fileExtensions = DataObjectStoreFactoryRegistry.getFileExtensions();
+    final Set<String> fileExtensions = RecordStoreFactoryRegistry.getFileExtensions();
     final String extension = FileUtil.getFileNameExtension(file).toLowerCase();
     return fileExtensions.contains(extension);
   }

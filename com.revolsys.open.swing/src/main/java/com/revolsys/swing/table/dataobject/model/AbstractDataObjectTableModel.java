@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
@@ -135,7 +135,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     final Object objectValue) {
     String text;
     final RecordDefinition metaData = getMetaData();
-    final String idFieldName = metaData.getIdAttributeName();
+    final String idFieldName = metaData.getIdFieldName();
     final String name = getFieldName(attributeIndex);
     if (objectValue == null) {
       if (name.equals(idFieldName)) {

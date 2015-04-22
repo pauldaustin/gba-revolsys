@@ -41,7 +41,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
@@ -300,7 +300,7 @@ public class SaifWriter extends AbstractWriter<Record> {
     if (compositeTypeName == null) {
       compositeTypeName = typePath + "Composite";
     }
-    final RecordDefinition compisteType = dataObjectMetaDataFactory.getMetaData(String.valueOf(compositeTypeName));
+    final RecordDefinition compisteType = dataObjectMetaDataFactory.getRecordDefinition(String.valueOf(compositeTypeName));
     return compisteType;
   }
 
@@ -475,8 +475,8 @@ public class SaifWriter extends AbstractWriter<Record> {
     final DataObjectMetaDataFactory schema) {
     this.dataObjectMetaDataFactory = schema;
     if (schema != null) {
-      spatialDataSetType = schema.getMetaData("/SpatialDataSet");
-      annotatedSpatialDataSetType = schema.getMetaData("/AnnotatedSpatialDataSet");
+      spatialDataSetType = schema.getRecordDefinition("/SpatialDataSet");
+      annotatedSpatialDataSetType = schema.getRecordDefinition("/AnnotatedSpatialDataSet");
     }
   }
 
@@ -581,7 +581,7 @@ public class SaifWriter extends AbstractWriter<Record> {
   @Override
   public void write(final Record object) {
     try {
-      final RecordDefinition type = object.getMetaData();
+      final RecordDefinition type = object.getRecordDefinition();
       final OsnSerializer serializer = getSerializer(type.getPath());
       if (serializer != null) {
         serializer.serializeDataObject(object);

@@ -6,11 +6,11 @@ import javax.xml.namespace.QName;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
@@ -109,7 +109,7 @@ public class GmlDataObjectWriter extends AbstractWriter<Record> implements
       writeHeader();
     }
     out.startTag(FEATURE_MEMBER);
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     QName qualifiedName = metaData.getProperty(DataObjectMetaDataProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
       final String typeName = metaData.getPath();
@@ -121,7 +121,7 @@ public class GmlDataObjectWriter extends AbstractWriter<Record> implements
     }
     out.startTag(qualifiedName);
 
-    for (final FieldDefinition attribute : metaData.getAttributes()) {
+    for (final FieldDefinition attribute : metaData.getFields()) {
       final String attributeName = attribute.getName();
       out.startTag(namespaceUri, attributeName);
       final Object value = object.getValue(attributeName);

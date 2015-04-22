@@ -10,9 +10,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.AbstractDataObjectWriterFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
@@ -106,7 +106,7 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
   }
 
   private Writer<Record> getWriter(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final String path = metaData.getPath();
     Writer<Record> writer = writers.get(path);
     if (writer == null) {

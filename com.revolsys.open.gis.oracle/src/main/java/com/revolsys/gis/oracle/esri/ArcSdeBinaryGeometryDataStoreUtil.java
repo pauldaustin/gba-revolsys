@@ -18,15 +18,15 @@ import com.esri.sde.sdk.client.SeRow;
 import com.esri.sde.sdk.client.SeShape;
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
@@ -81,7 +81,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
   }
 
   public void createGeometryColumn(final AbstractJdbcDataObjectStore dataStore,
-    final DataObjectStoreSchema schema, final RecordDefinition metaData,
+    final RecordStoreSchema schema, final RecordDefinition metaData,
     final String typePath, final String columnName,
     final Map<String, Object> columnProperties) {
     final FieldDefinition attribute = metaData.getAttribute(columnName);
@@ -106,7 +106,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
 
     metaData.setProperty("dataStoreIteratorFactory", this.iteratorFactory);
 
-    ((RecordDefinitionImpl)metaData).setGeometryAttributeName(columnName);
+    ((RecordDefinitionImpl)metaData).setGeometryFieldName(columnName);
   }
 
   public AbstractIterator<Record> createIterator(
@@ -242,7 +242,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
             default:
               LoggerFactory.getLogger(ArcSdeBinaryGeometryDataStoreUtil.class)
                 .error(
-                  "Unsupported column type: " + object.getMetaData() + "."
+                  "Unsupported column type: " + object.getRecordDefinition() + "."
                     + name);
             break;
           }

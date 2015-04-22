@@ -9,8 +9,8 @@ import org.springframework.util.StringUtils;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
@@ -84,7 +84,7 @@ public class XhtmlDataObjectWriter extends AbstractWriter<Record> {
       writeHeader();
     }
     if (singleObject) {
-      for (final String key : metaData.getAttributeNames()) {
+      for (final String key : metaData.getFieldNames()) {
         final Object value = object.getValue(key);
         out.startTag(HtmlUtil.TR);
         out.element(HtmlUtil.TH,
@@ -102,7 +102,7 @@ public class XhtmlDataObjectWriter extends AbstractWriter<Record> {
       }
     } else {
       out.startTag(HtmlUtil.TR);
-      for (final String key : metaData.getAttributeNames()) {
+      for (final String key : metaData.getFieldNames()) {
         final Object value = object.getValue(key);
         out.startTag(HtmlUtil.TD);
         if (value == null) {
@@ -192,7 +192,7 @@ public class XhtmlDataObjectWriter extends AbstractWriter<Record> {
 
       out.startTag(HtmlUtil.THEAD);
       out.startTag(HtmlUtil.TR);
-      for (final String name : metaData.getAttributeNames()) {
+      for (final String name : metaData.getFieldNames()) {
         out.element(HtmlUtil.TH, name);
       }
       out.endTag(HtmlUtil.TR);
@@ -204,7 +204,7 @@ public class XhtmlDataObjectWriter extends AbstractWriter<Record> {
   }
 
   public void writeValue(final String name, final Object value) {
-    final DataType dataType = metaData.getAttributeType(name);
+    final DataType dataType = metaData.getFieldType(name);
 
     @SuppressWarnings("unchecked")
     final Class<Object> dataTypeClass = (Class<Object>)dataType.getJavaClass();

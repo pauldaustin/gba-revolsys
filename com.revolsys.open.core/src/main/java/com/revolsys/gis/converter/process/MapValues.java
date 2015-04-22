@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.data.model.codes.CodeTable;
 
@@ -55,7 +55,7 @@ public class MapValues extends
     if (sourceValue != null) {
       final Object targetValue = valueMap.get(sourceValue);
       if (targetValue != null) {
-        final RecordDefinition targetMetaData = target.getMetaData();
+        final RecordDefinition targetMetaData = target.getRecordDefinition();
         final CodeTable codeTable = targetMetaData.getCodeTableByColumn(targetAttributeName);
         if (codeTable == null) {
           target.setValue(targetAttributeName, targetValue);

@@ -7,12 +7,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.data.record.RecordState;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTable;
@@ -61,12 +61,12 @@ public class DataObjectListLayer extends AbstractDataObjectLayer {
   }
 
   protected void createRecordInternal(final Map<String, Object> values) {
-    final LayerDataObject record = createDataObject(getMetaData());
-    record.setState(DataObjectState.Initalizing);
+    final LayerDataObject record = createRecord(getMetaData());
+    record.setState(RecordState.Initalizing);
     try {
       record.setValues(values);
     } finally {
-      record.setState(DataObjectState.Persisted);
+      record.setState(RecordState.Persisted);
     }
     synchronized (records) {
       this.records.add(record);

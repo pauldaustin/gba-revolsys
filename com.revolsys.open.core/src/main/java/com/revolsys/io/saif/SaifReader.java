@@ -43,12 +43,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.io.DataObjectIterator;
@@ -84,7 +84,7 @@ public class SaifReader extends AbstractReader<Record> implements
   /** The list of exported objects. */
   private Record exportedObjects;
 
-  private DataObjectFactory factory = new ArrayDataObjectFactory();
+  private RecordFactory factory = new ArrayDataObjectFactory();
 
   /** The SAIF archive file. */
   private File file;
@@ -212,7 +212,7 @@ public class SaifReader extends AbstractReader<Record> implements
   /**
    * @return the factory
    */
-  public DataObjectFactory getFactory() {
+  public RecordFactory getFactory() {
     return factory;
   }
 
@@ -291,8 +291,8 @@ public class SaifReader extends AbstractReader<Record> implements
   }
 
   @Override
-  public RecordDefinition getMetaData(final String typePath) {
-    return metaDataFactory.getMetaData(typePath);
+  public RecordDefinition getRecordDefinition(final String typePath) {
+    return metaDataFactory.getRecordDefinition(typePath);
   }
 
   /**
@@ -306,7 +306,7 @@ public class SaifReader extends AbstractReader<Record> implements
 
   private <D extends Record> OsnReader getOsnReader(
     final DataObjectMetaDataFactory metaDataFactory,
-    final DataObjectFactory factory, final String className) throws IOException {
+    final RecordFactory factory, final String className) throws IOException {
     String fileName = typePathFileNameMap.get(className);
     if (fileName == null) {
       fileName = PathUtil.getName(className);
@@ -327,7 +327,7 @@ public class SaifReader extends AbstractReader<Record> implements
   }
 
   public <D extends Record> OsnReader getOsnReader(final String className,
-    final DataObjectFactory factory) throws IOException {
+    final RecordFactory factory) throws IOException {
     final DataObjectMetaDataFactory metaDataFactory = this.metaDataFactory;
     return getOsnReader(metaDataFactory, factory, className);
 
@@ -538,7 +538,7 @@ public class SaifReader extends AbstractReader<Record> implements
       if (reader.hasNext()) {
         final Record spatialReferencing = reader.next();
         final Record coordinateSystem = spatialReferencing.getValue("coordSystem");
-        if (coordinateSystem.getMetaData().getPath().equals("/UTM")) {
+        if (coordinateSystem.getRecordDefinition().getPath().equals("/UTM")) {
           final Number srid = coordinateSystem.getValue("zone");
           setSrid(26900 + srid.intValue());
         }
@@ -594,9 +594,9 @@ public class SaifReader extends AbstractReader<Record> implements
           srid, 1.0, 1.0);
 
         for (final RecordDefinition metaData : ((DataObjectMetaDataFactoryImpl)this.metaDataFactory).getTypes()) {
-          final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+          final FieldDefinition geometryAttribute = metaData.getGeometryField();
           if (geometryAttribute != null) {
-            geometryAttribute.setProperty(AttributeProperties.GEOMETRY_FACTORY,
+            geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
               geometryFactory);
           }
         }
@@ -637,7 +637,7 @@ public class SaifReader extends AbstractReader<Record> implements
   }
 
   protected Record readObject(final String className,
-    final DataObjectFactory factory) throws IOException {
+    final RecordFactory factory) throws IOException {
     final OsnReader reader = getOsnReader(className, factory);
     try {
       final Record object = reader.next();
@@ -681,7 +681,7 @@ public class SaifReader extends AbstractReader<Record> implements
   /**
    * @param factory the factory to set
    */
-  public void setFactory(final DataObjectFactory factory) {
+  public void setFactory(final RecordFactory factory) {
     this.factory = factory;
   }
 

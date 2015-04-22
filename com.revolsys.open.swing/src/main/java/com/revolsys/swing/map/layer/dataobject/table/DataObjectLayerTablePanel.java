@@ -13,11 +13,11 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.property.DirectionalAttributes;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
@@ -126,7 +126,7 @@ PropertyChangeListener {
           this, "canPasteRecordGeometry")), this, "pasteGeometry");
 
       final MenuFactory editMenu = new MenuFactory("Edit Record Operations");
-      final DataType geometryDataType = metaData.getGeometryAttribute()
+      final DataType geometryDataType = metaData.getGeometryField()
           .getType();
       if (geometryDataType == DataTypes.LINE_STRING
           || geometryDataType == DataTypes.MULTI_LINE_STRING) {

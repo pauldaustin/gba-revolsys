@@ -7,10 +7,10 @@ import java.util.List;
 import org.springframework.core.convert.converter.Converter;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.converter.process.SourceToTargetProcess;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
@@ -19,7 +19,7 @@ public class SimpleDataObjectConveter implements
   Converter<Record, Record> {
   private RecordDefinition dataObjectMetaData;
 
-  private DataObjectFactory factory;
+  private RecordFactory factory;
 
   private List<SourceToTargetProcess<Record, Record>> processors = new ArrayList<SourceToTargetProcess<Record, Record>>();
 
@@ -48,7 +48,7 @@ public class SimpleDataObjectConveter implements
 
   @Override
   public Record convert(final Record sourceObject) {
-    final Record targetObject = factory.createDataObject(dataObjectMetaData);
+    final Record targetObject = factory.createRecord(dataObjectMetaData);
     final Geometry sourceGeometry = sourceObject.getGeometryValue();
     final GeometryFactory geometryFactory = GeometryFactory.getFactory(sourceGeometry);
     final Geometry targetGeometry = geometryFactory.createGeometry(sourceGeometry);

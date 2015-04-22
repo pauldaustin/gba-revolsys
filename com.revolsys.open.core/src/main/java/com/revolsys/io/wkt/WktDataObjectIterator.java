@@ -8,12 +8,12 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
@@ -22,7 +22,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public class WktDataObjectIterator extends AbstractIterator<Record>
   implements DataObjectIterator {
 
-  private DataObjectFactory factory;
+  private RecordFactory factory;
 
   private BufferedReader in;
 
@@ -30,7 +30,7 @@ public class WktDataObjectIterator extends AbstractIterator<Record>
 
   private RecordDefinition metaData;
 
-  public WktDataObjectIterator(final DataObjectFactory factory,
+  public WktDataObjectIterator(final RecordFactory factory,
     final Resource resource) throws IOException {
     this.factory = factory;
     this.in = new BufferedReader(
@@ -50,17 +50,17 @@ public class WktDataObjectIterator extends AbstractIterator<Record>
   @Override
   protected void doInit() {
     GeometryFactory geometryFactory;
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute == null) {
       geometryFactory = GeometryFactory.getFactory();
     } else {
-      geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+      geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
       if (geometryFactory == null) {
         geometryFactory = getProperty(IoConstants.GEOMETRY_FACTORY);
         if (geometryFactory == null) {
           geometryFactory = GeometryFactory.getFactory();
         }
-        geometryAttribute.setProperty(AttributeProperties.GEOMETRY_FACTORY,
+        geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
           geometryFactory);
       }
     }
@@ -80,7 +80,7 @@ public class WktDataObjectIterator extends AbstractIterator<Record>
       if (geometry == null) {
         throw new NoSuchElementException();
       } else {
-        final Record object = factory.createDataObject(getMetaData());
+        final Record object = factory.createRecord(getMetaData());
         object.setGeometryValue(geometry);
         return object;
       }

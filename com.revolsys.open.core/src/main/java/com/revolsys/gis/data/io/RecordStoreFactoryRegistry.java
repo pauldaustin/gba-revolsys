@@ -13,11 +13,13 @@ import java.util.regex.Pattern;
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class DataObjectStoreFactoryRegistry {
+import com.revolsys.data.record.schema.RecordStore;
 
-  private static Map<Pattern, DataObjectStoreFactory> dataStoreFactoryUrlPatterns = new HashMap<Pattern, DataObjectStoreFactory>();
+public class RecordStoreFactoryRegistry {
 
-  private static List<DataObjectStoreFactory> fileDataStoreFactories = new ArrayList<DataObjectStoreFactory>();
+  private static Map<Pattern, RecordStoreFactory> dataStoreFactoryUrlPatterns = new HashMap<Pattern, RecordStoreFactory>();
+
+  private static List<RecordStoreFactory> fileDataStoreFactories = new ArrayList<RecordStoreFactory>();
 
   private static Set<String> fileExtensions = new TreeSet<String>();
 
@@ -35,48 +37,48 @@ public class DataObjectStoreFactoryRegistry {
   public static <T extends RecordStore> T createDataObjectStore(
     final Map<String, ? extends Object> connectionProperties) {
     final String url = (String)connectionProperties.get("url");
-    final DataObjectStoreFactory factory = getDataStoreFactory(url);
+    final RecordStoreFactory factory = getDataStoreFactory(url);
     if (factory == null) {
       throw new IllegalArgumentException("Data Source Factory not found for "
         + url);
     } else {
-      return (T)factory.createDataObjectStore(connectionProperties);
+      return (T)factory.createRecordStore(connectionProperties);
     }
   }
 
   @SuppressWarnings("unchecked")
   public static <T extends RecordStore> T createDataObjectStore(
     final String url) {
-    final DataObjectStoreFactory factory = getDataStoreFactory(url);
+    final RecordStoreFactory factory = getDataStoreFactory(url);
     if (factory == null) {
       throw new IllegalArgumentException("Data Source Factory not found for "
         + url);
     } else {
       final Map<String, Object> connectionProperties = new HashMap<String, Object>();
       connectionProperties.put("url", url);
-      return (T)factory.createDataObjectStore(connectionProperties);
+      return (T)factory.createRecordStore(connectionProperties);
     }
   }
 
   public static Class<?> getDataObjectStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
     final String url = (String)connectionProperties.get("url");
-    final DataObjectStoreFactory factory = getDataStoreFactory(url);
+    final RecordStoreFactory factory = getDataStoreFactory(url);
     if (factory == null) {
       throw new IllegalArgumentException("Data Source Factory not found for "
         + url);
     } else {
-      return factory.getDataObjectStoreInterfaceClass(connectionProperties);
+      return factory.getRecordStoreInterfaceClass(connectionProperties);
     }
   }
 
-  public static DataObjectStoreFactory getDataStoreFactory(final String url) {
+  public static RecordStoreFactory getDataStoreFactory(final String url) {
     if (url == null) {
       throw new IllegalArgumentException("The url parameter must be specified");
     } else {
-      for (final Entry<Pattern, DataObjectStoreFactory> entry : dataStoreFactoryUrlPatterns.entrySet()) {
+      for (final Entry<Pattern, RecordStoreFactory> entry : dataStoreFactoryUrlPatterns.entrySet()) {
         final Pattern pattern = entry.getKey();
-        final DataObjectStoreFactory factory = entry.getValue();
+        final RecordStoreFactory factory = entry.getValue();
         if (pattern.matcher(url).matches()) {
           return factory;
         }
@@ -85,7 +87,7 @@ public class DataObjectStoreFactoryRegistry {
     }
   }
 
-  public static List<DataObjectStoreFactory> getFileDataStoreFactories() {
+  public static List<RecordStoreFactory> getFileDataStoreFactories() {
     return Collections.unmodifiableList(fileDataStoreFactories);
   }
 
@@ -93,8 +95,8 @@ public class DataObjectStoreFactoryRegistry {
     return fileExtensions;
   }
 
-  public static DataObjectStoreFactory register(
-    final DataObjectStoreFactory factory) {
+  public static RecordStoreFactory register(
+    final RecordStoreFactory factory) {
     final List<String> patterns = factory.getUrlPatterns();
     for (final String regex : patterns) {
       final Pattern pattern = Pattern.compile(regex);

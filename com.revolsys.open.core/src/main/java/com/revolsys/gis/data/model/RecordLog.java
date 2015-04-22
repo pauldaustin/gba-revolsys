@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.ThreadSharedAttributes;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataTypes;
@@ -34,7 +35,7 @@ public class RecordLog {
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.error(message + "\tnull");
     } else if (dataObjectLog == null) {
-      final RecordDefinition metaData = object.getMetaData();
+      final RecordDefinition metaData = object.getRecordDefinition();
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.error(message + "\t" + metaData.getPath() + object.getIdValue());
     } else {
@@ -54,7 +55,7 @@ public class RecordLog {
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.info(message + "\tnull");
     } else if (dataObjectLog == null) {
-      final RecordDefinition metaData = object.getMetaData();
+      final RecordDefinition metaData = object.getRecordDefinition();
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.info(message + "\t" + metaData.getPath() + object.getIdValue());
     } else {
@@ -69,7 +70,7 @@ public class RecordLog {
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.warn(message + "\tnull");
     } else if (dataObjectLog == null) {
-      final RecordDefinition metaData = object.getMetaData();
+      final RecordDefinition metaData = object.getRecordDefinition();
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.warn(message + "\t" + metaData.getPath() + object.getIdValue());
     } else {
@@ -93,7 +94,7 @@ public class RecordLog {
   }
 
   private RecordDefinition getLogMetaData(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final RecordDefinition logMetaData = getLogMetaData(metaData);
     return logMetaData;
   }
@@ -114,9 +115,9 @@ public class RecordLog {
       logMetaData = new RecordDefinitionImpl(logTypeName);
       logMetaData.addAttribute("LOGMESSAGE", DataTypes.STRING, 255, true);
       logMetaData.addAttribute("LOGLEVEL", DataTypes.STRING, 10, true);
-      for (final FieldDefinition attribute : metaData.getAttributes()) {
+      for (final FieldDefinition attribute : metaData.getFields()) {
         final FieldDefinition logAttribute = new FieldDefinition(attribute);
-        logMetaData.addAttribute(logAttribute);
+        logMetaData.addField(logAttribute);
 
       }
       logMetaDataMap.put(metaData, logMetaData);

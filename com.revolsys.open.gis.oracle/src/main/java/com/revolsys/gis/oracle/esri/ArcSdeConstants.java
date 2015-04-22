@@ -7,10 +7,10 @@ import java.util.Set;
 
 import oracle.sql.SQLName;
 
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
 import com.revolsys.gis.oracle.io.OracleDataObjectStore;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -128,7 +128,7 @@ public final class ArcSdeConstants {
     return false;
   }
 
-  public static boolean isSdeAvailable(final DataObjectStoreSchema schema) {
+  public static boolean isSdeAvailable(final RecordStoreSchema schema) {
     final RecordStore dataStore = schema.getDataStore();
 
     return isSdeAvailable(dataStore);

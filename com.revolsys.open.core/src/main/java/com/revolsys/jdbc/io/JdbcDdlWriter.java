@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.io.PathUtil;
 import com.revolsys.util.CollectionUtil;
@@ -86,7 +86,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     final String attributeName, final RecordDefinition referencedMetaData) {
     final String typePath = metaData.getPath();
     final String referencedTypeName = referencedMetaData.getPath();
-    final String referencedAttributeName = referencedMetaData.getIdAttributeName();
+    final String referencedAttributeName = referencedMetaData.getIdFieldName();
     final String constraintName = getTableAlias(metaData) + "_"
       + getTableAlias(referencedMetaData) + "_FK";
     writeAddForeignKeyConstraint(typePath, constraintName, attributeName,
@@ -98,7 +98,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     final RecordDefinition referencedMetaData) {
     final String typePath = metaData.getPath();
     final String referencedTypeName = referencedMetaData.getPath();
-    final String referencedAttributeName = referencedMetaData.getIdAttributeName();
+    final String referencedAttributeName = referencedMetaData.getIdFieldName();
     final String constraintName = getTableAlias(metaData) + "_"
       + referenceTablePrefix + "_" + getTableAlias(referencedMetaData) + "_FK";
     writeAddForeignKeyConstraint(typePath, constraintName, attributeName,
@@ -122,7 +122,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
   }
 
   public void writeAddPrimaryKeyConstraint(final RecordDefinition metaData) {
-    final String idAttributeName = metaData.getIdAttributeName();
+    final String idAttributeName = metaData.getIdFieldName();
     if (idAttributeName != null) {
       final String typePath = metaData.getPath();
       final String constraintName = getTableAlias(metaData) + "_PK";
@@ -240,7 +240,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
   }
 
   public void writeInsert(final Record row) {
-    final RecordDefinition metaData = row.getMetaData();
+    final RecordDefinition metaData = row.getRecordDefinition();
     final String typePath = metaData.getPath();
     out.print("INSERT INTO ");
     writeTableName(typePath);

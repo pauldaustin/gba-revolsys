@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.util.CompareUtil;
 
@@ -29,8 +29,8 @@ public class EqualAttributeCountComparator implements Comparator<Record> {
   public EqualAttributeCountComparator(final Record object,
     final boolean invert) {
     this.object = object;
-    final RecordDefinition metaData = object.getMetaData();
-    attributeNames = metaData.getAttributeNames();
+    final RecordDefinition metaData = object.getRecordDefinition();
+    attributeNames = metaData.getFieldNames();
     this.invert = invert;
   }
 

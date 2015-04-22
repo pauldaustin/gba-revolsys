@@ -13,14 +13,14 @@ import org.springframework.util.StringUtils;
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.data.query.SqlCondition;
@@ -49,12 +49,12 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
     this(new ArrayDataObjectFactory());
   }
 
-  public OracleDataObjectStore(final DataObjectFactory dataObjectFactory) {
+  public OracleDataObjectStore(final RecordFactory dataObjectFactory) {
     super(dataObjectFactory);
     initSettings();
   }
 
-  public OracleDataObjectStore(final DataObjectFactory dataObjectFactory,
+  public OracleDataObjectStore(final RecordFactory dataObjectFactory,
     final DataSource dataSource) {
     this(dataObjectFactory);
     setDataSource(dataSource);
@@ -79,16 +79,16 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
     final BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox != null) {
       final String typePath = query.getTypeName();
-      final RecordDefinition metaData = getMetaData(typePath);
+      final RecordDefinition metaData = getRecordDefinition(typePath);
       if (metaData == null) {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
-      } else if (metaData.getGeometryAttribute() == null) {
+      } else if (metaData.getGeometryField() == null) {
         return query;
       } else {
         query = query.clone();
-        final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+        final FieldDefinition geometryAttribute = metaData.getGeometryField();
         final String geometryColumnName = geometryAttribute.getName();
-        final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+        final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
 
         final BoundingBox projectedBoundingBox = boundingBox.convert(geometryFactory);
 

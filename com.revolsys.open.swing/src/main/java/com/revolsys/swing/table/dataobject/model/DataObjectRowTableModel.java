@@ -14,11 +14,11 @@ import javax.swing.event.ChangeEvent;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.table.SortableTableModel;
 import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
@@ -48,7 +48,7 @@ public abstract class DataObjectRowTableModel extends
     super(metaData);
     setAttributeNames(attributeNames);
     setAttributeTitles(Collections.<String> emptyList());
-    final String idAttributeName = metaData.getIdAttributeName();
+    final String idAttributeName = metaData.getIdFieldName();
     setSortOrder(idAttributeName);
   }
 
@@ -99,7 +99,7 @@ public abstract class DataObjectRowTableModel extends
     } else {
       final String name = getFieldName(columnIndex);
       final RecordDefinition metaData = getMetaData();
-      final DataType type = metaData.getAttributeType(name);
+      final DataType type = metaData.getFieldType(name);
       if (type == null) {
         return Object.class;
       } else {
@@ -184,7 +184,7 @@ public abstract class DataObjectRowTableModel extends
       final Record record = getRecord(rowIndex);
       if (record == null) {
         return LOADING_VALUE;
-      } else if (record.getState() == DataObjectState.Initalizing) {
+      } else if (record.getState() == RecordState.Initalizing) {
         return LOADING_VALUE;
       } else {
         final String name = getFieldName(columnIndex);
@@ -198,7 +198,7 @@ public abstract class DataObjectRowTableModel extends
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (isEditable()) {
       final Record record = getRecord(rowIndex);
-      if (record != null && record.getState() != DataObjectState.Initalizing) {
+      if (record != null && record.getState() != RecordState.Initalizing) {
         final String attributeName = getFieldName(rowIndex, columnIndex);
         if (attributeName != null) {
           if (!isReadOnly(attributeName)) {
@@ -230,7 +230,7 @@ public abstract class DataObjectRowTableModel extends
   public void setAttributeNames(final Collection<String> attributeNames) {
     if (attributeNames == null || attributeNames.isEmpty()) {
       final RecordDefinition metaData = getMetaData();
-      this.attributeNames = new ArrayList<String>(metaData.getAttributeNames());
+      this.attributeNames = new ArrayList<String>(metaData.getFieldNames());
     } else {
       this.attributeNames = new ArrayList<String>(attributeNames);
     }
@@ -314,7 +314,7 @@ public abstract class DataObjectRowTableModel extends
       rowHeight = 1;
       displayValue = null;
     } else {
-      if (record.getState() == DataObjectState.Initalizing) {
+      if (record.getState() == RecordState.Initalizing) {
         displayValue = LOADING_VALUE;
       } else {
         displayValue = toDisplayValueInternal(rowIndex, attributeIndex,

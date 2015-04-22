@@ -5,9 +5,9 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryWriterFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.Writer;
 
 public class EsriGeodatabaseXmlDataObjectWriterFactory extends

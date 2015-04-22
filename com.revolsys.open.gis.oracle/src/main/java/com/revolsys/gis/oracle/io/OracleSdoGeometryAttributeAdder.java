@@ -18,11 +18,11 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.AttributeProperties;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
@@ -126,7 +126,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
     final String description) {
     final String typePath = metaData.getPath();
     final String columnName = name.toUpperCase();
-    final DataObjectStoreSchema schema = metaData.getSchema();
+    final RecordStoreSchema schema = metaData.getSchema();
 
     GeometryFactory geometryFactory = getColumnProperty(schema, typePath,
       columnName, GEOMETRY_FACTORY);
@@ -148,14 +148,14 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
 
     final FieldDefinition attribute = new OracleSdoGeometryJdbcAttribute(name,
       dataType, sqlType, required, description, null, geometryFactory, numAxis);
-    metaData.addAttribute(attribute);
+    metaData.addField(attribute);
     attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction(
       "SDO_RELATE(", ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));
     attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction(
       "SDO_GEOM.SDO_BUFFER(", "," + 1 / geometryFactory.getScaleXY() + ")"));
     attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction(
       "SDO_EQUAL(", ") = 'TRUE'"));
-    attribute.setProperty(AttributeProperties.GEOMETRY_FACTORY, geometryFactory);
+    attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     return attribute;
 
   }
@@ -177,7 +177,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
   }
 
   @Override
-  public void initialize(final DataObjectStoreSchema schema) {
+  public void initialize(final RecordStoreSchema schema) {
     try {
       final Connection connection = JdbcUtils.getConnection(this.dataSource);
       try {

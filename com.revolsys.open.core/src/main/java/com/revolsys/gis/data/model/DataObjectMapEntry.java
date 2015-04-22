@@ -3,6 +3,7 @@ package com.revolsys.gis.data.model;
 import java.util.Map.Entry;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectMapEntry implements Entry<String, Object> {
   private final Record object;
@@ -16,7 +17,7 @@ public class DataObjectMapEntry implements Entry<String, Object> {
 
   @Override
   public String getKey() {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     return metaData.getAttributeName(index);
   }
 

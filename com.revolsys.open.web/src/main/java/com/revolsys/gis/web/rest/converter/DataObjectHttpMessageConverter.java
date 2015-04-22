@@ -12,12 +12,12 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectReader;
 import com.revolsys.gis.data.io.DataObjectReaderFactory;
 import com.revolsys.gis.data.io.DataObjectWriterFactory;
 import com.revolsys.gis.data.io.ListDataObjectReader;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.IoConstants;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.ui.web.rest.converter.AbstractHttpMessageConverter;
@@ -72,7 +72,7 @@ public class DataObjectHttpMessageConverter extends
     HttpMessageNotWritableException {
     if (!HttpServletUtils.getResponse().isCommitted()) {
       if (dataObject != null) {
-        final RecordDefinition metaData = dataObject.getMetaData();
+        final RecordDefinition metaData = dataObject.getRecordDefinition();
         final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         requestAttributes.setAttribute(IoConstants.SINGLE_OBJECT_PROPERTY,
           true, RequestAttributes.SCOPE_REQUEST);

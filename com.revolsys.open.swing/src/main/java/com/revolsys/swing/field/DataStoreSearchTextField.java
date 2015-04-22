@@ -37,8 +37,8 @@ import org.springframework.util.StringUtils;
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.query.Equal;
 import com.revolsys.gis.data.query.Q;
 import com.revolsys.gis.data.query.Query;
@@ -76,7 +76,7 @@ public class DataStoreSearchTextField extends JXSearchField implements
 
   public DataStoreSearchTextField(final RecordDefinition metaData,
     final String displayAttributeName) {
-    this(metaData.getDataStore(), displayAttributeName, new Query(metaData,
+    this(metaData.getRecordStore(), displayAttributeName, new Query(metaData,
       new Equal(F.upper(displayAttributeName), new Value(null))), new Query(
       metaData, Q.iLike(displayAttributeName, "")));
   }

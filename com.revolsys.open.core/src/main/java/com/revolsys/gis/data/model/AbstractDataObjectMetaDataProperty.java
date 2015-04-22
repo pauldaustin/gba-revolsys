@@ -1,5 +1,7 @@
 package com.revolsys.gis.data.model;
 
+import com.revolsys.data.record.schema.RecordDefinition;
+
 public abstract class AbstractDataObjectMetaDataProperty implements
   DataObjectMetaDataProperty {
   private RecordDefinition metaData;

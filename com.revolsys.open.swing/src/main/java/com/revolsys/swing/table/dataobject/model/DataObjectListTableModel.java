@@ -13,8 +13,8 @@ import javax.swing.JTable;
 import javax.swing.SortOrder;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
@@ -122,7 +122,7 @@ public class DataObjectListTableModel extends DataObjectRowTableModel implements
         return false;
       } else {
         final RecordDefinition metaData = getMetaData();
-        final DataType dataType = metaData.getAttributeType(attributeName);
+        final DataType dataType = metaData.getFieldType(attributeName);
         if (dataType == null) {
           return false;
         } else if (Geometry.class.isAssignableFrom(dataType.getJavaClass())) {

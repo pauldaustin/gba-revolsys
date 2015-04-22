@@ -7,10 +7,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreFactory;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.gis.data.io.RecordStoreFactory;
 
-public class JdbcDataObjectStoreFactory implements DataObjectStoreFactory {
+public class JdbcDataObjectStoreFactory implements RecordStoreFactory {
 
   private static final List<String> URL_PATTERNS = Arrays.asList("jdbc:.*");
 
@@ -26,14 +26,14 @@ public class JdbcDataObjectStoreFactory implements DataObjectStoreFactory {
   }
 
   @Override
-  public JdbcDataObjectStore createDataObjectStore(
+  public JdbcDataObjectStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
     final JdbcDatabaseFactory databaseFactory = JdbcFactoryRegistry.databaseFactory(connectionProperties);
-    return databaseFactory.createDataObjectStore(connectionProperties);
+    return databaseFactory.createRecordStore(connectionProperties);
   }
 
   @Override
-  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
+  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
     return JdbcDataObjectStore.class;
   }

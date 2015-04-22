@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTableProperty;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
@@ -88,13 +88,13 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
   @Override
   public void setMetaData(final RecordDefinition metaData) {
     super.setMetaData(metaData);
-    dataStore = (JdbcDataObjectStore)metaData.getDataStore();
+    dataStore = (JdbcDataObjectStore)metaData.getRecordStore();
     dataSource = dataStore.getDataSource();
     if (metaData != null) {
       this.tableName = JdbcUtils.getQualifiedTableName(metaData.getPath());
 
       final List<String> valueAttributeNames = getValueAttributeNames();
-      String idColumn = metaData.getIdAttributeName();
+      String idColumn = metaData.getIdFieldName();
       if (!StringUtils.hasText(idColumn)) {
         idColumn = metaData.getAttributeName(0);
       }

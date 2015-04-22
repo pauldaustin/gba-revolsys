@@ -10,20 +10,20 @@ import java.util.Map;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.io.RecordStoreFactory;
 import com.revolsys.io.DirectoryDataObjectStore;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.OutputStreamResource;
 import com.revolsys.spring.SpringUtil;
 
 public class ShapefileIoFactory extends AbstractDataObjectAndGeometryIoFactory
-  implements DataObjectStoreFactory {
+  implements RecordStoreFactory {
   public ShapefileIoFactory() {
     super(ShapefileConstants.DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(ShapefileConstants.MIME_TYPE,
@@ -33,7 +33,7 @@ public class ShapefileIoFactory extends AbstractDataObjectAndGeometryIoFactory
 
   @Override
   public DataObjectReader createDataObjectReader(final Resource resource,
-    final DataObjectFactory dataObjectFactory) {
+    final RecordFactory dataObjectFactory) {
     try {
       final ShapefileIterator iterator = new ShapefileIterator(resource,
         dataObjectFactory);
@@ -44,7 +44,7 @@ public class ShapefileIoFactory extends AbstractDataObjectAndGeometryIoFactory
   }
 
   @Override
-  public RecordStore createDataObjectStore(
+  public RecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
     final String url = (String)connectionProperties.get("url");
     final Resource resource = SpringUtil.getResource(url);
@@ -68,7 +68,7 @@ public class ShapefileIoFactory extends AbstractDataObjectAndGeometryIoFactory
   }
 
   @Override
-  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
+  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
     return RecordStore.class;
   }

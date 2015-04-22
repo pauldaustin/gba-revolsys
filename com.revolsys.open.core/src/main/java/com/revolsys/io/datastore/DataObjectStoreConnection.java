@@ -8,9 +8,9 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreFactoryRegistry;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
+import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.util.CollectionUtil;
@@ -64,7 +64,7 @@ public class DataObjectStoreConnection implements MapSerializer {
             LoggerFactory.getLogger(getClass()).error(
               "Data store must include a 'connection' map property: " + name);
           } else {
-            dataStore = DataObjectStoreFactoryRegistry.createDataObjectStore(connectionProperties);
+            dataStore = RecordStoreFactoryRegistry.createDataObjectStore(connectionProperties);
             dataStore.initialize();
           }
         } catch (final Throwable e) {
@@ -80,7 +80,7 @@ public class DataObjectStoreConnection implements MapSerializer {
     return name;
   }
 
-  public List<DataObjectStoreSchema> getSchemas() {
+  public List<RecordStoreSchema> getSchemas() {
     final RecordStore dataStore = getDataStore();
     if (dataStore == null) {
       return Collections.emptyList();

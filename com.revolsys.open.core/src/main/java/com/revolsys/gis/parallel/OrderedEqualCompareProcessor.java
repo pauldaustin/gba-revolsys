@@ -8,8 +8,8 @@ import java.util.Set;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.RecordLog;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
@@ -112,10 +112,10 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
 
   protected Set<String> getNotEqualAttributeNames(final Record object1,
     final Record object2) {
-    final RecordDefinition metaData = object1.getMetaData();
+    final RecordDefinition metaData = object1.getRecordDefinition();
     final Set<String> notEqualAttributeNames = new LinkedHashSet<String>();
     final String geometryAttributeName = metaData.getGeometryAttributeName();
-    for (final String attributeName : metaData.getAttributeNames()) {
+    for (final String attributeName : metaData.getFieldNames()) {
       if (!equalExclude.contains(attributeName)
         && !attributeName.equals(geometryAttributeName)) {
         final Object value1 = object1.getValue(attributeName);
@@ -278,7 +278,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
                 final boolean geometryEquals = geometryEquals(sourceObject,
                   otherObject);
                 if (!geometryEquals) {
-                  final String geometryAttributeName = sourceObject.getMetaData()
+                  final String geometryAttributeName = sourceObject.getRecordDefinition()
                     .getGeometryAttributeName();
                   notEqualAttributeNames.add(geometryAttributeName);
                 }

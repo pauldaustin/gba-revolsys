@@ -1,14 +1,16 @@
 package com.revolsys.gis.data.io;
 
+import com.revolsys.data.record.schema.AbstractRecordStore;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 
-public class DataObjectStoreSchemaProxy extends DataObjectStoreSchema {
-  private final DataObjectStoreSchema schema;
+public class DataObjectStoreSchemaProxy extends RecordStoreSchema {
+  private final RecordStoreSchema schema;
 
   public DataObjectStoreSchemaProxy(
-    final AbstractDataObjectStore dataObjectStore, final String name,
-    final DataObjectStoreSchema schema) {
+    final AbstractRecordStore dataObjectStore, final String name,
+    final RecordStoreSchema schema) {
     super(dataObjectStore, name);
     this.schema = schema;
   }
@@ -28,10 +30,10 @@ public class DataObjectStoreSchemaProxy extends DataObjectStoreSchema {
   }
 
   @Override
-  public synchronized RecordDefinition getMetaData(final String typePath) {
+  public synchronized RecordDefinition getRecordDefinition(final String typePath) {
     RecordDefinition metaData = findMetaData(typePath);
     if (metaData == null) {
-      metaData = schema.getMetaData(typePath);
+      metaData = schema.getRecordDefinition(typePath);
       if (metaData != null) {
         metaData = new RecordDefinitionImpl(getDataStore(), this,
           metaData);

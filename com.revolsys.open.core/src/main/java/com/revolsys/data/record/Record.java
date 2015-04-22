@@ -4,9 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectState;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.vividsolutions.jts.geom.Geometry;
 
 public interface Record extends Map<String, Object>, Comparable<Record> {
@@ -28,7 +26,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
    * 
    * @return The factory.
    */
-  DataObjectFactory getFactory();
+  RecordFactory getFactory();
 
   Float getFloat(final CharSequence name);
 
@@ -59,11 +57,11 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
    * 
    * @return The meta data.
    */
-  RecordDefinition getMetaData();
+  RecordDefinition getRecordDefinition();
 
   Short getShort(final CharSequence name);
 
-  DataObjectState getState();
+  RecordState getState();
 
   String getString(final CharSequence name);
 
@@ -126,7 +124,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
    */
   void setIdValue(Object id);
 
-  void setState(final DataObjectState state);
+  void setState(final RecordState state);
 
   /**
    * Set the value of the attribute with the specified name.

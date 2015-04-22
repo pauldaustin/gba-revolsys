@@ -15,7 +15,7 @@ import org.postgresql.ds.PGPoolingDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jdbc.io.JdbcDatabaseFactory;
 import com.revolsys.util.JavaBeanUtil;
@@ -50,12 +50,6 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcDataObjectStore createDataObjectStore(
-    final Map<String, ? extends Object> connectionProperties) {
-    return new PostgreSQLDataObjectStore(this, connectionProperties);
-  }
-
-  @Override
   public DataSource createDataSource(final Map<String, ? extends Object> config) {
     final Map<String, Object> newConfig = new HashMap<String, Object>(config);
     final String url = (String)newConfig.remove("url");
@@ -78,7 +72,7 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
           JavaBeanUtil.setProperty(dataSource, name, value);
         } catch (final Throwable t) {
           LOG.debug("Unable to set data source property " + name + " = "
-            + value + " for " + url, t);
+              + value + " for " + url, t);
         }
       }
 
@@ -98,9 +92,9 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
+  public JdbcDataObjectStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
-    return JdbcDataObjectStore.class;
+    return new PostgreSQLDataObjectStore(this, connectionProperties);
   }
 
   @Override
@@ -116,6 +110,12 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   @Override
   public List<String> getProductNames() {
     return Collections.singletonList("PostgreSQL");
+  }
+
+  @Override
+  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
+    final Map<String, ? extends Object> connectionProperties) {
+    return JdbcDataObjectStore.class;
   }
 
   @Override

@@ -15,12 +15,12 @@ import org.springframework.util.StringUtils;
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Query;
@@ -47,12 +47,12 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
     this(new ArrayDataObjectFactory());
   }
 
-  public PostgreSQLDataObjectStore(final DataObjectFactory dataObjectFactory) {
+  public PostgreSQLDataObjectStore(final RecordFactory dataObjectFactory) {
     super(dataObjectFactory);
     initSettings();
   }
 
-  public PostgreSQLDataObjectStore(final DataObjectFactory dataObjectFactory,
+  public PostgreSQLDataObjectStore(final RecordFactory dataObjectFactory,
     final DataSource dataSource) {
     this(dataObjectFactory);
     setDataSource(dataSource);
@@ -102,7 +102,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
     BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox != null) {
       final String typePath = query.getTypeName();
-      final RecordDefinition metaData = getMetaData(typePath);
+      final RecordDefinition metaData = getRecordDefinition(typePath);
       if (metaData == null) {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
       } else {
@@ -137,7 +137,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
       }
     } else {
       final String tableName = getDatabaseTableName(typePath);
-      final String idAttributeName = metaData.getIdAttributeName()
+      final String idAttributeName = metaData.getIdFieldName()
           .toLowerCase();
       if (this.useSchemaSequencePrefix) {
         sequenceName = schema + "." + tableName + "_" + idAttributeName

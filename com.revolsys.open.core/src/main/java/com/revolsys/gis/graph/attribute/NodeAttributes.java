@@ -12,7 +12,7 @@ import java.util.TreeSet;
 
 import com.revolsys.comparator.NumericComparator;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -57,7 +57,7 @@ public class NodeAttributes {
         final Object object = edge.getObject();
         if (object instanceof Record) {
           final Record dataObject = (Record)object;
-          final RecordDefinition metaData = dataObject.getMetaData();
+          final RecordDefinition metaData = dataObject.getRecordDefinition();
           metaDatas.add(metaData);
         }
       }

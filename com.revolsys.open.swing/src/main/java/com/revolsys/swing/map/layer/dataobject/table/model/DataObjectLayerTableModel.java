@@ -23,10 +23,10 @@ import javax.swing.SwingWorker;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.collection.LruMap;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Cast;
 import com.revolsys.gis.data.query.Column;
@@ -154,7 +154,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     setEditable(true);
     setReadOnlyFieldNames(layer.getUserReadOnlyFieldNames());
     this.loadingRecord = new LayerDataObject(layer);
-    this.loadingRecord.setState(DataObjectState.Initalizing);
+    this.loadingRecord.setState(RecordState.Initalizing);
   }
 
   public String getAttributeFilterMode() {
@@ -645,7 +645,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   public String toDisplayValueInternal(final int rowIndex,
     final int attributeIndex, final Object objectValue) {
     if (objectValue == null) {
-      if (getMetaData().getIdAttributeIndex() == attributeIndex) {
+      if (getMetaData().getIdFieldIndex() == attributeIndex) {
         return "NEW";
       }
     }

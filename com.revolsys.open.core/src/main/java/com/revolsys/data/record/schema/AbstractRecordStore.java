@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.io;
+package com.revolsys.data.record.schema;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,14 +25,14 @@ import com.revolsys.collection.ListResultPager;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.collection.ThreadSharedAttributes;
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.gis.data.io.DataObjectStoreExtension;
+import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
+import com.revolsys.gis.data.io.DataObjectStoreSchemaMapProxy;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.codes.CodeTableProperty;
@@ -53,11 +53,10 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class AbstractDataObjectStore extends
-  AbstractObjectWithProperties implements RecordStore {
+public abstract class AbstractRecordStore extends AbstractObjectWithProperties
+implements RecordStore {
 
-  public static RecordStore close(
-    final Collection<RecordStore> dataStores) {
+  public static RecordStore close(final Collection<RecordStore> dataStores) {
     final List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
     for (final RecordStore dataStore : dataStores) {
       if (dataStore != null) {
@@ -82,13 +81,13 @@ public abstract class AbstractDataObjectStore extends
 
   private Map<String, List<String>> codeTableColumNames = new HashMap<String, List<String>>();
 
-  private DataObjectFactory dataObjectFactory;
+  private RecordFactory dataObjectFactory;
 
   private final Map<String, CodeTable> columnToTableMap = new HashMap<String, CodeTable>();
 
   private String label;
 
-  private Map<String, DataObjectStoreSchema> schemaMap = new TreeMap<String, DataObjectStoreSchema>();
+  private Map<String, RecordStoreSchema> schemaMap = new TreeMap<String, RecordStoreSchema>();
 
   private List<DataObjectMetaDataProperty> commonMetaDataProperties = new ArrayList<DataObjectMetaDataProperty>();
 
@@ -102,11 +101,11 @@ public abstract class AbstractDataObjectStore extends
 
   private final Set<DataObjectStoreExtension> dataStoreExtensions = new LinkedHashSet<DataObjectStoreExtension>();
 
-  public AbstractDataObjectStore() {
+  public AbstractRecordStore() {
     this(new ArrayDataObjectFactory());
   }
 
-  public AbstractDataObjectStore(final DataObjectFactory dataObjectFactory) {
+  public AbstractRecordStore(final RecordFactory dataObjectFactory) {
     this.dataObjectFactory = dataObjectFactory;
   }
 
@@ -119,7 +118,7 @@ public abstract class AbstractDataObjectStore extends
       addCodeTable(alias, codeTable);
     }
     final String codeTableName = codeTable.getName();
-    final List<String> columnNames = codeTableColumNames.get(codeTableName);
+    final List<String> columnNames = this.codeTableColumNames.get(codeTableName);
     if (columnNames != null) {
       for (final String columnName : columnNames) {
         addCodeTable(columnName, codeTable);
@@ -145,46 +144,47 @@ public abstract class AbstractDataObjectStore extends
       try {
         final Map<String, Object> connectionProperties = getConnectionProperties();
         extension.initialize(this, connectionProperties);
-        dataStoreExtensions.add(extension);
+        this.dataStoreExtensions.add(extension);
       } catch (final Throwable e) {
         ExceptionUtil.log(extension.getClass(), "Unable to initialize", e);
       }
     }
   }
 
-  protected void addMetaData(final RecordDefinition metaData) {
+  protected void addRecordDefinition(final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
     final String schemaName = PathUtil.getPath(typePath);
-    final DataObjectStoreSchema schema = getSchema(schemaName);
+    final RecordStoreSchema schema = getSchema(schemaName);
     schema.addMetaData(metaData);
   }
 
-  protected void addMetaDataProperties(final RecordDefinitionImpl metaData) {
+  protected void addRecordDefinitionProperties(
+    final RecordDefinitionImpl metaData) {
     final String typePath = metaData.getPath();
-    for (final DataObjectMetaDataProperty property : commonMetaDataProperties) {
+    for (final DataObjectMetaDataProperty property : this.commonMetaDataProperties) {
       final DataObjectMetaDataProperty clonedProperty = property.clone();
       clonedProperty.setMetaData(metaData);
     }
-    final Map<String, Object> properties = typeMetaDataProperties.get(typePath);
+    final Map<String, Object> properties = this.typeMetaDataProperties.get(typePath);
     metaData.setProperties(properties);
   }
 
-  protected void addSchema(final DataObjectStoreSchema schema) {
-    schemaMap.put(schema.getPath(), schema);
+  protected void addSchema(final RecordStoreSchema schema) {
+    this.schemaMap.put(schema.getPath(), schema);
   }
 
   @Override
   public void addStatistic(final String statisticName, final Record object) {
-    if (statistics != null) {
-      statistics.add(statisticName, object);
+    if (this.statistics != null) {
+      this.statistics.add(statisticName, object);
     }
   }
 
   @Override
   public void addStatistic(final String statisticName, final String typePath,
     final int count) {
-    if (statistics != null) {
-      statistics.add(statisticName, typePath, count);
+    if (this.statistics != null) {
+      this.statistics.add(statisticName, typePath, count);
     }
   }
 
@@ -193,38 +193,38 @@ public abstract class AbstractDataObjectStore extends
   public void close() {
     try {
       super.close();
-      if (statistics != null) {
-        statistics.disconnect();
+      if (this.statistics != null) {
+        this.statistics.disconnect();
       }
-      if (schemaMap != null) {
-        for (final DataObjectStoreSchema schema : schemaMap.values()) {
+      if (this.schemaMap != null) {
+        for (final RecordStoreSchema schema : this.schemaMap.values()) {
           schema.close();
         }
-        schemaMap.clear();
+        this.schemaMap.clear();
       }
     } finally {
-      codeTableColumNames.clear();
-      columnToTableMap.clear();
-      commonMetaDataProperties.clear();
-      connectionProperties.clear();
-      dataObjectFactory = null;
-      dataStoreExtensions.clear();
-      iteratorFactory = null;
-      label = "deleted";
-      schemaMap.clear();
-      statistics.clear();
-      typeMetaDataProperties.clear();
+      this.codeTableColumNames.clear();
+      this.columnToTableMap.clear();
+      this.commonMetaDataProperties.clear();
+      this.connectionProperties.clear();
+      this.dataObjectFactory = null;
+      this.dataStoreExtensions.clear();
+      this.iteratorFactory = null;
+      this.label = "deleted";
+      this.schemaMap.clear();
+      this.statistics.clear();
+      this.typeMetaDataProperties.clear();
     }
   }
 
   @Override
   public Record copy(final Record record) {
-    final RecordDefinition metaData = getMetaData(record.getMetaData());
-    final DataObjectFactory dataObjectFactory = this.dataObjectFactory;
+    final RecordDefinition metaData = getRecordDefinition(record.getRecordDefinition());
+    final RecordFactory dataObjectFactory = this.dataObjectFactory;
     if (metaData == null || dataObjectFactory == null) {
       return null;
     } else {
-      final Record copy = dataObjectFactory.createDataObject(metaData);
+      final Record copy = dataObjectFactory.createRecord(metaData);
       copy.setValues(record);
       copy.setIdValue(null);
       return copy;
@@ -233,19 +233,19 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public Record create(final RecordDefinition objectMetaData) {
-    final RecordDefinition metaData = getMetaData(objectMetaData);
-    final DataObjectFactory dataObjectFactory = this.dataObjectFactory;
+    final RecordDefinition metaData = getRecordDefinition(objectMetaData);
+    final RecordFactory dataObjectFactory = this.dataObjectFactory;
     if (metaData == null || dataObjectFactory == null) {
       return null;
     } else {
-      final Record object = dataObjectFactory.createDataObject(metaData);
+      final Record object = dataObjectFactory.createRecord(metaData);
       return object;
     }
   }
 
   @Override
   public Record create(final String typePath) {
-    final RecordDefinition metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -256,7 +256,7 @@ public abstract class AbstractDataObjectStore extends
   @Override
   public Record create(final String typePath,
     final Map<String, ? extends Object> values) {
-    final RecordDefinition metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     if (metaData == null) {
       throw new IllegalArgumentException("Cannot find table " + typePath
         + " for " + this);
@@ -264,7 +264,7 @@ public abstract class AbstractDataObjectStore extends
       final Record record = create(metaData);
       if (record != null) {
         record.setValues(values);
-        final String idAttributeName = metaData.getIdAttributeName();
+        final String idAttributeName = metaData.getIdFieldName();
         if (StringUtils.hasText(idAttributeName)) {
           if (values.get(idAttributeName) == null) {
             final Object id = createPrimaryIdValue(typePath);
@@ -285,7 +285,7 @@ public abstract class AbstractDataObjectStore extends
     if (query == null) {
       return null;
     } else {
-      final RecordDefinition metaData = query.getMetaData();
+      final RecordDefinition metaData = query.getRecordDefinition();
       if (metaData != null) {
         final DataStoreIteratorFactory metaDataIteratorFactory = metaData.getProperty("dataStoreIteratorFactory");
         if (metaDataIteratorFactory != null) {
@@ -327,7 +327,7 @@ public abstract class AbstractDataObjectStore extends
   public Record createWithId(final RecordDefinition metaData) {
     final Record record = create(metaData);
     if (record != null) {
-      final String idAttributeName = metaData.getIdAttributeName();
+      final String idAttributeName = metaData.getIdFieldName();
       if (StringUtils.hasText(idAttributeName)) {
         final String typePath = metaData.getPath();
         final Object id = createPrimaryIdValue(typePath);
@@ -335,11 +335,6 @@ public abstract class AbstractDataObjectStore extends
       }
     }
     return record;
-  }
-
-  @Override
-  public void delete(final Record object) {
-    throw new UnsupportedOperationException("Delete not supported");
   }
 
   @Override
@@ -358,6 +353,11 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
+  public void delete(final Record object) {
+    throw new UnsupportedOperationException("Delete not supported");
+  }
+
+  @Override
   public void deleteAll(final Collection<Record> objects) {
     for (final Record object : objects) {
       delete(object);
@@ -366,7 +366,7 @@ public abstract class AbstractDataObjectStore extends
 
   protected RecordDefinition findMetaData(final String typePath) {
     final String schemaName = PathUtil.getPath(typePath);
-    final DataObjectStoreSchema schema = getSchema(schemaName);
+    final RecordStoreSchema schema = getSchema(schemaName);
     if (schema == null) {
       return null;
     } else {
@@ -376,7 +376,7 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public CodeTable getCodeTable(final String typePath) {
-    final RecordDefinition metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -386,93 +386,99 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public CodeTable getCodeTableByColumn(final String columnName) {
-    final CodeTable codeTable = columnToTableMap.get(columnName);
+  public Map<String, CodeTable> getCodeTableByColumnMap() {
+    return new HashMap<String, CodeTable>(this.columnToTableMap);
+  }
+
+  @Override
+  public CodeTable getCodeTableByFieldName(final String columnName) {
+    final CodeTable codeTable = this.columnToTableMap.get(columnName);
     return codeTable;
 
   }
 
-  @Override
-  public Map<String, CodeTable> getCodeTableByColumnMap() {
-    return new HashMap<String, CodeTable>(columnToTableMap);
-  }
-
   public Map<String, List<String>> getCodeTableColumNames() {
-    return codeTableColumNames;
+    return this.codeTableColumNames;
   }
 
   protected Map<String, Object> getConnectionProperties() {
-    return connectionProperties;
-  }
-
-  @Override
-  public DataObjectFactory getDataObjectFactory() {
-    return this.dataObjectFactory;
+    return this.connectionProperties;
   }
 
   public Collection<DataObjectStoreExtension> getDataStoreExtensions() {
-    return dataStoreExtensions;
+    return this.dataStoreExtensions;
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometryFactory;
+    return this.geometryFactory;
   }
 
   public DataStoreIteratorFactory getIteratorFactory() {
-    return iteratorFactory;
+    return this.iteratorFactory;
   }
 
   @Override
   public String getLabel() {
-    return label;
+    return this.label;
   }
 
   @Override
-  public RecordDefinition getMetaData(final RecordDefinition objectMetaData) {
+  public RecordDefinition getRecordDefinition(
+    final RecordDefinition objectMetaData) {
     final String typePath = objectMetaData.getPath();
-    final RecordDefinition metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     return metaData;
   }
 
   @Override
-  public RecordDefinition getMetaData(final String typePath) {
+  public RecordDefinition getRecordDefinition(final String typePath) {
     final String schemaName = PathUtil.getPath(typePath);
-    final DataObjectStoreSchema schema = getSchema(schemaName);
+    final RecordStoreSchema schema = getSchema(schemaName);
     if (schema == null) {
       return null;
     } else {
-      return schema.getMetaData(typePath);
+      return schema.getRecordDefinition(typePath);
     }
   }
 
   @Override
-  public DataObjectStoreSchema getSchema(String schemaName) {
-    if (schemaName == null || schemaMap == null) {
+  public RecordFactory getRecordFactory() {
+    return this.dataObjectFactory;
+  }
+
+  @Override
+  public RecordStoreSchema getSchema(String schemaName) {
+    if (schemaName == null || this.schemaMap == null) {
       return null;
     } else {
-      synchronized (schemaMap) {
-        if (schemaMap.isEmpty()) {
-          loadSchemas(schemaMap);
+      synchronized (this.schemaMap) {
+        if (this.schemaMap.isEmpty()) {
+          loadSchemas(this.schemaMap);
         }
         if (!schemaName.startsWith("/")) {
           schemaName = "/" + schemaName;
         }
-        return schemaMap.get(schemaName.toUpperCase());
+        RecordStoreSchema schema = this.schemaMap.get(schemaName.toUpperCase());
+        if (schema == null && "/".equals(schemaName)) {
+          schema = new RecordStoreSchema(this, schemaName);
+          this.schemaMap.put(schemaName.toUpperCase(), schema);
+        }
+        return schema;
       }
     }
   }
 
-  public Map<String, DataObjectStoreSchema> getSchemaMap() {
-    return schemaMap;
+  public Map<String, RecordStoreSchema> getSchemaMap() {
+    return this.schemaMap;
   }
 
   @Override
-  public List<DataObjectStoreSchema> getSchemas() {
-    synchronized (schemaMap) {
-      if (schemaMap.isEmpty()) {
-        loadSchemas(schemaMap);
+  public List<RecordStoreSchema> getSchemas() {
+    synchronized (this.schemaMap) {
+      if (this.schemaMap.isEmpty()) {
+        loadSchemas(this.schemaMap);
       }
-      return new ArrayList<DataObjectStoreSchema>(schemaMap.values());
+      return new ArrayList<RecordStoreSchema>(this.schemaMap.values());
     }
   }
 
@@ -494,12 +500,12 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public StatisticsMap getStatistics() {
-    return statistics;
+    return this.statistics;
   }
 
   @Override
   public Statistics getStatistics(final String name) {
-    return statistics.getStatistics(name);
+    return this.statistics.getStatistics(name);
   }
 
   public String getString(final Object name) {
@@ -517,7 +523,7 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public List<String> getTypeNames(final String schemaName) {
-    final DataObjectStoreSchema schema = getSchema(schemaName);
+    final RecordStoreSchema schema = getSchema(schemaName);
     if (schema == null) {
       return Collections.emptyList();
     } else {
@@ -529,19 +535,19 @@ public abstract class AbstractDataObjectStore extends
   public List<RecordDefinition> getTypes(final String namespace) {
     final List<RecordDefinition> types = new ArrayList<RecordDefinition>();
     for (final String typePath : getTypeNames(namespace)) {
-      types.add(getMetaData(typePath));
+      types.add(getRecordDefinition(typePath));
     }
     return types;
   }
 
   @Override
   public String getUrl() {
-    return (String)connectionProperties.get("url");
+    return (String)this.connectionProperties.get("url");
   }
 
   @Override
   public String getUsername() {
-    return (String)connectionProperties.get("username");
+    return (String)this.connectionProperties.get("username");
   }
 
   @Override
@@ -562,7 +568,7 @@ public abstract class AbstractDataObjectStore extends
   @Override
   @PostConstruct
   public void initialize() {
-    statistics.connect();
+    this.statistics.connect();
   }
 
   @Override
@@ -584,7 +590,7 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public Record load(final String typePath, final Object... id) {
-    final RecordDefinition metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     if (metaData == null) {
       return null;
     } else {
@@ -609,18 +615,17 @@ public abstract class AbstractDataObjectStore extends
   }
 
   protected abstract void loadSchemaDataObjectMetaData(
-    DataObjectStoreSchema schema, Map<String, RecordDefinition> metaDataMap);
+    RecordStoreSchema schema, Map<String, RecordDefinition> metaDataMap);
 
-  protected abstract void loadSchemas(
-    Map<String, DataObjectStoreSchema> schemaMap);
+  protected abstract void loadSchemas(Map<String, RecordStoreSchema> schemaMap);
 
   @Override
   public Record lock(final String typePath, final Object id) {
-    final RecordDefinition metaData = getMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     if (metaData == null) {
       return null;
     } else {
-      final String idAttributeName = metaData.getIdAttributeName();
+      final String idAttributeName = metaData.getIdFieldName();
       if (idAttributeName == null) {
         throw new IllegalArgumentException(typePath
           + " does not have a primary key");
@@ -637,36 +642,6 @@ public abstract class AbstractDataObjectStore extends
     final Reader<Record> results = query(query);
     final List<Record> list = results.read();
     return new ListResultPager<Record>(list);
-  }
-
-  @Override
-  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
-    final String typePath, final Geometry geometry) {
-    final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
-    final Query query = new Query(typePath);
-    query.setBoundingBox(boundingBox);
-    query.setProperty("dataObjectFactory", dataObjectFactory);
-    final Reader<Record> reader = query(query);
-    final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(
-      geometry);
-    return new FilterReader<Record>(filter, reader);
-  }
-
-  @Override
-  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
-    final String typePath, final Geometry geometry, final double distance) {
-    final Geometry searchGeometry;
-    if (geometry == null || geometry.isEmpty() || distance <= 0) {
-      searchGeometry = geometry;
-    } else {
-      final Geometry bufferedGeometry = geometry.buffer(distance);
-      if (bufferedGeometry.isEmpty()) {
-        searchGeometry = geometry;
-      } else {
-        searchGeometry = bufferedGeometry;
-      }
-    }
-    return query(dataObjectFactory, typePath, searchGeometry);
   }
 
   @Override
@@ -692,8 +667,38 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
+  public Reader<Record> query(final RecordFactory dataObjectFactory,
+    final String typePath, final Geometry geometry) {
+    final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
+    final Query query = new Query(typePath);
+    query.setBoundingBox(boundingBox);
+    query.setProperty("dataObjectFactory", dataObjectFactory);
+    final Reader<Record> reader = query(query);
+    final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(
+      geometry);
+    return new FilterReader<Record>(filter, reader);
+  }
+
+  @Override
+  public Reader<Record> query(final RecordFactory dataObjectFactory,
+    final String typePath, final Geometry geometry, final double distance) {
+    final Geometry searchGeometry;
+    if (geometry == null || geometry.isEmpty() || distance <= 0) {
+      searchGeometry = geometry;
+    } else {
+      final Geometry bufferedGeometry = geometry.buffer(distance);
+      if (bufferedGeometry.isEmpty()) {
+        searchGeometry = geometry;
+      } else {
+        searchGeometry = bufferedGeometry;
+      }
+    }
+    return query(dataObjectFactory, typePath, searchGeometry);
+  }
+
+  @Override
   public Reader<Record> query(final String path) {
-    final DataObjectStoreSchema schema = getSchema(path);
+    final RecordStoreSchema schema = getSchema(path);
     if (schema == null) {
       final Query query = new Query(path);
       return query(query);
@@ -708,14 +713,14 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public Reader<Record> query(final String typePath, final Geometry geometry) {
-    final DataObjectFactory dataObjectFactory = getDataObjectFactory();
+    final RecordFactory dataObjectFactory = getRecordFactory();
     return query(dataObjectFactory, typePath, geometry);
   }
 
   @Override
-  public Reader<Record> query(final String typePath,
-    final Geometry geometry, final double distance) {
-    final DataObjectFactory dataObjectFactory = getDataObjectFactory();
+  public Reader<Record> query(final String typePath, final Geometry geometry,
+    final double distance) {
+    final RecordFactory dataObjectFactory = getRecordFactory();
     return query(dataObjectFactory, typePath, geometry, distance);
   }
 
@@ -736,14 +741,14 @@ public abstract class AbstractDataObjectStore extends
   }
 
   protected void refreshMetaData(final String schemaName) {
-    final DataObjectStoreSchema schema = getSchema(schemaName);
+    final RecordStoreSchema schema = getSchema(schemaName);
     if (schema != null) {
       schema.refreshMetaData();
     }
   }
 
   protected void refreshSchema() {
-    schemaMap.clear();
+    this.schemaMap.clear();
   }
 
   public void setCodeTableColumNames(
@@ -762,7 +767,7 @@ public abstract class AbstractDataObjectStore extends
   }
 
   @Override
-  public void setDataObjectFactory(final DataObjectFactory dataObjectFactory) {
+  public void setDataObjectFactory(final RecordFactory dataObjectFactory) {
     this.dataObjectFactory = dataObjectFactory;
   }
 
@@ -777,15 +782,15 @@ public abstract class AbstractDataObjectStore extends
   @Override
   public void setLabel(final String label) {
     this.label = label;
-    statistics.setPrefix(label);
+    this.statistics.setPrefix(label);
   }
 
   @Override
   public void setLogCounts(final boolean logCounts) {
-    statistics.setLogCounts(logCounts);
+    this.statistics.setLogCounts(logCounts);
   }
 
-  public void setSchemaMap(final Map<String, DataObjectStoreSchema> schemaMap) {
+  public void setSchemaMap(final Map<String, RecordStoreSchema> schemaMap) {
     this.schemaMap = new DataObjectStoreSchemaMapProxy(this, schemaMap);
   }
 
@@ -813,8 +818,8 @@ public abstract class AbstractDataObjectStore extends
 
   @Override
   public String toString() {
-    if (StringUtils.hasText(label)) {
-      return label;
+    if (StringUtils.hasText(this.label)) {
+      return this.label;
     } else {
       return super.toString();
     }

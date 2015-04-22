@@ -18,9 +18,9 @@ import oracle.jdbc.pool.OracleDataSource;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jdbc.io.JdbcDatabaseFactory;
 import com.revolsys.util.JavaBeanUtil;
@@ -78,12 +78,6 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcDataObjectStore createDataObjectStore(
-    final Map<String, ? extends Object> connectionProperties) {
-    return new OracleDataObjectStore(this, connectionProperties);
-  }
-
-  @Override
   public DataSource createDataSource(final Map<String, ? extends Object> config) {
     try {
       final Map<String, Object> newConfig = new HashMap<String, Object>(config);
@@ -125,14 +119,14 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
       return dataSource;
     } catch (final Throwable e) {
       throw new IllegalArgumentException("Unable to create data source for "
-        + config, e);
+          + config, e);
     }
   }
 
   @Override
-  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
+  public JdbcDataObjectStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
-    return JdbcDataObjectStore.class;
+    return new OracleDataObjectStore(this, connectionProperties);
   }
 
   @Override
@@ -148,6 +142,12 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   @Override
   public List<String> getProductNames() {
     return Collections.singletonList("Oracle");
+  }
+
+  @Override
+  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
+    final Map<String, ? extends Object> connectionProperties) {
+    return JdbcDataObjectStore.class;
   }
 
   @Override

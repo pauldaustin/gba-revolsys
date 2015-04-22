@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Factory;
 import com.revolsys.filter.Filter;
@@ -14,7 +15,6 @@ import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
 import com.revolsys.gis.algorithm.index.PointDataObjectMap;
 import com.revolsys.gis.algorithm.linematch.LineMatchGraph;
 import com.revolsys.gis.data.model.RecordLog;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryFilter;
 import com.revolsys.gis.io.Statistics;

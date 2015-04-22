@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.FileUtil;
@@ -45,7 +45,7 @@ public class DataObjectDirectoryReader extends
   }
 
   @Override
-  public RecordDefinition getMetaData(final String path) {
+  public RecordDefinition getRecordDefinition(final String path) {
     final RecordDefinition metaData = typePathMetaDataMap.get(path);
     return metaData;
   }

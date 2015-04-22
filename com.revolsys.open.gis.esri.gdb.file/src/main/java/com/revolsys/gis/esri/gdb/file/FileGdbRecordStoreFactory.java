@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreFactory;
-import com.revolsys.gis.data.io.DataObjectStoreFactoryRegistry;
+import com.revolsys.collection.map.Maps;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.gis.data.io.RecordStoreFactory;
+import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
-import com.revolsys.util.CollectionUtil;
 
-public class FileGdbRecordStoreFactory implements DataObjectStoreFactory {
+public class FileGdbRecordStoreFactory implements RecordStoreFactory {
 
   private static final List<String> FILE_NAME_EXTENSIONS = Arrays.asList("gdb");
 
@@ -25,62 +25,64 @@ public class FileGdbRecordStoreFactory implements DataObjectStoreFactory {
 
   private static final Map<String, CapiFileGdbRecordStore> DATA_STORES = new HashMap<String, CapiFileGdbRecordStore>();
 
-  public static CapiFileGdbRecordStore create(final File file) {
+  public static CapiFileGdbRecordStore create(File file) {
     if (file == null) {
       return null;
     } else {
       synchronized (COUNTS) {
         final String fileName = FileUtil.getCanonicalPath(file);
-        final AtomicInteger count = CollectionUtil.get(COUNTS, fileName,
+        file = new File(fileName);
+        final AtomicInteger count = Maps.get(COUNTS, fileName,
           new AtomicInteger());
         count.incrementAndGet();
-        CapiFileGdbRecordStore dataStore = DATA_STORES.get(fileName);
-        if (dataStore == null) {
-          dataStore = new CapiFileGdbRecordStore(file);
-          dataStore.setCreateMissingDataStore(false);
-          DATA_STORES.put(fileName, dataStore);
+        CapiFileGdbRecordStore recordStore = DATA_STORES.get(fileName);
+        if (recordStore == null || recordStore.isClosed()) {
+          recordStore = new CapiFileGdbRecordStore(file);
+          recordStore.setCreateMissingRecordStore(false);
+          DATA_STORES.put(fileName, recordStore);
         }
-        return dataStore;
+        return recordStore;
       }
     }
   }
 
-  static void release(final String fileName) {
-    if (fileName != null) {
+  static boolean release(String fileName) {
+    if (fileName == null) {
+      return false;
+    } else {
       synchronized (COUNTS) {
-        final AtomicInteger countHolder = CollectionUtil.get(COUNTS, fileName,
+        fileName = FileUtil.getCanonicalPath(fileName);
+        final AtomicInteger countHolder = Maps.get(COUNTS, fileName,
           new AtomicInteger());
         final int count = countHolder.decrementAndGet();
         if (count <= 0) {
           COUNTS.remove(fileName);
-          final CapiFileGdbRecordStore dataStore = DATA_STORES.remove(fileName);
-          if (dataStore != null) {
-            dataStore.doClose();
+          final CapiFileGdbRecordStore recordStore = DATA_STORES.remove(fileName);
+          if (recordStore == null) {
+            return false;
+          } else {
+            recordStore.doClose();
           }
           COUNTS.remove(fileName);
+          return true;
+        } else {
+          return true;
         }
       }
     }
   }
 
   @Override
-  public FileGdbRecordStore createDataObjectStore(
+  public FileGdbRecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
     final Map<String, Object> properties = new LinkedHashMap<String, Object>(
       connectionProperties);
     final String url = (String)properties.remove("url");
     final File file = FileUtil.getUrlFile(url);
 
-    final FileGdbRecordStore dataObjectStore = create(file);
-    DataObjectStoreFactoryRegistry.setConnectionProperties(dataObjectStore,
-      properties);
-    return dataObjectStore;
-  }
-
-  @Override
-  public Class<? extends RecordStore> getDataObjectStoreInterfaceClass(
-    final Map<String, ? extends Object> connectionProperties) {
-    return RecordStore.class;
+    final FileGdbRecordStore recordStore = create(file);
+    RecordStoreFactoryRegistry.setConnectionProperties(recordStore, properties);
+    return recordStore;
   }
 
   @Override
@@ -91,6 +93,12 @@ public class FileGdbRecordStoreFactory implements DataObjectStoreFactory {
   @Override
   public String getName() {
     return "ESRI File Geodatabase";
+  }
+
+  @Override
+  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
+    final Map<String, ? extends Object> connectionProperties) {
+    return RecordStore.class;
   }
 
   @Override

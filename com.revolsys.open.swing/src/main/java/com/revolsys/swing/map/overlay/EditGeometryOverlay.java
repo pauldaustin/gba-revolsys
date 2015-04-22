@@ -28,12 +28,12 @@ import javax.swing.undo.UndoableEdit;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
@@ -189,7 +189,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements
     final AddGeometryCompleteAction addCompleteAction) {
     if (layer != null) {
       final RecordDefinition metaData = layer.getMetaData();
-      final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+      final FieldDefinition geometryAttribute = metaData.getGeometryField();
       if (geometryAttribute != null) {
         this.addLayer = layer;
         this.addCompleteAction = addCompleteAction;

@@ -1,7 +1,7 @@
 package com.revolsys.gis.util;
 
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.DataObjectState;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
@@ -86,7 +86,7 @@ public class NoOp {
   }
 
   public static void modified(final Record object) {
-    if (object.getState() == DataObjectState.Modified) {
+    if (object.getState() == RecordState.Modified) {
       noOp();
     }
   }
@@ -101,7 +101,7 @@ public class NoOp {
   }
 
   public static void typePath(final Record object, final String typePath) {
-    final String typePath2 = object.getMetaData().getPath();
+    final String typePath2 = object.getRecordDefinition().getPath();
     equals(typePath2, typePath);
   }
 

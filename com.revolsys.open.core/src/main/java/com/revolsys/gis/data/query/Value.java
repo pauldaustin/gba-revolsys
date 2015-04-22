@@ -10,8 +10,8 @@ import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.codes.CodeTableProperty;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -50,20 +50,13 @@ public class Value extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
+  public void appendSql(final StringBuilder buffer) {
     buffer.append('?');
   }
 
   @Override
   public Value clone() {
     return (Value)super.clone();
-  }
-
-  public void convert(final FieldDefinition attribute) {
-    if (attribute instanceof JdbcAttribute) {
-      this.jdbcAttribute = (JdbcAttribute)attribute;
-    }
-    convert(attribute.getType());
   }
 
   public void convert(final DataType dataType) {
@@ -73,11 +66,18 @@ public class Value extends QueryValue {
       final Class<?> typeClass = dataType.getJavaClass();
       if (newValue == null || !typeClass.isAssignableFrom(newValue.getClass())) {
         throw new IllegalArgumentException(this.queryValue + " is not a valid "
-            + typeClass);
+          + typeClass);
       } else {
         this.queryValue = newValue;
       }
     }
+  }
+
+  public void convert(final FieldDefinition attribute) {
+    if (attribute instanceof JdbcAttribute) {
+      this.jdbcAttribute = (JdbcAttribute)attribute;
+    }
+    convert(attribute.getType());
   }
 
   @Override

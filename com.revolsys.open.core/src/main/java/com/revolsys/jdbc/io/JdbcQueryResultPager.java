@@ -14,8 +14,8 @@ import javax.sql.DataSource;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.jdbc.JdbcUtils;
 
@@ -39,7 +39,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
 
   private DataSource dataSource;
 
-  private DataObjectFactory dataObjectFactory;
+  private RecordFactory dataObjectFactory;
 
   private JdbcDataObjectStore dataStore;
 
@@ -70,15 +70,15 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
         throw new IllegalArgumentException("Unable to create connection", e);
       }
     }
-    this.dataObjectFactory = dataStore.getDataObjectFactory();
+    this.dataObjectFactory = dataStore.getRecordFactory();
     this.dataStore = dataStore;
 
     this.query = query;
 
     final String tableName = query.getTypeName();
-    metaData = query.getMetaData();
+    metaData = query.getRecordDefinition();
     if (metaData == null) {
-      metaData = dataStore.getMetaData(tableName);
+      metaData = dataStore.getRecordDefinition(tableName);
       query.setMetaData(metaData);
     }
 
@@ -111,7 +111,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     return connection;
   }
 
-  public DataObjectFactory getDataObjectFactory() {
+  public RecordFactory getDataObjectFactory() {
     return dataObjectFactory;
   }
 
@@ -343,7 +343,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
           int i = 0;
           do {
             final Record object = JdbcQueryIterator.getNextObject(
-              dataStore, metaData, metaData.getAttributes(), dataObjectFactory,
+              dataStore, metaData, metaData.getFields(), dataObjectFactory,
               resultSet);
             results.add(object);
             i++;

@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataType;
@@ -93,7 +94,7 @@ public final class DataObjectUtil {
   @SuppressWarnings("unchecked")
   public static <T> T getAttributeByPath(final Record object,
     final String path) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
 
     final String[] propertyPath = path.split("\\.");
     Object propertyValue = object;

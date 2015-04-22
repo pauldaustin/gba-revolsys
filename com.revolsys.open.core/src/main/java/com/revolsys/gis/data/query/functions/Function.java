@@ -39,8 +39,8 @@ public class Function extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
-    buffer.append(name);
+  public void appendSql(final StringBuilder buffer) {
+    buffer.append(this.name);
     buffer.append("(");
     boolean first = true;
     for (final QueryValue parameter : getParameters()) {
@@ -55,7 +55,7 @@ public class Function extends QueryValue {
   }
 
   public void clear() {
-    parameters.clear();
+    this.parameters.clear();
   }
 
   @Override
@@ -88,7 +88,7 @@ public class Function extends QueryValue {
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public QueryValue getParameter(final int index) {
@@ -101,7 +101,7 @@ public class Function extends QueryValue {
   }
 
   public List<QueryValue> getParameters() {
-    return Collections.unmodifiableList(parameters);
+    return Collections.unmodifiableList(this.parameters);
   }
 
   public String getParameterStringValue(final int index,
@@ -127,14 +127,14 @@ public class Function extends QueryValue {
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return Collections.<QueryValue> unmodifiableList(parameters);
+    return Collections.<QueryValue> unmodifiableList(this.parameters);
 
   }
 
   @Override
   public <V> V getValue(final Map<String, Object> record) {
     throw new UnsupportedOperationException("Function is not supported"
-      + getName());
+        + getName());
   }
 
   @Override

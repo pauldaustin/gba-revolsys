@@ -29,7 +29,7 @@ public class JdbcDataObjectStoreFactoryBean extends
     final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry.getFactory(applicationContext);
     if (dataSource == null) {
       final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(config);
-      dataObjectStore = databaseFactory.createDataObjectStore(config);
+      dataObjectStore = databaseFactory.createRecordStore(config);
     } else {
       final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(dataSource);
       dataObjectStore = databaseFactory.createDataObjectStore(dataSource);

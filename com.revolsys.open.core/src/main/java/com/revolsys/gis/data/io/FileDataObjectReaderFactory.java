@@ -7,8 +7,8 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
 public class FileDataObjectReaderFactory extends
@@ -30,7 +30,7 @@ public class FileDataObjectReaderFactory extends
   }
 
   public static DataObjectReader dataObjectReader(final Resource resource,
-    final DataObjectFactory factory) {
+    final RecordFactory factory) {
     final DataObjectReaderFactory readerFactory = getDataObjectReaderFactory(resource);
     if (readerFactory == null) {
       return null;
@@ -49,7 +49,7 @@ public class FileDataObjectReaderFactory extends
     return readerFactory;
   }
 
-  private DataObjectFactory factory = new ArrayDataObjectFactory();
+  private RecordFactory factory = new ArrayDataObjectFactory();
 
   private Resource resource;
 
@@ -66,7 +66,7 @@ public class FileDataObjectReaderFactory extends
     resource = null;
   }
 
-  public DataObjectFactory getFactory() {
+  public RecordFactory getFactory() {
     return factory;
   }
 
@@ -79,7 +79,7 @@ public class FileDataObjectReaderFactory extends
     return resource;
   }
 
-  public void setFactory(final DataObjectFactory factory) {
+  public void setFactory(final RecordFactory factory) {
     this.factory = factory;
   }
 

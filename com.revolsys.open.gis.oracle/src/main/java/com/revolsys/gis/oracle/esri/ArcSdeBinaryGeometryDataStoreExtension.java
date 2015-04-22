@@ -6,10 +6,10 @@ import java.util.Map.Entry;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.oracle.io.OracleSdoGeometryJdbcAttribute;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
@@ -39,7 +39,7 @@ DataObjectStoreExtension {
   }
 
   @Override
-  public void postProcess(final DataObjectStoreSchema schema) {
+  public void postProcess(final RecordStoreSchema schema) {
     final AbstractJdbcDataObjectStore dataStore = (AbstractJdbcDataObjectStore)schema.getDataStore();
     for (final RecordDefinition metaData : schema.getTypes()) {
       final String typePath = metaData.getPath();
@@ -67,7 +67,7 @@ DataObjectStoreExtension {
   }
 
   @Override
-  public void preProcess(final DataObjectStoreSchema schema) {
+  public void preProcess(final RecordStoreSchema schema) {
   }
 
 }

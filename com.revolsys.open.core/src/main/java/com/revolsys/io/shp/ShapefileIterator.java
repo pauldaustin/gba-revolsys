@@ -12,6 +12,8 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
@@ -19,8 +21,6 @@ import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.io.EndianInputStream;
 import com.revolsys.gis.io.EndianMappedByteBuffer;
@@ -38,7 +38,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
 
   private boolean closeFile = true;
 
-  private DataObjectFactory dataObjectFactory;
+  private RecordFactory dataObjectFactory;
 
   private GeometryFactory geometryFactory;
 
@@ -65,7 +65,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
   private RecordDefinition returnMetaData;
 
   public ShapefileIterator(final Resource resource,
-    final DataObjectFactory factory) throws IOException {
+    final RecordFactory factory) throws IOException {
     this.dataObjectFactory = factory;
     final String baseName = FileUtil.getBaseName(resource.getFilename());
     name = baseName;
@@ -171,7 +171,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
     xbaseIterator = null;
   }
 
-  public DataObjectFactory getDataObjectFactory() {
+  public RecordFactory getDataObjectFactory() {
     return dataObjectFactory;
   }
 
@@ -195,7 +195,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
           throw new NoSuchElementException();
         }
       } else {
-        record = dataObjectFactory.createDataObject(metaData);
+        record = dataObjectFactory.createRecord(metaData);
       }
 
       final Geometry geometry = readGeometry();
@@ -208,7 +208,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
     if (returnMetaData == null) {
       return record;
     } else {
-      final Record copy = dataObjectFactory.createDataObject(returnMetaData);
+      final Record copy = dataObjectFactory.createRecord(returnMetaData);
       copy.setValues(record);
       return copy;
     }

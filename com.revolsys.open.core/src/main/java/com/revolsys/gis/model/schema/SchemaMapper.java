@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.converter.ObjectConverter;
-import com.revolsys.gis.data.model.RecordDefinition;
 
 public class SchemaMapper {
   private final Map<FieldDefinition, FieldDefinition> attributeMapping = new LinkedHashMap<FieldDefinition, FieldDefinition>();
@@ -66,7 +66,7 @@ public class SchemaMapper {
   }
 
   public Record convert(final Record object) {
-    final RecordDefinition type = object.getMetaData();
+    final RecordDefinition type = object.getRecordDefinition();
     final RecordDefinition newType = getClassMapping(type);
     if (newType != null) {
       final Record newObject = newType.createDataObject();

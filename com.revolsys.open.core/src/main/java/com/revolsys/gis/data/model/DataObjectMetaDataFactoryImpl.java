@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractObjectWithProperties;
 
 public class DataObjectMetaDataFactoryImpl extends AbstractObjectWithProperties
@@ -38,7 +39,7 @@ public class DataObjectMetaDataFactoryImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public RecordDefinition getMetaData(final String path) {
+  public RecordDefinition getRecordDefinition(final String path) {
     return types.get(path);
   }
 

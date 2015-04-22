@@ -118,8 +118,8 @@ public class FgdbReader {
       record.setIdValue(objectId++);
       int fieldIndex = 0;
       int optionalFieldIndex = 0;
-      final int idIndex = metaData.getIdAttributeIndex();
-      for (final FieldDefinition field : metaData.getAttributes()) {
+      final int idIndex = metaData.getIdFieldIndex();
+      for (final FieldDefinition field : metaData.getFields()) {
         if (fieldIndex != idIndex) {
           if (field.isRequired() || !isNull(nullFields, optionalFieldIndex++)) {
             final FgdbField fgdbField = (FgdbField)field;
@@ -329,10 +329,10 @@ public class FgdbReader {
     for (int i = 0; i < numFields; i++) {
       final FgdbField field = readFieldDescription();
       if (field != null) {
-        metaData.addAttribute(field);
+        metaData.addField(field);
         if (field instanceof ObjectIdField) {
           final String fieldName = field.getName();
-          metaData.setIdAttributeName(fieldName);
+          metaData.setIdFieldName(fieldName);
         }
         if (!field.isRequired()) {
           optionalFieldCount++;

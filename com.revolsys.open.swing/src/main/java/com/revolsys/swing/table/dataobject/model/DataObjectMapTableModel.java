@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectMapTableModel extends AbstractSingleDataObjectTableModel {
 

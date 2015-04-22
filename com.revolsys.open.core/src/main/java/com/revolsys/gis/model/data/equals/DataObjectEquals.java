@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectEquals implements Equals<Record> {
   public static final String EXCLUDE_GEOMETRY = DataObjectEquals.class.getName()
@@ -41,8 +41,8 @@ public class DataObjectEquals implements Equals<Record> {
     } else if (values2 == null) {
       return false;
     } else {
-      for (final String attributeName : object1.getMetaData()
-        .getAttributeNames()) {
+      for (final String attributeName : object1.getRecordDefinition()
+        .getFieldNames()) {
         if (!MapEquals.equals(object1, values2, attributeName)) {
           return false;
         }
@@ -54,11 +54,11 @@ public class DataObjectEquals implements Equals<Record> {
   public static boolean equals(final Collection<String> excludedAttributes,
     final Record object1, final Record object2,
     final String attributeName) {
-    final RecordDefinition metaData = object1.getMetaData();
+    final RecordDefinition metaData = object1.getRecordDefinition();
     if (excludedAttributes.contains(attributeName)) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_ID)
-      && attributeName.equals(metaData.getIdAttributeName())) {
+      && attributeName.equals(metaData.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
       && attributeName.equals(metaData.getGeometryAttributeName())) {
@@ -82,7 +82,7 @@ public class DataObjectEquals implements Equals<Record> {
     if (excludedAttributes.contains(attributeName)) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_ID)
-      && attributeName.equals(metaData.getIdAttributeName())) {
+      && attributeName.equals(metaData.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
       && attributeName.equals(metaData.getGeometryAttributeName())) {
@@ -98,11 +98,11 @@ public class DataObjectEquals implements Equals<Record> {
   public boolean equals(final Record object1, final Record object2,
     final Collection<String> excludedAttributes) {
     if (object1 != null && object2 != null) {
-      final RecordDefinition metaData1 = object1.getMetaData();
-      final RecordDefinition metaData2 = object2.getMetaData();
+      final RecordDefinition metaData1 = object1.getRecordDefinition();
+      final RecordDefinition metaData2 = object2.getRecordDefinition();
       if (metaData1.getPath().equals(metaData2.getPath())) {
         if (metaData1.getAttributeCount() == metaData2.getAttributeCount()) {
-          final int idIndex = metaData1.getIdAttributeIndex();
+          final int idIndex = metaData1.getIdFieldIndex();
           final int geometryIndex = metaData1.getGeometryAttributeIndex();
           final int objectIdIndex = metaData1.getAttributeIndex("OBJECTID");
           for (int i = 0; i < metaData1.getAttributeCount(); i++) {

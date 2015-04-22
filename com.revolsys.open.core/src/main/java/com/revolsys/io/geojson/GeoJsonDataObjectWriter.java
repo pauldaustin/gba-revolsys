@@ -4,8 +4,8 @@ import java.io.BufferedWriter;
 import java.io.Writer;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.io.AbstractWriter;
@@ -307,7 +307,7 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
     type(FEATURE);
     final Geometry mainGeometry = object.getGeometryValue();
     writeSrid(mainGeometry);
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final int geometryIndex = metaData.getGeometryAttributeIndex();
     boolean geometryWritten = false;
     out.endAttribute();

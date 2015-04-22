@@ -15,7 +15,7 @@ import javax.swing.event.ListDataListener;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.query.BinaryCondition;
 import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Q;

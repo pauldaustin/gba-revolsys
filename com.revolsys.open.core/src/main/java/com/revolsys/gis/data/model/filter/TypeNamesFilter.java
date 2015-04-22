@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.RecordDefinition;
 
 public class TypeNamesFilter implements Filter<Record> {
 
@@ -20,7 +20,7 @@ public class TypeNamesFilter implements Filter<Record> {
 
   @Override
   public boolean accept(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final String typePath = metaData.getPath();
     return typePaths.contains(typePath);
   }

@@ -17,7 +17,7 @@ import com.revolsys.format.esri.gdb.xml.model.SpatialReference;
 import com.revolsys.format.esri.gdb.xml.model.enums.GeometryType;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
-import com.revolsys.gis.data.model.AttributeProperties;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.esri.gdb.file.CapiFileGdbRecordStore;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.gis.io.EndianInputStream;
@@ -28,7 +28,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.shp.ShapefileGeometryUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
+public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
 
   public static final Map<GeometryType, DataType> GEOMETRY_TYPE_DATA_TYPE_MAP = new LinkedHashMap<GeometryType, DataType>();
 
@@ -52,7 +52,7 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
 
   private Method writeMethod;
 
-  public GeometryAttribute(final Field field) {
+  public GeometryFieldDefinition(final Field field) {
     super(field.getName(), DataTypes.GEOMETRY,
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());
@@ -93,7 +93,7 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
           this.geometryFactory = GeometryFactory.getFactory(srid, numAxis,
             scaleXY, scaleZ);
         }
-        setProperty(AttributeProperties.GEOMETRY_FACTORY, this.geometryFactory);
+        setProperty(FieldProperties.GEOMETRY_FACTORY, this.geometryFactory);
 
         final String geometryTypeKey = dataType.toString() + hasZ + hasM;
         this.readMethod = ShapefileGeometryUtil.getReadMethod(geometryTypeKey);

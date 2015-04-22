@@ -3,7 +3,7 @@ package com.revolsys.swing.table.dataobject.filter;
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
 
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.table.dataobject.model.AbstractDataObjectTableModel;
 import com.vividsolutions.jts.geom.Geometry;
 

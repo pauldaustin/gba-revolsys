@@ -21,7 +21,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.AttributeProperties;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -43,7 +43,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcAttribute {
     super(name, type, -1, 0, 0, required, description, properties);
     this.srid = srid;
     this.geometryFactory = geometryFactory;
-    setProperty(AttributeProperties.GEOMETRY_FACTORY, geometryFactory);
+    setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     this.numAxis = numAxis;
   }
 

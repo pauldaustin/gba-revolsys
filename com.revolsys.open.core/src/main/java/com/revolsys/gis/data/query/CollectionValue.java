@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.ctc.wstx.util.ExceptionUtil;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
@@ -22,6 +22,10 @@ public class CollectionValue extends QueryValue {
 
   private FieldDefinition attribute;
 
+  public CollectionValue(final Collection<? extends Object> values) {
+    this(null, values);
+  }
+
   public CollectionValue(final FieldDefinition attribute,
     final Collection<? extends Object> values) {
     setAttribute(attribute);
@@ -32,18 +36,14 @@ public class CollectionValue extends QueryValue {
       } else {
         queryValue = new Value(value);
       }
-      queryValues.add(queryValue);
+      this.queryValues.add(queryValue);
 
     }
   }
 
-  public CollectionValue(final Collection<? extends Object> values) {
-    this(null, values);
-  }
-
   @Override
   public int appendParameters(int index, final PreparedStatement statement) {
-    for (final QueryValue queryValue : queryValues) {
+    for (final QueryValue queryValue : this.queryValues) {
       JdbcAttribute jdbcAttribute = this.jdbcAttribute;
       if (queryValue instanceof Value) {
         final Value valueWrapper = (Value)queryValue;
@@ -65,19 +65,19 @@ public class CollectionValue extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
+  public void appendSql(final StringBuilder buffer) {
     buffer.append('(');
-    for (int i = 0; i < queryValues.size(); i++) {
+    for (int i = 0; i < this.queryValues.size(); i++) {
       if (i > 0) {
         buffer.append(", ");
       }
 
-      final QueryValue queryValue = queryValues.get(i);
+      final QueryValue queryValue = this.queryValues.get(i);
       if (queryValue instanceof Value) {
-        if (jdbcAttribute == null) {
+        if (this.jdbcAttribute == null) {
           queryValue.appendSql(buffer);
         } else {
-          jdbcAttribute.addSelectStatementPlaceHolder(buffer);
+          this.jdbcAttribute.addSelectStatementPlaceHolder(buffer);
         }
       } else {
         queryValue.appendSql(buffer);
@@ -90,7 +90,7 @@ public class CollectionValue extends QueryValue {
   @Override
   public CollectionValue clone() {
     final CollectionValue clone = (CollectionValue)super.clone();
-    clone.queryValues = cloneQueryValues(queryValues);
+    clone.queryValues = cloneQueryValues(this.queryValues);
     return clone;
   }
 
@@ -106,12 +106,12 @@ public class CollectionValue extends QueryValue {
   }
 
   public FieldDefinition getAttribute() {
-    return attribute;
+    return this.attribute;
   }
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return queryValues;
+    return this.queryValues;
   }
 
   @SuppressWarnings("unchecked")
@@ -127,9 +127,9 @@ public class CollectionValue extends QueryValue {
 
   public List<Object> getValues() {
     CodeTable codeTable = null;
-    if (attribute != null) {
-      final RecordDefinition metaData = attribute.getMetaData();
-      final String fieldName = attribute.getName();
+    if (this.attribute != null) {
+      final RecordDefinition metaData = this.attribute.getMetaData();
+      final String fieldName = this.attribute.getName();
       codeTable = metaData.getCodeTableByColumn(fieldName);
     }
     final List<Object> values = new ArrayList<Object>();
@@ -161,7 +161,7 @@ public class CollectionValue extends QueryValue {
       } else {
         this.jdbcAttribute = null;
       }
-      for (final QueryValue queryValue : queryValues) {
+      for (final QueryValue queryValue : this.queryValues) {
         if (queryValue instanceof Value) {
           final Value value = (Value)queryValue;
           value.setAttribute(attribute);
@@ -172,6 +172,6 @@ public class CollectionValue extends QueryValue {
 
   @Override
   public String toString() {
-    return "(" + CollectionUtil.toString(queryValues) + ")";
+    return "(" + CollectionUtil.toString(this.queryValues) + ")";
   }
 }

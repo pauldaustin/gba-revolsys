@@ -38,7 +38,7 @@ public class DataObjectReaderTransferable implements Transferable {
     } else if (DataFlavor.stringFlavor.equals(flavor)) {
       final StringWriter out = new StringWriter();
       final Collection<String> attributeNames = this.reader.getMetaData()
-        .getAttributeNames();
+        .getFieldNames();
       CsvUtil.writeColumns(out, attributeNames, '\t', '\n');
       for (final Record object : this.reader) {
         if (object != null) {

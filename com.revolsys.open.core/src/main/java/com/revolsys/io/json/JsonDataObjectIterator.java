@@ -11,10 +11,10 @@ import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.FileUtil;
 
 public class JsonDataObjectIterator extends AbstractIterator<Record>
@@ -61,7 +61,7 @@ public class JsonDataObjectIterator extends AbstractIterator<Record>
     if (iterator.hasNext()) {
       final Map<String, Object> map = iterator.next();
       final Record object = new ArrayRecord(metaData);
-      for (final FieldDefinition attribute : metaData.getAttributes()) {
+      for (final FieldDefinition attribute : metaData.getFields()) {
         final String name = attribute.getName();
         final Object value = map.get(name);
         if (value != null) {

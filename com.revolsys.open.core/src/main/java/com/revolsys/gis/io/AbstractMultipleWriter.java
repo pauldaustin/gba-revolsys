@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.Writer;
 
@@ -43,7 +43,7 @@ public abstract class AbstractMultipleWriter extends AbstractWriter<Record> {
 
   @Override
   public void write(final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     final Writer<Record> writer = getWriter(metaData);
     writer.write(object);
   }

@@ -11,10 +11,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.collection.ResultPager;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.AbstractRecordStore;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.Query;
@@ -24,10 +26,10 @@ import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DelegatingDataObjectStore extends AbstractDataObjectStore {
-  private final AbstractDataObjectStore dataStore;
+public class DelegatingDataObjectStore extends AbstractRecordStore {
+  private final AbstractRecordStore dataStore;
 
-  public DelegatingDataObjectStore(final AbstractDataObjectStore dataStore) {
+  public DelegatingDataObjectStore(final AbstractRecordStore dataStore) {
     this.dataStore = dataStore;
   }
 
@@ -125,8 +127,8 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public CodeTable getCodeTableByColumn(final String columnName) {
-    return dataStore.getCodeTableByColumn(columnName);
+  public CodeTable getCodeTableByFieldName(final String columnName) {
+    return dataStore.getCodeTableByFieldName(columnName);
   }
 
   @Override
@@ -140,11 +142,11 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public DataObjectFactory getDataObjectFactory() {
-    return dataStore.getDataObjectFactory();
+  public RecordFactory getRecordFactory() {
+    return dataStore.getRecordFactory();
   }
 
-  public AbstractDataObjectStore getDataStore() {
+  public AbstractRecordStore getDataStore() {
     return dataStore;
   }
 
@@ -159,13 +161,13 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public RecordDefinition getMetaData(final RecordDefinition objectMetaData) {
-    return dataStore.getMetaData(objectMetaData);
+  public RecordDefinition getRecordDefinition(final RecordDefinition objectMetaData) {
+    return dataStore.getRecordDefinition(objectMetaData);
   }
 
   @Override
-  public RecordDefinition getMetaData(final String typePath) {
-    return dataStore.getMetaData(typePath);
+  public RecordDefinition getRecordDefinition(final String typePath) {
+    return dataStore.getRecordDefinition(typePath);
   }
 
   @Override
@@ -189,17 +191,17 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public DataObjectStoreSchema getSchema(final String schemaName) {
+  public RecordStoreSchema getSchema(final String schemaName) {
     return dataStore.getSchema(schemaName);
   }
 
   @Override
-  public Map<String, DataObjectStoreSchema> getSchemaMap() {
+  public Map<String, RecordStoreSchema> getSchemaMap() {
     return dataStore.getSchemaMap();
   }
 
   @Override
-  public List<DataObjectStoreSchema> getSchemas() {
+  public List<RecordStoreSchema> getSchemas() {
     return dataStore.getSchemas();
   }
 
@@ -271,12 +273,12 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
 
   @Override
   protected void loadSchemaDataObjectMetaData(
-    final DataObjectStoreSchema schema,
+    final RecordStoreSchema schema,
     final Map<String, RecordDefinition> metaDataMap) {
   }
 
   @Override
-  protected void loadSchemas(final Map<String, DataObjectStoreSchema> schemaMap) {
+  protected void loadSchemas(final Map<String, RecordStoreSchema> schemaMap) {
   }
 
   @Override
@@ -290,7 +292,7 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public Reader<Record> query(final DataObjectFactory dataObjectFactory,
+  public Reader<Record> query(final RecordFactory dataObjectFactory,
     final String typePath, final Geometry geometry) {
     return dataStore.query(dataObjectFactory, typePath, geometry);
   }
@@ -333,7 +335,7 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public void setDataObjectFactory(final DataObjectFactory dataObjectFactory) {
+  public void setDataObjectFactory(final RecordFactory dataObjectFactory) {
     dataStore.setDataObjectFactory(dataObjectFactory);
   }
 
@@ -368,7 +370,7 @@ public class DelegatingDataObjectStore extends AbstractDataObjectStore {
   }
 
   @Override
-  public void setSchemaMap(final Map<String, DataObjectStoreSchema> schemaMap) {
+  public void setSchemaMap(final Map<String, RecordStoreSchema> schemaMap) {
     dataStore.setSchemaMap(schemaMap);
   }
 

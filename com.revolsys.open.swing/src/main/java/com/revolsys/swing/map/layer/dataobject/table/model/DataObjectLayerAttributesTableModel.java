@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.map.form.DataObjectLayerForm;
 import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
@@ -80,7 +80,7 @@ public class DataObjectLayerAttributesTableModel extends
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (columnIndex == 2) {
       if (this.form.get().isEditable()) {
-        final String idAttributeName = getMetaData().getIdAttributeName();
+        final String idAttributeName = getMetaData().getIdFieldName();
         final String attributeName = getFieldName(rowIndex);
         if (attributeName.equals(idAttributeName)) {
           return false;

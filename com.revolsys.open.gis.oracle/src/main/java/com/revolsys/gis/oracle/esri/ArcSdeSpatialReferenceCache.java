@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.WktCsParser;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
 
@@ -29,14 +29,14 @@ public class ArcSdeSpatialReferenceCache {
   }
 
   public static ArcSdeSpatialReferenceCache get(
-    final DataObjectStoreSchema schema) {
+    final RecordStoreSchema schema) {
     final AbstractJdbcDataObjectStore dataStore = (AbstractJdbcDataObjectStore)schema.getDataStore();
     return get(dataStore);
 
   }
 
   public static ArcSdeSpatialReference getSpatialReference(
-    final DataObjectStoreSchema schema, final int esriSrid) {
+    final RecordStoreSchema schema, final int esriSrid) {
     return get(schema).getSpatialReference(esriSrid);
   }
 

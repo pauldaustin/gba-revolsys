@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.AttributeProperties;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
 import com.revolsys.jdbc.io.JdbcConstants;
@@ -30,7 +30,7 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcAttributeAdder {
     final String name, final String dataTypeName, final int sqlType,
     final int length, final int scale, final boolean required,
     final String description) {
-    final DataObjectStoreSchema schema = metaData.getSchema();
+    final RecordStoreSchema schema = metaData.getSchema();
     final String typePath = metaData.getPath();
     final String owner = this.dataStore.getDatabaseSchemaName(schema);
     final String tableName = this.dataStore.getDatabaseTableName(typePath);
@@ -63,12 +63,12 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcAttributeAdder {
     final FieldDefinition attribute = new ArcSdeStGeometryAttribute(name, dataType,
       required, description, null, spatialReference, numAxis);
 
-    metaData.addAttribute(attribute);
+    metaData.addField(attribute);
     attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction(
       "SDE.ST_ENVINTERSECTS(", ") = 1"));
     attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction(
       "SDE.ST_BUFFER(", ")"));
-    attribute.setProperty(AttributeProperties.GEOMETRY_FACTORY, geometryFactory);
+    attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     return attribute;
   }
 

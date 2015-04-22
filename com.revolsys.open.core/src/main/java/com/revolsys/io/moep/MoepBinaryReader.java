@@ -9,9 +9,9 @@ import java.util.Map;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
 public class MoepBinaryReader extends AbstractReader<Record> implements
@@ -27,7 +27,7 @@ public class MoepBinaryReader extends AbstractReader<Record> implements
    * @param factory The factory used to create DataObject instances.
    */
   public MoepBinaryReader(final MoepDirectoryReader moepDirectoryReader,
-    final Resource resource, final DataObjectFactory factory) {
+    final Resource resource, final RecordFactory factory) {
     try {
       final InputStream in = resource.getInputStream();
       this.iterator = new MoepBinaryIterator(moepDirectoryReader,
@@ -42,7 +42,7 @@ public class MoepBinaryReader extends AbstractReader<Record> implements
    * @param url The url to the file.
    * @param factory The factory used to create DataObject instances.
    */
-  public MoepBinaryReader(final URL url, final DataObjectFactory factory) {
+  public MoepBinaryReader(final URL url, final RecordFactory factory) {
     try {
       final InputStream in = url.openStream();
       final String path = url.getPath();

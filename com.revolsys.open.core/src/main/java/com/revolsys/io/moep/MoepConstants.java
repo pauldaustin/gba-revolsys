@@ -1,8 +1,8 @@
 package com.revolsys.io.moep;
 
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.RecordDefinition;
 
 public final class MoepConstants {
   public static final String ADMIT_INTEGRATION_DATE = "A_DATE";
@@ -85,7 +85,7 @@ public final class MoepConstants {
     type.addAttribute(RETIRE_SPECIFICATIONS_RELEASE, DataTypes.STRING, 10,
       false);
     type.addAttribute(GEOMETRY, DataTypes.GEOMETRY, true);
-    type.setGeometryAttributeName(GEOMETRY);
+    type.setGeometryFieldName(GEOMETRY);
     return type;
   }
 

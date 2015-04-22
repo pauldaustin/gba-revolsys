@@ -19,19 +19,19 @@ public class RightUnaryCondition extends Condition {
 
   @Override
   public int appendParameters(final int index, final PreparedStatement statement) {
-    return value.appendParameters(index, statement);
+    return this.value.appendParameters(index, statement);
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
-    value.appendSql(buffer);
+  public void appendSql(final StringBuilder buffer) {
+    this.value.appendSql(buffer);
     buffer.append(" ");
-    buffer.append(operator);
+    buffer.append(this.operator);
   }
 
   @Override
   public RightUnaryCondition clone() {
-    return new RightUnaryCondition(value.clone(), operator);
+    return new RightUnaryCondition(this.value.clone(), this.operator);
   }
 
   @Override
@@ -48,16 +48,16 @@ public class RightUnaryCondition extends Condition {
   }
 
   public String getOperator() {
-    return operator;
+    return this.operator;
   }
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return Collections.singletonList(value);
+    return Collections.singletonList(this.value);
   }
 
   public QueryValue getValue() {
-    return value;
+    return this.value;
   }
 
   @Override

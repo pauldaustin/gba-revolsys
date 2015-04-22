@@ -16,7 +16,8 @@ public class In extends Condition {
 
   private CollectionValue values;
 
-  public In(final FieldDefinition attribute, final Collection<? extends Object> values) {
+  public In(final FieldDefinition attribute,
+    final Collection<? extends Object> values) {
     this(attribute.getName(), new CollectionValue(attribute, values));
   }
 
@@ -62,32 +63,32 @@ public class In extends Condition {
 
   @Override
   public int appendParameters(int index, final PreparedStatement statement) {
-    if (left != null) {
-      index = left.appendParameters(index, statement);
+    if (this.left != null) {
+      index = this.left.appendParameters(index, statement);
     }
-    if (values != null) {
-      index = values.appendParameters(index, statement);
+    if (this.values != null) {
+      index = this.values.appendParameters(index, statement);
     }
     return index;
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
-    if (left == null) {
+  public void appendSql(final StringBuilder buffer) {
+    if (this.left == null) {
       buffer.append("NULL");
     } else {
-      left.appendSql(buffer);
+      this.left.appendSql(buffer);
     }
     buffer.append(" ");
     buffer.append(" IN ");
-    values.appendSql(buffer);
+    this.values.appendSql(buffer);
   }
 
   @Override
   public In clone() {
     final In clone = (In)super.clone();
-    clone.left = left.clone();
-    clone.values = values.clone();
+    clone.left = this.left.clone();
+    clone.values = this.values.clone();
     return clone;
   }
 
@@ -106,21 +107,21 @@ public class In extends Condition {
 
   @SuppressWarnings("unchecked")
   public <V extends QueryValue> V getLeft() {
-    return (V)left;
+    return (V)this.left;
   }
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return Arrays.asList(left, values);
+    return Arrays.asList(this.left, this.values);
   }
 
   public CollectionValue getValues() {
-    return values;
+    return this.values;
   }
 
   @Override
   public String toString() {
-    return StringConverterRegistry.toString(left) + " IN "
-      + StringConverterRegistry.toString(values);
+    return StringConverterRegistry.toString(this.left) + " IN "
+        + StringConverterRegistry.toString(this.values);
   }
 }

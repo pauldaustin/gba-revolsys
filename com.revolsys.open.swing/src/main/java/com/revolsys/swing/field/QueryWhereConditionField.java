@@ -65,8 +65,8 @@ import com.akiban.sql.parser.ValueNodeList;
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.And;
 import com.revolsys.gis.data.query.Between;
@@ -189,7 +189,7 @@ public class QueryWhereConditionField extends ValueField implements
     this.originalFilter = filter;
     this.listener = listener;
     metaData = layer.getMetaData();
-    final List<FieldDefinition> attributes = metaData.getAttributes();
+    final List<FieldDefinition> attributes = metaData.getFields();
 
     fieldNamesList = new ComboBox(new AttributeTitleStringConveter(layer),
       false, attributes);

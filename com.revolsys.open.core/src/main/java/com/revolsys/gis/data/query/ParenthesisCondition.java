@@ -17,25 +17,25 @@ public class ParenthesisCondition extends Condition {
 
   @Override
   public boolean accept(final Map<String, Object> record) {
-    return condition.accept(record);
+    return this.condition.accept(record);
   }
 
   @Override
   public int appendParameters(final int index, final PreparedStatement statement) {
-    return condition.appendParameters(index, statement);
+    return this.condition.appendParameters(index, statement);
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
+  public void appendSql(final StringBuilder buffer) {
     buffer.append("(");
-    condition.appendSql(buffer);
+    this.condition.appendSql(buffer);
     buffer.append(")");
   }
 
   @Override
   public ParenthesisCondition clone() {
     final ParenthesisCondition clone = (ParenthesisCondition)super.clone();
-    clone.condition = condition.clone();
+    clone.condition = this.condition.clone();
     return clone;
   }
 
@@ -51,17 +51,17 @@ public class ParenthesisCondition extends Condition {
   }
 
   public Condition getCondition() {
-    return condition;
+    return this.condition;
   }
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return Collections.<QueryValue> singletonList(condition);
+    return Collections.<QueryValue> singletonList(this.condition);
   }
 
   @Override
   public <V> V getValue(final Map<String, Object> record) {
-    return condition.getValue(record);
+    return this.condition.getValue(record);
   }
 
   @Override

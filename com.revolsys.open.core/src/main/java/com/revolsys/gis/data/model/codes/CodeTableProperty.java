@@ -13,8 +13,8 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
 import com.revolsys.gis.data.query.And;
@@ -102,7 +102,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
     if (createMissingCodes) {
       // TODO prevent duplicates from other threads/processes
       final Record code = dataStore.create(typePath);
-      final RecordDefinition metaData = code.getMetaData();
+      final RecordDefinition metaData = code.getRecordDefinition();
       Object id = dataStore.createPrimaryIdValue(typePath);
       if (id == null) {
         final FieldDefinition idAttribute = metaData.getIdAttribute();
@@ -169,7 +169,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
     } else if (metaData == null) {
       return "";
     } else {
-      final String idAttributeName = metaData.getIdAttributeName();
+      final String idAttributeName = metaData.getIdFieldName();
       if (StringUtils.hasText(idAttributeName)) {
         return idAttributeName;
       } else {
@@ -239,9 +239,9 @@ public class CodeTableProperty extends AbstractCodeTable implements
         threadLoading.set(Boolean.TRUE);
         loading = true;
         try {
-          final RecordDefinition metaData = dataStore.getMetaData(typePath);
+          final RecordDefinition metaData = dataStore.getRecordDefinition(typePath);
           final Query query = new Query(typePath);
-          query.setAttributeNames(metaData.getAttributeNames());
+          query.setAttributeNames(metaData.getFieldNames());
           for (final String order : orderBy) {
             query.addOrderBy(order, true);
           }
@@ -372,7 +372,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
       } else {
         this.typePath = metaData.getPath();
         setName(PathUtil.getName(typePath));
-        this.dataStore = this.metaData.getDataStore();
+        this.dataStore = this.metaData.getRecordStore();
         metaData.setProperty(getPropertyName(), this);
         dataStore.addCodeTable(this);
       }

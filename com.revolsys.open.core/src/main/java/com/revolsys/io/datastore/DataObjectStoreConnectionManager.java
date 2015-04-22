@@ -12,8 +12,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreFactoryRegistry;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistryManager;
 import com.revolsys.util.JavaBeanUtil;
@@ -71,7 +71,7 @@ public class DataObjectStoreConnectionManager
             return null;
           }
         } else {
-          dataStore = DataObjectStoreFactoryRegistry.createDataObjectStore(connectionProperties);
+          dataStore = RecordStoreFactoryRegistry.createDataObjectStore(connectionProperties);
           dataStore.setProperties(config);
           dataStore.initialize();
         }

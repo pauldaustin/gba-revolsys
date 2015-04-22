@@ -9,11 +9,11 @@ import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.tree.TreeNode;
 
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.famfamfam.silk.SilkIconLoader;
-import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
 import com.revolsys.io.datastore.DataObjectStoreConnection;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.menu.MenuFactory;
@@ -61,7 +61,7 @@ public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode
     final List<TreeNode> children = new ArrayList<TreeNode>();
     final RecordStore dataStore = getDataStore();
     if (dataStore != null) {
-      for (final DataObjectStoreSchema schema : dataStore.getSchemas()) {
+      for (final RecordStoreSchema schema : dataStore.getSchemas()) {
         final String schemaPath = schema.getPath();
 
         final DataObjectStoreSchemaTreeNode schemaNode = new DataObjectStoreSchemaTreeNode(

@@ -7,12 +7,12 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
@@ -42,7 +42,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       return sequenceName;
     } else {
       final String tableName = PathUtil.getName(typePath).toLowerCase();
-      final String idAttributeName = metaData.getIdAttributeName()
+      final String idAttributeName = metaData.getIdFieldName()
         .toLowerCase();
       return schema + "." + tableName + "_" + idAttributeName + "_seq";
     }
@@ -56,9 +56,9 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       schemaName = "public";
     }
     final String tableName = PathUtil.getName(typePath);
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
       String geometryType = "GEOMETRY";
       final DataType dataType = geometryAttribute.getType();
@@ -182,9 +182,9 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       schemaName = "public";
     }
     final String tableName = PathUtil.getName(typePath);
-    final FieldDefinition geometryAttribute = metaData.getGeometryAttribute();
+    final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(AttributeProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
       String geometryType = "GEOMETRY";
       final DataType dataType = geometryAttribute.getType();

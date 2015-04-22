@@ -19,9 +19,9 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.io.ResourceEndianOutput;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
@@ -379,7 +379,7 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
 
       fields.clear();
       int numFields = 0;
-      for (final String name : metaData.getAttributeNames()) {
+      for (final String name : metaData.getFieldNames()) {
         final int index = metaData.getAttributeIndex(name);
         final int length = metaData.getAttributeLength(index);
         final int scale = metaData.getAttributeScale(index);

@@ -26,7 +26,7 @@ public abstract class AbstractMultiCondition extends Condition {
   }
 
   public void add(final QueryValue value) {
-    values.add(value);
+    this.values.add(value);
   }
 
   public void add(final String sql) {
@@ -43,7 +43,7 @@ public abstract class AbstractMultiCondition extends Condition {
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
+  public void appendSql(final StringBuilder buffer) {
     buffer.append("(");
     boolean first = true;
 
@@ -52,7 +52,7 @@ public abstract class AbstractMultiCondition extends Condition {
         first = false;
       } else {
         buffer.append(" ");
-        buffer.append(operator);
+        buffer.append(this.operator);
         buffer.append(" ");
       }
       value.appendSql(buffer);
@@ -61,7 +61,7 @@ public abstract class AbstractMultiCondition extends Condition {
   }
 
   public void clear() {
-    values.clear();
+    this.values.clear();
   }
 
   @Override
@@ -94,23 +94,24 @@ public abstract class AbstractMultiCondition extends Condition {
   }
 
   public String getOperator() {
-    return operator;
+    return this.operator;
   }
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return Collections.<QueryValue> unmodifiableList(values);
+    return Collections.<QueryValue> unmodifiableList(this.values);
 
   }
 
   @Override
   public boolean isEmpty() {
-    return values.isEmpty();
+    return this.values.isEmpty();
   }
 
   @Override
   public String toString() {
     return "("
-      + CollectionUtil.toString(") " + operator + " (", getQueryValues()) + ")";
+        + CollectionUtil.toString(") " + this.operator + " (", getQueryValues())
+      + ")";
   }
 }

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.data.record.schema.RecordStore;
+
 public class DelegatingDataObjectStoreHandler implements InvocationHandler {
   public static <T extends RecordStore> T create(final String label,
     final Class<T> interfaceClass, final T dataStore) {
@@ -29,7 +31,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
     final ClassLoader classLoader = Thread.currentThread()
       .getContextClassLoader();
     final Class<?>[] interfaces = new Class<?>[] {
-      DataObjectStoreFactoryRegistry.getDataObjectStoreInterfaceClass(config)
+      RecordStoreFactoryRegistry.getDataObjectStoreInterfaceClass(config)
     };
     final DelegatingDataObjectStoreHandler handler = new DelegatingDataObjectStoreHandler(
       label, config);
@@ -67,7 +69,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
 
   protected RecordStore createDataStore() {
     if (config != null) {
-      final RecordStore dataStore = DataObjectStoreFactoryRegistry.createDataObjectStore(config);
+      final RecordStore dataStore = RecordStoreFactoryRegistry.createDataObjectStore(config);
       return dataStore;
     } else {
       throw new UnsupportedOperationException("Data store must be set manually");

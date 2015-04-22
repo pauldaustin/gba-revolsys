@@ -16,7 +16,7 @@ public class OracleClobAttributeAdder extends JdbcAttributeAdder {
     final String description) {
     final OracleJdbcClobAttribute attribute = new OracleJdbcClobAttribute(name,
       sqlType, length, required, description);
-    metaData.addAttribute(attribute);
+    metaData.addField(attribute);
     return attribute;
   }
 

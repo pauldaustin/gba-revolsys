@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.comparator.DataObjectMetaDataNameComparator;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
@@ -29,7 +29,7 @@ public class SortByType extends BaseInOutProcess<Record, Record> {
   @Override
   protected void process(final Channel<Record> in,
     final Channel<Record> out, final Record object) {
-    final RecordDefinition metaData = object.getMetaData();
+    final RecordDefinition metaData = object.getRecordDefinition();
     Collection<Record> objects = objectsByType.get(metaData);
     if (objects == null) {
       objects = new ArrayList<Record>();

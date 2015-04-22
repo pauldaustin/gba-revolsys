@@ -7,8 +7,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectFactory;
 import com.revolsys.io.AbstractMapReaderFactory;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
@@ -31,7 +31,7 @@ public abstract class AbstractDataObjectReaderFactory extends
   }
 
   public static DataObjectReader dataObjectReader(final Resource resource,
-    final DataObjectFactory factory) {
+    final RecordFactory factory) {
     final DataObjectReaderFactory readerFactory = getDataObjectReaderFactory(resource);
     if (readerFactory == null) {
       return null;
@@ -66,7 +66,7 @@ public abstract class AbstractDataObjectReaderFactory extends
     return getDataObjectReaderFactory(fileName) != null;
   }
 
-  private final DataObjectFactory dataObjectFactory = new ArrayDataObjectFactory();
+  private final RecordFactory dataObjectFactory = new ArrayDataObjectFactory();
 
   private final boolean binary;
 
@@ -123,7 +123,7 @@ public abstract class AbstractDataObjectReaderFactory extends
    */
   @Override
   public Reader<Record> createDirectoryDataObjectReader(
-    final File directory, final DataObjectFactory dataObjectFactory) {
+    final File directory, final RecordFactory dataObjectFactory) {
     final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
     directoryReader.setDirectory(directory);

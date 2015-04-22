@@ -12,15 +12,15 @@ import org.springframework.util.StringUtils;
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.model.AttributeProperties;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.ExceptionUtil;
@@ -41,7 +41,7 @@ public class CsvDataObjectIterator extends AbstractIterator<Record>
 
   private GeometryFactory geometryFactory;
 
-  private DataObjectFactory dataObjectFactory;
+  private RecordFactory dataObjectFactory;
 
   /** The reader to */
   private BufferedReader in;
@@ -60,7 +60,7 @@ public class CsvDataObjectIterator extends AbstractIterator<Record>
    * @throws IOException
    */
   public CsvDataObjectIterator(final Resource resource,
-    final DataObjectFactory dataObjectFactory) {
+    final RecordFactory dataObjectFactory) {
     this.resource = resource;
     this.dataObjectFactory = dataObjectFactory;
   }
@@ -89,7 +89,7 @@ public class CsvDataObjectIterator extends AbstractIterator<Record>
       if (geometryFactory == null) {
         geometryFactory = GeometryFactory.wgs84();
       }
-      geometryAttribute.setProperty(AttributeProperties.GEOMETRY_FACTORY,
+      geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
         geometryFactory);
     }
     final String filename = FileUtil.getBaseName(resource.getFilename());
@@ -178,7 +178,7 @@ public class CsvDataObjectIterator extends AbstractIterator<Record>
    * @return The DataObject.
    */
   private Record parseDataObject(final String[] record) {
-    final Record object = dataObjectFactory.createDataObject(metaData);
+    final Record object = dataObjectFactory.createRecord(metaData);
     for (int i = 0; i < metaData.getAttributeCount(); i++) {
       String value = null;
       if (i < record.length) {

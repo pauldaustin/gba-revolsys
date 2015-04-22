@@ -1,6 +1,6 @@
 package com.revolsys.gis.data.model;
 
-public interface AttributeProperties {
+public interface FieldProperties {
 
   String GEOMETRY_FACTORY = "http://gis.revolsys.com/geometryFactory";
 

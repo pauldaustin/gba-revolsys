@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.converter.FilterDataObjectConverter;
 import com.revolsys.gis.converter.SimpleDataObjectConveter;
 import com.revolsys.gis.converter.process.CopyValues;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.parallel.channel.Channel;
@@ -59,7 +59,7 @@ public class DataObjectConverterProcess extends
 
   protected Record convert(final Record source) {
     int matchCount = 0;
-    final RecordDefinition sourceMetaData = source.getMetaData();
+    final RecordDefinition sourceMetaData = source.getRecordDefinition();
     final String sourceTypeName = sourceMetaData.getPath();
     final Collection<FilterDataObjectConverter> converters = typeFilterConverterMap.get(sourceTypeName);
     Record target = null;
@@ -120,7 +120,7 @@ public class DataObjectConverterProcess extends
   }
 
   public RecordDefinition getTargetMetaData(final String typePath) {
-    return targetMetaDataFactory.getMetaData(typePath);
+    return targetMetaDataFactory.getRecordDefinition(typePath);
   }
 
   public DataObjectMetaDataFactory getTargetMetaDataFactory() {

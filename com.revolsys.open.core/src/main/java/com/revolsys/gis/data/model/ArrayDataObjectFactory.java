@@ -1,13 +1,16 @@
 package com.revolsys.gis.data.model;
 
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
+
 /**
- * The ArrayDataObjectFactory is an implementation of {@link DataObjectFactory}
+ * The ArrayDataObjectFactory is an implementation of {@link RecordFactory}
  * for creating {@link ArrayRecord} instances.
  * 
  * @author Paul Austin
  * @see ArrayRecord
  */
-public class ArrayDataObjectFactory implements DataObjectFactory {
+public class ArrayDataObjectFactory implements RecordFactory {
 
   /**
    * Create an instance of ArrayDataObject using the metadata
@@ -16,7 +19,7 @@ public class ArrayDataObjectFactory implements DataObjectFactory {
    * @return The DataObject instance.
    */
   @Override
-  public ArrayRecord createDataObject(final RecordDefinition metaData) {
+  public ArrayRecord createRecord(final RecordDefinition metaData) {
     return new ArrayRecord(metaData);
   }
 }

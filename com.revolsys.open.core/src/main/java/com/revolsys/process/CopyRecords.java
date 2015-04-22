@@ -6,8 +6,8 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.io.RecordStore;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
@@ -75,13 +75,13 @@ public class CopyRecords extends AbstractProcess {
       try {
         final Writer<Record> targetWriter = targetDataStore.createWriter();
         try {
-          final RecordDefinition targetMetaData = targetDataStore.getMetaData(typePath);
+          final RecordDefinition targetMetaData = targetDataStore.getRecordDefinition(typePath);
           if (targetMetaData == null) {
             LoggerFactory.getLogger(getClass()).error(
               "Cannot find target table: " + typePath);
           } else {
             if (hasSequence) {
-              final String idAttributeName = targetMetaData.getIdAttributeName();
+              final String idAttributeName = targetMetaData.getIdFieldName();
               Object maxId = targetDataStore.createPrimaryIdValue(typePath);
               for (final Record sourceRecord : reader) {
                 final Object sourceId = sourceRecord.getValue(idAttributeName);

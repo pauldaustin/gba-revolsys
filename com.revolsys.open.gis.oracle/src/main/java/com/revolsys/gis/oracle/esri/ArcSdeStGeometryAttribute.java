@@ -15,7 +15,7 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
-import com.revolsys.gis.data.model.AttributeProperties;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -41,11 +41,11 @@ public class ArcSdeStGeometryAttribute extends JdbcAttribute {
     this.geometryFactory = GeometryFactory.getFactory(factory.getSRID(),
       dimension, factory.getScaleXY(), factory.getScaleZ());
     this.dimension = dimension;
-    setProperty(AttributeProperties.GEOMETRY_FACTORY, this.geometryFactory);
+    setProperty(FieldProperties.GEOMETRY_FACTORY, this.geometryFactory);
   }
 
   @Override
-  public void addColumnName(final StringBuffer sql, final String tablePrefix) {
+  public void addColumnName(final StringBuilder sql, final String tablePrefix) {
     sql.append(tablePrefix);
     sql.append(".GEOMETRY.ENTITY, ");
     sql.append(tablePrefix);
@@ -55,7 +55,7 @@ public class ArcSdeStGeometryAttribute extends JdbcAttribute {
   }
 
   @Override
-  public void addStatementPlaceHolder(final StringBuffer sql) {
+  public void addStatementPlaceHolder(final StringBuilder sql) {
     sql.append("SDE.ST_GEOMETRY(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   }
 
@@ -124,9 +124,9 @@ public class ArcSdeStGeometryAttribute extends JdbcAttribute {
       final double length = geometry.getLength();
 
       final boolean hasZ = this.dimension > 2 && zOffset != null
-        && zScale != null;
+          && zScale != null;
       final boolean hasM = this.dimension > 3 && mOffset != null
-        && mScale != null;
+          && mScale != null;
 
       int numPoints = 0;
       byte[] data;

@@ -32,7 +32,7 @@ import com.akiban.sql.parser.ValueNode;
 import com.akiban.sql.parser.ValueNodeList;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.model.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.functions.Function;
 import com.revolsys.util.ExceptionUtil;
@@ -58,7 +58,7 @@ public abstract class QueryValue implements Cloneable {
     final String whereClause) {
     try {
       final StatementNode statement = new SQLParser().parseStatement("SELECT * FROM "
-        + metaData.getTypeName() + " WHERE " + whereClause);
+          + metaData.getTypeName() + " WHERE " + whereClause);
       if (statement instanceof CursorNode) {
         final CursorNode selectStatement = (CursorNode)statement;
         final ResultSetNode resultSetNode = selectStatement.getResultSetNode();
@@ -118,7 +118,7 @@ public abstract class QueryValue implements Cloneable {
         return (V)new Or(leftCondition, rightCondition);
       } else {
         throw new IllegalArgumentException("Binary logical operator "
-          + operator + " not supported.");
+            + operator + " not supported.");
       }
     } else if (expression instanceof BinaryOperatorNode) {
       final BinaryOperatorNode binaryOperatorNode = (BinaryOperatorNode)expression;
@@ -138,7 +138,7 @@ public abstract class QueryValue implements Cloneable {
             final Object value = ((Value)rightCondition).getValue();
             if (value == null) {
               throw new IllegalArgumentException("Values can't be null for "
-                + operator + " use IS NULL or IS NOT NULL instead.");
+                  + operator + " use IS NULL or IS NOT NULL instead.");
             } else {
               final CodeTable codeTable = metaData.getCodeTableByColumn(name);
               if (codeTable == null || attribute == metaData.getIdAttribute()) {
@@ -147,15 +147,15 @@ public abstract class QueryValue implements Cloneable {
                   final Object convertedValue = StringConverterRegistry.toObject(
                     typeClass, value);
                   if (convertedValue == null
-                    || !typeClass.isAssignableFrom(typeClass)) {
+                      || !typeClass.isAssignableFrom(typeClass)) {
                     throw new IllegalArgumentException(name + " requires a "
-                      + attribute.getType() + " not the value " + value);
+                        + attribute.getType() + " not the value " + value);
                   } else {
                     rightCondition = new Value(attribute, convertedValue);
                   }
                 } catch (final Throwable t) {
                   throw new IllegalArgumentException(name + " requires a "
-                    + attribute.getType() + " not the value " + value);
+                      + attribute.getType() + " not the value " + value);
                 }
               } else {
                 Object id;
@@ -187,7 +187,7 @@ public abstract class QueryValue implements Cloneable {
         }
       } else {
         throw new IllegalArgumentException("Unsupported binary operator "
-          + operator);
+            + operator);
       }
     } else if (expression instanceof ColumnReference) {
       final ColumnReference column = (ColumnReference)expression;
@@ -273,14 +273,14 @@ public abstract class QueryValue implements Cloneable {
       return null;
     } else {
       throw new IllegalArgumentException("Unsupported expression"
-        + expression.getClass() + " " + expression);
+          + expression.getClass() + " " + expression);
     }
   }
 
   // TODO wrap in a more generic structure
   public abstract int appendParameters(int index, PreparedStatement statement);
 
-  public abstract void appendSql(StringBuffer buffer);
+  public abstract void appendSql(StringBuilder buffer);
 
   @Override
   public QueryValue clone() {

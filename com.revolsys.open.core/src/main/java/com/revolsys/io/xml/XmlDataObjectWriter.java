@@ -8,8 +8,8 @@ import javax.xml.namespace.QName;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;

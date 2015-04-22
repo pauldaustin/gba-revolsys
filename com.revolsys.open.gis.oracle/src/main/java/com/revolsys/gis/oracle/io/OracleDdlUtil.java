@@ -3,9 +3,9 @@ package com.revolsys.gis.oracle.io;
 import java.io.PrintWriter;
 
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.jdbc.JdbcUtils;
 
 public class OracleDdlUtil {

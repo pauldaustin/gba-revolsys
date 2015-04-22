@@ -25,7 +25,7 @@ public abstract class UnaryFunction extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuffer buffer) {
+  public void appendSql(final StringBuilder buffer) {
     buffer.append(getName());
     buffer.append("(");
     final QueryValue parameter = getParameter();
@@ -55,24 +55,25 @@ public abstract class UnaryFunction extends QueryValue {
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public QueryValue getParameter() {
-    return parameter;
+    return this.parameter;
   }
 
   @Override
   public List<QueryValue> getQueryValues() {
-    return Collections.singletonList(parameter);
+    return Collections.singletonList(this.parameter);
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + ((parameter == null) ? 0 : parameter.hashCode());
+    result = prime * result + (this.name == null ? 0 : this.name.hashCode());
+    result = prime * result
+      + (this.parameter == null ? 0 : this.parameter.hashCode());
     return result;
   }
 

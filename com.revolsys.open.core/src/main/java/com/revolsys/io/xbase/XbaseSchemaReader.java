@@ -3,8 +3,8 @@ package com.revolsys.io.xbase;
 import java.io.IOException;
 import java.util.List;
 
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.io.EndianInput;
 
 public class XbaseSchemaReader {

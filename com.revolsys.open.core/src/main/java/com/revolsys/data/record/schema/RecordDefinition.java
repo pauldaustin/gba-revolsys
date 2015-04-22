@@ -18,16 +18,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record.schema;
 
 import java.util.List;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.RecordStore;
+import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.io.ObjectWithProperties;
 import com.revolsys.io.map.MapSerializer;
@@ -89,9 +89,9 @@ public interface RecordDefinition extends ObjectWithProperties,
    * 
    * @return The attribute names.
    */
-  List<String> getAttributeNames();
+  List<String> getFieldNames();
 
-  List<FieldDefinition> getAttributes();
+  List<FieldDefinition> getFields();
 
   /**
    * Get the maximum number of decimal places of the attribute
@@ -105,7 +105,7 @@ public interface RecordDefinition extends ObjectWithProperties,
 
   List<String> getAttributeTitles();
 
-  DataType getAttributeType(CharSequence name);
+  DataType getFieldType(CharSequence name);
 
   /**
    * Get the type name of the attribute at the specified index.
@@ -117,17 +117,17 @@ public interface RecordDefinition extends ObjectWithProperties,
 
   CodeTable getCodeTableByColumn(String column);
 
-  DataObjectFactory getDataObjectFactory();
+  RecordFactory getDataObjectFactory();
 
   DataObjectMetaDataFactory getDataObjectMetaDataFactory();
 
-  RecordStore getDataStore();
+  RecordStore getRecordStore();
 
   Object getDefaultValue(String attributeName);
 
   Map<String, Object> getDefaultValues();
 
-  FieldDefinition getGeometryAttribute();
+  FieldDefinition getGeometryField();
 
   /**
    * Get the index of the primary Geometry attribute.
@@ -166,7 +166,7 @@ public interface RecordDefinition extends ObjectWithProperties,
    * 
    * @return The unique id index.
    */
-  int getIdAttributeIndex();
+  int getIdFieldIndex();
 
   /**
    * Get the index of all ID attributes.
@@ -180,7 +180,7 @@ public interface RecordDefinition extends ObjectWithProperties,
    * 
    * @return The unique id name.
    */
-  String getIdAttributeName();
+  String getIdFieldName();
 
   /**
    * Get the name of the all ID attributes.

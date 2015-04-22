@@ -9,11 +9,11 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.io.RecordStore;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
-import com.revolsys.gis.data.io.DataObjectStoreSchema;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.oracle.io.OracleDataObjectStore;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
@@ -41,7 +41,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
     return ArcSdeConstants.isSdeAvailable(dataStore);
   }
 
-  private void loadColumnProperties(final DataObjectStoreSchema schema,
+  private void loadColumnProperties(final RecordStoreSchema schema,
     final String schemaName, final Connection connection) throws SQLException {
     final String sql = "SELECT GC.F_TABLE_NAME, GC.F_GEOMETRY_COLUMN, GC.SRID, GC.GEOMETRY_TYPE, GC.COORD_DIMENSION, SG.GEOMETRY_TYPE GEOMETRY_DATA_TYPE FROM SDE.GEOMETRY_COLUMNS GC LEFT OUTER JOIN SDE.ST_GEOMETRY_COLUMNS SG ON GC.F_TABLE_SCHEMA = SG.OWNER AND GC.F_TABLE_NAME = SG.TABLE_NAME WHERE GC.F_TABLE_SCHEMA = ?";
     final PreparedStatement statement = connection.prepareStatement(sql);
@@ -105,7 +105,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
   }
 
   private void loadTableProperties(final Connection connection,
-    final DataObjectStoreSchema schema, final String schemaName) {
+    final RecordStoreSchema schema, final String schemaName) {
     final String sql = "SELECT registration_id, table_name, rowid_column FROM sde.table_registry WHERE owner = ?";
     PreparedStatement statement = null;
     ResultSet resultSet = null;
@@ -135,7 +135,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
   }
 
   @Override
-  public void postProcess(final DataObjectStoreSchema schema) {
+  public void postProcess(final RecordStoreSchema schema) {
     final String schemaName = schema.getName();
     for (final RecordDefinition metaData : schema.getTypes()) {
       final String typePath = metaData.getPath();
@@ -151,7 +151,7 @@ public class ArcSdeStGeometryDataStoreExtension implements
   }
 
   @Override
-  public void preProcess(final DataObjectStoreSchema schema) {
+  public void preProcess(final RecordStoreSchema schema) {
     final RecordStore dataStore = schema.getDataStore();
     final OracleDataObjectStore oracleDataStore = (OracleDataObjectStore)dataStore;
     try {

@@ -11,9 +11,9 @@ import java.util.Set;
 import java.util.zip.ZipFile;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.gis.data.model.DataObjectFactory;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.saif.util.OsnConverter;
@@ -27,7 +27,7 @@ public class OsnReader implements DataObjectIterator {
 
   private boolean endOfFile = false;
 
-  private DataObjectFactory factory;
+  private RecordFactory factory;
 
   private final String fileName;
 
@@ -94,8 +94,8 @@ public class OsnReader implements DataObjectIterator {
     if (converter != null) {
       return converter.read(osnIterator);
     } else {
-      final RecordDefinition type = metaDataFactory.getMetaData(typePath);
-      final Record dataObject = factory.createDataObject(type);
+      final RecordDefinition type = metaDataFactory.getRecordDefinition(typePath);
+      final Record dataObject = factory.createRecord(type);
       while (osnIterator.next() != OsnIterator.END_OBJECT) {
         addAttribute(dataObject);
       }
@@ -138,7 +138,7 @@ public class OsnReader implements DataObjectIterator {
   /**
    * @return the factory
    */
-  public DataObjectFactory getFactory() {
+  public RecordFactory getFactory() {
     return factory;
   }
 
@@ -228,7 +228,7 @@ public class OsnReader implements DataObjectIterator {
   /**
    * @param factory the factory to set
    */
-  public void setFactory(final DataObjectFactory factory) {
+  public void setFactory(final RecordFactory factory) {
     this.factory = factory;
   }
 
@@ -241,8 +241,8 @@ public class OsnReader implements DataObjectIterator {
   private boolean skipToFirstDataObject() throws IOException {
     if (osnIterator.next() == OsnIterator.START_DEFINITION) {
       final String typePath = osnIterator.getPathValue();
-      final RecordDefinitionImpl type = (RecordDefinitionImpl)metaDataFactory.getMetaData(typePath);
-      final RecordDefinition spatialDataSetType = metaDataFactory.getMetaData("/SpatialDataSet");
+      final RecordDefinitionImpl type = (RecordDefinitionImpl)metaDataFactory.getRecordDefinition(typePath);
+      final RecordDefinition spatialDataSetType = metaDataFactory.getRecordDefinition("/SpatialDataSet");
       if (type != null && type.isInstanceOf(spatialDataSetType)) {
         final String oiName = osnIterator.nextAttributeName();
 

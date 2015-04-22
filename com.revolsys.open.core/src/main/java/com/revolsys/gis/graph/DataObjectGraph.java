@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryFilter;
 import com.revolsys.gis.data.model.property.DirectionalAttributes;
@@ -106,7 +106,7 @@ public class DataObjectGraph extends Graph<Record> {
     if (object == null) {
       return null;
     } else {
-      final RecordDefinition metaData = object.getMetaData();
+      final RecordDefinition metaData = object.getRecordDefinition();
       final String typePath = metaData.getPath();
       return typePath;
     }
