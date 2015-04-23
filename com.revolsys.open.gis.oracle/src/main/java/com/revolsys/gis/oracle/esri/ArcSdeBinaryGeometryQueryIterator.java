@@ -128,7 +128,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
       BoundingBox boundingBox = this.query.getBoundingBox();
       if (boundingBox != null) {
         final SeLayer layer = new SeLayer(connection, tableName,
-          this.metaData.getGeometryAttributeName());
+          this.metaData.getGeometryFieldName());
 
         final GeometryFactory geometryFactory = this.metaData.getGeometryFactory();
         boundingBox = boundingBox.convert(geometryFactory);
@@ -137,7 +137,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
         final SeShape shape = new SeShape(layer.getCoordRef());
         shape.generateRectangle(envelope);
         final SeShapeFilter filter = new SeShapeFilter(tableName,
-          this.metaData.getGeometryAttributeName(), shape, SeFilter.METHOD_ENVP);
+          this.metaData.getGeometryFieldName(), shape, SeFilter.METHOD_ENVP);
         this.seQuery.setSpatialConstraints(SeQuery.SE_SPATIAL_FIRST, false,
           new SeFilter[] {
             filter

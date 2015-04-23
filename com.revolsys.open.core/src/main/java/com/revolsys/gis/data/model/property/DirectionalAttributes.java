@@ -90,7 +90,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     DirectionalAttributes property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new DirectionalAttributes();
-      property.setMetaData(metaData);
+      property.setRecordDefinition(metaData);
     }
     return property;
   }
@@ -284,7 +284,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     final Collection<String> equalExcludeAttributes,
     final boolean[] forwardsIndicators) {
     final RecordDefinition metaData = getMetaData();
-    if (attributeName.equals(metaData.getGeometryAttributeName())) {
+    if (attributeName.equals(metaData.getGeometryFieldName())) {
       final LineString line1 = object1.getGeometryValue();
       final LineString line2 = object2.getGeometryValue();
       return !line1.equals(line2);
@@ -439,7 +439,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     final LineString line1 = object1.getGeometryValue();
     final LineString line2 = object2.getGeometryValue();
     final RecordDefinition metaData = getMetaData();
-    if (attributeName.equals(metaData.getGeometryAttributeName())) {
+    if (attributeName.equals(metaData.getGeometryFieldName())) {
       return line1.equals(line2);
     }
     final CoordinatesList points1 = CoordinatesListUtil.get(line1);
@@ -513,7 +513,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
       }
       return attributeNames;
     } else {
-      final String geometryAttributeName = metaData.getGeometryAttributeName();
+      final String geometryAttributeName = metaData.getGeometryFieldName();
       return Collections.singleton(geometryAttributeName);
     }
   }
@@ -633,7 +633,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     setStartAttributes(startObject, newValues);
     setEndAttributes(endObject, newValues);
     final RecordDefinition metaData = object1.getRecordDefinition();
-    final String geometryAttributeName = metaData.getGeometryAttributeName();
+    final String geometryAttributeName = metaData.getGeometryFieldName();
     newValues.put(geometryAttributeName, newLine);
     return newValues;
   }
@@ -697,7 +697,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     }
     setStartAttributes(startObject, newObject);
     setEndAttributes(endObject, newObject);
-    LengthAttributeName.setObjectLength(newObject);
+    LengthFieldName.setObjectLength(newObject);
     return newObject;
   }
 
@@ -754,7 +754,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
     }
     setStartAttributes(startObject, newObject);
     setEndAttributes(endObject, newObject);
-    LengthAttributeName.setObjectLength(newObject);
+    LengthFieldName.setObjectLength(newObject);
     return newObject;
   }
 
@@ -824,7 +824,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
   public Map<String, Object> getReverseAttributesAndGeometry(
     final Map<String, Object> object) {
     final Map<String, Object> reverse = getReverseAttributes(object);
-    final String geometryAttributeName = getMetaData().getGeometryAttributeName();
+    final String geometryAttributeName = getMetaData().getGeometryFieldName();
     if (geometryAttributeName != null) {
       final Geometry geometry = getReverseLine(object);
       reverse.put(geometryAttributeName, geometry);
@@ -835,7 +835,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
   public Map<String, Object> getReverseGeometry(final Map<String, Object> object) {
     final Map<String, Object> reverse = new LinkedHashMap<String, Object>(
       object);
-    final String geometryAttributeName = getMetaData().getGeometryAttributeName();
+    final String geometryAttributeName = getMetaData().getGeometryFieldName();
     if (geometryAttributeName != null) {
       final Geometry geometry = getReverseLine(object);
       reverse.put(geometryAttributeName, geometry);
@@ -844,7 +844,7 @@ public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
   }
 
   protected Geometry getReverseLine(final Map<String, Object> object) {
-    final String geometryAttributeName = getMetaData().getGeometryAttributeName();
+    final String geometryAttributeName = getMetaData().getGeometryFieldName();
     final LineString line = (LineString)object.get(geometryAttributeName);
     if (line == null) {
       return null;

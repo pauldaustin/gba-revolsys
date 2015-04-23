@@ -24,7 +24,7 @@ public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
     EqualIgnoreAttributes property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new EqualIgnoreAttributes();
-      property.setMetaData(metaData);
+      property.setRecordDefinition(metaData);
     }
     return property;
   }
@@ -71,19 +71,19 @@ public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
     this.attributeNames = attributeNames;
   }
 
-  public void setAttributeNames(final String... attributeNames) {
+  public void setFieldNames(final String... attributeNames) {
     setAttributeNames(Arrays.asList(attributeNames));
   }
 
   @Override
-  public void setMetaData(final RecordDefinition metaData) {
-    super.setMetaData(metaData);
+  public void setRecordDefinition(final RecordDefinition metaData) {
+    super.setRecordDefinition(metaData);
     if (attributeNames.contains(DataObjectEquals.EXCLUDE_ID)) {
       final String idAttributeName = metaData.getIdFieldName();
       attributeNames.add(idAttributeName);
     }
     if (attributeNames.contains(DataObjectEquals.EXCLUDE_GEOMETRY)) {
-      final String geometryAttributeName = metaData.getGeometryAttributeName();
+      final String geometryAttributeName = metaData.getGeometryFieldName();
       attributeNames.add(geometryAttributeName);
     }
   }

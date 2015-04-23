@@ -47,11 +47,11 @@ public class GlobalIdProperty extends AbstractDataObjectMetaDataProperty {
   }
 
   @Override
-  public void setMetaData(final RecordDefinition metaData) {
+  public void setRecordDefinition(final RecordDefinition metaData) {
     if (attributeName == null) {
       attributeName = metaData.getIdFieldName();
     }
-    super.setMetaData(metaData);
+    super.setRecordDefinition(metaData);
   }
 
 }

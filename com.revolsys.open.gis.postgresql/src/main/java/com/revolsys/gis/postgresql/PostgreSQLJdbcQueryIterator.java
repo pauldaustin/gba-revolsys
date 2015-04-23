@@ -30,7 +30,7 @@ public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
       } else {
         query = query.clone();
-        final String geometryAttributeName = metaData.getGeometryAttributeName();
+        final String geometryAttributeName = metaData.getGeometryFieldName();
         final GeometryFactory geometryFactory = metaData.getGeometryFactory();
         boundingBox = boundingBox.convert(geometryFactory);
         final double x1 = boundingBox.getMinX();

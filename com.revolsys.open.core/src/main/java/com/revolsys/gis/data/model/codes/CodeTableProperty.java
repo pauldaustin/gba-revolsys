@@ -360,7 +360,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
   }
 
   @Override
-  public void setMetaData(final RecordDefinition metaData) {
+  public void setRecordDefinition(final RecordDefinition metaData) {
     if (this.metaData != metaData) {
       if (this.metaData != null) {
         this.metaData.setProperty(getPropertyName(), null);

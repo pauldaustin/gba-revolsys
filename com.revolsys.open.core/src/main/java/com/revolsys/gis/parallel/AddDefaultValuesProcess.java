@@ -166,7 +166,7 @@ public class AddDefaultValuesProcess extends
           final Record subObject = (Record)attributeValue;
           setDefaultValue(subObject, subKey, value);
         } else if (!attributeName.equals(dataObject.getRecordDefinition()
-          .getGeometryAttributeName())) {
+          .getGeometryFieldName())) {
           log.error("Attribute '" + attributeName + "' must be a DataObject");
         }
       } finally {

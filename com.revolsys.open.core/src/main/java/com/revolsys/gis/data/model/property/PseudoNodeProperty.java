@@ -32,7 +32,7 @@ public class PseudoNodeProperty extends AbstractDataObjectMetaDataProperty {
     PseudoNodeProperty property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new PseudoNodeProperty();
-      property.setMetaData(metaData);
+      property.setRecordDefinition(metaData);
     }
     return property;
   }
@@ -78,8 +78,8 @@ public class PseudoNodeProperty extends AbstractDataObjectMetaDataProperty {
   }
 
   @Override
-  public void setMetaData(final RecordDefinition metaData) {
-    super.setMetaData(metaData);
+  public void setRecordDefinition(final RecordDefinition metaData) {
+    super.setRecordDefinition(metaData);
   }
 
   @Override

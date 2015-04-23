@@ -294,7 +294,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
         if (property instanceof DataObjectMetaDataProperty) {
           DataObjectMetaDataProperty metaDataProperty = (DataObjectMetaDataProperty)property;
           metaDataProperty = metaDataProperty.clone();
-          metaDataProperty.setMetaData(this);
+          metaDataProperty.setRecordDefinition(this);
           setProperty(propertyName, metaDataProperty);
         } else {
           setProperty(propertyName, property);
@@ -569,7 +569,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public String getGeometryAttributeName() {
+  public String getGeometryFieldName() {
     return getAttributeName(this.geometryAttributeIndex);
   }
 
@@ -817,7 +817,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
         if (value instanceof DataObjectMetaDataProperty) {
           final DataObjectMetaDataProperty property = (DataObjectMetaDataProperty)value;
           final DataObjectMetaDataProperty clonedProperty = property.clone();
-          clonedProperty.setMetaData(this);
+          clonedProperty.setRecordDefinition(this);
         } else {
           setProperty(key, value);
         }

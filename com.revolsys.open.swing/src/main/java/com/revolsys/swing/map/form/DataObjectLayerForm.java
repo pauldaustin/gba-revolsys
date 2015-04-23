@@ -195,7 +195,7 @@ public class DataObjectLayerForm extends JPanel implements
     final boolean editable = layer.isEditable();
     setEditable(editable);
     getAllAttributes().setEditable(isEditable());
-    if (metaData.getGeometryAttributeName() != null) {
+    if (metaData.getGeometryFieldName() != null) {
       addTabGeometry();
     }
     Property.addListener(layer, this);
@@ -425,7 +425,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   protected void addTabGeometry() {
-    final String geometryAttributeName = this.metaData.getGeometryAttributeName();
+    final String geometryAttributeName = this.metaData.getGeometryFieldName();
     if (this.geometryCoordinatesPanel == null && geometryAttributeName != null) {
       this.geometryCoordinatesPanel = new GeometryCoordinatesPanel(this,
         geometryAttributeName);
@@ -780,7 +780,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public String getGeometryAttributeName() {
-    return getMetaData().getGeometryAttributeName();
+    return getMetaData().getGeometryFieldName();
   }
 
   public GeometryCoordinatesPanel getGeometryCoordinatesPanel() {

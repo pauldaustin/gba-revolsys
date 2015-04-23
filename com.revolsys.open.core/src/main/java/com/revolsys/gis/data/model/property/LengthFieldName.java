@@ -7,36 +7,36 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LengthAttributeName extends AbstractDataObjectMetaDataProperty {
-  public static final String PROPERTY_NAME = LengthAttributeName.class.getName()
+public class LengthFieldName extends AbstractDataObjectMetaDataProperty {
+  public static final String PROPERTY_NAME = LengthFieldName.class.getName()
     + ".propertyName";
 
-  public static LengthAttributeName getProperty(final Record object) {
+  public static LengthFieldName getProperty(final Record object) {
     final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);
   }
 
-  public static LengthAttributeName getProperty(
+  public static LengthFieldName getProperty(
     final RecordDefinition metaData) {
-    LengthAttributeName property = metaData.getProperty(PROPERTY_NAME);
+    LengthFieldName property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
-      property = new LengthAttributeName();
-      property.setMetaData(metaData);
+      property = new LengthFieldName();
+      property.setRecordDefinition(metaData);
     }
     return property;
   }
 
   public static void setObjectLength(final Record object) {
-    final LengthAttributeName property = getProperty(object);
+    final LengthFieldName property = getProperty(object);
     property.setLength(object);
   }
 
   private String attributeName;
 
-  public LengthAttributeName() {
+  public LengthFieldName() {
   }
 
-  public LengthAttributeName(final String attributeName) {
+  public LengthFieldName(final String attributeName) {
     this.attributeName = attributeName;
   }
 
@@ -49,7 +49,7 @@ public class LengthAttributeName extends AbstractDataObjectMetaDataProperty {
     return PROPERTY_NAME;
   }
 
-  public void setAttributeName(final String attributeName) {
+  public void setFieldName(final String attributeName) {
     this.attributeName = attributeName;
   }
 

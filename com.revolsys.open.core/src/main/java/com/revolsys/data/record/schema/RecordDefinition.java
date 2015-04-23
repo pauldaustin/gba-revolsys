@@ -148,7 +148,7 @@ public interface RecordDefinition extends ObjectWithProperties,
    * 
    * @return The primary geometry name.
    */
-  String getGeometryAttributeName();
+  String getGeometryFieldName();
 
   /**
    * Get the name of the all Geometry attributes.

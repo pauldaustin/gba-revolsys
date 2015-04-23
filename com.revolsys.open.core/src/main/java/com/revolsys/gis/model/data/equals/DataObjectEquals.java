@@ -61,7 +61,7 @@ public class DataObjectEquals implements Equals<Record> {
       && attributeName.equals(metaData.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
-      && attributeName.equals(metaData.getGeometryAttributeName())) {
+      && attributeName.equals(metaData.getGeometryFieldName())) {
       return true;
     } else {
       final Object value1 = object1.getValue(attributeName);
@@ -85,7 +85,7 @@ public class DataObjectEquals implements Equals<Record> {
       && attributeName.equals(metaData.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
-      && attributeName.equals(metaData.getGeometryAttributeName())) {
+      && attributeName.equals(metaData.getGeometryFieldName())) {
       return true;
     } else {
       return false;

@@ -163,7 +163,7 @@ implements RecordStore {
     final String typePath = metaData.getPath();
     for (final DataObjectMetaDataProperty property : this.commonMetaDataProperties) {
       final DataObjectMetaDataProperty clonedProperty = property.clone();
-      clonedProperty.setMetaData(metaData);
+      clonedProperty.setRecordDefinition(metaData);
     }
     final Map<String, Object> properties = this.typeMetaDataProperties.get(typePath);
     metaData.setProperties(properties);

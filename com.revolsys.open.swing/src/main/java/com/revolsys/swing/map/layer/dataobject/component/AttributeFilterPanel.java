@@ -124,7 +124,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
     add(this.whereLabel);
 
     this.attributeNames = new ArrayList<String>(this.layer.getColumnNames());
-    this.attributeNames.remove(this.metaData.getGeometryAttributeName());
+    this.attributeNames.remove(this.metaData.getGeometryFieldName());
     final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(
       this.layer);
     this.nameField = new ComboBox(converter, false,

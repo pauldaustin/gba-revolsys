@@ -150,7 +150,7 @@ public class ShapefileDataObjectWriter extends XbaseDataObjectWriter {
     super.init();
     final RecordDefinitionImpl metaData = (RecordDefinitionImpl)getMetaData();
     if (metaData != null) {
-      geometryPropertyName = metaData.getGeometryAttributeName();
+      geometryPropertyName = metaData.getGeometryFieldName();
       if (geometryPropertyName != null) {
 
         this.out = new ResourceEndianOutput(resource);

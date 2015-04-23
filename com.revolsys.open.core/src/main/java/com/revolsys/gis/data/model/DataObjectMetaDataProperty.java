@@ -10,5 +10,5 @@ public interface DataObjectMetaDataProperty extends Cloneable {
 
   String getPropertyName();
 
-  void setMetaData(RecordDefinition metaData);
+  void setRecordDefinition(RecordDefinition metaData);
 }

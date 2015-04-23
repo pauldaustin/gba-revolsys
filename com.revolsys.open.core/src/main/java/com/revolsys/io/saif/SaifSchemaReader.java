@@ -125,7 +125,7 @@ public class SaifSchemaReader {
       currentClass.setIdFieldName(idAttributeName);
 
     }
-    String geometryAttributeName = superClass.getGeometryAttributeName();
+    String geometryAttributeName = superClass.getGeometryFieldName();
     final String path = currentClass.getPath();
     if (path.equals("/TRIM/TrimText")) {
       geometryAttributeName = "textOrSymbol";
@@ -453,7 +453,7 @@ public class SaifSchemaReader {
   private void setMetaDataProperties(final RecordDefinitionImpl metaData) {
     for (final DataObjectMetaDataProperty property : commonMetaDataProperties) {
       final DataObjectMetaDataProperty clonedProperty = property.clone();
-      clonedProperty.setMetaData(metaData);
+      clonedProperty.setRecordDefinition(metaData);
     }
   }
 

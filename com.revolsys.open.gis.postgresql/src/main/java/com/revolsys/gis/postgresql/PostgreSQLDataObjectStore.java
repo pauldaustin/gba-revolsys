@@ -108,7 +108,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
       } else {
         query = query.clone();
         query.setAttributeNames("count(*))");
-        final String geometryAttributeName = metaData.getGeometryAttributeName();
+        final String geometryAttributeName = metaData.getGeometryFieldName();
         final GeometryFactory geometryFactory = metaData.getGeometryFactory();
         boundingBox = boundingBox.convert(geometryFactory);
         final double x1 = boundingBox.getMinX();

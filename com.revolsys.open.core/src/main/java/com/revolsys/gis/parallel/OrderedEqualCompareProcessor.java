@@ -114,7 +114,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
     final Record object2) {
     final RecordDefinition metaData = object1.getRecordDefinition();
     final Set<String> notEqualAttributeNames = new LinkedHashSet<String>();
-    final String geometryAttributeName = metaData.getGeometryAttributeName();
+    final String geometryAttributeName = metaData.getGeometryFieldName();
     for (final String attributeName : metaData.getFieldNames()) {
       if (!equalExclude.contains(attributeName)
         && !attributeName.equals(geometryAttributeName)) {
@@ -279,7 +279,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
                   otherObject);
                 if (!geometryEquals) {
                   final String geometryAttributeName = sourceObject.getRecordDefinition()
-                    .getGeometryAttributeName();
+                    .getGeometryFieldName();
                   notEqualAttributeNames.add(geometryAttributeName);
                 }
                 if (!notEqualAttributeNames.isEmpty()) {

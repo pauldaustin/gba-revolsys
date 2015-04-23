@@ -1006,7 +1006,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements
     } else {
       final LayerDataObject object = location.getObject();
       final RecordDefinition metaData = location.getMetaData();
-      final String geometryAttributeName = metaData.getGeometryAttributeName();
+      final String geometryAttributeName = metaData.getGeometryFieldName();
       final Geometry oldValue = object.getValue(geometryAttributeName);
       if (JtsGeometryUtil.equalsExact3D(newGeometry, oldValue)) {
         return null;

@@ -345,7 +345,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
   public void addComplete(final AbstractOverlay overlay, final Geometry geometry) {
     if (geometry != null) {
       final RecordDefinition metaData = getMetaData();
-      final String geometryAttributeName = metaData.getGeometryAttributeName();
+      final String geometryAttributeName = metaData.getGeometryFieldName();
       final Map<String, Object> parameters = new HashMap<String, Object>();
       parameters.put(geometryAttributeName, geometry);
       showAddForm(parameters);
@@ -939,7 +939,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     if (this.metaData == null) {
       return "";
     } else {
-      return getMetaData().getGeometryAttributeName();
+      return getMetaData().getGeometryFieldName();
     }
   }
 
