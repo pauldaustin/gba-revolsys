@@ -9,8 +9,21 @@
 package com.revolsys.gis.esri.gdb.file.capi.swig;
 
 import com.revolsys.jar.ClasspathNativeLibraryUtil;
+import com.revolsys.util.OS;
 
 public class EsriFileGdbJNI {
+
+  static {
+    if (OS.IS_WINDOWS) {
+      ClasspathNativeLibraryUtil.loadLibrary("FileGDBCAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("Esri.FileGDBCAPI");
+    } else {
+      ClasspathNativeLibraryUtil.loadLibrary("fgdbunixrtl");
+      ClasspathNativeLibraryUtil.loadLibrary("FileGDBCAPI");
+    }
+    ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+    EsriFileGdb.setMaxOpenFiles(2048);
+  }
 
   public final static native int CloseGeodatabase(long jarg1, Geodatabase jarg1_);
 
@@ -621,9 +634,4 @@ public class EsriFileGdbJNI {
 
   public final static native long VectorOfWString_size(long jarg1,
     VectorOfWString jarg1_);
-
-  static {
-    ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
-    EsriFileGdb.setMaxOpenFiles(2048);
-  }
 }
