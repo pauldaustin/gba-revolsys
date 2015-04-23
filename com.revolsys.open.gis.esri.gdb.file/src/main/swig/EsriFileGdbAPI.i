@@ -49,12 +49,21 @@ void handleException(JNIEnv *jenv, const std::runtime_error e) {
 
 %pragma(java) jniclassimports=%{
 import com.revolsys.jar.ClasspathNativeLibraryUtil;
+import com.revolsys.util.OS;
 %}
 
 %pragma(java) jniclasscode=%{
   static {
-    ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
-    EsriFileGdb.setMaxOpenFiles(2048);
+    if (OS.isWindows()) {
+      ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("Esri.FileGDBAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+      EsriFileGdb.setMaxOpenFiles(2048);
+    } else {
+      ClasspathNativeLibraryUtil.loadLibrary("fgdbunixrtl");
+      ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+    }
   }
 %}
 %define EXT_FILEGDB_API

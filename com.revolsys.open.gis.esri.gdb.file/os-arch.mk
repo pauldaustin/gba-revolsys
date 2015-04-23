@@ -4,7 +4,7 @@
 
 ESRI_FILE_GBD_HOME=/opt/EsriFileGdb/1.3/${OS}/${ARCH}
 ESRI_FILE_GBD_INCLUDE=/opt/EsriFileGdb/1.3/${OS}/${ARCH}/include
-JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_60.jdk/Contents/Home
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_76.jdk/Contents/Home/
 CFG=Release
 CXX=clang++
 
