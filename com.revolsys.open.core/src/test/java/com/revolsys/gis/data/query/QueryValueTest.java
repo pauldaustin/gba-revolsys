@@ -27,7 +27,7 @@ public class QueryValueTest {
 
   public QueryValueTest() {
     metaData = new RecordDefinitionImpl("Test");
-    idAttribute = metaData.addAttribute("ID", DataTypes.INT, true);
+    idAttribute = metaData.addField("ID", DataTypes.INT, true);
     nameAttribute = metaData.addAttribute("NAME", DataTypes.STRING, 255, true);
     descriptionAttribute = metaData.addAttribute("DESCRIPTION",
       DataTypes.STRING, 255, false);

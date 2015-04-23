@@ -28,7 +28,7 @@ public class Column extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuilder buffer) {
+  public void appendSql(final StringBuffer buffer) {
     buffer.append(toString());
   }
 

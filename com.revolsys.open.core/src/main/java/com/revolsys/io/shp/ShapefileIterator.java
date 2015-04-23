@@ -339,7 +339,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
           default:
           break;
         }
-        metaData.addAttribute("geometry", geometryType, true);
+        metaData.addField("geometry", geometryType, true);
       }
     }
   }

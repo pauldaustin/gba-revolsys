@@ -95,22 +95,22 @@ public final class GpxConstants {
     addAttribute("pdop", DataTypes.DOUBLE, false);
     addAttribute("ageofdgpsdata", DataTypes.DOUBLE, false);
     addAttribute("dgpsid", DataTypes.STRING, false);
-    GPX_TYPE.addAttribute("location", DataTypes.GEOMETRY, true);
+    GPX_TYPE.addField("location", DataTypes.GEOMETRY, true);
     GPX_TYPE.setGeometryFactory(GEOMETRY_FACTORY);
-    GPX_WAYPOINT.addAttribute("geometry", DataTypes.POINT, true);
+    GPX_WAYPOINT.addField("geometry", DataTypes.POINT, true);
     GPX_WAYPOINT.setGeometryFactory(GEOMETRY_FACTORY);
-    GPX_TRACK.addAttribute("geometry", DataTypes.MULTI_LINE_STRING, true);
+    GPX_TRACK.addField("geometry", DataTypes.MULTI_LINE_STRING, true);
     GPX_TRACK.setGeometryFactory(GEOMETRY_FACTORY);
-    GPX_ROUTE.addAttribute("geometry", DataTypes.LINE_STRING, true);
+    GPX_ROUTE.addField("geometry", DataTypes.LINE_STRING, true);
     GPX_ROUTE.setGeometryFactory(GEOMETRY_FACTORY);
   }
 
   private static void addAttribute(final String name, final DataType type,
     final boolean required) {
-    GPX_TYPE.addAttribute(name, type, required);
-    GPX_WAYPOINT.addAttribute(name, type, required);
-    GPX_TRACK.addAttribute(name, type, required);
-    GPX_ROUTE.addAttribute(name, type, required);
+    GPX_TYPE.addField(name, type, required);
+    GPX_WAYPOINT.addField(name, type, required);
+    GPX_TRACK.addField(name, type, required);
+    GPX_ROUTE.addField(name, type, required);
   }
 
   private GpxConstants() {

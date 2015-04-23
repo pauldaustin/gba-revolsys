@@ -11,27 +11,31 @@ import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
 public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
 
-  private Reference<CapiFileGdbRecordStore> recordStore;
+  private Reference<CapiFileGdbRecordStore> dataStore;
 
-  public AbstractFileGdbFieldDefinition(final String name, final DataType dataType,
-    final boolean required) {
+  public AbstractFileGdbFieldDefinition(final String name,
+    final DataType dataType, final boolean required) {
     super(name, dataType, required);
   }
 
-  public AbstractFileGdbFieldDefinition(final String name, final DataType dataType,
-    final int length, final boolean required) {
+  public AbstractFileGdbFieldDefinition(final String name,
+    final DataType dataType, final int length, final boolean required) {
     super(name, dataType, length, required);
   }
 
-  public CapiFileGdbRecordStore getRecordStore() {
-    if (this.recordStore == null) {
+  public CapiFileGdbRecordStore getDataStore() {
+    if (this.dataStore == null) {
       return null;
     } else {
-      return this.recordStore.get();
+      return this.dataStore.get();
     }
   }
 
   public abstract Object getValue(Row row);
+
+  public void setDataStore(final CapiFileGdbRecordStore dataStore) {
+    this.dataStore = new WeakReference<CapiFileGdbRecordStore>(dataStore);
+  }
 
   public Object setInsertValue(final Record object, final Row row,
     final Object value) {
@@ -39,10 +43,6 @@ public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
   }
 
   public void setPostInsertValue(final Record object, final Row row) {
-  }
-
-  public void setRecordStore(final CapiFileGdbRecordStore recordStore) {
-    this.recordStore = new WeakReference<CapiFileGdbRecordStore>(recordStore);
   }
 
   public Object setUpdateValue(final Record object, final Row row,

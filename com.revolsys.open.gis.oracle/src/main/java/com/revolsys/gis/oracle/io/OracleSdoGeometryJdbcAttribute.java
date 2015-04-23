@@ -65,7 +65,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
   }
 
   @Override
-  public void addColumnName(final StringBuilder sql, final String tablePrefix) {
+  public void addColumnName(final StringBuffer sql, final String tablePrefix) {
     sql.append(tablePrefix);
     sql.append(".GEOMETRY.SDO_GTYPE, ");
     sql.append(tablePrefix);
@@ -96,25 +96,25 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
     switch (geometryType % 1000) {
       case 1:
         value = toPoint(resultSet, columnIndex, numAxis);
-        break;
+      break;
       case 2:
         value = toLineString(resultSet, columnIndex, numAxis);
-        break;
+      break;
       case 3:
         value = toPolygon(resultSet, columnIndex, numAxis);
-        break;
+      break;
       case 5:
         value = toMultiPoint(resultSet, columnIndex, numAxis);
-        break;
+      break;
       case 6:
         value = toMultiLineString(resultSet, columnIndex, numAxis);
-        break;
+      break;
       case 7:
         value = toMultiPolygon(resultSet, columnIndex, numAxis);
-        break;
+      break;
       default:
         throw new IllegalArgumentException("Unsupported geometry type "
-            + geometryType);
+          + geometryType);
     }
     object.setValue(getIndex(), value);
     return columnIndex + 6;
@@ -282,7 +282,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
         jGeometry = toJGeometry(multiPolygon, dimension);
       } else {
         throw new IllegalArgumentException("Unable to convert to SDO_GEOMETRY "
-            + object.getClass());
+          + object.getClass());
       }
       try {
         final STRUCT struct = JGeometry.store(jGeometry, connection);
@@ -293,7 +293,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
       }
     } else {
       throw new IllegalArgumentException("Unable to convert to SDO_GEOMETRY "
-          + object.getClass());
+        + object.getClass());
     }
   }
 
@@ -503,14 +503,14 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
             exteriorRing = ring;
             interiorRings = new ArrayList<LinearRing>();
 
-            break;
+          break;
           case 2003:
             interiorRings.add(ring);
-            break;
+          break;
 
           default:
             throw new IllegalArgumentException("Unsupported geometry type "
-                + type);
+              + type);
         }
       } else {
         throw new IllegalArgumentException("Unsupported geometry type " + type
@@ -575,20 +575,20 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcAttribute {
               exteriorRing = ring;
             } else {
               throw new IllegalArgumentException(
-                  "Cannot have two exterior rings on a geometry");
+                "Cannot have two exterior rings on a geometry");
             }
-            break;
+          break;
           case 2003:
             if (numInteriorRings == interiorRings.length) {
               throw new IllegalArgumentException("Too many interior rings");
             } else {
               interiorRings[numInteriorRings++] = ring;
             }
-            break;
+          break;
 
           default:
             throw new IllegalArgumentException("Unsupported geometry type "
-                + type);
+              + type);
         }
       } else {
         throw new IllegalArgumentException("Unsupported geometry type " + type

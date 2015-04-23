@@ -52,7 +52,7 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcAttribute {
    * function.
    */
   @Override
-  public void addInsertStatementPlaceHolder(final StringBuilder sql,
+  public void addInsertStatementPlaceHolder(final StringBuffer sql,
     final boolean generateKeys) {
     sql.append(" sde.version_user_ddl.next_row_id('");
     sql.append(this.schemaName);

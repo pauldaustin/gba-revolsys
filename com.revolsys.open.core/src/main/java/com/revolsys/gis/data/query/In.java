@@ -73,7 +73,7 @@ public class In extends Condition {
   }
 
   @Override
-  public void appendSql(final StringBuilder buffer) {
+  public void appendSql(final StringBuffer buffer) {
     if (this.left == null) {
       buffer.append("NULL");
     } else {

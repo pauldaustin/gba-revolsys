@@ -29,7 +29,7 @@ import com.revolsys.jdbc.attribute.JdbcAttribute;
 import com.revolsys.transaction.Transaction;
 
 public class JdbcWriterImpl extends AbstractWriter<Record> implements
-  JdbcWriter {
+JdbcWriter {
   private static final Logger LOG = Logger.getLogger(JdbcWriterImpl.class);
 
   private int batchSize = 1;
@@ -97,7 +97,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements
     statistics.connect();
   }
 
-  private void addSqlColumEqualsPlaceholder(final StringBuilder sqlBuffer,
+  private void addSqlColumEqualsPlaceholder(final StringBuffer sqlBuffer,
     final JdbcAttribute attribute) {
     final String attributeName = attribute.getName();
     if (this.quoteColumnNames) {
@@ -289,7 +289,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     String sql = this.typeDeleteSqlMap.get(typePath);
     if (sql == null) {
-      final StringBuilder sqlBuffer = new StringBuilder();
+      final StringBuffer sqlBuffer = new StringBuffer();
       if (this.sqlPrefix != null) {
         sqlBuffer.append(this.sqlPrefix);
       }
@@ -339,7 +339,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements
       sql = this.typeInsertSqlMap.get(typePath);
     }
     if (sql == null) {
-      final StringBuilder sqlBuffer = new StringBuilder();
+      final StringBuffer sqlBuffer = new StringBuffer();
       if (this.sqlPrefix != null) {
         sqlBuffer.append(this.sqlPrefix);
       }
@@ -417,7 +417,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     String sql = this.typeUpdateSqlMap.get(typePath);
     if (sql == null) {
-      final StringBuilder sqlBuffer = new StringBuilder();
+      final StringBuffer sqlBuffer = new StringBuffer();
       if (this.sqlPrefix != null) {
         sqlBuffer.append(this.sqlPrefix);
       }
@@ -480,7 +480,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements
     }
 
     final boolean hasIdValue = hasId
-      && object.getValue(idAttributeName) != null;
+        && object.getValue(idAttributeName) != null;
 
     if (!hasId || hasIdValue) {
       insert(object, typePath, metaData);
@@ -719,16 +719,16 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements
         switch (state) {
           case New:
             insert(object);
-          break;
+            break;
           case Modified:
             update(object);
-          break;
+            break;
           case Persisted:
-          // No action required
-          break;
+            // No action required
+            break;
           case Deleted:
             delete(object);
-          break;
+            break;
           default:
             throw new IllegalStateException("State not known");
         }

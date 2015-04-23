@@ -23,7 +23,7 @@ public class RightUnaryCondition extends Condition {
   }
 
   @Override
-  public void appendSql(final StringBuilder buffer) {
+  public void appendSql(final StringBuffer buffer) {
     this.value.appendSql(buffer);
     buffer.append(" ");
     buffer.append(this.operator);

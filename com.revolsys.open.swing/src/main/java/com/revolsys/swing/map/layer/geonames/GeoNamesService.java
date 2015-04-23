@@ -30,35 +30,35 @@ public class GeoNamesService {
   static {
     final RecordDefinitionImpl meta = new RecordDefinitionImpl(
       PathUtil.toPath("/geoname.org", "name"));
-    meta.addAttribute("geonameId", DataTypes.STRING, false);
-    meta.addAttribute("name", DataTypes.STRING, false);
-    meta.addAttribute("fcode", DataTypes.STRING, false);
-    meta.addAttribute("fcodeName", DataTypes.STRING, false);
-    meta.addAttribute("fcl", DataTypes.STRING, false);
-    meta.addAttribute("fclName", DataTypes.STRING, false);
-    meta.addAttribute("adminName1", DataTypes.STRING, false);
-    meta.addAttribute("adminName2", DataTypes.STRING, false);
-    meta.addAttribute("adminName3", DataTypes.STRING, false);
-    meta.addAttribute("adminName4", DataTypes.STRING, false);
-    meta.addAttribute("adminCode1", DataTypes.STRING, false);
-    meta.addAttribute("population", DataTypes.INTEGER, false);
-    meta.addAttribute("countryCode", DataTypes.STRING, false);
-    meta.addAttribute("countryName", DataTypes.STRING, false);
-    meta.addAttribute("timeZoneId", DataTypes.STRING, false);
-    meta.addAttribute("geometry", DataTypes.POINT, false);
+    meta.addField("geonameId", DataTypes.STRING, false);
+    meta.addField("name", DataTypes.STRING, false);
+    meta.addField("fcode", DataTypes.STRING, false);
+    meta.addField("fcodeName", DataTypes.STRING, false);
+    meta.addField("fcl", DataTypes.STRING, false);
+    meta.addField("fclName", DataTypes.STRING, false);
+    meta.addField("adminName1", DataTypes.STRING, false);
+    meta.addField("adminName2", DataTypes.STRING, false);
+    meta.addField("adminName3", DataTypes.STRING, false);
+    meta.addField("adminName4", DataTypes.STRING, false);
+    meta.addField("adminCode1", DataTypes.STRING, false);
+    meta.addField("population", DataTypes.INTEGER, false);
+    meta.addField("countryCode", DataTypes.STRING, false);
+    meta.addField("countryName", DataTypes.STRING, false);
+    meta.addField("timeZoneId", DataTypes.STRING, false);
+    meta.addField("geometry", DataTypes.POINT, false);
     NAME_METADATA = meta;
 
     final RecordDefinitionImpl wikipediaMetaData = new RecordDefinitionImpl(
       PathUtil.toPath("/geoname.org", "wikipedia"));
-    wikipediaMetaData.addAttribute("summary", DataTypes.STRING, false);
-    wikipediaMetaData.addAttribute("title", DataTypes.STRING, false);
-    wikipediaMetaData.addAttribute("wikipediaUrl", DataTypes.STRING, false);
-    wikipediaMetaData.addAttribute("countryCode", DataTypes.STRING, false);
-    wikipediaMetaData.addAttribute("feature", DataTypes.STRING, false);
-    wikipediaMetaData.addAttribute("thumbnailImg", DataTypes.STRING, false);
-    wikipediaMetaData.addAttribute("lang", DataTypes.STRING, false);
-    wikipediaMetaData.addAttribute("population", DataTypes.INTEGER, false);
-    wikipediaMetaData.addAttribute("geometry", DataTypes.POINT, false);
+    wikipediaMetaData.addField("summary", DataTypes.STRING, false);
+    wikipediaMetaData.addField("title", DataTypes.STRING, false);
+    wikipediaMetaData.addField("wikipediaUrl", DataTypes.STRING, false);
+    wikipediaMetaData.addField("countryCode", DataTypes.STRING, false);
+    wikipediaMetaData.addField("feature", DataTypes.STRING, false);
+    wikipediaMetaData.addField("thumbnailImg", DataTypes.STRING, false);
+    wikipediaMetaData.addField("lang", DataTypes.STRING, false);
+    wikipediaMetaData.addField("population", DataTypes.INTEGER, false);
+    wikipediaMetaData.addField("geometry", DataTypes.POINT, false);
 
     WIKIPEDIA_METADATA = wikipediaMetaData;
   }

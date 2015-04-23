@@ -45,7 +45,7 @@ public class ArcSdeStGeometryAttribute extends JdbcAttribute {
   }
 
   @Override
-  public void addColumnName(final StringBuilder sql, final String tablePrefix) {
+  public void addColumnName(final StringBuffer sql, final String tablePrefix) {
     sql.append(tablePrefix);
     sql.append(".GEOMETRY.ENTITY, ");
     sql.append(tablePrefix);
@@ -55,7 +55,7 @@ public class ArcSdeStGeometryAttribute extends JdbcAttribute {
   }
 
   @Override
-  public void addStatementPlaceHolder(final StringBuilder sql) {
+  public void addStatementPlaceHolder(final StringBuffer sql) {
     sql.append("SDE.ST_GEOMETRY(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   }
 
@@ -124,9 +124,9 @@ public class ArcSdeStGeometryAttribute extends JdbcAttribute {
       final double length = geometry.getLength();
 
       final boolean hasZ = this.dimension > 2 && zOffset != null
-          && zScale != null;
+        && zScale != null;
       final boolean hasM = this.dimension > 3 && mOffset != null
-          && mScale != null;
+        && mScale != null;
 
       int numPoints = 0;
       byte[] data;

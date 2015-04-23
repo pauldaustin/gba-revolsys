@@ -55,7 +55,7 @@ public class Between extends Condition {
   }
 
   @Override
-  public void appendSql(final StringBuilder buffer) {
+  public void appendSql(final StringBuffer buffer) {
     this.column.appendSql(buffer);
     buffer.append(" BETWEEN ");
     this.min.appendSql(buffer);

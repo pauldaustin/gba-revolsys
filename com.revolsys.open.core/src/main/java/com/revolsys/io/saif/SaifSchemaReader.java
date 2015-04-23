@@ -99,10 +99,10 @@ public class SaifSchemaReader {
     final RecordDefinitionImpl exportedObjectHandle = new RecordDefinitionImpl(
       "ExportedObjectHandle");
     schema.addMetaData(exportedObjectHandle);
-    exportedObjectHandle.addAttribute("referenceID", DataTypes.STRING, true);
-    exportedObjectHandle.addAttribute("type", DataTypes.STRING, true);
-    exportedObjectHandle.addAttribute("offset", DataTypes.INTEGER, true);
-    exportedObjectHandle.addAttribute("sharable", DataTypes.BOOLEAN, true);
+    exportedObjectHandle.addField("referenceID", DataTypes.STRING, true);
+    exportedObjectHandle.addField("type", DataTypes.STRING, true);
+    exportedObjectHandle.addField("offset", DataTypes.INTEGER, true);
+    exportedObjectHandle.addField("sharable", DataTypes.BOOLEAN, true);
   }
 
   public void addSuperClass(final RecordDefinitionImpl currentClass,
@@ -158,7 +158,7 @@ public class SaifSchemaReader {
                 dataType = new SimpleDataType(typePath, Record.class);
               }
 
-              currentClass.addAttribute(attributeName, dataType, required);
+              currentClass.addField(attributeName, dataType, required);
 
             break;
             case CsnIterator.COLLECTION_ATTRIBUTE:
@@ -170,7 +170,7 @@ public class SaifSchemaReader {
                 if (contentDataType == null) {
                   contentDataType = DataTypes.DATA_OBJECT;
                 }
-                currentClass.addAttribute(attributeName,
+                currentClass.addField(attributeName,
                   new CollectionDataType(collectionDataType.getName(),
                     collectionDataType.getJavaClass(), contentDataType),
                   required);

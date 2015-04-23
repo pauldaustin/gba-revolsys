@@ -25,7 +25,7 @@ public class Cast extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuilder buffer) {
+  public void appendSql(final StringBuffer buffer) {
     buffer.append("CAST(");
     this.value.appendSql(buffer);
     buffer.append(" AS ");

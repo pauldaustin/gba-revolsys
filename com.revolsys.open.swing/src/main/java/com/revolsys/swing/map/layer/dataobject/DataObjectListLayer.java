@@ -25,7 +25,7 @@ public class DataObjectListLayer extends AbstractDataObjectLayer {
   public static RecordDefinitionImpl createMetaData(final String name,
     final GeometryFactory geometryFactory, final DataType geometryType) {
     final RecordDefinitionImpl metaData = new RecordDefinitionImpl(name);
-    metaData.addAttribute("GEOMETRY", geometryType, true);
+    metaData.addField("GEOMETRY", geometryType, true);
     metaData.setGeometryFactory(geometryFactory);
     return metaData;
   }

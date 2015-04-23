@@ -39,7 +39,7 @@ public class Function extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuilder buffer) {
+  public void appendSql(final StringBuffer buffer) {
     buffer.append(this.name);
     buffer.append("(");
     boolean first = true;

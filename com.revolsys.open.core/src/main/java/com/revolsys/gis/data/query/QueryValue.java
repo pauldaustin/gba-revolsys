@@ -280,7 +280,7 @@ public abstract class QueryValue implements Cloneable {
   // TODO wrap in a more generic structure
   public abstract int appendParameters(int index, PreparedStatement statement);
 
-  public abstract void appendSql(StringBuilder buffer);
+  public abstract void appendSql(StringBuffer buffer);
 
   @Override
   public QueryValue clone() {

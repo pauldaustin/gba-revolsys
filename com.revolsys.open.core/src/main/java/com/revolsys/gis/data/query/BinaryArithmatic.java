@@ -39,7 +39,7 @@ public abstract class BinaryArithmatic extends QueryValue {
   }
 
   @Override
-  public void appendSql(final StringBuilder buffer) {
+  public void appendSql(final StringBuffer buffer) {
     if (this.left == null) {
       buffer.append("NULL");
     } else {

@@ -229,12 +229,12 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
    *
    * @throws AssertionFailedException if a second Geometry is being added
    */
-  public FieldDefinition addAttribute(final String attributeName,
+  public FieldDefinition addField(final String attributeName,
     final DataType type) {
-    return addAttribute(attributeName, type, false);
+    return addField(attributeName, type, false);
   }
 
-  public FieldDefinition addAttribute(final String name, final DataType type,
+  public FieldDefinition addField(final String name, final DataType type,
     final boolean required) {
     final FieldDefinition attribute = new FieldDefinition(name, type, required);
     addField(attribute);

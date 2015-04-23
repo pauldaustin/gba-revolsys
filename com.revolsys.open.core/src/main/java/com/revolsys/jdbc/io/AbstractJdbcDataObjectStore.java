@@ -61,7 +61,7 @@ import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
-  implements JdbcDataObjectStore, DataObjectStoreExtension {
+implements JdbcDataObjectStore, DataObjectStoreExtension {
   public static final List<String> DEFAULT_PERMISSIONS = Arrays.asList("SELECT");
 
   public static final AbstractIterator<Record> createJdbcIterator(
@@ -253,7 +253,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
     }
     final String sql = JdbcUtils.getDeleteSql(query);
     try (
-        Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
@@ -266,7 +266,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
               connection = JdbcUtils.getConnection(dataSource);
               boolean autoCommit = false;
               if (BooleanStringConverter.getBoolean(getProperties().get(
-                  "autoCommit"))) {
+                "autoCommit"))) {
                 autoCommit = true;
               }
               connection.setAutoCommit(autoCommit);
@@ -509,7 +509,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
       return metaData;
     } catch (final SQLException e) {
       throw new IllegalArgumentException("Unable to load metadata for "
-          + typePath);
+        + typePath);
     }
   }
 
@@ -635,7 +635,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
     JdbcWriterImpl writer;
     final JdbcWriterResourceHolder resourceHolder = (JdbcWriterResourceHolder)TransactionSynchronizationManager.getResource(writerKey);
     if (resourceHolder != null
-        && (resourceHolder.hasWriter() || resourceHolder.isSynchronizedWithTransaction())) {
+      && (resourceHolder.hasWriter() || resourceHolder.isSynchronizedWithTransaction())) {
       resourceHolder.requested();
       if (resourceHolder.hasWriter()) {
         writer = resourceHolder.getWriter();
@@ -704,7 +704,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
 
   protected boolean isExcluded(final String dbSchemaName, final String tableName) {
     final String path = ("/" + dbSchemaName + "/" + tableName).toUpperCase()
-        .replaceAll("/+", "/");
+      .replaceAll("/+", "/");
     if (this.excludeTablePaths.contains(path)) {
       return true;
     } else {
@@ -738,7 +738,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
             final String tableName = rs.getString("TABLE_NAME").toUpperCase();
             final String idAttributeName = rs.getString("COLUMN_NAME");
             CollectionUtil.addToList(idColumnNames, schemaName + "/"
-                + tableName, idAttributeName);
+              + tableName, idAttributeName);
           }
         } finally {
           JdbcUtils.close(rs);
@@ -748,7 +748,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
       }
     } catch (final SQLException e) {
       throw new IllegalArgumentException("Unable to primary keys for schema "
-          + dbSchemaName, e);
+        + dbSchemaName, e);
     } finally {
       releaseConnection(connection);
     }
@@ -792,12 +792,12 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
       try {
         while (columnsRs.next()) {
           final String tableName = columnsRs.getString("TABLE_NAME")
-              .toUpperCase();
+            .toUpperCase();
           final String typePath = PathUtil.toPath(schemaName, tableName);
           final RecordDefinitionImpl metaData = (RecordDefinitionImpl)metaDataMap.get(typePath);
           if (metaData != null) {
             final String name = columnsRs.getString("COLUMN_NAME")
-                .toUpperCase();
+              .toUpperCase();
             final int sqlType = columnsRs.getInt("DATA_TYPE");
             final String dataType = columnsRs.getString("TYPE_NAME");
             final int length = columnsRs.getInt("COLUMN_SIZE");
@@ -806,7 +806,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
               scale = -1;
             }
             final boolean required = !columnsRs.getString("IS_NULLABLE")
-                .equals("YES");
+              .equals("YES");
             final String description = columnsRs.getString("REMARKS");
             addAttribute(metaData, name, dataType, sqlType, length, scale,
               required, description);
@@ -825,7 +825,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
 
     } catch (final SQLException e) {
       throw new IllegalArgumentException("Unable to load metadata for schema "
-          + schemaName, e);
+        + schemaName, e);
     } finally {
       releaseConnection(connection);
     }
@@ -905,7 +905,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
     geometry = ProjectionFactory.convert(geometry, geometryFactory);
 
     final SqlFunction intersectsFunction = geometryAttribute.getProperty(JdbcConstants.FUNCTION_INTERSECTS);
-    final StringBuilder qArg = new StringBuilder();
+    final StringBuffer qArg = new StringBuffer();
     geometryAttribute.addSelectStatementPlaceHolder(qArg);
 
     final Query query = new Query(metaData);
@@ -955,7 +955,7 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
 
   public void setExcludeTablePatterns(final String... excludeTablePatterns) {
     this.excludeTablePatterns = new ArrayList<String>(
-        Arrays.asList(excludeTablePatterns));
+      Arrays.asList(excludeTablePatterns));
   }
 
   public void setFlushBetweenTypes(final boolean flushBetweenTypes) {
@@ -1018,12 +1018,12 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
 
   protected void write(final Record record, final RecordState state) {
     try (
-        Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
       try (
-          JdbcWriter writer = getWriter(true)) {
+        JdbcWriter writer = getWriter(true)) {
         write(writer, record, state);
       } catch (final RuntimeException e) {
         transaction.setRollbackOnly();
@@ -1038,12 +1038,12 @@ public abstract class AbstractJdbcDataObjectStore extends AbstractRecordStore
   protected void writeAll(final Collection<Record> records,
     final RecordState state) {
     try (
-        Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
       try (
-          final JdbcWriter writer = getWriter(true)) {
+        final JdbcWriter writer = getWriter(true)) {
         for (final Record record : records) {
           write(writer, record, state);
         }
