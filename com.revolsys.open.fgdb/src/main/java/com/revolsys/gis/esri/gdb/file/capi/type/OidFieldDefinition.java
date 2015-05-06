@@ -7,8 +7,8 @@ import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.gis.esri.gdb.file.CapiFileGdbRecordStore;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
-public class OidAttribute extends AbstractFileGdbFieldDefinition {
-  public OidAttribute(final Field field) {
+public class OidFieldDefinition extends AbstractFileGdbFieldDefinition {
+  public OidFieldDefinition(final Field field) {
     super(field.getName(), DataTypes.INT,
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());

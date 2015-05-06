@@ -77,7 +77,7 @@ import com.revolsys.gis.esri.gdb.file.capi.type.GeometryAttribute;
 import com.revolsys.gis.esri.gdb.file.capi.type.GlobalIdAttribute;
 import com.revolsys.gis.esri.gdb.file.capi.type.GuidAttribute;
 import com.revolsys.gis.esri.gdb.file.capi.type.IntegerAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.OidAttribute;
+import com.revolsys.gis.esri.gdb.file.capi.type.OidFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.capi.type.ShortAttribute;
 import com.revolsys.gis.esri.gdb.file.capi.type.StringAttribute;
 import com.revolsys.gis.esri.gdb.file.capi.type.XmlAttribute;
@@ -121,7 +121,7 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGeometry,
       GeometryAttribute.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeOID,
-      OidAttribute.class);
+      OidFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeBlob,
       BinaryAttribute.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGlobalID,
