@@ -15,18 +15,17 @@ std::string wstring2string(std::wstring wstr) {
   return str;
 }
 
-  
 fgdbError checkResult(fgdbError error) {
   if (error) {
      std::wstring errorString;
      if (FileGDBAPI::ErrorInfo::GetErrorDescription(error, errorString) == S_FALSE) {
-     FileGDBAPI::ErrorInfo::ClearErrors();
          throw std::runtime_error("Unknown error");
      } else {
        std::stringstream out;
        out << wstring2string(errorString) << " (" << error << ")";
        std::string message = out.str();
-       FileGDBAPI::ErrorInfo::ClearErrors();
+       std::cout << message << std::endl;
+       std::cout.flush();
        throw std::runtime_error(message);
      }
   }
@@ -36,14 +35,14 @@ fgdbError checkResult(fgdbError error) {
 void handleException(JNIEnv *jenv, const std::exception e) {
   std::stringstream message;
   message << e.what() ;
-  jclass clazz = jenv->FindClass("java/lang/RuntimeException");
+  jclass clazz = jenv->FindClass("com/revolsys/gis/esri/gdb/file/FileGdbException");
   jenv->ThrowNew(clazz, message.str().c_str());
 }
   
 void handleException(JNIEnv *jenv, const std::runtime_error e) {
   std::stringstream message;
   message << e.what() ;
-  jclass clazz = jenv->FindClass("java/lang/RuntimeException");
+  jclass clazz = jenv->FindClass("com/revolsys/gis/esri/gdb/file/FileGdbException");
   jenv->ThrowNew(clazz, message.str().c_str());
 }
 
@@ -56,15 +55,15 @@ import com.revolsys.util.OS;
 
 %pragma(java) jniclasscode=%{
   static {
-    if (OS.isWindows()) {
-      ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
-      ClasspathNativeLibraryUtil.loadLibrary("Esri.FileGDBAPI");
-      ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
-      EsriFileGdb.setMaxOpenFiles(2048);
-    } else {
+    if (OS.isUnix() || OS.isMac()) {
       ClasspathNativeLibraryUtil.loadLibrary("fgdbunixrtl");
       ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
       ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+    } else if (OS.isWindows()) {
+      ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("Esri.FILEGDBAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+      EsriFileGdb.setMaxOpenFiles(2048);
     }
   }
 %}
@@ -525,7 +524,7 @@ import com.revolsys.util.OS;
   void setGeometry(char* byteArray, size_t length) {
     FileGDBAPI::ShapeBuffer shape;
     shape.Allocate(length);
-    for (int i = 0; i < length; i++) {
+    for (size_t i = 0; i < length; i++) {
       char c = byteArray[i];
       shape.shapeBuffer[i] = (byte)c;
     }
@@ -588,6 +587,8 @@ import com.revolsys.util.OS;
 }
 
 
+%ignore FileGDBAPI::FieldDef::GetGeometryDef;
+%ignore FileGDBAPI::FieldDef::SetGeometryDef;
 %ignore FileGDBAPI::FieldDef::GetAlias;
 %ignore FileGDBAPI::FieldDef::GetName;
 %ignore FileGDBAPI::FieldDef::GetLength;
@@ -642,86 +643,9 @@ import com.revolsys.util.OS;
   }
 }
 
-%ignore FileGDBAPI::SpatialReference::GetSpatialReferenceID;
-%ignore FileGDBAPI::SpatialReference::GetSpatialReferenceText;
-%ignore FileGDBAPI::SpatialReference::GetFalseOriginAndUnits;
-%ignore FileGDBAPI::SpatialReference::GetMFalseOriginAndUnits;
-%ignore FileGDBAPI::SpatialReference::GetMTolerance;
-%ignore FileGDBAPI::SpatialReference::GetXYTolerance;
-%ignore FileGDBAPI::SpatialReference::GetZFalseOriginAndUnits;
-%ignore FileGDBAPI::SpatialReference::GetZTolerance;
-%extend FileGDBAPI::SpatialReference {
-  int getId() {
-    int result;
-    checkResult(self->GetSpatialReferenceID(result));
-    return result;
-  }
-  std::wstring getText() {
-    std::wstring value;
-    checkResult(self->GetSpatialReferenceText(value));
-    return value;
-  }
-  double getXFalseOrigin() {
-    double falseX;
-    double falseY;
-    double xyUnits;
-    checkResult(self->GetFalseOriginAndUnits(falseX, falseY, xyUnits));
-    return falseX;
-  }
-  double getYFalseOrigin() {
-    double falseX;
-    double falseY;
-    double xyUnits;
-    checkResult(self->GetFalseOriginAndUnits(falseX, falseY, xyUnits));
-    return falseY;
-  }
-  double getXYUnits() {
-    double falseX;
-    double falseY;
-    double xyUnits;
-    checkResult(self->GetFalseOriginAndUnits(falseX, falseY, xyUnits));
-    return xyUnits;
-  }
-  double getMFalseOrigin() {
-    double falseM;
-    double mUnits;
-    checkResult(self->GetMFalseOriginAndUnits(falseM, mUnits));
-    return falseM;
-  }
-  double getMUnits() {
-    double falseM;
-    double mUnits;
-    checkResult(self->GetMFalseOriginAndUnits(falseM, mUnits));
-    return mUnits;
-  }
-  double getMTolerance() {
-    double result;
-    checkResult(self->GetMTolerance(result));
-    return result;
-  }
-  double getXYTolerance() {
-    double result;
-    checkResult(self->GetXYTolerance(result));
-    return result;
-  }
-  double getXFalseOrigin() {
-    double falseZ;
-    double zUnits;
-    checkResult(self->GetMFalseOriginAndUnits(falseZ, zUnits));
-    return falseZ;
-  }
-  double getXUnits() {
-    double falseZ;
-    double zUnits;
-    checkResult(self->GetMFalseOriginAndUnits(falseZ, zUnits));
-    return zUnits;
-  }
-  double getZTolerance() {
-    double result;
-    checkResult(self->GetZTolerance(result));
-    return result;
-  }
-}
+%ignore FileGDBAPI::SpatialReference;
+%ignore FileGDBAPI::GeometryDef;
+
 %ignore FileGDBAPI::IndexDef::GetIsUnique;
 %ignore FileGDBAPI::IndexDef::GetName;
 %ignore FileGDBAPI::IndexDef::GetFields;
@@ -801,5 +725,3 @@ import com.revolsys.util.OS;
 %include "Util.h"
 
 %include "Raster.h"
-
-

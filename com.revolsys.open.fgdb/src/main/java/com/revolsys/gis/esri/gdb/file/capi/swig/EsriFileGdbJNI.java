@@ -14,15 +14,15 @@ import com.revolsys.util.OS;
 public class EsriFileGdbJNI {
 
   static {
-    if (OS.isWindows()) {
-      ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
-      ClasspathNativeLibraryUtil.loadLibrary("Esri.FileGDBAPI");
-      ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
-      EsriFileGdb.setMaxOpenFiles(2048);
-    } else {
+    if (OS.isUnix() || OS.isMac()) {
       ClasspathNativeLibraryUtil.loadLibrary("fgdbunixrtl");
       ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
       ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+    } else if (OS.isWindows()) {
+      ClasspathNativeLibraryUtil.loadLibrary("FileGDBAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("Esri.FILEGDBAPI");
+      ClasspathNativeLibraryUtil.loadLibrary("EsriFileGdbJni");
+      EsriFileGdb.setMaxOpenFiles(2048);
     }
   }
 
@@ -46,8 +46,6 @@ public class EsriFileGdbJNI {
 
   public final static native void delete_Geodatabase(long jarg1);
 
-  public final static native void delete_GeometryDef(long jarg1);
-
   public final static native void delete_Guid(long jarg1);
 
   public final static native void delete_IndexDef(long jarg1);
@@ -55,8 +53,6 @@ public class EsriFileGdbJNI {
   public final static native void delete_Raster(long jarg1);
 
   public final static native void delete_Row(long jarg1);
-
-  public final static native void delete_SpatialReference(long jarg1);
 
   public final static native void delete_Table(long jarg1);
 
@@ -123,9 +119,6 @@ public class EsriFileGdbJNI {
   public final static native String FieldDef_getAlias(long jarg1,
     FieldDef jarg1_);
 
-  public final static native int FieldDef_GetGeometryDef(long jarg1,
-    FieldDef jarg1_, long jarg2, GeometryDef jarg2_);
-
   public final static native int FieldDef_getLength(long jarg1, FieldDef jarg1_);
 
   public final static native String FieldDef_getName(long jarg1, FieldDef jarg1_);
@@ -137,9 +130,6 @@ public class EsriFileGdbJNI {
 
   public final static native int FieldDef_SetAlias(long jarg1, FieldDef jarg1_,
     String jarg2);
-
-  public final static native int FieldDef_SetGeometryDef(long jarg1,
-    FieldDef jarg1_, long jarg2, GeometryDef jarg2_);
 
   public final static native int FieldDef_SetIsNullable(long jarg1,
     FieldDef jarg1_, boolean jarg2);
@@ -240,30 +230,6 @@ public class EsriFileGdbJNI {
   public final static native int Geodatabase_Rename(long jarg1,
     Geodatabase jarg1_, String jarg2, String jarg3, String jarg4);
 
-  public final static native int GeometryDef_getGeometryType(long jarg1,
-    GeometryDef jarg1_);
-
-  public final static native int GeometryDef_GetSpatialReference(long jarg1,
-    GeometryDef jarg1_, long jarg2, SpatialReference jarg2_);
-
-  public final static native boolean GeometryDef_hasM(long jarg1,
-    GeometryDef jarg1_);
-
-  public final static native boolean GeometryDef_hasZ(long jarg1,
-    GeometryDef jarg1_);
-
-  public final static native int GeometryDef_SetGeometryType(long jarg1,
-    GeometryDef jarg1_, int jarg2);
-
-  public final static native int GeometryDef_SetHasM(long jarg1,
-    GeometryDef jarg1_, boolean jarg2);
-
-  public final static native int GeometryDef_SetHasZ(long jarg1,
-    GeometryDef jarg1_, boolean jarg2);
-
-  public final static native int GeometryDef_SetSpatialReference(long jarg1,
-    GeometryDef jarg1_, long jarg2, SpatialReference jarg2_);
-
   public final static native String getSpatialReferenceWkt(int jarg1);
 
   public final static native void Guid_Create(long jarg1, Guid jarg1_);
@@ -311,8 +277,6 @@ public class EsriFileGdbJNI {
 
   public final static native long new_Geodatabase();
 
-  public final static native long new_GeometryDef();
-
   public final static native long new_Guid();
 
   public final static native long new_IndexDef__SWIG_0();
@@ -326,8 +290,6 @@ public class EsriFileGdbJNI {
   public final static native long new_Raster();
 
   public final static native long new_Row();
-
-  public final static native long new_SpatialReference();
 
   public final static native long new_Table();
 
@@ -417,64 +379,6 @@ public class EsriFileGdbJNI {
     String jarg2, String jarg3);
 
   public final static native void setMaxOpenFiles(int jarg1);
-
-  public final static native int SpatialReference_getId(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getMFalseOrigin(
-    long jarg1, SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getMTolerance(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getMUnits(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native String SpatialReference_getText(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getXFalseOrigin(
-    long jarg1, SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getXUnits(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getXYTolerance(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getXYUnits(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getYFalseOrigin(
-    long jarg1, SpatialReference jarg1_);
-
-  public final static native double SpatialReference_getZTolerance(long jarg1,
-    SpatialReference jarg1_);
-
-  public final static native int SpatialReference_SetFalseOriginAndUnits(
-    long jarg1, SpatialReference jarg1_, double jarg2, double jarg3,
-    double jarg4);
-
-  public final static native int SpatialReference_SetMFalseOriginAndUnits(
-    long jarg1, SpatialReference jarg1_, double jarg2, double jarg3);
-
-  public final static native int SpatialReference_SetMTolerance(long jarg1,
-    SpatialReference jarg1_, double jarg2);
-
-  public final static native int SpatialReference_SetSpatialReferenceID(
-    long jarg1, SpatialReference jarg1_, int jarg2);
-
-  public final static native int SpatialReference_SetSpatialReferenceText(
-    long jarg1, SpatialReference jarg1_, String jarg2);
-
-  public final static native int SpatialReference_SetXYTolerance(long jarg1,
-    SpatialReference jarg1_, double jarg2);
-
-  public final static native int SpatialReference_SetZFalseOriginAndUnits(
-    long jarg1, SpatialReference jarg1_, double jarg2, double jarg3);
-
-  public final static native int SpatialReference_SetZTolerance(long jarg1,
-    SpatialReference jarg1_, double jarg2);
 
   public final static native int Table_AddField__SWIG_0(long jarg1,
     Table jarg1_, String jarg2);

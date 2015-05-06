@@ -45,11 +45,6 @@ public class FieldDef {
     return EsriFileGdbJNI.FieldDef_getAlias(this.swigCPtr, this);
   }
 
-  public int GetGeometryDef(final GeometryDef geometryDef) {
-    return EsriFileGdbJNI.FieldDef_GetGeometryDef(this.swigCPtr, this,
-      GeometryDef.getCPtr(geometryDef), geometryDef);
-  }
-
   public int getLength() {
     return EsriFileGdbJNI.FieldDef_getLength(this.swigCPtr, this);
   }
@@ -69,11 +64,6 @@ public class FieldDef {
 
   public int SetAlias(final String alias) {
     return EsriFileGdbJNI.FieldDef_SetAlias(this.swigCPtr, this, alias);
-  }
-
-  public int SetGeometryDef(final GeometryDef geometryDef) {
-    return EsriFileGdbJNI.FieldDef_SetGeometryDef(this.swigCPtr, this,
-      GeometryDef.getCPtr(geometryDef), geometryDef);
   }
 
   public int SetIsNullable(final boolean isNullable) {

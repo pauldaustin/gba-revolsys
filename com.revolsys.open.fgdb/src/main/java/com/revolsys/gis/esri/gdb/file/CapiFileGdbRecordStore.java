@@ -574,7 +574,7 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
         final DataType dataType = metaData.getFieldType(column);
         // TODO at the moment only numbers are supported
         if (dataType != null
-            && Number.class.isAssignableFrom(dataType.getJavaClass())) {
+          && Number.class.isAssignableFrom(dataType.getJavaClass())) {
           if (first) {
             sql.append(" ORDER BY ");
             first = false;
@@ -590,7 +590,7 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
         } else {
           LoggerFactory.getLogger(getClass()).error(
             "Unable to sort on " + metaData.getPath() + "." + column
-            + " as the ESRI library can't sort on " + dataType + " columns");
+              + " as the ESRI library can't sort on " + dataType + " columns");
         }
       }
     }
@@ -756,10 +756,11 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
             try {
               final Table table = geodatabase.createTable(tableDefinition,
                 schemaPath);
+              geodatabase.closeTable(table);
+              table.delete();
               final RecordDefinitionImpl metaData = getRecordDefinition(
                 schemaName, schemaPath, tableDefinition);
               addRecordDefinition(metaData);
-              this.tablesToClose.put(metaData.getPath(), table);
               return metaData;
 
             } catch (final Throwable t) {
@@ -1099,6 +1100,9 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
                     this.tablesToClose.put(typePath, table);
                   }
                 }
+                if (table != null) {
+                  Maps.addCount(this.tableReferenceCountsByTypePath, typePath);
+                }
                 return table;
               } catch (final RuntimeException e) {
                 throw new RuntimeException("Unable to open table " + typePath,
@@ -1117,9 +1121,10 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
     synchronized (this.apiSync) {
       final Table table = getTable(typePath);
       if (table != null) {
-        Maps.addCount(this.writeLockCountsByTypePath, typePath);
-        table.setWriteLock();
-        table.setLoadOnlyMode(true);
+        if (Maps.addCount(this.writeLockCountsByTypePath, typePath) == 1) {
+          table.setWriteLock();
+          table.setLoadOnlyMode(true);
+        }
       }
       return table;
     }
