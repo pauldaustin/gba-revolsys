@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PreDestroy;
 
@@ -25,78 +24,88 @@ import com.revolsys.io.AbstractWriter;
 public class FileGdbWriter extends AbstractWriter<Record> {
   private Map<String, Table> tables = new HashMap<String, Table>();
 
-  private CapiFileGdbRecordStore dataStore;
+  private CapiFileGdbRecordStore recordStore;
 
-  FileGdbWriter(final CapiFileGdbRecordStore dataObjectStore) {
-    this.dataStore = dataObjectStore;
+  FileGdbWriter(final CapiFileGdbRecordStore recordStore) {
+    this.recordStore = recordStore;
   }
 
   @Override
   @PreDestroy
   public void close() {
     try {
-      if (this.dataStore != null) {
-        for (final Entry<String, Table> entry : this.tables.entrySet()) {
-          final Table table = entry.getValue();
-          try {
-            this.dataStore.freeWriteLock(table);
-          } catch (final Throwable e) {
-            LoggerFactory.getLogger(FileGdbWriter.class).error(
-              "Unable to close table", e);
-          }
+      if (this.tables != null) {
+        for (final String typePath : this.tables.keySet()) {
+          this.recordStore.releaseTableAndWriteLock(typePath);
         }
       }
     } finally {
       this.tables = null;
-      this.dataStore = null;
+      this.recordStore = null;
     }
   }
 
-  private void delete(final Record object) {
-    final RecordDefinition objectMetaData = object.getRecordDefinition();
-    final String typePath = objectMetaData.getPath();
+  public void closeTable(final String typePath) {
+    if (this.tables != null) {
+      synchronized (this.tables) {
+        if (this.tables.remove(typePath) != null) {
+          this.recordStore.releaseTableAndWriteLock(typePath);
+        }
+      }
+    }
+  }
+
+  private void delete(final Record record) {
+    final RecordDefinition objectRecordDefinition = record.getRecordDefinition();
+    final String typePath = objectRecordDefinition.getPath();
     final Table table = getTable(typePath);
-    final EnumRows rows = this.dataStore.search(table, "OBJECTID", "OBJECTID="
-        + object.getValue("OBJECTID"), false);
+    final EnumRows rows = this.recordStore.search(typePath, table, "OBJECTID",
+      "OBJECTID=" + record.getValue("OBJECTID"), false);
     if (rows != null) {
       try {
-        final Row row = this.dataStore.nextRow(rows);
+        final Row row = this.recordStore.nextRow(rows);
         if (row != null) {
           try {
-            this.dataStore.deletedRow(table, row);
-            object.setState(RecordState.Deleted);
+            this.recordStore.deleteRow(typePath, table, row);
+            record.setState(RecordState.Deleted);
           } finally {
-            this.dataStore.closeRow(row);
-            this.dataStore.addStatistic("Delete", object);
+            this.recordStore.closeRow(row);
+            this.recordStore.addStatistic("Delete", record);
           }
         }
       } finally {
-        this.dataStore.closeEnumRows(rows);
+        this.recordStore.closeEnumRows(rows);
       }
     }
+  }
+
+  @Override
+  protected void finalize() throws Throwable {
+    close();
   }
 
   private Table getTable(final String typePath) {
-    Table table = this.tables.get(typePath);
-    if (table == null) {
-      table = this.dataStore.getTable(typePath);
-      if (table != null) {
-        this.tables.put(typePath, table);
-        this.dataStore.setWriteLock(table);
+    synchronized (this) {
+      Table table = this.tables.get(typePath);
+      if (table == null) {
+        table = this.recordStore.getTableWithWriteLock(typePath);
+        if (table != null) {
+          this.tables.put(typePath, table);
+        }
       }
+      return table;
     }
-    return table;
   }
 
-  private void insert(final Record object) {
-    final RecordDefinition sourceMetaData = object.getRecordDefinition();
-    final RecordDefinition metaData = this.dataStore.getRecordDefinition(sourceMetaData);
-    final String typePath = sourceMetaData.getPath();
-    for (final FieldDefinition attribute : metaData.getFields()) {
-      final String name = attribute.getName();
-      if (attribute.isRequired()) {
-        final Object value = object.getValue(name);
-        if (value == null && !(attribute instanceof OidAttribute)) {
+  private void insert(final Record record) {
+    final RecordDefinition sourceRecordDefinition = record.getRecordDefinition();
+    final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(sourceRecordDefinition);
+    final String typePath = sourceRecordDefinition.getPath();
+    for (final FieldDefinition field : recordDefinition.getFields()) {
+      final String name = field.getName();
+      if (field.isRequired()) {
+        final Object value = record.getValue(name);
+        if (value == null && !(field instanceof OidAttribute)) {
           throw new IllegalArgumentException("Atribute " + typePath + "."
               + name + " is required");
         }
@@ -104,116 +113,116 @@ public class FileGdbWriter extends AbstractWriter<Record> {
     }
     final Table table = getTable(typePath);
     try {
-      final Row row = this.dataStore.createRowObject(table);
+      final Row row = this.recordStore.createRowObject(table);
       try {
         final List<Object> values = new ArrayList<Object>();
-        for (final FieldDefinition attribute : metaData.getFields()) {
-          final String name = attribute.getName();
-          final Object value = object.getValue(name);
-          final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)attribute;
-          final Object esriValue = esriFieldDefinition.setInsertValue(object,
+        for (final FieldDefinition field : recordDefinition.getFields()) {
+          final String name = field.getName();
+          final Object value = record.getValue(name);
+          final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
+          final Object esriValue = esriFieldDefinition.setInsertValue(record,
             row, value);
           values.add(esriValue);
         }
-        this.dataStore.insertRow(table, row);
-        for (final FieldDefinition attribute : metaData.getFields()) {
-          final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)attribute;
-          esriFieldDefinition.setPostInsertValue(object, row);
+        this.recordStore.insertRow(table, row);
+        for (final FieldDefinition field : recordDefinition.getFields()) {
+          final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
+          esriFieldDefinition.setPostInsertValue(record, row);
         }
-        object.setState(RecordState.Persisted);
+        record.setState(RecordState.Persisted);
       } finally {
-        this.dataStore.closeRow(row);
-        this.dataStore.addStatistic("Insert", object);
+        this.recordStore.closeRow(row);
+        this.recordStore.addStatistic("Insert", record);
       }
     } catch (final IllegalArgumentException e) {
       throw new RuntimeException("Unable to insert row " + e.getMessage()
-        + "\n" + object.toString(), e);
+        + "\n" + record.toString(), e);
     } catch (final RuntimeException e) {
       if (LoggerFactory.getLogger(FileGdbWriter.class).isDebugEnabled()) {
         LoggerFactory.getLogger(FileGdbWriter.class).debug(
-          "Unable to insert row \n:" + object.toString());
+          "Unable to insert row \n:" + record.toString());
       }
       throw new RuntimeException("Unable to insert row", e);
     }
 
   }
 
-  private void update(final Record object) {
-    final Object objectId = object.getValue("OBJECTID");
+  private void update(final Record record) {
+    final Object objectId = record.getValue("OBJECTID");
     if (objectId == null) {
-      insert(object);
+      insert(record);
     } else {
-      final RecordDefinition sourceMetaData = object.getRecordDefinition();
-      final RecordDefinition metaData = this.dataStore.getRecordDefinition(sourceMetaData);
-      final String typePath = sourceMetaData.getPath();
+      final RecordDefinition sourceRecordDefinition = record.getRecordDefinition();
+      final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(sourceRecordDefinition);
+      final String typePath = sourceRecordDefinition.getPath();
       final Table table = getTable(typePath);
-      final EnumRows rows = this.dataStore.search(table, "OBJECTID",
-        "OBJECTID=" + objectId, false);
+      final EnumRows rows = this.recordStore.search(typePath, table,
+        "OBJECTID", "OBJECTID=" + objectId, false);
       if (rows != null) {
         try {
-          final Row row = this.dataStore.nextRow(rows);
+          final Row row = this.recordStore.nextRow(rows);
           if (row != null) {
             try {
               final List<Object> esriValues = new ArrayList<Object>();
               try {
-                for (final FieldDefinition attribute : metaData.getFields()) {
-                  final String name = attribute.getName();
-                  final Object value = object.getValue(name);
-                  final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)attribute;
-                  esriValues.add(esriFieldDefinition.setUpdateValue(object,
+                for (final FieldDefinition field : recordDefinition.getFields()) {
+                  final String name = field.getName();
+                  final Object value = record.getValue(name);
+                  final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
+                  esriValues.add(esriFieldDefinition.setUpdateValue(record,
                     row, value));
                 }
-                this.dataStore.updateRow(table, row);
+                this.recordStore.updateRow(typePath, table, row);
               } finally {
-                this.dataStore.addStatistic("Update", object);
+                this.recordStore.addStatistic("Update", record);
               }
             } catch (final IllegalArgumentException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
                 "Unable to update row " + e.getMessage() + "\n"
-                    + object.toString(), e);
+                    + record.toString(), e);
             } catch (final RuntimeException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
-                "Unable to update row \n:" + object.toString());
+                "Unable to update row \n:" + record.toString());
               if (LoggerFactory.getLogger(FileGdbWriter.class).isDebugEnabled()) {
                 LoggerFactory.getLogger(FileGdbWriter.class).debug(
-                  "Unable to update row \n:" + object.toString());
+                  "Unable to update row \n:" + record.toString());
               }
               throw new RuntimeException("Unable to update row", e);
             } finally {
-              this.dataStore.closeRow(row);
+              this.recordStore.closeRow(row);
             }
           }
         } finally {
-          this.dataStore.closeEnumRows(rows);
+          this.recordStore.closeEnumRows(rows);
         }
       }
     }
   }
 
   @Override
-  public void write(final Record object) {
+  public void write(final Record record) {
     try {
-      final RecordDefinition metaData = object.getRecordDefinition();
-      final RecordStore dataObjectStore = metaData.getRecordStore();
-      if (dataObjectStore == this.dataStore) {
-        switch (object.getState()) {
+      final RecordDefinition recordDefinition = record.getRecordDefinition();
+      final RecordStore dataObjectStore = recordDefinition.getRecordStore();
+      if (dataObjectStore == this.recordStore) {
+        switch (record.getState()) {
           case New:
-            insert(object);
+            insert(record);
             break;
           case Modified:
-            update(object);
+            update(record);
             break;
           case Persisted:
             // No action required
             break;
           case Deleted:
-            delete(object);
+            delete(record);
             break;
           default:
             throw new IllegalStateException("State not known");
         }
       } else {
-        insert(object);
+        insert(record);
       }
     } catch (final RuntimeException e) {
       throw e;
