@@ -1062,7 +1062,6 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
                     }
                     row.delete();
                   }
-                  System.out.println("End rowCount\t" + query);
                   return count;
                 } finally {
                   closeEnumRows(rows);
@@ -1442,7 +1441,6 @@ public class CapiFileGdbRecordStore extends AbstractRecordStore implements
         if (this.geodatabaseReferenceCount <= 0) {
           this.geodatabaseReferenceCount = 0;
           try {
-            System.out.println("Release " + this);
             closeGeodatabase(this.geodatabase);
           } finally {
             this.geodatabase = null;
