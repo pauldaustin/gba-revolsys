@@ -20,7 +20,7 @@ import com.revolsys.gis.esri.gdb.file.convert.GeometryConverter;
 
 public class FileGdbQueryIterator extends AbstractIterator<Record> {
 
-  private RecordFactory dataObjectFactory;
+  private RecordFactory recordFactory;
 
   private Table table;
 
@@ -30,9 +30,9 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
 
   private BoundingBox boundingBox;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
-  private CapiFileGdbRecordStore dataStore;
+  private CapiFileGdbRecordStore recordStore;
 
   private EnumRows rows;
 
@@ -44,53 +44,57 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
 
   private int count;
 
-  FileGdbQueryIterator(final CapiFileGdbRecordStore dataStore,
+  FileGdbQueryIterator(final CapiFileGdbRecordStore recordStore,
     final String typePath) {
-    this(dataStore, typePath, "*", "", null, 0, -1);
+    this(recordStore, typePath, "*", "", null, 0, -1);
   }
 
-  FileGdbQueryIterator(final CapiFileGdbRecordStore dataStore,
+  FileGdbQueryIterator(final CapiFileGdbRecordStore recordStore,
     final String typePath, final String whereClause) {
-    this(dataStore, typePath, "*", whereClause, null, 0, -1);
+    this(recordStore, typePath, "*", whereClause, null, 0, -1);
   }
 
-  FileGdbQueryIterator(final CapiFileGdbRecordStore dataStore,
+  FileGdbQueryIterator(final CapiFileGdbRecordStore recordStore,
     final String typePath, final String whereClause,
     final BoundingBox boundingBox, final Query query, final int offset,
     final int limit) {
-    this(dataStore, typePath, "*", whereClause, boundingBox, offset, limit);
+    this(recordStore, typePath, "*", whereClause, boundingBox, offset, limit);
     final RecordFactory factory = query.getProperty("dataObjectFactory");
     if (factory != null) {
-      this.dataObjectFactory = factory;
+      this.recordFactory = factory;
     }
   }
 
-  FileGdbQueryIterator(final CapiFileGdbRecordStore dataStore,
+  FileGdbQueryIterator(final CapiFileGdbRecordStore recordStore,
     final String typePath, final String fields, final String sql,
     final BoundingBox boundingBox, final int offset, final int limit) {
-    this.dataStore = dataStore;
+    this.recordStore = recordStore;
     this.typePath = typePath;
-    this.metaData = dataStore.getRecordDefinition(typePath);
-    this.table = dataStore.getTable(typePath);
+    this.recordDefinition = recordStore.getRecordDefinition(typePath);
+    this.table = recordStore.getTable(typePath);
     this.fields = fields;
     this.sql = sql;
     setBoundingBox(boundingBox);
-    this.dataObjectFactory = dataStore.getRecordFactory();
+    this.recordFactory = recordStore.getRecordFactory();
     this.offset = offset;
     this.limit = limit;
   }
 
   @Override
   protected void doClose() {
-    if (this.dataStore != null) {
+    if (this.recordStore != null) {
       try {
-        this.dataStore.closeEnumRows(this.rows);
+        try {
+          this.recordStore.closeEnumRows(this.rows);
+        } finally {
+          this.recordStore.releaseTable(this.typePath);
+        }
       } catch (final Throwable e) {
       } finally {
         this.boundingBox = null;
-        this.dataStore = null;
+        this.recordStore = null;
         this.fields = null;
-        this.metaData = null;
+        this.recordDefinition = null;
         this.rows = null;
         this.sql = null;
         this.table = null;
@@ -100,14 +104,14 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
 
   @Override
   protected void doInit() {
-    if (this.metaData != null) {
-      synchronized (this.dataStore) {
+    if (this.recordDefinition != null) {
+      synchronized (this.recordStore) {
         if (this.boundingBox == null) {
           if (this.sql.startsWith("SELECT")) {
-            this.rows = this.dataStore.query(this.sql, true);
+            this.rows = this.recordStore.query(this.sql, true);
           } else {
-            this.rows = this.dataStore.search(this.table, this.fields,
-              this.sql, true);
+            this.rows = this.recordStore.search(this.typePath, this.table,
+              this.fields, this.sql, true);
           }
         } else {
           BoundingBox boundingBox = this.boundingBox;
@@ -118,63 +122,56 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
             boundingBox = boundingBox.expand(0, 1);
           }
           final com.revolsys.gis.esri.gdb.file.capi.swig.Envelope envelope = GeometryConverter.toEsri(boundingBox);
-          this.rows = this.dataStore.search(this.table, this.fields, this.sql,
-            envelope, true);
+          this.rows = this.recordStore.search(this.typePath, this.table,
+            this.fields, this.sql, envelope, true);
         }
       }
     }
   }
 
-  protected RecordDefinition getMetaData() {
-    if (this.metaData == null) {
-      hasNext();
-    }
-    return this.metaData;
-  }
-
   @Override
   protected Record getNext() throws NoSuchElementException {
-    if (this.rows == null || this.metaData == null) {
+    if (this.rows == null || this.recordDefinition == null) {
       throw new NoSuchElementException();
     } else {
       Row row = null;
       while (this.offset > 0 && this.count < this.offset) {
-        this.dataStore.nextRow(this.rows);
+        this.recordStore.nextRow(this.rows);
         this.count++;
       }
       if (this.limit > -1 && this.count >= this.offset + this.limit) {
         throw new NoSuchElementException();
       }
-      row = this.dataStore.nextRow(this.rows);
+      row = this.recordStore.nextRow(this.rows);
       this.count++;
       if (row == null) {
         throw new NoSuchElementException();
       } else {
         try {
-          final Record object = this.dataObjectFactory.createRecord(this.metaData);
-          this.dataStore.addStatistic("query", object);
-          object.setState(RecordState.Initalizing);
-          for (final FieldDefinition attribute : this.metaData.getFields()) {
-            final String name = attribute.getName();
-            final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)attribute;
+          final Record record = this.recordFactory.createRecord(this.recordDefinition);
+          this.recordStore.addStatistic("query", record);
+          record.setState(RecordState.Initalizing);
+          for (final FieldDefinition field : this.recordDefinition.getFields()) {
+            final String name = field.getName();
+            final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
             final Object value;
-            synchronized (this.dataStore) {
+            synchronized (this.recordStore) {
               value = esriFieldDefinition.getValue(row);
             }
-            object.setValue(name, value);
+            record.setValue(name, value);
           }
-          object.setState(RecordState.Persisted);
-          return object;
+          record.setState(RecordState.Persisted);
+          return record;
 
         } finally {
-          this.dataStore.closeRow(row);
+          this.recordStore.closeRow(row);
         }
       }
     }
   }
 
   public void setBoundingBox(final BoundingBox boundingBox) {
-    final RecordDefinition metaData = this.metaData;
+    final RecordDefinition metaData = this.recordDefinition;
     if (metaData != null) {
       this.boundingBox = boundingBox;
       if (boundingBox != null) {
@@ -189,13 +186,8 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
     }
   }
 
-  public void setSql(final String whereClause) {
-    this.sql = whereClause;
-  }
-
   @Override
   public String toString() {
-    return this.typePath.toString();
+    return this.typePath + " " + this.sql;
   }
-
 }
