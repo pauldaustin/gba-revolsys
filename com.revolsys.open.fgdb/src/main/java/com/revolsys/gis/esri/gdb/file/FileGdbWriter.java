@@ -18,10 +18,10 @@ import com.revolsys.gis.esri.gdb.file.capi.swig.EnumRows;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Table;
 import com.revolsys.gis.esri.gdb.file.capi.type.AbstractFileGdbFieldDefinition;
-import com.revolsys.gis.esri.gdb.file.capi.type.OidAttribute;
-import com.revolsys.io.AbstractWriter;
+import com.revolsys.gis.esri.gdb.file.capi.type.OidFieldDefinition;
+import com.revolsys.io.AbstractRecordWriter;
 
-public class FileGdbWriter extends AbstractWriter<Record> {
+public class FileGdbWriter extends AbstractRecordWriter {
   private CapiFileGdbRecordStore recordStore;
 
   private Map<String, Table> tables = new HashMap<String, Table>();
@@ -32,7 +32,7 @@ public class FileGdbWriter extends AbstractWriter<Record> {
 
   @Override
   @PreDestroy
-  public void close() {
+  public synchronized void close() {
     try {
       if (this.tables != null) {
         for (final String typePath : this.tables.keySet()) {
@@ -56,8 +56,8 @@ public class FileGdbWriter extends AbstractWriter<Record> {
   }
 
   private void delete(final Record record) {
-    final RecordDefinition objectRecordDefinition = record.getRecordDefinition();
-    final String typePath = objectRecordDefinition.getPath();
+    final RecordDefinition recordDefinition = record.getRecordDefinition();
+    final String typePath = recordDefinition.getPath();
     final Table table = getTable(typePath);
     final EnumRows rows = this.recordStore.search(typePath, table, "OBJECTID",
       "OBJECTID=" + record.getValue("OBJECTID"), false);
@@ -105,9 +105,9 @@ public class FileGdbWriter extends AbstractWriter<Record> {
       final String name = field.getName();
       if (field.isRequired()) {
         final Object value = record.getValue(name);
-        if (value == null && !(field instanceof OidAttribute)) {
+        if (value == null && !(field instanceof OidFieldDefinition)) {
           throw new IllegalArgumentException("Atribute " + typePath + "."
-            + name + " is required");
+              + name + " is required");
         }
       }
     }
@@ -119,9 +119,8 @@ public class FileGdbWriter extends AbstractWriter<Record> {
         for (final FieldDefinition field : recordDefinition.getFields()) {
           final String name = field.getName();
           final Object value = record.getValue(name);
-          final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
-          final Object esriValue = esriFieldDefinition.setInsertValue(record,
-            row, value);
+          final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+          final Object esriValue = esriField.setInsertValue(record, row, value);
           values.add(esriValue);
         }
         this.recordStore.insertRow(table, row);
@@ -179,7 +178,7 @@ public class FileGdbWriter extends AbstractWriter<Record> {
             } catch (final IllegalArgumentException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
                 "Unable to update row " + e.getMessage() + "\n"
-                  + record.toString(), e);
+                    + record.toString(), e);
             } catch (final RuntimeException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
                 "Unable to update row \n:" + record.toString());
@@ -203,21 +202,21 @@ public class FileGdbWriter extends AbstractWriter<Record> {
   public void write(final Record record) {
     try {
       final RecordDefinition recordDefinition = record.getRecordDefinition();
-      final RecordStore dataObjectStore = recordDefinition.getRecordStore();
-      if (dataObjectStore == this.recordStore) {
+      final RecordStore recordStore = recordDefinition.getRecordStore();
+      if (recordStore == this.recordStore) {
         switch (record.getState()) {
           case New:
             insert(record);
-          break;
+            break;
           case Modified:
             update(record);
-          break;
+            break;
           case Persisted:
-          // No action required
-          break;
+            // No action required
+            break;
           case Deleted:
             delete(record);
-          break;
+            break;
           default:
             throw new IllegalStateException("State not known");
         }
