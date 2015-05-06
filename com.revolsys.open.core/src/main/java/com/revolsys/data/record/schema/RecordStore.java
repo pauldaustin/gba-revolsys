@@ -10,7 +10,6 @@ import com.revolsys.collection.ResultPager;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.io.Statistics;
@@ -21,8 +20,7 @@ import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface RecordStore extends DataObjectMetaDataFactory,
-  AutoCloseable {
+public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
   void addCodeTable(CodeTable codeTable);
 
   void addCodeTables(Collection<CodeTable> codeTables);
@@ -40,6 +38,8 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   Record create(String typePath);
 
+  Record create(String typePath, Map<String, ? extends Object> values);
+
   <T> T createPrimaryIdValue(String typePath);
 
   Query createQuery(final String typePath, String whereClause,
@@ -49,23 +49,21 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   Record createWithId(RecordDefinition objectMetaData);
 
-  Record create(String typePath, Map<String, ? extends Object> values);
-
   Writer<Record> createWriter();
 
-  void delete(Record object);
-
   int delete(Query query);
+
+  void delete(Record object);
 
   void deleteAll(Collection<Record> objects);
 
   CodeTable getCodeTable(String typePath);
 
-  CodeTable getCodeTableByFieldName(String columnName);
-
   Map<String, CodeTable> getCodeTableByColumnMap();
 
-  RecordFactory getRecordFactory();
+  CodeTable getCodeTableByFieldName(String columnName);
+
+  RecordStoreConnected getConnected();
 
   String getLabel();
 
@@ -73,12 +71,14 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   /**
    * Get the meta data for the specified type.
-   * 
+   *
    * @param typePath The type name.
    * @return The meta data.
    */
   @Override
   RecordDefinition getRecordDefinition(String typePath);
+
+  RecordFactory getRecordFactory();
 
   int getRowCount(Query query);
 
@@ -86,7 +86,7 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   /**
    * Get the list of name space names provided by the data store.
-   * 
+   *
    * @return The name space names.
    */
   List<RecordStoreSchema> getSchemas();
@@ -99,7 +99,7 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   /**
    * Get the list of type names (including name space) in the name space.
-   * 
+   *
    * @param namespace The name space.
    * @return The type names.
    */
@@ -131,15 +131,15 @@ public interface RecordStore extends DataObjectMetaDataFactory,
 
   ResultPager<Record> page(Query query);
 
-  Reader<Record> query(RecordFactory dataObjectFactory,
-    String typePath, Geometry geometry);
-
-  Reader<Record> query(RecordFactory dataObjectFactory,
-    String typePath, Geometry geometry, double distance);
-
   Reader<Record> query(List<?> queries);
 
   Reader<Record> query(Query... queries);
+
+  Reader<Record> query(RecordFactory dataObjectFactory, String typePath,
+    Geometry geometry);
+
+  Reader<Record> query(RecordFactory dataObjectFactory, String typePath,
+    Geometry geometry, double distance);
 
   Reader<Record> query(String typePath);
 

@@ -401,6 +401,11 @@ implements RecordStore {
     return this.codeTableColumNames;
   }
 
+  @Override
+  public RecordStoreConnected getConnected() {
+    return new RecordStoreConnected(this);
+  }
+
   protected Map<String, Object> getConnectionProperties() {
     return this.connectionProperties;
   }
@@ -637,6 +642,9 @@ implements RecordStore {
     }
   }
 
+  protected void obtainConnected() {
+  }
+
   @Override
   public ResultPager<Record> page(final Query query) {
     final Reader<Record> results = query(query);
@@ -749,6 +757,9 @@ implements RecordStore {
 
   protected void refreshSchema() {
     this.schemaMap.clear();
+  }
+
+  protected void releaseConnected() {
   }
 
   public void setCodeTableColumNames(
