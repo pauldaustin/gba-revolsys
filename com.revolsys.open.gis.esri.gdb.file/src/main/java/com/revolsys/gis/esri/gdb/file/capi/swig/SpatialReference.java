@@ -13,9 +13,9 @@ public class SpatialReference {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public SpatialReference() {
     this(EsriFileGdbJNI.new_SpatialReference(), true);

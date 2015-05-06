@@ -13,9 +13,9 @@ public class FieldInfo {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public FieldInfo() {
     this(EsriFileGdbJNI.new_FieldInfo(), true);

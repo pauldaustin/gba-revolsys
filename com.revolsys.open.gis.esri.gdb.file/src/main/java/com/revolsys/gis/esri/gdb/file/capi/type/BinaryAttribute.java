@@ -11,7 +11,7 @@ public class BinaryAttribute extends AbstractFileGdbFieldDefinition {
   public BinaryAttribute(final Field field) {
     super(field.getName(), DataTypes.BASE64_BINARY, field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override

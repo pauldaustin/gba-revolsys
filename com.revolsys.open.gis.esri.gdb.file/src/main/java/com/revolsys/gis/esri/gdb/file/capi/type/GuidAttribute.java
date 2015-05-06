@@ -36,7 +36,7 @@ public class GuidAttribute extends AbstractFileGdbFieldDefinition {
   public GuidAttribute(final Field field) {
     this(field.getName(), field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   public GuidAttribute(final String name, final int length,

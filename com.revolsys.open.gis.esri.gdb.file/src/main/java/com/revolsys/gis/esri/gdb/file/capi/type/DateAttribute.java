@@ -12,19 +12,19 @@ import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.util.DateUtil;
 
 public class DateAttribute extends AbstractFileGdbFieldDefinition {
-  @SuppressWarnings("deprecation")
-  public static final Date MIN_DATE = new Date(70, 0, 1);
+  /** Synchronize access to C++ date methods across all instances. */
+  private static final Object LOCK = new Object();
 
   @SuppressWarnings("deprecation")
   public static final Date MAX_DATE = new Date(138, 1, 19);
 
-  /** Synchronize access to C++ date methods across all instances. */
-  private static final Object LOCK = new Object();
+  @SuppressWarnings("deprecation")
+  public static final Date MIN_DATE = new Date(70, 0, 1);
 
   public DateAttribute(final Field field) {
     super(field.getName(), DataTypes.DATE,
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override
@@ -73,8 +73,8 @@ public class DateAttribute extends AbstractFileGdbFieldDefinition {
         Date date = (Date)value;
         if (date.before(MIN_DATE)) {
           RecordLog.warn(getClass(), name + "=" + date + " is before "
-              + MIN_DATE + " which is not supported by ESRI File Geodatabases",
-              object);
+            + MIN_DATE + " which is not supported by ESRI File Geodatabases",
+            object);
           if (isRequired()) {
             date = MIN_DATE;
           } else {
@@ -83,8 +83,8 @@ public class DateAttribute extends AbstractFileGdbFieldDefinition {
           }
         } else if (date.after(MAX_DATE)) {
           RecordLog.warn(getClass(), name + "=" + date + " is after "
-              + MAX_DATE + " which is not supported by ESRI File Geodatabases",
-              object);
+            + MAX_DATE + " which is not supported by ESRI File Geodatabases",
+            object);
           if (isRequired()) {
             date = MAX_DATE;
           } else {
@@ -101,7 +101,7 @@ public class DateAttribute extends AbstractFileGdbFieldDefinition {
         }
       } else {
         throw new IllegalArgumentException("Expecting a java,util.Date not "
-            + value.getClass() + " " + value);
+          + value.getClass() + " " + value);
       }
     }
   }

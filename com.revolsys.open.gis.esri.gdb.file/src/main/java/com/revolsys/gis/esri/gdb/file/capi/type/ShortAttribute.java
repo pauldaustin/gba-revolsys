@@ -11,7 +11,7 @@ public class ShortAttribute extends AbstractFileGdbFieldDefinition {
   public ShortAttribute(final Field field) {
     super(field.getName(), DataTypes.SHORT,
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override

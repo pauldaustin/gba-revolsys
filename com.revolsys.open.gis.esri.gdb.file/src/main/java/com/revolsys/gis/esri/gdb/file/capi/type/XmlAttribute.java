@@ -12,7 +12,7 @@ public class XmlAttribute extends AbstractFileGdbFieldDefinition {
   public XmlAttribute(final Field field) {
     super(field.getName(), DataTypes.STRING, field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override

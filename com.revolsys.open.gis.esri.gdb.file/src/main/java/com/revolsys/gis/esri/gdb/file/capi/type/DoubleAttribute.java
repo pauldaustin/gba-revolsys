@@ -13,7 +13,7 @@ public class DoubleAttribute extends AbstractFileGdbFieldDefinition {
   public DoubleAttribute(final Field field) {
     super(field.getName(), DataTypes.DOUBLE,
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override

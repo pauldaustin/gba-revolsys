@@ -11,7 +11,7 @@ public class OidAttribute extends AbstractFileGdbFieldDefinition {
   public OidAttribute(final Field field) {
     super(field.getName(), DataTypes.INT,
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override

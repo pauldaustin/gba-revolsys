@@ -13,9 +13,9 @@ public class VectorOfFieldDef {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public VectorOfFieldDef() {
     this(EsriFileGdbJNI.new_VectorOfFieldDef__SWIG_0(), true);

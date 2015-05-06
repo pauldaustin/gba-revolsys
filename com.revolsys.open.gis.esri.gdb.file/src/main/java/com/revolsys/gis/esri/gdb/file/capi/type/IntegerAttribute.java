@@ -13,7 +13,7 @@ public class IntegerAttribute extends AbstractFileGdbFieldDefinition {
   public IntegerAttribute(final Field field) {
     super(field.getName(), DataTypes.INT,
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override

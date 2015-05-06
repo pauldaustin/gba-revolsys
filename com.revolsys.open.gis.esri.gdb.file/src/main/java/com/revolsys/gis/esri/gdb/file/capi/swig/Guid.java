@@ -13,9 +13,9 @@ public class Guid {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public Guid() {
     this(EsriFileGdbJNI.new_Guid(), true);

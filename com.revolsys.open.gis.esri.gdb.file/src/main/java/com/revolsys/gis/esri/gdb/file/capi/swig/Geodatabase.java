@@ -13,9 +13,9 @@ public class Geodatabase {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public Geodatabase() {
     this(EsriFileGdbJNI.new_Geodatabase(), true);

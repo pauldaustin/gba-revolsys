@@ -11,7 +11,7 @@ public class FloatAttribute extends AbstractFileGdbFieldDefinition {
   public FloatAttribute(final Field field) {
     super(field.getName(), DataTypes.FLOAT,
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   @Override

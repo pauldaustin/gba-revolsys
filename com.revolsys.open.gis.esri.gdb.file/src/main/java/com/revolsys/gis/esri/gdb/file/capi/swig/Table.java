@@ -13,9 +13,9 @@ public class Table {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public Table() {
     this(EsriFileGdbJNI.new_Table(), true);

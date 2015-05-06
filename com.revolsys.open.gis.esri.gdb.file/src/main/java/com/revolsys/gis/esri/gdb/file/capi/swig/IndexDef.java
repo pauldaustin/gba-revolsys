@@ -13,9 +13,9 @@ public class IndexDef {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public IndexDef() {
     this(EsriFileGdbJNI.new_IndexDef__SWIG_0(), true);

@@ -16,11 +16,11 @@ import com.revolsys.gis.esri.gdb.file.CapiFileGdbRecordStore;
 public class FileGdbDomainCodeTable implements CodeTable {
   private static final Logger LOG = LoggerFactory.getLogger(FileGdbDomainCodeTable.class);
 
+  private final CapiFileGdbRecordStore dataStore;
+
   private final CodedValueDomain domain;
 
   private final String name;
-
-  private final CapiFileGdbRecordStore dataStore;
 
   private JComponent swingEditor;
 

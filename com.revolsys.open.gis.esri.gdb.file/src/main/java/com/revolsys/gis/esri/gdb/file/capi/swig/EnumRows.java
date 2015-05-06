@@ -13,9 +13,9 @@ public class EnumRows {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public EnumRows() {
     this(EsriFileGdbJNI.new_EnumRows(), true);

@@ -20,29 +20,29 @@ import com.revolsys.gis.esri.gdb.file.convert.GeometryConverter;
 
 public class FileGdbQueryIterator extends AbstractIterator<Record> {
 
-  private RecordFactory recordFactory;
+  private BoundingBox boundingBox;
 
-  private Table table;
+  private int count;
 
   private String fields;
 
-  private String sql;
+  private final int limit;
 
-  private BoundingBox boundingBox;
+  private final int offset;
 
   private RecordDefinition recordDefinition;
+
+  private RecordFactory recordFactory;
 
   private CapiFileGdbRecordStore recordStore;
 
   private EnumRows rows;
 
+  private String sql;
+
+  private Table table;
+
   private final String typePath;
-
-  private final int offset;
-
-  private final int limit;
-
-  private int count;
 
   FileGdbQueryIterator(final CapiFileGdbRecordStore recordStore,
     final String typePath) {

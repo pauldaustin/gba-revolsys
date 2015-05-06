@@ -10,13 +10,13 @@ import com.revolsys.io.AbstractMultipleIteratorReader;
 
 public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
 
-  private List<String> typePaths = new ArrayList<String>();
+  private BoundingBox boundingBox;
 
   private final CapiFileGdbRecordStore dataStore;
 
-  private BoundingBox boundingBox;
-
   private int index = 0;
+
+  private List<String> typePaths = new ArrayList<String>();
 
   public FileGdbReader(final CapiFileGdbRecordStore dataStore) {
     this.dataStore = dataStore;
@@ -57,6 +57,6 @@ public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
   @Override
   public String toString() {
     return "Reader " + this.dataStore.getLabel() + " " + this.typePaths + " "
-        + this.boundingBox;
+      + this.boundingBox;
   }
 }

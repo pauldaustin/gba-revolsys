@@ -11,7 +11,7 @@ public class GlobalIdAttribute extends AbstractFileGdbFieldDefinition {
   public GlobalIdAttribute(final Field field) {
     this(field.getName(), field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+        || !field.isIsNullable());
   }
 
   public GlobalIdAttribute(final String name, final int length,

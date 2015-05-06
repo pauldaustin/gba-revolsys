@@ -32,6 +32,9 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
 
   public static final Map<GeometryType, DataType> GEOMETRY_TYPE_DATA_TYPE_MAP = new LinkedHashMap<GeometryType, DataType>();
 
+  private static final ShapefileGeometryUtil SHP_UTIL = new ShapefileGeometryUtil(
+    true);
+
   static {
     GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPoint,
       DataTypes.POINT);
@@ -43,9 +46,6 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
       DataTypes.MULTI_POLYGON);
   }
 
-  private static final ShapefileGeometryUtil SHP_UTIL = new ShapefileGeometryUtil(
-    true);
-
   private GeometryFactory geometryFactory = GeometryFactory.getFactory();
 
   private Method readMethod;
@@ -55,17 +55,17 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
   public GeometryAttribute(final Field field) {
     super(field.getName(), DataTypes.GEOMETRY,
       BooleanStringConverter.getBoolean(field.getRequired())
-        || !field.isIsNullable());
+      || !field.isIsNullable());
     final GeometryDef geometryDef = field.getGeometryDef();
     if (geometryDef == null) {
       throw new IllegalArgumentException(
-          "Field definition does not include a geometry definition");
+        "Field definition does not include a geometry definition");
 
     } else {
       final SpatialReference spatialReference = geometryDef.getSpatialReference();
       if (spatialReference == null) {
         throw new IllegalArgumentException(
-          "Field definition does not include a spatial reference");
+            "Field definition does not include a spatial reference");
       } else {
         final GeometryType geometryType = geometryDef.getGeometryType();
         final DataType dataType = GEOMETRY_TYPE_DATA_TYPE_MAP.get(geometryType);
@@ -74,7 +74,7 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
         if (this.geometryFactory == null) {
           throw new IllegalArgumentException(
             "Field definition does not include a valid coordinate system "
-              + spatialReference.getLatestWKID());
+                + spatialReference.getLatestWKID());
         }
 
         int numAxis = 2;

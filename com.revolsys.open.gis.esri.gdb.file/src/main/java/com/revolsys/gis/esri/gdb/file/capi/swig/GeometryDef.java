@@ -13,9 +13,9 @@ public class GeometryDef {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public GeometryDef() {
     this(EsriFileGdbJNI.new_GeometryDef(), true);

@@ -22,9 +22,9 @@ import com.revolsys.gis.esri.gdb.file.capi.type.OidAttribute;
 import com.revolsys.io.AbstractWriter;
 
 public class FileGdbWriter extends AbstractWriter<Record> {
-  private Map<String, Table> tables = new HashMap<String, Table>();
-
   private CapiFileGdbRecordStore recordStore;
+
+  private Map<String, Table> tables = new HashMap<String, Table>();
 
   FileGdbWriter(final CapiFileGdbRecordStore recordStore) {
     this.recordStore = recordStore;
@@ -107,7 +107,7 @@ public class FileGdbWriter extends AbstractWriter<Record> {
         final Object value = record.getValue(name);
         if (value == null && !(field instanceof OidAttribute)) {
           throw new IllegalArgumentException("Atribute " + typePath + "."
-              + name + " is required");
+            + name + " is required");
         }
       }
     }
@@ -179,7 +179,7 @@ public class FileGdbWriter extends AbstractWriter<Record> {
             } catch (final IllegalArgumentException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
                 "Unable to update row " + e.getMessage() + "\n"
-                    + record.toString(), e);
+                  + record.toString(), e);
             } catch (final RuntimeException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
                 "Unable to update row \n:" + record.toString());
@@ -208,16 +208,16 @@ public class FileGdbWriter extends AbstractWriter<Record> {
         switch (record.getState()) {
           case New:
             insert(record);
-            break;
+          break;
           case Modified:
             update(record);
-            break;
+          break;
           case Persisted:
-            // No action required
-            break;
+          // No action required
+          break;
           case Deleted:
             delete(record);
-            break;
+          break;
           default:
             throw new IllegalStateException("State not known");
         }
