@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
@@ -54,11 +54,11 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcAttributeAdder {
     final int length, final int scale, final boolean required,
     final String description) {
     final String typePath = metaData.getPath();
-    String owner = dataStore.getDatabaseSchemaName(PathUtil.getPath(typePath));
+    String owner = this.dataStore.getDatabaseSchemaName(PathUtil.getPath(typePath));
     if (!StringUtils.hasText(owner)) {
       owner = "public";
     }
-    final String tableName = dataStore.getDatabaseTableName(typePath);
+    final String tableName = this.dataStore.getDatabaseTableName(typePath);
     final String columnName = name.toLowerCase();
     try {
       int srid = 0;
@@ -66,18 +66,18 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcAttributeAdder {
       int numAxis = 3;
       try {
         final String sql = "select SRID, TYPE, COORD_DIMENSION from GEOMETRY_COLUMNS where UPPER(F_TABLE_SCHEMA) = UPPER(?) AND UPPER(F_TABLE_NAME) = UPPER(?) AND UPPER(F_GEOMETRY_COLUMN) = UPPER(?)";
-        final Map<String, Object> values = JdbcUtils.selectMap(dataSource, sql,
-          owner, tableName, columnName);
+        final Map<String, Object> values = JdbcUtils.selectMap(this.dataSource,
+          sql, owner, tableName, columnName);
         srid = (Integer)values.get("srid");
         type = (String)values.get("type");
         numAxis = (Integer)values.get("coord_dimension");
       } catch (final IllegalArgumentException e) {
         LOG.warn("Cannot get geometry column metadata for " + typePath + "."
-          + columnName);
+            + columnName);
       }
 
       final DataType dataType = DATA_TYPE_MAP.get(type);
-      final GeometryFactory storeGeometryFactory = dataStore.getGeometryFactory();
+      final GeometryFactory storeGeometryFactory = this.dataStore.getGeometryFactory();
       final GeometryFactory geometryFactory;
       if (storeGeometryFactory == null) {
         geometryFactory = GeometryFactory.getFactory(srid, numAxis, 0, 0);
@@ -85,17 +85,17 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcAttributeAdder {
         geometryFactory = GeometryFactory.getFactory(srid, numAxis,
           storeGeometryFactory.getScaleXY(), storeGeometryFactory.getScaleZ());
       }
-      final FieldDefinition attribute = new PostgreSQLGeometryJdbcAttribute(name,
-        dataType, required, description, null, srid, numAxis, geometryFactory);
+      final FieldDefinition attribute = new PostgreSQLGeometryJdbcAttribute(
+        name, dataType, required, description, null, srid, numAxis,
+        geometryFactory);
       metaData.addField(attribute);
       attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction(
-        "intersects(", ")"));
+        "st_intersects(", ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction(
         "st_buffer(", ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction(
         "st_equals(", ")"));
-      attribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
-        geometryFactory);
+      attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
       return attribute;
     } catch (final SQLException e) {
       LOG.error("Attribute not registered in GEOMETRY_COLUMN table " + owner

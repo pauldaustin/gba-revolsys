@@ -7,9 +7,9 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 
@@ -17,7 +17,7 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
 
   private String typeName;
 
-  private DataObjectMetaDataFactory metaDataFactory;
+  private RecordDefinitionFactory metaDataFactory;
 
   private RecordDefinition metaData;
 
@@ -71,7 +71,7 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
     return metaData;
   }
 
-  public DataObjectMetaDataFactory getMetaDataFactory() {
+  public RecordDefinitionFactory getMetaDataFactory() {
     return metaDataFactory;
   }
 
@@ -107,7 +107,7 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
     this.metaData = metaData;
   }
 
-  public void setMetaDataFactory(final DataObjectMetaDataFactory metaDataFactory) {
+  public void setMetaDataFactory(final RecordDefinitionFactory metaDataFactory) {
     this.metaDataFactory = metaDataFactory;
   }
 

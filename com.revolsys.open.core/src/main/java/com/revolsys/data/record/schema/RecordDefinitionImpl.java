@@ -25,10 +25,9 @@ import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.FieldProperties;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
+import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.ValueMetaDataProperty;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.io.AbstractObjectWithProperties;
@@ -44,7 +43,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.util.AssertionFailedException;
 
 public class RecordDefinitionImpl extends AbstractObjectWithProperties
-  implements RecordDefinition, Cloneable {
+implements RecordDefinition, Cloneable {
   private static final AtomicInteger INSTANCE_IDS = new AtomicInteger(0);
 
   private static final Map<Integer, RecordDefinitionImpl> METADATA_CACHE = new WeakCache<Integer, RecordDefinitionImpl>();
@@ -53,8 +52,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     "dataRecordDefinition", "Data Record Definition",
     RecordDefinitionImpl.class, "create");
 
-  public static RecordDefinitionImpl create(
-    final Map<String, Object> properties) {
+  public static RecordDefinitionImpl create(final Map<String, Object> properties) {
     return new RecordDefinitionImpl(properties);
   }
 
@@ -80,7 +78,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   private RecordFactory dataObjectFactory = new ArrayDataObjectFactory();
 
-  private DataObjectMetaDataFactory dataObjectMetaDataFactory;
+  private RecordDefinitionFactory recordDefinitionFactory;
 
   private Reference<RecordStore> dataStore;
 
@@ -193,6 +191,32 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     METADATA_CACHE.put(this.instanceId, this);
   }
 
+  public FieldDefinition addAttribute(final String name, final DataType type,
+    final int length, final boolean required) {
+    final FieldDefinition attribute = new FieldDefinition(name, type, length,
+      required);
+    addField(attribute);
+    return attribute;
+  }
+
+  public FieldDefinition addAttribute(final String name, final DataType type,
+    final int length, final int scale, final boolean required) {
+    final FieldDefinition attribute = new FieldDefinition(name, type, length,
+      scale, required);
+    addField(attribute);
+    return attribute;
+  }
+
+  public void addColumnCodeTable(final String column, final CodeTable codeTable) {
+    this.codeTableByColumnMap.put(column, codeTable);
+  }
+
+  @Override
+  public void addDefaultValue(final String attributeName,
+    final Object defaultValue) {
+    this.defaultValues.put(attributeName, defaultValue);
+  }
+
   public void addField(final FieldDefinition attribute) {
     final int index = this.attributeNames.size();
     final String name = attribute.getName();
@@ -239,32 +263,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     final FieldDefinition attribute = new FieldDefinition(name, type, required);
     addField(attribute);
     return attribute;
-  }
-
-  public FieldDefinition addAttribute(final String name, final DataType type,
-    final int length, final boolean required) {
-    final FieldDefinition attribute = new FieldDefinition(name, type, length,
-      required);
-    addField(attribute);
-    return attribute;
-  }
-
-  public FieldDefinition addAttribute(final String name, final DataType type,
-    final int length, final int scale, final boolean required) {
-    final FieldDefinition attribute = new FieldDefinition(name, type, length,
-      scale, required);
-    addField(attribute);
-    return attribute;
-  }
-
-  public void addColumnCodeTable(final String column, final CodeTable codeTable) {
-    this.codeTableByColumnMap.put(column, codeTable);
-  }
-
-  @Override
-  public void addDefaultValue(final String attributeName,
-    final Object defaultValue) {
-    this.defaultValues.put(attributeName, defaultValue);
   }
 
   public void addRestriction(final String attributePath,
@@ -348,7 +346,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     this.attributes.clear();
     this.codeTableByColumnMap.clear();
     this.dataObjectFactory = null;
-    this.dataObjectMetaDataFactory = new DataObjectMetaDataFactoryImpl();
+    this.recordDefinitionFactory = new DataObjectMetaDataFactoryImpl();
     this.dataStore = null;
     this.defaultValues.clear();
     this.description = "";
@@ -447,16 +445,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public List<String> getFieldNames() {
-    return new ArrayList<String>(this.attributeNames);
-  }
-
-  @Override
-  public List<FieldDefinition> getFields() {
-    return new ArrayList<FieldDefinition>(this.attributes);
-  }
-
-  @Override
   public int getAttributeScale(final int i) {
     final FieldDefinition attribute = this.attributes.get(i);
     return attribute.getScale();
@@ -479,16 +467,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
       titles.add(attribute.getTitle());
     }
     return titles;
-  }
-
-  @Override
-  public DataType getFieldType(final CharSequence name) {
-    final int index = getAttributeIndex(name);
-    if (index == -1) {
-      return null;
-    } else {
-      return getAttributeType(index);
-    }
   }
 
   @Override
@@ -517,25 +495,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public DataObjectMetaDataFactory getDataObjectMetaDataFactory() {
-    if (this.dataObjectMetaDataFactory == null) {
-      final RecordStore dataStore = getRecordStore();
-      return dataStore;
-    } else {
-      return this.dataObjectMetaDataFactory;
-    }
-  }
-
-  @Override
-  public RecordStore getRecordStore() {
-    if (this.dataStore == null) {
-      return null;
-    } else {
-      return this.dataStore.get();
-    }
-  }
-
-  @Override
   public Object getDefaultValue(final String attributeName) {
     return this.defaultValues.get(attributeName);
   }
@@ -550,11 +509,22 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public FieldDefinition getGeometryField() {
-    if (this.geometryAttributeIndex == -1) {
+  public List<String> getFieldNames() {
+    return new ArrayList<String>(this.attributeNames);
+  }
+
+  @Override
+  public List<FieldDefinition> getFields() {
+    return new ArrayList<FieldDefinition>(this.attributes);
+  }
+
+  @Override
+  public DataType getFieldType(final CharSequence name) {
+    final int index = getAttributeIndex(name);
+    if (index == -1) {
       return null;
     } else {
-      return this.attributes.get(this.geometryAttributeIndex);
+      return getAttributeType(index);
     }
   }
 
@@ -566,11 +536,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   @Override
   public List<Integer> getGeometryAttributeIndexes() {
     return Collections.unmodifiableList(this.geometryAttributeIndexes);
-  }
-
-  @Override
-  public String getGeometryFieldName() {
-    return getAttributeName(this.geometryAttributeIndex);
   }
 
   @Override
@@ -590,6 +555,20 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
+  public FieldDefinition getGeometryField() {
+    if (this.geometryAttributeIndex == -1) {
+      return null;
+    } else {
+      return this.attributes.get(this.geometryAttributeIndex);
+    }
+  }
+
+  @Override
+  public String getGeometryFieldName() {
+    return getAttributeName(this.geometryAttributeIndex);
+  }
+
+  @Override
   public FieldDefinition getIdAttribute() {
     if (this.idAttributeIndex >= 0) {
       return this.attributes.get(this.idAttributeIndex);
@@ -599,18 +578,8 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public int getIdFieldIndex() {
-    return this.idAttributeIndex;
-  }
-
-  @Override
   public List<Integer> getIdAttributeIndexes() {
     return Collections.unmodifiableList(this.idAttributeIndexes);
-  }
-
-  @Override
-  public String getIdFieldName() {
-    return getAttributeName(this.idAttributeIndex);
   }
 
   @Override
@@ -624,6 +593,16 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   @Override
+  public int getIdFieldIndex() {
+    return this.idAttributeIndex;
+  }
+
+  @Override
+  public String getIdFieldName() {
+    return getAttributeName(this.idAttributeIndex);
+  }
+
+  @Override
   public int getInstanceId() {
     return this.instanceId;
   }
@@ -631,6 +610,25 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   @Override
   public String getPath() {
     return this.path;
+  }
+
+  @Override
+  public RecordDefinitionFactory getRecordDefinitionFactory() {
+    if (this.recordDefinitionFactory == null) {
+      final RecordStore dataStore = getRecordStore();
+      return dataStore;
+    } else {
+      return this.recordDefinitionFactory;
+    }
+  }
+
+  @Override
+  public RecordStore getRecordStore() {
+    if (this.dataStore == null) {
+      return null;
+    } else {
+      return this.dataStore.get();
+    }
   }
 
   public Map<String, Collection<Object>> getRestrictions() {
@@ -690,7 +688,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
   }
 
   private void readObject(final ObjectInputStream ois)
-    throws ClassNotFoundException, IOException {
+      throws ClassNotFoundException, IOException {
     ois.defaultReadObject();
     METADATA_CACHE.put(this.instanceId, this);
   }
@@ -715,11 +713,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     this.codeTableByColumnMap = codeTableByColumnMap;
   }
 
-  public void setDataObjectMetaDataFactory(
-    final DataObjectMetaDataFactory dataObjectMetaDataFactory) {
-    this.dataObjectMetaDataFactory = dataObjectMetaDataFactory;
-  }
-
   @Override
   public void setDefaultValues(final Map<String, ? extends Object> defaultValues) {
     if (defaultValues == null) {
@@ -740,11 +733,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     this.geometryAttributeIndex = geometryAttributeIndex;
   }
 
-  public void setGeometryFieldName(final String name) {
-    final int id = getAttributeIndex(name);
-    setGeometryAttributeIndex(id);
-  }
-
   @Override
   public void setGeometryFactory(final GeometryFactory geometryFactory) {
     final FieldDefinition geometryAttribute = getGeometryField();
@@ -752,6 +740,11 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
       geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
         geometryFactory);
     }
+  }
+
+  public void setGeometryFieldName(final String name) {
+    final int id = getAttributeIndex(name);
+    setGeometryAttributeIndex(id);
   }
 
   /**
@@ -765,11 +758,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
     this.idAttributeNames.add(getIdFieldName());
     this.idAttributes.clear();
     this.idAttributes.add(getIdAttribute());
-  }
-
-  public void setIdFieldName(final String name) {
-    final int id = getAttributeIndex(name);
-    setIdAttributeIndex(id);
   }
 
   public void setIdAttributeNames(final Collection<String> names) {
@@ -795,6 +783,11 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
 
   public void setIdAttributeNames(final String... names) {
     setIdAttributeNames(Arrays.asList(names));
+  }
+
+  public void setIdFieldName(final String name) {
+    final int id = getAttributeIndex(name);
+    setIdAttributeIndex(id);
   }
 
   @Override
@@ -824,6 +817,11 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties
       }
     }
 
+  }
+
+  public void setRecordDefinitionFactory(
+    final RecordDefinitionFactory recordDefinitionFactory) {
+    this.recordDefinitionFactory = recordDefinitionFactory;
   }
 
   @Override

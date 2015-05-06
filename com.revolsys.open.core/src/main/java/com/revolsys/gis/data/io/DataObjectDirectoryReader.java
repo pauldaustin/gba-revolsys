@@ -7,15 +7,15 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
 
 public class DataObjectDirectoryReader extends
-  AbstractDirectoryReader<Record> implements DataObjectMetaDataFactory {
+  AbstractDirectoryReader<Record> implements RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
 

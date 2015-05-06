@@ -37,6 +37,7 @@ import java.util.TreeSet;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -46,7 +47,6 @@ import com.revolsys.data.types.DataTypes;
 import com.revolsys.data.types.EnumerationDataType;
 import com.revolsys.data.types.SimpleDataType;
 import com.revolsys.gis.data.model.FieldProperties;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.io.saif.util.CsnIterator;
@@ -281,7 +281,7 @@ public class SaifSchemaReader {
     return currentClass;
   }
 
-  private DataObjectMetaDataFactory loadSchema(final CsnIterator iterator)
+  private RecordDefinitionFactory loadSchema(final CsnIterator iterator)
     throws IOException {
     if (schema == null) {
       schema = new DataObjectMetaDataFactoryImpl();
@@ -298,32 +298,32 @@ public class SaifSchemaReader {
       if (definition instanceof RecordDefinition) {
         final RecordDefinitionImpl metaData = (RecordDefinitionImpl)definition;
         setMetaDataProperties(metaData);
-        metaData.setDataObjectMetaDataFactory(schema);
+        metaData.setRecordDefinitionFactory(schema);
         schema.addMetaData(metaData);
       }
     }
     return schema;
   }
 
-  public DataObjectMetaDataFactory loadSchema(final File file)
+  public RecordDefinitionFactory loadSchema(final File file)
     throws IOException {
     final CsnIterator iterator = new CsnIterator(file);
     return loadSchema(iterator);
   }
 
-  public DataObjectMetaDataFactory loadSchema(final Resource resource)
+  public RecordDefinitionFactory loadSchema(final Resource resource)
     throws IOException {
     return loadSchema(new CsnIterator(resource.getFilename(),
       resource.getInputStream()));
 
   }
 
-  public DataObjectMetaDataFactory loadSchema(final String fileName,
+  public RecordDefinitionFactory loadSchema(final String fileName,
     final InputStream in) throws IOException {
     return loadSchema(new CsnIterator(fileName, in));
   }
 
-  public DataObjectMetaDataFactory loadSchemas(final List<Resource> resources)
+  public RecordDefinitionFactory loadSchemas(final List<Resource> resources)
     throws IOException {
     for (final Resource resource : resources) {
       if (resource.exists()) {

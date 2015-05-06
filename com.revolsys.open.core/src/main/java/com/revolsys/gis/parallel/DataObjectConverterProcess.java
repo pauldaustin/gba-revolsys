@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.converter.FilterDataObjectConverter;
 import com.revolsys.gis.converter.SimpleDataObjectConveter;
 import com.revolsys.gis.converter.process.CopyValues;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
@@ -32,7 +32,7 @@ public class DataObjectConverterProcess extends
 
   private Map<String, Converter<Record, Record>> typeConverterMap = new HashMap<String, Converter<Record, Record>>();
 
-  private DataObjectMetaDataFactory targetMetaDataFactory;
+  private RecordDefinitionFactory targetMetaDataFactory;
 
   private Map<Object, Map<String, Object>> simpleMapping;
 
@@ -123,7 +123,7 @@ public class DataObjectConverterProcess extends
     return targetMetaDataFactory.getRecordDefinition(typePath);
   }
 
-  public DataObjectMetaDataFactory getTargetMetaDataFactory() {
+  public RecordDefinitionFactory getTargetMetaDataFactory() {
     return targetMetaDataFactory;
   }
 
@@ -205,7 +205,7 @@ public class DataObjectConverterProcess extends
   }
 
   public void setTargetMetaDataFactory(
-    final DataObjectMetaDataFactory targetMetaDataFactory) {
+    final RecordDefinitionFactory targetMetaDataFactory) {
     this.targetMetaDataFactory = targetMetaDataFactory;
   }
 

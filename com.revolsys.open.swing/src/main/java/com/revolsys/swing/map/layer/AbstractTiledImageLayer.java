@@ -38,6 +38,10 @@ public abstract class AbstractTiledImageLayer extends AbstractLayer {
 
   public abstract double getResolution(final Viewport2D viewport);
 
+  public String getSourceLocation() {
+    return "";
+  }
+
   public boolean isHasError() {
     return this.hasError;
   }
@@ -52,7 +56,9 @@ public abstract class AbstractTiledImageLayer extends AbstractLayer {
   public void setError(final Throwable e) {
     if (!this.hasError) {
       this.hasError = true;
-      LoggerFactory.getLogger(getClass()).error("Unable to get map tiles", e);
+      LoggerFactory.getLogger(getClass()).error(
+        "Unable to get map tiles for " + this + " (" + getSourceLocation()
+        + ")", e);
     }
   }
 

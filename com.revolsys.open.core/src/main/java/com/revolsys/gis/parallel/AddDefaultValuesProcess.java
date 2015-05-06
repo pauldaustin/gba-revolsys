@@ -31,9 +31,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.PathUtil;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.AbstractInOutProcess;
@@ -44,7 +44,7 @@ public class AddDefaultValuesProcess extends
 
   private Set<String> excludedAttributeNames = new HashSet<String>();
 
-  private DataObjectMetaDataFactory metaDataFactory;
+  private RecordDefinitionFactory metaDataFactory;
 
   private String schemaName;
 
@@ -81,7 +81,7 @@ public class AddDefaultValuesProcess extends
     return excludedAttributeNames;
   }
 
-  public DataObjectMetaDataFactory getMetaDataFactory() {
+  public RecordDefinitionFactory getMetaDataFactory() {
     return metaDataFactory;
   }
 
@@ -185,7 +185,7 @@ public class AddDefaultValuesProcess extends
     this.excludedAttributeNames = excludedAttributeNames;
   }
 
-  public void setMetaDataFactory(final DataObjectMetaDataFactory metaDataFactory) {
+  public void setMetaDataFactory(final RecordDefinitionFactory metaDataFactory) {
     this.metaDataFactory = metaDataFactory;
   }
 

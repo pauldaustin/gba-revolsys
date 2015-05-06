@@ -12,9 +12,9 @@ import java.util.zip.ZipFile;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.saif.util.OsnConverter;
 import com.revolsys.io.saif.util.OsnConverterRegistry;
@@ -31,7 +31,7 @@ public class OsnReader implements DataObjectIterator {
 
   private final String fileName;
 
-  private final DataObjectMetaDataFactory metaDataFactory;
+  private final RecordDefinitionFactory metaDataFactory;
 
   private boolean nextChecked = false;
 
@@ -39,7 +39,7 @@ public class OsnReader implements DataObjectIterator {
 
   private ZipFile zipFile;
 
-  public OsnReader(final DataObjectMetaDataFactory metaDataFactory,
+  public OsnReader(final RecordDefinitionFactory metaDataFactory,
     final File directory, final String fileName, final int srid)
     throws IOException {
     this.metaDataFactory = metaDataFactory;
@@ -49,7 +49,7 @@ public class OsnReader implements DataObjectIterator {
     open();
   }
 
-  public OsnReader(final DataObjectMetaDataFactory metaDataFactory,
+  public OsnReader(final RecordDefinitionFactory metaDataFactory,
     final ZipFile zipFile, final String fileName, final int srid)
     throws IOException {
     this.metaDataFactory = metaDataFactory;
@@ -149,7 +149,7 @@ public class OsnReader implements DataObjectIterator {
     return fileName;
   }
 
-  public DataObjectMetaDataFactory getMetaDataFactory() {
+  public RecordDefinitionFactory getMetaDataFactory() {
     return metaDataFactory;
   }
 

@@ -64,7 +64,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
   private Map<String, LayerDataObject> cachedRecords = new HashMap<String, LayerDataObject>();
 
-  private RecordStore dataStore;
+  private RecordStore recordStore;
 
   private BoundingBox loadingBoundingBox = new BoundingBox();
 
@@ -80,7 +80,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
   public DataObjectStoreLayer(final RecordStore dataStore,
     final String typePath, final boolean exists) {
-    this.dataStore = dataStore;
+    this.recordStore = dataStore;
     setExists(exists);
     setType("dataStore");
 
@@ -144,7 +144,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     String url = null;
     String username = null;
     if (isExists()) {
-      final RecordStore dataStore = getDataStore();
+      final RecordStore dataStore = getRecordStore();
       url = dataStore.getUrl();
       username = dataStore.getUsername();
     }
@@ -248,14 +248,14 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
   @Override
   public void delete() {
-    if (this.dataStore != null) {
+    if (this.recordStore != null) {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties != null) {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("connection", connectionProperties);
         DataObjectStoreConnectionManager.releaseDataStore(config);
       }
-      this.dataStore = null;
+      this.recordStore = null;
     }
     final SwingWorker<DataObjectQuadTree, Void> loadingWorker = this.loadingWorker;
     this.boundingBox = new BoundingBox();
@@ -290,7 +290,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
 
   @Override
   protected boolean doInitialize() {
-    RecordStore dataStore = this.dataStore;
+    RecordStore dataStore = this.recordStore;
     if (dataStore == null) {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties == null) {
@@ -371,7 +371,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
       BoundingBox boundingBox = BoundingBox.getBoundingBox(queryGeometry);
       boundingBox = boundingBox.expand(distance);
       final String typePath = getTypePath();
-      final RecordStore dataStore = getDataStore();
+      final RecordStore dataStore = getRecordStore();
       final Reader reader = dataStore.query(this, typePath, queryGeometry,
         distance);
       try {
@@ -392,7 +392,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   @Override
   protected List<LayerDataObject> doQuery(final Query query) {
     if (isExists()) {
-      final RecordStore dataStore = getDataStore();
+      final RecordStore dataStore = getRecordStore();
       if (dataStore != null) {
         final boolean enabled = setEventsEnabled(false);
         try {
@@ -465,14 +465,14 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   @Override
   protected boolean doSaveChanges(final LayerDataObject record) {
     final boolean deleted = isDeleted(record);
-    final PlatformTransactionManager transactionManager = getDataStore().getTransactionManager();
+    final PlatformTransactionManager transactionManager = getRecordStore().getTransactionManager();
     try (
         Transaction transaction = new Transaction(transactionManager,
           Propagation.REQUIRES_NEW)) {
       try {
 
         if (isExists()) {
-          final RecordStore dataStore = getDataStore();
+          final RecordStore dataStore = getRecordStore();
           if (dataStore != null) {
             final Writer<Record> writer = dataStore.createWriter();
             try {
@@ -570,8 +570,8 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   }
 
   @Override
-  public RecordStore getDataStore() {
-    return this.dataStore;
+  public RecordStore getRecordStore() {
+    return this.recordStore;
   }
 
   protected String getId(final LayerDataObject record) {
@@ -611,7 +611,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
       if (record == null) {
         final Query query = Query.equal(metaData, idAttributeName, id);
         query.setProperty("dataObjectFactory", this);
-        final RecordStore dataStore = getDataStore();
+        final RecordStore dataStore = getRecordStore();
         return (LayerDataObject)dataStore.queryFirst(query);
       } else {
         return record;
@@ -663,7 +663,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   protected List<LayerDataObject> getRecordsFromDataStore(
     final BoundingBox boundingBox) {
     if (isExists()) {
-      final RecordStore dataStore = getDataStore();
+      final RecordStore dataStore = getRecordStore();
       if (dataStore != null) {
         final Query query = new Query(getTypePath());
         query.setBoundingBox(boundingBox);
@@ -682,7 +682,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   @Override
   public int getRowCount(final Query query) {
     if (isExists()) {
-      final RecordStore dataStore = getDataStore();
+      final RecordStore dataStore = getRecordStore();
       if (dataStore != null) {
         return dataStore.getRowCount(query);
       }
@@ -753,7 +753,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
       setIndex(null);
       cleanCachedRecords();
     }
-    final RecordStore dataStore = getDataStore();
+    final RecordStore dataStore = getRecordStore();
     final String typePath = getTypePath();
     final CodeTable codeTable = dataStore.getCodeTable(typePath);
     if (codeTable != null) {
@@ -812,7 +812,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
   }
 
   protected void setDataStore(final RecordStore dataStore) {
-    this.dataStore = dataStore;
+    this.recordStore = dataStore;
   }
 
   protected void setIndex(final BoundingBox loadedBoundingBox,
@@ -861,7 +861,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     }
     if (StringUtils.hasText(typePath)) {
       if (isExists()) {
-        final RecordStore dataStore = getDataStore();
+        final RecordStore dataStore = getRecordStore();
         if (dataStore != null) {
           final RecordDefinition metaData = dataStore.getRecordDefinition(typePath);
           if (metaData != null) {

@@ -42,12 +42,12 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
 
   @Override
   protected boolean doInitialize() {
-    synchronized (initSync) {
-      if (mapServer == null) {
+    synchronized (this.initSync) {
+      if (this.mapServer == null) {
         this.url = getProperty("url");
         try {
-          this.mapServer = ArcGisServerRestClient.getMapServer(url);
-          if (mapServer == null) {
+          this.mapServer = ArcGisServerRestClient.getMapServer(this.url);
+          if (this.mapServer == null) {
             return false;
           } else {
             final TileInfo tileInfo = this.mapServer.getTileInfo();
@@ -55,8 +55,9 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
             return true;
           }
         } catch (final Throwable e) {
+          setError(e);
           throw new RuntimeException("Error connecting to ArcGIS rest server "
-            + url, e);
+            + this.url, e);
         }
       } else {
         return true;
@@ -130,6 +131,11 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
       final int zoomLevel = mapServer.getZoomLevel(metresPerPixel);
       return mapServer.getResolution(zoomLevel);
     }
+  }
+
+  @Override
+  public String getSourceLocation() {
+    return this.url;
   }
 
   @Override

@@ -44,12 +44,12 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
 import com.revolsys.gis.data.model.FieldProperties;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.AbstractReader;
@@ -67,7 +67,7 @@ import com.revolsys.spring.SpringUtil;
  * @see SaifWriter
  */
 public class SaifReader extends AbstractReader<Record> implements
-  DataObjectIterator, DataObjectMetaDataFactory,
+  DataObjectIterator, RecordDefinitionFactory,
   com.revolsys.gis.data.io.DataObjectReader {
   /** The logging instance. */
   private static final Logger log = Logger.getLogger(SaifReader.class);
@@ -76,7 +76,7 @@ public class SaifReader extends AbstractReader<Record> implements
   private Record currentDataObject;
 
   /** The schema definition declared in the SAIF archive. */
-  private DataObjectMetaDataFactory declaredMetaDataFactory;
+  private RecordDefinitionFactory declaredMetaDataFactory;
 
   /** List of type names to exclude from reading. */
   private final Set<String> excludeTypeNames = new LinkedHashSet<String>();
@@ -111,7 +111,7 @@ public class SaifReader extends AbstractReader<Record> implements
   private boolean loadNewObject = true;
 
   /** The schema definition that will be set on each data object. */
-  private DataObjectMetaDataFactory metaDataFactory;
+  private RecordDefinitionFactory metaDataFactory;
 
   /** The iterator for the current object set. */
   private OsnReader osnReader;
@@ -196,7 +196,7 @@ public class SaifReader extends AbstractReader<Record> implements
    * 
    * @return The schema definition.
    */
-  public DataObjectMetaDataFactory getDeclaredMetaDataFactory() {
+  public RecordDefinitionFactory getDeclaredMetaDataFactory() {
     return declaredMetaDataFactory;
   }
 
@@ -300,12 +300,12 @@ public class SaifReader extends AbstractReader<Record> implements
    * 
    * @return The schema definition.
    */
-  public DataObjectMetaDataFactory getMetaDataFactory() {
+  public RecordDefinitionFactory getMetaDataFactory() {
     return metaDataFactory;
   }
 
   private <D extends Record> OsnReader getOsnReader(
-    final DataObjectMetaDataFactory metaDataFactory,
+    final RecordDefinitionFactory metaDataFactory,
     final RecordFactory factory, final String className) throws IOException {
     String fileName = typePathFileNameMap.get(className);
     if (fileName == null) {
@@ -328,7 +328,7 @@ public class SaifReader extends AbstractReader<Record> implements
 
   public <D extends Record> OsnReader getOsnReader(final String className,
     final RecordFactory factory) throws IOException {
-    final DataObjectMetaDataFactory metaDataFactory = this.metaDataFactory;
+    final RecordDefinitionFactory metaDataFactory = this.metaDataFactory;
     return getOsnReader(metaDataFactory, factory, className);
 
   }
@@ -392,7 +392,7 @@ public class SaifReader extends AbstractReader<Record> implements
     final boolean setNames = includeTypeNames.isEmpty();
     final ClassPathResource resource = new ClassPathResource(
       "com/revolsys/io/saif/saifzip.csn");
-    final DataObjectMetaDataFactory schema = new SaifSchemaReader().loadSchema(resource);
+    final RecordDefinitionFactory schema = new SaifSchemaReader().loadSchema(resource);
     final OsnReader reader = getOsnReader(schema, factory, "/exports.dir");
     try {
       final Map<String, String> names = new TreeMap<String, String>();
@@ -664,7 +664,7 @@ public class SaifReader extends AbstractReader<Record> implements
    * @param declaredSchema The schema definition.
    */
   public void setDeclaredMetaDataFactory(
-    final DataObjectMetaDataFactory declaredMetaDataFactory) {
+    final RecordDefinitionFactory declaredMetaDataFactory) {
     this.declaredMetaDataFactory = declaredMetaDataFactory;
   }
 
@@ -704,7 +704,7 @@ public class SaifReader extends AbstractReader<Record> implements
    * 
    * @param schema The schema definition.
    */
-  public void setMetaDataFactory(final DataObjectMetaDataFactory metaDataFactory) {
+  public void setMetaDataFactory(final RecordDefinitionFactory metaDataFactory) {
     if (metaDataFactory != null) {
       this.metaDataFactory = metaDataFactory;
     } else {

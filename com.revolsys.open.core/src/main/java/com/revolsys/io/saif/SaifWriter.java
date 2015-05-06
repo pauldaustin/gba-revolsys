@@ -41,8 +41,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactory;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.PathUtil;
@@ -70,7 +70,7 @@ public class SaifWriter extends AbstractWriter<Record> {
 
   protected OsnConverterRegistry converters = new OsnConverterRegistry();
 
-  private DataObjectMetaDataFactory dataObjectMetaDataFactory;
+  private RecordDefinitionFactory dataObjectMetaDataFactory;
 
   private final Set<String> exportedTypes = new LinkedHashSet<String>();
 
@@ -106,7 +106,7 @@ public class SaifWriter extends AbstractWriter<Record> {
   }
 
   public SaifWriter(final File file,
-    final DataObjectMetaDataFactory dataObjectMetaDataFactory)
+    final RecordDefinitionFactory dataObjectMetaDataFactory)
     throws IOException {
     this(file);
     setDataObjectMetaDataFactory(dataObjectMetaDataFactory);
@@ -472,7 +472,7 @@ public class SaifWriter extends AbstractWriter<Record> {
   }
 
   public void setDataObjectMetaDataFactory(
-    final DataObjectMetaDataFactory schema) {
+    final RecordDefinitionFactory schema) {
     this.dataObjectMetaDataFactory = schema;
     if (schema != null) {
       spatialDataSetType = schema.getRecordDefinition("/SpatialDataSet");

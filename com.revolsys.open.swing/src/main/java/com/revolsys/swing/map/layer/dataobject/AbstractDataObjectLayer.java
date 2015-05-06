@@ -903,7 +903,7 @@ public abstract class AbstractDataObjectLayer extends AbstractLayer implements
     return getGeometryFactory().getCoordinateSystem();
   }
 
-  public RecordStore getDataStore() {
+  public RecordStore getRecordStore() {
     return getMetaData().getRecordStore();
   }
 

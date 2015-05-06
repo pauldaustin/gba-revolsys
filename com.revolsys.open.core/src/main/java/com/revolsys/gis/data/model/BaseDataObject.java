@@ -24,6 +24,7 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
@@ -485,7 +486,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
           if (attributeType != null) {
             if (attributeType.getJavaClass() == Record.class) {
               final String typePath = attributeType.getName();
-              final DataObjectMetaDataFactory metaDataFactory = metaData.getDataObjectMetaDataFactory();
+              final RecordDefinitionFactory metaDataFactory = metaData.getRecordDefinitionFactory();
               final RecordDefinition subMetaData = metaDataFactory.getRecordDefinition(typePath);
               final RecordFactory dataObjectFactory = subMetaData.getDataObjectFactory();
               final Record subObject = dataObjectFactory.createRecord(subMetaData);

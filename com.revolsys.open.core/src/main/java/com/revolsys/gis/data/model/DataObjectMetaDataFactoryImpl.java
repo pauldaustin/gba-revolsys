@@ -24,11 +24,12 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractObjectWithProperties;
 
 public class DataObjectMetaDataFactoryImpl extends AbstractObjectWithProperties
-  implements DataObjectMetaDataFactory {
+  implements RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> types = new LinkedHashMap<String, RecordDefinition>();
 
