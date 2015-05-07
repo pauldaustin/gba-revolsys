@@ -40,23 +40,13 @@ public class EsriFileGdbJNI {
 
   public final static native void delete_Envelope(long jarg1);
 
-  public final static native void delete_FieldDef(long jarg1);
-
-  public final static native void delete_FieldInfo(long jarg1);
-
   public final static native void delete_Geodatabase(long jarg1);
 
   public final static native void delete_Guid(long jarg1);
 
-  public final static native void delete_IndexDef(long jarg1);
-
-  public final static native void delete_Raster(long jarg1);
-
   public final static native void delete_Row(long jarg1);
 
   public final static native void delete_Table(long jarg1);
-
-  public final static native void delete_VectorOfFieldDef(long jarg1);
 
   public final static native void delete_VectorOfString(long jarg1);
 
@@ -67,11 +57,6 @@ public class EsriFileGdbJNI {
   public final static native int deleteGeodatabase2(String jarg1);
 
   public final static native void EnumRows_Close(long jarg1, EnumRows jarg1_);
-
-  public final static native int EnumRows_GetFieldInformation(long jarg1,
-    EnumRows jarg1_, long jarg2, FieldInfo jarg2_);
-
-  public final static native long EnumRows_getFields(long jarg1, EnumRows jarg1_);
 
   public final static native long EnumRows_next(long jarg1, EnumRows jarg1_);
 
@@ -115,48 +100,6 @@ public class EsriFileGdbJNI {
 
   public final static native void Envelope_zMin_set(long jarg1,
     Envelope jarg1_, double jarg2);
-
-  public final static native String FieldDef_getAlias(long jarg1,
-    FieldDef jarg1_);
-
-  public final static native int FieldDef_getLength(long jarg1, FieldDef jarg1_);
-
-  public final static native String FieldDef_getName(long jarg1, FieldDef jarg1_);
-
-  public final static native int FieldDef_getType(long jarg1, FieldDef jarg1_);
-
-  public final static native boolean FieldDef_isNullable(long jarg1,
-    FieldDef jarg1_);
-
-  public final static native int FieldDef_SetAlias(long jarg1, FieldDef jarg1_,
-    String jarg2);
-
-  public final static native int FieldDef_SetIsNullable(long jarg1,
-    FieldDef jarg1_, boolean jarg2);
-
-  public final static native int FieldDef_SetLength(long jarg1,
-    FieldDef jarg1_, int jarg2);
-
-  public final static native int FieldDef_SetName(long jarg1, FieldDef jarg1_,
-    String jarg2);
-
-  public final static native int FieldDef_SetType(long jarg1, FieldDef jarg1_,
-    int jarg2);
-
-  public final static native int FieldInfo_getFieldCount(long jarg1,
-    FieldInfo jarg1_);
-
-  public final static native int FieldInfo_getFieldLength(long jarg1,
-    FieldInfo jarg1_, int jarg2);
-
-  public final static native String FieldInfo_getFieldName(long jarg1,
-    FieldInfo jarg1_, int jarg2);
-
-  public final static native int FieldInfo_getFieldType(long jarg1,
-    FieldInfo jarg1_, int jarg2);
-
-  public final static native boolean FieldInfo_isNullable(long jarg1,
-    FieldInfo jarg1_, int jarg2);
 
   public final static native void Geodatabase_alterDomain(long jarg1,
     Geodatabase jarg1_, String jarg2);
@@ -230,6 +173,8 @@ public class EsriFileGdbJNI {
   public final static native int Geodatabase_Rename(long jarg1,
     Geodatabase jarg1_, String jarg2, String jarg3, String jarg4);
 
+  public final static native long getErrors();
+
   public final static native String getSpatialReferenceWkt(int jarg1);
 
   public final static native void Guid_Create(long jarg1, Guid jarg1_);
@@ -247,23 +192,6 @@ public class EsriFileGdbJNI {
 
   public final static native String Guid_toString(long jarg1, Guid jarg1_);
 
-  public final static native String IndexDef_getFields(long jarg1,
-    IndexDef jarg1_);
-
-  public final static native String IndexDef_getName(long jarg1, IndexDef jarg1_);
-
-  public final static native boolean IndexDef_isUnique(long jarg1,
-    IndexDef jarg1_);
-
-  public final static native int IndexDef_SetFields(long jarg1,
-    IndexDef jarg1_, String jarg2);
-
-  public final static native int IndexDef_SetIsUnique(long jarg1,
-    IndexDef jarg1_, boolean jarg2);
-
-  public final static native int IndexDef_SetName(long jarg1, IndexDef jarg1_,
-    String jarg2);
-
   public final static native long new_EnumRows();
 
   public final static native long new_Envelope__SWIG_0();
@@ -271,31 +199,13 @@ public class EsriFileGdbJNI {
   public final static native long new_Envelope__SWIG_1(double jarg1,
     double jarg2, double jarg3, double jarg4);
 
-  public final static native long new_FieldDef();
-
-  public final static native long new_FieldInfo();
-
   public final static native long new_Geodatabase();
 
   public final static native long new_Guid();
 
-  public final static native long new_IndexDef__SWIG_0();
-
-  public final static native long new_IndexDef__SWIG_1(String jarg1,
-    String jarg2, boolean jarg3);
-
-  public final static native long new_IndexDef__SWIG_2(String jarg1,
-    String jarg2);
-
-  public final static native long new_Raster();
-
   public final static native long new_Row();
 
   public final static native long new_Table();
-
-  public final static native long new_VectorOfFieldDef__SWIG_0();
-
-  public final static native long new_VectorOfFieldDef__SWIG_1(long jarg1);
 
   public final static native long new_VectorOfString__SWIG_0();
 
@@ -315,11 +225,6 @@ public class EsriFileGdbJNI {
 
   public final static native double Row_getDouble(long jarg1, Row jarg1_,
     String jarg2);
-
-  public final static native int Row_GetFieldInformation(long jarg1,
-    Row jarg1_, long jarg2, FieldInfo jarg2_);
-
-  public final static native long Row_getFields(long jarg1, Row jarg1_);
 
   public final static native float Row_getFloat(long jarg1, Row jarg1_,
     String jarg2);
@@ -380,18 +285,6 @@ public class EsriFileGdbJNI {
 
   public final static native void setMaxOpenFiles(int jarg1);
 
-  public final static native int Table_AddField__SWIG_0(long jarg1,
-    Table jarg1_, String jarg2);
-
-  public final static native int Table_AddField__SWIG_1(long jarg1,
-    Table jarg1_, long jarg2, FieldDef jarg2_);
-
-  public final static native int Table_AddIndex__SWIG_0(long jarg1,
-    Table jarg1_, String jarg2);
-
-  public final static native int Table_AddIndex__SWIG_1(long jarg1,
-    Table jarg1_, long jarg2, IndexDef jarg2_);
-
   public final static native int Table_AlterField(long jarg1, Table jarg1_,
     String jarg2);
 
@@ -433,11 +326,6 @@ public class EsriFileGdbJNI {
   public final static native int Table_GetExtent(long jarg1, Table jarg1_,
     long jarg2, Envelope jarg2_);
 
-  public final static native int Table_GetFieldInformation(long jarg1,
-    Table jarg1_, long jarg2, FieldInfo jarg2_);
-
-  public final static native long Table_getFields(long jarg1, Table jarg1_);
-
   public final static native long Table_getIndexes(long jarg1, Table jarg1_);
 
   public final static native int Table_getRowCount(long jarg1, Table jarg1_);
@@ -467,30 +355,6 @@ public class EsriFileGdbJNI {
 
   public final static native void Table_updateRow(long jarg1, Table jarg1_,
     long jarg2, Row jarg2_);
-
-  public final static native void VectorOfFieldDef_add(long jarg1,
-    VectorOfFieldDef jarg1_, long jarg2, FieldDef jarg2_);
-
-  public final static native long VectorOfFieldDef_capacity(long jarg1,
-    VectorOfFieldDef jarg1_);
-
-  public final static native void VectorOfFieldDef_clear(long jarg1,
-    VectorOfFieldDef jarg1_);
-
-  public final static native long VectorOfFieldDef_get(long jarg1,
-    VectorOfFieldDef jarg1_, int jarg2);
-
-  public final static native boolean VectorOfFieldDef_isEmpty(long jarg1,
-    VectorOfFieldDef jarg1_);
-
-  public final static native void VectorOfFieldDef_reserve(long jarg1,
-    VectorOfFieldDef jarg1_, long jarg2);
-
-  public final static native void VectorOfFieldDef_set(long jarg1,
-    VectorOfFieldDef jarg1_, int jarg2, long jarg3, FieldDef jarg3_);
-
-  public final static native long VectorOfFieldDef_size(long jarg1,
-    VectorOfFieldDef jarg1_);
 
   public final static native void VectorOfString_add(long jarg1,
     VectorOfString jarg1_, String jarg2);

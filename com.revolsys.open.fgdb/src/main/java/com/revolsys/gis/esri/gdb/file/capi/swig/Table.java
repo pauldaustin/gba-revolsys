@@ -26,24 +26,6 @@ public class Table {
     this.swigCPtr = cPtr;
   }
 
-  public int AddField(final FieldDef fieldDef) {
-    return EsriFileGdbJNI.Table_AddField__SWIG_1(this.swigCPtr, this,
-      FieldDef.getCPtr(fieldDef), fieldDef);
-  }
-
-  public int AddField(final String fieldDef) {
-    return EsriFileGdbJNI.Table_AddField__SWIG_0(this.swigCPtr, this, fieldDef);
-  }
-
-  public int AddIndex(final IndexDef indexDef) {
-    return EsriFileGdbJNI.Table_AddIndex__SWIG_1(this.swigCPtr, this,
-      IndexDef.getCPtr(indexDef), indexDef);
-  }
-
-  public int AddIndex(final String indexDef) {
-    return EsriFileGdbJNI.Table_AddIndex__SWIG_0(this.swigCPtr, this, indexDef);
-  }
-
   public int AlterField(final String fieldDef) {
     return EsriFileGdbJNI.Table_AlterField(this.swigCPtr, this, fieldDef);
   }
@@ -120,16 +102,6 @@ public class Table {
   public int GetExtent(final Envelope extent) {
     return EsriFileGdbJNI.Table_GetExtent(this.swigCPtr, this,
       Envelope.getCPtr(extent), extent);
-  }
-
-  public int GetFieldInformation(final FieldInfo fieldInfo) {
-    return EsriFileGdbJNI.Table_GetFieldInformation(this.swigCPtr, this,
-      FieldInfo.getCPtr(fieldInfo), fieldInfo);
-  }
-
-  public VectorOfFieldDef getFields() {
-    return new VectorOfFieldDef(EsriFileGdbJNI.Table_getFields(this.swigCPtr,
-      this), true);
   }
 
   public VectorOfString getIndexes() {

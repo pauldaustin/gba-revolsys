@@ -92,10 +92,12 @@ import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileGdbRecordStore {
-  private static final Object API_SYNC = new Object();
+public class FileGdbRecordStoreImpl extends AbstractRecordStore implements
+FileGdbRecordStore {
+  static final Object API_SYNC = new Object();
 
-  private static final String CATALOG_PATH_PROPERTY = FileGdbRecordStoreImpl.class + ".CatalogPath";
+  private static final String CATALOG_PATH_PROPERTY = FileGdbRecordStoreImpl.class
+      + ".CatalogPath";
 
   private static final Map<FieldType, Constructor<? extends AbstractFileGdbFieldDefinition>> ESRI_FIELD_TYPE_ATTRIBUTE_MAP = new HashMap<FieldType, Constructor<? extends AbstractFileGdbFieldDefinition>>();
 
@@ -104,26 +106,38 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\?");
 
   static {
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeInteger, IntegerAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSmallInteger, ShortAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDouble, DoubleAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSingle, FloatAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeString, StringAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDate, DateAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGeometry, GeometryAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeOID, OidFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeBlob, BinaryAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGlobalID, GlobalIdAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGUID, GuidAttribute.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeXML, XmlAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeInteger,
+      IntegerAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSmallInteger,
+      ShortAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDouble,
+      DoubleAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSingle,
+      FloatAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeString,
+      StringAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDate,
+      DateAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGeometry,
+      GeometryAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeOID,
+      OidFieldDefinition.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeBlob,
+      BinaryAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGlobalID,
+      GlobalIdAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGUID,
+      GuidAttribute.class);
+    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeXML,
+      XmlAttribute.class);
 
   }
 
-  private static void addFieldTypeAttributeConstructor(final FieldType fieldType,
-      final Class<? extends AbstractFileGdbFieldDefinition> fieldClass) {
+  private static void addFieldTypeAttributeConstructor(
+    final FieldType fieldType,
+    final Class<? extends AbstractFileGdbFieldDefinition> fieldClass) {
     try {
-      final Constructor<? extends AbstractFileGdbFieldDefinition> constructor = fieldClass
-          .getConstructor(Field.class);
+      final Constructor<? extends AbstractFileGdbFieldDefinition> constructor = fieldClass.getConstructor(Field.class);
       ESRI_FIELD_TYPE_ATTRIBUTE_MAP.put(fieldType, constructor);
     } catch (final SecurityException e) {
       LOG.error("No public constructor for ESRI type " + fieldType, e);
@@ -133,7 +147,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
 
   }
 
-  public static SpatialReference getSpatialReference(final GeometryFactory geometryFactory) {
+  public static SpatialReference getSpatialReference(
+    final GeometryFactory geometryFactory) {
     if (geometryFactory == null || geometryFactory.getSRID() == 0) {
       return null;
     } else {
@@ -141,7 +156,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
       synchronized (API_SYNC) {
         wkt = EsriFileGdb.getSpatialReferenceWkt(geometryFactory.getSRID());
       }
-      final SpatialReference spatialReference = SpatialReference.get(geometryFactory, wkt);
+      final SpatialReference spatialReference = SpatialReference.get(
+        geometryFactory, wkt);
       return spatialReference;
     }
   }
@@ -180,7 +196,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
 
   protected FileGdbRecordStoreImpl(final File file) {
     this.fileName = file.getAbsolutePath();
-    setConnectionProperties(Collections.singletonMap("url", FileUtil.toUrl(file).toString()));
+    setConnectionProperties(Collections.singletonMap("url",
+      FileUtil.toUrl(file).toString()));
   }
 
   public void addChildSchema(final String path) {
@@ -189,7 +206,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         final Geodatabase geodatabase = getGeodatabase();
         if (geodatabase != null) {
           try {
-            final VectorOfWString childDatasets = geodatabase.getChildDatasets(path, "Feature Dataset");
+            final VectorOfWString childDatasets = geodatabase.getChildDatasets(
+              path, "Feature Dataset");
             for (int i = 0; i < childDatasets.size(); i++) {
               final String childPath = childDatasets.get(i);
               addFeatureDatasetSchema(childPath);
@@ -208,7 +226,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
         if (codeTable instanceof Domain) {
-          final Domain domain = (Domain) codeTable;
+          final Domain domain = (Domain)codeTable;
           createDomain(domain);
         }
       }
@@ -224,14 +242,16 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     return schema;
   }
 
-  private void addTableRecordDefinition(final String schemaName, final String path) {
+  private void addTableRecordDefinition(final String schemaName,
+    final String path) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
         final Geodatabase geodatabase = getGeodatabase();
         if (geodatabase != null) {
           try {
             final String tableDefinition = geodatabase.getTableDefinition(path);
-            final RecordDefinition recordDefinition = getRecordDefinition(schemaName, path, tableDefinition);
+            final RecordDefinition recordDefinition = getRecordDefinition(
+              schemaName, path, tableDefinition);
             addRecordDefinition(recordDefinition);
           } finally {
             releaseGeodatabase();
@@ -257,16 +277,17 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  private void appendQueryValue(final StringBuffer buffer, final QueryValue condition) {
+  private void appendQueryValue(final StringBuffer buffer,
+    final QueryValue condition) {
     if (condition instanceof Like || condition instanceof ILike) {
-      final BinaryCondition like = (BinaryCondition) condition;
+      final BinaryCondition like = (BinaryCondition)condition;
       final QueryValue left = like.getLeft();
       final QueryValue right = like.getRight();
       buffer.append("UPPER(CAST(");
       appendQueryValue(buffer, left);
       buffer.append(" AS VARCHAR(4000))) LIKE ");
       if (right instanceof Value) {
-        final Value valueCondition = (Value) right;
+        final Value valueCondition = (Value)right;
         final Object value = valueCondition.getValue();
         buffer.append("'");
         if (value != null) {
@@ -278,21 +299,21 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         appendQueryValue(buffer, right);
       }
     } else if (condition instanceof LeftUnaryCondition) {
-      final LeftUnaryCondition unaryCondition = (LeftUnaryCondition) condition;
+      final LeftUnaryCondition unaryCondition = (LeftUnaryCondition)condition;
       final String operator = unaryCondition.getOperator();
       final QueryValue right = unaryCondition.getQueryValue();
       buffer.append(operator);
       buffer.append(" ");
       appendQueryValue(buffer, right);
     } else if (condition instanceof RightUnaryCondition) {
-      final RightUnaryCondition unaryCondition = (RightUnaryCondition) condition;
+      final RightUnaryCondition unaryCondition = (RightUnaryCondition)condition;
       final QueryValue left = unaryCondition.getValue();
       final String operator = unaryCondition.getOperator();
       appendQueryValue(buffer, left);
       buffer.append(" ");
       buffer.append(operator);
     } else if (condition instanceof BinaryCondition) {
-      final BinaryCondition binaryCondition = (BinaryCondition) condition;
+      final BinaryCondition binaryCondition = (BinaryCondition)condition;
       final QueryValue left = binaryCondition.getLeft();
       final String operator = binaryCondition.getOperator();
       final QueryValue right = binaryCondition.getRight();
@@ -302,7 +323,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
       buffer.append(" ");
       appendQueryValue(buffer, right);
     } else if (condition instanceof AbstractMultiCondition) {
-      final AbstractMultiCondition multipleCondition = (AbstractMultiCondition) condition;
+      final AbstractMultiCondition multipleCondition = (AbstractMultiCondition)condition;
       buffer.append("(");
       boolean first = true;
       final String operator = multipleCondition.getOperator();
@@ -318,11 +339,11 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
       }
       buffer.append(")");
     } else if (condition instanceof Value) {
-      final Value valueCondition = (Value) condition;
+      final Value valueCondition = (Value)condition;
       final Object value = valueCondition.getValue();
       appendValue(buffer, value);
     } else if (condition instanceof CollectionValue) {
-      final CollectionValue collectionValue = (CollectionValue) condition;
+      final CollectionValue collectionValue = (CollectionValue)condition;
       final List<Object> values = collectionValue.getValues();
       boolean first = true;
       for (final Object value : values) {
@@ -334,16 +355,18 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         appendValue(buffer, value);
       }
     } else if (condition instanceof Column) {
-      final Column column = (Column) condition;
+      final Column column = (Column)condition;
       final Object name = column.getName();
       buffer.append(name);
     } else if (condition instanceof SqlCondition) {
-      final SqlCondition sqlCondition = (SqlCondition) condition;
+      final SqlCondition sqlCondition = (SqlCondition)condition;
       final String where = sqlCondition.getSql();
       final List<Object> parameters = sqlCondition.getParameterValues();
       if (parameters.isEmpty()) {
         if (where.indexOf('?') > -1) {
-          throw new IllegalArgumentException("No arguments specified for a where clause with placeholders: " + where);
+          throw new IllegalArgumentException(
+            "No arguments specified for a where clause with placeholders: "
+                + where);
         } else {
           buffer.append(where);
         }
@@ -352,10 +375,13 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         int i = 0;
         while (matcher.find()) {
           if (i >= parameters.size()) {
-            throw new IllegalArgumentException("Not enough arguments for where clause with placeholders: " + where);
+            throw new IllegalArgumentException(
+              "Not enough arguments for where clause with placeholders: "
+                  + where);
           }
           final Object argument = parameters.get(i);
-          matcher.appendReplacement(buffer, StringConverterRegistry.toString(argument));
+          matcher.appendReplacement(buffer,
+            StringConverterRegistry.toString(argument));
           appendValue(buffer, argument);
           i++;
         }
@@ -373,7 +399,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     } else if (value instanceof Number) {
       buffer.append(value);
     } else if (value instanceof java.util.Date) {
-      final String stringValue = DateUtil.format("yyyy-MM-dd", (java.util.Date) value);
+      final String stringValue = DateUtil.format("yyyy-MM-dd",
+        (java.util.Date)value);
       buffer.append("DATE '" + stringValue + "'");
     } else {
       final String stringValue = StringConverterRegistry.toString(value);
@@ -503,14 +530,16 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   }
 
   @Override
-  public AbstractIterator<Record> createIterator(final Query query, final Map<String, Object> properties) {
+  public AbstractIterator<Record> createIterator(final Query query,
+    final Map<String, Object> properties) {
     String typePath = query.getTypeName();
     RecordDefinition recordDefinition = query.getRecordDefinition();
     if (recordDefinition == null) {
       typePath = query.getTypeName();
       recordDefinition = getRecordDefinition(typePath);
       if (recordDefinition == null) {
-        throw new IllegalArgumentException("Type name does not exist " + typePath);
+        throw new IllegalArgumentException("Type name does not exist "
+            + typePath);
       }
     } else {
       typePath = recordDefinition.getPath();
@@ -522,8 +551,9 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     if (orderBy.isEmpty() || boundingBox != null) {
       if (!orderBy.isEmpty()) {
         LoggerFactory.getLogger(getClass()).error(
-            "Unable to sort on " + recordDefinition.getPath() + " " + orderBy.keySet()
-                + " as the ESRI library can't sort with a bounding box query");
+          "Unable to sort on " + recordDefinition.getPath() + " "
+              + orderBy.keySet()
+              + " as the ESRI library can't sort with a bounding box query");
       }
       sql = whereClause;
     } else {
@@ -546,7 +576,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         final String fieldName = entry.getKey();
         final DataType dataType = recordDefinition.getFieldType(fieldName);
         // TODO at the moment only numbers are supported
-        if (dataType != null && Number.class.isAssignableFrom(dataType.getJavaClass())) {
+        if (dataType != null
+            && Number.class.isAssignableFrom(dataType.getJavaClass())) {
           if (first) {
             sql.append(" ORDER BY ");
             first = false;
@@ -561,14 +592,15 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
 
         } else {
           LoggerFactory.getLogger(getClass()).error(
-              "Unable to sort on " + recordDefinition.getPath() + "." + fieldName + " as the ESRI library can't sort on "
-                  + dataType + " fields");
+            "Unable to sort on " + recordDefinition.getPath() + "." + fieldName
+            + " as the ESRI library can't sort on " + dataType + " fields");
         }
       }
     }
 
-    final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this, typePath, sql.toString(), boundingBox, query,
-        query.getOffset(), query.getLimit());
+    final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this,
+      typePath, sql.toString(), boundingBox, query, query.getOffset(),
+      query.getLimit());
     return iterator;
   }
 
@@ -590,7 +622,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
             for (final Record record : query(typePath)) {
               final Object id = record.getIdValue();
               if (id instanceof Number) {
-                final Number number = (Number) id;
+                final Number number = (Number)id;
                 if (number.longValue() > maxId) {
                   maxId = number.longValue();
                 }
@@ -599,7 +631,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
             idGenerator = new AtomicLong(maxId);
             this.idGenerators.put(typePath, idGenerator);
           }
-          return (T) (Object) idGenerator.incrementAndGet();
+          return (T)(Object)idGenerator.incrementAndGet();
         } else {
           return null;
         }
@@ -637,7 +669,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 if (LOG.isDebugEnabled()) {
                   LOG.debug(datasetDefinition);
                 }
-                throw new RuntimeException("Unable to create feature dataset " + path, t);
+                throw new RuntimeException("Unable to create feature dataset "
+                    + path, t);
               }
             }
             return getSchema(catalogPath.replaceAll("\\\\", "/"));
@@ -649,7 +682,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  public void createSchema(final String schemaName, final GeometryFactory geometryFactory) {
+  public void createSchema(final String schemaName,
+    final GeometryFactory geometryFactory) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
         final Geodatabase geodatabase = getGeodatabase();
@@ -657,7 +691,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           try {
             final SpatialReference spatialReference = getSpatialReference(geometryFactory);
             final List<DEFeatureDataset> datasets = EsriXmlRecordDefinitionUtil.createDEFeatureDatasets(
-                schemaName.replaceAll("/", ""), spatialReference);
+              schemaName.replaceAll("/", ""), spatialReference);
             for (final DEFeatureDataset dataset : datasets) {
               final String path = dataset.getCatalogPath();
               final String datasetDefinition = EsriGdbXmlSerializer.toString(dataset);
@@ -668,7 +702,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 if (LOG.isDebugEnabled()) {
                   LOG.debug(datasetDefinition);
                 }
-                throw new RuntimeException("Unable to create feature dataset " + path, t);
+                throw new RuntimeException("Unable to create feature dataset "
+                    + path, t);
               }
             }
           } finally {
@@ -716,16 +751,18 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
               final String fieldName = field.getName();
               final CodeTable codeTable = getCodeTableByFieldName(fieldName);
               if (codeTable instanceof FileGdbDomainCodeTable) {
-                final FileGdbDomainCodeTable domainCodeTable = (FileGdbDomainCodeTable) codeTable;
+                final FileGdbDomainCodeTable domainCodeTable = (FileGdbDomainCodeTable)codeTable;
                 field.setDomain(domainCodeTable.getDomain());
               }
             }
             final String tableDefinition = EsriGdbXmlSerializer.toString(deTable);
             try {
-              final Table table = geodatabase.createTable(tableDefinition, schemaPath);
+              final Table table = geodatabase.createTable(tableDefinition,
+                schemaPath);
               geodatabase.closeTable(table);
               table.delete();
-              final RecordDefinitionImpl recordDefinition = getRecordDefinition(schemaName, schemaPath, tableDefinition);
+              final RecordDefinitionImpl recordDefinition = getRecordDefinition(
+                schemaName, schemaPath, tableDefinition);
               addRecordDefinition(recordDefinition);
               return recordDefinition;
 
@@ -733,7 +770,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
               if (LOG.isDebugEnabled()) {
                 LOG.debug(tableDefinition);
               }
-              throw new RuntimeException("Unable to create table " + deTable.getCatalogPath(), t);
+              throw new RuntimeException("Unable to create table "
+                  + deTable.getCatalogPath(), t);
             }
           } finally {
             releaseGeodatabase();
@@ -749,7 +787,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         final GeometryFactory geometryFactory = recordDefinition.getGeometryFactory();
         final SpatialReference spatialReference = getSpatialReference(geometryFactory);
 
-        final DETable deTable = EsriXmlRecordDefinitionUtil.getDETable(recordDefinition, spatialReference);
+        final DETable deTable = EsriXmlRecordDefinitionUtil.getDETable(
+          recordDefinition, spatialReference);
         final RecordDefinitionImpl tableRecordDefinition = createTable(deTable);
         final String idFieldName = recordDefinition.getIdFieldName();
         if (idFieldName != null) {
@@ -769,7 +808,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   public void delete(final Record record) {
     // Don't synchronize to avoid deadlock as that is done lower down in the
     // methods
-    if (record.getState() == RecordState.Persisted || record.getState() == RecordState.Modified) {
+    if (record.getState() == RecordState.Persisted
+        || record.getState() == RecordState.Modified) {
       record.setState(RecordState.Deleted);
       final Writer<Record> writer = getWriter();
       writer.write(record);
@@ -792,7 +832,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  protected void deleteRow(final String typePath, final Table table, final Row row) {
+  protected void deleteRow(final String typePath, final Table table,
+    final Row row) {
     synchronized (this.apiSync) {
       if (isOpen(table)) {
         final boolean loadOnly = this.writeLockCountsByTypePath.containsKey(typePath);
@@ -873,7 +914,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   }
 
   @Override
-  public RecordDefinition getRecordDefinition(final RecordDefinition sourceRecordDefinition) {
+  public RecordDefinition getRecordDefinition(
+    final RecordDefinition sourceRecordDefinition) {
     synchronized (this.apiSync) {
       RecordDefinition recordDefinition = super.getRecordDefinition(sourceRecordDefinition);
       if (this.createMissingTables && recordDefinition == null) {
@@ -883,8 +925,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  public RecordDefinitionImpl getRecordDefinition(final String schemaName, final String path,
-      final String tableDefinition) {
+  public RecordDefinitionImpl getRecordDefinition(final String schemaName,
+    final String path, final String tableDefinition) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
         try {
@@ -893,16 +935,16 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           final String tableName = deTable.getName();
           final String typePath = PathUtil.toPath(schemaName, tableName);
           final RecordStoreSchema schema = getSchema(schemaName);
-          final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(this, schema, typePath);
+          final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(
+            this, schema, typePath);
           for (final Field field : deTable.getFields()) {
             final String fieldName = field.getName();
             final FieldType type = field.getType();
-            final Constructor<? extends AbstractFileGdbFieldDefinition> fieldConstructor = ESRI_FIELD_TYPE_ATTRIBUTE_MAP
-                .get(type);
+            final Constructor<? extends AbstractFileGdbFieldDefinition> fieldConstructor = ESRI_FIELD_TYPE_ATTRIBUTE_MAP.get(type);
             if (fieldConstructor != null) {
               try {
-                final AbstractFileGdbFieldDefinition fieldDefinition = JavaBeanUtil.invokeConstructor(fieldConstructor,
-                    field);
+                final AbstractFileGdbFieldDefinition fieldDefinition = JavaBeanUtil.invokeConstructor(
+                  fieldConstructor, field);
                 fieldDefinition.setDataStore(this);
                 recordDefinition.addField(fieldDefinition);
                 if (fieldDefinition instanceof GlobalIdAttribute) {
@@ -910,17 +952,19 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 }
               } catch (final Throwable e) {
                 LOG.error(tableDefinition);
-                throw new RuntimeException("Error creating field for " + typePath + "." + field.getName() + " : "
-                    + field.getType(), e);
+                throw new RuntimeException("Error creating field for "
+                    + typePath + "." + field.getName() + " : " + field.getType(),
+                    e);
               }
             } else {
               LOG.error("Unsupported field type " + fieldName + ":" + type);
             }
           }
           final String oidFieldName = deTable.getOIDFieldName();
-          recordDefinition.setProperty(EsriGeodatabaseXmlConstants.ESRI_OBJECT_ID_FIELD_NAME, oidFieldName);
+          recordDefinition.setProperty(
+            EsriGeodatabaseXmlConstants.ESRI_OBJECT_ID_FIELD_NAME, oidFieldName);
           if (deTable instanceof DEFeatureClass) {
-            final DEFeatureClass featureClass = (DEFeatureClass) deTable;
+            final DEFeatureClass featureClass = (DEFeatureClass)deTable;
             final String shapeFieldName = featureClass.getShapeFieldName();
             recordDefinition.setGeometryFieldName(shapeFieldName);
           }
@@ -999,7 +1043,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 }
               }
             } else {
-              final GeometryAttribute geometryAttribute = (GeometryAttribute) recordDefinition.getGeometryField();
+              final GeometryAttribute geometryAttribute = (GeometryAttribute)recordDefinition.getGeometryField();
               if (geometryAttribute == null || boundingBox.isEmpty()) {
                 return 0;
               } else {
@@ -1015,7 +1059,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 try {
                   int count = 0;
                   for (Row row = rows.next(); row != null; row = rows.next()) {
-                    final Geometry geometry = (Geometry) geometryAttribute.getValue(row);
+                    final Geometry geometry = (Geometry)geometryAttribute.getValue(row);
                     final BoundingBox geometryBoundingBox = BoundingBox.getBoundingBox(geometry);
                     if (geometryBoundingBox.intersects(boundingBox)) {
                       count++;
@@ -1064,7 +1108,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 }
                 return table;
               } catch (final RuntimeException e) {
-                throw new RuntimeException("Unable to open table " + typePath, e);
+                throw new RuntimeException("Unable to open table " + typePath,
+                  e);
               }
             }
           } finally {
@@ -1122,18 +1167,21 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           if (file.exists()) {
             if (file.isDirectory()) {
               if (!new File(this.fileName, "gdb").exists()) {
-                throw new IllegalArgumentException(FileUtil.getCanonicalPath(file)
+                throw new IllegalArgumentException(
+                  FileUtil.getCanonicalPath(file)
                     + " is not a valid ESRI File Geodatabase");
               }
               geodatabase = openGeodatabase();
             } else {
-              throw new IllegalArgumentException(FileUtil.getCanonicalPath(file)
+              throw new IllegalArgumentException(
+                FileUtil.getCanonicalPath(file)
                   + " ESRI File Geodatabase must be a directory");
             }
           } else if (this.createMissingRecordStore) {
             geodatabase = createGeodatabase();
           } else {
-            throw new IllegalArgumentException("ESRI file geodatabase not found " + this.fileName);
+            throw new IllegalArgumentException(
+              "ESRI file geodatabase not found " + this.fileName);
           }
           final VectorOfWString domainNames = geodatabase.getDomains();
           for (int i = 0; i < domainNames.size(); i++) {
@@ -1168,7 +1216,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   }
 
   public boolean isClosed() {
-    return closed;
+    return this.closed;
   }
 
   public boolean isCreateMissingDataStore() {
@@ -1230,7 +1278,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           element = path.substring(index + 1, nextIndex);
         }
         boolean found = false;
-        final VectorOfWString children = geodatabase.getChildDatasets(parentPath, "Feature Dataset");
+        final VectorOfWString children = geodatabase.getChildDatasets(
+          parentPath, "Feature Dataset");
         for (int i = 0; i < children.size(); i++) {
           final String childPath = children.get(i);
           if (childPath.equals(element)) {
@@ -1253,8 +1302,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
       if (recordDefinition == null) {
         throw new IllegalArgumentException("Unknown type " + typePath);
       } else {
-        final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this, typePath, recordDefinition.getIdFieldName()
-            + " = " + id[0]);
+        final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this,
+          typePath, recordDefinition.getIdFieldName() + " = " + id[0]);
         try {
           if (iterator.hasNext()) {
             return iterator.next();
@@ -1268,12 +1317,14 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  protected void loadDomain(final Geodatabase geodatabase, final String domainName) {
+  protected void loadDomain(final Geodatabase geodatabase,
+    final String domainName) {
     final String domainDef = geodatabase.getDomainDefinition(domainName);
     final Domain domain = EsriGdbXmlParser.parse(domainDef);
     if (domain instanceof CodedValueDomain) {
-      final CodedValueDomain codedValueDomain = (CodedValueDomain) domain;
-      final FileGdbDomainCodeTable codeTable = new FileGdbDomainCodeTable(this, codedValueDomain);
+      final CodedValueDomain codedValueDomain = (CodedValueDomain)domain;
+      final FileGdbDomainCodeTable codeTable = new FileGdbDomainCodeTable(this,
+        codedValueDomain);
       super.addCodeTable(codeTable);
       final List<String> fieldNames = this.domainFieldNames.get(domainName);
       if (fieldNames != null) {
@@ -1286,7 +1337,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
 
   @Override
   protected void loadSchemaDataObjectMetaData(final RecordStoreSchema schema,
-      final Map<String, RecordDefinition> recordDefinitionMap) {
+    final Map<String, RecordDefinition> recordDefinitionMap) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
         final Geodatabase geodatabase = getGeodatabase();
@@ -1294,12 +1345,16 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           try {
             final String schemaName = schema.getPath();
             if (schemaName.equals(this.defaultSchema)) {
-              loadSchemaRecordDefinition(recordDefinitionMap, schemaName, "\\", "Feature Class");
-              loadSchemaRecordDefinition(recordDefinitionMap, schemaName, "\\", "Table");
+              loadSchemaRecordDefinition(recordDefinitionMap, schemaName, "\\",
+                  "Feature Class");
+              loadSchemaRecordDefinition(recordDefinitionMap, schemaName, "\\",
+                  "Table");
             }
             final String path = schemaName.replaceAll("/", "\\\\");
-            loadSchemaRecordDefinition(recordDefinitionMap, schemaName, path, "Feature Class");
-            loadSchemaRecordDefinition(recordDefinitionMap, schemaName, path, "Table");
+            loadSchemaRecordDefinition(recordDefinitionMap, schemaName, path,
+                "Feature Class");
+            loadSchemaRecordDefinition(recordDefinitionMap, schemaName, path,
+                "Table");
           } finally {
             releaseGeodatabase();
           }
@@ -1308,8 +1363,9 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  public void loadSchemaRecordDefinition(final Map<String, RecordDefinition> recordDefinitionMap, final String schemaName,
-      final String path, final String datasetType) {
+  public void loadSchemaRecordDefinition(
+    final Map<String, RecordDefinition> recordDefinitionMap,
+    final String schemaName, final String path, final String datasetType) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
         final Geodatabase geodatabase = getGeodatabase();
@@ -1317,7 +1373,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           try {
             final boolean pathExists = isPathExists(geodatabase, path);
             if (pathExists) {
-              final VectorOfWString childFeatureClasses = geodatabase.getChildDatasets(path, datasetType);
+              final VectorOfWString childFeatureClasses = geodatabase.getChildDatasets(
+                path, datasetType);
               for (int i = 0; i < childFeatureClasses.size(); i++) {
                 final String childPath = childFeatureClasses.get(i);
                 addTableRecordDefinition(schemaName, childPath);
@@ -1414,13 +1471,15 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         try {
           final Table table = this.tablesToClose.get(typePath);
           if (table != null) {
-            if (Maps.decrementCount(this.tableReferenceCountsByTypePath, typePath) == 0) {
+            if (Maps.decrementCount(this.tableReferenceCountsByTypePath,
+              typePath) == 0) {
               try {
                 this.tablesToClose.remove(typePath);
                 this.writeLockCountsByTypePath.remove(typePath);
                 geodatabase.closeTable(table);
               } catch (final Exception e) {
-                LoggerFactory.getLogger(getClass()).error("Unable to close table: " + typePath, e);
+                LoggerFactory.getLogger(getClass()).error(
+                  "Unable to close table: " + typePath, e);
               } finally {
                 if (this.tablesToClose.isEmpty()) {
                   this.geodatabaseReferenceCount--;
@@ -1448,7 +1507,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 table.setLoadOnlyMode(false);
                 table.freeWriteLock();
               } catch (final Exception e) {
-                LoggerFactory.getLogger(getClass()).error("Unable to free write lock for table: " + typePath, e);
+                LoggerFactory.getLogger(getClass()).error(
+                  "Unable to free write lock for table: " + typePath, e);
               }
             }
           }
@@ -1460,8 +1520,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  public EnumRows search(final String typePath, final Table table, final String fields, final String whereClause,
-      final boolean recycling) {
+  public EnumRows search(final String typePath, final Table table,
+    final String fields, final String whereClause, final boolean recycling) {
     synchronized (this.apiSync) {
       if (isOpen(table)) {
         try {
@@ -1470,7 +1530,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           return rows;
         } catch (final Throwable t) {
           LoggerFactory.getLogger(getClass()).error(
-              "Unable to execute query SELECT " + fields + " FROM " + typePath + " WHERE " + whereClause, t);
+            "Unable to execute query SELECT " + fields + " FROM " + typePath
+            + " WHERE " + whereClause, t);
 
         }
       }
@@ -1478,17 +1539,19 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  public EnumRows search(final String typePath, final Table table, final String fields, final String whereClause,
-      final Envelope boundingBox, final boolean recycling) {
+  public EnumRows search(final String typePath, final Table table,
+    final String fields, final String whereClause, final Envelope boundingBox,
+    final boolean recycling) {
     synchronized (this.apiSync) {
       if (isOpen(table)) {
         try {
-          final EnumRows rows = table.search(fields, whereClause, boundingBox, recycling);
+          final EnumRows rows = table.search(fields, whereClause, boundingBox,
+            recycling);
           this.enumRowsToClose.add(rows);
           return rows;
         } catch (final Exception e) {
-          LOG.error("ERROR executing query SELECT " + fields + " FROM " + typePath + " WHERE " + whereClause + " AND "
-              + boundingBox, e);
+          LOG.error("ERROR executing query SELECT " + fields + " FROM "
+              + typePath + " WHERE " + whereClause + " AND " + boundingBox, e);
         }
       }
       return null;
@@ -1521,7 +1584,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     }
   }
 
-  public void setDomainColumNames(final Map<String, List<String>> domainColumNames) {
+  public void setDomainColumNames(
+    final Map<String, List<String>> domainColumNames) {
     this.domainFieldNames = domainColumNames;
   }
 
@@ -1547,7 +1611,8 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
     getWriter().write(record);
   }
 
-  protected void updateRow(final String typePath, final Table table, final Row row) {
+  protected void updateRow(final String typePath, final Table table,
+    final Row row) {
     synchronized (this.apiSync) {
       if (isOpen(table)) {
         final boolean loadOnly = this.writeLockCountsByTypePath.containsKey(typePath);

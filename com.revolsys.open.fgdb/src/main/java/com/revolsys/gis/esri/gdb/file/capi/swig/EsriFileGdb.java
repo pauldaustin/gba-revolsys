@@ -38,6 +38,10 @@ public class EsriFileGdb {
     return EsriFileGdbJNI.deleteGeodatabase2(path);
   }
 
+  public static VectorOfWString getErrors() {
+    return new VectorOfWString(EsriFileGdbJNI.getErrors(), true);
+  }
+
   public static String getSpatialReferenceWkt(final int srid) {
     return EsriFileGdbJNI.getSpatialReferenceWkt(srid);
   }

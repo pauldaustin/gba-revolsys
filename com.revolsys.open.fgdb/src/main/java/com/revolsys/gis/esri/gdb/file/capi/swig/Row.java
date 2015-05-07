@@ -49,16 +49,6 @@ public class Row {
     return EsriFileGdbJNI.Row_getDouble(this.swigCPtr, this, name);
   }
 
-  public int GetFieldInformation(final FieldInfo fieldInfo) {
-    return EsriFileGdbJNI.Row_GetFieldInformation(this.swigCPtr, this,
-      FieldInfo.getCPtr(fieldInfo), fieldInfo);
-  }
-
-  public VectorOfFieldDef getFields() {
-    return new VectorOfFieldDef(EsriFileGdbJNI.Row_getFields(this.swigCPtr,
-      this), true);
-  }
-
   public float getFloat(final String name) {
     return EsriFileGdbJNI.Row_getFloat(this.swigCPtr, this, name);
   }

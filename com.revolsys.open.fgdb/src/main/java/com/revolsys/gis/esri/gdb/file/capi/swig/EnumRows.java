@@ -44,16 +44,6 @@ public class EnumRows {
   protected void finalize() {
   }
 
-  public int GetFieldInformation(final FieldInfo fieldInfo) {
-    return EsriFileGdbJNI.EnumRows_GetFieldInformation(this.swigCPtr, this,
-      FieldInfo.getCPtr(fieldInfo), fieldInfo);
-  }
-
-  public VectorOfFieldDef getFields() {
-    return new VectorOfFieldDef(EsriFileGdbJNI.EnumRows_getFields(
-      this.swigCPtr, this), true);
-  }
-
   public Row next() {
     final long cPtr = EsriFileGdbJNI.EnumRows_next(this.swigCPtr, this);
     return cPtr == 0 ? null : new Row(cPtr, true);
