@@ -34,13 +34,11 @@ public class GuidFieldDefinition extends AbstractFileGdbFieldDefinition {
   }
 
   public GuidFieldDefinition(final Field field) {
-    this(field.getName(), field.getLength(),
-      BooleanStringConverter.getBoolean(field.getRequired())
-        || !field.isIsNullable());
+    this(field.getName(), field.getLength(), BooleanStringConverter.getBoolean(field.getRequired())
+      || !field.isIsNullable());
   }
 
-  public GuidFieldDefinition(final String name, final int length,
-    final boolean required) {
+  public GuidFieldDefinition(final String name, final int length, final boolean required) {
     super(name, DataTypes.STRING, length, required);
   }
 
@@ -63,8 +61,7 @@ public class GuidFieldDefinition extends AbstractFileGdbFieldDefinition {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
-        throw new IllegalArgumentException(name
-          + " is required and cannot be null");
+        throw new IllegalArgumentException(name + " is required and cannot be null");
       } else {
         getRecordStore().setNull(row, name);
       }

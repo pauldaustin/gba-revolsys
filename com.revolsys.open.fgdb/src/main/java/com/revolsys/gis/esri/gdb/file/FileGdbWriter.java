@@ -62,8 +62,7 @@ public class FileGdbWriter extends AbstractRecordWriter {
       final String typePath = recordDefinition.getPath();
       final Table table = getTable(typePath);
       final String whereClause = "OBJECTID=" + objectId;
-      final EnumRows rows = this.recordStore.search(typePath, table,
-        "OBJECTID", whereClause, false);
+      final EnumRows rows = this.recordStore.search(typePath, table, "OBJECTID", whereClause, false);
       if (rows != null) {
         try {
           final Row row = this.recordStore.nextRow(rows);
@@ -110,8 +109,7 @@ public class FileGdbWriter extends AbstractRecordWriter {
       if (field.isRequired()) {
         final Object value = record.getValue(name);
         if (value == null && !(field instanceof OidFieldDefinition)) {
-          throw new IllegalArgumentException("Atribute " + typePath + "."
-              + name + " is required");
+          throw new IllegalArgumentException("Atribute " + typePath + "." + name + " is required");
         }
       }
     }
@@ -138,8 +136,8 @@ public class FileGdbWriter extends AbstractRecordWriter {
         this.recordStore.addStatistic("Insert", record);
       }
     } catch (final IllegalArgumentException e) {
-      throw new RuntimeException("Unable to insert row " + e.getMessage()
-        + "\n" + record.toString(), e);
+      throw new RuntimeException("Unable to insert row " + e.getMessage() + "\n"
+        + record.toString(), e);
     } catch (final RuntimeException e) {
       if (LoggerFactory.getLogger(FileGdbWriter.class).isDebugEnabled()) {
         LoggerFactory.getLogger(FileGdbWriter.class).debug(
@@ -160,8 +158,7 @@ public class FileGdbWriter extends AbstractRecordWriter {
       final String typePath = sourceRecordDefinition.getPath();
       final Table table = getTable(typePath);
       final String whereClause = "OBJECTID=" + objectId;
-      final EnumRows rows = this.recordStore.search(typePath, table, "*",
-        whereClause, true);
+      final EnumRows rows = this.recordStore.search(typePath, table, "*", whereClause, true);
       if (rows != null) {
         try {
           final Row row = this.recordStore.nextRow(rows);
@@ -174,8 +171,7 @@ public class FileGdbWriter extends AbstractRecordWriter {
                   final Object value = record.getValue(name);
                   final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
                   try {
-                    final Object esriValue = esriFieldDefinition.setUpdateValue(
-                      record, row, value);
+                    final Object esriValue = esriFieldDefinition.setUpdateValue(record, row, value);
                     esriValues.add(esriValue);
                   } catch (final RuntimeException e) {
                     LoggerFactory.getLogger(FileGdbWriter.class).error(
@@ -189,8 +185,7 @@ public class FileGdbWriter extends AbstractRecordWriter {
               }
             } catch (final IllegalArgumentException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
-                "Unable to update row " + e.getMessage() + "\n"
-                    + record.toString(), e);
+                "Unable to update row " + e.getMessage() + "\n" + record.toString(), e);
             } catch (final RuntimeException e) {
               LoggerFactory.getLogger(FileGdbWriter.class).error(
                 "Unable to update row \n:" + record.toString());
@@ -218,16 +213,16 @@ public class FileGdbWriter extends AbstractRecordWriter {
       switch (record.getState()) {
         case New:
           insert(record);
-          break;
+        break;
         case Modified:
           update(record);
-          break;
+        break;
         case Persisted:
-          // No action required
-          break;
+        // No action required
+        break;
         case Deleted:
           delete(record);
-          break;
+        break;
         default:
           throw new IllegalStateException("State not known");
       }

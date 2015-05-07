@@ -22,9 +22,8 @@ public class DateFieldDefinition extends AbstractFileGdbFieldDefinition {
   public static final Date MIN_DATE = new Date(70, 0, 1);
 
   public DateFieldDefinition(final Field field) {
-    super(field.getName(), DataTypes.DATE,
-      BooleanStringConverter.getBoolean(field.getRequired())
-        || !field.isIsNullable());
+    super(field.getName(), DataTypes.DATE, BooleanStringConverter.getBoolean(field.getRequired())
+      || !field.isIsNullable());
   }
 
   @Override
@@ -54,8 +53,7 @@ public class DateFieldDefinition extends AbstractFileGdbFieldDefinition {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
-        throw new IllegalArgumentException(name
-          + " is required and cannot be null");
+        throw new IllegalArgumentException(name + " is required and cannot be null");
       } else {
         getRecordStore().setNull(row, name);
       }
@@ -65,16 +63,14 @@ public class DateFieldDefinition extends AbstractFileGdbFieldDefinition {
         try {
           value = DateUtil.getDate("yyyy-MM-dd", (String)value);
         } catch (final Exception e) {
-          throw new IllegalArgumentException(
-            "Data must be in the format YYYY-MM-DD " + value);
+          throw new IllegalArgumentException("Data must be in the format YYYY-MM-DD " + value);
         }
       }
       if (value instanceof Date) {
         Date date = (Date)value;
         if (date.before(MIN_DATE)) {
-          RecordLog.warn(getClass(), name + "=" + date + " is before "
-            + MIN_DATE + " which is not supported by ESRI File Geodatabases",
-            record);
+          RecordLog.warn(getClass(), name + "=" + date + " is before " + MIN_DATE
+            + " which is not supported by ESRI File Geodatabases", record);
           if (isRequired()) {
             date = MIN_DATE;
           } else {
@@ -82,9 +78,8 @@ public class DateFieldDefinition extends AbstractFileGdbFieldDefinition {
             return null;
           }
         } else if (date.after(MAX_DATE)) {
-          RecordLog.warn(getClass(), name + "=" + date + " is after "
-            + MAX_DATE + " which is not supported by ESRI File Geodatabases",
-            record);
+          RecordLog.warn(getClass(), name + "=" + date + " is after " + MAX_DATE
+            + " which is not supported by ESRI File Geodatabases", record);
           if (isRequired()) {
             date = MAX_DATE;
           } else {
@@ -100,8 +95,8 @@ public class DateFieldDefinition extends AbstractFileGdbFieldDefinition {
           return time;
         }
       } else {
-        throw new IllegalArgumentException("Expecting a java,util.Date not "
-          + value.getClass() + " " + value);
+        throw new IllegalArgumentException("Expecting a java,util.Date not " + value.getClass()
+          + " " + value);
       }
     }
   }

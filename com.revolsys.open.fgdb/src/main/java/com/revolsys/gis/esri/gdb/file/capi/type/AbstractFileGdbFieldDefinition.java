@@ -13,13 +13,13 @@ public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
 
   private Reference<FileGdbRecordStoreImpl> recordStore;
 
-  public AbstractFileGdbFieldDefinition(final String name,
-    final DataType dataType, final boolean required) {
+  public AbstractFileGdbFieldDefinition(final String name, final DataType dataType,
+    final boolean required) {
     super(name, dataType, required);
   }
 
-  public AbstractFileGdbFieldDefinition(final String name,
-    final DataType dataType, final int length, final boolean required) {
+  public AbstractFileGdbFieldDefinition(final String name, final DataType dataType,
+    final int length, final boolean required) {
     super(name, dataType, length, required);
   }
 
@@ -41,16 +41,14 @@ public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
     this.recordStore = new WeakReference<FileGdbRecordStoreImpl>(recordStore);
   }
 
-  public Object setInsertValue(final Record record, final Row row,
-    final Object value) {
+  public Object setInsertValue(final Record record, final Row row, final Object value) {
     return setValue(record, row, value);
   }
 
   public void setPostInsertValue(final Record record, final Row row) {
   }
 
-  public Object setUpdateValue(final Record record, final Row row,
-    final Object value) {
+  public Object setUpdateValue(final Record record, final Row row, final Object value) {
     return setValue(record, row, value);
   }
 

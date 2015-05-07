@@ -22,8 +22,8 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
 
   private static final Map<String, FileGdbRecordStoreImpl> RECORD_STORES = new HashMap<String, FileGdbRecordStoreImpl>();
 
-  private static final List<String> URL_PATTERNS = Arrays.asList(
-    "file:/(//)?.*.gdb/?", "folderconnection:/(//)?.*.gdb/?");
+  private static final List<String> URL_PATTERNS = Arrays.asList("file:/(//)?.*.gdb/?",
+    "folderconnection:/(//)?.*.gdb/?");
 
   public static FileGdbRecordStoreImpl create(final File file) {
     if (file == null) {
@@ -31,8 +31,7 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
     } else {
       synchronized (COUNTS) {
         final String fileName = FileUtil.getCanonicalPath(file);
-        final AtomicInteger count = CollectionUtil.get(COUNTS, fileName,
-          new AtomicInteger());
+        final AtomicInteger count = CollectionUtil.get(COUNTS, fileName, new AtomicInteger());
         count.incrementAndGet();
         FileGdbRecordStoreImpl recordStore = RECORD_STORES.get(fileName);
         if (recordStore == null || recordStore.isClosed()) {
@@ -48,8 +47,7 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
   static void release(final String fileName) {
     if (fileName != null) {
       synchronized (COUNTS) {
-        final AtomicInteger countHolder = CollectionUtil.get(COUNTS, fileName,
-          new AtomicInteger());
+        final AtomicInteger countHolder = CollectionUtil.get(COUNTS, fileName, new AtomicInteger());
         final int count = countHolder.decrementAndGet();
         if (count <= 0) {
           COUNTS.remove(fileName);
@@ -66,14 +64,12 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
   @Override
   public FileGdbRecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
-    final Map<String, Object> properties = new LinkedHashMap<String, Object>(
-      connectionProperties);
+    final Map<String, Object> properties = new LinkedHashMap<String, Object>(connectionProperties);
     final String url = (String)properties.remove("url");
     final File file = FileUtil.getUrlFile(url);
 
     final FileGdbRecordStore dataObjectStore = create(file);
-    RecordStoreFactoryRegistry.setConnectionProperties(dataObjectStore,
-      properties);
+    RecordStoreFactoryRegistry.setConnectionProperties(dataObjectStore, properties);
     return dataObjectStore;
   }
 

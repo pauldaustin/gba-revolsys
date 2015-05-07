@@ -16,7 +16,7 @@ public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
 
   private final FileGdbRecordStoreImpl recordStore;
 
-  private List<String> typePaths = new ArrayList<String>();
+  private List<String> typePaths = new ArrayList<>();
 
   public FileGdbReader(final FileGdbRecordStoreImpl recordStore) {
     this.recordStore = recordStore;

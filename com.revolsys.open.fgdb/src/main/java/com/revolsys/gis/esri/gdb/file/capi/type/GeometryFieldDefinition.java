@@ -32,18 +32,13 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
 
   public static final Map<GeometryType, DataType> GEOMETRY_TYPE_DATA_TYPE_MAP = new LinkedHashMap<GeometryType, DataType>();
 
-  private static final ShapefileGeometryUtil SHP_UTIL = new ShapefileGeometryUtil(
-    true);
+  private static final ShapefileGeometryUtil SHP_UTIL = new ShapefileGeometryUtil(true);
 
   static {
-    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPoint,
-      DataTypes.POINT);
-    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryMultipoint,
-      DataTypes.MULTI_POINT);
-    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPolyline,
-      DataTypes.MULTI_LINE_STRING);
-    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPolygon,
-      DataTypes.MULTI_POLYGON);
+    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPoint, DataTypes.POINT);
+    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryMultipoint, DataTypes.MULTI_POINT);
+    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPolyline, DataTypes.MULTI_LINE_STRING);
+    GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPolygon, DataTypes.MULTI_POLYGON);
   }
 
   private GeometryFactory geometryFactory = GeometryFactory.getFactory();
@@ -54,18 +49,15 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
 
   public GeometryFieldDefinition(final Field field) {
     super(field.getName(), DataTypes.GEOMETRY,
-      BooleanStringConverter.getBoolean(field.getRequired())
-      || !field.isIsNullable());
+      BooleanStringConverter.getBoolean(field.getRequired()) || !field.isIsNullable());
     final GeometryDef geometryDef = field.getGeometryDef();
     if (geometryDef == null) {
-      throw new IllegalArgumentException(
-        "Field definition does not include a geometry definition");
+      throw new IllegalArgumentException("Field definition does not include a geometry definition");
 
     } else {
       final SpatialReference spatialReference = geometryDef.getSpatialReference();
       if (spatialReference == null) {
-        throw new IllegalArgumentException(
-            "Field definition does not include a spatial reference");
+        throw new IllegalArgumentException("Field definition does not include a spatial reference");
       } else {
         final GeometryType geometryType = geometryDef.getGeometryType();
         final DataType dataType = GEOMETRY_TYPE_DATA_TYPE_MAP.get(geometryType);
@@ -74,7 +66,7 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
         if (this.geometryFactory == null) {
           throw new IllegalArgumentException(
             "Field definition does not include a valid coordinate system "
-                + spatialReference.getLatestWKID());
+              + spatialReference.getLatestWKID());
         }
 
         int numAxis = 2;
@@ -90,21 +82,18 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
           final int srid = this.geometryFactory.getSRID();
           final double scaleXY = this.geometryFactory.getScaleXY();
           final double scaleZ = this.geometryFactory.getScaleZ();
-          this.geometryFactory = GeometryFactory.getFactory(srid, numAxis,
-            scaleXY, scaleZ);
+          this.geometryFactory = GeometryFactory.getFactory(srid, numAxis, scaleXY, scaleZ);
         }
         setProperty(FieldProperties.GEOMETRY_FACTORY, this.geometryFactory);
 
         final String geometryTypeKey = dataType.toString() + hasZ + hasM;
         this.readMethod = ShapefileGeometryUtil.getReadMethod(geometryTypeKey);
         if (this.readMethod == null) {
-          throw new IllegalArgumentException(
-            "No read method for geometry type " + geometryTypeKey);
+          throw new IllegalArgumentException("No read method for geometry type " + geometryTypeKey);
         }
         this.writeMethod = ShapefileGeometryUtil.getWriteMethod(geometryTypeKey);
         if (this.writeMethod == null) {
-          throw new IllegalArgumentException(
-            "No write method for geometry type " + geometryTypeKey);
+          throw new IllegalArgumentException("No write method for geometry type " + geometryTypeKey);
         }
       }
 
@@ -134,8 +123,7 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
         if (type == 0) {
           return null;
         } else {
-          final Geometry geometry = SHP_UTIL.read(this.readMethod,
-            this.geometryFactory, in);
+          final Geometry geometry = SHP_UTIL.read(this.readMethod, this.geometryFactory, in);
           return geometry;
         }
       } catch (final IOException e) {
@@ -151,16 +139,14 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
-        throw new IllegalArgumentException(name
-          + " is required and cannot be null");
+        throw new IllegalArgumentException(name + " is required and cannot be null");
       } else {
         getRecordStore().setNull(row, name);
       }
       return null;
     } else if (value instanceof Geometry) {
       final Geometry geometry = (Geometry)value;
-      final Geometry projectedGeometry = ProjectionFactory.convert(geometry,
-        this.geometryFactory);
+      final Geometry projectedGeometry = ProjectionFactory.convert(geometry, this.geometryFactory);
       final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
       final EndianOutput out = new EndianOutputStream(byteOut);
       SHP_UTIL.write(this.writeMethod, out, projectedGeometry);
@@ -170,8 +156,8 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
       }
       return bytes;
     } else {
-      throw new IllegalArgumentException("Expecting a " + Geometry.class
-        + " not a " + value.getClass() + "=" + value);
+      throw new IllegalArgumentException("Expecting a " + Geometry.class + " not a "
+        + value.getClass() + "=" + value);
     }
   }
 }
