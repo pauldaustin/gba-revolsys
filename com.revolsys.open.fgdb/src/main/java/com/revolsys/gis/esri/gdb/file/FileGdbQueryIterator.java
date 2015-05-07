@@ -2,6 +2,8 @@ package com.revolsys.gis.esri.gdb.file;
 
 import java.util.NoSuchElementException;
 
+import org.slf4j.LoggerFactory;
+
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
@@ -15,8 +17,10 @@ import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Table;
 import com.revolsys.gis.esri.gdb.file.capi.type.AbstractFileGdbFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.convert.GeometryConverter;
+import com.revolsys.gis.io.Statistics;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.CollectionUtil;
 
 public class FileGdbQueryIterator extends AbstractIterator<Record> {
 
@@ -40,39 +44,43 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
 
   private String sql;
 
+  private Statistics statistics;
+
   private Table table;
 
   private final String typePath;
 
-  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore,
-    final String typePath) {
+  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore, final String typePath) {
     this(recordStore, typePath, "*", "", null, 0, -1);
   }
 
-  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore,
-    final String typePath, final String whereClause) {
+  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore, final String typePath,
+    final String whereClause) {
     this(recordStore, typePath, "*", whereClause, null, 0, -1);
   }
 
-  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore,
-    final String typePath, final String whereClause,
-    final BoundingBox boundingBox, final Query query, final int offset,
+  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore, final String typePath,
+    final String whereClause, final BoundingBox boundingBox, final Query query, final int offset,
     final int limit) {
     this(recordStore, typePath, "*", whereClause, boundingBox, offset, limit);
-    final RecordFactory factory = query.getProperty("dataObjectFactory");
+    final RecordFactory factory = query.getProperty("recordFactory");
     if (factory != null) {
       this.recordFactory = factory;
     }
   }
 
-  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore,
-    final String typePath, final String fields, final String sql,
-    final BoundingBox boundingBox, final int offset, final int limit) {
+  FileGdbQueryIterator(final FileGdbRecordStoreImpl recordStore, final String typePath,
+    final String fields, final String sql, final BoundingBox boundingBox, final int offset,
+    final int limit) {
     this.recordStore = recordStore;
     this.typePath = typePath;
     this.recordDefinition = recordStore.getRecordDefinition(typePath);
     this.table = recordStore.getTable(typePath);
-    this.fields = fields;
+    if (this.recordDefinition != null && "*".equals(fields)) {
+      this.fields = CollectionUtil.toString(this.recordDefinition.getFieldNames());
+    } else {
+      this.fields = fields;
+    }
     this.sql = sql;
     setBoundingBox(boundingBox);
     this.recordFactory = recordStore.getRecordFactory();
@@ -90,6 +98,7 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
           this.recordStore.releaseTable(this.typePath);
         }
       } catch (final Throwable e) {
+        LoggerFactory.getLogger(getClass()).error("Error closing query: " + this.typePath);
       } finally {
         this.boundingBox = null;
         this.recordStore = null;
@@ -110,8 +119,8 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
           if (this.sql.startsWith("SELECT")) {
             this.rows = this.recordStore.query(this.sql, true);
           } else {
-            this.rows = this.recordStore.search(this.typePath, this.table,
-              this.fields, this.sql, true);
+            this.rows = this.recordStore.search(this.typePath, this.table, this.fields, this.sql,
+              true);
           }
         } else {
           BoundingBox boundingBox = this.boundingBox;
@@ -122,8 +131,8 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
             boundingBox = boundingBox.expand(0, 1);
           }
           final com.revolsys.gis.esri.gdb.file.capi.swig.Envelope envelope = GeometryConverter.toEsri(boundingBox);
-          this.rows = this.recordStore.search(this.typePath, this.table,
-            this.fields, this.sql, envelope, true);
+          this.rows = this.recordStore.search(this.typePath, this.table, this.fields, this.sql,
+            envelope, true);
         }
       }
     }
@@ -171,11 +180,11 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
   }
 
   public void setBoundingBox(final BoundingBox boundingBox) {
-    final RecordDefinition metaData = this.recordDefinition;
-    if (metaData != null) {
+    final RecordDefinition recordDefinition = this.recordDefinition;
+    if (recordDefinition != null) {
       this.boundingBox = boundingBox;
       if (boundingBox != null) {
-        final FieldDefinition geometryFieldDefinition = metaData.getGeometryField();
+        final FieldDefinition geometryFieldDefinition = recordDefinition.getGeometryField();
         if (geometryFieldDefinition != null) {
           final GeometryFactory geometryFactory = geometryFieldDefinition.getProperty(FieldProperties.GEOMETRY_FACTORY);
           if (geometryFactory != null) {
@@ -184,6 +193,10 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
         }
       }
     }
+  }
+
+  public void setStatistics(final Statistics statistics) {
+    this.statistics = statistics;
   }
 
   @Override

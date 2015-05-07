@@ -397,7 +397,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
         final boolean enabled = setEventsEnabled(false);
         try {
           final Statistics statistics = query.getProperty("statistics");
-          query.setProperty("dataObjectFactory", this);
+          query.setProperty("recordFactory", this);
           final Reader<LayerDataObject> reader = (Reader)dataStore.query(query);
           try {
             final List<LayerDataObject> records = new ArrayList<LayerDataObject>();
@@ -610,7 +610,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
       final LayerDataObject record = this.cachedRecords.get(idString);
       if (record == null) {
         final Query query = Query.equal(metaData, idAttributeName, id);
-        query.setProperty("dataObjectFactory", this);
+        query.setProperty("recordFactory", this);
         final RecordStore dataStore = getRecordStore();
         return (LayerDataObject)dataStore.queryFirst(query);
       } else {
@@ -667,7 +667,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
       if (dataStore != null) {
         final Query query = new Query(getTypePath());
         query.setBoundingBox(boundingBox);
-        query.setProperty("dataObjectFactory", this);
+        query.setProperty("recordFactory", this);
         final Reader reader = dataStore.query(query);
         try {
           return reader.read();

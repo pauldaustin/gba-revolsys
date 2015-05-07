@@ -56,7 +56,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
     final JdbcDataObjectStore dataStore, final Query query,
     final Map<String, Object> properties) {
     this.sdeUtil = sdeUtil;
-    this.dataObjectFactory = query.getProperty("dataObjectFactory");
+    this.dataObjectFactory = query.getProperty("recordFactory");
     if (this.dataObjectFactory == null) {
       this.dataObjectFactory = dataStore.getRecordFactory();
     }

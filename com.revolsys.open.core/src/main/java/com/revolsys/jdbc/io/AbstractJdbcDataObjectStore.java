@@ -909,7 +909,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
     geometryAttribute.addSelectStatementPlaceHolder(qArg);
 
     final Query query = new Query(metaData);
-    query.setProperty("dataObjectFactory", dataObjectFactory);
+    query.setProperty("recordFactory", dataObjectFactory);
     query.setWhereCondition(new SqlCondition(intersectsFunction.toSql(
       geometryAttribute.getName(), qArg), geometryAttribute, geometry));
     final DataObjectStoreQueryReader reader = createReader();

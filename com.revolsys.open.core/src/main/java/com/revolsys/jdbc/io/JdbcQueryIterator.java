@@ -105,7 +105,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements
         throw new IllegalArgumentException("Unable to create connection", e);
       }
     }
-    this.dataObjectFactory = query.getProperty("dataObjectFactory");
+    this.dataObjectFactory = query.getProperty("recordFactory");
     if (this.dataObjectFactory == null) {
       this.dataObjectFactory = dataStore.getRecordFactory();
     }

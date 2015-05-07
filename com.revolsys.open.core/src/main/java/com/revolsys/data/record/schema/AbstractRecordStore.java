@@ -680,7 +680,7 @@ implements RecordStore {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     final Query query = new Query(typePath);
     query.setBoundingBox(boundingBox);
-    query.setProperty("dataObjectFactory", dataObjectFactory);
+    query.setProperty("recordFactory", dataObjectFactory);
     final Reader<Record> reader = query(query);
     final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(
       geometry);
