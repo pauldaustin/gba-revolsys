@@ -7,12 +7,12 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.vividsolutions.jts.geom.TopologyException;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.util.ExceptionUtil;
 
@@ -22,18 +22,18 @@ import com.revolsys.util.ExceptionUtil;
  */
 public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
 
-  private static final Icon ICON = SilkIconLoader.getIcon("style_scale");
+  private static final Icon ICON = Icons.getIcon("style_scale");
 
   private transient long lastScale = 0;
 
   private transient AbstractDataObjectLayerRenderer renderer;
 
-  public ScaleMultipleRenderer(final AbstractDataObjectLayer layer,
+  public ScaleMultipleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent) {
     this(layer, parent, Collections.<String, Object> emptyMap());
   }
 
-  public ScaleMultipleRenderer(final AbstractDataObjectLayer layer,
+  public ScaleMultipleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final Map<String, Object> style) {
     super("scaleStyle", layer, parent, style);
     setIcon(ICON);
@@ -71,7 +71,7 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   public void render(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractDataObjectLayer layer) {
+    final AbstractRecordLayer layer) {
     if (layer.hasGeometryAttribute()) {
       final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
       if (renderer != null) {
@@ -84,7 +84,7 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
   @Override
   public void renderRecord(final Viewport2D viewport,
     final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractDataObjectLayer layer, final LayerDataObject object) {
+    final AbstractRecordLayer layer, final LayerDataObject object) {
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {
       if (isVisible(object)) {
@@ -102,7 +102,7 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
   @Override
   // NOTE: Needed for multiple styles
   protected void renderRecords(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractDataObjectLayer layer,
+    final Graphics2D graphics, final AbstractRecordLayer layer,
     final List<LayerDataObject> objects) {
     final BoundingBox visibleArea = viewport.getBoundingBox();
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
@@ -121,7 +121,7 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   public void renderSelectedRecord(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractDataObjectLayer layer,
+    final Graphics2D graphics, final AbstractRecordLayer layer,
     final LayerDataObject object) {
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {

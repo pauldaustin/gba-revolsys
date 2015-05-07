@@ -20,7 +20,7 @@ import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.parallel.Invoke;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class DataObjectBoundingBoxLayer extends AbstractDataObjectLayer {
+public class DataObjectBoundingBoxLayer extends AbstractRecordLayer {
   private static final Logger LOG = Logger.getLogger(DataObjectBoundingBoxLayer.class);
 
   private boolean loading = false;

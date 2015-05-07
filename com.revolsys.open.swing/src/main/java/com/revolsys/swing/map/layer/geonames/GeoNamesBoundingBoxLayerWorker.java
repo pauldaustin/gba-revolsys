@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
@@ -14,6 +13,7 @@ import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.dataobject.DataObjectBoundingBoxLayer;
 import com.revolsys.swing.map.layer.dataobject.renderer.MarkerStyleRenderer;
 import com.revolsys.swing.map.layer.dataobject.style.MarkerStyle;
@@ -33,7 +33,7 @@ public class GeoNamesBoundingBoxLayerWorker extends
     final DataObjectBoundingBoxLayer layer = new DataObjectBoundingBoxLayer(
       "geoname", "Geo Names", GeoNamesBoundingBoxLayerWorker.class, wgs84);
 
-    final BufferedImage image = SilkIconLoader.getImage("world");
+    final BufferedImage image = Icons.getImage("world");
     final ImageMarker marker = new ImageMarker(image);
     final MarkerStyle style = new MarkerStyle();
     style.setMarker(marker);

@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.BooleanStringConverter;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
@@ -23,6 +22,7 @@ import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.raster.BufferedGeoReferencedImage;
 import com.revolsys.raster.GeoReferencedImage;
 import com.revolsys.raster.MappedLocation;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.ImageViewport;
 import com.revolsys.swing.map.MapPanel;
@@ -40,7 +40,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class EditGeoReferencedImageOverlay extends AbstractOverlay {
-  private static final Cursor CURSOR_MOVE_IMAGE = SilkIconLoader.getCursor(
+  private static final Cursor CURSOR_MOVE_IMAGE = Icons.getCursor(
     "cursor_move", 8, 7);
 
   private static final Color COLOR_OUTLINE = WebColors.Black;

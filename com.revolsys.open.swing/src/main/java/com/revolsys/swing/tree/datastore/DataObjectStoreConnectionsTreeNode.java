@@ -6,13 +6,13 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.tree.TreeNode;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
 import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.tree.model.node.AbstractTreeNode;
 
 public class DataObjectStoreConnectionsTreeNode extends AbstractTreeNode {
-  public static final Icon ICON = SilkIconLoader.getIcon("folder_database");
+  public static final Icon ICON = Icons.getIcon("folder_database");
 
   private ArrayList<TreeNode> children;
 

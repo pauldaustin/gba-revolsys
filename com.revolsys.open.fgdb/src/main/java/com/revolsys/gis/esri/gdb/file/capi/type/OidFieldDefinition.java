@@ -22,33 +22,33 @@ public class OidFieldDefinition extends AbstractFileGdbFieldDefinition {
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    final FileGdbRecordStoreImpl dataStore = getDataStore();
-    if (dataStore.isNull(row, name)) {
+    final FileGdbRecordStoreImpl recordStore = getRecordStore();
+    if (recordStore.isNull(row, name)) {
       return null;
     } else {
-      synchronized (dataStore) {
+      synchronized (getSync()) {
         return row.getOid();
       }
     }
   }
 
   @Override
-  public void setPostInsertValue(final Record object, final Row row) {
-    synchronized (getDataStore()) {
+  public void setPostInsertValue(final Record record, final Row row) {
+    synchronized (getSync()) {
       final int oid = row.getOid();
       final String name = getName();
-      object.setValue(name, oid);
+      record.setValue(name, oid);
     }
   }
 
   @Override
-  public Object setUpdateValue(final Record object, final Row row,
+  public Object setUpdateValue(final Record record, final Row row,
     final Object value) {
     return value;
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, final Object value) {
+  public Object setValue(final Record record, final Row row, final Object value) {
     return null;
   }
 

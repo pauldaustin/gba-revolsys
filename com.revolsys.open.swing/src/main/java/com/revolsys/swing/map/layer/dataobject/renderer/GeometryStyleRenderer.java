@@ -14,12 +14,12 @@ import javax.swing.ImageIcon;
 
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.style.GeometryStyle;
 import com.revolsys.swing.map.layer.dataobject.style.panel.GeometryStylePanel;
@@ -32,7 +32,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
 
-  private static final Icon ICON = SilkIconLoader.getIcon("style_geometry");
+  private static final Icon ICON = Icons.getIcon("style_geometry");
 
   public static GeneralPath getLineShape() {
     final GeneralPath path = new GeneralPath();
@@ -156,28 +156,28 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
 
   private GeometryStyle style;
 
-  public GeometryStyleRenderer(final AbstractDataObjectLayer layer) {
+  public GeometryStyleRenderer(final AbstractRecordLayer layer) {
     this(layer, new GeometryStyle());
   }
 
-  public GeometryStyleRenderer(final AbstractDataObjectLayer layer,
+  public GeometryStyleRenderer(final AbstractRecordLayer layer,
     final GeometryStyle style) {
     this(layer, null, style);
   }
 
-  public GeometryStyleRenderer(final AbstractDataObjectLayer layer,
+  public GeometryStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent) {
     this(layer, parent, new GeometryStyle());
   }
 
-  public GeometryStyleRenderer(final AbstractDataObjectLayer layer,
+  public GeometryStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final GeometryStyle style) {
     super("geometryStyle", "Geometry Style", layer, parent);
     this.style = style;
     setIcon(ICON);
   }
 
-  public GeometryStyleRenderer(final AbstractDataObjectLayer layer,
+  public GeometryStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final Map<String, Object> geometryStyle) {
     super("geometryStyle", "Geometry Style", layer, parent, geometryStyle);
     this.style = new GeometryStyle(geometryStyle);
@@ -198,7 +198,7 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
 
   @Override
   public Icon getIcon() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     if (layer == null) {
       return super.getIcon();
     } else {
@@ -245,7 +245,7 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
   @Override
   public void renderRecord(final Viewport2D viewport,
     final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractDataObjectLayer layer, final LayerDataObject object) {
+    final AbstractRecordLayer layer, final LayerDataObject object) {
     final Geometry geometry = object.getGeometryValue();
     graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON);

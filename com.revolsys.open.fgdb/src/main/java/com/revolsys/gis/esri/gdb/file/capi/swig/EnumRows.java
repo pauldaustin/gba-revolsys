@@ -9,25 +9,20 @@
 package com.revolsys.gis.esri.gdb.file.capi.swig;
 
 public class EnumRows {
-  protected static long getCPtr(EnumRows obj) {
-    return (obj == null) ? 0 : obj.swigCPtr;
-  }
+  private long swigCPtr;
   protected boolean swigCMemOwn;
 
-  private long swigCPtr;
-
-  public EnumRows() {
-    this(EsriFileGdbJNI.new_EnumRows(), true);
-  }
-
-   protected EnumRows(long cPtr, boolean cMemoryOwn) {
+  protected EnumRows(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  public void Close() {
-    EsriFileGdbJNI.EnumRows_Close(swigCPtr, this);
+  protected static long getCPtr(EnumRows obj) {
+    return (obj == null) ? 0 : obj.swigCPtr;
   }
+
+   protected void finalize() {
+   }
 
   public synchronized void delete() {
     if (swigCPtr != 0) {
@@ -39,8 +34,13 @@ public class EnumRows {
     }
   }
 
-  protected void finalize() {
-   }
+  public void Close() {
+    EsriFileGdbJNI.EnumRows_Close(swigCPtr, this);
+  }
+
+  public EnumRows() {
+    this(EsriFileGdbJNI.new_EnumRows(), true);
+  }
 
   public Row next() {
     long cPtr = EsriFileGdbJNI.EnumRows_next(swigCPtr, this);

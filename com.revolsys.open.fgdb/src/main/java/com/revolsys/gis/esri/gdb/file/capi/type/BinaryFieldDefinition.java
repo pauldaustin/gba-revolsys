@@ -6,9 +6,9 @@ import com.revolsys.data.types.DataTypes;
 import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
-public class BinaryAttribute extends AbstractFileGdbFieldDefinition {
+public class BinaryFieldDefinition extends AbstractFileGdbFieldDefinition {
 
-  public BinaryAttribute(final Field field) {
+  public BinaryFieldDefinition(final Field field) {
     super(field.getName(), DataTypes.BASE64_BINARY, field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());
@@ -26,7 +26,7 @@ public class BinaryAttribute extends AbstractFileGdbFieldDefinition {
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, final Object value) {
+  public Object setValue(final Record record, final Row row, final Object value) {
     return null;
   }
 

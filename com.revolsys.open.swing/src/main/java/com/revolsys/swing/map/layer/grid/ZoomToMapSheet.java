@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.grid.RectangularMapGrid;
 import com.revolsys.gis.grid.RectangularMapTile;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.AbstractAction;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.tree.TreeUtil;
@@ -28,7 +28,7 @@ public class ZoomToMapSheet extends AbstractAction {
 
   public ZoomToMapSheet() {
     putValue(NAME, "Zoom to Map Sheet");
-    putValue(SMALL_ICON, SilkIconLoader.getIcon("zoom"));
+    putValue(SMALL_ICON, Icons.getIcon("zoom"));
   }
 
   @Override

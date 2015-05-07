@@ -17,8 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.parallel.ThreadInterruptedException;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.LayerRenderer;
 
 public class LayerRendererTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -27,9 +27,9 @@ public class LayerRendererTreeCellRenderer extends DefaultTreeCellRenderer {
    */
   private static final long serialVersionUID = -7481451746832997079L;
 
-  private static final Icon VISIBLE_ICON = SilkIconLoader.getIcon("map");
+  private static final Icon VISIBLE_ICON = Icons.getIcon("map");
 
-  private static final Icon VISIBLE_DISABLED_ICON = SilkIconLoader.getIcon("map_gray");
+  private static final Icon VISIBLE_DISABLED_ICON = Icons.getIcon("map_gray");
 
   private static final Map<List<Icon>, Icon> ICON_CACHE = new HashMap<List<Icon>, Icon>();
 

@@ -16,7 +16,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.data.io.DataObjectReaderFactory;
 import com.revolsys.gis.data.io.RecordStoreFactory;
 import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
@@ -24,6 +23,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.raster.GeoReferencedImageFactory;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.parallel.Invoke;
@@ -36,7 +36,7 @@ public class AddFileLayerAction extends AbstractAction {
 
   public AddFileLayerAction() {
     putValue(NAME, "Open File Layer");
-    putValue(SMALL_ICON, SilkIconLoader.getIcon("page_add"));
+    putValue(SMALL_ICON, Icons.getIcon("page_add"));
   }
 
   @Override

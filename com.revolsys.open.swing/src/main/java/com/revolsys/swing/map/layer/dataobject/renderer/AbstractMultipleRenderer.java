@@ -9,12 +9,12 @@ import javax.swing.ImageIcon;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.map.MapSerializerUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
@@ -30,7 +30,7 @@ public abstract class AbstractMultipleRenderer extends
     for (final String type : Arrays.asList("Geometry", "Text", "Marker",
       "Multiple", "Filter", "Scale")) {
       final String iconName = ("style_" + type + "_add").toLowerCase();
-      final ImageIcon icon = SilkIconLoader.getIcon(iconName);
+      final ImageIcon icon = Icons.getIcon(iconName);
       final InvokeMethodAction action = TreeItemRunnable.createAction("Add "
         + type + " Style", icon, null, "add" + type + "Style");
       menu.addMenuItem("add", action);
@@ -44,7 +44,7 @@ public abstract class AbstractMultipleRenderer extends
   protected static void addMenuItem(final MenuFactory menu, final String type,
     final Class<?> rendererClass) {
     final String iconName = ("style_" + type + "_go").toLowerCase();
-    final ImageIcon icon = SilkIconLoader.getIcon(iconName);
+    final ImageIcon icon = Icons.getIcon(iconName);
 
     final TreeItemPropertyEnableCheck enableCheck = new TreeItemPropertyEnableCheck(
       "class", rendererClass, true);
@@ -57,7 +57,7 @@ public abstract class AbstractMultipleRenderer extends
   private List<AbstractDataObjectLayerRenderer> renderers = new ArrayList<AbstractDataObjectLayerRenderer>();
 
   public AbstractMultipleRenderer(final String type,
-    final AbstractDataObjectLayer layer, final LayerRenderer<?> parent,
+    final AbstractRecordLayer layer, final LayerRenderer<?> parent,
     final Map<String, Object> style) {
     super(type, "Styles", layer, parent, style);
     @SuppressWarnings("unchecked")
@@ -153,7 +153,7 @@ public abstract class AbstractMultipleRenderer extends
   }
 
   public FilterMultipleRenderer convertToFilterStyle() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final List<AbstractDataObjectLayerRenderer> renderers = getRenderers();
     final AbstractMultipleRenderer parent = (AbstractMultipleRenderer)getParent();
     final Map<String, Object> style = toMap();
@@ -172,7 +172,7 @@ public abstract class AbstractMultipleRenderer extends
   }
 
   public MultipleRenderer convertToMultipleStyle() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final List<AbstractDataObjectLayerRenderer> renderers = getRenderers();
     final AbstractMultipleRenderer parent = (AbstractMultipleRenderer)getParent();
     final Map<String, Object> style = toMap();
@@ -191,7 +191,7 @@ public abstract class AbstractMultipleRenderer extends
   }
 
   public ScaleMultipleRenderer convertToScaleStyle() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final List<AbstractDataObjectLayerRenderer> renderers = getRenderers();
     final AbstractMultipleRenderer parent = (AbstractMultipleRenderer)getParent();
     final Map<String, Object> style = toMap();

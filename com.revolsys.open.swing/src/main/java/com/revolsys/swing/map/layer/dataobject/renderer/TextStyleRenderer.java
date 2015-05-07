@@ -29,7 +29,6 @@ import org.springframework.util.StringUtils;
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
@@ -41,10 +40,11 @@ import com.revolsys.gis.model.coordinates.LineSegmentUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.geometry.util.PointUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.style.TextStyle;
 import com.revolsys.swing.map.layer.dataobject.style.panel.TextStylePanel;
@@ -392,16 +392,16 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
   private static final AffineTransform NOOP_TRANSFORM = AffineTransform.getTranslateInstance(
     0, 0);
 
-  private static final Icon ICON = SilkIconLoader.getIcon("style_text");
+  private static final Icon ICON = Icons.getIcon("style_text");
 
   private TextStyle style;
 
-  public TextStyleRenderer(final AbstractDataObjectLayer layer,
+  public TextStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent) {
     this(layer, parent, Collections.<String, Object> emptyMap());
   }
 
-  public TextStyleRenderer(final AbstractDataObjectLayer layer,
+  public TextStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final Map<String, Object> textStyle) {
     super("textStyle", "Text Style", layer, parent, textStyle);
     this.style = new TextStyle(textStyle);
@@ -427,7 +427,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
   @Override
   public void renderRecord(final Viewport2D viewport,
     final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractDataObjectLayer layer, final LayerDataObject object) {
+    final AbstractRecordLayer layer, final LayerDataObject object) {
     final Geometry geometry = object.getGeometryValue();
     renderText(viewport, graphics, object, geometry, this.style);
   }

@@ -14,7 +14,7 @@ import javax.swing.SwingConstants;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentGroup;
@@ -61,7 +61,7 @@ public class ToolBar extends JToolBar {
     String name = null;
     Icon icon = null;
     if (StringUtils.hasText(iconName)) {
-      icon = SilkIconLoader.getIcon(iconName);
+      icon = Icons.getIcon(iconName);
     } else {
       name = title;
       title = null;
@@ -85,7 +85,7 @@ public class ToolBar extends JToolBar {
   public JButton addButtonTitleIcon(final String groupName, final String title,
     final String iconName, final Object object, final String methodName,
     final Object... parameters) {
-    final ImageIcon icon = SilkIconLoader.getIcon(iconName);
+    final ImageIcon icon = Icons.getIcon(iconName);
     return addButton(groupName, iconName, title, icon, object, methodName,
       parameters);
   }
@@ -105,7 +105,7 @@ public class ToolBar extends JToolBar {
   public JToggleButton addToggleButton(final String groupName, final int index,
     final String title, final String iconName, final EnableCheck enableCheck,
     final Object object, final String methodName, final Object... parameters) {
-    final ImageIcon icon = SilkIconLoader.getIcon(iconName);
+    final ImageIcon icon = Icons.getIcon(iconName);
     return addToggleButton(groupName, index, iconName, title, icon,
       enableCheck, object, methodName, parameters);
   }
@@ -128,7 +128,7 @@ public class ToolBar extends JToolBar {
   public JToggleButton addToggleButtonTitleIcon(final String groupName,
     final int index, final String title, final String iconName,
     final Object object, final String methodName, final Object... parameters) {
-    final ImageIcon icon = SilkIconLoader.getIcon(iconName);
+    final ImageIcon icon = Icons.getIcon(iconName);
     return addToggleButton(groupName, index, iconName, title, icon, null,
       object, methodName, parameters);
   }

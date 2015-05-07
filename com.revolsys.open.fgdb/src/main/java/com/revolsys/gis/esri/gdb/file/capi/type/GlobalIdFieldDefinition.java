@@ -7,38 +7,38 @@ import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Guid;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
-public class GlobalIdAttribute extends AbstractFileGdbFieldDefinition {
-  public GlobalIdAttribute(final Field field) {
+public class GlobalIdFieldDefinition extends AbstractFileGdbFieldDefinition {
+  public GlobalIdFieldDefinition(final Field field) {
     this(field.getName(), field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());
   }
 
-  public GlobalIdAttribute(final String name, final int length,
+  public GlobalIdFieldDefinition(final String name, final int length,
     final boolean required) {
     super(name, DataTypes.STRING, length, required);
   }
 
   @Override
   public Object getValue(final Row row) {
-    synchronized (getDataStore()) {
+    synchronized (getSync()) {
       final Guid guid = row.getGlobalId();
       return guid.toString();
     }
   }
 
   @Override
-  public void setPostInsertValue(final Record object, final Row row) {
-    synchronized (getDataStore()) {
+  public void setPostInsertValue(final Record record, final Row row) {
+    synchronized (getSync()) {
       final Guid guid = row.getGlobalId();
       final String name = getName();
       final String string = guid.toString();
-      object.setValue(name, string);
+      record.setValue(name, string);
     }
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, final Object value) {
+  public Object setValue(final Record record, final Row row, final Object value) {
     return null;
   }
 

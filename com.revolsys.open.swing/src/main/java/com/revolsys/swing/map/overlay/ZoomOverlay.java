@@ -18,9 +18,9 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import com.revolsys.converter.string.BooleanStringConverter;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.preferences.PreferencesDialog;
@@ -49,7 +49,7 @@ public class ZoomOverlay extends AbstractOverlay {
       "/com/revolsys/gis/zoom", "wheelForwardsZoomIn", Boolean.class, true);
   }
 
-  private static final Cursor CURSOR_ZOOM_BOX = SilkIconLoader.getCursor(
+  private static final Cursor CURSOR_ZOOM_BOX = Icons.getCursor(
     "cursor_zoom_box", 9, 9);
 
   private int panModifiers;

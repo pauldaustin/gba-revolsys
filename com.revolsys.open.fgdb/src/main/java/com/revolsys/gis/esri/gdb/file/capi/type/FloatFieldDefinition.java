@@ -7,56 +7,57 @@ import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
-public class ShortAttribute extends AbstractFileGdbFieldDefinition {
-  public ShortAttribute(final Field field) {
-    super(field.getName(), DataTypes.SHORT,
+public class FloatFieldDefinition extends AbstractFileGdbFieldDefinition {
+  public FloatFieldDefinition(final Field field) {
+    super(field.getName(), DataTypes.FLOAT,
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());
   }
 
   @Override
   public int getMaxStringLength() {
-    return 6;
+    return 19;
   }
 
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    final FileGdbRecordStoreImpl dataStore = getDataStore();
-    if (dataStore.isNull(row, name)) {
+    final FileGdbRecordStoreImpl recordStore = getRecordStore();
+    if (recordStore.isNull(row, name)) {
       return null;
     } else {
-      synchronized (dataStore) {
-        return row.getShort(name);
+      synchronized (getSync()) {
+        return row.getFloat(name);
       }
     }
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, final Object value) {
+  public Object setValue(final Record record, final Row row, final Object value) {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
         throw new IllegalArgumentException(name
           + " is required and cannot be null");
       } else {
-        getDataStore().setNull(row, name);
+        getRecordStore().setNull(row, name);
       }
       return null;
     } else if (value instanceof Number) {
       final Number number = (Number)value;
-      final short shortValue = number.shortValue();
-      synchronized (getDataStore()) {
-        row.setShort(name, shortValue);
+      final float floatValue = number.floatValue();
+      synchronized (getSync()) {
+        row.setFloat(name, floatValue);
       }
-      return shortValue;
+      return floatValue;
     } else {
       final String string = value.toString();
-      final short shortValue = Short.parseShort(string);
-      synchronized (getDataStore()) {
-        row.setShort(name, shortValue);
+      final float floatValue = Float.parseFloat(string);
+      synchronized (getSync()) {
+        row.setFloat(name, floatValue);
       }
-      return shortValue;
+      return floatValue;
     }
   }
+
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
@@ -13,6 +12,7 @@ import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.dataobject.DataObjectBoundingBoxLayer;
 import com.revolsys.swing.map.layer.dataobject.renderer.MarkerStyleRenderer;
 import com.revolsys.swing.map.layer.dataobject.style.MarkerStyle;
@@ -35,7 +35,7 @@ public class WikipediaBoundingBoxLayerWorker extends
       "wikipedia", "Wikipedia Articles", WikipediaBoundingBoxLayerWorker.class,
       wgs84);
 
-    final BufferedImage image = SilkIconLoader.getImage("wikipedia");
+    final BufferedImage image = Icons.getImage("wikipedia");
     final ImageMarker marker = new ImageMarker(image);
     final MarkerStyle style = new MarkerStyle();
     style.setMarker(marker);

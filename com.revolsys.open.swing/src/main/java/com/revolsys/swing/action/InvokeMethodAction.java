@@ -10,9 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.i18n.I18nCharSequence;
 import com.revolsys.parallel.process.InvokeMethodRunnable;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.menu.AbstractActionMainMenuItemFactory;
 import com.revolsys.swing.parallel.Invoke;
@@ -65,7 +65,7 @@ public class InvokeMethodAction extends AbstractActionMainMenuItemFactory {
   public static JMenuItem createMenuItem(final String name,
     final String iconName, final Object object, final String methodName,
     final Object... parameters) {
-    final Icon icon = SilkIconLoader.getIcon(iconName);
+    final Icon icon = Icons.getIcon(iconName);
     return createMenuItem(name, icon, object, methodName, parameters);
   }
 

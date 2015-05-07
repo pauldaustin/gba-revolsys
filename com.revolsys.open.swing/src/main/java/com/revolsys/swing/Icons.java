@@ -1,4 +1,4 @@
-package com.revolsys.famfamfam.silk;
+package com.revolsys.swing;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -14,9 +14,8 @@ import javax.swing.ImageIcon;
 
 import com.revolsys.util.OS;
 
-public class SilkIconLoader {
-  private static final String RESOURCE_FOLDER = "/"
-    + SilkIconLoader.class.getPackage().getName().replace(".", "/") + "/icons/";
+public class Icons {
+  public static final String RESOURCE_FOLDER = "/com/revolsys/famfamfam/silk/icons/";
 
   public static Cursor getCursor(final String imageName) {
     return getCursor(imageName, 0, 0);
@@ -74,13 +73,13 @@ public class SilkIconLoader {
   }
 
   public static BufferedImage getImage(final String imageName) {
-    final Class<?> clazz = SilkIconLoader.class;
+    final Class<?> clazz = Icons.class;
     final String resourceName = RESOURCE_FOLDER + imageName + ".png";
     InputStream in = clazz.getResourceAsStream(resourceName);
     if (in == null) {
       in = Thread.currentThread()
-        .getContextClassLoader()
-        .getResourceAsStream("images/" + imageName + ".png");
+          .getContextClassLoader()
+          .getResourceAsStream("images/" + imageName + ".png");
     }
     return getImage(in);
   }

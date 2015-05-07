@@ -9,38 +9,20 @@
 package com.revolsys.gis.esri.gdb.file.capi.swig;
 
 public class Table {
-  protected static long getCPtr(Table obj) {
-    return (obj == null) ? 0 : obj.swigCPtr;
-  }
+  private long swigCPtr;
   protected boolean swigCMemOwn;
 
-  private long swigCPtr;
-
-  public Table() {
-    this(EsriFileGdbJNI.new_Table(), true);
-  }
-
-   protected Table(long cPtr, boolean cMemoryOwn) {
+  protected Table(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  public int AlterField(String fieldDef) {
-    return EsriFileGdbJNI.Table_AlterField(swigCPtr, this, fieldDef);
+  protected static long getCPtr(Table obj) {
+    return (obj == null) ? 0 : obj.swigCPtr;
   }
 
-  public int AlterSubtype(String subtypeDef) {
-    return EsriFileGdbJNI.Table_AlterSubtype(swigCPtr, this, subtypeDef);
-  }
-
-  public Row createRowObject() {
-    long cPtr = EsriFileGdbJNI.Table_createRowObject(swigCPtr, this);
-    return (cPtr == 0) ? null : new Row(cPtr, true);
-  }
-
-  public int CreateSubtype(String subtypeDef) {
-    return EsriFileGdbJNI.Table_CreateSubtype(swigCPtr, this, subtypeDef);
-  }
+   protected void finalize() {
+   }
 
   public synchronized void delete() {
     if (swigCPtr != 0) {
@@ -52,6 +34,14 @@ public class Table {
     }
   }
 
+  public int SetDocumentation(String documentation) {
+    return EsriFileGdbJNI.Table_SetDocumentation(swigCPtr, this, documentation);
+  }
+
+  public int AlterField(String fieldDef) {
+    return EsriFileGdbJNI.Table_AlterField(swigCPtr, this, fieldDef);
+  }
+
   public int DeleteField(String fieldName) {
     return EsriFileGdbJNI.Table_DeleteField(swigCPtr, this, fieldName);
   }
@@ -60,31 +50,40 @@ public class Table {
     return EsriFileGdbJNI.Table_DeleteIndex(swigCPtr, this, indexName);
   }
 
-  public void deleteRow(Row row) {
-    EsriFileGdbJNI.Table_deleteRow(swigCPtr, this, Row.getCPtr(row), row);
+  public int CreateSubtype(String subtypeDef) {
+    return EsriFileGdbJNI.Table_CreateSubtype(swigCPtr, this, subtypeDef);
+  }
+
+  public int AlterSubtype(String subtypeDef) {
+    return EsriFileGdbJNI.Table_AlterSubtype(swigCPtr, this, subtypeDef);
   }
 
   public int DeleteSubtype(String subtypeName) {
     return EsriFileGdbJNI.Table_DeleteSubtype(swigCPtr, this, subtypeName);
   }
 
-  public int DisableSubtypes() {
-    return EsriFileGdbJNI.Table_DisableSubtypes(swigCPtr, this);
-  }
-
   public int EnableSubtypes(String subtypeFieldName, String subtypeDef) {
     return EsriFileGdbJNI.Table_EnableSubtypes(swigCPtr, this, subtypeFieldName, subtypeDef);
   }
 
-  protected void finalize() {
-   }
-
-  public void freeWriteLock() {
-    EsriFileGdbJNI.Table_freeWriteLock(swigCPtr, this);
+  public int SetDefaultSubtypeCode(int defaultCode) {
+    return EsriFileGdbJNI.Table_SetDefaultSubtypeCode(swigCPtr, this, defaultCode);
   }
 
-  public int getDefaultSubtypeCode() {
-    return EsriFileGdbJNI.Table_getDefaultSubtypeCode(swigCPtr, this);
+  public int DisableSubtypes() {
+    return EsriFileGdbJNI.Table_DisableSubtypes(swigCPtr, this);
+  }
+
+  public int GetExtent(Envelope extent) {
+    return EsriFileGdbJNI.Table_GetExtent(swigCPtr, this, Envelope.getCPtr(extent), extent);
+  }
+
+  public Table() {
+    this(EsriFileGdbJNI.new_Table(), true);
+  }
+
+  public boolean isEditable() {
+    return EsriFileGdbJNI.Table_isEditable(swigCPtr, this);
   }
 
   public String getDefinition() {
@@ -95,29 +94,33 @@ public class Table {
     return EsriFileGdbJNI.Table_getDocumentation(swigCPtr, this);
   }
 
-  public int GetExtent(Envelope extent) {
-    return EsriFileGdbJNI.Table_GetExtent(swigCPtr, this, Envelope.getCPtr(extent), extent);
+  public int getRowCount() {
+    return EsriFileGdbJNI.Table_getRowCount(swigCPtr, this);
+  }
+
+  public int getDefaultSubtypeCode() {
+    return EsriFileGdbJNI.Table_getDefaultSubtypeCode(swigCPtr, this);
   }
 
   public VectorOfString getIndexes() {
     return new VectorOfString(EsriFileGdbJNI.Table_getIndexes(swigCPtr, this), true);
   }
 
-  public int getRowCount() {
-    return EsriFileGdbJNI.Table_getRowCount(swigCPtr, this);
+  public Row createRowObject() {
+    long cPtr = EsriFileGdbJNI.Table_createRowObject(swigCPtr, this);
+    return (cPtr == 0) ? null : new Row(cPtr, true);
   }
 
   public void insertRow(Row row) {
     EsriFileGdbJNI.Table_insertRow(swigCPtr, this, Row.getCPtr(row), row);
   }
 
-  public boolean isEditable() {
-    return EsriFileGdbJNI.Table_isEditable(swigCPtr, this);
+  public void updateRow(Row row) {
+    EsriFileGdbJNI.Table_updateRow(swigCPtr, this, Row.getCPtr(row), row);
   }
 
-  public EnumRows search(String subfields, String whereClause, boolean recycling) {
-    long cPtr = EsriFileGdbJNI.Table_search__SWIG_1(swigCPtr, this, subfields, whereClause, recycling);
-    return (cPtr == 0) ? null : new EnumRows(cPtr, true);
+  public void deleteRow(Row row) {
+    EsriFileGdbJNI.Table_deleteRow(swigCPtr, this, Row.getCPtr(row), row);
   }
 
   public EnumRows search(String subfields, String whereClause, Envelope envelope, boolean recycling) {
@@ -125,12 +128,9 @@ public class Table {
     return (cPtr == 0) ? null : new EnumRows(cPtr, true);
   }
 
-  public int SetDefaultSubtypeCode(int defaultCode) {
-    return EsriFileGdbJNI.Table_SetDefaultSubtypeCode(swigCPtr, this, defaultCode);
-  }
-
-  public int SetDocumentation(String documentation) {
-    return EsriFileGdbJNI.Table_SetDocumentation(swigCPtr, this, documentation);
+  public EnumRows search(String subfields, String whereClause, boolean recycling) {
+    long cPtr = EsriFileGdbJNI.Table_search__SWIG_1(swigCPtr, this, subfields, whereClause, recycling);
+    return (cPtr == 0) ? null : new EnumRows(cPtr, true);
   }
 
   public void setLoadOnlyMode(boolean loadOnly) {
@@ -141,8 +141,8 @@ public class Table {
     EsriFileGdbJNI.Table_setWriteLock(swigCPtr, this);
   }
 
-  public void updateRow(Row row) {
-    EsriFileGdbJNI.Table_updateRow(swigCPtr, this, Row.getCPtr(row), row);
+  public void freeWriteLock() {
+    EsriFileGdbJNI.Table_freeWriteLock(swigCPtr, this);
   }
 
 }

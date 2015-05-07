@@ -17,11 +17,11 @@ import com.revolsys.util.Property;
 public class LayerDataObject extends ArrayRecord {
   private static final long serialVersionUID = 1L;
 
-  private final AbstractDataObjectLayer layer;
+  private final AbstractRecordLayer layer;
 
   private Map<String, Object> originalValues;
 
-  public LayerDataObject(final AbstractDataObjectLayer layer) {
+  public LayerDataObject(final AbstractRecordLayer layer) {
     super(layer.getMetaData());
     this.layer = layer;
   }
@@ -45,7 +45,7 @@ public class LayerDataObject extends ArrayRecord {
 
   public void firePropertyChange(final String attributeName,
     final Object oldValue, final Object newValue) {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     if (layer.isEventsEnabled()) {
       final PropertyChangeEvent event = new PropertyChangeEvent(this,
         attributeName, oldValue, newValue);
@@ -53,7 +53,7 @@ public class LayerDataObject extends ArrayRecord {
     }
   }
 
-  public AbstractDataObjectLayer getLayer() {
+  public AbstractRecordLayer getLayer() {
     return this.layer;
   }
 
@@ -110,7 +110,7 @@ public class LayerDataObject extends ArrayRecord {
     } else if (this == record) {
       return true;
     } else {
-      final AbstractDataObjectLayer layer = getLayer();
+      final AbstractRecordLayer layer = getLayer();
       if (layer.isLayerRecord(record)) {
         final Object id = getIdValue();
         final Object otherId = record.getIdValue();
@@ -158,7 +158,7 @@ public class LayerDataObject extends ArrayRecord {
   public LayerDataObject revertChanges() {
     if (this.originalValues != null || getState() == RecordState.Deleted) {
       cancelChanges();
-      final AbstractDataObjectLayer layer = getLayer();
+      final AbstractRecordLayer layer = getLayer();
       layer.revertChanges(this);
       firePropertyChange("state", RecordState.Modified,
         RecordState.Persisted);
@@ -187,7 +187,7 @@ public class LayerDataObject extends ArrayRecord {
 
     final Object oldValue = getValue(index);
     if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {
-      final AbstractDataObjectLayer layer = getLayer();
+      final AbstractRecordLayer layer = getLayer();
       final RecordState state = getState();
       if (RecordState.Initalizing.equals(state)) {
         // Allow modification on initialization

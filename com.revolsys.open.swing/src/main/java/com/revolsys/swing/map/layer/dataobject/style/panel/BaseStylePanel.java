@@ -30,7 +30,7 @@ import javax.swing.JTextField;
 import org.jdesktop.swingx.VerticalLayout;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.I18nAction;
 import com.revolsys.swing.component.TogglePanel;
@@ -49,7 +49,7 @@ import com.revolsys.swing.map.component.MapScale;
 import com.revolsys.swing.map.component.MarkerField;
 import com.revolsys.swing.map.layer.Layer;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.style.GeometryStyle;
 import com.revolsys.swing.map.layer.dataobject.style.LineCap;
 import com.revolsys.swing.map.layer.dataobject.style.LineJoin;
@@ -78,7 +78,7 @@ public class BaseStylePanel extends ValueField implements
     final List<Action> actions = new ArrayList<Action>();
     for (final String alignmentType : alignmentTypes) {
       final String iconName = ("line_" + type + "_" + alignmentType).toLowerCase();
-      final ImageIcon icon = SilkIconLoader.getIcon(iconName);
+      final ImageIcon icon = Icons.getIcon(iconName);
       final String toolTip = CaseConverter.toCapitalizedWords(alignmentType
         + " " + type);
       final I18nAction action = new I18nAction(alignmentType, null, toolTip,
@@ -93,7 +93,7 @@ public class BaseStylePanel extends ValueField implements
     for (final String alignmentType : alignmentTypes) {
       final I18nAction action = new I18nAction(alignmentType, null,
         CaseConverter.toCapitalizedWords(alignmentType),
-        SilkIconLoader.getIcon("text_align_" + alignmentType));
+        Icons.getIcon("text_align_" + alignmentType));
       actions.add(action);
     }
     return actions;
@@ -259,7 +259,7 @@ public class BaseStylePanel extends ValueField implements
     } else if (fieldName.equals("lineDashArray")) {
       field = new DashField(fieldName, (List<Measure<Length>>)value);
     } else if (fieldName.equals("queryFilter")) {
-      final AbstractDataObjectLayer layer = getLayer();
+      final AbstractRecordLayer layer = getLayer();
       field = new QueryFilterField(layer, fieldName, (String)value);
       field.setFieldValue(value);
       Property.addListener(field, fieldName, this);

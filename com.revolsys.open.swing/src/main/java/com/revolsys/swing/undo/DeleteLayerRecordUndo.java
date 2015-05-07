@@ -3,7 +3,7 @@ package com.revolsys.swing.undo;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 
 public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
@@ -25,7 +25,7 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
   public boolean canRedo() {
     if (super.canRedo()) {
       if (record != null) {
-        final AbstractDataObjectLayer layer = record.getLayer();
+        final AbstractRecordLayer layer = record.getLayer();
         if (layer != null) {
           return !layer.isDeleted(record);
         }
@@ -38,7 +38,7 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
   public boolean canUndo() {
     if (super.canUndo()) {
       if (record != null) {
-        final AbstractDataObjectLayer layer = record.getLayer();
+        final AbstractRecordLayer layer = record.getLayer();
         if (layer != null) {
           return layer.isDeleted(record);
         }
@@ -50,7 +50,7 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
   @Override
   protected void doRedo() {
     if (record != null) {
-      final AbstractDataObjectLayer layer = record.getLayer();
+      final AbstractRecordLayer layer = record.getLayer();
       if (layer != null) {
         layer.deleteRecords(record);
         layer.unSelectRecords(record);
@@ -63,7 +63,7 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
     if (record != null) {
       final LayerDataObject sourceRecord = record.revertChanges();
       sourceRecord.setValues(values);
-      final AbstractDataObjectLayer layer = sourceRecord.getLayer();
+      final AbstractRecordLayer layer = sourceRecord.getLayer();
       layer.addSelectedRecords(sourceRecord);
     }
   }

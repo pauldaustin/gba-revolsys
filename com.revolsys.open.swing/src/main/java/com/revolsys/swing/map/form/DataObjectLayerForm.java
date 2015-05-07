@@ -81,7 +81,7 @@ import com.revolsys.swing.field.ObjectLabelField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.map.ProjectFrame;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerAttributesTableModel;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
@@ -150,7 +150,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   private String lastFocussedFieldName;
 
-  private AbstractDataObjectLayer layer;
+  private AbstractRecordLayer layer;
 
   private RecordDefinition metaData;
 
@@ -173,7 +173,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   private String focussedFieldName;
 
-  public DataObjectLayerForm(final AbstractDataObjectLayer layer) {
+  public DataObjectLayerForm(final AbstractRecordLayer layer) {
     ProjectFrame.addSaveActions(this, layer.getProject());
     setLayout(new BorderLayout());
     setName(layer.getName());
@@ -203,14 +203,14 @@ public class DataObjectLayerForm extends JPanel implements
     this.undoManager.addKeyMap(this);
   }
 
-  public DataObjectLayerForm(final AbstractDataObjectLayer layer,
+  public DataObjectLayerForm(final AbstractRecordLayer layer,
     final LayerDataObject object) {
     this(layer);
     setObject(object);
   }
 
   public void actionAddCancel() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final LayerDataObject object = getObject();
     layer.deleteRecords(object);
     this.object = null;
@@ -218,7 +218,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public void actionAddOk() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final LayerDataObject record = getObject();
     layer.saveChanges(record);
     layer.setSelectedRecords(record);
@@ -439,7 +439,7 @@ public class DataObjectLayerForm extends JPanel implements
     }
   }
 
-  public ToolBar addToolBar(final AbstractDataObjectLayer layer) {
+  public ToolBar addToolBar(final AbstractRecordLayer layer) {
     this.toolBar = new ToolBar();
     add(this.toolBar, BorderLayout.NORTH);
     final RecordDefinition metaData = getMetaData();
@@ -533,7 +533,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public boolean canPasteRecordGeometry() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     if (layer == null) {
       return false;
     } else {
@@ -606,7 +606,7 @@ public class DataObjectLayerForm extends JPanel implements
       parent.remove(this);
     }
 
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
       this.layer = null;
       if (this.allAttributes != null) {
@@ -788,7 +788,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   protected JLabel getLabel(final String fieldName) {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     String title = layer.getFieldTitle(fieldName);
     title = title.replaceAll(" Code$", "");
     title = title.replaceAll(" Ind$", "");
@@ -802,7 +802,7 @@ public class DataObjectLayerForm extends JPanel implements
     return this.lastFocussedFieldName;
   }
 
-  public AbstractDataObjectLayer getLayer() {
+  public AbstractRecordLayer getLayer() {
     return this.layer;
   }
 
@@ -946,7 +946,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   public void pasteGeometry() {
     final LayerDataObject record = getObject();
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
       if (record != null) {
         layer.pasteRecordGeometry(record);
@@ -955,7 +955,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public void pasteValues(final Map<String, Object> map) {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
       final Map<String, Object> newValues = new LinkedHashMap<String, Object>(
         map);
@@ -977,7 +977,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
       final LayerDataObject object = getObject();
       if (object != null) {

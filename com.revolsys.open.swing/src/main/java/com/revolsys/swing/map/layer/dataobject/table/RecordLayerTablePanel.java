@@ -28,7 +28,7 @@ import com.revolsys.swing.action.enablecheck.OrEnableCheck;
 import com.revolsys.swing.dnd.ClipboardUtil;
 import com.revolsys.swing.map.form.DataObjectLayerForm;
 import com.revolsys.swing.map.layer.Project;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.component.AttributeFilterPanel;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
@@ -45,7 +45,7 @@ import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectLayerTablePanel extends TablePanel implements
+public class RecordLayerTablePanel extends TablePanel implements
 PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ PropertyChangeListener {
 
   public static final String FILTER_ATTRIBUTE = "filter_attribute";
 
-  private final AbstractDataObjectLayer layer;
+  private final AbstractRecordLayer layer;
 
   private final DataObjectLayerTableModel tableModel;
 
@@ -61,7 +61,7 @@ PropertyChangeListener {
 
   private final DataObjectTableCellEditor tableCellEditor;
 
-  public DataObjectLayerTablePanel(final AbstractDataObjectLayer layer,
+  public RecordLayerTablePanel(final AbstractRecordLayer layer,
     final DataObjectLayerTable table) {
     super(table);
     this.layer = layer;
@@ -286,7 +286,7 @@ PropertyChangeListener {
     }
   }
 
-  public AbstractDataObjectLayer getLayer() {
+  public AbstractRecordLayer getLayer() {
     return this.layer;
   }
 
@@ -342,7 +342,7 @@ PropertyChangeListener {
     Property.removeListener(this.layer, this);
   }
 
-  public void setAttributeFilterMode(final String mode) {
+  public void setFieldFilterMode(final String mode) {
     if (DataObjectLayerTableModel.MODE_SELECTED.equals(mode)) {
       this.selectedButton.doClick();
     }

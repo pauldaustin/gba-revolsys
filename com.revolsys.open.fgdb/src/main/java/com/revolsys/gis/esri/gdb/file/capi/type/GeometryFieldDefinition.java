@@ -28,7 +28,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.shp.ShapefileGeometryUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
+public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
 
   public static final Map<GeometryType, DataType> GEOMETRY_TYPE_DATA_TYPE_MAP = new LinkedHashMap<GeometryType, DataType>();
 
@@ -52,7 +52,7 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
 
   private Method writeMethod;
 
-  public GeometryAttribute(final Field field) {
+  public GeometryFieldDefinition(final Field field) {
     super(field.getName(), DataTypes.GEOMETRY,
       BooleanStringConverter.getBoolean(field.getRequired())
       || !field.isIsNullable());
@@ -119,12 +119,12 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    final FileGdbRecordStoreImpl dataStore = getDataStore();
-    if (dataStore.isNull(row, name)) {
+    final FileGdbRecordStoreImpl recordStore = getRecordStore();
+    if (recordStore.isNull(row, name)) {
       return null;
     } else {
       final byte[] buffer;
-      synchronized (dataStore) {
+      synchronized (getSync()) {
         buffer = row.getGeometry();
       }
       final ByteArrayInputStream byteIn = new ByteArrayInputStream(buffer);
@@ -147,14 +147,14 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, final Object value) {
+  public Object setValue(final Record record, final Row row, final Object value) {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
         throw new IllegalArgumentException(name
           + " is required and cannot be null");
       } else {
-        getDataStore().setNull(row, name);
+        getRecordStore().setNull(row, name);
       }
       return null;
     } else if (value instanceof Geometry) {
@@ -165,7 +165,7 @@ public class GeometryAttribute extends AbstractFileGdbFieldDefinition {
       final EndianOutput out = new EndianOutputStream(byteOut);
       SHP_UTIL.write(this.writeMethod, out, projectedGeometry);
       final byte[] bytes = byteOut.toByteArray();
-      synchronized (getDataStore()) {
+      synchronized (getSync()) {
         row.setGeometry(bytes);
       }
       return bytes;

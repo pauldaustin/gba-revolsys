@@ -50,9 +50,9 @@ import com.revolsys.transaction.Transaction;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class DataObjectStoreLayer extends AbstractDataObjectLayer {
+public class DataObjectStoreLayer extends AbstractRecordLayer {
 
-  public static AbstractDataObjectLayer create(
+  public static AbstractRecordLayer create(
     final Map<String, Object> properties) {
     return new DataObjectStoreLayer(properties);
   }
@@ -85,7 +85,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
     setType("dataStore");
 
     setTypePath(typePath);
-    setMetaData(dataStore.getRecordDefinition(typePath));
+    setRecordDefinition(dataStore.getRecordDefinition(typePath));
   }
 
   public DataObjectStoreLayer(final Map<String, ? extends Object> properties) {
@@ -328,7 +328,7 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
           "Cannot find table " + this.typePath + " for layer " + getPath());
         return false;
       } else {
-        setMetaData(metaData);
+        setRecordDefinition(metaData);
         return true;
       }
     } else {
@@ -866,14 +866,14 @@ public class DataObjectStoreLayer extends AbstractDataObjectLayer {
           final RecordDefinition metaData = dataStore.getRecordDefinition(typePath);
           if (metaData != null) {
 
-            setMetaData(metaData);
+            setRecordDefinition(metaData);
             setQuery(new Query(metaData));
             return;
           }
         }
       }
     }
-    setMetaData(null);
+    setRecordDefinition(null);
     setQuery(null);
   }
 

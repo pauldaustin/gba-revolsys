@@ -11,7 +11,7 @@ import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.util.DateUtil;
 
-public class DateAttribute extends AbstractFileGdbFieldDefinition {
+public class DateFieldDefinition extends AbstractFileGdbFieldDefinition {
   /** Synchronize access to C++ date methods across all instances. */
   private static final Object LOCK = new Object();
 
@@ -21,7 +21,7 @@ public class DateAttribute extends AbstractFileGdbFieldDefinition {
   @SuppressWarnings("deprecation")
   public static final Date MIN_DATE = new Date(70, 0, 1);
 
-  public DateAttribute(final Field field) {
+  public DateFieldDefinition(final Field field) {
     super(field.getName(), DataTypes.DATE,
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());
@@ -35,11 +35,11 @@ public class DateAttribute extends AbstractFileGdbFieldDefinition {
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    final FileGdbRecordStoreImpl dataStore = getDataStore();
-    if (dataStore.isNull(row, name)) {
+    final FileGdbRecordStoreImpl recordStore = getRecordStore();
+    if (recordStore.isNull(row, name)) {
       return null;
     } else {
-      synchronized (dataStore) {
+      synchronized (getSync()) {
         long time;
         synchronized (LOCK) {
           time = row.getDate(name) * 1000;
@@ -50,14 +50,14 @@ public class DateAttribute extends AbstractFileGdbFieldDefinition {
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, Object value) {
+  public Object setValue(final Record record, final Row row, Object value) {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
         throw new IllegalArgumentException(name
           + " is required and cannot be null");
       } else {
-        getDataStore().setNull(row, name);
+        getRecordStore().setNull(row, name);
       }
       return null;
     } else {
@@ -74,25 +74,25 @@ public class DateAttribute extends AbstractFileGdbFieldDefinition {
         if (date.before(MIN_DATE)) {
           RecordLog.warn(getClass(), name + "=" + date + " is before "
             + MIN_DATE + " which is not supported by ESRI File Geodatabases",
-            object);
+            record);
           if (isRequired()) {
             date = MIN_DATE;
           } else {
-            getDataStore().setNull(row, name);
+            getRecordStore().setNull(row, name);
             return null;
           }
         } else if (date.after(MAX_DATE)) {
           RecordLog.warn(getClass(), name + "=" + date + " is after "
             + MAX_DATE + " which is not supported by ESRI File Geodatabases",
-            object);
+            record);
           if (isRequired()) {
             date = MAX_DATE;
           } else {
-            getDataStore().setNull(row, name);
+            getRecordStore().setNull(row, name);
             return null;
           }
         }
-        synchronized (getDataStore()) {
+        synchronized (getSync()) {
           final long time = date.getTime() / 1000;
           synchronized (LOCK) {
             row.setDate(name, time);

@@ -99,7 +99,7 @@ public class DataObjectFileLayer extends DataObjectListLayer {
         } else {
           try {
             final RecordDefinition metaData = reader.getMetaData();
-            setMetaData(metaData);
+            setRecordDefinition(metaData);
             final GeometryFactory geometryFactory = metaData.getGeometryFactory();
             BoundingBox boundingBox = new BoundingBox(geometryFactory);
             for (final Record record : reader) {

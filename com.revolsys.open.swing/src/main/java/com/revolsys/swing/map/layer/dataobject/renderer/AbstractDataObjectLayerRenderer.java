@@ -13,18 +13,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.filter.AcceptAllFilter;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.data.model.filter.MultipleAttributeValuesFilter;
 import com.vividsolutions.jts.geom.TopologyException;
 import com.revolsys.io.map.MapSerializerUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.AbstractLayerRenderer;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.SqlLayerFilter;
 import com.revolsys.swing.map.layer.menu.TreeItemScaleMenu;
@@ -36,7 +36,7 @@ import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
 
 public abstract class AbstractDataObjectLayerRenderer extends
-  AbstractLayerRenderer<AbstractDataObjectLayer> {
+  AbstractLayerRenderer<AbstractRecordLayer> {
 
   static {
     final MenuFactory menu = ObjectTreeModel.getMenu(AbstractDataObjectLayerRenderer.class);
@@ -51,7 +51,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
 
     for (final String type : Arrays.asList("Multiple", "Filter", "Scale")) {
       final String iconName = ("style_" + type + "_wrap").toLowerCase();
-      final ImageIcon icon = SilkIconLoader.getIcon(iconName);
+      final ImageIcon icon = Icons.getIcon(iconName);
       final InvokeMethodAction action = TreeItemRunnable.createAction(
         "Wrap With " + type + " Style", icon, null, "wrapWith" + type + "Style");
       menu.addMenuItem("wrap", action);
@@ -61,7 +61,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   private static final AcceptAllFilter<Record> DEFAULT_FILTER = new AcceptAllFilter<Record>();
 
   public static Filter<Record> getFilter(
-    final AbstractDataObjectLayer layer, final Map<String, Object> style) {
+    final AbstractRecordLayer layer, final Map<String, Object> style) {
     @SuppressWarnings("unchecked")
     Map<String, Object> filterDefinition = (Map<String, Object>)style.get("filter");
     if (filterDefinition != null) {
@@ -99,7 +99,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   }
 
   public static AbstractDataObjectLayerRenderer getRenderer(
-    final AbstractDataObjectLayer layer, final LayerRenderer<?> parent,
+    final AbstractRecordLayer layer, final LayerRenderer<?> parent,
     final Map<String, Object> style) {
     final String type = (String)style.remove("type");
     if ("geometryStyle".equals(type)) {
@@ -120,20 +120,20 @@ public abstract class AbstractDataObjectLayerRenderer extends
     return null;
   }
 
-  public static LayerRenderer<AbstractDataObjectLayer> getRenderer(
-    final AbstractDataObjectLayer layer, final Map<String, Object> style) {
+  public static LayerRenderer<AbstractRecordLayer> getRenderer(
+    final AbstractRecordLayer layer, final Map<String, Object> style) {
     return getRenderer(layer, null, style);
   }
 
   private Filter<Record> filter = DEFAULT_FILTER;
 
   public AbstractDataObjectLayerRenderer(final String type, final String name,
-    final AbstractDataObjectLayer layer, final LayerRenderer<?> parent) {
+    final AbstractRecordLayer layer, final LayerRenderer<?> parent) {
     this(type, name, layer, parent, Collections.<String, Object> emptyMap());
   }
 
   public AbstractDataObjectLayerRenderer(final String type, final String name,
-    final AbstractDataObjectLayer layer, final LayerRenderer<?> parent,
+    final AbstractRecordLayer layer, final LayerRenderer<?> parent,
     final Map<String, Object> style) {
     super(type, name, layer, parent, style);
     this.filter = getFilter(layer, style);
@@ -181,7 +181,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
 
   @Override
   public void render(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractDataObjectLayer layer) {
+    final AbstractRecordLayer layer) {
     if (layer.hasGeometryAttribute()) {
       final boolean saved = viewport.setUseModelCoordinates(true, graphics);
       try {
@@ -196,11 +196,11 @@ public abstract class AbstractDataObjectLayerRenderer extends
 
   public void renderRecord(final Viewport2D viewport,
     final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractDataObjectLayer layer, final LayerDataObject record) {
+    final AbstractRecordLayer layer, final LayerDataObject record) {
   }
 
   protected void renderRecords(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractDataObjectLayer layer,
+    final Graphics2D graphics, final AbstractRecordLayer layer,
     final List<LayerDataObject> records) {
     final BoundingBox visibleArea = viewport.getBoundingBox();
     for (final LayerDataObject record : records) {
@@ -221,7 +221,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   }
 
   public void renderSelectedRecord(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractDataObjectLayer layer,
+    final Graphics2D graphics, final AbstractRecordLayer layer,
     final LayerDataObject record) {
     final BoundingBox boundingBox = viewport.getBoundingBox();
     if (isVisible(record)) {
@@ -232,7 +232,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
     }
   }
 
-  protected void replace(final AbstractDataObjectLayer layer,
+  protected void replace(final AbstractRecordLayer layer,
     final AbstractMultipleRenderer parent,
     final AbstractMultipleRenderer newRenderer) {
     if (parent == null) {
@@ -265,7 +265,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   public void setQueryFilter(final String query) {
     if (filter instanceof SqlLayerFilter || filter instanceof AcceptAllFilter) {
       if (StringUtils.hasText(query)) {
-        final AbstractDataObjectLayer layer = getLayer();
+        final AbstractRecordLayer layer = getLayer();
         filter = new SqlLayerFilter(layer, query);
       } else {
         filter = new AcceptAllFilter<Record>();
@@ -282,7 +282,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
     return map;
   }
 
-  protected void wrap(final AbstractDataObjectLayer layer,
+  protected void wrap(final AbstractRecordLayer layer,
     final AbstractMultipleRenderer parent,
     final AbstractMultipleRenderer newRenderer) {
     newRenderer.addRenderer(this.clone());
@@ -290,7 +290,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   }
 
   public FilterMultipleRenderer wrapWithFilterStyle() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final AbstractMultipleRenderer parent = (AbstractMultipleRenderer)getParent();
     final FilterMultipleRenderer newRenderer = new FilterMultipleRenderer(
       layer, parent);
@@ -299,7 +299,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   }
 
   public MultipleRenderer wrapWithMultipleStyle() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final AbstractMultipleRenderer parent = (AbstractMultipleRenderer)getParent();
     final MultipleRenderer newRenderer = new MultipleRenderer(layer, parent);
     wrap(layer, parent, newRenderer);
@@ -307,7 +307,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   }
 
   public ScaleMultipleRenderer wrapWithScaleStyle() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final AbstractMultipleRenderer parent = (AbstractMultipleRenderer)getParent();
     final ScaleMultipleRenderer newRenderer = new ScaleMultipleRenderer(layer,
       parent);

@@ -90,6 +90,10 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class SwingUtil {
+  public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
+
+  public static final Font BOLD_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 11);
+
   public static void addAction(final JComponent component,
     final KeyStroke keyStroke, final String actionKey, final Object object,
     final String methodName, final Object... parameters) {
@@ -103,7 +107,7 @@ public class SwingUtil {
     if (component instanceof JComboBox) {
       final JComboBox comboBox = (JComboBox)component;
       final JComponent editorComponent = (JComponent)comboBox.getEditor()
-        .getEditorComponent();
+          .getEditorComponent();
       addAction(editorComponent, keyStroke, actionKey, object, methodName,
         parameters);
     }
@@ -195,7 +199,7 @@ public class SwingUtil {
       }
       int longestLength = -1;
       for (final Entry<Object, List<Object>> codes : codeTable.getCodes()
-        .entrySet()) {
+          .entrySet()) {
         final List<Object> values = codes.getValue();
         if (values != null && !values.isEmpty()) {
           final String text = CollectionUtil.toString(values);
@@ -236,14 +240,14 @@ public class SwingUtil {
       return new DataFlavor(mimeType);
     } catch (final ClassNotFoundException e) {
       throw new IllegalArgumentException("Cannot create data flavor for "
-        + mimeType, e);
+          + mimeType, e);
     }
   }
 
   public static DateField createDateField(final String fieldName) {
     final DateField dateField = new DateField(fieldName);
     dateField.setFormats("yyyy-MM-dd", "yyyy/MM/dd", "yyyy-MMM-dd",
-      "yyyy/MMM/dd");
+        "yyyy/MMM/dd");
     PopupMenu.getPopupMenuFactory(dateField.getEditor());
     return dateField;
   }
@@ -468,6 +472,10 @@ public class SwingUtil {
 
   }
 
+  public static Rectangle getScreenBounds() {
+    return getScreenBounds((Component)null);
+  }
+
   public static Rectangle getScreenBounds(Component component) {
     if (component == null) {
       component = SwingUtil.getActiveWindow();
@@ -482,6 +490,10 @@ public class SwingUtil {
       }
     }
     return getScreenBounds(mousePosition);
+  }
+
+  public static Rectangle getScreenBounds(final int x, final int y) {
+    return getScreenBounds(new Point(x, y));
   }
 
   /**
@@ -607,7 +619,7 @@ public class SwingUtil {
   public static boolean isControlOrMetaDown(final InputEvent event) {
     final int modifiersEx = event.getModifiersEx();
     final int flag = modifiersEx
-      & (InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
+        & (InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
     return flag != 0;
   }
 
@@ -640,7 +652,7 @@ public class SwingUtil {
   public static boolean isLeftButtonAndNoModifiers(final MouseEvent event) {
     final int modifiers = event.getModifiers();
     return SwingUtilities.isLeftMouseButton(event)
-      && InputEvent.BUTTON1_MASK == modifiers;
+        && InputEvent.BUTTON1_MASK == modifiers;
   }
 
   public static boolean isMetaDown(final InputEvent event) {
@@ -658,8 +670,8 @@ public class SwingUtil {
   public static boolean isModifierKeyDown(final InputEvent event) {
     final int modifiersEx = event.getModifiersEx();
     final int flag = modifiersEx
-      & (InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK
-        | InputEvent.ALT_GRAPH_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
+        & (InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK
+            | InputEvent.ALT_GRAPH_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
     return flag != 0;
   }
 
@@ -675,7 +687,7 @@ public class SwingUtil {
         "/usr/bin/defaults",
         "read",
         System.getProperty("user.home")
-          + "/Library/Preferences/.GlobalPreferences.plist",
+        + "/Library/Preferences/.GlobalPreferences.plist",
         "com.apple.swipescrolldirection"
       };
       Process process = null;
@@ -883,7 +895,7 @@ public class SwingUtil {
     final String message, final Throwable e) {
     final String exceptionMessage = e.getMessage().replaceAll("\n", "<br />");
     final String errorMessage = "<html><body><p style=\"margin-bottom: 10px\"><strong>"
-      + message + "</strong></p><pre>" + exceptionMessage + "</pre></body></p>";
+        + message + "</strong></p><pre>" + exceptionMessage + "</pre></body></p>";
 
     final JScrollPane scrollPane = new JScrollPane(new JLabel(errorMessage));
     final Dimension preferredSize = scrollPane.getPreferredSize();
@@ -896,9 +908,5 @@ public class SwingUtil {
     JOptionPane.showMessageDialog(window, scrollPane, title,
       JOptionPane.ERROR_MESSAGE);
   }
-
-  public static final Font FONT = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
-
-  public static final Font BOLD_FONT = new Font(Font.SANS_SERIF, Font.BOLD, 11);
 
 }

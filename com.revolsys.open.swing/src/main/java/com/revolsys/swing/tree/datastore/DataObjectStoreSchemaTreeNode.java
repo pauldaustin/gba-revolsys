@@ -14,16 +14,16 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
 import com.revolsys.io.PathUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
 public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
   DataObjectStoreConnectionMapProxy {
 
-  public static final ImageIcon ICON_SCHEMA = SilkIconLoader.getIcon("folder_table");
+  public static final ImageIcon ICON_SCHEMA = Icons.getIcon("folder_table");
 
   private final String schemaPath;
 

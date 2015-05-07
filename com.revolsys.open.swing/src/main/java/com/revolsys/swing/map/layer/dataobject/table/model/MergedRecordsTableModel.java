@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.table.predicate.MergedNullValuePredicate;
 import com.revolsys.swing.map.layer.dataobject.table.predicate.MergedObjectPredicate;
@@ -18,7 +18,7 @@ public class MergedRecordsTableModel extends DataObjectListTableModel implements
   SortableTableModel {
   private static final long serialVersionUID = 1L;
 
-  public static TablePanel createPanel(final AbstractDataObjectLayer layer,
+  public static TablePanel createPanel(final AbstractRecordLayer layer,
     final Record mergedObject, final Collection<LayerDataObject> objects) {
     final MergedRecordsTableModel model = new MergedRecordsTableModel(layer,
       mergedObject, objects);
@@ -34,11 +34,11 @@ public class MergedRecordsTableModel extends DataObjectListTableModel implements
 
   private final Record mergedObject;
 
-  public MergedRecordsTableModel(final AbstractDataObjectLayer layer) {
+  public MergedRecordsTableModel(final AbstractRecordLayer layer) {
     this(layer, null, null);
   }
 
-  public MergedRecordsTableModel(final AbstractDataObjectLayer layer,
+  public MergedRecordsTableModel(final AbstractRecordLayer layer,
     final Record mergedObject, final Collection<LayerDataObject> objects) {
     super(layer.getMetaData(), objects, layer.getColumnNames());
     setAttributesOffset(1);

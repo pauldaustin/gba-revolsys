@@ -56,25 +56,29 @@ public class FileGdbWriter extends AbstractRecordWriter {
   }
 
   private void delete(final Record record) {
-    final RecordDefinition recordDefinition = record.getRecordDefinition();
-    final String typePath = recordDefinition.getPath();
-    final Table table = getTable(typePath);
-    final EnumRows rows = this.recordStore.search(typePath, table, "OBJECTID",
-      "OBJECTID=" + record.getValue("OBJECTID"), false);
-    if (rows != null) {
-      try {
-        final Row row = this.recordStore.nextRow(rows);
-        if (row != null) {
-          try {
-            this.recordStore.deleteRow(typePath, table, row);
-            record.setState(RecordState.Deleted);
-          } finally {
-            this.recordStore.closeRow(row);
-            this.recordStore.addStatistic("Delete", record);
+    final Object objectId = record.getValue("OBJECTID");
+    if (objectId != null) {
+      final RecordDefinition recordDefinition = record.getRecordDefinition();
+      final String typePath = recordDefinition.getPath();
+      final Table table = getTable(typePath);
+      final String whereClause = "OBJECTID=" + objectId;
+      final EnumRows rows = this.recordStore.search(typePath, table,
+        "OBJECTID", whereClause, false);
+      if (rows != null) {
+        try {
+          final Row row = this.recordStore.nextRow(rows);
+          if (row != null) {
+            try {
+              this.recordStore.deleteRow(typePath, table, row);
+              record.setState(RecordState.Deleted);
+            } finally {
+              this.recordStore.closeRow(row);
+              this.recordStore.addStatistic("Delete", record);
+            }
           }
+        } finally {
+          this.recordStore.closeEnumRows(rows);
         }
-      } finally {
-        this.recordStore.closeEnumRows(rows);
       }
     }
   }
@@ -155,8 +159,9 @@ public class FileGdbWriter extends AbstractRecordWriter {
       final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(sourceRecordDefinition);
       final String typePath = sourceRecordDefinition.getPath();
       final Table table = getTable(typePath);
-      final EnumRows rows = this.recordStore.search(typePath, table,
-        "OBJECTID", "OBJECTID=" + objectId, false);
+      final String whereClause = "OBJECTID=" + objectId;
+      final EnumRows rows = this.recordStore.search(typePath, table, "*",
+        whereClause, true);
       if (rows != null) {
         try {
           final Row row = this.recordStore.nextRow(rows);
@@ -168,8 +173,15 @@ public class FileGdbWriter extends AbstractRecordWriter {
                   final String name = field.getName();
                   final Object value = record.getValue(name);
                   final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
-                  esriValues.add(esriFieldDefinition.setUpdateValue(record,
-                    row, value));
+                  try {
+                    final Object esriValue = esriFieldDefinition.setUpdateValue(
+                      record, row, value);
+                    esriValues.add(esriValue);
+                  } catch (final RuntimeException e) {
+                    LoggerFactory.getLogger(FileGdbWriter.class).error(
+                      "Unable to update field " + name + "=" + value, e);
+                    throw e;
+                  }
                 }
                 this.recordStore.updateRow(typePath, table, row);
               } finally {
@@ -200,35 +212,27 @@ public class FileGdbWriter extends AbstractRecordWriter {
 
   @Override
   public void write(final Record record) {
-    try {
-      final RecordDefinition recordDefinition = record.getRecordDefinition();
-      final RecordStore recordStore = recordDefinition.getRecordStore();
-      if (recordStore == this.recordStore) {
-        switch (record.getState()) {
-          case New:
-            insert(record);
-            break;
-          case Modified:
-            update(record);
-            break;
-          case Persisted:
-            // No action required
-            break;
-          case Deleted:
-            delete(record);
-            break;
-          default:
-            throw new IllegalStateException("State not known");
-        }
-      } else {
-        insert(record);
+    final RecordDefinition recordDefinition = record.getRecordDefinition();
+    final RecordStore recordStore = recordDefinition.getRecordStore();
+    if (recordStore == this.recordStore) {
+      switch (record.getState()) {
+        case New:
+          insert(record);
+          break;
+        case Modified:
+          update(record);
+          break;
+        case Persisted:
+          // No action required
+          break;
+        case Deleted:
+          delete(record);
+          break;
+        default:
+          throw new IllegalStateException("State not known");
       }
-    } catch (final RuntimeException e) {
-      throw e;
-    } catch (final Error e) {
-      throw e;
-    } catch (final Exception e) {
-      throw new RuntimeException("Unable to write", e);
+    } else {
+      insert(record);
     }
   }
 }

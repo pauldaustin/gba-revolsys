@@ -18,26 +18,26 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.parallel.ThreadInterruptedException;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.Layer;
 
 public class LayerTreeCellRenderer extends DefaultTreeCellRenderer {
   private static final long serialVersionUID = -7481451746832997079L;
 
-  private static final Icon EDIT_ICON = SilkIconLoader.getIcon("pencil");
+  private static final Icon EDIT_ICON = Icons.getIcon("pencil");
 
-  private static final Icon EDIT_DISABLED_ICON = SilkIconLoader.getIcon("pencil_gray");
+  private static final Icon EDIT_DISABLED_ICON = Icons.getIcon("pencil_gray");
 
-  private static final Icon SELECT_ICON = SilkIconLoader.getIcon("map_select");
+  private static final Icon SELECT_ICON = Icons.getIcon("map_select");
 
-  private static final Icon SELECT_DISABLED_ICON = SilkIconLoader.getIcon("map_select_gray");
+  private static final Icon SELECT_DISABLED_ICON = Icons.getIcon("map_select_gray");
 
-  private static final Icon VISIBLE_ICON = SilkIconLoader.getIcon("map");
+  private static final Icon VISIBLE_ICON = Icons.getIcon("map");
 
-  private static final Icon NOT_EXISTS_ICON = SilkIconLoader.getIcon("error");
+  private static final Icon NOT_EXISTS_ICON = Icons.getIcon("error");
 
-  private static final Icon VISIBLE_DISABLED_ICON = SilkIconLoader.getIcon("map_gray");
+  private static final Icon VISIBLE_DISABLED_ICON = Icons.getIcon("map_gray");
 
   private static final Map<List<Icon>, Icon> ICON_CACHE = new HashMap<List<Icon>, Icon>();
 

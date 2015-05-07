@@ -69,18 +69,18 @@ import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Table;
 import com.revolsys.gis.esri.gdb.file.capi.swig.VectorOfWString;
 import com.revolsys.gis.esri.gdb.file.capi.type.AbstractFileGdbFieldDefinition;
-import com.revolsys.gis.esri.gdb.file.capi.type.BinaryAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.DateAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.DoubleAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.FloatAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.GeometryAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.GlobalIdAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.GuidAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.IntegerAttribute;
+import com.revolsys.gis.esri.gdb.file.capi.type.BinaryFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.DateFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.DoubleFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.FloatFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.GeometryFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.GlobalIdFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.GuidFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.IntegerFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.capi.type.OidFieldDefinition;
-import com.revolsys.gis.esri.gdb.file.capi.type.ShortAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.StringAttribute;
-import com.revolsys.gis.esri.gdb.file.capi.type.XmlAttribute;
+import com.revolsys.gis.esri.gdb.file.capi.type.ShortFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.StringFieldDefinition;
+import com.revolsys.gis.esri.gdb.file.capi.type.XmlFieldDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.PathUtil;
 import com.revolsys.io.Writer;
@@ -107,29 +107,29 @@ FileGdbRecordStore {
 
   static {
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeInteger,
-      IntegerAttribute.class);
+      IntegerFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSmallInteger,
-      ShortAttribute.class);
+      ShortFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDouble,
-      DoubleAttribute.class);
+      DoubleFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSingle,
-      FloatAttribute.class);
+      FloatFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeString,
-      StringAttribute.class);
+      StringFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDate,
-      DateAttribute.class);
+      DateFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGeometry,
-      GeometryAttribute.class);
+      GeometryFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeOID,
       OidFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeBlob,
-      BinaryAttribute.class);
+      BinaryFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGlobalID,
-      GlobalIdAttribute.class);
+      GlobalIdFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGUID,
-      GuidAttribute.class);
+      GuidFieldDefinition.class);
     addFieldTypeAttributeConstructor(FieldType.esriFieldTypeXML,
-      XmlAttribute.class);
+      XmlFieldDefinition.class);
 
   }
 
@@ -234,14 +234,10 @@ FileGdbRecordStore {
 
   private void addTableRecordDefinition(final Geodatabase geodatabase,
     final String schemaName, final String path) {
-    try {
-      final String tableDefinition = geodatabase.getTableDefinition(path);
-      final RecordDefinition recordDefinition = getRecordDefinition(schemaName,
-        path, tableDefinition);
-      addRecordDefinition(recordDefinition);
-    } finally {
-      releaseGeodatabase();
-    }
+    final String tableDefinition = geodatabase.getTableDefinition(path);
+    final RecordDefinition recordDefinition = getRecordDefinition(schemaName,
+      path, tableDefinition);
+    addRecordDefinition(recordDefinition);
   }
 
   public void alterDomain(final CodedValueDomain domain) {
@@ -869,6 +865,10 @@ FileGdbRecordStore {
     }
   }
 
+  public Object getApiSync() {
+    return this.apiSync;
+  }
+
   public String getDefaultSchema() {
     return this.defaultSchema;
   }
@@ -929,7 +929,7 @@ FileGdbRecordStore {
                   fieldConstructor, field);
                 fieldDefinition.setDataStore(this);
                 recordDefinition.addField(fieldDefinition);
-                if (fieldDefinition instanceof GlobalIdAttribute) {
+                if (fieldDefinition instanceof GlobalIdFieldDefinition) {
                   recordDefinition.setIdFieldName(fieldName);
                 }
               } catch (final Throwable e) {
@@ -1025,7 +1025,7 @@ FileGdbRecordStore {
                 }
               }
             } else {
-              final GeometryAttribute geometryAttribute = (GeometryAttribute)recordDefinition.getGeometryField();
+              final GeometryFieldDefinition geometryAttribute = (GeometryFieldDefinition)recordDefinition.getGeometryField();
               if (geometryAttribute == null || boundingBox.isEmpty()) {
                 return 0;
               } else {

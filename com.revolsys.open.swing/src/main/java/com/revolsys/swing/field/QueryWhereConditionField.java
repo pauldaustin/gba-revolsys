@@ -66,7 +66,6 @@ import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.query.And;
 import com.revolsys.gis.data.query.Between;
@@ -85,12 +84,13 @@ import com.revolsys.gis.data.query.QueryValue;
 import com.revolsys.gis.data.query.Value;
 import com.revolsys.gis.data.query.functions.Function;
 import com.revolsys.spring.SpelUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.component.AttributeTitleStringConveter;
 import com.revolsys.swing.toolbar.ToolBar;
 import com.revolsys.util.CollectionUtil;
@@ -98,7 +98,7 @@ import com.revolsys.util.CollectionUtil;
 public class QueryWhereConditionField extends ValueField implements
   MouseListener, CaretListener, ItemListener {
 
-  private static final ImageIcon ICON = SilkIconLoader.getIcon("add");
+  private static final ImageIcon ICON = Icons.getIcon("add");
 
   private static final long serialVersionUID = 1L;
 
@@ -176,12 +176,12 @@ public class QueryWhereConditionField extends ValueField implements
 
   private final Condition originalFilter;
 
-  public QueryWhereConditionField(final AbstractDataObjectLayer layer,
+  public QueryWhereConditionField(final AbstractRecordLayer layer,
     final PropertyChangeListener listener, final Condition filter) {
     this(layer, listener, filter, null);
   }
 
-  public QueryWhereConditionField(final AbstractDataObjectLayer layer,
+  public QueryWhereConditionField(final AbstractRecordLayer layer,
     final PropertyChangeListener listener, final Condition filter,
     final String query) {
     super(new BorderLayout());
@@ -322,7 +322,7 @@ public class QueryWhereConditionField extends ValueField implements
     }
   }
 
-  public QueryWhereConditionField(final AbstractDataObjectLayer layer,
+  public QueryWhereConditionField(final AbstractRecordLayer layer,
     final PropertyChangeListener listener, final String query) {
     this(layer, listener, null, query);
   }

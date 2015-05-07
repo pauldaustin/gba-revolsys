@@ -1,7 +1,7 @@
 package com.revolsys.swing.undo;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 
 public class CreateRecordUndo extends AbstractUndoableEdit {
@@ -11,9 +11,9 @@ public class CreateRecordUndo extends AbstractUndoableEdit {
 
   private LayerDataObject layerRecord;
 
-  private final AbstractDataObjectLayer layer;
+  private final AbstractRecordLayer layer;
 
-  public CreateRecordUndo(final AbstractDataObjectLayer layer,
+  public CreateRecordUndo(final AbstractRecordLayer layer,
     final Record record) {
     this.layer = layer;
     this.record = record;

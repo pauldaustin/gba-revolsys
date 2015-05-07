@@ -17,7 +17,6 @@ import javax.swing.tree.TreeNode;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
 import com.revolsys.gis.data.io.DataObjectReaderFactory;
 import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
@@ -29,6 +28,7 @@ import com.revolsys.io.file.FolderConnectionManager;
 import com.revolsys.io.file.FolderConnectionRegistry;
 import com.revolsys.raster.AbstractGeoReferencedImageFactory;
 import com.revolsys.raster.GeoReferencedImageFactory;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
@@ -46,25 +46,25 @@ import com.revolsys.util.UrlUtil;
 
 public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
 
-  public static final Icon ICON_FILE = SilkIconLoader.getIcon("file");
+  public static final Icon ICON_FILE = Icons.getIcon("file");
 
-  public static final Icon ICON_FILE_DATABASE = SilkIconLoader.getIcon("file_database");
+  public static final Icon ICON_FILE_DATABASE = Icons.getIcon("file_database");
 
-  public static final Icon ICON_FILE_IMAGE = SilkIconLoader.getIcon("file_image");
+  public static final Icon ICON_FILE_IMAGE = Icons.getIcon("file_image");
 
-  public static final Icon ICON_FILE_TABLE = SilkIconLoader.getIcon("file_table");
+  public static final Icon ICON_FILE_TABLE = Icons.getIcon("file_table");
 
-  public static final Icon ICON_FILE_VECTOR = SilkIconLoader.getIcon("file_table");
+  public static final Icon ICON_FILE_VECTOR = Icons.getIcon("file_table");
 
-  public static final Icon ICON_FOLDER = SilkIconLoader.getIcon("folder");
+  public static final Icon ICON_FOLDER = Icons.getIcon("folder");
 
-  public static final Icon ICON_DRIVE = SilkIconLoader.getIcon("drive");
+  public static final Icon ICON_DRIVE = Icons.getIcon("drive");
 
-  public static final Icon ICON_DRIVE_MISSING = SilkIconLoader.getIcon("drive_error");
+  public static final Icon ICON_DRIVE_MISSING = Icons.getIcon("drive_error");
 
-  public static final ImageIcon ICON_FOLDER_LINK = SilkIconLoader.getIcon("folder_link");
+  public static final ImageIcon ICON_FOLDER_LINK = Icons.getIcon("folder_link");
 
-  public static final Icon ICON_FOLDER_MISSING = SilkIconLoader.getIcon("folder_error");
+  public static final Icon ICON_FOLDER_MISSING = Icons.getIcon("folder_error");
 
   private static final MenuFactory MENU = new MenuFactory();
 

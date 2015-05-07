@@ -8,7 +8,7 @@ import com.revolsys.swing.map.tree.renderer.LayerGroupTreeCellRenderer;
 import com.revolsys.swing.tree.model.node.AbstractObjectTreeNodeModel;
 
 public class ProjectTreeNodeModel extends
-  AbstractObjectTreeNodeModel<Project, Layer> {
+AbstractObjectTreeNodeModel<Project, Layer> {
 
   public ProjectTreeNodeModel() {
     setSupportedClasses(Project.class);

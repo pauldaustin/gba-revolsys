@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -27,8 +28,6 @@ import org.jdesktop.swingx.ScrollableSizeHint;
 import org.jdesktop.swingx.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import bibliothek.gui.dock.common.DefaultSingleCDockable;
 
 import com.revolsys.beans.KeyedPropertyChangeEvent;
 import com.revolsys.beans.PropertyChangeSupportProxy;
@@ -54,6 +53,8 @@ import com.revolsys.swing.field.Field;
 import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.swing.listener.BeanPropertyListener;
 import com.revolsys.swing.map.MapPanel;
+import com.revolsys.swing.map.ProjectFrame;
+import com.revolsys.swing.map.ProjectFramePanel;
 import com.revolsys.swing.map.layer.dataobject.style.panel.DataObjectLayerStylePanel;
 import com.revolsys.swing.map.layer.menu.TreeItemScaleMenu;
 import com.revolsys.swing.menu.MenuFactory;
@@ -65,7 +66,8 @@ import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
 public abstract class AbstractLayer extends AbstractObjectWithProperties
-  implements Layer, PropertyChangeListener, PropertyChangeSupportProxy {
+  implements Layer, PropertyChangeListener, PropertyChangeSupportProxy,
+  ProjectFramePanel {
   private static final AtomicLong ID_GEN = new AtomicLong();
 
   static {
@@ -90,6 +92,8 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     menu.addMenuItem("layer", TreeItemRunnable.createAction("Layer Properties",
       "information", exists, "showProperties"));
   }
+
+  private Icon icon;
 
   private boolean exists = true;
 
@@ -316,6 +320,11 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
   }
 
   @Override
+  public Component createPanelComponent() {
+    return createTableViewComponent();
+  }
+
+  @Override
   public TabbedValuePanel createPropertiesPanel() {
     final TabbedValuePanel tabPanel = new TabbedValuePanel("Layer " + this
       + " Properties", this);
@@ -324,14 +333,17 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     return tabPanel;
   }
 
+  protected Component createTableViewComponent() {
+    return null;
+  }
+
   @Override
   public void delete() {
     setExists(false);
     this.beanPropertyListener = null;
-    final DefaultSingleCDockable dockable = getProperty("TableView");
-    if (dockable != null) {
-      // TODO all this should be done by listeners
-      dockable.setVisible(false);
+    final ProjectFrame projectFrame = ProjectFrame.get(this);
+    if (projectFrame != null) {
+      projectFrame.removeBottomTab(this);
     }
     firePropertyChange("deleted", false, true);
     setEventsEnabled(false);
@@ -419,6 +431,11 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     } else {
       return this.geometryFactory;
     }
+  }
+
+  @Override
+  public Icon getIcon() {
+    return this.icon;
   }
 
   @Override
@@ -543,7 +560,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
   }
 
   public boolean isEventsEnabled() {
-    if (eventsEnabled.get() != Boolean.FALSE) {
+    if (this.eventsEnabled.get() != Boolean.FALSE) {
       final LayerGroup layerGroup = getLayerGroup();
       if (layerGroup == null || layerGroup == this) {
         return true;
@@ -557,7 +574,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   @Override
   public boolean isExists() {
-    return isInitialized() && exists;
+    return isInitialized() && this.exists;
   }
 
   @Override
@@ -572,7 +589,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   @Override
   public boolean isInitialized() {
-    return initialized;
+    return this.initialized;
   }
 
   @Override
@@ -624,7 +641,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
-    if (propertyChangeSupport != null && isEventsEnabled()) {
+    if (this.propertyChangeSupport != null && isEventsEnabled()) {
       this.propertyChangeSupport.firePropertyChange(event);
     }
   }
@@ -685,6 +702,10 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
       this.geometryFactory = geometryFactory;
       firePropertyChange("geometryFactory", old, this.geometryFactory);
     }
+  }
+
+  public void setIcon(final Icon icon) {
+    this.icon = icon;
   }
 
   protected void setInitialized(final boolean initialized) {
@@ -753,7 +774,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
       if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {
         final KeyedPropertyChangeEvent event = new KeyedPropertyChangeEvent(
           this, "property", oldValue, value, name);
-        if (propertyChangeSupport != null) {
+        if (this.propertyChangeSupport != null) {
           this.propertyChangeSupport.firePropertyChange(event);
         }
         try {
@@ -830,7 +851,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
   public void showProperties(final String tabName) {
     final MapPanel map = MapPanel.get(this);
     if (map != null) {
-      if (exists) {
+      if (this.exists) {
         if (checkShowProperties()) {
           try {
             final Window window = SwingUtilities.getWindowAncestor(map);
@@ -850,7 +871,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
   public void showRendererProperties(final LayerRenderer<?> renderer) {
     final MapPanel map = MapPanel.get(this);
     if (map != null) {
-      if (exists) {
+      if (this.exists) {
         if (checkShowProperties()) {
           try {
             final Window window = SwingUtilities.getWindowAncestor(map);
@@ -866,6 +887,11 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
         }
       }
     }
+  }
+
+  public <C extends Component> C showTableView() {
+    final ProjectFrame projectFrame = ProjectFrame.get(this);
+    return projectFrame.addBottomTab(this);
   }
 
   public void toggleEditable() {

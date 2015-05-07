@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.map.form.DataObjectLayerForm;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.table.dataobject.model.AbstractSingleDataObjectTableModel;
 import com.revolsys.util.Property;
@@ -20,7 +20,7 @@ public class DataObjectLayerAttributesTableModel extends
 
   private LayerDataObject object;
 
-  private final AbstractDataObjectLayer layer;
+  private final AbstractRecordLayer layer;
 
   private final Reference<DataObjectLayerForm> form;
 

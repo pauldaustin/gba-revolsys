@@ -9,7 +9,7 @@ import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Guid;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
-public class GuidAttribute extends AbstractFileGdbFieldDefinition {
+public class GuidFieldDefinition extends AbstractFileGdbFieldDefinition {
   private static final WeakHashMap<String, Guid> GUID_CACHE = new WeakHashMap<String, Guid>();
 
   public static void addGuid(final Guid guid) {
@@ -33,13 +33,13 @@ public class GuidAttribute extends AbstractFileGdbFieldDefinition {
     }
   }
 
-  public GuidAttribute(final Field field) {
+  public GuidFieldDefinition(final Field field) {
     this(field.getName(), field.getLength(),
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());
   }
 
-  public GuidAttribute(final String name, final int length,
+  public GuidFieldDefinition(final String name, final int length,
     final boolean required) {
     super(name, DataTypes.STRING, length, required);
   }
@@ -47,10 +47,10 @@ public class GuidAttribute extends AbstractFileGdbFieldDefinition {
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    if (getDataStore().isNull(row, name)) {
+    if (getRecordStore().isNull(row, name)) {
       return null;
     } else {
-      synchronized (getDataStore()) {
+      synchronized (getSync()) {
         final Guid guid = row.getGuid(name);
         addGuid(guid);
         return guid.toString();
@@ -59,20 +59,20 @@ public class GuidAttribute extends AbstractFileGdbFieldDefinition {
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, final Object value) {
+  public Object setValue(final Record record, final Row row, final Object value) {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
         throw new IllegalArgumentException(name
           + " is required and cannot be null");
       } else {
-        getDataStore().setNull(row, name);
+        getRecordStore().setNull(row, name);
       }
       return null;
     } else {
       final String guidString = value.toString();
       final Guid guid = getGuid(guidString);
-      synchronized (getDataStore()) {
+      synchronized (getSync()) {
         row.setGuid(name, guid);
       }
       return guid;

@@ -37,7 +37,7 @@ import com.revolsys.gis.graph.Node;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.MapPanel;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.table.model.MergedRecordsTableModel;
 import com.revolsys.swing.parallel.Invoke;
@@ -53,7 +53,7 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
 
   private static final long serialVersionUID = 1L;
 
-  public static void showDialog(final AbstractDataObjectLayer layer) {
+  public static void showDialog(final AbstractRecordLayer layer) {
     final UndoManager undoManager = MapPanel.get(layer).getUndoManager();
     final MergeRecordsDialog dialog = new MergeRecordsDialog(undoManager, layer);
     dialog.showDialog();
@@ -61,7 +61,7 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
 
   private JButton okButton;
 
-  private final AbstractDataObjectLayer layer;
+  private final AbstractRecordLayer layer;
 
   private final Map<Record, LayerDataObject> mergeableToOiginalRecordMap = new HashMap<Record, LayerDataObject>();
 
@@ -74,7 +74,7 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
   private final UndoManager undoManager;
 
   public MergeRecordsDialog(final UndoManager undoManager,
-    final AbstractDataObjectLayer layer) {
+    final AbstractRecordLayer layer) {
     super(SwingUtil.getActiveWindow(), "Merge " + layer.getName(),
       ModalityType.APPLICATION_MODAL);
     this.undoManager = undoManager;

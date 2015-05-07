@@ -11,10 +11,10 @@ import javax.swing.tree.TreeNode;
 
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
 import com.revolsys.io.datastore.DataObjectStoreConnection;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.BaseTree;
@@ -23,7 +23,7 @@ import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
 public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode
   implements DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
-  public static final Icon ICON = SilkIconLoader.getIcon("database_link");
+  public static final Icon ICON = Icons.getIcon("database_link");
 
   private static final MenuFactory MENU = new MenuFactory();
 

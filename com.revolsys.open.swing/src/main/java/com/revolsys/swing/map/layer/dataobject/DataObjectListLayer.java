@@ -1,6 +1,5 @@
 package com.revolsys.swing.map.layer.dataobject;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,11 +15,11 @@ import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.query.Condition;
 import com.revolsys.gis.data.query.Query;
 import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTable;
-import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTablePanel;
+import com.revolsys.swing.map.layer.dataobject.table.RecordLayerTablePanel;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectListLayerTableModel;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectListLayer extends AbstractDataObjectLayer {
+public class DataObjectListLayer extends AbstractRecordLayer {
 
   public static RecordDefinitionImpl createMetaData(final String name,
     final GeometryFactory geometryFactory, final DataType geometryType) {
@@ -35,21 +34,21 @@ public class DataObjectListLayer extends AbstractDataObjectLayer {
   public DataObjectListLayer() {
   }
 
+  public DataObjectListLayer(final Map<String, ? extends Object> properties) {
+    super(properties);
+  }
+
   public DataObjectListLayer(final RecordDefinition metaData) {
     super(metaData);
     setEditable(true);
   }
 
-  public DataObjectListLayer(final Map<String, ? extends Object> properties) {
-    super(properties);
-  }
-
   public DataObjectListLayer(final String name,
     final GeometryFactory geometryFactory, final DataType geometryType) {
     super(name);
-    final RecordDefinitionImpl metaData = createMetaData(name,
-      geometryFactory, geometryType);
-    setMetaData(metaData);
+    final RecordDefinitionImpl metaData = createMetaData(name, geometryFactory,
+      geometryType);
+    setRecordDefinition(metaData);
   }
 
   @Override
@@ -68,16 +67,16 @@ public class DataObjectListLayer extends AbstractDataObjectLayer {
     } finally {
       record.setState(RecordState.Persisted);
     }
-    synchronized (records) {
+    synchronized (this.records) {
       this.records.add(record);
     }
     addToIndex(record);
   }
 
   @Override
-  public Component createTablePanel() {
+  public RecordLayerTablePanel createTablePanel() {
     final DataObjectLayerTable table = DataObjectListLayerTableModel.createTable(this);
-    return new DataObjectLayerTablePanel(this, table);
+    return new RecordLayerTablePanel(this, table);
   }
 
   @Override
@@ -131,7 +130,7 @@ public class DataObjectListLayer extends AbstractDataObjectLayer {
   protected List<LayerDataObject> doQuery(final Query query) {
     final Condition whereCondition = query.getWhereCondition();
     if (whereCondition == null) {
-      return new ArrayList<LayerDataObject>(records);
+      return new ArrayList<LayerDataObject>(this.records);
     } else {
       final List<LayerDataObject> records = new ArrayList<LayerDataObject>();
       for (final LayerDataObject record : new ArrayList<LayerDataObject>(

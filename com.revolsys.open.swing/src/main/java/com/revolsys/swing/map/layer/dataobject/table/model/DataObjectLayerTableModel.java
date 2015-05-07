@@ -38,7 +38,7 @@ import com.revolsys.gis.data.query.functions.Function;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.listener.InvokeMethodListener;
 import com.revolsys.swing.map.layer.Project;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTable;
 import com.revolsys.swing.map.layer.dataobject.table.predicate.DeletedPredicate;
@@ -58,7 +58,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   PropertyChangeSupportProxy {
 
   public static DataObjectLayerTable createTable(
-    final AbstractDataObjectLayer layer) {
+    final AbstractRecordLayer layer) {
     final RecordDefinition metaData = layer.getMetaData();
     if (metaData == null) {
       return null;
@@ -124,7 +124,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   private final int pageSize = 40;
 
-  private final AbstractDataObjectLayer layer;
+  private final AbstractRecordLayer layer;
 
   private boolean countLoaded;
 
@@ -146,7 +146,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   private final LayerDataObject loadingRecord;
 
-  public DataObjectLayerTableModel(final AbstractDataObjectLayer layer,
+  public DataObjectLayerTableModel(final AbstractRecordLayer layer,
     final List<String> attributeNames) {
     super(layer.getMetaData(), attributeNames);
     this.layer = layer;
@@ -192,7 +192,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     return this.highlightedModel;
   }
 
-  public AbstractDataObjectLayer getLayer() {
+  public AbstractRecordLayer getLayer() {
     return this.layer;
   }
 
@@ -210,7 +210,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   }
 
   protected List<LayerDataObject> getLayerSelectedRecords() {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     return layer.getSelectedRecords();
   }
 
@@ -274,7 +274,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     } else if (this.attributeFilterMode.equals(MODE_SELECTED)) {
       return (V)getSelectedRecord(row);
     } else if (this.attributeFilterMode.equals(MODE_EDITS)) {
-      final AbstractDataObjectLayer layer = getLayer();
+      final AbstractRecordLayer layer = getLayer();
       final List<LayerDataObject> changes = layer.getChanges();
       if (row < changes.size()) {
         return (V)changes.get(row);
@@ -294,7 +294,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
           int count = this.rowCount;
           if (!this.attributeFilterMode.equals(MODE_SELECTED)
             && !this.attributeFilterMode.equals(MODE_EDITS)) {
-            final AbstractDataObjectLayer layer = getLayer();
+            final AbstractRecordLayer layer = getLayer();
             final int newRecordCount = layer.getNewRecordCount();
             count += newRecordCount;
           }
@@ -373,7 +373,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   }
 
   protected LayerDataObject loadLayerRecord(int row) {
-    final AbstractDataObjectLayer layer = getLayer();
+    final AbstractRecordLayer layer = getLayer();
     final int newObjectCount = layer.getNewRecordCount();
     if (row < newObjectCount) {
       return layer.getNewRecords().get(row);

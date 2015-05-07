@@ -15,7 +15,7 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.field.Field;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.renderer.MarkerStyleRenderer;
 import com.revolsys.swing.map.layer.dataobject.style.MarkerStyle;
 import com.revolsys.util.JavaBeanUtil;
@@ -35,7 +35,7 @@ public class MarkerStylePanel extends BaseStylePanel implements
 
     this.geometryStyleRenderer = markerStyleRenderer;
     this.markerStyle = markerStyleRenderer.getStyle().clone();
-    final AbstractDataObjectLayer layer = markerStyleRenderer.getLayer();
+    final AbstractRecordLayer layer = markerStyleRenderer.getLayer();
     final RecordDefinition metaData = layer.getMetaData();
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
 

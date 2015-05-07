@@ -7,7 +7,7 @@ import java.util.ListIterator;
 import javax.swing.Icon;
 import javax.swing.tree.TreeNode;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeItemRunnable;
@@ -16,7 +16,7 @@ import com.revolsys.swing.tree.model.node.AbstractTreeNode;
 public class FileSystemsTreeNode extends AbstractTreeNode {
   private List<TreeNode> children;
 
-  public static final Icon ICON_FOLDER_DRIVE = SilkIconLoader.getIcon("folder_drive");
+  public static final Icon ICON_FOLDER_DRIVE = Icons.getIcon("folder_drive");
 
   private static final MenuFactory MENU = new MenuFactory();
 

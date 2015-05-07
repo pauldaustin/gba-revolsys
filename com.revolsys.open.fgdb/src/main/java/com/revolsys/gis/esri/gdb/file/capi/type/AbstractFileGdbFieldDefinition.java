@@ -11,7 +11,7 @@ import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
 public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
 
-  private Reference<FileGdbRecordStoreImpl> dataStore;
+  private Reference<FileGdbRecordStoreImpl> recordStore;
 
   public AbstractFileGdbFieldDefinition(final String name,
     final DataType dataType, final boolean required) {
@@ -23,32 +23,36 @@ public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
     super(name, dataType, length, required);
   }
 
-  public FileGdbRecordStoreImpl getDataStore() {
-    if (this.dataStore == null) {
+  public FileGdbRecordStoreImpl getRecordStore() {
+    if (this.recordStore == null) {
       return null;
     } else {
-      return this.dataStore.get();
+      return this.recordStore.get();
     }
+  }
+
+  public Object getSync() {
+    return getRecordStore().getApiSync();
   }
 
   public abstract Object getValue(Row row);
 
-  public void setDataStore(final FileGdbRecordStoreImpl dataStore) {
-    this.dataStore = new WeakReference<FileGdbRecordStoreImpl>(dataStore);
+  public void setDataStore(final FileGdbRecordStoreImpl recordStore) {
+    this.recordStore = new WeakReference<FileGdbRecordStoreImpl>(recordStore);
   }
 
-  public Object setInsertValue(final Record object, final Row row,
+  public Object setInsertValue(final Record record, final Row row,
     final Object value) {
-    return setValue(object, row, value);
+    return setValue(record, row, value);
   }
 
-  public void setPostInsertValue(final Record object, final Row row) {
+  public void setPostInsertValue(final Record record, final Row row) {
   }
 
-  public Object setUpdateValue(final Record object, final Row row,
+  public Object setUpdateValue(final Record record, final Row row,
     final Object value) {
-    return setValue(object, row, value);
+    return setValue(record, row, value);
   }
 
-  public abstract Object setValue(Record object, Row row, Object value);
+  public abstract Object setValue(Record record, Row row, Object value);
 }

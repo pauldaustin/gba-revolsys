@@ -30,7 +30,6 @@ import javax.swing.undo.UndoableEdit;
 
 import com.revolsys.comparator.IntArrayComparator;
 import com.revolsys.converter.string.BooleanStringConverter;
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.algorithm.index.PointQuadTree;
 import com.revolsys.gis.algorithm.index.quadtree.QuadTree;
 import com.revolsys.gis.cs.BoundingBox;
@@ -42,10 +41,11 @@ import com.revolsys.gis.model.coordinates.comparator.GeometryDistanceComparator;
 import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
 import com.revolsys.gis.model.geometry.util.IndexedLineSegment;
 import com.revolsys.io.wkt.WktWriter;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.Project;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.renderer.GeometryStyleRenderer;
 import com.revolsys.swing.map.layer.dataobject.style.GeometryStyle;
@@ -57,16 +57,16 @@ import com.vividsolutions.jts.geom.Point;
 public class AbstractOverlay extends JComponent implements
   PropertyChangeListener, MouseListener, MouseMotionListener,
   MouseWheelListener, KeyListener {
-  public static final Cursor CURSOR_LINE_ADD_NODE = SilkIconLoader.getCursor(
+  public static final Cursor CURSOR_LINE_ADD_NODE = Icons.getCursor(
     "cursor_line_node_add", 8, 6);
 
-  public static final Cursor CURSOR_LINE_SNAP = SilkIconLoader.getCursor(
+  public static final Cursor CURSOR_LINE_SNAP = Icons.getCursor(
     "cursor_line_snap", 8, 4);
 
-  public static final Cursor CURSOR_NODE_EDIT = SilkIconLoader.getCursor(
+  public static final Cursor CURSOR_NODE_EDIT = Icons.getCursor(
     "cursor_node_edit", 8, 7);
 
-  public static final Cursor CURSOR_NODE_SNAP = SilkIconLoader.getCursor(
+  public static final Cursor CURSOR_NODE_SNAP = Icons.getCursor(
     "cursor_node_snap", 8, 7);
 
   private static final IntArrayComparator INT_ARRAY_COMPARATOR = new IntArrayComparator();
@@ -225,7 +225,7 @@ public class AbstractOverlay extends JComponent implements
   }
 
   protected CloseLocation findCloseLocation(
-    final AbstractDataObjectLayer layer, final LayerDataObject object,
+    final AbstractRecordLayer layer, final LayerDataObject object,
     final Geometry geometry, final BoundingBox boundingBox) {
     CloseLocation closeLocation = findCloseVertexLocation(layer, object,
       geometry, boundingBox);
@@ -239,7 +239,7 @@ public class AbstractOverlay extends JComponent implements
   protected CloseLocation findCloseLocation(final LayerDataObject object,
     final BoundingBox boundingBox) {
     if (object.isGeometryEditable()) {
-      final AbstractDataObjectLayer layer = object.getLayer();
+      final AbstractRecordLayer layer = object.getLayer();
       final Geometry geometryValue = object.getGeometryValue();
       return findCloseLocation(layer, object, geometryValue, boundingBox);
 
@@ -248,7 +248,7 @@ public class AbstractOverlay extends JComponent implements
   }
 
   private CloseLocation findCloseSegmentLocation(
-    final AbstractDataObjectLayer layer, final LayerDataObject object,
+    final AbstractRecordLayer layer, final LayerDataObject object,
     final Geometry geometry, final BoundingBox boundingBox) {
 
     final GeometryFactory viewportGeometryFactory = getViewport().getGeometryFactory();
@@ -285,7 +285,7 @@ public class AbstractOverlay extends JComponent implements
   }
 
   protected CloseLocation findCloseVertexLocation(
-    final AbstractDataObjectLayer layer, final LayerDataObject object,
+    final AbstractRecordLayer layer, final LayerDataObject object,
     final Geometry geometry, final BoundingBox boundingBox) {
     final PointQuadTree<int[]> index = GeometryEditUtil.getPointQuadTree(geometry);
     if (index != null) {
@@ -408,8 +408,8 @@ public class AbstractOverlay extends JComponent implements
     return this.project;
   }
 
-  protected List<AbstractDataObjectLayer> getSnapLayers() {
-    return AbstractDataObjectLayer.getVisibleLayers(project);
+  protected List<AbstractRecordLayer> getSnapLayers() {
+    return AbstractRecordLayer.getVisibleLayers(project);
   }
 
   public Point getSnapPoint() {
@@ -465,11 +465,11 @@ public class AbstractOverlay extends JComponent implements
     snapEventPoint = eventPoint;
     new TreeMap<Coordinates, List<CloseLocation>>();
     final Point point = boundingBox.getCentrePoint();
-    final List<AbstractDataObjectLayer> layers = getSnapLayers();
+    final List<AbstractRecordLayer> layers = getSnapLayers();
     final TreeMap<Point, Set<CloseLocation>> snapLocations = new TreeMap<Point, Set<CloseLocation>>(
       new GeometryDistanceComparator(point));
     this.snapPoint = null;
-    for (final AbstractDataObjectLayer layer : layers) {
+    for (final AbstractRecordLayer layer : layers) {
       final List<LayerDataObject> objects = layer.queryBackground(boundingBox);
       for (final LayerDataObject object : objects) {
         if (layer.isVisible(object)) {

@@ -8,10 +8,10 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.io.PathUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.Project;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.DataObjectStoreLayer;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.BaseTree;
@@ -20,7 +20,7 @@ import com.revolsys.util.CaseConverter;
 
 public class DataObjectStoreTableTreeNode extends LazyLoadTreeNode {
 
-  public static final ImageIcon ICON_TABLE = SilkIconLoader.getIcon("table");
+  public static final ImageIcon ICON_TABLE = Icons.getIcon("table");
 
   public static Map<String, Icon> ICONS_GEOMETRY = new HashMap<String, Icon>();
 
@@ -30,7 +30,7 @@ public class DataObjectStoreTableTreeNode extends LazyLoadTreeNode {
     for (final String geometryType : Arrays.asList("Point", "MultiPoint",
       "LineString", "MultiLineString", "Polygon", "MultiPolygon")) {
       ICONS_GEOMETRY.put(geometryType,
-        SilkIconLoader.getIcon("table_" + geometryType.toLowerCase()));
+        Icons.getIcon("table_" + geometryType.toLowerCase()));
     }
 
     MENU.addMenuItemTitleIcon("default", "Add Layer", "map_add", null,
@@ -48,7 +48,7 @@ public class DataObjectStoreTableTreeNode extends LazyLoadTreeNode {
     layerConfig.put("name", node.getName());
     layerConfig.put("connection", connection);
     layerConfig.put("typePath", typePath);
-    final AbstractDataObjectLayer layer = DataObjectStoreLayer.create(layerConfig);
+    final AbstractRecordLayer layer = DataObjectStoreLayer.create(layerConfig);
     Project.get().add(layer);
     // TODO different layer groups?
   }

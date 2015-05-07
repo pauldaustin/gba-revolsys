@@ -9,63 +9,65 @@ import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
-public class DoubleAttribute extends AbstractFileGdbFieldDefinition {
-  public DoubleAttribute(final Field field) {
-    super(field.getName(), DataTypes.DOUBLE,
+public class IntegerFieldDefinition extends AbstractFileGdbFieldDefinition {
+  public IntegerFieldDefinition(final Field field) {
+    super(field.getName(), DataTypes.INT,
       BooleanStringConverter.getBoolean(field.getRequired())
         || !field.isIsNullable());
   }
 
   @Override
   public int getMaxStringLength() {
-    return 19;
+    return 11;
   }
 
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    final FileGdbRecordStoreImpl dataStore = getDataStore();
-    if (dataStore.isNull(row, name)) {
+    final FileGdbRecordStoreImpl recordStore = getRecordStore();
+    if (recordStore.isNull(row, name)) {
       return null;
     } else {
-      synchronized (dataStore) {
-        return row.getDouble(name);
+      synchronized (getSync()) {
+        return row.getInteger(name);
       }
     }
   }
 
   @Override
-  public Object setValue(final Record object, final Row row, final Object value) {
+  public Object setValue(final Record record, final Row row, final Object value) {
     final String name = getName();
     if (value == null) {
       if (isRequired()) {
         throw new IllegalArgumentException(name
           + " is required and cannot be null");
       } else {
-        getDataStore().setNull(row, name);
+        getRecordStore().setNull(row, name);
       }
       return null;
     } else if (value instanceof Number) {
       final Number number = (Number)value;
-      final double doubleValue = number.doubleValue();
-      synchronized (getDataStore()) {
-        row.setDouble(name, doubleValue);
+      final int intValue = number.intValue();
+      synchronized (getSync()) {
+        row.setInteger(name, intValue);
       }
-      return doubleValue;
+      return intValue;
     } else {
-      final String string = value.toString();
+      final String string = value.toString().trim();
       if (StringUtils.hasText(string)) {
-        final double doubleValue = Double.parseDouble(string);
-        synchronized (getDataStore()) {
-          row.setDouble(name, doubleValue);
+        final int intValue = Integer.parseInt(string);
+        synchronized (getSync()) {
+          row.setInteger(name, intValue);
         }
-        return doubleValue;
-      } else if (isRequired()) {
-        throw new IllegalArgumentException(name
-          + " is required and cannot be null");
+        return intValue;
       } else {
-        getDataStore().setNull(row, name);
-        return null;
+        if (isRequired()) {
+          throw new IllegalArgumentException(name
+            + " is required and cannot be null");
+        } else {
+          getRecordStore().setNull(row, name);
+          return null;
+        }
       }
     }
   }

@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.LayerGroup;
 
 public class LayerGroupTreeCellRenderer extends DefaultTreeCellRenderer {
@@ -16,7 +16,7 @@ public class LayerGroupTreeCellRenderer extends DefaultTreeCellRenderer {
   private static final long serialVersionUID = 7356001100251805839L;
 
   public LayerGroupTreeCellRenderer() {
-    final ImageIcon icon = SilkIconLoader.getIcon("folder");
+    final ImageIcon icon = Icons.getIcon("folder");
     setOpenIcon(icon);
     setClosedIcon(icon);
     setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));

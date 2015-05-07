@@ -10,12 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import bibliothek.gui.dock.common.DefaultSingleCDockable;
-import bibliothek.gui.dock.common.SingleCDockable;
-import bibliothek.gui.dock.common.event.CDockableStateListener;
-import bibliothek.gui.dock.common.intern.CDockable;
-import bibliothek.gui.dock.common.mode.ExtendedMode;
-
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
@@ -30,16 +24,14 @@ import com.revolsys.raster.GeoReferencedImage;
 import com.revolsys.raster.GeoReferencedImageFactory;
 import com.revolsys.raster.MappedLocation;
 import com.revolsys.spring.SpringUtil;
-import com.revolsys.swing.DockingFramesUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.TabbedValuePanel;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
-import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.layer.AbstractLayer;
-import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
@@ -63,7 +55,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
       false);
     final EnableCheck editable = new TreeItemPropertyEnableCheck("editable");
     final EnableCheck showOriginalImage = new TreeItemPropertyEnableCheck(
-      "showOriginalImage");
+        "showOriginalImage");
 
     menu.addCheckboxMenuItem("edit", TreeItemRunnable.createAction("Editable",
       "pencil", readonly, "toggleEditable"), editable);
@@ -106,24 +98,25 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     setSelectSupported(false);
     setQuerySupported(false);
     setRenderer(new GeoReferencedImageLayerRenderer(this));
+    setIcon(Icons.getIcon("picture"));
   }
 
   @Override
   protected ValueField addPropertiesTabGeneralPanelSource(final BasePanel parent) {
     final ValueField panel = super.addPropertiesTabGeneralPanelSource(parent);
 
-    if (url.startsWith("file:")) {
-      final String fileName = url.replaceFirst("file:(//)?", "");
+    if (this.url.startsWith("file:")) {
+      final String fileName = this.url.replaceFirst("file:(//)?", "");
       SwingUtil.addReadOnlyTextField(panel, "File", fileName);
     } else {
-      SwingUtil.addReadOnlyTextField(panel, "URL", url);
+      SwingUtil.addReadOnlyTextField(panel, "URL", this.url);
     }
-    final String fileNameExtension = FileUtil.getFileNameExtension(url);
+    final String fileNameExtension = FileUtil.getFileNameExtension(this.url);
     if (StringUtils.hasText(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final GeoReferencedImageFactory factory = IoFactoryRegistry.getInstance()
-        .getFactoryByFileExtension(GeoReferencedImageFactory.class,
-          fileNameExtension);
+          .getFactoryByFileExtension(GeoReferencedImageFactory.class,
+            fileNameExtension);
       if (factory != null) {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }
@@ -169,26 +162,31 @@ public class GeoReferencedImageLayer extends AbstractLayer {
   }
 
   @Override
+  protected TiePointsPanel createTableViewComponent() {
+    return new TiePointsPanel(this);
+  }
+
+  @Override
   protected boolean doInitialize() {
     final String url = getProperty("url");
     if (StringUtils.hasText(url)) {
       this.url = url;
-      resource = SpringUtil.getResource(url);
+      this.resource = SpringUtil.getResource(url);
       cancelChanges();
       return true;
     } else {
       LoggerFactory.getLogger(getClass()).error(
-        "Layer definition does not contain a 'url' property");
+          "Layer definition does not contain a 'url' property");
       return false;
     }
   }
 
   @Override
   protected boolean doSaveChanges() {
-    if (image == null) {
+    if (this.image == null) {
       return true;
     } else {
-      return image.saveChanges();
+      return this.image.saveChanges();
     }
   }
 
@@ -246,10 +244,10 @@ public class GeoReferencedImageLayer extends AbstractLayer {
 
   @Override
   public GeometryFactory getGeometryFactory() {
-    if (image == null) {
+    if (this.image == null) {
       return getBoundingBox().getGeometryFactory();
     } else {
-      return image.getGeometryFactory();
+      return this.image.getGeometryFactory();
     }
   }
 
@@ -259,19 +257,19 @@ public class GeoReferencedImageLayer extends AbstractLayer {
 
   @Override
   public boolean isHasChanges() {
-    if (image == null) {
+    if (this.image == null) {
       return false;
     } else {
-      return image.isHasChanages();
+      return this.image.isHasChanages();
     }
   }
 
   public boolean isShowOriginalImage() {
-    return showOriginalImage;
+    return this.showOriginalImage;
   }
 
   public void setBoundingBox(final BoundingBox boundingBox) {
-    if (image != null) {
+    if (this.image != null) {
       this.image.setBoundingBox(boundingBox);
     }
   }
@@ -307,49 +305,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
 
   public void showTiePointsTable() {
     if (SwingUtilities.isEventDispatchThread()) {
-      final Object tableView = getProperty("TableView");
-      DefaultSingleCDockable dockable = null;
-      if (tableView instanceof DefaultSingleCDockable) {
-        dockable = (DefaultSingleCDockable)tableView;
-      }
-      final TiePointsPanel tiePointsPanel;
-      if (dockable == null) {
-        final LayerGroup project = getProject();
-
-        tiePointsPanel = new TiePointsPanel(this);
-
-        if (tiePointsPanel != null) {
-          final String id = getClass().getName() + "." + getId();
-          dockable = DockingFramesUtil.addDockable(project,
-            MapPanel.MAP_TABLE_WORKING_AREA, id, getName(), tiePointsPanel);
-
-          if (dockable != null) {
-            dockable.setCloseable(true);
-            setProperty("TableView", dockable);
-            dockable.addCDockableStateListener(new CDockableStateListener() {
-              @Override
-              public void extendedModeChanged(final CDockable dockable,
-                final ExtendedMode mode) {
-              }
-
-              @Override
-              public void visibilityChanged(final CDockable dockable) {
-                final boolean visible = dockable.isVisible();
-                if (!visible) {
-                  dockable.getControl()
-                    .getOwner()
-                    .remove((SingleCDockable)dockable);
-                  setProperty("TableView", null);
-                }
-              }
-            });
-            dockable.toFront();
-          }
-        }
-      } else {
-        dockable.toFront();
-      }
-
+      showTableView();
     } else {
       Invoke.later(this, "showTiePointsTable");
     }
@@ -361,8 +317,8 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     final double[] coordinates = new double[] {
       sourcePixel.getX(), sourcePixel.getY()
     };
-    final AffineTransform transform = image.getAffineTransformation(boundingBox);
-    if (!showOriginalImage) {
+    final AffineTransform transform = this.image.getAffineTransformation(boundingBox);
+    if (!this.showOriginalImage) {
       transform.transform(coordinates, 0, coordinates, 0, 1);
     }
     final double imageX = coordinates[0];
@@ -425,13 +381,13 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     map.remove("editable");
     map.remove("TableView");
     MapSerializerUtil.add(map, "url", this.url);
-    MapSerializerUtil.add(map, "showOriginalImage", showOriginalImage);
+    MapSerializerUtil.add(map, "showOriginalImage", this.showOriginalImage);
 
     final Map<String, Object> imageSettings;
-    if (image == null) {
+    if (this.image == null) {
       imageSettings = getProperty("imageSettings");
     } else {
-      imageSettings = image.toMap();
+      imageSettings = this.image.toMap();
     }
     MapSerializerUtil.add(map, "imageSettings", imageSettings);
 

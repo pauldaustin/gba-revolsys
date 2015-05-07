@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
@@ -19,10 +18,11 @@ import com.revolsys.gis.model.coordinates.CoordinatesWithOrientation;
 import com.revolsys.gis.model.coordinates.LineSegmentUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.style.MarkerStyle;
 import com.revolsys.swing.map.layer.dataobject.style.marker.Marker;
@@ -38,7 +38,7 @@ public class MarkerStyleRenderer extends AbstractDataObjectLayerRenderer {
   private static final Geometry EMPTY_GEOMETRY = GeometryFactory.getFactory()
     .createEmptyGeometry();
 
-  private static final Icon ICON = SilkIconLoader.getIcon("style_marker");
+  private static final Icon ICON = Icons.getIcon("style_marker");
 
   public static Geometry getGeometry(final Viewport2D viewport,
     final Geometry geometry) {
@@ -342,26 +342,26 @@ public class MarkerStyleRenderer extends AbstractDataObjectLayerRenderer {
 
   private MarkerStyle style;
 
-  public MarkerStyleRenderer(final AbstractDataObjectLayer layer,
+  public MarkerStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent) {
     this(layer, parent, new MarkerStyle());
   }
 
-  public MarkerStyleRenderer(final AbstractDataObjectLayer layer,
+  public MarkerStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final Map<String, Object> geometryStyle) {
     super("markerStyle", "Marker Style", layer, parent, geometryStyle);
     this.style = new MarkerStyle(geometryStyle);
     setIcon(ICON);
   }
 
-  public MarkerStyleRenderer(final AbstractDataObjectLayer layer,
+  public MarkerStyleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final MarkerStyle style) {
     super("markerStyle", "Marker Style", layer, parent);
     this.style = style;
     setIcon(ICON);
   }
 
-  public MarkerStyleRenderer(final AbstractDataObjectLayer layer,
+  public MarkerStyleRenderer(final AbstractRecordLayer layer,
     final MarkerStyle style) {
     this(layer, null, style);
   }
@@ -396,7 +396,7 @@ public class MarkerStyleRenderer extends AbstractDataObjectLayerRenderer {
   @Override
   public void renderRecord(final Viewport2D viewport,
     final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractDataObjectLayer layer, final LayerDataObject object) {
+    final AbstractRecordLayer layer, final LayerDataObject object) {
     if (isVisible(object)) {
       final Geometry geometry = object.getGeometryValue();
       renderMarker(viewport, graphics, geometry, this.style);

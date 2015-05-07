@@ -1,6 +1,5 @@
 package com.revolsys.swing.component;
 
-import java.awt.GraphicsConfiguration;
 import java.awt.HeadlessException;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -12,24 +11,16 @@ import com.revolsys.swing.WindowManager;
 @SuppressWarnings("serial")
 public class BaseFrame extends JFrame implements WindowListener {
 
-  public BaseFrame() throws HeadlessException {
-    super();
-    init();
-  }
-
-  public BaseFrame(final GraphicsConfiguration gc) {
-    super(gc);
-    init();
-  }
-
   public BaseFrame(final String title) throws HeadlessException {
-    super(title);
-    init();
+    this(title, true);
   }
 
-  public BaseFrame(final String title, final GraphicsConfiguration gc) {
-    super(title, gc);
-    init();
+  public BaseFrame(final String title, final boolean initialize)
+      throws HeadlessException {
+    super(title);
+    if (initialize) {
+      init();
+    }
   }
 
   @Override
@@ -39,7 +30,7 @@ public class BaseFrame extends JFrame implements WindowListener {
     super.dispose();
   }
 
-  private void init() {
+  protected void init() {
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     addWindowListener(this);
   }

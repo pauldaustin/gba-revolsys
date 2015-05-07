@@ -7,12 +7,12 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import com.revolsys.famfamfam.silk.SilkIconLoader;
 import com.revolsys.gis.cs.BoundingBox;
 import com.vividsolutions.jts.geom.TopologyException;
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
-import com.revolsys.swing.map.layer.dataobject.AbstractDataObjectLayer;
+import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.map.layer.dataobject.style.GeometryStyle;
 import com.revolsys.util.ExceptionUtil;
@@ -23,14 +23,14 @@ import com.revolsys.util.ExceptionUtil;
  */
 public class MultipleRenderer extends AbstractMultipleRenderer {
 
-  private static final Icon ICON = SilkIconLoader.getIcon("style_multiple");
+  private static final Icon ICON = Icons.getIcon("style_multiple");
 
-  public MultipleRenderer(final AbstractDataObjectLayer layer,
+  public MultipleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent) {
     this(layer, parent, Collections.<String, Object> emptyMap());
   }
 
-  public MultipleRenderer(final AbstractDataObjectLayer layer,
+  public MultipleRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final Map<String, Object> multipleStyle) {
     super("multipleStyle", layer, parent, multipleStyle);
     setIcon(ICON);
@@ -46,7 +46,7 @@ public class MultipleRenderer extends AbstractMultipleRenderer {
   @Override
   public void renderRecord(final Viewport2D viewport,
     final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractDataObjectLayer layer, final LayerDataObject record) {
+    final AbstractRecordLayer layer, final LayerDataObject record) {
     if (isVisible(record)) {
       for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
         final long scale = (long)viewport.getScale();
@@ -68,7 +68,7 @@ public class MultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   protected void renderRecords(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractDataObjectLayer layer,
+    final Graphics2D graphics, final AbstractRecordLayer layer,
     final List<LayerDataObject> records) {
     final BoundingBox visibleArea = viewport.getBoundingBox();
     for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
@@ -95,7 +95,7 @@ public class MultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   public void renderSelectedRecord(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractDataObjectLayer layer,
+    final Graphics2D graphics, final AbstractRecordLayer layer,
     final LayerDataObject object) {
     if (isVisible(object)) {
       for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
