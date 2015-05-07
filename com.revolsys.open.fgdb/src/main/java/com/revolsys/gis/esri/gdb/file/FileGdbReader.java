@@ -12,14 +12,14 @@ public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
 
   private BoundingBox boundingBox;
 
-  private final FileGdbRecordStoreImpl dataStore;
-
   private int index = 0;
+
+  private final FileGdbRecordStoreImpl recordStore;
 
   private List<String> typePaths = new ArrayList<String>();
 
-  public FileGdbReader(final FileGdbRecordStoreImpl dataStore) {
-    this.dataStore = dataStore;
+  public FileGdbReader(final FileGdbRecordStoreImpl recordStore) {
+    this.recordStore = recordStore;
   }
 
   public BoundingBox getBoundingBox() {
@@ -30,8 +30,7 @@ public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
   protected AbstractIterator<Record> getNextIterator() {
     if (this.index < this.typePaths.size()) {
       final String typePath = this.typePaths.get(this.index);
-      final FileGdbQueryIterator iterator = new FileGdbQueryIterator(
-        this.dataStore, typePath);
+      final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this.recordStore, typePath);
       if (this.boundingBox != null) {
         iterator.setBoundingBox(this.boundingBox);
       }
@@ -56,7 +55,6 @@ public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
 
   @Override
   public String toString() {
-    return "Reader " + this.dataStore.getLabel() + " " + this.typePaths + " "
-      + this.boundingBox;
+    return "Reader " + this.recordStore.getLabel() + " " + this.typePaths + " " + this.boundingBox;
   }
 }

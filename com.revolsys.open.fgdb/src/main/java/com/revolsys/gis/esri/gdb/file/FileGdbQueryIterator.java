@@ -149,7 +149,7 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
     } else {
       Row row = null;
       while (this.offset > 0 && this.count < this.offset) {
-        this.recordStore.nextRow(this.rows);
+        row = this.recordStore.nextRow(this.rows);
         if (row == null) {
           throw new NoSuchElementException();
         } else {
@@ -157,7 +157,7 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
         }
         this.count++;
       }
-      if (this.limit > -1 && this.count >= this.offset + this.limit) {
+      if (this.count - this.offset >= this.limit) {
         throw new NoSuchElementException();
       }
       row = this.recordStore.nextRow(this.rows);
@@ -197,6 +197,10 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
       hasNext();
     }
     return this.recordDefinition;
+  }
+
+  public Statistics getStatistics() {
+    return this.statistics;
   }
 
   public void setBoundingBox(final BoundingBox boundingBox) {

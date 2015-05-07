@@ -8,12 +8,12 @@ public interface FileGdbRecordStore extends RecordStore {
   void deleteGeodatabase();
 
   @Override
-  RecordDefinition getRecordDefinition(RecordDefinition metaData);
+  RecordDefinition getRecordDefinition(RecordDefinition recordDefinition);
 
   @Override
   void initialize();
 
-  void setCreateMissingRecordStore(boolean createMissingDataStore);
+  void setCreateMissingRecordStore(boolean createMissingRecordStore);
 
   void setCreateMissingTables(boolean createMissingTables);
 
