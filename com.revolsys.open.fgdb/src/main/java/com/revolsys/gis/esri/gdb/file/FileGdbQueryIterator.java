@@ -131,7 +131,11 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
             boundingBox = boundingBox.expand(0, 1);
           }
           final com.revolsys.gis.esri.gdb.file.capi.swig.Envelope envelope = GeometryConverter.toEsri(boundingBox);
-          this.rows = this.recordStore.search(this.typePath, this.table, this.fields, this.sql,
+          String sql = this.sql;
+          if ("1 = 1".equals(sql)) {
+            sql = "";
+          }
+          this.rows = this.recordStore.search(this.typePath, this.table, this.fields, sql,
             envelope, true);
         }
       }
@@ -146,6 +150,11 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
       Row row = null;
       while (this.offset > 0 && this.count < this.offset) {
         this.recordStore.nextRow(this.rows);
+        if (row == null) {
+          throw new NoSuchElementException();
+        } else {
+          this.recordStore.closeRow(row);
+        }
         this.count++;
       }
       if (this.limit > -1 && this.count >= this.offset + this.limit) {
@@ -158,7 +167,11 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
       } else {
         try {
           final Record record = this.recordFactory.createRecord(this.recordDefinition);
-          this.recordStore.addStatistic("query", record);
+          if (this.statistics == null) {
+            this.recordStore.addStatistic("query", record);
+          } else {
+            this.statistics.add(record);
+          }
           record.setState(RecordState.Initalizing);
           for (final FieldDefinition field : this.recordDefinition.getFields()) {
             final String name = field.getName();
@@ -179,14 +192,21 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
     }
   }
 
+  protected RecordDefinition getRecordDefinition() {
+    if (this.recordDefinition == null) {
+      hasNext();
+    }
+    return this.recordDefinition;
+  }
+
   public void setBoundingBox(final BoundingBox boundingBox) {
     final RecordDefinition recordDefinition = this.recordDefinition;
     if (recordDefinition != null) {
       this.boundingBox = boundingBox;
       if (boundingBox != null) {
-        final FieldDefinition geometryFieldDefinition = recordDefinition.getGeometryField();
-        if (geometryFieldDefinition != null) {
-          final GeometryFactory geometryFactory = geometryFieldDefinition.getProperty(FieldProperties.GEOMETRY_FACTORY);
+        final FieldDefinition geometryField = recordDefinition.getGeometryField();
+        if (geometryField != null) {
+          final GeometryFactory geometryFactory = geometryField.getProperty(FieldProperties.GEOMETRY_FACTORY);
           if (geometryFactory != null) {
             this.boundingBox = boundingBox.convert(geometryFactory);
           }
