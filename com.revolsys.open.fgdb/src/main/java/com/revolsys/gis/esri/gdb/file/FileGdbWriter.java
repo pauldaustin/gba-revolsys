@@ -7,8 +7,8 @@ import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
-import org.slf4j.LoggerFactory;
-
+import com.revolsys.beans.ObjectException;
+import com.revolsys.beans.ObjectPropertyException;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -24,7 +24,7 @@ import com.revolsys.io.AbstractRecordWriter;
 public class FileGdbWriter extends AbstractRecordWriter {
   private FileGdbRecordStoreImpl recordStore;
 
-  private Map<String, Table> tables = new HashMap<String, Table>();
+  private Map<String, Table> tables = new HashMap<>();
 
   FileGdbWriter(final FileGdbRecordStoreImpl recordStore) {
     this.recordStore = recordStore;
@@ -104,48 +104,52 @@ public class FileGdbWriter extends AbstractRecordWriter {
     final RecordDefinition sourceRecordDefinition = record.getRecordDefinition();
     final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(sourceRecordDefinition);
     final String typePath = sourceRecordDefinition.getPath();
-    for (final FieldDefinition field : recordDefinition.getFields()) {
-      final String name = field.getName();
-      if (field.isRequired()) {
-        final Object value = record.getValue(name);
-        if (value == null && !(field instanceof OidFieldDefinition)) {
-          throw new IllegalArgumentException("Atribute " + typePath + "." + name + " is required");
-        }
-      }
-    }
+
+    validateRequired(record, recordDefinition);
+
     final Table table = getTable(typePath);
     try {
       final Row row = this.recordStore.createRowObject(table);
       try {
-        final List<Object> values = new ArrayList<Object>();
+        final List<Object> values = new ArrayList<>();
         for (final FieldDefinition field : recordDefinition.getFields()) {
           final String name = field.getName();
-          final Object value = record.getValue(name);
-          final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
-          final Object esriValue = esriField.setInsertValue(record, row, value);
-          values.add(esriValue);
+          try {
+            final Object value = record.getValue(name);
+            final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+            final Object esriValue = esriField.setInsertValue(record, row, value);
+            values.add(esriValue);
+          } catch (final Throwable e) {
+            throw new ObjectPropertyException(record, name, e);
+          }
         }
         this.recordStore.insertRow(table, row);
         for (final FieldDefinition field : recordDefinition.getFields()) {
           final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
-          esriFieldDefinition.setPostInsertValue(record, row);
+          try {
+            esriFieldDefinition.setPostInsertValue(record, row);
+          } catch (final Throwable e) {
+            throw new ObjectPropertyException(record, field.getName(), e);
+          }
         }
         record.setState(RecordState.Persisted);
       } finally {
         this.recordStore.closeRow(row);
         this.recordStore.addStatistic("Insert", record);
       }
-    } catch (final IllegalArgumentException e) {
-      throw new RuntimeException("Unable to insert row " + e.getMessage() + "\n"
-        + record.toString(), e);
-    } catch (final RuntimeException e) {
-      if (LoggerFactory.getLogger(FileGdbWriter.class).isDebugEnabled()) {
-        LoggerFactory.getLogger(FileGdbWriter.class).debug(
-          "Unable to insert row \n:" + record.toString());
+    } catch (final ObjectException e) {
+      if (e.getObject() == record) {
+        throw e;
+      } else {
+        throw new ObjectException(record, e);
       }
-      throw new RuntimeException("Unable to insert row", e);
+    } catch (final Throwable e) {
+      throw new ObjectException(record, e);
     }
+  }
 
+  public synchronized void openTable(final String typePath) {
+    getTable(typePath);
   }
 
   private void update(final Record record) {
@@ -155,6 +159,9 @@ public class FileGdbWriter extends AbstractRecordWriter {
     } else {
       final RecordDefinition sourceRecordDefinition = record.getRecordDefinition();
       final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(sourceRecordDefinition);
+
+      validateRequired(record, recordDefinition);
+
       final String typePath = sourceRecordDefinition.getPath();
       final Table table = getTable(typePath);
       final String whereClause = "OBJECTID=" + objectId;
@@ -164,42 +171,49 @@ public class FileGdbWriter extends AbstractRecordWriter {
           final Row row = this.recordStore.nextRow(rows);
           if (row != null) {
             try {
-              final List<Object> esriValues = new ArrayList<Object>();
+              final List<Object> esriValues = new ArrayList<>();
               try {
                 for (final FieldDefinition field : recordDefinition.getFields()) {
                   final String name = field.getName();
-                  final Object value = record.getValue(name);
-                  final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
                   try {
+                    final Object value = record.getValue(name);
+                    final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
                     final Object esriValue = esriFieldDefinition.setUpdateValue(record, row, value);
                     esriValues.add(esriValue);
                   } catch (final RuntimeException e) {
-                    LoggerFactory.getLogger(FileGdbWriter.class).error(
-                      "Unable to update field " + name + "=" + value, e);
-                    throw e;
+                    throw new ObjectPropertyException(record, name, e);
                   }
                 }
                 this.recordStore.updateRow(typePath, table, row);
               } finally {
                 this.recordStore.addStatistic("Update", record);
               }
-            } catch (final IllegalArgumentException e) {
-              LoggerFactory.getLogger(FileGdbWriter.class).error(
-                "Unable to update row " + e.getMessage() + "\n" + record.toString(), e);
-            } catch (final RuntimeException e) {
-              LoggerFactory.getLogger(FileGdbWriter.class).error(
-                "Unable to update row \n:" + record.toString());
-              if (LoggerFactory.getLogger(FileGdbWriter.class).isDebugEnabled()) {
-                LoggerFactory.getLogger(FileGdbWriter.class).debug(
-                  "Unable to update row \n:" + record.toString());
+            } catch (final ObjectException e) {
+              if (e.getObject() == record) {
+                throw e;
+              } else {
+                throw new ObjectException(record, e);
               }
-              throw new RuntimeException("Unable to update row", e);
+            } catch (final Throwable e) {
+              throw new ObjectException(record, e);
             } finally {
               this.recordStore.closeRow(row);
             }
           }
         } finally {
           this.recordStore.closeEnumRows(rows);
+        }
+      }
+    }
+  }
+
+  private void validateRequired(final Record record, final RecordDefinition recordDefinition) {
+    for (final FieldDefinition field : recordDefinition.getFields()) {
+      final String name = field.getName();
+      if (field.isRequired()) {
+        final Object value = record.getValue(name);
+        if (value == null && !(field instanceof OidFieldDefinition)) {
+          throw new ObjectPropertyException(record, name, "Value required");
         }
       }
     }
@@ -213,16 +227,16 @@ public class FileGdbWriter extends AbstractRecordWriter {
       switch (record.getState()) {
         case New:
           insert(record);
-        break;
+          break;
         case Modified:
           update(record);
-        break;
+          break;
         case Persisted:
-        // No action required
-        break;
+          // No action required
+          break;
         case Deleted:
           delete(record);
-        break;
+          break;
         default:
           throw new IllegalStateException("State not known");
       }
