@@ -1,13 +1,12 @@
 package com.revolsys.gis.esri.gdb.file.capi.type;
 
-import org.springframework.util.StringUtils;
-
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
+import com.revolsys.util.Property;
 
 public class DoubleFieldDefinition extends AbstractFileGdbFieldDefinition {
   public DoubleFieldDefinition(final Field field) {
@@ -52,7 +51,7 @@ public class DoubleFieldDefinition extends AbstractFileGdbFieldDefinition {
       return doubleValue;
     } else {
       final String string = value.toString();
-      if (StringUtils.hasText(string)) {
+      if (Property.hasValue(string)) {
         final double doubleValue = Double.parseDouble(string);
         synchronized (getSync()) {
           row.setDouble(name, doubleValue);

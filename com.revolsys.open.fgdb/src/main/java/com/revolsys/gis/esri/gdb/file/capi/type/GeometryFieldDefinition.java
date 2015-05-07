@@ -41,7 +41,7 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
     GEOMETRY_TYPE_DATA_TYPE_MAP.put(GeometryType.esriGeometryPolygon, DataTypes.MULTI_POLYGON);
   }
 
-  private GeometryFactory geometryFactory = GeometryFactory.getFactory();
+  private GeometryFactory geometryFactory = GeometryFactory.floating3();
 
   private Method readMethod;
 
@@ -66,23 +66,23 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
         if (this.geometryFactory == null) {
           throw new IllegalArgumentException(
             "Field definition does not include a valid coordinate system "
-              + spatialReference.getLatestWKID());
+                + spatialReference.getLatestWKID());
         }
 
-        int numAxis = 2;
+        int axisCount = 2;
         final boolean hasZ = geometryDef.isHasZ();
         if (hasZ) {
-          numAxis = 3;
+          axisCount = 3;
         }
         final boolean hasM = geometryDef.isHasM();
         if (hasM) {
-          numAxis = 4;
+          axisCount = 4;
         }
-        if (numAxis != this.geometryFactory.getNumAxis()) {
-          final int srid = this.geometryFactory.getSRID();
+        if (axisCount != this.geometryFactory.getNumAxis()) {
+          final int srid = this.geometryFactory.getSrid();
           final double scaleXY = this.geometryFactory.getScaleXY();
           final double scaleZ = this.geometryFactory.getScaleZ();
-          this.geometryFactory = GeometryFactory.getFactory(srid, numAxis, scaleXY, scaleZ);
+          this.geometryFactory = GeometryFactory.getFactory(srid, axisCount, scaleXY, scaleZ);
         }
         setProperty(FieldProperties.GEOMETRY_FACTORY, this.geometryFactory);
 
@@ -157,7 +157,7 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
       return bytes;
     } else {
       throw new IllegalArgumentException("Expecting a " + Geometry.class + " not a "
-        + value.getClass() + "=" + value);
+          + value.getClass() + "=" + value);
     }
   }
 }

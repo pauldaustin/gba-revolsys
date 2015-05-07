@@ -50,11 +50,11 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
 public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory implements
 CoordinatesPrecisionModel, MapSerializer {
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "geometryFactory", "Geometry Factory", GeometryFactory.class, "create");
-
   /** The cached geometry factories. */
   private static Map<String, GeometryFactory> factories = new HashMap<String, GeometryFactory>();
+
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
+    "geometryFactory", "Geometry Factory", GeometryFactory.class, "create");
 
   private static final long serialVersionUID = 4328651897279304108L;
 
@@ -68,6 +68,35 @@ CoordinatesPrecisionModel, MapSerializer {
     final double scaleXY = CollectionUtil.getDouble(properties, "scaleXy", 0.0);
     final double scaleZ = CollectionUtil.getDouble(properties, "scaleZ", 0.0);
     return GeometryFactory.getFactory(srid, numAxis, scaleXY, scaleZ);
+  }
+
+  /**
+   * <p>
+   * Get a GeometryFactory with the coordinate system, number of axis and a
+   * fixed x, y &amp; fixed z precision models.
+   * </p>
+   *
+   * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
+   *          coordinate system id</a>.
+   * @param numAxis The number of coordinate axis. 2 for 2D x &amp; y
+   *          coordinates. 3 for 3D x, y &amp; z coordinates.
+   * @param scaleXY The scale factor used to round the x, y coordinates. The
+   *          precision is 1 / scaleXy. A scale factor of 1000 will give a
+   *          precision of 1 / 1000 = 1mm for projected coordinate systems using
+   *          metres.
+   * @param scaleZ The scale factor used to round the z coordinates. The
+   *          precision is 1 / scaleZ. A scale factor of 1000 will give a
+   *          precision of 1 / 1000 = 1mm for projected coordinate systems using
+   *          metres.
+   * @return The geometry factory.
+   */
+  public static GeometryFactory fixed(final int srid, final int numAxis, final double scaleXY,
+    final double scaleZ) {
+    return getFactory(srid, numAxis, scaleXY, scaleZ);
+  }
+
+  public static GeometryFactory floating3() {
+    return getFactory();
   }
 
   /**
@@ -202,26 +231,6 @@ CoordinatesPrecisionModel, MapSerializer {
     return getFactory(srid, numAxis, 0, 0);
   }
 
-  /**
-   * <p>
-   * Get a GeometryFactory with the coordinate system, number of axis and a
-   * fixed x, y &amp; fixed z precision models.
-   * </p>
-   *
-   * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
-   *          coordinate system id</a>.
-   * @param numAxis The number of coordinate axis. 2 for 2D x &amp; y
-   *          coordinates. 3 for 3D x, y &amp; z coordinates.
-   * @param scaleXY The scale factor used to round the x, y coordinates. The
-   *          precision is 1 / scaleXy. A scale factor of 1000 will give a
-   *          precision of 1 / 1000 = 1mm for projected coordinate systems using
-   *          metres.
-   * @param scaleZ The scale factor used to round the z coordinates. The
-   *          precision is 1 / scaleZ. A scale factor of 1000 will give a
-   *          precision of 1 / 1000 = 1mm for projected coordinate systems using
-   *          metres.
-   * @return The geometry factory.
-   */
   public static GeometryFactory getFactory(final int srid, final int numAxis, final double scaleXY,
     final double scaleZ) {
     synchronized (factories) {
@@ -807,6 +816,10 @@ CoordinatesPrecisionModel, MapSerializer {
 
     }
     return createPolygon(rings);
+  }
+
+  public int getAxisCount() {
+    return getNumAxis();
   }
 
   public Coordinates getCoordinates(final Point point) {

@@ -84,7 +84,7 @@ public class FgdbReader {
   public FgdbReader() {
     try {
       this.in = new EndianInputStream(new FileInputStream(
-        "/Users/paustin/Downloads/KSRD_20140306.gdb/a0000000d.gdbtable"));
+          "/Users/paustin/Downloads/KSRD_20140306.gdb/a0000000d.gdbtable"));
     } catch (final FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -150,7 +150,7 @@ public class FgdbReader {
         // ubyte: ldf = length of default value in byte if (flag&4) != 0
         // followed by ldf bytes
         field = new ShortField(fieldName, required);
-      break;
+        break;
       case 1:
         this.in.read(); // length
         required = readFlags();
@@ -158,39 +158,39 @@ public class FgdbReader {
         // ubyte: ldf = length of default value in byte if (flag&4) != 0
         // followed by ldf bytes
         field = new IntField(fieldName, required);
-      break;
+        break;
       case 2:
         this.in.read(); // length
         required = readFlags();
         // ubyte: ldf = length of default value in byte if (flag&4) != 0
         // followed by ldf bytes
         field = new FloatField(fieldName, required);
-      break;
+        break;
       case 3:
         this.in.read(); // length
         required = readFlags();
         // ubyte: ldf = length of default value in byte if (flag&4) != 0
         // followed by ldf bytes
         field = new DoubleField(fieldName, required);
-      break;
+        break;
       case 4:
         length = this.in.readLEInt();
         required = readFlags();
         field = new StringField(fieldName, length, required);
-      break;
+        break;
       case 5:
         this.in.read(); // length
         required = readFlags();
         // ubyte: ldf = length of default value in byte if (flag&4) != 0
         // followed by ldf bytes
         field = new FgdbField(fieldName, DataTypes.DATE_TIME, required);
-      break;
+        break;
       case 6:
         // OBJECTID
         this.in.read();
         required = readFlags();
         field = new ObjectIdField(fieldName, true);
-      break;
+        break;
       case 7:
         final int geometryFlag1 = this.in.read();
         final int geometryFlag2 = this.in.read();
@@ -262,31 +262,31 @@ public class FgdbReader {
         // Goto 1
         // End
         field = new GeometryField(fieldName, this.geometryType, required, geometryFactory);
-      break;
+        break;
       case 8:
         this.in.read();
         required = readFlags();
         field = new BinaryField(fieldName, length, required);
-      break;
+        break;
       case 9:
         // Raster
         field = new FgdbField(fieldName, DataTypes.BLOB, required);
-      break;
+        break;
       case 10:
         // UUID
         this.in.read();
         required = readFlags();
         field = new FgdbField(fieldName, DataTypes.STRING, required);
-      break;
+        break;
       case 11:// UUID
         this.in.read();
         required = readFlags();
         field = new FgdbField(fieldName, DataTypes.STRING, required);
-      break;
+        break;
       case 12:
         // XML
         field = new XmlField(fieldName, length, required);
-      break;
+        break;
       default:
         System.out.println("Unknown field type " + fieldName + " " + fieldType);
         return null;
@@ -301,23 +301,23 @@ public class FgdbReader {
     final int geometryType = this.in.read();
     switch (geometryType) {
       case 0:
-      break;
+        break;
       case 1:
         this.geometryType = DataTypes.POINT;
-      break;
+        break;
       case 2:
         this.geometryType = DataTypes.MULTI_POINT;
-      break;
+        break;
       case 3:
         this.geometryType = DataTypes.MULTI_LINE_STRING;
-      break;
+        break;
       case 4:
         this.geometryType = DataTypes.MULTI_POLYGON;
-      break;
+        break;
 
       default:
         System.out.println("Unknown geometry type " + geometryType);
-      break;
+        break;
     }
     final int unknown1 = this.in.read();
     final int unknown2 = this.in.read();
