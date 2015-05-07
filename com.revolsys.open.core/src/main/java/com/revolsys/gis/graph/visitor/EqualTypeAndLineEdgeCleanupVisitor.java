@@ -12,9 +12,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordLog;
 import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.RecordLog;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryFilter;
 import com.revolsys.gis.graph.DataObjectGraph;
 import com.revolsys.gis.graph.Edge;

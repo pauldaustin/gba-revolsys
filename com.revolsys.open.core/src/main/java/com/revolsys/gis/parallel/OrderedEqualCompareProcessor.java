@@ -8,8 +8,8 @@ import java.util.Set;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.RecordLog;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;

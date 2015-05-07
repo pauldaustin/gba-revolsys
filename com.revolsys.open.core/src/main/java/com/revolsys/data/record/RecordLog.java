@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.ThreadSharedAttributes;
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataTypes;
+import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
 

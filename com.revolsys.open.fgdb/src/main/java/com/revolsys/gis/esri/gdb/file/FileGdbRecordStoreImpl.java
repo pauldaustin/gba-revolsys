@@ -891,7 +891,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
               try {
                 final AbstractFileGdbFieldDefinition fieldDefinition = JavaBeanUtil.invokeConstructor(
                   fieldConstructor, field);
-                fieldDefinition.setDataStore(this);
+                fieldDefinition.setRecordStore(this);
                 recordDefinition.addField(fieldDefinition);
                 if (fieldDefinition instanceof GlobalIdFieldDefinition) {
                   recordDefinition.setIdFieldName(fieldName);
