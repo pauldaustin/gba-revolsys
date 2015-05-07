@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 
-import com.revolsys.gis.data.model.codes.CodeTable;
+import com.revolsys.data.codes.CodeTable;
 
 public class CodedValueDomain extends Domain implements CodeTable {
   private List<CodedValue> codedValues = new ArrayList<CodedValue>();

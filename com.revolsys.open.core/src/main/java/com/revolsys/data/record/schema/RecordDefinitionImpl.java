@@ -20,6 +20,7 @@ import javax.annotation.PreDestroy;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.WeakCache;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.property.FieldProperties;
@@ -28,9 +29,8 @@ import com.revolsys.gis.data.model.ArrayDataObjectFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.ValueMetaDataProperty;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.io.AbstractObjectWithProperties;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
@@ -641,7 +641,7 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public String getTypeName() {
-    return PathUtil.getName(this.path);
+    return Path.getName(this.path);
   }
 
   @Override

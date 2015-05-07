@@ -6,9 +6,9 @@ import java.util.Comparator;
 import org.jdesktop.swingx.sort.TableSortController;
 
 import com.revolsys.comparator.NumericComparator;
+import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.codes.CodeTableCoparator;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTable;
-import com.revolsys.gis.data.model.codes.CodeTableCoparator;
 import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
 

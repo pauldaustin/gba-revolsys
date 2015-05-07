@@ -31,6 +31,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.converter.string.BooleanStringConverter;
+import com.revolsys.data.codes.AbstractCodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.query.SqlCondition;
 import com.revolsys.data.record.Record;
@@ -49,8 +50,7 @@ import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
 import com.revolsys.gis.data.model.GlobalIdProperty;
-import com.revolsys.gis.data.model.codes.AbstractCodeTable;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
@@ -343,7 +343,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
 
   public JdbcAttribute getAttribute(final String schemaName,
     final String tableName, final String columnName) {
-    final String typePath = PathUtil.toPath(schemaName, tableName);
+    final String typePath = Path.toPath(schemaName, tableName);
     final RecordDefinition metaData = getRecordDefinition(typePath);
     if (metaData == null) {
       return null;
@@ -397,7 +397,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
 
   @Override
   public String getDatabaseQualifiedTableName(final String typePath) {
-    final String schema = getDatabaseSchemaName(PathUtil.getPath(typePath));
+    final String schema = getDatabaseSchemaName(Path.getPath(typePath));
     final String tableName = getDatabaseTableName(typePath);
     return schema + "." + tableName;
   }
@@ -490,7 +490,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
   public RecordDefinition getMetaData(final String typePath,
     final ResultSetMetaData resultSetMetaData) {
     try {
-      final String schemaName = PathUtil.getPath(typePath);
+      final String schemaName = Path.getPath(typePath);
       final RecordStoreSchema schema = getSchema(schemaName);
       final RecordDefinitionImpl metaData = new RecordDefinitionImpl(this,
         schema, typePath);
@@ -775,7 +775,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
       final Set<String> tableNames = tablePermissionsMap.keySet();
       for (final String dbTableName : tableNames) {
         final String tableName = dbTableName.toUpperCase();
-        final String typePath = PathUtil.toPath(schemaName, tableName);
+        final String typePath = Path.toPath(schemaName, tableName);
         this.tableNameMap.put(typePath, dbTableName);
         final RecordDefinitionImpl metaData = new RecordDefinitionImpl(this,
           schema, typePath);
@@ -793,7 +793,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
         while (columnsRs.next()) {
           final String tableName = columnsRs.getString("TABLE_NAME")
             .toUpperCase();
-          final String typePath = PathUtil.toPath(schemaName, tableName);
+          final String typePath = Path.toPath(schemaName, tableName);
           final RecordDefinitionImpl metaData = (RecordDefinitionImpl)metaDataMap.get(typePath);
           if (metaData != null) {
             final String name = columnsRs.getString("COLUMN_NAME")

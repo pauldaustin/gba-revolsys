@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.codes.CodeTable;
-import com.revolsys.gis.data.model.codes.CodeTableProperty;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
 import com.revolsys.util.CollectionUtil;

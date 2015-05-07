@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 import com.revolsys.collection.Parent;
 import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
@@ -63,7 +63,7 @@ public class LayerGroup extends AbstractLayer implements List<Layer>,
   }
 
   private static Layer getLayer(LayerGroup group, final String name) {
-    for (final String path : PathUtil.getPathElements(PathUtil.getPath(name))) {
+    for (final String path : Path.getPathElements(Path.getPath(name))) {
       final Layer layer = getLayerByName(group, path);
       if (layer instanceof LayerGroup) {
         group = (LayerGroup)layer;
@@ -73,7 +73,7 @@ public class LayerGroup extends AbstractLayer implements List<Layer>,
     }
 
     if (group != null) {
-      final String layerName = PathUtil.getName(name);
+      final String layerName = Path.getName(name);
 
       return getLayerByName(group, layerName);
     }

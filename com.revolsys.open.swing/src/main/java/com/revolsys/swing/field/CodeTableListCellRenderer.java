@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-import com.revolsys.gis.data.model.codes.CodeTable;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.util.CollectionUtil;
 
 @SuppressWarnings("serial")

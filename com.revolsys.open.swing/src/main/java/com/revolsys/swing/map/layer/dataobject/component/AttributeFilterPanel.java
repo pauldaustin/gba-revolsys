@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Column;
 import com.revolsys.data.query.Condition;
@@ -41,7 +42,6 @@ import com.revolsys.data.query.RightUnaryCondition;
 import com.revolsys.data.query.Value;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.field.ComboBox;

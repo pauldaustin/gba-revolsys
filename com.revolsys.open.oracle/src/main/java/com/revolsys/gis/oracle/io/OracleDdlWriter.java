@@ -13,7 +13,7 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.data.model.ShortNameProperty;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDdlWriter;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -54,7 +54,7 @@ public class OracleDdlWriter extends JdbcDdlWriter {
     if (schemaName.length() == 0) {
       schemaName = "public";
     }
-    final String tableName = PathUtil.getName(typePath);
+    final String tableName = Path.getName(typePath);
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
@@ -174,7 +174,7 @@ public class OracleDdlWriter extends JdbcDdlWriter {
     final PrintWriter out = getOut();
     final String typePath = metaData.getPath();
     final String schemaName = JdbcUtils.getSchemaName(typePath);
-    final String tableName = PathUtil.getName(typePath);
+    final String tableName = Path.getName(typePath);
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);

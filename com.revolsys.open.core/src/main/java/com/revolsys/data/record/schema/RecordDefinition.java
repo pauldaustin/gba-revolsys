@@ -23,10 +23,10 @@ package com.revolsys.data.record.schema;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.io.ObjectWithProperties;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.jts.geom.GeometryFactory;

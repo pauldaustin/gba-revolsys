@@ -8,7 +8,7 @@ import javax.swing.ListCellRenderer;
 
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.util.Property;
 
 @SuppressWarnings("rawtypes")
@@ -33,7 +33,7 @@ public class PathNameListCellRenderer extends ObjectToStringConverter implements
   public String getPreferredStringForItem(final Object item) {
     if (Property.hasValue(item)) {
       final String path = item.toString();
-      return PathUtil.getName(path);
+      return Path.getName(path);
     } else {
       return "-";
     }

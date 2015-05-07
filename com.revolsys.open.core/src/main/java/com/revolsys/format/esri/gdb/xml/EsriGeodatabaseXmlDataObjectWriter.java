@@ -20,7 +20,7 @@ import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCsWktWriter;
 import com.revolsys.io.AbstractWriter;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.xml.XmlConstants;
 import com.revolsys.io.xml.XmlWriter;
 import com.revolsys.io.xml.XsiConstants;
@@ -157,7 +157,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
     out.attribute(XsiConstants.TYPE, dataElementType);
 
     final String path = metaData.getPath();
-    final String localName = PathUtil.getName(path);
+    final String localName = Path.getName(path);
     out.element(CATALOG_PATH, "/FC=" + localName);
     out.element(NAME, localName);
     out.element(METADATA_RETRIEVED, true);

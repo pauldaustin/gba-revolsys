@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.codes;
+package com.revolsys.data.codes;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.util.Property;
 
@@ -371,7 +371,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
         this.typePath = null;
       } else {
         this.typePath = metaData.getPath();
-        setName(PathUtil.getName(typePath));
+        setName(Path.getName(typePath));
         this.dataStore = this.metaData.getRecordStore();
         metaData.setProperty(getPropertyName(), this);
         dataStore.addCodeTable(this);

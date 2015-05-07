@@ -19,11 +19,11 @@ import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.map.Maps;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.AbstractMultiCondition;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.CollectionValue;
@@ -57,7 +57,6 @@ import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.format.esri.gdb.xml.model.Index;
 import com.revolsys.format.esri.gdb.xml.model.SpatialReference;
 import com.revolsys.format.esri.gdb.xml.model.enums.FieldType;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.esri.gdb.file.capi.FileGdbDomainCodeTable;
 import com.revolsys.gis.esri.gdb.file.capi.swig.EnumRows;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Envelope;
@@ -80,7 +79,7 @@ import com.revolsys.gis.esri.gdb.file.capi.type.ShortFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.capi.type.StringFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.capi.type.XmlFieldDefinition;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
 import com.revolsys.io.xml.XmlProcessor;
 import com.revolsys.jdbc.JdbcUtils;
@@ -90,6 +89,7 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.DateUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileGdbRecordStore {
@@ -134,12 +134,12 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   }
 
   public static SpatialReference getSpatialReference(final GeometryFactory geometryFactory) {
-    if (geometryFactory == null || geometryFactory.getSRID() == 0) {
+    if (geometryFactory == null || geometryFactory.getSrid() == 0) {
       return null;
     } else {
       final String wkt;
       synchronized (API_SYNC) {
-        wkt = EsriFileGdb.getSpatialReferenceWkt(geometryFactory.getSRID());
+        wkt = EsriFileGdb.getSpatialReferenceWkt(geometryFactory.getSrid());
       }
       final SpatialReference spatialReference = SpatialReference.get(geometryFactory, wkt);
       return spatialReference;
@@ -148,15 +148,17 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
 
   private final Object apiSync = new Object();
 
+  private final Map<String, String> catalogPathByPath = new HashMap<>();
+
   private boolean closed = false;
 
   private boolean createMissingRecordStore = true;
 
   private boolean createMissingTables = true;
 
-  private String defaultSchema = "/";
+  private String defaultSchemaPath = "/";
 
-  private Map<String, List<String>> domainFieldNames = new HashMap<String, List<String>>();
+  private Map<String, List<String>> domainFieldNames = new HashMap<>();
 
   private final Set<EnumRows> enumRowsToClose = new HashSet<>();
 
@@ -168,7 +170,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
 
   private int geodatabaseReferenceCount;
 
-  private final Map<String, AtomicLong> idGenerators = new HashMap<String, AtomicLong>();
+  private final Map<String, AtomicLong> idGenerators = new HashMap<>();
 
   private boolean initialized;
 
@@ -181,6 +183,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   protected FileGdbRecordStoreImpl(final File file) {
     this.fileName = file.getAbsolutePath();
     setConnectionProperties(Collections.singletonMap("url", FileUtil.toUrl(file).toString()));
+    this.catalogPathByPath.put("/", "\\");
   }
 
   private void addChildSchema(final Geodatabase geodatabase, final String path) {
@@ -495,7 +498,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
       if (!orderBy.isEmpty()) {
         LoggerFactory.getLogger(getClass()).error(
           "Unable to sort on " + recordDefinition.getPath() + " " + orderBy.keySet()
-            + " as the ESRI library can't sort with a bounding box query");
+          + " as the ESRI library can't sort with a bounding box query");
       }
       sql = whereClause;
     } else {
@@ -534,7 +537,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         } else {
           LoggerFactory.getLogger(getClass()).error(
             "Unable to sort on " + recordDefinition.getPath() + "." + fieldName
-              + " as the ESRI library can't sort on " + dataType + " fields");
+            + " as the ESRI library can't sort on " + dataType + " fields");
         }
       }
     }
@@ -661,7 +664,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
                 createSchema(geodatabase, deTable);
               }
             }
-            if (schemaName.equals(this.defaultSchema)) {
+            if (schemaName.equals(this.defaultSchemaPath)) {
               if (!(deTable instanceof DEFeatureClass)) {
                 schemaPath = "\\";
                 // @TODO clone
@@ -669,7 +672,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
 
               }
             } else if (schemaName.equals("")) {
-              schemaName = this.defaultSchema;
+              schemaName = this.defaultSchemaPath;
             }
             for (final Field field : deTable.getFields()) {
               final String fieldName = field.getName();
@@ -832,7 +835,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   }
 
   public String getDefaultSchema() {
-    return this.defaultSchema;
+    return this.defaultSchemaPath;
   }
 
   public Map<String, List<String>> getDomainColumNames() {
@@ -876,7 +879,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           final XmlProcessor parser = new EsriGdbXmlParser();
           final DETable deTable = parser.process(tableDefinition);
           final String tableName = deTable.getName();
-          final String typePath = PathUtil.toPath(schemaName, tableName);
+          final String typePath = Path.toPath(schemaName, tableName);
           final RecordStoreSchema schema = getSchema(schemaName);
           final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(this, schema,
             typePath);
@@ -896,7 +899,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
               } catch (final Throwable e) {
                 LOG.error(tableDefinition);
                 throw new RuntimeException("Error creating field for " + typePath + "."
-                  + field.getName() + " : " + field.getType(), e);
+                    + field.getName() + " : " + field.getType(), e);
               }
             } else {
               LOG.error("Unsupported field type " + fieldName + ":" + type);
@@ -1279,15 +1282,15 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         if (geodatabase != null) {
           try {
             final String schemaName = schema.getPath();
-            if (schemaName.equals(this.defaultSchema)) {
+            if (schemaName.equals(this.defaultSchemaPath)) {
               loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, "\\",
-                "Feature Class");
+                  "Feature Class");
               loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, "\\",
-                "Table");
+                  "Table");
             }
             final String path = schemaName.replaceAll("/", "\\\\");
             loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, path,
-              "Feature Class");
+                "Feature Class");
             loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, path, "Table");
           } finally {
             releaseGeodatabase();
@@ -1316,7 +1319,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
       final Geodatabase geodatabase = getGeodatabase();
       if (geodatabase != null) {
         try {
-          addSchema(new RecordStoreSchema(this, this.defaultSchema));
+          addSchema(new RecordStoreSchema(this, this.defaultSchemaPath));
           addChildSchema(geodatabase, "\\");
         } finally {
           releaseGeodatabase();
@@ -1435,7 +1438,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
         } catch (final Throwable t) {
           LoggerFactory.getLogger(getClass()).error(
             "Unable to execute query SELECT " + fields + " FROM " + typePath + " WHERE "
-              + whereClause, t);
+                + whereClause, t);
 
         }
       }
@@ -1453,7 +1456,7 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
           return rows;
         } catch (final Exception e) {
           LOG.error("ERROR executing query SELECT " + fields + " FROM " + typePath + " WHERE "
-            + whereClause + " AND " + boundingBox, e);
+              + whereClause + " AND " + boundingBox, e);
         }
       }
       return null;
@@ -1473,14 +1476,14 @@ public class FileGdbRecordStoreImpl extends AbstractRecordStore implements FileG
   @Override
   public void setDefaultSchema(final String defaultSchema) {
     synchronized (this.apiSync) {
-      if (StringUtils.hasText(defaultSchema)) {
+      if (Property.hasValue(defaultSchema)) {
         if (!defaultSchema.startsWith("/")) {
-          this.defaultSchema = "/" + defaultSchema;
+          this.defaultSchemaPath = "/" + defaultSchema;
         } else {
-          this.defaultSchema = defaultSchema;
+          this.defaultSchemaPath = defaultSchema;
         }
       } else {
-        this.defaultSchema = "/";
+        this.defaultSchemaPath = "/";
       }
       refreshSchema();
     }

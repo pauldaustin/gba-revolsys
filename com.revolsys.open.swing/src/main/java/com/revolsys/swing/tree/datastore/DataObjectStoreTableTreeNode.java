@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
@@ -66,7 +66,7 @@ public class DataObjectStoreTableTreeNode extends LazyLoadTreeNode {
     setAllowsChildren(false);
     setParent(parent);
 
-    final String name = PathUtil.getName(typePath);
+    final String name = Path.getName(typePath);
     setName(name);
 
     Icon icon = ICONS_GEOMETRY.get(geometryType);

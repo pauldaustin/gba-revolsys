@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.codes.CodeTable;
 
 /**
  * Filter DataObjects by the value of the attributeName.

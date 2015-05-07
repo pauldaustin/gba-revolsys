@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
-import com.revolsys.gis.data.model.codes.AbstractCodeTable;
+import com.revolsys.data.codes.AbstractCodeTable;
 import com.revolsys.jdbc.JdbcUtils;
 
 @Deprecated

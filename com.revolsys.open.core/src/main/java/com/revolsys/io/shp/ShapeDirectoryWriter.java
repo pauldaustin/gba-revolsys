@@ -15,7 +15,7 @@ import com.revolsys.gis.data.io.AbstractDataObjectWriterFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
 import com.revolsys.io.xbase.XbaseDataObjectWriter;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -78,7 +78,7 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
   private File getDirectory(final RecordDefinition metaData) {
     if (useNamespaceAsSubDirectory) {
       final String typePath = metaData.getPath();
-      final String schemaName = PathUtil.getPath(typePath);
+      final String schemaName = Path.getPath(typePath);
       if (StringUtils.hasText(schemaName)) {
         final File childDirectory = new File(directory, schemaName);
         if (!childDirectory.mkdirs()) {

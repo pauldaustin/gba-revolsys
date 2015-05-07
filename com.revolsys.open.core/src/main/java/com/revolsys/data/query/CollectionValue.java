@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.ctc.wstx.util.ExceptionUtil;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
 import com.revolsys.util.CollectionUtil;

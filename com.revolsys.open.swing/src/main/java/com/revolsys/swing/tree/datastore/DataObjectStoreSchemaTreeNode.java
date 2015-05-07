@@ -16,7 +16,7 @@ import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
@@ -35,7 +35,7 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
     setIcon(ICON_SCHEMA);
     setParent(parent);
     this.schemaPath = schemaPath;
-    String name = PathUtil.getName(schemaPath);
+    String name = Path.getName(schemaPath);
     if (!StringUtils.hasText(name)) {
       name = "/";
     }

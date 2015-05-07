@@ -22,7 +22,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
 import com.revolsys.gis.data.model.ShortNameProperty;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
@@ -126,7 +126,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
 
   public String getSequenceName(final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
-    final String schema = getDatabaseSchemaName(PathUtil.getPath(typePath));
+    final String schema = getDatabaseSchemaName(Path.getPath(typePath));
     final String shortName = ShortNameProperty.getShortName(metaData);
     final String sequenceName;
     if (StringUtils.hasText(shortName)) {

@@ -47,9 +47,8 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
-public class GeometryFactory extends
-  com.vividsolutions.jts.geom.GeometryFactory implements
-  CoordinatesPrecisionModel, MapSerializer {
+public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory implements
+CoordinatesPrecisionModel, MapSerializer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
     "geometryFactory", "Geometry Factory", GeometryFactory.class, "create");
@@ -76,7 +75,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with no coordinate system, 3D axis (x, y &amp; z) and
    * a floating precision model.
    * </p>
-   * 
+   *
    * @return The geometry factory.
    */
   public static GeometryFactory getFactory() {
@@ -86,15 +85,13 @@ public class GeometryFactory extends
   /**
    * get a 3d geometry factory with a floating scale.
    */
-  public static GeometryFactory getFactory(
-    final CoordinateSystem coordinateSystem) {
+  public static GeometryFactory getFactory(final CoordinateSystem coordinateSystem) {
     final int srid = getId(coordinateSystem);
     return getFactory(srid, 3, 0, 0);
   }
 
-  public static GeometryFactory getFactory(
-    final CoordinateSystem coordinateSystem, final int numAxis,
-    final double scaleXY, final double scaleZ) {
+  public static GeometryFactory getFactory(final CoordinateSystem coordinateSystem,
+    final int numAxis, final double scaleXY, final double scaleZ) {
     return new GeometryFactory(coordinateSystem, numAxis, scaleXY, scaleZ);
   }
 
@@ -103,7 +100,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with no coordinate system, 3D axis (x, y &amp; z) and
    * a fixed x, y & floating z precision models.
    * </p>
-   * 
+   *
    * @param scaleXY The scale factor used to round the x, y coordinates. The
    *          precision is 1 / scaleXy. A scale factor of 1000 will give a
    *          precision of 1 / 1000 = 1mm for projected coordinate systems using
@@ -140,7 +137,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with the coordinate system, 3D axis (x, y &amp; z)
    * and a floating precision models.
    * </p>
-   * 
+   *
    * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
    *          coordinate system id</a>.
    * @return The geometry factory.
@@ -154,7 +151,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with the coordinate system, 2D axis (x &amp; y) and a
    * fixed x, y precision model.
    * </p>
-   * 
+   *
    * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
    *          coordinate system id</a>.
    * @param scaleXY The scale factor used to round the x, y coordinates. The
@@ -172,7 +169,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with no coordinate system, 3D axis (x, y &amp; z) and
    * a fixed x, y &amp; floating z precision models.
    * </p>
-   * 
+   *
    * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
    *          coordinate system id</a>.
    * @param scaleXY The scale factor used to round the x, y coordinates. The
@@ -185,8 +182,7 @@ public class GeometryFactory extends
    *          metres.
    * @return The geometry factory.
    */
-  public static GeometryFactory getFactory(final int srid,
-    final double scaleXY, final double scaleZ) {
+  public static GeometryFactory getFactory(final int srid, final double scaleXY, final double scaleZ) {
     return getFactory(srid, 3, scaleXY, scaleZ);
   }
 
@@ -195,7 +191,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with the coordinate system, number of axis and a
    * floating precision model.
    * </p>
-   * 
+   *
    * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
    *          coordinate system id</a>.
    * @param numAxis The number of coordinate axis. 2 for 2D x &amp; y
@@ -211,7 +207,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with the coordinate system, number of axis and a
    * fixed x, y &amp; fixed z precision models.
    * </p>
-   * 
+   *
    * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
    *          coordinate system id</a>.
    * @param numAxis The number of coordinate axis. 2 for 2D x &amp; y
@@ -226,8 +222,8 @@ public class GeometryFactory extends
    *          metres.
    * @return The geometry factory.
    */
-  public static GeometryFactory getFactory(final int srid, final int numAxis,
-    final double scaleXY, final double scaleZ) {
+  public static GeometryFactory getFactory(final int srid, final int numAxis, final double scaleXY,
+    final double scaleZ) {
     synchronized (factories) {
       final String key = srid + "-" + numAxis + "-" + scaleXY + "-" + scaleZ;
       GeometryFactory factory = factories.get(key);
@@ -244,7 +240,7 @@ public class GeometryFactory extends
    * Get a GeometryFactory with the coordinate system, 3D axis (x, y &amp; z)
    * and a floating precision models.
    * </p>
-   * 
+   *
    * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
    *          coordinate system id</a>.
    * @return The geometry factory.
@@ -260,8 +256,7 @@ public class GeometryFactory extends
     }
   }
 
-  private static Set<Class<?>> getGeometryClassSet(
-    final Collection<? extends Geometry> geometries) {
+  private static Set<Class<?>> getGeometryClassSet(final Collection<? extends Geometry> geometries) {
     final Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
     for (final Geometry geometry : geometries) {
       classes.add(geometry.getClass());
@@ -277,34 +272,38 @@ public class GeometryFactory extends
     }
   }
 
+  public static GeometryFactory wgs84() {
+    return getFactory(4326);
+  }
+
+  public static GeometryFactory worldMercator() {
+    return getFactory(3857);
+  }
+
   private final CoordinatesPrecisionModel coordinatesPrecisionModel;
 
   private final CoordinateSystem coordinateSystem;
 
   private int numAxis = 2;
 
-  protected GeometryFactory(final CoordinateSystem coordinateSystem,
-    final int numAxis, final double scaleXY, final double scaleZ) {
-    super(PrecisionModelUtil.getPrecisionModel(scaleXY),
-      coordinateSystem.getId(), new DoubleCoordinatesListFactory());
-    this.coordinateSystem = coordinateSystem;
-    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(
-      scaleXY, scaleZ);
-    this.numAxis = Math.max(numAxis, 2);
-  }
-
-  protected GeometryFactory(final int srid, final int numAxis,
+  protected GeometryFactory(final CoordinateSystem coordinateSystem, final int numAxis,
     final double scaleXY, final double scaleZ) {
-    super(PrecisionModelUtil.getPrecisionModel(scaleXY), srid,
+    super(PrecisionModelUtil.getPrecisionModel(scaleXY), coordinateSystem.getId(),
       new DoubleCoordinatesListFactory());
-    this.coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
-    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(
-      scaleXY, scaleZ);
+    this.coordinateSystem = coordinateSystem;
+    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
     this.numAxis = Math.max(numAxis, 2);
   }
 
-  public void addGeometries(final List<Geometry> geometryList,
-    final Geometry geometry) {
+  protected GeometryFactory(final int srid, final int numAxis, final double scaleXY,
+    final double scaleZ) {
+    super(PrecisionModelUtil.getPrecisionModel(scaleXY), srid, new DoubleCoordinatesListFactory());
+    this.coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
+    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
+    this.numAxis = Math.max(numAxis, 2);
+  }
+
+  public void addGeometries(final List<Geometry> geometryList, final Geometry geometry) {
     if (geometry != null && !geometry.isEmpty()) {
       for (int i = 0; i < geometry.getNumGeometries(); i++) {
         final Geometry part = geometry.getGeometryN(i);
@@ -321,8 +320,7 @@ public class GeometryFactory extends
   }
 
   @SuppressWarnings("unchecked")
-  public <V extends GeometryCollection> V createCollection(
-    final Geometry... geometries) {
+  public <V extends GeometryCollection> V createCollection(final Geometry... geometries) {
     return (V)createGeometryCollection(Arrays.asList(geometries));
   }
 
@@ -333,8 +331,7 @@ public class GeometryFactory extends
   }
 
   public Coordinates createCoordinates(final double... coordinates) {
-    final Coordinates newPoint = new DoubleCoordinates(this.numAxis,
-      coordinates);
+    final Coordinates newPoint = new DoubleCoordinates(this.numAxis, coordinates);
     makePrecise(newPoint);
     return newPoint;
   }
@@ -345,8 +342,7 @@ public class GeometryFactory extends
     } else {
       final int numPoints = points.size();
       final int numAxis = getNumAxis();
-      CoordinatesList coordinatesList = new DoubleCoordinatesList(numPoints,
-        numAxis);
+      CoordinatesList coordinatesList = new DoubleCoordinatesList(numPoints, numAxis);
       int i = 0;
       for (final Object object : points) {
         Coordinates point;
@@ -385,9 +381,8 @@ public class GeometryFactory extends
   }
 
   public CoordinatesList createCoordinatesList(final Coordinates... points) {
-    final DoubleCoordinatesList coordinatesList = new DoubleCoordinatesList(
-      getNumAxis(), points);
-    coordinatesList.makePrecise(coordinatesPrecisionModel);
+    final DoubleCoordinatesList coordinatesList = new DoubleCoordinatesList(getNumAxis(), points);
+    coordinatesList.makePrecise(this.coordinatesPrecisionModel);
     return coordinatesList;
   }
 
@@ -396,8 +391,7 @@ public class GeometryFactory extends
       return null;
     } else {
       final int size = points.size();
-      final CoordinatesList newPoints = new DoubleCoordinatesList(size,
-        this.numAxis);
+      final CoordinatesList newPoints = new DoubleCoordinatesList(size, this.numAxis);
       final int numAxis2 = points.getDimension();
       final int numAxis = Math.min(this.numAxis, numAxis2);
       for (int i = 0; i < size; i++) {
@@ -415,16 +409,14 @@ public class GeometryFactory extends
     if (points == null) {
       return null;
     } else {
-      final CoordinatesList newPoints = new DoubleCoordinatesList(getNumAxis(),
-        points);
+      final CoordinatesList newPoints = new DoubleCoordinatesList(getNumAxis(), points);
       makePrecise(newPoints);
       return newPoints;
     }
   }
 
   public CoordinatesList createCoordinatesList(final double... coordinates) {
-    final CoordinatesList newPoints = new DoubleCoordinatesList(this.numAxis,
-      coordinates);
+    final CoordinatesList newPoints = new DoubleCoordinatesList(this.numAxis, coordinates);
     makePrecise(newPoints);
     return newPoints;
   }
@@ -446,7 +438,7 @@ public class GeometryFactory extends
    * <p>
    * Create a new geometry of the requested target geometry class.
    * <p>
-   * 
+   *
    * @param targetClass
    * @param geometry
    * @return
@@ -454,8 +446,7 @@ public class GeometryFactory extends
   @SuppressWarnings({
     "unchecked"
   })
-  public <V extends Geometry> V createGeometry(final Class<?> targetClass,
-    Geometry geometry) {
+  public <V extends Geometry> V createGeometry(final Class<?> targetClass, Geometry geometry) {
     if (geometry != null && !geometry.isEmpty()) {
       geometry = copy(geometry);
       if (geometry instanceof GeometryCollection) {
@@ -514,8 +505,7 @@ public class GeometryFactory extends
   }
 
   @SuppressWarnings("unchecked")
-  public <V extends Geometry> V createGeometry(
-    final Collection<? extends Geometry> geometries) {
+  public <V extends Geometry> V createGeometry(final Collection<? extends Geometry> geometries) {
     final Collection<? extends Geometry> geometryList = getGeometries(geometries);
     if (geometryList == null || geometries.size() == 0) {
       return (V)createEmptyGeometryCollection();
@@ -549,8 +539,8 @@ public class GeometryFactory extends
       final int srid = getSRID();
       final int geometrySrid = geometry.getSRID();
       if (srid == 0 && geometrySrid != 0) {
-        final GeometryFactory geometryFactory = GeometryFactory.getFactory(
-          geometrySrid, numAxis, getScaleXY(), getScaleZ());
+        final GeometryFactory geometryFactory = GeometryFactory.getFactory(geometrySrid,
+          this.numAxis, getScaleXY(), getScaleZ());
         return geometryFactory.createGeometry(geometry);
       } else if (srid != 0 && geometrySrid != 0 && geometrySrid != srid) {
         if (geometry instanceof GeometryCollection) {
@@ -643,8 +633,7 @@ public class GeometryFactory extends
   }
 
   public LineString createLineString() {
-    final DoubleCoordinatesList points = new DoubleCoordinatesList(0,
-      getNumAxis());
+    final DoubleCoordinatesList points = new DoubleCoordinatesList(0, getNumAxis());
     return createLineString(points);
   }
 
@@ -715,8 +704,7 @@ public class GeometryFactory extends
   }
 
   public Point createPoint() {
-    final DoubleCoordinatesList points = new DoubleCoordinatesList(0,
-      getNumAxis());
+    final DoubleCoordinatesList points = new DoubleCoordinatesList(0, getNumAxis());
     return createPoint(points);
   }
 
@@ -735,7 +723,7 @@ public class GeometryFactory extends
   }
 
   public Point createPoint(final double... coordinates) {
-    final DoubleCoordinates coords = new DoubleCoordinates(numAxis, coordinates);
+    final DoubleCoordinates coords = new DoubleCoordinates(this.numAxis, coordinates);
     makePrecise(coords);
     return createPoint(coords);
   }
@@ -779,8 +767,7 @@ public class GeometryFactory extends
   }
 
   public Polygon createPolygon() {
-    final DoubleCoordinatesList points = new DoubleCoordinatesList(0,
-      getNumAxis());
+    final DoubleCoordinatesList points = new DoubleCoordinatesList(0, getNumAxis());
     return createPolygon(points);
   }
 
@@ -791,8 +778,7 @@ public class GeometryFactory extends
 
   public Polygon createPolygon(final List<?> rings) {
     if (rings.size() == 0) {
-      final DoubleCoordinatesList nullPoints = new DoubleCoordinatesList(0,
-        numAxis);
+      final DoubleCoordinatesList nullPoints = new DoubleCoordinatesList(0, this.numAxis);
       final LinearRing ring = createLinearRing(nullPoints);
       return createPolygon(ring, null);
     } else {
@@ -829,18 +815,18 @@ public class GeometryFactory extends
   }
 
   public CoordinatesPrecisionModel getCoordinatesPrecisionModel() {
-    return coordinatesPrecisionModel;
+    return this.coordinatesPrecisionModel;
   }
 
   public CoordinateSystem getCoordinateSystem() {
-    return coordinateSystem;
+    return this.coordinateSystem;
   }
 
   public GeometryFactory getGeographicGeometryFactory() {
-    if (coordinateSystem instanceof GeographicCoordinateSystem) {
+    if (this.coordinateSystem instanceof GeographicCoordinateSystem) {
       return this;
-    } else if (coordinateSystem instanceof ProjectedCoordinateSystem) {
-      final ProjectedCoordinateSystem projectedCs = (ProjectedCoordinateSystem)coordinateSystem;
+    } else if (this.coordinateSystem instanceof ProjectedCoordinateSystem) {
+      final ProjectedCoordinateSystem projectedCs = (ProjectedCoordinateSystem)this.coordinateSystem;
       final GeographicCoordinateSystem geographicCs = projectedCs.getGeographicCoordinateSystem();
       final int srid = geographicCs.getId();
       return getFactory(srid, getNumAxis(), 0, 0);
@@ -849,8 +835,7 @@ public class GeometryFactory extends
     }
   }
 
-  public List<Geometry> getGeometries(
-    final Collection<? extends Geometry> geometries) {
+  public List<Geometry> getGeometries(final Collection<? extends Geometry> geometries) {
     final List<Geometry> geometryList = new ArrayList<Geometry>();
     for (final Geometry geometry : geometries) {
       addGeometries(geometryList, geometry);
@@ -874,8 +859,7 @@ public class GeometryFactory extends
       return createLinearRing(points);
     } else if (ring instanceof double[]) {
       final double[] coordinates = (double[])ring;
-      final DoubleCoordinatesList points = new DoubleCoordinatesList(
-        getNumAxis(), coordinates);
+      final DoubleCoordinatesList points = new DoubleCoordinatesList(getNumAxis(), coordinates);
       return createLinearRing(points);
     } else {
       return null;
@@ -908,7 +892,7 @@ public class GeometryFactory extends
   }
 
   public int getNumAxis() {
-    return numAxis;
+    return this.numAxis;
   }
 
   public Point[] getPointArray(final Collection<?> pointsList) {
@@ -947,7 +931,7 @@ public class GeometryFactory extends
 
   @Override
   public Coordinates getPreciseCoordinates(final Coordinates point) {
-    return coordinatesPrecisionModel.getPreciseCoordinates(point);
+    return this.coordinatesPrecisionModel.getPreciseCoordinates(point);
   }
 
   @Override
@@ -962,26 +946,30 @@ public class GeometryFactory extends
     return precisionModel.getScaleZ();
   }
 
+  public int getSrid() {
+    return getSRID();
+  }
+
   public boolean hasM() {
-    return numAxis > 3;
+    return this.numAxis > 3;
   }
 
   public boolean hasZ() {
-    return numAxis > 2;
+    return this.numAxis > 2;
   }
 
   @Override
   public boolean isFloating() {
-    return coordinatesPrecisionModel.isFloating();
+    return this.coordinatesPrecisionModel.isFloating();
   }
 
   @Override
   public void makePrecise(final Coordinates point) {
-    coordinatesPrecisionModel.makePrecise(point);
+    this.coordinatesPrecisionModel.makePrecise(point);
   }
 
   public void makePrecise(final CoordinatesList points) {
-    points.makePrecise(coordinatesPrecisionModel);
+    points.makePrecise(this.coordinatesPrecisionModel);
   }
 
   public double makePrecise(final double value) {
@@ -990,17 +978,17 @@ public class GeometryFactory extends
 
   @Override
   public double makeXyPrecise(final double value) {
-    return coordinatesPrecisionModel.makeXyPrecise(value);
+    return this.coordinatesPrecisionModel.makeXyPrecise(value);
   }
 
   @Override
   public double makeZPrecise(final double value) {
-    return coordinatesPrecisionModel.makeZPrecise(value);
+    return this.coordinatesPrecisionModel.makeZPrecise(value);
   }
 
   /**
    * Project the geometry if it is in a different coordinate system
-   * 
+   *
    * @param geometry
    * @return
    */
@@ -1019,7 +1007,7 @@ public class GeometryFactory extends
     if (scaleXY > 0) {
       map.put("scaleXy", scaleXY);
     }
-    if (numAxis > 2) {
+    if (this.numAxis > 2) {
       final double scaleZ = getScaleZ();
       if (scaleZ > 0) {
         map.put("scaleZ", scaleZ);
@@ -1030,16 +1018,16 @@ public class GeometryFactory extends
 
   @Override
   public String toString() {
-    if (coordinateSystem == null) {
+    if (this.coordinateSystem == null) {
       return "Unknown coordinate system";
     } else {
-      final StringBuffer string = new StringBuffer(coordinateSystem.getName());
-      final int srid = coordinateSystem.getId();
+      final StringBuffer string = new StringBuffer(this.coordinateSystem.getName());
+      final int srid = this.coordinateSystem.getId();
       string.append(", srid=");
       string.append(srid);
       string.append(", numAxis=");
-      string.append(numAxis);
-      final double scaleXY = coordinatesPrecisionModel.getScaleXY();
+      string.append(this.numAxis);
+      final double scaleXY = this.coordinatesPrecisionModel.getScaleXY();
       string.append(", scaleXy=");
       if (scaleXY <= 0) {
         string.append("floating");
@@ -1047,7 +1035,7 @@ public class GeometryFactory extends
         string.append(scaleXY);
       }
       if (hasZ()) {
-        final double scaleZ = coordinatesPrecisionModel.getScaleZ();
+        final double scaleZ = this.coordinatesPrecisionModel.getScaleZ();
         string.append(", scaleZ=");
         if (scaleZ <= 0) {
           string.append("floating");
@@ -1057,13 +1045,5 @@ public class GeometryFactory extends
       }
       return string.toString();
     }
-  }
-
-  public static GeometryFactory wgs84() {
-    return getFactory(4326);
-  }
-
-  public static GeometryFactory worldMercator() {
-    return getFactory(3857);
   }
 }

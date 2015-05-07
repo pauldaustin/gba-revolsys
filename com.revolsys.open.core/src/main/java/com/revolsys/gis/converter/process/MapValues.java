@@ -3,10 +3,10 @@ package com.revolsys.gis.converter.process;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
-import com.revolsys.gis.data.model.codes.CodeTable;
 
 public class MapValues extends
   AbstractSourceToTargetProcess<Record, Record> {

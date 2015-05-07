@@ -13,7 +13,7 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.data.model.ShortNameProperty;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDdlWriter;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -41,7 +41,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
         + "_seq";
       return sequenceName;
     } else {
-      final String tableName = PathUtil.getName(typePath).toLowerCase();
+      final String tableName = Path.getName(typePath).toLowerCase();
       final String idAttributeName = metaData.getIdFieldName()
         .toLowerCase();
       return schema + "." + tableName + "_" + idAttributeName + "_seq";
@@ -55,7 +55,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
     if (schemaName.length() == 0) {
       schemaName = "public";
     }
-    final String tableName = PathUtil.getName(typePath);
+    final String tableName = Path.getName(typePath);
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
@@ -181,7 +181,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
     if (schemaName.length() == 0) {
       schemaName = "public";
     }
-    final String tableName = PathUtil.getName(typePath);
+    final String tableName = Path.getName(typePath);
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);

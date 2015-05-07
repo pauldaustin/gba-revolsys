@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTable;
 
 public class CopyValues extends
   AbstractSourceToTargetProcess<Record, Record> {

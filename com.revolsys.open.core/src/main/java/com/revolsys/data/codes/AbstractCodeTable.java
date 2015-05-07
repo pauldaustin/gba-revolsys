@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.codes;
+package com.revolsys.data.codes;
 
 import java.beans.PropertyChangeSupport;
 import java.io.Closeable;

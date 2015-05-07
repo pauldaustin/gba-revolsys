@@ -9,8 +9,8 @@ import javax.sql.DataSource;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTableProperty;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 

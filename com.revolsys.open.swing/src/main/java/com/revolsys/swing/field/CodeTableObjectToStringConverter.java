@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
-import com.revolsys.gis.data.model.codes.CodeTable;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.util.CollectionUtil;
 
 public class CodeTableObjectToStringConverter extends ObjectToStringConverter {

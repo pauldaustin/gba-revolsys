@@ -20,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
@@ -27,10 +28,9 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.io.Statistics;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
 import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
@@ -857,7 +857,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   public void setTypePath(final String typePath) {
     this.typePath = typePath;
     if (!StringUtils.hasText(getName())) {
-      setName(PathUtil.getName(typePath));
+      setName(Path.getName(typePath));
     }
     if (StringUtils.hasText(typePath)) {
       if (isExists()) {

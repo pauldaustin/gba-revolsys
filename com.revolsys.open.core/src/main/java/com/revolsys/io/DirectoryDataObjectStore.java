@@ -76,7 +76,7 @@ public class DirectoryDataObjectStore extends AbstractRecordStore {
     final RecordDefinition metaData = super.getRecordDefinition(objectMetaData);
     if (metaData == null && createMissingTables) {
       final String typePath = objectMetaData.getPath();
-      final String schemaName = PathUtil.getPath(typePath);
+      final String schemaName = Path.getPath(typePath);
       RecordStoreSchema schema = getSchema(schemaName);
       if (schema == null && createMissingTables) {
         schema = new RecordStoreSchema(this, schemaName);
@@ -125,7 +125,7 @@ public class DirectoryDataObjectStore extends AbstractRecordStore {
     final String typePath = metaData.getPath();
     Writer<Record> writer = writers.get(typePath);
     if (writer == null) {
-      final String schemaName = PathUtil.getPath(typePath);
+      final String schemaName = Path.getPath(typePath);
       final File subDirectory = new File(getDirectory(), schemaName);
       final File file = new File(subDirectory, metaData.getTypeName() + "."
         + getFileExtension());

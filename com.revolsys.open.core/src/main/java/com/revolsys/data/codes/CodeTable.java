@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.codes;
+package com.revolsys.data.codes;
 
 import java.util.List;
 import java.util.Map;

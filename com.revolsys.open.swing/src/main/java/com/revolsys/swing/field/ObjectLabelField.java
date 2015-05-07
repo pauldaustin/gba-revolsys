@@ -10,7 +10,7 @@ import javax.swing.border.BevelBorder;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.data.model.codes.CodeTable;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.CollectionUtil;
 

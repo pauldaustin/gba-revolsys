@@ -15,7 +15,7 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.JdbcConstants;
@@ -54,7 +54,7 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcAttributeAdder {
     final int length, final int scale, final boolean required,
     final String description) {
     final String typePath = metaData.getPath();
-    String owner = this.dataStore.getDatabaseSchemaName(PathUtil.getPath(typePath));
+    String owner = this.dataStore.getDatabaseSchemaName(Path.getPath(typePath));
     if (!StringUtils.hasText(owner)) {
       owner = "public";
     }

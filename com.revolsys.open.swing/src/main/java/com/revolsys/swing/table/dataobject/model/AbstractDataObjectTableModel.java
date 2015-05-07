@@ -16,8 +16,8 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;

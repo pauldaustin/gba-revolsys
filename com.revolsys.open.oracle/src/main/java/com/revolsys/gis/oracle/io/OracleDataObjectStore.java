@@ -25,7 +25,7 @@ import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.gis.oracle.esri.ArcSdeBinaryGeometryDataStoreExtension;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryAttribute;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryDataStoreExtension;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
@@ -160,7 +160,7 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
       return null;
     } else {
       final String typePath = metaData.getPath();
-      final String schema = getDatabaseSchemaName(PathUtil.getPath(typePath));
+      final String schema = getDatabaseSchemaName(Path.getPath(typePath));
       final String shortName = ShortNameProperty.getShortName(metaData);
       final String sequenceName;
       if (StringUtils.hasText(shortName)) {

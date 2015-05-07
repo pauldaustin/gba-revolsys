@@ -13,9 +13,9 @@ import org.jdesktop.swingx.decorator.HighlightPredicate;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.table.dataobject.model.DataObjectRowTableModel;
 import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;

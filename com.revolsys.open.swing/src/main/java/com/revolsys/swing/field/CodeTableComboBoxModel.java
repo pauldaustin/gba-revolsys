@@ -11,7 +11,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.SwingUtilities;
 
-import com.revolsys.gis.data.model.codes.CodeTable;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;

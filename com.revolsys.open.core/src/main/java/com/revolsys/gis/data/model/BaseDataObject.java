@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
@@ -28,7 +29,6 @@ import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;

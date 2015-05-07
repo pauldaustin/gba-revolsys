@@ -12,7 +12,7 @@ import javax.annotation.PreDestroy;
 
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.io.AbstractObjectWithProperties;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.ExceptionUtil;
 
@@ -104,7 +104,7 @@ public class RecordStoreSchema extends AbstractObjectWithProperties {
 
   public String getName() {
     final String path = getPath();
-    return PathUtil.getName(path);
+    return Path.getName(path);
   }
 
   public String getPath() {

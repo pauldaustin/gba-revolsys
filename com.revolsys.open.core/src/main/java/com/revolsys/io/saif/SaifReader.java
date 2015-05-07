@@ -53,7 +53,7 @@ import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.io.saif.util.PathCache;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.spring.SpringUtil;
@@ -309,7 +309,7 @@ public class SaifReader extends AbstractReader<Record> implements
     final RecordFactory factory, final String className) throws IOException {
     String fileName = typePathFileNameMap.get(className);
     if (fileName == null) {
-      fileName = PathUtil.getName(className);
+      fileName = Path.getName(className);
     }
     OsnReader reader;
     if (zipFile != null) {

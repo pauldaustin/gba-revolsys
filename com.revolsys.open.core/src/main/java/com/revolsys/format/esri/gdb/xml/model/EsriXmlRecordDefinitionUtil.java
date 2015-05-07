@@ -20,7 +20,7 @@ import com.revolsys.format.esri.gdb.xml.model.enums.GeometryType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldTypeRegistry;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.io.PathUtil;
+import com.revolsys.io.Path;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.CollectionUtil;
 
@@ -190,7 +190,7 @@ public class EsriXmlRecordDefinitionUtil implements
   public static DETable createDETable(final RecordDefinition metaData,
     final SpatialReference spatialReference) {
     final String typePath = metaData.getPath();
-    final String schemaPath = PathUtil.getPath(typePath)
+    final String schemaPath = Path.getPath(typePath)
       .replaceAll("/", "\\\\");
 
     return createDETable(schemaPath, metaData, spatialReference);
@@ -231,7 +231,7 @@ public class EsriXmlRecordDefinitionUtil implements
     }
 
     final String path = metaData.getPath();
-    final String name = PathUtil.getName(path);
+    final String name = Path.getName(path);
     if (hasGeometry) {
       final DEFeatureClass featureClass = new DEFeatureClass();
       table = featureClass;
@@ -299,7 +299,7 @@ public class EsriXmlRecordDefinitionUtil implements
     } else {
       tableName = domain.getName();
     }
-    final String typePath = PathUtil.toPath(schemaName, tableName);
+    final String typePath = Path.toPath(schemaName, tableName);
     final RecordDefinitionImpl metaData = new RecordDefinitionImpl(typePath);
     final FieldType fieldType = domain.getFieldType();
     final DataType dataType = EsriGeodatabaseXmlFieldTypeRegistry.INSTANCE.getDataType(fieldType);
@@ -329,7 +329,7 @@ public class EsriXmlRecordDefinitionUtil implements
   public static RecordDefinition getMetaData(final String schemaName,
     final DETable deTable, final boolean ignoreEsriFields) {
     final String tableName = deTable.getName();
-    final String typePath = PathUtil.toPath(schemaName, tableName);
+    final String typePath = Path.toPath(schemaName, tableName);
     final RecordDefinitionImpl metaData = new RecordDefinitionImpl(typePath);
     final List<String> ignoreFieldNames = new ArrayList<String>();
     if (ignoreEsriFields) {

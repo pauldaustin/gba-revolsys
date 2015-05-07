@@ -31,10 +31,10 @@ import com.akiban.sql.parser.UserTypeConstantNode;
 import com.akiban.sql.parser.ValueNode;
 import com.akiban.sql.parser.ValueNodeList;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.functions.Function;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.util.ExceptionUtil;
 
 public abstract class QueryValue implements Cloneable {
