@@ -200,23 +200,12 @@ FileGdbRecordStore {
       FileUtil.toUrl(file).toString()));
   }
 
-  public void addChildSchema(final String path) {
-    synchronized (this.apiSync) {
-      synchronized (API_SYNC) {
-        final Geodatabase geodatabase = getGeodatabase();
-        if (geodatabase != null) {
-          try {
-            final VectorOfWString childDatasets = geodatabase.getChildDatasets(
-              path, "Feature Dataset");
-            for (int i = 0; i < childDatasets.size(); i++) {
-              final String childPath = childDatasets.get(i);
-              addFeatureDatasetSchema(childPath);
-            }
-          } finally {
-            releaseGeodatabase();
-          }
-        }
-      }
+  private void addChildSchema(final Geodatabase geodatabase, final String path) {
+    final VectorOfWString childDatasets = geodatabase.getChildDatasets(path,
+        "Feature Dataset");
+    for (int i = 0; i < childDatasets.size(); i++) {
+      final String childPath = childDatasets.get(i);
+      addFeatureDatasetSchema(geodatabase, childPath);
     }
   }
 
@@ -233,31 +222,25 @@ FileGdbRecordStore {
     }
   }
 
-  private RecordStoreSchema addFeatureDatasetSchema(final String path) {
+  private RecordStoreSchema addFeatureDatasetSchema(
+    final Geodatabase geodatabase2, final String path) {
     final String schemaName = path.replaceAll("\\\\", "/");
     final RecordStoreSchema schema = new RecordStoreSchema(this, schemaName);
     schema.setProperty(CATALOG_PATH_PROPERTY, path);
     addSchema(schema);
-    addChildSchema(path);
+    addChildSchema(this.geodatabase, path);
     return schema;
   }
 
-  private void addTableRecordDefinition(final String schemaName,
-    final String path) {
-    synchronized (this.apiSync) {
-      synchronized (API_SYNC) {
-        final Geodatabase geodatabase = getGeodatabase();
-        if (geodatabase != null) {
-          try {
-            final String tableDefinition = geodatabase.getTableDefinition(path);
-            final RecordDefinition recordDefinition = getRecordDefinition(
-              schemaName, path, tableDefinition);
-            addRecordDefinition(recordDefinition);
-          } finally {
-            releaseGeodatabase();
-          }
-        }
-      }
+  private void addTableRecordDefinition(final Geodatabase geodatabase,
+    final String schemaName, final String path) {
+    try {
+      final String tableDefinition = geodatabase.getTableDefinition(path);
+      final RecordDefinition recordDefinition = getRecordDefinition(schemaName,
+        path, tableDefinition);
+      addRecordDefinition(recordDefinition);
+    } finally {
+      releaseGeodatabase();
     }
   }
 
@@ -465,35 +448,24 @@ FileGdbRecordStore {
     }
   }
 
-  private void closeTables() {
-    synchronized (this.apiSync) {
-      if (!this.tablesToClose.isEmpty()) {
-        final Geodatabase geodatabase = getGeodatabase();
-        if (geodatabase != null) {
-          try {
-            for (final Entry<String, Table> entry : this.tablesToClose.entrySet()) {
-              final Table table = entry.getValue();
-              try {
-                table.setLoadOnlyMode(false);
-                table.freeWriteLock();
-                geodatabase.closeTable(table);
-              } catch (final Throwable e) {
-              } finally {
-                try {
-                  table.delete();
-                } catch (final Throwable t) {
-                }
-              }
-            }
-            this.tablesToClose.clear();
-            this.tableReferenceCountsByTypePath.clear();
-            this.writeLockCountsByTypePath.clear();
-          } finally {
-            releaseGeodatabase();
-          }
+  private void closeTables(final Geodatabase geodatabase) {
+    for (final Entry<String, Table> entry : this.tablesToClose.entrySet()) {
+      final Table table = entry.getValue();
+      try {
+        table.setLoadOnlyMode(false);
+        table.freeWriteLock();
+        geodatabase.closeTable(table);
+      } catch (final Throwable e) {
+      } finally {
+        try {
+          table.delete();
+        } catch (final Throwable t) {
         }
       }
     }
+    this.tablesToClose.clear();
+    this.tableReferenceCountsByTypePath.clear();
+    this.writeLockCountsByTypePath.clear();
   }
 
   public synchronized void createDomain(final Domain domain) {
@@ -649,37 +621,25 @@ FileGdbRecordStore {
     }
   }
 
-  private RecordStoreSchema createSchema(final DETable table) {
-    synchronized (this.apiSync) {
-      synchronized (API_SYNC) {
-        final Geodatabase geodatabase = getGeodatabase();
-        if (geodatabase == null) {
-          return null;
-        } else {
-          try {
-            final String catalogPath = table.getParentCatalogPath();
-            final List<DEFeatureDataset> datasets = EsriXmlRecordDefinitionUtil.createDEFeatureDatasets(table);
-            for (final DEFeatureDataset dataset : datasets) {
-              final String path = dataset.getCatalogPath();
-              final String datasetDefinition = EsriGdbXmlSerializer.toString(dataset);
-              try {
-                geodatabase.createFeatureDataset(datasetDefinition);
-                addFeatureDatasetSchema(path);
-              } catch (final Throwable t) {
-                if (LOG.isDebugEnabled()) {
-                  LOG.debug(datasetDefinition);
-                }
-                throw new RuntimeException("Unable to create feature dataset "
-                    + path, t);
-              }
-            }
-            return getSchema(catalogPath.replaceAll("\\\\", "/"));
-          } finally {
-            releaseGeodatabase();
-          }
+  private RecordStoreSchema createSchema(final Geodatabase geodatabase,
+    final DETable table) {
+    final String catalogPath = table.getParentCatalogPath();
+    final List<DEFeatureDataset> datasets = EsriXmlRecordDefinitionUtil.createDEFeatureDatasets(table);
+    for (final DEFeatureDataset dataset : datasets) {
+      final String path = dataset.getCatalogPath();
+      final String datasetDefinition = EsriGdbXmlSerializer.toString(dataset);
+      try {
+        geodatabase.createFeatureDataset(datasetDefinition);
+        addFeatureDatasetSchema(geodatabase, path);
+      } catch (final Throwable t) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug(datasetDefinition);
         }
+        throw new RuntimeException("Unable to create feature dataset " + path,
+          t);
       }
     }
+    return getSchema(catalogPath.replaceAll("\\\\", "/"));
   }
 
   public void createSchema(final String schemaName,
@@ -697,7 +657,7 @@ FileGdbRecordStore {
               final String datasetDefinition = EsriGdbXmlSerializer.toString(dataset);
               try {
                 geodatabase.createFeatureDataset(datasetDefinition);
-                addFeatureDatasetSchema(path);
+                addFeatureDatasetSchema(geodatabase, path);
               } catch (final Throwable t) {
                 if (LOG.isDebugEnabled()) {
                   LOG.debug(datasetDefinition);
@@ -714,7 +674,7 @@ FileGdbRecordStore {
     }
   }
 
-  protected RecordDefinitionImpl createTable(final DETable deTable) {
+  private RecordDefinitionImpl createTable(final DETable deTable) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
         final Geodatabase geodatabase = getGeodatabase();
@@ -727,14 +687,14 @@ FileGdbRecordStore {
             RecordStoreSchema schema = getSchema(schemaName);
             if (schema == null) {
               if (schemaName.length() > 1 && deTable instanceof DEFeatureClass) {
-                schema = createSchema(deTable);
+                schema = createSchema(geodatabase, deTable);
               } else {
                 schema = new RecordStoreSchema(this, schemaName);
                 addSchema(schema);
               }
             } else if (schema.getProperty(CATALOG_PATH_PROPERTY) == null) {
               if (schemaName.length() > 1 && deTable instanceof DEFeatureClass) {
-                createSchema(deTable);
+                createSchema(geodatabase, deTable);
               }
             }
             if (schemaName.equals(this.defaultSchema)) {
@@ -857,7 +817,7 @@ FileGdbRecordStore {
           final Geodatabase geodatabase = this.geodatabase;
           if (geodatabase != null) {
             closeEnumRows();
-            closeTables();
+            closeTables(geodatabase);
             try {
               closeGeodatabase(geodatabase);
             } finally {
@@ -866,6 +826,28 @@ FileGdbRecordStore {
           }
         } finally {
           super.close();
+        }
+      }
+    }
+  }
+
+  private void doReleaseTable(final Geodatabase geodatabase,
+    final String typePath) {
+    final Table table = this.tablesToClose.get(typePath);
+    if (table != null) {
+      if (Maps.decrementCount(this.tableReferenceCountsByTypePath, typePath) == 0) {
+        try {
+          this.tablesToClose.remove(typePath);
+          this.writeLockCountsByTypePath.remove(typePath);
+          geodatabase.closeTable(table);
+        } catch (final Exception e) {
+          LoggerFactory.getLogger(getClass()).error(
+            "Unable to close table: " + typePath, e);
+        } finally {
+          if (this.tablesToClose.isEmpty()) {
+            this.geodatabaseReferenceCount--;
+          }
+          table.delete();
         }
       }
     }
@@ -1169,13 +1151,13 @@ FileGdbRecordStore {
               if (!new File(this.fileName, "gdb").exists()) {
                 throw new IllegalArgumentException(
                   FileUtil.getCanonicalPath(file)
-                    + " is not a valid ESRI File Geodatabase");
+                  + " is not a valid ESRI File Geodatabase");
               }
               geodatabase = openGeodatabase();
             } else {
               throw new IllegalArgumentException(
                 FileUtil.getCanonicalPath(file)
-                  + " ESRI File Geodatabase must be a directory");
+                + " ESRI File Geodatabase must be a directory");
             }
           } else if (this.createMissingRecordStore) {
             geodatabase = createGeodatabase();
@@ -1271,18 +1253,18 @@ FileGdbRecordStore {
       while (index != -1) {
         final String parentPath = path.substring(0, index + 1);
         final int nextIndex = path.indexOf(index + 1, '\\');
-        String element;
+        String currentPath;
         if (nextIndex == -1) {
-          element = path.substring(index + 1);
+          currentPath = path;
         } else {
-          element = path.substring(index + 1, nextIndex);
+          currentPath = path.substring(0, nextIndex);
         }
         boolean found = false;
         final VectorOfWString children = geodatabase.getChildDatasets(
           parentPath, "Feature Dataset");
         for (int i = 0; i < children.size(); i++) {
           final String childPath = children.get(i);
-          if (childPath.equals(element)) {
+          if (childPath.equals(currentPath)) {
             found = true;
           }
         }
@@ -1345,16 +1327,16 @@ FileGdbRecordStore {
           try {
             final String schemaName = schema.getPath();
             if (schemaName.equals(this.defaultSchema)) {
-              loadSchemaRecordDefinition(recordDefinitionMap, schemaName, "\\",
-                  "Feature Class");
-              loadSchemaRecordDefinition(recordDefinitionMap, schemaName, "\\",
-                  "Table");
+              loadSchemaRecordDefinition(geodatabase, recordDefinitionMap,
+                schemaName, "\\", "Feature Class");
+              loadSchemaRecordDefinition(geodatabase, recordDefinitionMap,
+                schemaName, "\\", "Table");
             }
             final String path = schemaName.replaceAll("/", "\\\\");
-            loadSchemaRecordDefinition(recordDefinitionMap, schemaName, path,
-                "Feature Class");
-            loadSchemaRecordDefinition(recordDefinitionMap, schemaName, path,
-                "Table");
+            loadSchemaRecordDefinition(geodatabase, recordDefinitionMap,
+              schemaName, path, "Feature Class");
+            loadSchemaRecordDefinition(geodatabase, recordDefinitionMap,
+              schemaName, path, "Table");
           } finally {
             releaseGeodatabase();
           }
@@ -1363,27 +1345,16 @@ FileGdbRecordStore {
     }
   }
 
-  public void loadSchemaRecordDefinition(
+  private void loadSchemaRecordDefinition(final Geodatabase geodatabase,
     final Map<String, RecordDefinition> recordDefinitionMap,
     final String schemaName, final String path, final String datasetType) {
-    synchronized (this.apiSync) {
-      synchronized (API_SYNC) {
-        final Geodatabase geodatabase = getGeodatabase();
-        if (geodatabase != null) {
-          try {
-            final boolean pathExists = isPathExists(geodatabase, path);
-            if (pathExists) {
-              final VectorOfWString childFeatureClasses = geodatabase.getChildDatasets(
-                path, datasetType);
-              for (int i = 0; i < childFeatureClasses.size(); i++) {
-                final String childPath = childFeatureClasses.get(i);
-                addTableRecordDefinition(schemaName, childPath);
-              }
-            }
-          } finally {
-            releaseGeodatabase();
-          }
-        }
+    final boolean pathExists = isPathExists(geodatabase, path);
+    if (pathExists) {
+      final VectorOfWString childDatasets = geodatabase.getChildDatasets(path,
+        datasetType);
+      for (int i = 0; i < childDatasets.size(); i++) {
+        final String childPath = childDatasets.get(i);
+        addTableRecordDefinition(geodatabase, schemaName, childPath);
       }
     }
   }
@@ -1395,7 +1366,7 @@ FileGdbRecordStore {
       if (geodatabase != null) {
         try {
           addSchema(new RecordStoreSchema(this, this.defaultSchema));
-          addChildSchema("\\");
+          addChildSchema(geodatabase, "\\");
         } finally {
           releaseGeodatabase();
         }
@@ -1469,25 +1440,7 @@ FileGdbRecordStore {
       final Geodatabase geodatabase = getGeodatabase();
       if (geodatabase != null) {
         try {
-          final Table table = this.tablesToClose.get(typePath);
-          if (table != null) {
-            if (Maps.decrementCount(this.tableReferenceCountsByTypePath,
-              typePath) == 0) {
-              try {
-                this.tablesToClose.remove(typePath);
-                this.writeLockCountsByTypePath.remove(typePath);
-                geodatabase.closeTable(table);
-              } catch (final Exception e) {
-                LoggerFactory.getLogger(getClass()).error(
-                  "Unable to close table: " + typePath, e);
-              } finally {
-                if (this.tablesToClose.isEmpty()) {
-                  this.geodatabaseReferenceCount--;
-                }
-                table.delete();
-              }
-            }
-          }
+          doReleaseTable(geodatabase, typePath);
         } finally {
           releaseGeodatabase();
         }
@@ -1512,7 +1465,7 @@ FileGdbRecordStore {
               }
             }
           }
-          releaseTable(typePath);
+          doReleaseTable(geodatabase, typePath);
         } finally {
           releaseGeodatabase();
         }

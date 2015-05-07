@@ -232,10 +232,7 @@ fgdbError checkResult(fgdbError error) {
          throw std::runtime_error("Unknown error");
      } else {
        std::stringstream out;
-       out << wstring2string(errorString) << " (" << error << ")";
        std::string message = out.str();
-       std::cout << message << std::endl;
-       std::cout.flush();
        throw std::runtime_error(message);
      }
   }
@@ -354,11 +351,9 @@ template<class T> class ArrayOut {
     int errorCount;
     fgdbError hr;
     FileGDBAPI::ErrorInfo::GetErrorRecordCount(errorCount);
-    std::cout << errorCount << std::endl;
     for (int i = 0; i < errorCount; i++) {
       std::wstring errorText;
       FileGDBAPI::ErrorInfo::GetErrorRecord(i, hr, errorText);
-      std::cout << errorText.c_str() << std::endl;
       errors.push_back(errorText);
     }
     FileGDBAPI::ErrorInfo::ClearErrors();

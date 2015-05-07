@@ -36,11 +36,26 @@ public class FileGdbException extends RuntimeException {
   private void initErrors() {
     synchronized (FileGdbRecordStoreImpl.API_SYNC) {
       final VectorOfWString errors = EsriFileGdb.getErrors();
-      long errorCount = errors.size();
+      final long errorCount = errors.size();
       for (int i = 0; i < errorCount; i++) {
         final String error = errors.get(i);
         this.errors.add(error);
       }
+    }
+  }
+
+  @Override
+  public String toString() {
+    final String superString = super.toString();
+    if (this.errors.isEmpty()) {
+      return superString;
+    } else {
+      final StringBuilder string = new StringBuilder(superString);
+      for (final String error : this.errors) {
+        string.append("\n  ");
+        string.append(error);
+      }
+      return string.toString();
     }
   }
 }

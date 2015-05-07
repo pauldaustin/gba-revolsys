@@ -9,32 +9,28 @@
 package com.revolsys.gis.esri.gdb.file.capi.swig;
 
 public class EsriFileGdb {
-  public static int CloseGeodatabase(final Geodatabase geodatabase) {
-    return EsriFileGdbJNI.CloseGeodatabase(Geodatabase.getCPtr(geodatabase),
-      geodatabase);
+  public static int CloseGeodatabase(Geodatabase geodatabase) {
+    return EsriFileGdbJNI.CloseGeodatabase(Geodatabase.getCPtr(geodatabase), geodatabase);
   }
 
-  public static int closeGeodatabase2(final Geodatabase geodatabase) {
-    return EsriFileGdbJNI.closeGeodatabase2(Geodatabase.getCPtr(geodatabase),
-      geodatabase);
+  public static int closeGeodatabase2(Geodatabase geodatabase) {
+    return EsriFileGdbJNI.closeGeodatabase2(Geodatabase.getCPtr(geodatabase), geodatabase);
   }
 
-  public static Geodatabase createGeodatabase(final String path) {
-    final long cPtr = EsriFileGdbJNI.createGeodatabase(path);
-    return cPtr == 0 ? null : new Geodatabase(cPtr, true);
+  public static Geodatabase createGeodatabase(String path) {
+    long cPtr = EsriFileGdbJNI.createGeodatabase(path);
+    return (cPtr == 0) ? null : new Geodatabase(cPtr, true);
   }
 
-  public static int createGeodatabase2(final String path,
-    final Geodatabase geodatabase) {
-    return EsriFileGdbJNI.createGeodatabase2(path,
-      Geodatabase.getCPtr(geodatabase), geodatabase);
+  public static int createGeodatabase2(String path, Geodatabase geodatabase) {
+    return EsriFileGdbJNI.createGeodatabase2(path, Geodatabase.getCPtr(geodatabase), geodatabase);
   }
 
-  public static int DeleteGeodatabase(final String path) {
+  public static int DeleteGeodatabase(String path) {
     return EsriFileGdbJNI.DeleteGeodatabase(path);
   }
 
-  public static int deleteGeodatabase2(final String path) {
+  public static int deleteGeodatabase2(String path) {
     return EsriFileGdbJNI.deleteGeodatabase2(path);
   }
 
@@ -42,22 +38,20 @@ public class EsriFileGdb {
     return new VectorOfWString(EsriFileGdbJNI.getErrors(), true);
   }
 
-  public static String getSpatialReferenceWkt(final int srid) {
+  public static String getSpatialReferenceWkt(int srid) {
     return EsriFileGdbJNI.getSpatialReferenceWkt(srid);
   }
 
-  public static Geodatabase openGeodatabase(final String path) {
-    final long cPtr = EsriFileGdbJNI.openGeodatabase(path);
-    return cPtr == 0 ? null : new Geodatabase(cPtr, true);
+  public static Geodatabase openGeodatabase(String path) {
+    long cPtr = EsriFileGdbJNI.openGeodatabase(path);
+    return (cPtr == 0) ? null : new Geodatabase(cPtr, true);
   }
 
-  public static int openGeodatabase2(final String path,
-    final Geodatabase geodatabase) {
-    return EsriFileGdbJNI.openGeodatabase2(path,
-      Geodatabase.getCPtr(geodatabase), geodatabase);
+  public static int openGeodatabase2(String path, Geodatabase geodatabase) {
+    return EsriFileGdbJNI.openGeodatabase2(path, Geodatabase.getCPtr(geodatabase), geodatabase);
   }
 
-  public static void setMaxOpenFiles(final int maxOpenFiles) {
+  public static void setMaxOpenFiles(int maxOpenFiles) {
     EsriFileGdbJNI.setMaxOpenFiles(maxOpenFiles);
   }
 

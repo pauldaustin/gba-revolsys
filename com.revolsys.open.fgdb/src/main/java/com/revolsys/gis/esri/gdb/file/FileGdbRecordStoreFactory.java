@@ -18,9 +18,9 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
 
   private static final Map<String, AtomicInteger> COUNTS = new HashMap<String, AtomicInteger>();
 
-  private static final Map<String, FileGdbRecordStoreImpl> RECORD_STORES = new HashMap<String, FileGdbRecordStoreImpl>();
-
   private static final List<String> FILE_NAME_EXTENSIONS = Arrays.asList("gdb");
+
+  private static final Map<String, FileGdbRecordStoreImpl> RECORD_STORES = new HashMap<String, FileGdbRecordStoreImpl>();
 
   private static final List<String> URL_PATTERNS = Arrays.asList(
     "file:/(//)?.*.gdb/?", "folderconnection:/(//)?.*.gdb/?");

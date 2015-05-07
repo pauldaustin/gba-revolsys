@@ -9,10 +9,9 @@
 package com.revolsys.gis.esri.gdb.file.capi.swig;
 
 public class Guid {
-  protected static long getCPtr(final Guid obj) {
-    return obj == null ? 0 : obj.swigCPtr;
+  protected static long getCPtr(Guid obj) {
+    return (obj == null) ? 0 : obj.swigCPtr;
   }
-
   protected boolean swigCMemOwn;
 
   private long swigCPtr;
@@ -21,51 +20,47 @@ public class Guid {
     this(EsriFileGdbJNI.new_Guid(), true);
   }
 
-  protected Guid(final long cPtr, final boolean cMemoryOwn) {
-    this.swigCMemOwn = cMemoryOwn;
-    this.swigCPtr = cPtr;
+  protected Guid(long cPtr, boolean cMemoryOwn) {
+    swigCMemOwn = cMemoryOwn;
+    swigCPtr = cPtr;
   }
 
   public void Create() {
-    EsriFileGdbJNI.Guid_Create(this.swigCPtr, this);
+    EsriFileGdbJNI.Guid_Create(swigCPtr, this);
   }
 
   public synchronized void delete() {
-    if (this.swigCPtr != 0) {
-      if (this.swigCMemOwn) {
-        this.swigCMemOwn = false;
-        EsriFileGdbJNI.delete_Guid(this.swigCPtr);
+    if (swigCPtr != 0) {
+      if (swigCMemOwn) {
+        swigCMemOwn = false;
+        EsriFileGdbJNI.delete_Guid(swigCPtr);
       }
-      this.swigCPtr = 0;
+      swigCPtr = 0;
     }
   }
 
-  public boolean equal(final Guid other) {
-    return EsriFileGdbJNI.Guid_equal(this.swigCPtr, this, Guid.getCPtr(other),
-      other);
+  public boolean equal(Guid other) {
+    return EsriFileGdbJNI.Guid_equal(swigCPtr, this, Guid.getCPtr(other), other);
   }
 
-  @Override
   protected void finalize() {
     delete();
   }
 
-  public int FromString(final String guidString) {
-    return EsriFileGdbJNI.Guid_FromString(this.swigCPtr, this, guidString);
+  public int FromString(String guidString) {
+    return EsriFileGdbJNI.Guid_FromString(swigCPtr, this, guidString);
   }
 
-  public boolean notEqual(final Guid other) {
-    return EsriFileGdbJNI.Guid_notEqual(this.swigCPtr, this,
-      Guid.getCPtr(other), other);
+  public boolean notEqual(Guid other) {
+    return EsriFileGdbJNI.Guid_notEqual(swigCPtr, this, Guid.getCPtr(other), other);
   }
 
   public void SetNull() {
-    EsriFileGdbJNI.Guid_SetNull(this.swigCPtr, this);
+    EsriFileGdbJNI.Guid_SetNull(swigCPtr, this);
   }
 
-  @Override
   public String toString() {
-    return EsriFileGdbJNI.Guid_toString(this.swigCPtr, this);
+    return EsriFileGdbJNI.Guid_toString(swigCPtr, this);
   }
 
 }
