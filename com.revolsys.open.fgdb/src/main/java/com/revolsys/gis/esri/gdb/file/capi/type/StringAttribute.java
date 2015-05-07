@@ -6,7 +6,7 @@ import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.format.esri.gdb.xml.model.Field;
-import com.revolsys.gis.esri.gdb.file.CapiFileGdbRecordStore;
+import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
 public class StringAttribute extends AbstractFileGdbFieldDefinition {
@@ -19,7 +19,7 @@ public class StringAttribute extends AbstractFileGdbFieldDefinition {
   @Override
   public Object getValue(final Row row) {
     final String name = getName();
-    final CapiFileGdbRecordStore dataStore = getDataStore();
+    final FileGdbRecordStoreImpl dataStore = getDataStore();
     if (dataStore.isNull(row, name)) {
       return null;
     } else {

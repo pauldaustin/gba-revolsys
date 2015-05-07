@@ -22,7 +22,10 @@ public class AbstractObjectWithProperties implements ObjectWithProperties {
 
   @Override
   public void clearProperties() {
-    properties.clear();
+    final Map<String, Object> properties = getProperties();
+    if (properties != null) {
+      properties.clear();
+    }
   }
 
   @PreDestroy
@@ -71,7 +74,10 @@ public class AbstractObjectWithProperties implements ObjectWithProperties {
 
   @Override
   public void removeProperty(final String propertyName) {
-    properties.remove(propertyName);
+    final Map<String, Object> properties = getProperties();
+    if (properties != null) {
+      properties.remove(propertyName);
+    }
   }
 
   @Override
@@ -88,18 +94,24 @@ public class AbstractObjectWithProperties implements ObjectWithProperties {
   @Override
   public void setProperty(final String name, final Object value) {
     final Map<String, Object> properties = getProperties();
-    properties.put(name, value);
+    if (properties != null) {
+      properties.put(name, value);
+    }
   }
 
   @Override
   public void setPropertySoft(final String name, final Object value) {
     final Map<String, Object> properties = getProperties();
-    properties.put(name, new SoftReference<Object>(value));
+    if (properties != null) {
+      properties.put(name, new SoftReference<Object>(value));
+    }
   }
 
   @Override
   public void setPropertyWeak(final String name, final Object value) {
     final Map<String, Object> properties = getProperties();
-    properties.put(name, new WeakReference<Object>(value));
+    if (properties != null) {
+      properties.put(name, new WeakReference<Object>(value));
+    }
   }
 }

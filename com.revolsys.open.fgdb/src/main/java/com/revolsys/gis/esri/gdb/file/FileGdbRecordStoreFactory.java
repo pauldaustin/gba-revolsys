@@ -18,14 +18,14 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
 
   private static final Map<String, AtomicInteger> COUNTS = new HashMap<String, AtomicInteger>();
 
-  private static final Map<String, CapiFileGdbRecordStore> DATA_STORES = new HashMap<String, CapiFileGdbRecordStore>();
+  private static final Map<String, FileGdbRecordStoreImpl> RECORD_STORES = new HashMap<String, FileGdbRecordStoreImpl>();
 
   private static final List<String> FILE_NAME_EXTENSIONS = Arrays.asList("gdb");
 
   private static final List<String> URL_PATTERNS = Arrays.asList(
     "file:/(//)?.*.gdb/?", "folderconnection:/(//)?.*.gdb/?");
 
-  public static CapiFileGdbRecordStore create(final File file) {
+  public static FileGdbRecordStoreImpl create(final File file) {
     if (file == null) {
       return null;
     } else {
@@ -34,13 +34,13 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
         final AtomicInteger count = CollectionUtil.get(COUNTS, fileName,
           new AtomicInteger());
         count.incrementAndGet();
-        CapiFileGdbRecordStore dataStore = DATA_STORES.get(fileName);
-        if (dataStore == null) {
-          dataStore = new CapiFileGdbRecordStore(file);
-          dataStore.setCreateMissingRecordStore(false);
-          DATA_STORES.put(fileName, dataStore);
+        FileGdbRecordStoreImpl recordStore = RECORD_STORES.get(fileName);
+        if (recordStore == null || recordStore.isClosed()) {
+          recordStore = new FileGdbRecordStoreImpl(file);
+          recordStore.setCreateMissingRecordStore(false);
+          RECORD_STORES.put(fileName, recordStore);
         }
-        return dataStore;
+        return recordStore;
       }
     }
   }
@@ -53,7 +53,7 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
         final int count = countHolder.decrementAndGet();
         if (count <= 0) {
           COUNTS.remove(fileName);
-          final CapiFileGdbRecordStore dataStore = DATA_STORES.remove(fileName);
+          final FileGdbRecordStoreImpl dataStore = RECORD_STORES.remove(fileName);
           if (dataStore != null) {
             dataStore.doClose();
           }

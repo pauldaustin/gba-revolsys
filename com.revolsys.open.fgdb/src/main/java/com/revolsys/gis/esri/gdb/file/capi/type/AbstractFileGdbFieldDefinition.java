@@ -6,12 +6,12 @@ import java.lang.ref.WeakReference;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.esri.gdb.file.CapiFileGdbRecordStore;
+import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 
 public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
 
-  private Reference<CapiFileGdbRecordStore> dataStore;
+  private Reference<FileGdbRecordStoreImpl> dataStore;
 
   public AbstractFileGdbFieldDefinition(final String name,
     final DataType dataType, final boolean required) {
@@ -23,7 +23,7 @@ public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
     super(name, dataType, length, required);
   }
 
-  public CapiFileGdbRecordStore getDataStore() {
+  public FileGdbRecordStoreImpl getDataStore() {
     if (this.dataStore == null) {
       return null;
     } else {
@@ -33,8 +33,8 @@ public abstract class AbstractFileGdbFieldDefinition extends FieldDefinition {
 
   public abstract Object getValue(Row row);
 
-  public void setDataStore(final CapiFileGdbRecordStore dataStore) {
-    this.dataStore = new WeakReference<CapiFileGdbRecordStore>(dataStore);
+  public void setDataStore(final FileGdbRecordStoreImpl dataStore) {
+    this.dataStore = new WeakReference<FileGdbRecordStoreImpl>(dataStore);
   }
 
   public Object setInsertValue(final Record object, final Row row,
