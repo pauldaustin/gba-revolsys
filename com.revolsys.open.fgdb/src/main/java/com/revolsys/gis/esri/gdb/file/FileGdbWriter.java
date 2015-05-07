@@ -103,10 +103,10 @@ public class FileGdbWriter extends AbstractRecordWriter {
   private void insert(final Record record) {
     final RecordDefinition sourceRecordDefinition = record.getRecordDefinition();
     final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(sourceRecordDefinition);
-    final String typePath = sourceRecordDefinition.getPath();
 
     validateRequired(record, recordDefinition);
 
+    final String typePath = sourceRecordDefinition.getPath();
     final Table table = getTable(typePath);
     try {
       final Row row = this.recordStore.createRowObject(table);
@@ -125,9 +125,9 @@ public class FileGdbWriter extends AbstractRecordWriter {
         }
         this.recordStore.insertRow(table, row);
         for (final FieldDefinition field : recordDefinition.getFields()) {
-          final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
+          final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
           try {
-            esriFieldDefinition.setPostInsertValue(record, row);
+            esriField.setPostInsertValue(record, row);
           } catch (final Throwable e) {
             throw new ObjectPropertyException(record, field.getName(), e);
           }
@@ -177,8 +177,8 @@ public class FileGdbWriter extends AbstractRecordWriter {
                   final String name = field.getName();
                   try {
                     final Object value = record.getValue(name);
-                    final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
-                    final Object esriValue = esriFieldDefinition.setUpdateValue(record, row, value);
+                    final AbstractFileGdbFieldDefinition edriField = (AbstractFileGdbFieldDefinition)field;
+                    final Object esriValue = edriField.setUpdateValue(record, row, value);
                     esriValues.add(esriValue);
                   } catch (final RuntimeException e) {
                     throw new ObjectPropertyException(record, name, e);
@@ -227,16 +227,16 @@ public class FileGdbWriter extends AbstractRecordWriter {
       switch (record.getState()) {
         case New:
           insert(record);
-          break;
+        break;
         case Modified:
           update(record);
-          break;
+        break;
         case Persisted:
-          // No action required
-          break;
+        // No action required
+        break;
         case Deleted:
           delete(record);
-          break;
+        break;
         default:
           throw new IllegalStateException("State not known");
       }
