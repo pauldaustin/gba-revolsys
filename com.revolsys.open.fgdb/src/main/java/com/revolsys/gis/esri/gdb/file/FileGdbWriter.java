@@ -180,7 +180,7 @@ public class FileGdbWriter extends AbstractRecordWriter {
                     final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
                     final Object esriValue = esriField.setUpdateValue(record, row, value);
                     esriValues.add(esriValue);
-                  } catch (final RuntimeException e) {
+                  } catch (final Throwable e) {
                     throw new ObjectPropertyException(record, name, e);
                   }
                 }
@@ -227,16 +227,16 @@ public class FileGdbWriter extends AbstractRecordWriter {
       switch (record.getState()) {
         case New:
           insert(record);
-          break;
+        break;
         case Modified:
           update(record);
-          break;
+        break;
         case Persisted:
-          // No action required
-          break;
+        // No action required
+        break;
         case Deleted:
           delete(record);
-          break;
+        break;
         default:
           throw new IllegalStateException("State not known");
       }
