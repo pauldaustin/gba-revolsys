@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;

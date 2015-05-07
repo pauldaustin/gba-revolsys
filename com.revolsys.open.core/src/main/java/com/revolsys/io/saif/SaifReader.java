@@ -44,12 +44,12 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.AbstractReader;

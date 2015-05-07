@@ -18,10 +18,10 @@ import org.postgis.Point;
 import org.postgis.Polygon;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;

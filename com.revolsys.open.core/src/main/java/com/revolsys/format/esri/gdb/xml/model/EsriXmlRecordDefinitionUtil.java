@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -20,7 +21,6 @@ import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldTypeRegistry;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.io.PathUtil;
 import com.revolsys.util.CollectionUtil;
 

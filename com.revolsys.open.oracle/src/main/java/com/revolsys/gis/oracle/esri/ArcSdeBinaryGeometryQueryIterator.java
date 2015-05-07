@@ -18,6 +18,7 @@ import com.esri.sde.sdk.client.SeShape;
 import com.esri.sde.sdk.client.SeShapeFilter;
 import com.esri.sde.sdk.client.SeSqlConstruct;
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
@@ -26,7 +27,6 @@ import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 

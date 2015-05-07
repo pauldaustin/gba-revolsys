@@ -7,11 +7,11 @@ import java.util.Map;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.collection.ResultPager;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.data.model.codes.CodeTable;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.Reader;

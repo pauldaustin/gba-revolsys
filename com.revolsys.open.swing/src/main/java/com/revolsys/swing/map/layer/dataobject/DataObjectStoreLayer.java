@@ -20,6 +20,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -30,7 +31,6 @@ import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.codes.CodeTable;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.PathUtil;
 import com.revolsys.io.Reader;

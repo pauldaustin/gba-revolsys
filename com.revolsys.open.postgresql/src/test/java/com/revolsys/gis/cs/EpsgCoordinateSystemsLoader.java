@@ -16,11 +16,11 @@ import javax.measure.unit.NonSI;
 import javax.measure.unit.SI;
 import javax.measure.unit.Unit;
 
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.cs.epsg.EpsgUtil;
 import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
 import com.revolsys.io.csv.CsvWriter;

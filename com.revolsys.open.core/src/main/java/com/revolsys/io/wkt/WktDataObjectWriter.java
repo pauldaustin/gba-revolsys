@@ -4,10 +4,10 @@ import java.io.BufferedWriter;
 import java.io.PrintWriter;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.vividsolutions.jts.geom.Geometry;

@@ -6,14 +6,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.data.query.Condition;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.query.Condition;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTable;
 import com.revolsys.swing.map.layer.dataobject.table.RecordLayerTablePanel;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectListLayerTableModel;

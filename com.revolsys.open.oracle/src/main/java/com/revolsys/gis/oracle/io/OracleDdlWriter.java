@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;

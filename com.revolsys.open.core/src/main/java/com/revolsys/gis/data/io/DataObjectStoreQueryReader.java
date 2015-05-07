@@ -11,12 +11,12 @@ import javax.annotation.PreDestroy;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.query.Query;
+import com.revolsys.data.query.SqlCondition;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.query.Query;
-import com.revolsys.gis.data.query.SqlCondition;
 
 public class DataObjectStoreQueryReader extends IteratorReader<Record>
   implements DataObjectReader {

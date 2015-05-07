@@ -5,11 +5,11 @@ import java.util.Map;
 import org.postgis.PGbox2d;
 import org.postgis.Point;
 
+import com.revolsys.data.query.BinaryCondition;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.query.BinaryCondition;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jdbc.io.JdbcQueryIterator;
 

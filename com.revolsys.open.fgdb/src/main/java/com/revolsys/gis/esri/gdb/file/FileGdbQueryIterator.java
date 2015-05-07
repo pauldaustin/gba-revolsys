@@ -3,15 +3,15 @@ package com.revolsys.gis.esri.gdb.file;
 import java.util.NoSuchElementException;
 
 import com.revolsys.collection.AbstractIterator;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeometryFactory;
-import com.revolsys.gis.data.model.FieldProperties;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.esri.gdb.file.capi.swig.EnumRows;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Table;

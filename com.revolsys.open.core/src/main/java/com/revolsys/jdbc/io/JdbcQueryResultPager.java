@@ -13,10 +13,10 @@ import javax.sql.DataSource;
 
 import com.revolsys.collection.ResultPager;
 import com.revolsys.converter.string.BooleanStringConverter;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.jdbc.JdbcUtils;
 
 public class JdbcQueryResultPager implements ResultPager<Record> {

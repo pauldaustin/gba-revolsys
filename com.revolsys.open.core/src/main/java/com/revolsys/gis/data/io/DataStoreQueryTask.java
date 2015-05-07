@@ -3,10 +3,10 @@ package com.revolsys.gis.data.io;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.Reader;
 import com.revolsys.parallel.process.AbstractProcess;
 

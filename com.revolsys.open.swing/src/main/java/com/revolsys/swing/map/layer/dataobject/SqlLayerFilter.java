@@ -8,11 +8,11 @@ import java.util.Properties;
 
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.data.query.Condition;
+import com.revolsys.data.query.QueryValue;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.query.Condition;
-import com.revolsys.gis.data.query.QueryValue;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.util.UriTemplate;
 

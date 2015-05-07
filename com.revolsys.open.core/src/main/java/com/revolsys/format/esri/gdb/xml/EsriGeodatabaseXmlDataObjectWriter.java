@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
@@ -20,7 +21,6 @@ import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCsWktWriter;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.PathUtil;
 import com.revolsys.io.xml.XmlConstants;

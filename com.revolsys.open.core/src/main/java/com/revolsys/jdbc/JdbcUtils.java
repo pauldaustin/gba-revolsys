@@ -25,12 +25,12 @@ import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.query.Condition;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.query.Condition;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;

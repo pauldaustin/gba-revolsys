@@ -14,12 +14,12 @@ import javax.swing.event.ListDataListener;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.query.BinaryCondition;
+import com.revolsys.data.query.Condition;
+import com.revolsys.data.query.Q;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.query.BinaryCondition;
-import com.revolsys.gis.data.query.Condition;
-import com.revolsys.gis.data.query.Q;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.Reader;
 import com.revolsys.util.Property;
 

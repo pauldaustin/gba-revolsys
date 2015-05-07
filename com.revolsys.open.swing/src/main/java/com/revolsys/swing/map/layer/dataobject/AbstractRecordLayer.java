@@ -41,6 +41,8 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.beans.InvokeMethodCallable;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.query.Condition;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
@@ -61,8 +63,6 @@ import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryDistanceFilter;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.data.model.property.DirectionalAttributes;
-import com.revolsys.gis.data.query.Condition;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;

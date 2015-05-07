@@ -37,6 +37,7 @@ import java.util.TreeSet;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
@@ -46,7 +47,6 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.data.types.EnumerationDataType;
 import com.revolsys.data.types.SimpleDataType;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.io.saif.util.CsnIterator;

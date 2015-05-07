@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.converter.string.BooleanStringConverter;
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
@@ -22,7 +23,6 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttribute;

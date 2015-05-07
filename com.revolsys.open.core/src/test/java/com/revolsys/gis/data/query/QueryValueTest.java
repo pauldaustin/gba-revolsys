@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import junit.framework.Assert;
 
+import com.revolsys.data.query.Condition;
+import com.revolsys.data.query.Q;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;

@@ -9,10 +9,10 @@ import java.util.Set;
 
 import javax.annotation.PreDestroy;
 
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.swing.listener.InvokeMethodListener;
 import com.revolsys.swing.map.layer.dataobject.DataObjectListLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;

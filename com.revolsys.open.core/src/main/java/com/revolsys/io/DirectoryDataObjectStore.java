@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.AbstractRecordStore;
@@ -17,7 +18,6 @@ import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
-import com.revolsys.gis.data.query.Query;
 import com.revolsys.io.filter.DirectoryFilenameFilter;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 import com.vividsolutions.jts.geom.Geometry;

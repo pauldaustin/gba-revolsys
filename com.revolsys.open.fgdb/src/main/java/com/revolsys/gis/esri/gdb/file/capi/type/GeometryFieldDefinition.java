@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.format.esri.gdb.xml.model.Field;
@@ -17,7 +18,6 @@ import com.revolsys.format.esri.gdb.xml.model.SpatialReference;
 import com.revolsys.format.esri.gdb.xml.model.enums.GeometryType;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.gis.io.EndianInputStream;

@@ -3,13 +3,13 @@ package com.revolsys.gis.esri.gdb.file.test;
 import java.io.File;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.FieldProperties;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStore;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
