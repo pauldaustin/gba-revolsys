@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.revolsys.collection.map.Maps;
+import com.revolsys.data.io.RecordStoreFactory;
+import com.revolsys.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.io.RecordStoreFactory;
-import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
-import com.revolsys.util.CollectionUtil;
 
 public class FileGdbRecordStoreFactory implements RecordStoreFactory {
 
@@ -31,7 +31,7 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
     } else {
       synchronized (COUNTS) {
         final String fileName = FileUtil.getCanonicalPath(file);
-        final AtomicInteger count = CollectionUtil.get(COUNTS, fileName, new AtomicInteger());
+        final AtomicInteger count = Maps.get(COUNTS, fileName, new AtomicInteger());
         count.incrementAndGet();
         FileGdbRecordStoreImpl recordStore = RECORD_STORES.get(fileName);
         if (recordStore == null || recordStore.isClosed()) {
@@ -44,18 +44,26 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
     }
   }
 
-  static void release(final String fileName) {
-    if (fileName != null) {
+  static boolean release(String fileName) {
+    if (fileName == null) {
+      return false;
+    } else {
       synchronized (COUNTS) {
-        final AtomicInteger countHolder = CollectionUtil.get(COUNTS, fileName, new AtomicInteger());
+        fileName = FileUtil.getCanonicalPath(fileName);
+        final AtomicInteger countHolder = Maps.get(COUNTS, fileName, new AtomicInteger());
         final int count = countHolder.decrementAndGet();
         if (count <= 0) {
           COUNTS.remove(fileName);
-          final FileGdbRecordStoreImpl dataStore = RECORD_STORES.remove(fileName);
-          if (dataStore != null) {
-            dataStore.doClose();
+          final FileGdbRecordStoreImpl recordStore = RECORD_STORES.remove(fileName);
+          if (recordStore == null) {
+            return false;
+          } else {
+            recordStore.doClose();
           }
           COUNTS.remove(fileName);
+          return true;
+        } else {
+          return true;
         }
       }
     }
@@ -68,19 +76,19 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
     final String url = (String)properties.remove("url");
     final File file = FileUtil.getUrlFile(url);
 
-    final FileGdbRecordStore dataObjectStore = create(file);
-    RecordStoreFactoryRegistry.setConnectionProperties(dataObjectStore, properties);
-    return dataObjectStore;
-  }
-
-  @Override
-  public List<String> getFileExtensions() {
-    return FILE_NAME_EXTENSIONS;
+    final FileGdbRecordStore recordStore = create(file);
+    RecordStoreFactoryRegistry.setConnectionProperties(recordStore, properties);
+    return recordStore;
   }
 
   @Override
   public String getName() {
     return "ESRI File Geodatabase";
+  }
+
+  @Override
+  public List<String> getRecordStoreFileExtensions() {
+    return FILE_NAME_EXTENSIONS;
   }
 
   @Override

@@ -2,7 +2,9 @@ package com.revolsys.gis.data.io;
 
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.core.io.Resource;
@@ -16,23 +18,21 @@ import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
-public abstract class AbstractDataObjectIoFactory extends
-  AbstractDataObjectReaderFactory implements DataObjectWriterFactory {
+public abstract class AbstractDataObjectIoFactory extends AbstractDataObjectReaderFactory implements
+DataObjectWriterFactory {
 
-  public static Writer<Record> dataObjectWriter(
-    final RecordDefinition metaData, final Resource resource) {
+  public static Writer<Record> dataObjectWriter(final RecordDefinition metaData,
+    final Resource resource) {
     final DataObjectWriterFactory writerFactory = getDataObjectWriterFactory(resource);
     if (writerFactory == null) {
       return null;
     } else {
-      final Writer<Record> writer = writerFactory.createDataObjectWriter(
-        metaData, resource);
+      final Writer<Record> writer = writerFactory.createDataObjectWriter(metaData, resource);
       return writer;
     }
   }
 
-  protected static DataObjectWriterFactory getDataObjectWriterFactory(
-    final Resource resource) {
+  protected static DataObjectWriterFactory getDataObjectWriterFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     final DataObjectWriterFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
       DataObjectWriterFactory.class, resource);
@@ -52,14 +52,14 @@ public abstract class AbstractDataObjectIoFactory extends
 
   /**
    * Create a writer to write to the specified resource.
-   * 
+   *
    * @param metaData The metaData for the type of data to write.
    * @param resource The resource to write to.
    * @return The writer.
    */
   @Override
-  public Writer<Record> createDataObjectWriter(
-    final RecordDefinition metaData, final Resource resource) {
+  public Writer<Record> createDataObjectWriter(final RecordDefinition metaData,
+    final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
     final String baseName = FileUtil.getBaseName(fileName);
@@ -69,34 +69,33 @@ public abstract class AbstractDataObjectIoFactory extends
   @Override
   public Writer<Record> createDataObjectWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream) {
-    return createDataObjectWriter(baseName, metaData, outputStream,
-      FileUtil.UTF8);
+    return createDataObjectWriter(baseName, metaData, outputStream, FileUtil.UTF8);
   }
 
   @Override
   public Set<CoordinateSystem> getCoordinateSystems() {
-    return coordinateSystems;
+    return this.coordinateSystems;
+  }
+
+  public List<String> getRecordStoreFileExtensions() {
+    return Collections.emptyList();
   }
 
   @Override
-  public boolean isCoordinateSystemSupported(
-    final CoordinateSystem coordinateSystem) {
-    return coordinateSystems.contains(coordinateSystem);
+  public boolean isCoordinateSystemSupported(final CoordinateSystem coordinateSystem) {
+    return this.coordinateSystems.contains(coordinateSystem);
   }
 
   @Override
   public boolean isGeometrySupported() {
-    return geometrySupported;
+    return this.geometrySupported;
   }
 
-  protected void setCoordinateSystems(
-    final CoordinateSystem... coordinateSystems) {
-    setCoordinateSystems(new LinkedHashSet<CoordinateSystem>(
-      Arrays.asList(coordinateSystems)));
+  protected void setCoordinateSystems(final CoordinateSystem... coordinateSystems) {
+    setCoordinateSystems(new LinkedHashSet<CoordinateSystem>(Arrays.asList(coordinateSystems)));
   }
 
-  protected void setCoordinateSystems(
-    final Set<CoordinateSystem> coordinateSystems) {
+  protected void setCoordinateSystems(final Set<CoordinateSystem> coordinateSystems) {
     this.coordinateSystems = coordinateSystems;
   }
 }

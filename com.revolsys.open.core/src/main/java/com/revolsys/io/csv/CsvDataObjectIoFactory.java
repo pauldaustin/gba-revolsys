@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.io.RecordStoreFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -16,7 +17,6 @@ import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.io.RecordStoreFactory;
 import com.revolsys.io.DirectoryDataObjectStore;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;

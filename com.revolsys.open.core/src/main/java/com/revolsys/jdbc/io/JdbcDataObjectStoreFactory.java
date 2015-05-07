@@ -7,8 +7,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.revolsys.data.io.RecordStoreFactory;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.io.RecordStoreFactory;
 
 public class JdbcDataObjectStoreFactory implements RecordStoreFactory {
 
@@ -19,8 +19,7 @@ public class JdbcDataObjectStoreFactory implements RecordStoreFactory {
     databaseFactory.closeDataSource(dataSource);
   }
 
-  public static DataSource createDataSource(
-    final Map<String, ? extends Object> connectionProperties) {
+  public static DataSource createDataSource(final Map<String, ? extends Object> connectionProperties) {
     final JdbcDatabaseFactory databaseFactory = JdbcFactoryRegistry.databaseFactory(connectionProperties);
     return databaseFactory.createDataSource(connectionProperties);
   }
@@ -33,19 +32,19 @@ public class JdbcDataObjectStoreFactory implements RecordStoreFactory {
   }
 
   @Override
-  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
-    final Map<String, ? extends Object> connectionProperties) {
-    return JdbcDataObjectStore.class;
+  public String getName() {
+    return "JDBC";
   }
 
   @Override
-  public List<String> getFileExtensions() {
+  public List<String> getRecordStoreFileExtensions() {
     return Collections.emptyList();
   }
 
   @Override
-  public String getName() {
-    return "JDBC";
+  public Class<? extends RecordStore> getRecordStoreInterfaceClass(
+    final Map<String, ? extends Object> connectionProperties) {
+    return JdbcDataObjectStore.class;
   }
 
   @Override

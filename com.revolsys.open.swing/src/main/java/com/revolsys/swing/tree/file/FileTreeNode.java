@@ -17,9 +17,9 @@ import javax.swing.tree.TreeNode;
 
 import org.springframework.util.StringUtils;
 
+import com.revolsys.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
 import com.revolsys.gis.data.io.DataObjectReaderFactory;
-import com.revolsys.gis.data.io.RecordStoreFactoryRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;

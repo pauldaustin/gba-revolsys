@@ -71,8 +71,7 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
         try {
           JavaBeanUtil.setProperty(dataSource, name, value);
         } catch (final Throwable t) {
-          LOG.debug("Unable to set data source property " + name + " = "
-              + value + " for " + url, t);
+          LOG.debug("Unable to set data source property " + name + " = " + value + " for " + url, t);
         }
       }
 
@@ -98,11 +97,6 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public List<String> getFileExtensions() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public String getName() {
     return "PostgreSQL/PostGIS Database";
   }
@@ -110,6 +104,11 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   @Override
   public List<String> getProductNames() {
     return Collections.singletonList("PostgreSQL");
+  }
+
+  @Override
+  public List<String> getRecordStoreFileExtensions() {
+    return Collections.emptyList();
   }
 
   @Override

@@ -16,7 +16,7 @@ import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreImpl;
 public class FileGdbDomainCodeTable implements CodeTable {
   private static final Logger LOG = LoggerFactory.getLogger(FileGdbDomainCodeTable.class);
 
-  private final FileGdbRecordStoreImpl dataStore;
+  private final FileGdbRecordStoreImpl recordStore;
 
   private final CodedValueDomain domain;
 
@@ -24,9 +24,9 @@ public class FileGdbDomainCodeTable implements CodeTable {
 
   private JComponent swingEditor;
 
-  public FileGdbDomainCodeTable(final FileGdbRecordStoreImpl dataStore,
+  public FileGdbDomainCodeTable(final FileGdbRecordStoreImpl recordStore,
     final CodedValueDomain domain) {
-    this.dataStore = dataStore;
+    this.recordStore = recordStore;
     this.domain = domain;
     this.name = domain.getDomainName();
   }
@@ -41,9 +41,9 @@ public class FileGdbDomainCodeTable implements CodeTable {
   }
 
   private Object createValue(final String name) {
-    synchronized (this.dataStore) {
+    synchronized (this.recordStore) {
       final Object id = this.domain.addCodedValue(name);
-      this.dataStore.alterDomain(this.domain);
+      this.recordStore.alterDomain(this.domain);
       LOG.info(this.domain.getDomainName() + " created code " + id + "=" + name);
       return id;
     }

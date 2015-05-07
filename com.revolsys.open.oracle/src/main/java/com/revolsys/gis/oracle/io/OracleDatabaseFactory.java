@@ -33,9 +33,8 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
 
   private static final Pattern URL_PATTERN = Pattern.compile(URL_REGEX);
 
-  protected void addCacheProperty(final Map<String, Object> config,
-    final String key, final Properties cacheProperties,
-    final String propertyName, final Object defaultValue,
+  protected void addCacheProperty(final Map<String, Object> config, final String key,
+    final Properties cacheProperties, final String propertyName, final Object defaultValue,
     final DataType dataType) {
     Object value = config.remove(key);
     if (value == null) {
@@ -44,8 +43,7 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
     cacheProperties.put(propertyName, String.valueOf(defaultValue));
     if (value != null) {
       try {
-        final Object propertyValue = StringConverterRegistry.toObject(dataType,
-          value);
+        final Object propertyValue = StringConverterRegistry.toObject(dataType, value);
         final String stringValue = String.valueOf(propertyValue);
         cacheProperties.put(propertyName, stringValue);
       } catch (final Throwable e) {
@@ -66,8 +64,7 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
       try {
         oracleDataSource.close();
       } catch (final SQLException e) {
-        LoggerFactory.getLogger(OracleDatabaseFactory.class).warn(
-          "Unable to close data source", e);
+        LoggerFactory.getLogger(OracleDatabaseFactory.class).warn("Unable to close data source", e);
       }
     }
   }
@@ -86,16 +83,14 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
       final String username = (String)newConfig.remove("username");
       String password = (String)newConfig.remove("password");
       password = PasswordUtil.decrypt(password);
-      addCacheProperty(newConfig, "minPoolSize", cacheProperties, "MinLimit",
-        0, DataTypes.INT);
-      addCacheProperty(newConfig, "maxPoolSize", cacheProperties, "MaxLimit",
-        10, DataTypes.INT);
-      addCacheProperty(newConfig, "inactivityTimeout", cacheProperties,
-        "InactivityTimeout", 300, DataTypes.INT);
-      addCacheProperty(newConfig, "waitTimeout", cacheProperties,
-        "ConnectionWaitTimeout", 1, DataTypes.INT);
-      addCacheProperty(newConfig, "validateConnection", cacheProperties,
-        "ValidateConnection", Boolean.TRUE, DataTypes.BOOLEAN);
+      addCacheProperty(newConfig, "minPoolSize", cacheProperties, "MinLimit", 0, DataTypes.INT);
+      addCacheProperty(newConfig, "maxPoolSize", cacheProperties, "MaxLimit", 10, DataTypes.INT);
+      addCacheProperty(newConfig, "inactivityTimeout", cacheProperties, "InactivityTimeout", 300,
+        DataTypes.INT);
+      addCacheProperty(newConfig, "waitTimeout", cacheProperties, "ConnectionWaitTimeout", 1,
+        DataTypes.INT);
+      addCacheProperty(newConfig, "validateConnection", cacheProperties, "ValidateConnection",
+        Boolean.TRUE, DataTypes.BOOLEAN);
 
       final OracleDataSource dataSource = new OracleDataSource();
 
@@ -118,8 +113,7 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
 
       return dataSource;
     } catch (final Throwable e) {
-      throw new IllegalArgumentException("Unable to create data source for "
-          + config, e);
+      throw new IllegalArgumentException("Unable to create data source for " + config, e);
     }
   }
 
@@ -130,11 +124,6 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public List<String> getFileExtensions() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public String getName() {
     return "Oracle Database";
   }
@@ -142,6 +131,11 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   @Override
   public List<String> getProductNames() {
     return Collections.singletonList("Oracle");
+  }
+
+  @Override
+  public List<String> getRecordStoreFileExtensions() {
+    return Collections.emptyList();
   }
 
   @Override
