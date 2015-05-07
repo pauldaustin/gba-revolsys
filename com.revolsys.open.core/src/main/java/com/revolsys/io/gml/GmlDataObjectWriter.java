@@ -8,9 +8,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
@@ -18,6 +16,8 @@ import com.revolsys.io.PathUtil;
 import com.revolsys.io.gml.type.GmlFieldType;
 import com.revolsys.io.gml.type.GmlFieldTypeRegistry;
 import com.revolsys.io.xml.XmlWriter;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class GmlDataObjectWriter extends AbstractWriter<Record> implements
   GmlConstants {

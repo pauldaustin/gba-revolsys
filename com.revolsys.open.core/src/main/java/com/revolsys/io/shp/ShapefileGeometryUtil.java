@@ -8,13 +8,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.io.EndianOutput;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.io.EndianInput;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.Envelope;

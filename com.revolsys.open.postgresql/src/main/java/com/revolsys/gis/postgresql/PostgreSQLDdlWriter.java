@@ -12,11 +12,11 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDdlWriter;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class PostgreSQLDdlWriter extends JdbcDdlWriter {

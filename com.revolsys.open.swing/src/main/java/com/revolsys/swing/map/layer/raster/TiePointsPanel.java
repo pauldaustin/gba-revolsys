@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.jdesktop.swingx.table.TableColumnExt;
 
-import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.raster.GeoReferencedImage;
 import com.revolsys.raster.MappedLocation;
 import com.revolsys.swing.action.enablecheck.EnableCheck;

@@ -3,8 +3,8 @@ package com.revolsys.io.saif.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.io.saif.SaifConstants;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class OsnConverterRegistry {
   private final Map<String, OsnConverter> converters = new HashMap<String, OsnConverter>();

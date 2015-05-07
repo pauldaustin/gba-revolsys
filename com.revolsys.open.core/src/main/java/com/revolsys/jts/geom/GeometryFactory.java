@@ -1,4 +1,4 @@
-package com.revolsys.gis.cs;
+package com.revolsys.jts.geom;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.revolsys.gis.cs.CoordinateSystem;
+import com.revolsys.gis.cs.GeographicCoordinateSystem;
+import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;

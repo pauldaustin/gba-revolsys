@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.gis.algorithm.index.LineSegmentIndex;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.LineStringUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 import com.vividsolutions.jts.geom.Geometry;

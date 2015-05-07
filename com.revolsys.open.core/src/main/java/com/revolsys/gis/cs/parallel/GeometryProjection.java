@@ -1,8 +1,8 @@
 package com.revolsys.gis.cs.parallel;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 import com.vividsolutions.jts.geom.Geometry;

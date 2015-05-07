@@ -16,7 +16,7 @@ import com.revolsys.format.esri.map.rest.map.LevelOfDetail;
 import com.revolsys.format.esri.map.rest.map.TableDescription;
 import com.revolsys.format.esri.map.rest.map.TileInfo;
 import com.revolsys.format.esri.map.rest.map.TimeInfo;
-import com.revolsys.gis.cs.BoundingBox;
+import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.util.WrappedException;
 
 public class MapServer extends Service {

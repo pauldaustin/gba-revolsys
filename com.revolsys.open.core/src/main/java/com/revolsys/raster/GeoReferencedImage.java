@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.io.map.MapSerializer;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public interface GeoReferencedImage extends MapSerializer,
   PropertyChangeListener {

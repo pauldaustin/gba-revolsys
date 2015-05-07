@@ -11,8 +11,8 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.io.json.JsonMapIoFactory;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.JavaBeanUtil;

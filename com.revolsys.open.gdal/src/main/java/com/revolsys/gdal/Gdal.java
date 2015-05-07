@@ -33,13 +33,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.gdal.raster.GdalImageFactory;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCsWktWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.json.JsonMapIoFactory;
+import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.OS;

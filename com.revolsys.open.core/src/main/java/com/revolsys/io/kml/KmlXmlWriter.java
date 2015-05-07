@@ -8,11 +8,11 @@ import java.util.Map.Entry;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.io.StringBufferWriter;
 import com.revolsys.io.xml.XmlWriter;
+import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.util.UrlUtil;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;

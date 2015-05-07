@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
@@ -27,6 +26,7 @@ import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesListFactory;
 import com.revolsys.gis.model.coordinates.list.InPlaceIterator;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.gis.model.data.equals.Geometry3DExactEquals;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.JavaBeanUtil;
 import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;

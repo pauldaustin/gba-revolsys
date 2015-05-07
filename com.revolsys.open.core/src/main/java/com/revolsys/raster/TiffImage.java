@@ -21,13 +21,13 @@ import com.revolsys.gis.cs.Authority;
 import com.revolsys.gis.cs.Axis;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.LinearUnit;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.Projection;
 import com.revolsys.gis.cs.ProjectionParameterNames;
 import com.revolsys.gis.cs.epsg.EpsgAuthority;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.ExceptionUtil;
 import com.sun.media.jai.codec.ImageCodec;
 

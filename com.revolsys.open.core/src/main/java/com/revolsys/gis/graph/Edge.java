@@ -18,11 +18,11 @@ import java.util.Set;
 
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.algorithm.linematch.LineSegmentMatch;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 

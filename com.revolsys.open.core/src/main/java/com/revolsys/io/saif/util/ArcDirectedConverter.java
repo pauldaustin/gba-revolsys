@@ -3,8 +3,8 @@ package com.revolsys.io.saif.util;
 import java.io.IOException;
 import java.util.Map;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.io.saif.SaifConstants;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class ArcDirectedConverter extends ArcConverter {
 

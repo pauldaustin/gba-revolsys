@@ -14,8 +14,8 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.ExceptionUtil;
 
 public class ArcSdeBinaryGeometryAttribute extends JdbcAttribute {

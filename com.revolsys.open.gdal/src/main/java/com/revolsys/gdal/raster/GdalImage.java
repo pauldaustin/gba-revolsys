@@ -11,11 +11,11 @@ import org.gdal.gdal.Dataset;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.gdal.Gdal;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.raster.AbstractGeoReferencedImage;
 
 public class GdalImage extends AbstractGeoReferencedImage {

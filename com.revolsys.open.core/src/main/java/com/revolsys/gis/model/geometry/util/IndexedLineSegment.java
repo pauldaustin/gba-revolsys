@@ -1,7 +1,7 @@
 package com.revolsys.gis.model.geometry.util;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.geometry.LineSegment;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class IndexedLineSegment extends LineSegment {
 

@@ -37,9 +37,9 @@ import java.io.StringWriter;
 import java.lang.ref.Reference;
 import java.text.NumberFormat;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;

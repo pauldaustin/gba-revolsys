@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.jdbc.JdbcUtils;
+import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class Query extends AbstractObjectWithProperties implements Cloneable {

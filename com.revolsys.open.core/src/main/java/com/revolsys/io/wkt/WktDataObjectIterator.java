@@ -12,11 +12,11 @@ import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class WktDataObjectIterator extends AbstractIterator<Record>

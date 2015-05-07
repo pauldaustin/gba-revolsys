@@ -16,7 +16,7 @@ import com.revolsys.data.query.SqlCondition;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.cs.BoundingBox;
+import com.revolsys.jts.geom.BoundingBox;
 
 public class DataObjectStoreQueryReader extends IteratorReader<Record>
   implements DataObjectReader {

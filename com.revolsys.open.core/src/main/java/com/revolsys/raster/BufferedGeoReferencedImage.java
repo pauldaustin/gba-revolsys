@@ -2,7 +2,7 @@ package com.revolsys.raster;
 
 import java.awt.image.BufferedImage;
 
-import com.revolsys.gis.cs.BoundingBox;
+import com.revolsys.jts.geom.BoundingBox;
 
 public class BufferedGeoReferencedImage extends AbstractGeoReferencedImage {
 

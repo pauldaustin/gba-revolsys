@@ -4,7 +4,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineStringGraphTest {

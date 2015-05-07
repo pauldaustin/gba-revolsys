@@ -13,12 +13,12 @@ import java.util.List;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.BooleanStringConverter;
-import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.raster.BufferedGeoReferencedImage;
 import com.revolsys.raster.GeoReferencedImage;
 import com.revolsys.raster.MappedLocation;

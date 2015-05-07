@@ -10,10 +10,10 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.geometry.GeometryCollection;
 import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.map.form.DataObjectLayerForm;
 import com.revolsys.swing.table.TablePanel;
 import com.vividsolutions.jts.geom.Geometry;

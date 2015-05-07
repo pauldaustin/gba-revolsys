@@ -16,8 +16,8 @@ import java.util.List;
 import org.jdesktop.swingx.color.ColorUtil;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.MapPanel;

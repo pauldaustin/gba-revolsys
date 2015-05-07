@@ -10,11 +10,11 @@ import java.util.Map;
 
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.WktCsParser;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class ArcSdeSpatialReferenceCache {
 

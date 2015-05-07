@@ -6,8 +6,8 @@ import java.util.List;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.io.Reader;
+import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.parallel.process.AbstractProcess;
 
 public class DataStoreQueryTask extends AbstractProcess {

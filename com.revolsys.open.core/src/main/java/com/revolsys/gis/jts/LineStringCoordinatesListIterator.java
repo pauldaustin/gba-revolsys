@@ -2,9 +2,9 @@ package com.revolsys.gis.jts;
 
 import java.util.Iterator;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineStringCoordinatesListIterator implements Iterator<LineString>,

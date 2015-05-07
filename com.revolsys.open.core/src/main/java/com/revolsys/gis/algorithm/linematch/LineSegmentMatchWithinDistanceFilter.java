@@ -1,9 +1,9 @@
 package com.revolsys.gis.algorithm.linematch;
 
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Node;
+import com.revolsys.jts.geom.BoundingBox;
 
 public class LineSegmentMatchWithinDistanceFilter implements
   Filter<Edge<LineSegmentMatch>> {

@@ -1,7 +1,7 @@
 package com.revolsys.format.esri.gdb.xml.model;
 
 import com.revolsys.format.esri.gdb.xml.model.enums.GeometryType;
-import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class GeometryDef {
   private int avgNumPoints;

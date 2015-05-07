@@ -1,6 +1,6 @@
 package com.revolsys.gis.oracle.esri;
 
-import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class ArcSdeSpatialReference {

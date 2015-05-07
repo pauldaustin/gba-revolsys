@@ -3,13 +3,13 @@ package com.revolsys.io.gml.type;
 import javax.xml.namespace.QName;
 
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.io.gml.GmlConstants;
 import com.revolsys.io.gml.GmlDataObjectWriter;
 import com.revolsys.io.xml.XmlWriter;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.LineString;

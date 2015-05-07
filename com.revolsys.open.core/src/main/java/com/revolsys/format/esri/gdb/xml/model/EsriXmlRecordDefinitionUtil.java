@@ -19,9 +19,9 @@ import com.revolsys.format.esri.gdb.xml.model.enums.FieldType;
 import com.revolsys.format.esri.gdb.xml.model.enums.GeometryType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldTypeRegistry;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.PathUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.CollectionUtil;
 
 public class EsriXmlRecordDefinitionUtil implements

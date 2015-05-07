@@ -1,9 +1,9 @@
 package com.revolsys.swing.map.overlay;
 
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
 import com.revolsys.gis.model.geometry.util.IndexedLineSegment;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.util.CollectionUtil;

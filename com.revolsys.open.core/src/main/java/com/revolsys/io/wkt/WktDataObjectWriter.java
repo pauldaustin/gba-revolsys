@@ -7,9 +7,9 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class WktDataObjectWriter extends AbstractWriter<Record> {

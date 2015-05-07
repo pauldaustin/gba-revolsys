@@ -1,9 +1,9 @@
 package com.revolsys.gis.graph.filter;
 
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.model.coordinates.Coordinates;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.prep.PreparedGeometry;

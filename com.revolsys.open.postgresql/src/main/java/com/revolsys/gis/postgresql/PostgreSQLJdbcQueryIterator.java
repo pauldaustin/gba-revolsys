@@ -8,10 +8,10 @@ import org.postgis.Point;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.cs.BoundingBox;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jdbc.io.JdbcQueryIterator;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
 

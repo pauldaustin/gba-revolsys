@@ -1,8 +1,8 @@
 package com.revolsys.gis.graph.visitor;
 
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.EdgeVisitor;
+import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;

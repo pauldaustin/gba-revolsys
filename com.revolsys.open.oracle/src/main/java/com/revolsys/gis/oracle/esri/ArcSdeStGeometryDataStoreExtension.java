@@ -12,12 +12,12 @@ import org.springframework.util.StringUtils;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.oracle.io.OracleDataObjectStore;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class ArcSdeStGeometryDataStoreExtension implements
   DataObjectStoreExtension {

@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.revolsys.collection.AbstractIterator;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.io.AbstractMultipleIteratorReader;
+import com.revolsys.jts.geom.BoundingBox;
 
 public class FileGdbReader extends AbstractMultipleIteratorReader<Record> {
 

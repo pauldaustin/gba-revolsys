@@ -21,10 +21,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.field.InvokeMethodStringConverter;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.parallel.Invoke;

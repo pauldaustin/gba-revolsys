@@ -10,10 +10,10 @@ import java.util.TreeMap;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.PathUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.ExceptionUtil;
 
 public class RecordStoreSchema extends AbstractObjectWithProperties {

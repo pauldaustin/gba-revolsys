@@ -6,12 +6,12 @@ import java.util.Map;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.dataobject.DataObjectBoundingBoxLayer;
 import com.revolsys.swing.map.layer.dataobject.renderer.MarkerStyleRenderer;

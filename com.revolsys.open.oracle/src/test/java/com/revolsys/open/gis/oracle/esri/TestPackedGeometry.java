@@ -3,13 +3,13 @@ package com.revolsys.open.gis.oracle.esri;
 import java.util.Collections;
 import java.util.List;
 
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.data.equals.Geometry3DExactEquals;
 import com.revolsys.gis.oracle.esri.ArcSdeConstants;
 import com.revolsys.gis.oracle.esri.PackedCoordinateUtil;
 import com.revolsys.io.wkt.WktWriter;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class TestPackedGeometry {

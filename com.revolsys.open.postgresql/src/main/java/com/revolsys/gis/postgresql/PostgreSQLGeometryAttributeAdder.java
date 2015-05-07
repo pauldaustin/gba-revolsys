@@ -15,12 +15,12 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.io.PathUtil;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
 import com.revolsys.jdbc.io.JdbcConstants;
 import com.revolsys.jdbc.io.SqlFunction;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class PostgreSQLGeometryAttributeAdder extends JdbcAttributeAdder {
 

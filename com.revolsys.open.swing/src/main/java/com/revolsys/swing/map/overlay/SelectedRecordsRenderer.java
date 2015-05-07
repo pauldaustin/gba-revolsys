@@ -9,12 +9,12 @@ import java.util.List;
 import org.jdesktop.swingx.color.ColorUtil;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.jts.IsSimpleOp;
 import com.revolsys.gis.jts.IsValidOp;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.dataobject.renderer.GeometryStyleRenderer;
 import com.revolsys.swing.map.layer.dataobject.renderer.MarkerStyleRenderer;

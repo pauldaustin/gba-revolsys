@@ -9,9 +9,7 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.esri.gdb.file.test.field.BinaryField;
@@ -27,6 +25,8 @@ import com.revolsys.gis.esri.gdb.file.test.field.XmlField;
 import com.revolsys.gis.io.EndianInputStream;
 import com.revolsys.io.EndianInput;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
+import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 
 public class FgdbReader {
 

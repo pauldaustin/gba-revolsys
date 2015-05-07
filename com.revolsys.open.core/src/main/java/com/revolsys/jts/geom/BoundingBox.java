@@ -1,4 +1,4 @@
-package com.revolsys.gis.cs;
+package com.revolsys.jts.geom;
 
 import javax.measure.Measurable;
 import javax.measure.Measure;
@@ -14,6 +14,8 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.gis.cs.CoordinateSystem;
+import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.projection.CoordinatesListProjectionUtil;
 import com.revolsys.gis.cs.projection.CoordinatesOperation;
 import com.revolsys.gis.cs.projection.GeometryOperation;

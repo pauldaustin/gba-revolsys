@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.data.io.AbstractDataObjectWriterFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.AbstractWriter;
@@ -19,6 +18,7 @@ import com.revolsys.io.IoConstants;
 import com.revolsys.io.PathUtil;
 import com.revolsys.io.Writer;
 import com.revolsys.io.xbase.XbaseDataObjectWriter;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class ShapeDirectoryWriter extends AbstractWriter<Record> {

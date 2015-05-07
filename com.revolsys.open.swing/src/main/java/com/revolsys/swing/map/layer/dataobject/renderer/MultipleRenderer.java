@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import com.revolsys.gis.cs.BoundingBox;
+import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.geom.TopologyException;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;

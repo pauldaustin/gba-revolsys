@@ -36,11 +36,11 @@ import javax.swing.tree.TreePath;
 
 import org.springframework.core.io.FileSystemResource;
 
-import com.revolsys.gis.cs.BoundingBox;
 import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
 import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
 import com.revolsys.io.file.FolderConnectionManager;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
+import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.net.urlcache.FileResponseCache;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;

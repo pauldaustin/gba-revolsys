@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.format.esri.map.rest.AbstractMapWrapper;
-import com.revolsys.gis.cs.GeometryFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Point;
 
