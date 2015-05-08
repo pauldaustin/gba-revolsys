@@ -1,6 +1,6 @@
 JAVA_VERSION=1.7.0
 WIN_SDK=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A
-ESRI_FILE_GBD_HOME=C:\Apps\EsriFileGdb\1.4\winnt
+ESRI_FILE_GBD_HOME=C:\Development\EsriFileGdb\1.4\VS2010
 ESRI_FILE_GBD_INCLUDE=$(ESRI_FILE_GBD_HOME)\include
 
 !IFNDEF ARCH
@@ -19,7 +19,6 @@ LINKFLAGS=/NODEFAULTLIB /NOLOGO /MACHINE:$(PLATFORM) -entry:_DllMainCRTStartup@1
 
 CFLAGS=/c /nologo /EHsc /O2 /MT
 LINKFLAGS=$(LINKFLAGS) /RELEASE
-DLLIBC=msvcrt.lib oldnames.lib libcpmt.lib
 LIBS=msvcrt.lib oldnames.lib libcpmt.lib kernel32.lib advapi32.lib user32.lib gdi32.lib comdlg32.lib winspool.lib FileGDBAPI.lib
 
 SRC_FILE=src\main\cxx\EsriFileGdb_wrap.cxx
