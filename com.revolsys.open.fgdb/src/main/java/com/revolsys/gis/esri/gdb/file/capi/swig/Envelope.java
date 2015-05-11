@@ -13,9 +13,9 @@ public class Envelope {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public Envelope() {
     this(EsriFileGdbJNI.new_Envelope__SWIG_0(), true);

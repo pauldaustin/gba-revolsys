@@ -92,6 +92,8 @@ public class EsriFileGdbJNI {
   public final static native void Geodatabase_closeTable(long jarg1, Geodatabase jarg1_,
     long jarg2, Table jarg2_);
 
+  public final static native int Geodatabase_CompactDatabase(long jarg1, Geodatabase jarg1_);
+
   public final static native void Geodatabase_createDomain(long jarg1, Geodatabase jarg1_,
     String jarg2);
 

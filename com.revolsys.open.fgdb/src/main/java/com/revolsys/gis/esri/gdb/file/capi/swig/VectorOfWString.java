@@ -13,9 +13,9 @@ public class VectorOfWString {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public VectorOfWString() {
     this(EsriFileGdbJNI.new_VectorOfWString__SWIG_0(), true);

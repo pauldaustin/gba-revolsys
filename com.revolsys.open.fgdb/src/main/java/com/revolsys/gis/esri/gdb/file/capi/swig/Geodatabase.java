@@ -13,9 +13,9 @@ public class Geodatabase {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public Geodatabase() {
     this(EsriFileGdbJNI.new_Geodatabase(), true);
@@ -32,6 +32,10 @@ public class Geodatabase {
 
   public void closeTable(final Table table) {
     EsriFileGdbJNI.Geodatabase_closeTable(this.swigCPtr, this, Table.getCPtr(table), table);
+  }
+
+  public int CompactDatabase() {
+    return EsriFileGdbJNI.Geodatabase_CompactDatabase(this.swigCPtr, this);
   }
 
   public void createDomain(final String domainDefinition) {
