@@ -69,11 +69,11 @@ public class FgdbReader {
 
   }
 
-  private EndianInputStream in;
-
   private int fieldDescriptionOffset;
 
   private DataType geometryType;
+
+  private EndianInputStream in;
 
   private final RecordDefinitionImpl metaData = new RecordDefinitionImpl();
 
