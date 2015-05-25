@@ -23,7 +23,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     if (filter != null && !filter.isEmpty()) {
       for (final Entry<String, ?> entry : filter.entrySet()) {
         final String name = entry.getKey();
-        final FieldDefinition attribute = metaData.getAttribute(name);
+        final FieldDefinition attribute = metaData.getField(name);
         if (attribute == null) {
           final Object value = entry.getValue();
           if (value == null) {
@@ -61,7 +61,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
 
   public static Query equal(final RecordDefinition metaData,
     final String name, final Object value) {
-    final FieldDefinition attribute = metaData.getAttribute(name);
+    final FieldDefinition attribute = metaData.getField(name);
     if (attribute == null) {
       return null;
     } else {

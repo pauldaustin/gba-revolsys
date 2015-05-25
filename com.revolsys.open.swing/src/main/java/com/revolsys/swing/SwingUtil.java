@@ -302,7 +302,7 @@ public class SwingUtil {
     final RecordDefinition metaData, final String fieldName,
     final boolean editable) {
     Field field;
-    final FieldDefinition attribute = metaData.getAttribute(fieldName);
+    final FieldDefinition attribute = metaData.getField(fieldName);
     if (attribute == null) {
       throw new IllegalArgumentException("Cannot find field " + fieldName);
     } else {

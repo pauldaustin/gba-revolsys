@@ -469,7 +469,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
       this.previousSearchFieldName = searchFieldName;
       this.layer.setProperty("searchField", searchFieldName);
       final RecordDefinition metaData = this.tableModel.getMetaData();
-      this.attribute = metaData.getAttribute(searchFieldName);
+      this.attribute = metaData.getField(searchFieldName);
       final Class<?> attributeClass = this.attribute.getTypeClass();
       if (!EqualsRegistry.equal(searchFieldName,
         this.nameField.getSelectedItem())) {

@@ -15,17 +15,17 @@ import com.revolsys.data.query.And;
 import com.revolsys.data.query.Q;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
 import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.util.Property;
 
 public class CodeTableProperty extends AbstractCodeTable implements
-  DataObjectMetaDataProperty {
+  RecordDefinitionProperty {
 
   private static final ArrayList<String> DEFAULT_ATTRIBUTE_NAMES = new ArrayList<String>(
     Arrays.asList("VALUE"));
@@ -283,7 +283,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
           if (value == null) {
             and.add(Q.isNull(attributeName));
           } else {
-            final FieldDefinition attribute = metaData.getAttribute(attributeName);
+            final FieldDefinition attribute = metaData.getField(attributeName);
             and.add(Q.equal(attribute, value));
           }
           i++;

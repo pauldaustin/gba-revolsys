@@ -66,7 +66,7 @@ public final class JdbcUtils {
       if (hasColumns) {
         sql.append(", ");
       }
-      final FieldDefinition attribute = metaData.getAttribute(attributeName);
+      final FieldDefinition attribute = metaData.getField(attributeName);
       if (attribute == null) {
         sql.append(attributeName);
       } else {

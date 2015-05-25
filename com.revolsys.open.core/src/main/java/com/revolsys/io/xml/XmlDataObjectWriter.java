@@ -8,9 +8,9 @@ import javax.xml.namespace.QName;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.RecordProperties;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.DataObjectMetaDataProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
@@ -126,7 +126,7 @@ public class XmlDataObjectWriter extends AbstractWriter<Record> {
     if (!opened) {
       writeHeader();
     }
-    QName qualifiedName = metaData.getProperty(DataObjectMetaDataProperties.QUALIFIED_NAME);
+    QName qualifiedName = metaData.getProperty(RecordProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
       qualifiedName = new QName(metaData.getTypeName());
     }

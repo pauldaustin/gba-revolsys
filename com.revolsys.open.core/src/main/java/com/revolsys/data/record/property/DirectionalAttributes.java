@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.property;
+package com.revolsys.data.record.property;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -30,7 +29,7 @@ import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
-public class DirectionalAttributes extends AbstractDataObjectMetaDataProperty {
+public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = DirectionalAttributes.class.getName()
     + ".propertyName";
 

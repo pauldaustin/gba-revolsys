@@ -314,7 +314,7 @@ public class QueryWhereConditionField extends ValueField implements
       whereTextField.setText(query);
     }
     final String searchField = layer.getProperty("searchField");
-    final FieldDefinition searchAttribute = metaData.getAttribute(searchField);
+    final FieldDefinition searchAttribute = metaData.getField(searchField);
     if (searchAttribute == null) {
       fieldNamesList.setSelectedIndex(0);
     } else {
@@ -741,7 +741,7 @@ public class QueryWhereConditionField extends ValueField implements
       final Column column = toQueryValue(leftValueNode);
       final Value min = toQueryValue(betweenExpressionStart);
       final Value max = toQueryValue(betweenExpressionEnd);
-      final FieldDefinition attribute = metaData.getAttribute(column.getName());
+      final FieldDefinition attribute = metaData.getField(column.getName());
       min.convert(attribute);
       max.convert(attribute);
       return (V)new Between(column, min, max);
@@ -780,7 +780,7 @@ public class QueryWhereConditionField extends ValueField implements
               final Column column = (Column)leftCondition;
 
               final String name = column.getName();
-              final FieldDefinition attribute = metaData.getAttribute(name);
+              final FieldDefinition attribute = metaData.getField(name);
               final CodeTable codeTable = metaData.getCodeTableByColumn(name);
               if (codeTable == null || attribute == metaData.getIdAttribute()) {
                 final Class<?> typeClass = attribute.getTypeClass();
@@ -836,7 +836,7 @@ public class QueryWhereConditionField extends ValueField implements
       final ColumnReference column = (ColumnReference)expression;
       String columnName = column.getColumnName();
       columnName = columnName.replaceAll("\"", "");
-      final FieldDefinition attribute = metaData.getAttribute(columnName);
+      final FieldDefinition attribute = metaData.getField(columnName);
       if (attribute == null) {
         setInvalidMessage("Invalid column name " + columnName);
       } else {

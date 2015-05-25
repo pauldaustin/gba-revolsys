@@ -88,7 +88,7 @@ public abstract class DataObjectRowTableModel extends
     } else {
       final String name = getFieldName(columnIndex);
       final RecordDefinition metaData = getMetaData();
-      return metaData.getAttribute(name);
+      return metaData.getField(name);
     }
   }
 
@@ -249,7 +249,7 @@ public abstract class DataObjectRowTableModel extends
       } else {
         final String attributeName = getFieldName(i);
         final RecordDefinition metaData = getMetaData();
-        final FieldDefinition attribute = metaData.getAttribute(attributeName);
+        final FieldDefinition attribute = metaData.getField(attributeName);
         title = attribute.getTitle();
       }
       this.attributeTitles.add(title);

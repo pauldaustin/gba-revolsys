@@ -38,6 +38,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.property.FieldProperties;
+import com.revolsys.data.record.property.GlobalIdProperty;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -49,7 +50,6 @@ import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.GlobalIdProperty;
 import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.jdbc.JdbcUtils;
@@ -348,7 +348,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
     if (metaData == null) {
       return null;
     } else {
-      final FieldDefinition attribute = metaData.getAttribute(columnName);
+      final FieldDefinition attribute = metaData.getField(columnName);
       return (JdbcAttribute)attribute;
     }
   }

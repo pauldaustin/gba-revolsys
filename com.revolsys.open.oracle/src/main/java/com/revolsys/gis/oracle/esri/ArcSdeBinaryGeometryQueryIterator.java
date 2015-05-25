@@ -112,7 +112,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
             this.attributes.addAll(this.metaData.getFields());
             attributeNames.addAll(this.metaData.getFieldNames());
           } else {
-            final FieldDefinition attribute = this.metaData.getAttribute(attributeName);
+            final FieldDefinition attribute = this.metaData.getField(attributeName);
             if (attribute != null) {
               this.attributes.add(attribute);
             }

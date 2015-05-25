@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.property.DirectionalAttributes;
+import com.revolsys.data.record.property.DirectionalAttributes;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.EdgePair;
 import com.revolsys.gis.graph.Node;

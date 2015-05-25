@@ -6,11 +6,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.DirectionalAttributes;
+import com.revolsys.data.record.property.PseudoNodeProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterProxy;
-import com.revolsys.gis.data.model.property.DirectionalAttributes;
-import com.revolsys.gis.data.model.property.PseudoNodeProperty;
 import com.revolsys.gis.graph.DataObjectGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.EdgePair;

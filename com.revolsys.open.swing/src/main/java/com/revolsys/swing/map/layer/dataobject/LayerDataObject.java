@@ -143,7 +143,7 @@ public class LayerDataObject extends ArrayRecord {
     if (getState() == RecordState.Initalizing) {
       return true;
     } else {
-      final FieldDefinition attribute = getRecordDefinition().getAttribute(name);
+      final FieldDefinition attribute = getRecordDefinition().getField(name);
       if (attribute != null && attribute.isRequired()) {
         final Object value = getValue(name);
         if (value == null || value instanceof String

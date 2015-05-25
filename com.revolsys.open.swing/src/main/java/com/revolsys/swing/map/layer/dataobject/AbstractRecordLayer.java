@@ -46,6 +46,7 @@ import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
+import com.revolsys.data.record.property.DirectionalAttributes;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -60,7 +61,6 @@ import com.revolsys.gis.data.io.ListDataObjectReader;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryDistanceFilter;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
-import com.revolsys.gis.data.model.property.DirectionalAttributes;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
@@ -1545,7 +1545,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements
           Geometry sourceGeometry = sourceRecord.getGeometryValue();
           for (final Iterator<String> iterator = newValues.keySet().iterator(); iterator.hasNext();) {
             final String attributeName = iterator.next();
-            final FieldDefinition attribute = metaData.getAttribute(attributeName);
+            final FieldDefinition attribute = metaData.getField(attributeName);
             if (attribute == null) {
               iterator.remove();
             } else if (ignorePasteFields != null) {

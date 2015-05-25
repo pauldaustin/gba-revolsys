@@ -14,7 +14,7 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcAttribute {
   public static void replaceAttribute(final String schemaName,
     final RecordDefinition metaData, final Integer registrationId,
     final String rowIdColumn) {
-    final JdbcAttribute objectIdAttribute = (JdbcAttribute)metaData.getAttribute(rowIdColumn);
+    final JdbcAttribute objectIdAttribute = (JdbcAttribute)metaData.getField(rowIdColumn);
     if (objectIdAttribute != null
         && !(objectIdAttribute instanceof ArcSdeObjectIdJdbcAttribute)) {
       final String name = objectIdAttribute.getName();

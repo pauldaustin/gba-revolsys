@@ -37,8 +37,8 @@ public class SchemaMapper {
    */
   public void addAttributeMapping(final RecordDefinition fromClass,
     final String fromName, final RecordDefinition toClass, final String toName) {
-    final FieldDefinition fromAttribute = fromClass.getAttribute(fromName);
-    final FieldDefinition toAttribute = toClass.getAttribute(toName);
+    final FieldDefinition fromAttribute = fromClass.getField(fromName);
+    final FieldDefinition toAttribute = toClass.getField(toName);
     addAttributeMapping(fromAttribute, toAttribute);
   }
 

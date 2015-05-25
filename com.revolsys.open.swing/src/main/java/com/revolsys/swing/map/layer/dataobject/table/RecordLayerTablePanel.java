@@ -13,10 +13,10 @@ import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.DirectionalAttributes;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.property.DirectionalAttributes;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.SwingUtil;

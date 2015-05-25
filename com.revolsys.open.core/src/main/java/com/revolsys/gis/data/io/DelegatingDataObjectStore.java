@@ -14,10 +14,10 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.Reader;
@@ -330,7 +330,7 @@ public class DelegatingDataObjectStore extends AbstractRecordStore {
 
   @Override
   public void setCommonMetaDataProperties(
-    final List<DataObjectMetaDataProperty> commonMetaDataProperties) {
+    final List<RecordDefinitionProperty> commonMetaDataProperties) {
     dataStore.setCommonMetaDataProperties(commonMetaDataProperties);
   }
 
@@ -376,7 +376,7 @@ public class DelegatingDataObjectStore extends AbstractRecordStore {
 
   @Override
   public void setTypeMetaDataProperties(
-    final Map<String, List<DataObjectMetaDataProperty>> typeMetaProperties) {
+    final Map<String, List<RecordDefinitionProperty>> typeMetaProperties) {
     dataStore.setTypeMetaDataProperties(typeMetaProperties);
   }
 

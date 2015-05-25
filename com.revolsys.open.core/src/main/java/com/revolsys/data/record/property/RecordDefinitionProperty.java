@@ -1,10 +1,10 @@
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record.property;
 
 import com.revolsys.data.record.schema.RecordDefinition;
 
-public interface DataObjectMetaDataProperty extends Cloneable {
+public interface RecordDefinitionProperty extends Cloneable {
 
-  DataObjectMetaDataProperty clone();
+  RecordDefinitionProperty clone();
 
   RecordDefinition getMetaData();
 

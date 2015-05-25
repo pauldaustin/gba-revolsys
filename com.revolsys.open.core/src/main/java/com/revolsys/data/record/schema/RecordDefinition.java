@@ -43,7 +43,7 @@ public interface RecordDefinition extends ObjectWithProperties,
 
   void destroy();
 
-  FieldDefinition getAttribute(CharSequence name);
+  FieldDefinition getField(CharSequence name);
 
   FieldDefinition getAttribute(int index);
 

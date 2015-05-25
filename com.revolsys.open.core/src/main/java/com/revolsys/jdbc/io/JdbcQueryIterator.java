@@ -212,7 +212,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements
           if (attributeName.equals("*")) {
             this.attributes.addAll(metaData.getFields());
           } else {
-            final FieldDefinition attribute = metaData.getAttribute(attributeName);
+            final FieldDefinition attribute = metaData.getField(attributeName);
             if (attribute != null) {
               attributes.add(attribute);
             }

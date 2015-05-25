@@ -30,12 +30,12 @@ import com.revolsys.data.query.Q;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
 import com.revolsys.gis.data.io.DataObjectStoreSchemaMapProxy;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
-import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
@@ -89,7 +89,7 @@ implements RecordStore {
 
   private Map<String, RecordStoreSchema> schemaMap = new TreeMap<String, RecordStoreSchema>();
 
-  private List<DataObjectMetaDataProperty> commonMetaDataProperties = new ArrayList<DataObjectMetaDataProperty>();
+  private List<RecordDefinitionProperty> commonMetaDataProperties = new ArrayList<RecordDefinitionProperty>();
 
   private final Map<String, Map<String, Object>> typeMetaDataProperties = new HashMap<String, Map<String, Object>>();
 
@@ -161,8 +161,8 @@ implements RecordStore {
   protected void addRecordDefinitionProperties(
     final RecordDefinitionImpl metaData) {
     final String typePath = metaData.getPath();
-    for (final DataObjectMetaDataProperty property : this.commonMetaDataProperties) {
-      final DataObjectMetaDataProperty clonedProperty = property.clone();
+    for (final RecordDefinitionProperty property : this.commonMetaDataProperties) {
+      final RecordDefinitionProperty clonedProperty = property.clone();
       clonedProperty.setRecordDefinition(metaData);
     }
     final Map<String, Object> properties = this.typeMetaDataProperties.get(typePath);
@@ -611,7 +611,7 @@ implements RecordStore {
         for (int i = 0; i < idAttributeNames.size(); i++) {
           final String name = idAttributeNames.get(i);
           final Object value = id[i];
-          final FieldDefinition attribute = metaData.getAttribute(name);
+          final FieldDefinition attribute = metaData.getField(name);
           query.and(Q.equal(attribute, value));
         }
         return queryFirst(query);
@@ -768,7 +768,7 @@ implements RecordStore {
   }
 
   public void setCommonMetaDataProperties(
-    final List<DataObjectMetaDataProperty> commonMetaDataProperties) {
+    final List<RecordDefinitionProperty> commonMetaDataProperties) {
     this.commonMetaDataProperties = commonMetaDataProperties;
   }
 
@@ -811,16 +811,16 @@ implements RecordStore {
   }
 
   public void setTypeMetaDataProperties(
-    final Map<String, List<DataObjectMetaDataProperty>> typeMetaProperties) {
-    for (final Entry<String, List<DataObjectMetaDataProperty>> typeProperties : typeMetaProperties.entrySet()) {
+    final Map<String, List<RecordDefinitionProperty>> typeMetaProperties) {
+    for (final Entry<String, List<RecordDefinitionProperty>> typeProperties : typeMetaProperties.entrySet()) {
       final String typePath = typeProperties.getKey();
       Map<String, Object> currentProperties = this.typeMetaDataProperties.get(typePath);
       if (currentProperties == null) {
         currentProperties = new LinkedHashMap<String, Object>();
         this.typeMetaDataProperties.put(typePath, currentProperties);
       }
-      final List<DataObjectMetaDataProperty> properties = typeProperties.getValue();
-      for (final DataObjectMetaDataProperty property : properties) {
+      final List<RecordDefinitionProperty> properties = typeProperties.getValue();
+      for (final RecordDefinitionProperty property : properties) {
         final String name = property.getPropertyName();
         currentProperties.put(name, property);
       }

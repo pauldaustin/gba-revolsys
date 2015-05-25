@@ -18,10 +18,10 @@ import org.springframework.dao.DataAccessException;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
+import com.revolsys.data.record.property.GlobalIdProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.model.GlobalIdProperty;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.jdbc.JdbcUtils;

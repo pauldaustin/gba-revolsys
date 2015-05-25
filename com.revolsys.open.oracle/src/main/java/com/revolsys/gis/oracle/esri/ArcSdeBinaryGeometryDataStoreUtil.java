@@ -84,7 +84,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     final RecordStoreSchema schema, final RecordDefinition metaData,
     final String typePath, final String columnName,
     final Map<String, Object> columnProperties) {
-    final FieldDefinition attribute = metaData.getAttribute(columnName);
+    final FieldDefinition attribute = metaData.getField(columnName);
 
     DataType dataType = JdbcAttributeAdder.getColumnProperty(schema, typePath,
       columnName, JdbcAttributeAdder.GEOMETRY_TYPE);

@@ -10,9 +10,9 @@ import java.util.List;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.ShortNameProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.ShortNameProperty;
 import com.revolsys.io.Path;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.MathUtil;

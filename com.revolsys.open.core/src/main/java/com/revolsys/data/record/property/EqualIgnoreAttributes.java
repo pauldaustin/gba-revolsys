@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.property;
+package com.revolsys.data.record.property;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,10 +7,9 @@ import java.util.Set;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
 import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
-public class EqualIgnoreAttributes extends AbstractDataObjectMetaDataProperty {
+public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = EqualIgnoreAttributes.class.getName()
     + ".propertyName";
 

@@ -239,7 +239,7 @@ public final class DataObjectUtil {
     final Record object = new ArrayRecord(metaData);
     for (final Entry<String, Object> entry : values.entrySet()) {
       final String name = entry.getKey();
-      final FieldDefinition attribute = metaData.getAttribute(name);
+      final FieldDefinition attribute = metaData.getField(name);
       if (attribute != null) {
         final Object value = entry.getValue();
         if (value != null) {

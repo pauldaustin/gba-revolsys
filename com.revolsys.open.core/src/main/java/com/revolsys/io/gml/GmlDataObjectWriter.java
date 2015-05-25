@@ -5,11 +5,11 @@ import java.io.Writer;
 import javax.xml.namespace.QName;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.RecordProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.cs.CoordinateSystem;
-import com.revolsys.gis.data.model.DataObjectMetaDataProperties;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.revolsys.io.Path;
@@ -45,7 +45,7 @@ public class GmlDataObjectWriter extends AbstractWriter<Record> implements
   public GmlDataObjectWriter(final RecordDefinition metaData, final Writer out) {
     this.metaData = metaData;
     this.out = new XmlWriter(out);
-    qualifiedName = metaData.getProperty(DataObjectMetaDataProperties.QUALIFIED_NAME);
+    qualifiedName = metaData.getProperty(RecordProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
       qualifiedName = new QName(metaData.getTypeName());
     }
@@ -110,13 +110,13 @@ public class GmlDataObjectWriter extends AbstractWriter<Record> implements
     }
     out.startTag(FEATURE_MEMBER);
     final RecordDefinition metaData = object.getRecordDefinition();
-    QName qualifiedName = metaData.getProperty(DataObjectMetaDataProperties.QUALIFIED_NAME);
+    QName qualifiedName = metaData.getProperty(RecordProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
       final String typeName = metaData.getPath();
       final String path = Path.getPath(typeName);
       final String name = Path.getName(typeName);
       qualifiedName = new QName(path, name);
-      metaData.setProperty(DataObjectMetaDataProperties.QUALIFIED_NAME,
+      metaData.setProperty(RecordProperties.QUALIFIED_NAME,
         qualifiedName);
     }
     out.startTag(qualifiedName);

@@ -38,6 +38,7 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
+import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
@@ -48,7 +49,6 @@ import com.revolsys.data.types.DataTypes;
 import com.revolsys.data.types.EnumerationDataType;
 import com.revolsys.data.types.SimpleDataType;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
-import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
 import com.revolsys.io.saif.util.CsnIterator;
 
 public class SaifSchemaReader {
@@ -87,7 +87,7 @@ public class SaifSchemaReader {
     nameTypeMap.put(String.valueOf(typePath), dataType);
   }
 
-  private List<DataObjectMetaDataProperty> commonMetaDataProperties = new ArrayList<DataObjectMetaDataProperty>();
+  private List<RecordDefinitionProperty> commonMetaDataProperties = new ArrayList<RecordDefinitionProperty>();
 
   private RecordDefinitionImpl currentClass;
 
@@ -109,7 +109,7 @@ public class SaifSchemaReader {
     final RecordDefinition superClass) {
     currentClass.addSuperClass(superClass);
     for (final String name : superClass.getFieldNames()) {
-      final FieldDefinition attribute = superClass.getAttribute(name);
+      final FieldDefinition attribute = superClass.getField(name);
       currentClass.addField(attribute.clone());
     }
     for (final Entry<String, Object> defaultValue : superClass.getDefaultValues()
@@ -222,7 +222,7 @@ public class SaifSchemaReader {
     }
   }
 
-  public List<DataObjectMetaDataProperty> getCommonMetaDataProperties() {
+  public List<RecordDefinitionProperty> getCommonMetaDataProperties() {
     return commonMetaDataProperties;
   }
 
@@ -406,7 +406,7 @@ public class SaifSchemaReader {
         "position");
       final int dotIndex = attributeName.indexOf('.');
       if (dotIndex == -1) {
-        final FieldDefinition attribute = type.getAttribute(attributeName);
+        final FieldDefinition attribute = type.getField(attributeName);
         if (attribute != null) {
           if (!typePaths.isEmpty()) {
             attribute.setProperty(FieldProperties.ALLOWED_TYPE_NAMES,
@@ -419,7 +419,7 @@ public class SaifSchemaReader {
       } else {
         final String key = attributeName.substring(0, dotIndex);
         final String subKey = attributeName.substring(dotIndex + 1);
-        final FieldDefinition attribute = type.getAttribute(key);
+        final FieldDefinition attribute = type.getField(key);
         if (attribute != null) {
           if (!typePaths.isEmpty()) {
             Map<String, List<String>> allowedValues = attribute.getProperty(FieldProperties.ATTRIBUTE_ALLOWED_TYPE_NAMES);
@@ -446,13 +446,13 @@ public class SaifSchemaReader {
   }
 
   public void setCommonMetaDataProperties(
-    final List<DataObjectMetaDataProperty> commonMetaDataProperties) {
+    final List<RecordDefinitionProperty> commonMetaDataProperties) {
     this.commonMetaDataProperties = commonMetaDataProperties;
   }
 
   private void setMetaDataProperties(final RecordDefinitionImpl metaData) {
-    for (final DataObjectMetaDataProperty property : commonMetaDataProperties) {
-      final DataObjectMetaDataProperty clonedProperty = property.clone();
+    for (final RecordDefinitionProperty property : commonMetaDataProperties) {
+      final RecordDefinitionProperty clonedProperty = property.clone();
       clonedProperty.setRecordDefinition(metaData);
     }
   }

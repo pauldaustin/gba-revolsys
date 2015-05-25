@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.property;
+package com.revolsys.data.record.property;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,21 +8,20 @@ import java.util.Set;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.graph.attribute.InvokeMethodObjectAttributeProxy;
 import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
 import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
 import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
-public class PseudoNodeProperty extends AbstractDataObjectMetaDataProperty {
+public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
   protected static final List<String> DEFAULT_EXCLUDE = Arrays.asList(
     DataObjectEquals.EXCLUDE_ID, DataObjectEquals.EXCLUDE_GEOMETRY);
 
   public static final String PROPERTY_NAME = PseudoNodeProperty.class.getName()
     + ".propertyName";
 
-  public static AbstractDataObjectMetaDataProperty getProperty(
+  public static AbstractRecordDefinitionProperty getProperty(
     final Record object) {
     final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);

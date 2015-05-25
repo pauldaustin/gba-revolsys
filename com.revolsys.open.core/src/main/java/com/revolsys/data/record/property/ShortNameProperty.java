@@ -1,9 +1,9 @@
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record.property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 
-public class ShortNameProperty extends AbstractDataObjectMetaDataProperty {
+public class ShortNameProperty extends AbstractRecordDefinitionProperty {
   static final String PROPERTY_NAME = "http://revolsys.com/gis/shortName";
 
   public static ShortNameProperty getProperty(final Record object) {

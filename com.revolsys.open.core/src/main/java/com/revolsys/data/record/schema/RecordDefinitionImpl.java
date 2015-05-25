@@ -24,11 +24,11 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.property.FieldProperties;
+import com.revolsys.data.record.property.RecordDefinitionProperty;
+import com.revolsys.data.record.property.ValueRecordDefinitionProperty;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.data.model.ArrayDataObjectFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
-import com.revolsys.gis.data.model.DataObjectMetaDataProperty;
-import com.revolsys.gis.data.model.ValueMetaDataProperty;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.Path;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
@@ -289,8 +289,8 @@ implements RecordDefinition, Cloneable {
     if (properties != null) {
       for (final Entry<String, Object> property : properties.entrySet()) {
         final String propertyName = property.getKey();
-        if (property instanceof DataObjectMetaDataProperty) {
-          DataObjectMetaDataProperty metaDataProperty = (DataObjectMetaDataProperty)property;
+        if (property instanceof RecordDefinitionProperty) {
+          RecordDefinitionProperty metaDataProperty = (RecordDefinitionProperty)property;
           metaDataProperty = metaDataProperty.clone();
           metaDataProperty.setRecordDefinition(this);
           setProperty(propertyName, metaDataProperty);
@@ -364,7 +364,7 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public FieldDefinition getAttribute(final CharSequence name) {
+  public FieldDefinition getField(final CharSequence name) {
     if (name == null) {
       return null;
     } else {
@@ -452,7 +452,7 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public String getAttributeTitle(final String fieldName) {
-    final FieldDefinition attribute = getAttribute(fieldName);
+    final FieldDefinition attribute = getField(fieldName);
     if (attribute == null) {
       return CaseConverter.toCapitalizedWords(fieldName);
     } else {
@@ -661,7 +661,7 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public boolean isAttributeRequired(final CharSequence name) {
-    final FieldDefinition attribute = getAttribute(name);
+    final FieldDefinition attribute = getField(name);
     return attribute.isRequired();
   }
 
@@ -801,15 +801,15 @@ implements RecordDefinition, Cloneable {
       for (final Entry<String, ? extends Object> entry : properties.entrySet()) {
         final String key = entry.getKey();
         final Object value = entry.getValue();
-        if (value instanceof ValueMetaDataProperty) {
-          final ValueMetaDataProperty valueProperty = (ValueMetaDataProperty)value;
+        if (value instanceof ValueRecordDefinitionProperty) {
+          final ValueRecordDefinitionProperty valueProperty = (ValueRecordDefinitionProperty)value;
           final String propertyName = valueProperty.getPropertyName();
           final Object propertyValue = valueProperty.getValue();
           JavaBeanUtil.setProperty(this, propertyName, propertyValue);
         }
-        if (value instanceof DataObjectMetaDataProperty) {
-          final DataObjectMetaDataProperty property = (DataObjectMetaDataProperty)value;
-          final DataObjectMetaDataProperty clonedProperty = property.clone();
+        if (value instanceof RecordDefinitionProperty) {
+          final RecordDefinitionProperty property = (RecordDefinitionProperty)value;
+          final RecordDefinitionProperty clonedProperty = property.clone();
           clonedProperty.setRecordDefinition(this);
         } else {
           setProperty(key, value);

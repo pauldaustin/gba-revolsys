@@ -96,7 +96,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
         fieldType.writeValue(out, value);
       }
     }
-    if (metaData.getAttribute("OBJECTID") == null) {
+    if (metaData.getField("OBJECTID") == null) {
       final EsriGeodatabaseXmlFieldType fieldType = fieldTypes.getFieldType(DataTypes.INTEGER);
       fieldType.writeValue(out, objectId++);
     }
@@ -307,7 +307,7 @@ public class EsriGeodatabaseXmlDataObjectWriter extends
     for (final FieldDefinition attribute : metaData.getFields()) {
       writeField(attribute);
     }
-    if (metaData.getAttribute("OBJECTID") == null) {
+    if (metaData.getField("OBJECTID") == null) {
       writeOidField();
     }
     out.endTag(FIELD_ARRAY);

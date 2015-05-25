@@ -1,6 +1,6 @@
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record.property;
 
-public class SimpleProperty extends AbstractDataObjectMetaDataProperty {
+public class SimpleProperty extends AbstractRecordDefinitionProperty {
   private String propertyName;
 
   private Object value;

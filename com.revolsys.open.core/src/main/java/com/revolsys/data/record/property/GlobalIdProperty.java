@@ -1,9 +1,9 @@
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record.property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 
-public class GlobalIdProperty extends AbstractDataObjectMetaDataProperty {
+public class GlobalIdProperty extends AbstractRecordDefinitionProperty {
   static final String PROPERTY_NAME = "http://revolsys.com/gis/globalId";
 
   public static GlobalIdProperty getProperty(final Record object) {

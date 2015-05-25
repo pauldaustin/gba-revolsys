@@ -49,7 +49,7 @@ DataObjectStoreExtension {
         final String columnName = columnEntry.getKey();
         final Map<String, Object> columnProperties = columnEntry.getValue();
         if (ArcSdeConstants.SDEBINARY.equals(columnProperties.get(ArcSdeConstants.GEOMETRY_COLUMN_TYPE))) {
-          final FieldDefinition attribute = metaData.getAttribute(columnName);
+          final FieldDefinition attribute = metaData.getField(columnName);
           if (!(attribute instanceof OracleSdoGeometryJdbcAttribute)) {
             if (this.sdeUtil == null) {
               LoggerFactory.getLogger(getClass())

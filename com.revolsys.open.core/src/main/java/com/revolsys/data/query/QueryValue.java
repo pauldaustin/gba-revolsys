@@ -101,7 +101,7 @@ public abstract class QueryValue implements Cloneable {
       final Column column = toQueryValue(metaData, leftValueNode);
       final Value min = toQueryValue(metaData, betweenExpressionStart);
       final Value max = toQueryValue(metaData, betweenExpressionEnd);
-      final FieldDefinition attribute = metaData.getAttribute(column.getName());
+      final FieldDefinition attribute = metaData.getField(column.getName());
       min.convert(attribute);
       max.convert(attribute);
       return (V)new Between(column, min, max);
@@ -134,7 +134,7 @@ public abstract class QueryValue implements Cloneable {
             final Column column = (Column)leftCondition;
 
             final String name = column.getName();
-            final FieldDefinition attribute = metaData.getAttribute(name);
+            final FieldDefinition attribute = metaData.getField(name);
             final Object value = ((Value)rightCondition).getValue();
             if (value == null) {
               throw new IllegalArgumentException("Values can't be null for "
@@ -193,7 +193,7 @@ public abstract class QueryValue implements Cloneable {
       final ColumnReference column = (ColumnReference)expression;
       String columnName = column.getColumnName();
       columnName = columnName.replaceAll("\"", "");
-      final FieldDefinition attribute = metaData.getAttribute(columnName);
+      final FieldDefinition attribute = metaData.getField(columnName);
       if (attribute == null) {
         throw new IllegalArgumentException("Invalid column name " + columnName);
       } else {

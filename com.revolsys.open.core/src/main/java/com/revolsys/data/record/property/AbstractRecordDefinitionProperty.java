@@ -1,15 +1,15 @@
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record.property;
 
 import com.revolsys.data.record.schema.RecordDefinition;
 
-public abstract class AbstractDataObjectMetaDataProperty implements
-  DataObjectMetaDataProperty {
+public abstract class AbstractRecordDefinitionProperty implements
+  RecordDefinitionProperty {
   private RecordDefinition metaData;
 
   @Override
-  public AbstractDataObjectMetaDataProperty clone() {
+  public AbstractRecordDefinitionProperty clone() {
     try {
-      final AbstractDataObjectMetaDataProperty clone = (AbstractDataObjectMetaDataProperty)super.clone();
+      final AbstractRecordDefinitionProperty clone = (AbstractRecordDefinitionProperty)super.clone();
       clone.metaData = null;
       return clone;
     } catch (final CloneNotSupportedException e) {

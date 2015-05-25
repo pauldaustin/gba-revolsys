@@ -1,7 +1,7 @@
 package com.revolsys.swing.undo;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.property.DirectionalAttributes;
+import com.revolsys.data.record.property.DirectionalAttributes;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.vividsolutions.jts.geom.Geometry;
 

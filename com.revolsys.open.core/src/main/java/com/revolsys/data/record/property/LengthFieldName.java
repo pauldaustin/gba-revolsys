@@ -1,13 +1,12 @@
-package com.revolsys.gis.data.model.property;
+package com.revolsys.data.record.property;
 
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.AbstractDataObjectMetaDataProperty;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LengthFieldName extends AbstractDataObjectMetaDataProperty {
+public class LengthFieldName extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = LengthFieldName.class.getName()
     + ".propertyName";
 
