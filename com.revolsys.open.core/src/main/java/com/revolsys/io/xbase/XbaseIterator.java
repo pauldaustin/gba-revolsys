@@ -291,9 +291,9 @@ public class XbaseIterator extends AbstractIterator<Record> implements
     }
     final Record object = dataObjectFactory.createRecord(metaData);
     int startIndex = 0;
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
-      int len = metaData.getAttributeLength(i);
-      final DataType type = metaData.getAttributeType(i);
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
+      int len = metaData.getFieldLength(i);
+      final DataType type = metaData.getFieldType(i);
       Object value = null;
 
       if (type == DataTypes.STRING) {

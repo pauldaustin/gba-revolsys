@@ -567,7 +567,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
           if (left instanceof Column) {
             final Column column = (Column)left;
             final String columnName = column.getName();
-            columnIndex = getMetaData().getAttributeIndex(columnName);
+            columnIndex = getMetaData().getFieldIndex(columnName);
           } else if (left instanceof Function) {
             final Function function = (Function)left;
             left = function.getQueryValues().get(0);

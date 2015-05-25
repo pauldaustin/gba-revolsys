@@ -27,7 +27,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public boolean containsKey(final Object name) {
-    return object.getRecordDefinition().hasAttribute(name.toString());
+    return object.getRecordDefinition().hasField(name.toString());
   }
 
   @Override
@@ -100,7 +100,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public int size() {
-    return object.getRecordDefinition().getAttributeCount();
+    return object.getRecordDefinition().getFieldCount();
   }
 
   @Override

@@ -113,8 +113,8 @@ public class RecordLog {
       }
       final String logTypeName = Path.toPath(parentPath, logTableName);
       logMetaData = new RecordDefinitionImpl(logTypeName);
-      logMetaData.addAttribute("LOGMESSAGE", DataTypes.STRING, 255, true);
-      logMetaData.addAttribute("LOGLEVEL", DataTypes.STRING, 10, true);
+      logMetaData.addField("LOGMESSAGE", DataTypes.STRING, 255, true);
+      logMetaData.addField("LOGLEVEL", DataTypes.STRING, 10, true);
       for (final FieldDefinition attribute : metaData.getFields()) {
         final FieldDefinition logAttribute = new FieldDefinition(attribute);
         logMetaData.addField(logAttribute);

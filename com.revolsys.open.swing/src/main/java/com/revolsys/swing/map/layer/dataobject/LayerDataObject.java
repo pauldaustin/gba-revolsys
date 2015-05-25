@@ -91,7 +91,7 @@ public class LayerDataObject extends ArrayRecord {
     if (this.originalValues == null) {
       return false;
     } else {
-      final String attributeName = getRecordDefinition().getAttributeName(index);
+      final String attributeName = getRecordDefinition().getFieldName(index);
       return isModified(attributeName);
     }
   }
@@ -133,7 +133,7 @@ public class LayerDataObject extends ArrayRecord {
       return true;
     } else {
       final RecordDefinition metaData = getRecordDefinition();
-      final String name = metaData.getAttributeName(index);
+      final String name = metaData.getFieldName(index);
       return isValid(name);
     }
   }
@@ -183,7 +183,7 @@ public class LayerDataObject extends ArrayRecord {
   @Override
   public void setValue(final int index, final Object value) {
     final RecordDefinition metaData = getRecordDefinition();
-    final String attributeName = metaData.getAttributeName(index);
+    final String attributeName = metaData.getFieldName(index);
 
     final Object oldValue = getValue(index);
     if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {

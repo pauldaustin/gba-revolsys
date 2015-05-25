@@ -179,12 +179,12 @@ public class CsvDataObjectIterator extends AbstractIterator<Record>
    */
   private Record parseDataObject(final String[] record) {
     final Record object = dataObjectFactory.createRecord(metaData);
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       String value = null;
       if (i < record.length) {
         value = record[i];
         if (value != null) {
-          final DataType dataType = metaData.getAttributeType(i);
+          final DataType dataType = metaData.getFieldType(i);
           final Object convertedValue = StringConverterRegistry.toObject(
             dataType, value);
           object.setValue(i, convertedValue);

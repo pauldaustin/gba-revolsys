@@ -107,7 +107,7 @@ public class AddDefaultValuesProcess extends
       processDefaultValues(dataObject, getDefaultValues(type));
     }
 
-    for (int i = 0; i < type.getAttributeCount(); i++) {
+    for (int i = 0; i < type.getFieldCount(); i++) {
       final Object value = dataObject.getValue(i);
       if (value instanceof Record) {
         process((Record)value);
@@ -151,8 +151,8 @@ public class AddDefaultValuesProcess extends
         final Object attributeValue = dataObject.getValue(attributeName);
         if (attributeValue == null) {
           final RecordDefinition type = dataObject.getRecordDefinition();
-          final int attrIndex = type.getAttributeIndex(attributeName);
-          final DataType dataType = type.getAttributeType(attrIndex);
+          final int attrIndex = type.getFieldIndex(attributeName);
+          final DataType dataType = type.getFieldType(attrIndex);
           final Class<?> typeClass = dataType.getJavaClass();
           if (typeClass == Record.class) {
 

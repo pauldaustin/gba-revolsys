@@ -96,7 +96,7 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
       final List<String> valueAttributeNames = getValueAttributeNames();
       String idColumn = metaData.getIdFieldName();
       if (!StringUtils.hasText(idColumn)) {
-        idColumn = metaData.getAttributeName(0);
+        idColumn = metaData.getFieldName(0);
       }
       this.insertSql = "INSERT INTO " + tableName + " (" + idColumn;
       for (int i = 0; i < valueAttributeNames.size(); i++) {

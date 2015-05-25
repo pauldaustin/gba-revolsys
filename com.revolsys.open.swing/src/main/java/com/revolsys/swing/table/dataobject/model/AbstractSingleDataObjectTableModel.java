@@ -93,7 +93,7 @@ public abstract class AbstractSingleDataObjectTableModel extends
 
   public String getFieldTitle(final String fieldName) {
     final RecordDefinition metaData = getMetaData();
-    return metaData.getAttributeTitle(fieldName);
+    return metaData.getFieldTitle(fieldName);
   }
 
   public abstract Object getObjectValue(final int attributeIndex);
@@ -101,7 +101,7 @@ public abstract class AbstractSingleDataObjectTableModel extends
   @Override
   public int getRowCount() {
     final RecordDefinition metaData = getMetaData();
-    final int attributeCount = metaData.getAttributeCount();
+    final int attributeCount = metaData.getFieldCount();
     return attributeCount;
   }
 

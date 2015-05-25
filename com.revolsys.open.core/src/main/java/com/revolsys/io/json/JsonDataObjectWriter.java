@@ -219,15 +219,15 @@ public class JsonDataObjectWriter extends AbstractWriter<Record> {
     }
     startObject();
     boolean first = true;
-    final int attributeCount = metaData.getAttributeCount();
+    final int attributeCount = metaData.getFieldCount();
     for (int i = 0; i < attributeCount; i++) {
       final Object value = object.getValue(i);
       if (value != null) {
         if (!first) {
           endAttribute();
         }
-        final String name = metaData.getAttributeName(i);
-        final DataType dataType = metaData.getAttributeType(i);
+        final String name = metaData.getFieldName(i);
+        final DataType dataType = metaData.getFieldType(i);
         label(name);
         value(dataType, value);
         first = false;

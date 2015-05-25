@@ -164,8 +164,8 @@ public abstract class JdbcDdlWriter implements Cloneable {
     out.print("CREATE TABLE ");
     writeTableName(typePath);
     out.println(" (");
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
-      final FieldDefinition attribute = metaData.getAttribute(i);
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
+      final FieldDefinition attribute = metaData.getField(i);
       if (i > 0) {
         out.println(",");
       }
@@ -187,7 +187,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
 
     writeGeometryMetaData(metaData);
 
-    final FieldDefinition idAttribute = metaData.getIdAttribute();
+    final FieldDefinition idAttribute = metaData.getIdField();
     if (idAttribute != null) {
       if (Number.class.isAssignableFrom(idAttribute.getType().getJavaClass())) {
         writeCreateSequence(metaData);
@@ -245,14 +245,14 @@ public abstract class JdbcDdlWriter implements Cloneable {
     out.print("INSERT INTO ");
     writeTableName(typePath);
     out.print(" (");
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       if (i > 0) {
         out.print(", ");
       }
-      out.print(metaData.getAttributeName(i));
+      out.print(metaData.getFieldName(i));
     }
     out.print(" ) VALUES (");
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       if (i > 0) {
         out.print(", ");
       }

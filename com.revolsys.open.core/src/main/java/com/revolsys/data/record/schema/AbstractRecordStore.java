@@ -599,7 +599,7 @@ implements RecordStore {
     if (metaData == null) {
       return null;
     } else {
-      final List<String> idAttributeNames = metaData.getIdAttributeNames();
+      final List<String> idAttributeNames = metaData.getIdFieldNames();
       if (idAttributeNames.isEmpty()) {
         throw new IllegalArgumentException(typePath
           + " does not have a primary key");

@@ -17,7 +17,7 @@ public class DataObjectEntry implements Entry<String, Object> {
 
   @Override
   public String getKey() {
-    return dataObject.getRecordDefinition().getAttributeName(index);
+    return dataObject.getRecordDefinition().getFieldName(index);
   }
 
   @Override

@@ -18,11 +18,11 @@ public class OracleDdlUtil {
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     out.print(tableName);
     out.println(" (");
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       if (i > 1) {
         out.println(",");
       }
-      final FieldDefinition attribute = metaData.getAttribute(i);
+      final FieldDefinition attribute = metaData.getField(i);
       final String name = attribute.getName();
       out.print("  ");
       out.print(name);

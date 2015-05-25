@@ -380,10 +380,10 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
       fields.clear();
       int numFields = 0;
       for (final String name : metaData.getFieldNames()) {
-        final int index = metaData.getAttributeIndex(name);
-        final int length = metaData.getAttributeLength(index);
-        final int scale = metaData.getAttributeScale(index);
-        final DataType attributeType = metaData.getAttributeType(index);
+        final int index = metaData.getFieldIndex(name);
+        final int length = metaData.getFieldLength(index);
+        final int scale = metaData.getFieldScale(index);
+        final DataType attributeType = metaData.getFieldType(index);
         final Class<?> typeJavaClass = attributeType.getJavaClass();
         final int fieldLength = addDbaseField(name, attributeType,
           typeJavaClass, length, scale);

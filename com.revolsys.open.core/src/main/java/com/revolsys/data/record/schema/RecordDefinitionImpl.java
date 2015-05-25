@@ -191,7 +191,7 @@ implements RecordDefinition, Cloneable {
     METADATA_CACHE.put(this.instanceId, this);
   }
 
-  public FieldDefinition addAttribute(final String name, final DataType type,
+  public FieldDefinition addField(final String name, final DataType type,
     final int length, final boolean required) {
     final FieldDefinition attribute = new FieldDefinition(name, type, length,
       required);
@@ -374,12 +374,12 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public FieldDefinition getAttribute(final int i) {
+  public FieldDefinition getField(final int i) {
     return this.attributes.get(i);
   }
 
   @Override
-  public Class<?> getAttributeClass(final CharSequence name) {
+  public Class<?> getFieldClass(final CharSequence name) {
     final DataType dataType = getFieldType(name);
     if (dataType == null) {
       return Object.class;
@@ -389,8 +389,8 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public Class<?> getAttributeClass(final int i) {
-    final DataType dataType = getAttributeType(i);
+  public Class<?> getFieldClass(final int i) {
+    final DataType dataType = getFieldType(i);
     if (dataType == null) {
       return Object.class;
     } else {
@@ -399,12 +399,12 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public int getAttributeCount() {
+  public int getFieldCount() {
     return this.attributes.size();
   }
 
   @Override
-  public int getAttributeIndex(final CharSequence name) {
+  public int getFieldIndex(final CharSequence name) {
     if (name == null) {
       return -1;
     } else {
@@ -419,7 +419,7 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public int getAttributeLength(final int i) {
+  public int getFieldLength(final int i) {
     try {
       final FieldDefinition attribute = this.attributes.get(i);
       return attribute.getLength();
@@ -429,7 +429,7 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public String getAttributeName(final int i) {
+  public String getFieldName(final int i) {
     try {
       if (i == -1) {
         return null;
@@ -445,13 +445,13 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public int getAttributeScale(final int i) {
+  public int getFieldScale(final int i) {
     final FieldDefinition attribute = this.attributes.get(i);
     return attribute.getScale();
   }
 
   @Override
-  public String getAttributeTitle(final String fieldName) {
+  public String getFieldTitle(final String fieldName) {
     final FieldDefinition attribute = getField(fieldName);
     if (attribute == null) {
       return CaseConverter.toCapitalizedWords(fieldName);
@@ -461,7 +461,7 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public List<String> getAttributeTitles() {
+  public List<String> getFieldTitles() {
     final List<String> titles = new ArrayList<String>();
     for (final FieldDefinition attribute : getFields()) {
       titles.add(attribute.getTitle());
@@ -470,7 +470,7 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public DataType getAttributeType(final int i) {
+  public DataType getFieldType(final int i) {
     final FieldDefinition attribute = this.attributes.get(i);
     return attribute.getType();
   }
@@ -490,7 +490,7 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public RecordFactory getDataObjectFactory() {
+  public RecordFactory getRecordFactory() {
     return this.dataObjectFactory;
   }
 
@@ -520,26 +520,26 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public DataType getFieldType(final CharSequence name) {
-    final int index = getAttributeIndex(name);
+    final int index = getFieldIndex(name);
     if (index == -1) {
       return null;
     } else {
-      return getAttributeType(index);
+      return getFieldType(index);
     }
   }
 
   @Override
-  public int getGeometryAttributeIndex() {
+  public int getGeometryFieldIndex() {
     return this.geometryAttributeIndex;
   }
 
   @Override
-  public List<Integer> getGeometryAttributeIndexes() {
+  public List<Integer> getGeometryFieldIndexes() {
     return Collections.unmodifiableList(this.geometryAttributeIndexes);
   }
 
   @Override
-  public List<String> getGeometryAttributeNames() {
+  public List<String> getGeometryFieldNames() {
     return Collections.unmodifiableList(this.geometryAttributeNames);
   }
 
@@ -565,11 +565,11 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public String getGeometryFieldName() {
-    return getAttributeName(this.geometryAttributeIndex);
+    return getFieldName(this.geometryAttributeIndex);
   }
 
   @Override
-  public FieldDefinition getIdAttribute() {
+  public FieldDefinition getIdField() {
     if (this.idAttributeIndex >= 0) {
       return this.attributes.get(this.idAttributeIndex);
     } else {
@@ -578,17 +578,17 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public List<Integer> getIdAttributeIndexes() {
+  public List<Integer> getIdFieldIndexes() {
     return Collections.unmodifiableList(this.idAttributeIndexes);
   }
 
   @Override
-  public List<String> getIdAttributeNames() {
+  public List<String> getIdFieldNames() {
     return Collections.unmodifiableList(this.idAttributeNames);
   }
 
   @Override
-  public List<FieldDefinition> getIdAttributes() {
+  public List<FieldDefinition> getIdFields() {
     return Collections.unmodifiableList(this.idAttributes);
   }
 
@@ -599,7 +599,7 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public String getIdFieldName() {
-    return getAttributeName(this.idAttributeIndex);
+    return getFieldName(this.idAttributeIndex);
   }
 
   @Override
@@ -645,7 +645,7 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public boolean hasAttribute(final CharSequence name) {
+  public boolean hasField(final CharSequence name) {
     final String lowerName = name.toString().toLowerCase();
     return this.attributeMap.containsKey(lowerName);
   }
@@ -660,14 +660,14 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public boolean isAttributeRequired(final CharSequence name) {
+  public boolean isFieldRequired(final CharSequence name) {
     final FieldDefinition attribute = getField(name);
     return attribute.isRequired();
   }
 
   @Override
-  public boolean isAttributeRequired(final int i) {
-    final FieldDefinition attribute = getAttribute(i);
+  public boolean isFieldRequired(final int i) {
+    final FieldDefinition attribute = getField(i);
     return attribute.isRequired();
   }
 
@@ -743,7 +743,7 @@ implements RecordDefinition, Cloneable {
   }
 
   public void setGeometryFieldName(final String name) {
-    final int id = getAttributeIndex(name);
+    final int id = getFieldIndex(name);
     setGeometryAttributeIndex(id);
   }
 
@@ -757,7 +757,7 @@ implements RecordDefinition, Cloneable {
     this.idAttributeNames.clear();
     this.idAttributeNames.add(getIdFieldName());
     this.idAttributes.clear();
-    this.idAttributes.add(getIdAttribute());
+    this.idAttributes.add(getIdField());
   }
 
   public void setIdAttributeNames(final Collection<String> names) {
@@ -767,14 +767,14 @@ implements RecordDefinition, Cloneable {
         setIdFieldName(name);
       } else {
         for (final String name : names) {
-          final int index = getAttributeIndex(name);
+          final int index = getFieldIndex(name);
           if (index == -1) {
             LoggerFactory.getLogger(getClass()).error(
               "Cannot set ID " + getPath() + "." + name + " does not exist");
           } else {
             this.idAttributeIndexes.add(index);
             this.idAttributeNames.add(name);
-            this.idAttributes.add(getAttribute(index));
+            this.idAttributes.add(getField(index));
           }
         }
       }
@@ -786,7 +786,7 @@ implements RecordDefinition, Cloneable {
   }
 
   public void setIdFieldName(final String name) {
-    final int id = getAttributeIndex(name);
+    final int id = getFieldIndex(name);
     setIdAttributeIndex(id);
   }
 

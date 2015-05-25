@@ -141,7 +141,7 @@ public abstract class QueryValue implements Cloneable {
                   + operator + " use IS NULL or IS NOT NULL instead.");
             } else {
               final CodeTable codeTable = metaData.getCodeTableByColumn(name);
-              if (codeTable == null || attribute == metaData.getIdAttribute()) {
+              if (codeTable == null || attribute == metaData.getIdField()) {
                 final Class<?> typeClass = attribute.getTypeClass();
                 try {
                   final Object convertedValue = StringConverterRegistry.toObject(

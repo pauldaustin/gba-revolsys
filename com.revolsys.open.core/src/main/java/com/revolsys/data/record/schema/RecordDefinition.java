@@ -33,7 +33,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 
 public interface RecordDefinition extends ObjectWithProperties,
   Comparable<RecordDefinition>, MapSerializer {
-  void addDefaultValue(String attributeName, Object defaultValue);
+  void addDefaultValue(String fieldName, Object defaultValue);
 
   RecordDefinition clone();
 
@@ -45,150 +45,150 @@ public interface RecordDefinition extends ObjectWithProperties,
 
   FieldDefinition getField(CharSequence name);
 
-  FieldDefinition getAttribute(int index);
+  FieldDefinition getField(int index);
 
-  Class<?> getAttributeClass(CharSequence name);
+  Class<?> getFieldClass(CharSequence name);
 
-  Class<?> getAttributeClass(int index);
+  Class<?> getFieldClass(int index);
 
   /**
-   * Get the number of attributes supported by the type.
+   * Get the number of fields supported by the type.
    * 
-   * @return The number of attributes.
+   * @return The number of fields.
    */
-  int getAttributeCount();
+  int getFieldCount();
 
   /**
-   * Get the index of the named attribute within the list of attributes for the
+   * Get the index of the named field within the list of fields for the
    * type.
    * 
-   * @param name The attribute name.
+   * @param name The field name.
    * @return The index.
    */
-  int getAttributeIndex(CharSequence name);
+  int getFieldIndex(CharSequence name);
 
   /**
-   * Get the maximum length of the attribute.
+   * Get the maximum length of the field.
    * 
-   * @param index The attribute index.
+   * @param index The field index.
    * @return The maximum length.
    */
-  int getAttributeLength(int index);
+  int getFieldLength(int index);
 
   /**
-   * Get the name of the attribute at the specified index.
+   * Get the name of the field at the specified index.
    * 
-   * @param index The attribute index.
-   * @return The attribute name.
+   * @param index The field index.
+   * @return The field name.
    */
-  String getAttributeName(int index);
+  String getFieldName(int index);
 
   /**
-   * Get the names of all the attributes supported by the type.
+   * Get the names of all the fields supported by the type.
    * 
-   * @return The attribute names.
+   * @return The field names.
    */
   List<String> getFieldNames();
 
   List<FieldDefinition> getFields();
 
   /**
-   * Get the maximum number of decimal places of the attribute
+   * Get the maximum number of decimal places of the field
    * 
-   * @param index The attribute index.
+   * @param index The field index.
    * @return The maximum number of decimal places.
    */
-  int getAttributeScale(int index);
+  int getFieldScale(int index);
 
-  String getAttributeTitle(String fieldName);
+  String getFieldTitle(String fieldName);
 
-  List<String> getAttributeTitles();
+  List<String> getFieldTitles();
 
   DataType getFieldType(CharSequence name);
 
   /**
-   * Get the type name of the attribute at the specified index.
+   * Get the type name of the field at the specified index.
    * 
-   * @param index The attribute index.
-   * @return The attribute type name.
+   * @param index The field index.
+   * @return The field type name.
    */
-  DataType getAttributeType(int index);
+  DataType getFieldType(int index);
 
   CodeTable getCodeTableByColumn(String column);
 
-  RecordFactory getDataObjectFactory();
+  RecordFactory getRecordFactory();
 
   RecordDefinitionFactory getRecordDefinitionFactory();
 
   RecordStore getRecordStore();
 
-  Object getDefaultValue(String attributeName);
+  Object getDefaultValue(String fieldName);
 
   Map<String, Object> getDefaultValues();
 
   FieldDefinition getGeometryField();
 
   /**
-   * Get the index of the primary Geometry attribute.
+   * Get the index of the primary Geometry field.
    * 
    * @return The primary geometry index.
    */
-  int getGeometryAttributeIndex();
+  int getGeometryFieldIndex();
 
   /**
-   * Get the index of all Geometry attributes.
+   * Get the index of all Geometry fields.
    * 
    * @return The geometry indexes.
    */
-  List<Integer> getGeometryAttributeIndexes();
+  List<Integer> getGeometryFieldIndexes();
 
   /**
-   * Get the name of the primary Geometry attribute.
+   * Get the name of the primary Geometry field.
    * 
    * @return The primary geometry name.
    */
   String getGeometryFieldName();
 
   /**
-   * Get the name of the all Geometry attributes.
+   * Get the name of the all Geometry fields.
    * 
    * @return The geometry names.
    */
-  List<String> getGeometryAttributeNames();
+  List<String> getGeometryFieldNames();
 
   GeometryFactory getGeometryFactory();
 
-  FieldDefinition getIdAttribute();
+  FieldDefinition getIdField();
 
   /**
-   * Get the index of the Unique identifier attribute.
+   * Get the index of the Unique identifier field.
    * 
    * @return The unique id index.
    */
   int getIdFieldIndex();
 
   /**
-   * Get the index of all ID attributes.
+   * Get the index of all ID fields.
    * 
    * @return The ID indexes.
    */
-  List<Integer> getIdAttributeIndexes();
+  List<Integer> getIdFieldIndexes();
 
   /**
-   * Get the name of the Unique identifier attribute.
+   * Get the name of the Unique identifier field.
    * 
    * @return The unique id name.
    */
   String getIdFieldName();
 
   /**
-   * Get the name of the all ID attributes.
+   * Get the name of the all ID fields.
    * 
    * @return The id names.
    */
-  List<String> getIdAttributeNames();
+  List<String> getIdFieldNames();
 
-  List<FieldDefinition> getIdAttributes();
+  List<FieldDefinition> getIdFields();
 
   int getInstanceId();
 
@@ -203,22 +203,22 @@ public interface RecordDefinition extends ObjectWithProperties,
   String getTypeName();
 
   /**
-   * Check to see if the type has the specified attribute name.
+   * Check to see if the type has the specified field name.
    * 
-   * @param name The name of the attribute.
-   * @return True id the type has the attribute, false otherwise.
+   * @param name The name of the field.
+   * @return True id the type has the field, false otherwise.
    */
-  boolean hasAttribute(CharSequence name);
+  boolean hasField(CharSequence name);
 
-  boolean isAttributeRequired(CharSequence name);
+  boolean isFieldRequired(CharSequence name);
 
   /**
-   * Return true if a value for the attribute is required.
+   * Return true if a value for the field is required.
    * 
-   * @param index The attribute index.
-   * @return True if the attribute is required, false otherwise.
+   * @param index The field index.
+   * @return True if the field is required, false otherwise.
    */
-  boolean isAttributeRequired(int index);
+  boolean isFieldRequired(int index);
 
   boolean isInstanceOf(RecordDefinition classDefinition);
 

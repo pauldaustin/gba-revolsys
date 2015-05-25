@@ -25,11 +25,11 @@ public class CsvDataObjectWriter extends AbstractWriter<Record> {
   public CsvDataObjectWriter(final RecordDefinition metaData, final Writer out) {
     this.metaData = metaData;
     this.out = new PrintWriter(out);
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       if (i > 0) {
         this.out.print(',');
       }
-      final String name = metaData.getAttributeName(i);
+      final String name = metaData.getFieldName(i);
       string(name);
     }
     this.out.println();
@@ -57,13 +57,13 @@ public class CsvDataObjectWriter extends AbstractWriter<Record> {
 
   @Override
   public void write(final Record object) {
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       if (i > 0) {
         out.print(',');
       }
       final Object value = object.getValue(i);
       if (value != null) {
-        final String name = metaData.getAttributeName(i);
+        final String name = metaData.getFieldName(i);
         final DataType dataType = metaData.getFieldType(name);
 
         @SuppressWarnings("unchecked")

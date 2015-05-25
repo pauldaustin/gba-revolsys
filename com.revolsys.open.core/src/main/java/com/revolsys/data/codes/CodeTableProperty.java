@@ -105,7 +105,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
       final RecordDefinition metaData = code.getRecordDefinition();
       Object id = dataStore.createPrimaryIdValue(typePath);
       if (id == null) {
-        final FieldDefinition idAttribute = metaData.getIdAttribute();
+        final FieldDefinition idAttribute = metaData.getIdField();
         if (idAttribute != null) {
           if (Number.class.isAssignableFrom(idAttribute.getType()
             .getJavaClass())) {
@@ -173,7 +173,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
       if (StringUtils.hasText(idAttributeName)) {
         return idAttributeName;
       } else {
-        return metaData.getAttributeName(0);
+        return metaData.getFieldName(0);
       }
     }
   }

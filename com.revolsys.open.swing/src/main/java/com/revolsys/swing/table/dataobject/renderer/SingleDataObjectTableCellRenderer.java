@@ -46,7 +46,7 @@ public class SingleDataObjectTableCellRenderer implements TableCellRenderer {
 
     JComponent component = null;
     final String name = model.getFieldName(rowIndex, columnIndex);
-    final boolean required = metaData.isAttributeRequired(name);
+    final boolean required = metaData.isFieldRequired(name);
     if (columnIndex == 0) {
       this.valueComponent.setText(String.valueOf(rowIndex));
       valueComponent.setHorizontalAlignment(SwingConstants.RIGHT);

@@ -157,7 +157,7 @@ JdbcWriter {
       }
     }
     int parameterIndex = 1;
-    final JdbcAttribute idAttribute = (JdbcAttribute)metaData.getIdAttribute();
+    final JdbcAttribute idAttribute = (JdbcAttribute)metaData.getIdField();
     parameterIndex = idAttribute.setInsertPreparedStatementValue(statement,
       parameterIndex, object);
     statement.addBatch();
@@ -300,7 +300,7 @@ JdbcWriter {
       sqlBuffer.append(" from ");
       sqlBuffer.append(tableName);
       sqlBuffer.append(" where ");
-      final JdbcAttribute idAttribute = (JdbcAttribute)type.getIdAttribute();
+      final JdbcAttribute idAttribute = (JdbcAttribute)type.getIdField();
       if (idAttribute == null) {
         throw new RuntimeException("No primary key found for " + type);
       }
@@ -359,15 +359,15 @@ JdbcWriter {
         }
         sqlBuffer.append(",");
       }
-      for (int i = 0; i < type.getAttributeCount(); i++) {
+      for (int i = 0; i < type.getFieldCount(); i++) {
         if (!generatePrimaryKey || i != type.getIdFieldIndex()) {
-          final String attributeName = type.getAttributeName(i);
+          final String attributeName = type.getFieldName(i);
           if (this.quoteColumnNames) {
             sqlBuffer.append('"').append(attributeName).append('"');
           } else {
             sqlBuffer.append(attributeName);
           }
-          if (i < type.getAttributeCount() - 1) {
+          if (i < type.getFieldCount() - 1) {
             sqlBuffer.append(", ");
           }
         }
@@ -377,11 +377,11 @@ JdbcWriter {
         sqlBuffer.append(getGeneratePrimaryKeySql(type));
         sqlBuffer.append(",");
       }
-      for (int i = 0; i < type.getAttributeCount(); i++) {
+      for (int i = 0; i < type.getFieldCount(); i++) {
         if (!generatePrimaryKey || i != type.getIdFieldIndex()) {
-          final JdbcAttribute attribute = (JdbcAttribute)type.getAttribute(i);
+          final JdbcAttribute attribute = (JdbcAttribute)type.getField(i);
           attribute.addInsertStatementPlaceHolder(sqlBuffer, generatePrimaryKey);
-          if (i < type.getAttributeCount() - 1) {
+          if (i < type.getFieldCount() - 1) {
             sqlBuffer.append(", ");
           }
         }
@@ -427,7 +427,7 @@ JdbcWriter {
       }
       sqlBuffer.append(tableName);
       sqlBuffer.append(" set ");
-      final List<FieldDefinition> idAttributes = type.getIdAttributes();
+      final List<FieldDefinition> idAttributes = type.getIdFields();
       boolean first = true;
       for (final FieldDefinition attribute : type.getFields()) {
         if (!idAttributes.contains(attribute)) {
@@ -538,7 +538,7 @@ JdbcWriter {
       }
     }
     int parameterIndex = 1;
-    final FieldDefinition idAttribute = metaData.getIdAttribute();
+    final FieldDefinition idAttribute = metaData.getIdField();
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (attribute != idAttribute) {
         final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
@@ -674,7 +674,7 @@ JdbcWriter {
       }
     }
     int parameterIndex = 1;
-    final List<FieldDefinition> idAttributes = metaData.getIdAttributes();
+    final List<FieldDefinition> idAttributes = metaData.getIdFields();
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (!idAttributes.contains(attribute)) {
         final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;

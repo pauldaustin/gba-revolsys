@@ -70,7 +70,7 @@ public class SimpleDataObjectConveter implements
 
   public void setDataObjectMetaData(final RecordDefinition dataObjectMetaData) {
     this.dataObjectMetaData = dataObjectMetaData;
-    this.factory = dataObjectMetaData.getDataObjectFactory();
+    this.factory = dataObjectMetaData.getRecordFactory();
   }
 
   public void setProcessors(

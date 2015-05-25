@@ -54,12 +54,12 @@ public class DataObjectMetaDataTableModel extends AbstractTableModel {
 
   @Override
   public int getRowCount() {
-    return this.metaData.getAttributeCount();
+    return this.metaData.getFieldCount();
   }
 
   @Override
   public Object getValueAt(final int rowIndex, final int columnIndex) {
-    final FieldDefinition attribute = this.metaData.getAttribute(rowIndex);
+    final FieldDefinition attribute = this.metaData.getField(rowIndex);
     if (attribute == null) {
       return "...";
     } else {

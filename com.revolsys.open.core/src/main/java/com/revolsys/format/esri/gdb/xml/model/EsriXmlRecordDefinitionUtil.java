@@ -264,7 +264,7 @@ public class EsriXmlRecordDefinitionUtil implements
     table.setOIDFieldName(oidFieldName);
 
     addObjectIdField(table);
-    final FieldDefinition idAttribute = metaData.getIdAttribute();
+    final FieldDefinition idAttribute = metaData.getIdField();
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (attribute == geometryAttribute) {
         addGeometryField(shapeType, table, attribute);
@@ -307,8 +307,8 @@ public class EsriXmlRecordDefinitionUtil implements
     for (final CodedValue codedValue : domain.getCodedValues()) {
       length = Math.max(length, codedValue.getCode().toString().length());
     }
-    metaData.addAttribute(tableName, dataType, length, true);
-    metaData.addAttribute("DESCRIPTION", DataTypes.STRING, 255, true);
+    metaData.addField(tableName, dataType, length, true);
+    metaData.addField("DESCRIPTION", DataTypes.STRING, 255, true);
     metaData.setIdAttributeIndex(0);
     return metaData;
   }

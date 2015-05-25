@@ -50,11 +50,11 @@ public final class JdbcUtils {
 
   public static void addColumnNames(final StringBuffer sql,
     final RecordDefinition metaData, final String tablePrefix) {
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       if (i > 0) {
         sql.append(", ");
       }
-      final FieldDefinition attribute = metaData.getAttribute(i);
+      final FieldDefinition attribute = metaData.getField(i);
       addAttributeName(sql, tablePrefix, attribute);
     }
   }

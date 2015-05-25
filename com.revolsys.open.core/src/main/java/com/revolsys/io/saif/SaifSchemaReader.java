@@ -116,7 +116,7 @@ public class SaifSchemaReader {
       .entrySet()) {
       final String name = defaultValue.getKey();
       final Object value = defaultValue.getValue();
-      if (!currentClass.hasAttribute(name)) {
+      if (!currentClass.hasField(name)) {
         currentClass.addDefaultValue(name, value);
       }
     }
@@ -153,7 +153,7 @@ public class SaifSchemaReader {
               if (typePath.equals(SPATIAL_OBJECT)
                 || typePath.equals(TEXT_OR_SYMBOL_OBJECT)) {
                 dataType = DataTypes.GEOMETRY;
-                currentClass.setGeometryAttributeIndex(currentClass.getAttributeCount());
+                currentClass.setGeometryAttributeIndex(currentClass.getFieldCount());
               } else if (dataType == null) {
                 dataType = new SimpleDataType(typePath, Record.class);
               }
@@ -183,7 +183,7 @@ public class SaifSchemaReader {
               if (iterator.getEventType() == CsnIterator.STRING_ATTRIBUTE_LENGTH) {
                 length = iterator.getIntegerValue();
               }
-              currentClass.addAttribute(attributeName, DataTypes.STRING,
+              currentClass.addField(attributeName, DataTypes.STRING,
                 length, required);
             break;
             default:

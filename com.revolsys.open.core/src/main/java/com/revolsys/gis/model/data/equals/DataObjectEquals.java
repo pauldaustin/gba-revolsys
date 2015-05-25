@@ -101,12 +101,12 @@ public class DataObjectEquals implements Equals<Record> {
       final RecordDefinition metaData1 = object1.getRecordDefinition();
       final RecordDefinition metaData2 = object2.getRecordDefinition();
       if (metaData1.getPath().equals(metaData2.getPath())) {
-        if (metaData1.getAttributeCount() == metaData2.getAttributeCount()) {
+        if (metaData1.getFieldCount() == metaData2.getFieldCount()) {
           final int idIndex = metaData1.getIdFieldIndex();
-          final int geometryIndex = metaData1.getGeometryAttributeIndex();
-          final int objectIdIndex = metaData1.getAttributeIndex("OBJECTID");
-          for (int i = 0; i < metaData1.getAttributeCount(); i++) {
-            final String name = metaData1.getAttributeName(i);
+          final int geometryIndex = metaData1.getGeometryFieldIndex();
+          final int objectIdIndex = metaData1.getFieldIndex("OBJECTID");
+          for (int i = 0; i < metaData1.getFieldCount(); i++) {
+            final String name = metaData1.getFieldName(i);
             if (excludedAttributes.contains(name)) {
             } else if (i == idIndex && excludedAttributes.contains(EXCLUDE_ID)) {
             } else if (i == geometryIndex

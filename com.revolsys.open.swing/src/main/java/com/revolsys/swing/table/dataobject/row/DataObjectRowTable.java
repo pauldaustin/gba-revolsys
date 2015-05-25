@@ -125,7 +125,7 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
       final int column = columnAtPoint(e.getPoint());
       if (column > -1 && SwingUtilities.isLeftMouseButton(e)) {
         final int index = convertColumnIndexToModel(column);
-        final Class<?> attributeClass = metaData.getAttributeClass(index);
+        final Class<?> attributeClass = metaData.getFieldClass(index);
         if (!Geometry.class.isAssignableFrom(attributeClass)) {
           model.setSortOrder(index);
         }

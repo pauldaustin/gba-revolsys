@@ -18,7 +18,7 @@ public class SimpleCodeTable extends AbstractCodeTable {
       for (final Record codeObject : reader) {
         final Object id = codeObject.getValue(0);
         final List<Object> values = new ArrayList<Object>();
-        final int attributeCount = codeObject.getRecordDefinition().getAttributeCount();
+        final int attributeCount = codeObject.getRecordDefinition().getFieldCount();
         for (int i = 1; i < attributeCount; i++) {
           final Object value = codeObject.getValue(i);
           values.add(value);

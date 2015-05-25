@@ -30,8 +30,8 @@ public class QueryValueTest {
   public QueryValueTest() {
     metaData = new RecordDefinitionImpl("Test");
     idAttribute = metaData.addField("ID", DataTypes.INT, true);
-    nameAttribute = metaData.addAttribute("NAME", DataTypes.STRING, 255, true);
-    descriptionAttribute = metaData.addAttribute("DESCRIPTION",
+    nameAttribute = metaData.addField("NAME", DataTypes.STRING, 255, true);
+    descriptionAttribute = metaData.addField("DESCRIPTION",
       DataTypes.STRING, 255, false);
 
     record = new ArrayRecord(metaData);

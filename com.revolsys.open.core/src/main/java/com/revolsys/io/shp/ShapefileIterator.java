@@ -305,7 +305,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
     if (xbaseIterator != null) {
       final RecordDefinitionImpl metaData = xbaseIterator.getMetaData();
       this.metaData = metaData;
-      if (metaData.getGeometryAttributeIndex() == -1) {
+      if (metaData.getGeometryFieldIndex() == -1) {
         DataType geometryType = DataTypes.GEOMETRY;
         switch (shapeType) {
           case ShapefileConstants.POINT_SHAPE:

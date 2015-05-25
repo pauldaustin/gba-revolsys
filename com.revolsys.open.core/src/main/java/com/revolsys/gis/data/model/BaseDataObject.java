@@ -116,7 +116,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   @Override
   public Set<Entry<String, Object>> entrySet() {
     final Set<Entry<String, Object>> entries = new LinkedHashSet<Entry<String, Object>>();
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       entries.add(new DataObjectEntry(this, i));
     }
     return entries;
@@ -129,7 +129,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
 
   public String getAttributeTitle(final String name) {
     final RecordDefinition metaData = getRecordDefinition();
-    return metaData.getAttributeTitle(name);
+    return metaData.getFieldTitle(name);
   }
 
   @Override
@@ -163,7 +163,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
     if (metaData == null) {
       return null;
     } else {
-      return metaData.getDataObjectFactory();
+      return metaData.getRecordFactory();
     }
   }
 
@@ -185,7 +185,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   @Override
   @SuppressWarnings("unchecked")
   public <T extends Geometry> T getGeometryValue() {
-    final int index = metaData.getGeometryAttributeIndex();
+    final int index = metaData.getGeometryFieldIndex();
     return (T)getValue(index);
   }
 
@@ -293,7 +293,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   @SuppressWarnings("unchecked")
   public <T extends Object> T getValue(final CharSequence name) {
     try {
-      final int index = metaData.getAttributeIndex(name);
+      final int index = metaData.getFieldIndex(name);
       return (T)getValue(index);
     } catch (final NullPointerException e) {
       LoggerFactory.getLogger(getClass()).warn(
@@ -369,7 +369,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   @Override
   public List<Object> getValues() {
     final List<Object> values = new ArrayList<Object>();
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       final Object value = getValue(i);
       values.add(value);
     }
@@ -385,7 +385,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    */
   @Override
   public boolean hasAttribute(final CharSequence name) {
-    return metaData.hasAttribute(name);
+    return metaData.hasField(name);
   }
 
   @Override
@@ -430,7 +430,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    */
   @Override
   public void setGeometryValue(final Geometry geometry) {
-    final int index = metaData.getGeometryAttributeIndex();
+    final int index = metaData.getGeometryFieldIndex();
     setValue(index, geometry);
   }
 
@@ -468,7 +468,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
    */
   @Override
   public void setValue(final CharSequence name, final Object value) {
-    final int index = metaData.getAttributeIndex(name);
+    final int index = metaData.getFieldIndex(name);
     if (index >= 0) {
       setValue(index, value);
     } else {
@@ -488,7 +488,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
               final String typePath = attributeType.getName();
               final RecordDefinitionFactory metaDataFactory = metaData.getRecordDefinitionFactory();
               final RecordDefinition subMetaData = metaDataFactory.getRecordDefinition(typePath);
-              final RecordFactory dataObjectFactory = subMetaData.getDataObjectFactory();
+              final RecordFactory dataObjectFactory = subMetaData.getRecordFactory();
               final Record subObject = dataObjectFactory.createRecord(subMetaData);
               subObject.setValue(subKey, value);
               setValue(key, subObject);
@@ -621,10 +621,10 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
   public String toString() {
     final StringBuffer s = new StringBuffer();
     s.append(metaData.getPath()).append("(\n");
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       final Object value = getValue(i);
       if (value != null) {
-        s.append(metaData.getAttributeName(i))
+        s.append(metaData.getFieldName(i))
           .append('=')
           .append(value)
           .append('\n');

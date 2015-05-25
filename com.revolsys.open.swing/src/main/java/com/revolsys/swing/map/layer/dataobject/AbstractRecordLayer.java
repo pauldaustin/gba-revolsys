@@ -946,7 +946,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements
   public String getFieldTitle(final String fieldName) {
     if (isUseFieldTitles()) {
       final RecordDefinition metaData = getMetaData();
-      return metaData.getAttributeTitle(fieldName);
+      return metaData.getFieldTitle(fieldName);
     } else {
       return fieldName;
     }
@@ -1994,7 +1994,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements
       setGeometryFactory(geometryFactory);
       final Icon icon = getIcon(geometryType);
       setIcon(icon);
-      if (recordDefinition.getGeometryAttributeIndex() == -1) {
+      if (recordDefinition.getGeometryFieldIndex() == -1) {
         setVisible(false);
         setSelectSupported(false);
         setRenderer(null);

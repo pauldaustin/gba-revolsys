@@ -48,7 +48,7 @@ public class ArrayRecord extends BaseDataObject {
     if (metaData == null) {
       attributes = new Object[0];
     } else {
-      final int attributeCount = metaData.getAttributeCount();
+      final int attributeCount = metaData.getFieldCount();
       attributes = new Object[attributeCount];
       final Map<String, Object> defaultValues = metaData.getDefaultValues();
       setValuesByPath(defaultValues);

@@ -108,7 +108,7 @@ public class DataObjectLayerAttributesTableModel extends
     if (source == this.object) {
       final String propertyName = event.getPropertyName();
       final RecordDefinition metaData = getMetaData();
-      final int index = metaData.getAttributeIndex(propertyName);
+      final int index = metaData.getFieldIndex(propertyName);
       if (index > -1) {
         try {
           fireTableRowsUpdated(index, index);

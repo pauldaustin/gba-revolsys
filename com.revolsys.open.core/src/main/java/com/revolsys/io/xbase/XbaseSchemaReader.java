@@ -51,7 +51,7 @@ public class XbaseSchemaReader {
         if (fieldDefinitions != null) {
           fieldDefinitions.add(field);
         }
-        metaData.addAttribute(fieldName.toString(), field.getDataType(),
+        metaData.addField(fieldName.toString(), field.getDataType(),
           length, true);
       }
     }

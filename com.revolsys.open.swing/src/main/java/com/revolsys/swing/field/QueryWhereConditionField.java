@@ -115,7 +115,7 @@ public class QueryWhereConditionField extends ValueField implements
         return new TextField(20);
       } else {
         JComponent field;
-        if (attribute.equals(metaData.getIdAttribute())) {
+        if (attribute.equals(metaData.getIdField())) {
           field = new TextField(20);
         } else if (StringUtils.hasText(searchFieldFactory)) {
           final Map<String, Object> searchFieldFactoryParameters = attribute.getProperty("searchFieldFactoryParameters");
@@ -782,7 +782,7 @@ public class QueryWhereConditionField extends ValueField implements
               final String name = column.getName();
               final FieldDefinition attribute = metaData.getField(name);
               final CodeTable codeTable = metaData.getCodeTableByColumn(name);
-              if (codeTable == null || attribute == metaData.getIdAttribute()) {
+              if (codeTable == null || attribute == metaData.getIdField()) {
                 final Class<?> typeClass = attribute.getTypeClass();
                 try {
                   final Object convertedValue = StringConverterRegistry.toObject(

@@ -18,7 +18,7 @@ public class DataObjectMapEntry implements Entry<String, Object> {
   @Override
   public String getKey() {
     final RecordDefinition metaData = object.getRecordDefinition();
-    return metaData.getAttributeName(index);
+    return metaData.getFieldName(index);
   }
 
   @Override

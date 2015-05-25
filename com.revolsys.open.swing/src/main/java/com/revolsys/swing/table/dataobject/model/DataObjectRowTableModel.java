@@ -202,7 +202,7 @@ public abstract class DataObjectRowTableModel extends
         final String attributeName = getFieldName(rowIndex, columnIndex);
         if (attributeName != null) {
           if (!isReadOnly(attributeName)) {
-            final Class<?> attributeClass = getMetaData().getAttributeClass(
+            final Class<?> attributeClass = getMetaData().getFieldClass(
               attributeName);
             if (!Geometry.class.isAssignableFrom(attributeClass)) {
               return true;

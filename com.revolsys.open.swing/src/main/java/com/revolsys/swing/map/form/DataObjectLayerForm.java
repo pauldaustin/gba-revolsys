@@ -879,7 +879,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public boolean hasOriginalValue(final String name) {
-    return getMetaData().hasAttribute(name);
+    return getMetaData().hasField(name);
   }
 
   protected void invokeAction(final String actionName) {
@@ -1010,7 +1010,7 @@ public class DataObjectLayerForm extends JPanel implements
             final RecordDefinition metaData = getMetaData();
             if ("errorsUpdated".equals(propertyName)) {
               updateErrors();
-            } else if (metaData.hasAttribute(propertyName)) {
+            } else if (metaData.hasField(propertyName)) {
               setFieldValue(propertyName, value, isFieldValidationEnabled());
             }
             final boolean modifiedOrDeleted = isModifiedOrDeleted();
@@ -1153,7 +1153,7 @@ public class DataObjectLayerForm extends JPanel implements
     final RecordDefinition metaData = getMetaData();
     if (metaData != null) {
       try {
-        final Class<?> attributeClass = metaData.getAttributeClass(fieldName);
+        final Class<?> attributeClass = metaData.getFieldClass(fieldName);
         value = StringConverterRegistry.toObject(attributeClass, value);
       } catch (final Throwable e) {
       }

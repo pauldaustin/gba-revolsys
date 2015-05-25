@@ -133,9 +133,9 @@ public class XmlDataObjectWriter extends AbstractWriter<Record> {
 
     out.startTag(qualifiedName);
 
-    final int attributeCount = metaData.getAttributeCount();
+    final int attributeCount = metaData.getFieldCount();
     for (int i = 0; i < attributeCount; i++) {
-      final String name = metaData.getAttributeName(i);
+      final String name = metaData.getFieldName(i);
       final Object value = object.getValue(i);
       final QName tagName = new QName(name);
       if (value instanceof Map) {
@@ -150,7 +150,7 @@ public class XmlDataObjectWriter extends AbstractWriter<Record> {
         list(list);
         out.endTag();
       } else {
-        final DataType dataType = metaData.getAttributeType(i);
+        final DataType dataType = metaData.getFieldType(i);
         final String string = StringConverterRegistry.toString(dataType, value);
         out.nillableElement(tagName, string);
       }

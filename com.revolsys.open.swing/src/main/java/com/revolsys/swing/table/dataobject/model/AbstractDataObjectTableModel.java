@@ -78,7 +78,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
 
   public String getFieldName(final int attributeIndex) {
     final RecordDefinition metaData = getMetaData();
-    return metaData.getAttributeName(attributeIndex);
+    return metaData.getFieldName(attributeIndex);
   }
 
   public abstract String getFieldName(int rowIndex, int columnIndex);
@@ -184,7 +184,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     final String name = getFieldName(attributeIndex);
     final CodeTable codeTable = metaData.getCodeTableByColumn(name);
     if (codeTable == null) {
-      final Class<?> fieldClass = metaData.getAttributeClass(name);
+      final Class<?> fieldClass = metaData.getFieldClass(name);
       final Object objectValue = StringConverterRegistry.toObject(fieldClass,
         displayValue);
       return objectValue;

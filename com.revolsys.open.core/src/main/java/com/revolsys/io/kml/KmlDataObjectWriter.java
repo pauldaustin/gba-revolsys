@@ -100,7 +100,7 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements
     open();
     writer.startTag(PLACEMARK);
     final RecordDefinition metaData = object.getRecordDefinition();
-    final int geometryIndex = metaData.getGeometryAttributeIndex();
+    final int geometryIndex = metaData.getGeometryFieldIndex();
     final int idIndex = metaData.getIdFieldIndex();
 
     final String nameAttribute = getProperty(PLACEMARK_NAME_ATTRIBUTE_PROPERTY);
@@ -138,9 +138,9 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements
       writer.element(STYLE_URL, defaultStyleUrl);
     }
     boolean hasValues = false;
-    for (int i = 0; i < metaData.getAttributeCount(); i++) {
+    for (int i = 0; i < metaData.getFieldCount(); i++) {
       if (i != geometryIndex) {
-        final String attributeName = metaData.getAttributeName(i);
+        final String attributeName = metaData.getFieldName(i);
         final Object value = object.getValue(i);
         if (value != null
           || BooleanStringConverter.isTrue(getProperty(Kml22Constants.WRITE_NULLS_PROPERTY))) {
@@ -158,7 +158,7 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements
     if (hasValues) {
       writer.endTag(EXTENDED_DATA);
     }
-    final List<Integer> geometryAttributeIndexes = metaData.getGeometryAttributeIndexes();
+    final List<Integer> geometryAttributeIndexes = metaData.getGeometryFieldIndexes();
     if (!geometryAttributeIndexes.isEmpty()) {
       Geometry geometry = null;
       if (geometryAttributeIndexes.size() == 1) {

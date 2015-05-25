@@ -566,11 +566,11 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
       sqlBuffer.append(" (");
       sqlBuffer.append('"').append(metaData.getIdFieldName()).append('"');
       sqlBuffer.append(",");
-      for (int i = 0; i < metaData.getAttributeCount(); i++) {
+      for (int i = 0; i < metaData.getFieldCount(); i++) {
         if (i != metaData.getIdFieldIndex()) {
-          final String attributeName = metaData.getAttributeName(i);
+          final String attributeName = metaData.getFieldName(i);
           sqlBuffer.append('"').append(attributeName).append('"');
-          if (i < metaData.getAttributeCount() - 1) {
+          if (i < metaData.getFieldCount() - 1) {
             sqlBuffer.append(", ");
           }
         }
@@ -578,10 +578,10 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
       sqlBuffer.append(") VALUES (");
       sqlBuffer.append(getGeneratePrimaryKeySql(metaData));
       sqlBuffer.append(",");
-      for (int i = 0; i < metaData.getAttributeCount(); i++) {
+      for (int i = 0; i < metaData.getFieldCount(); i++) {
         if (i != metaData.getIdFieldIndex()) {
           sqlBuffer.append("?");
-          if (i < metaData.getAttributeCount() - 1) {
+          if (i < metaData.getFieldCount() - 1) {
             sqlBuffer.append(", ");
           }
         }

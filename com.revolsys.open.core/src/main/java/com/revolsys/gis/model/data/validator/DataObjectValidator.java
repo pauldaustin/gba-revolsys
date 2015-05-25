@@ -109,11 +109,11 @@ public class DataObjectValidator {
       boolean valid = true;
 
       final RecordDefinition type = dataObject.getRecordDefinition();
-      for (int i = 0; i < type.getAttributeCount(); i++) {
+      for (int i = 0; i < type.getFieldCount(); i++) {
         final Object value = dataObject.getValue(i);
-        final DataType dataType = type.getAttributeType(i);
-        final FieldDefinition attribDef = type.getAttribute(i);
-        final String attributeName = type.getAttributeName(i);
+        final DataType dataType = type.getFieldType(i);
+        final FieldDefinition attribDef = type.getField(i);
+        final String attributeName = type.getFieldName(i);
 
         if (value == null) {
           if (attribDef.isRequired()) {
@@ -133,7 +133,7 @@ public class DataObjectValidator {
                   + "' is not a valid value for type '" + dataType + "'");
               }
               valid = (i == dataObject.getRecordDefinition()
-                .getGeometryAttributeIndex());
+                .getGeometryFieldIndex());
             }
           }
         }
