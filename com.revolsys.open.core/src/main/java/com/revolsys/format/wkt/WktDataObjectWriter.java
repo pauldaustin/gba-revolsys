@@ -1,4 +1,4 @@
-package com.revolsys.io.wkt;
+package com.revolsys.format.wkt;
 
 import java.io.BufferedWriter;
 import java.io.PrintWriter;

@@ -333,7 +333,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     final double modelX = boundingBox.getMinX() + modelWidth * xPercent;
     final double modelY = boundingBox.getMinY() + modelHeight * yPercent;
     final GeometryFactory geometryFactory = boundingBox.getGeometryFactory();
-    final Point imagePoint = geometryFactory.createPoint(modelX, modelY);
+    final Point imagePoint = geometryFactory.point(modelX, modelY);
     return imagePoint;
   }
 

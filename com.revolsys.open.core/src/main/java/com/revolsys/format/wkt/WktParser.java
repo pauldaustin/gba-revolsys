@@ -1,4 +1,4 @@
-package com.revolsys.io.wkt;
+package com.revolsys.format.wkt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -206,7 +206,7 @@ public class WktParser {
       if (hasText(text, "SRID=")) {
         final Integer srid = parseInteger(text);
         if (srid != null && srid != this.geometryFactory.getSRID()) {
-          geometryFactory = GeometryFactory.getFactory(srid, numAxis);
+          geometryFactory = GeometryFactory.floating(srid, numAxis);
         }
         hasText(text, ";");
       }

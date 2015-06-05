@@ -18,10 +18,10 @@ import org.springframework.core.io.Resource;
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.io.EndianInputStream;
 import com.revolsys.gis.io.EndianMappedByteBuffer;
 import com.revolsys.gis.io.LittleEndianRandomAccessFile;
@@ -33,7 +33,7 @@ import com.revolsys.util.DateUtil;
 import com.revolsys.util.ExceptionUtil;
 
 public class XbaseIterator extends AbstractIterator<Record> implements
-  DataObjectIterator {
+  RecordIterator {
   public static final char CHARACTER_TYPE = 'C';
 
   private static final Map<Character, DataType> DATA_TYPES = new HashMap<Character, DataType>();
@@ -220,7 +220,7 @@ public class XbaseIterator extends AbstractIterator<Record> implements
   }
 
   @Override
-  public RecordDefinitionImpl getMetaData() {
+  public RecordDefinitionImpl getRecordDefinition() {
     return metaData;
   }
 

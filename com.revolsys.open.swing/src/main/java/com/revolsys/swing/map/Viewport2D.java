@@ -90,7 +90,7 @@ public class Viewport2D extends AbstractObjectWithProperties implements
   /** The current bounding box of the project. */
   private BoundingBox boundingBox = new BoundingBox();
 
-  private GeometryFactory geometryFactory = GeometryFactory.getFactory(3005);
+  private GeometryFactory geometryFactory = GeometryFactory.floating3(3005);
 
   private Reference<Project> project;
 
@@ -610,7 +610,7 @@ public class Viewport2D extends AbstractObjectWithProperties implements
       return GeometryFactory.getFactory().createPoint();
     } else {
       final double[] coordinates = toModelCoordinates(viewCoordinates);
-      return this.geometryFactory.createPoint(coordinates);
+      return this.geometryFactory.point(coordinates);
     }
   }
 
@@ -621,7 +621,7 @@ public class Viewport2D extends AbstractObjectWithProperties implements
         || Double.isNaN(coordinates[0]) || Double.isNaN(coordinates[1])) {
       return geometryFactory.createPoint();
     } else {
-      final Point point = this.geometryFactory.createPoint(coordinates);
+      final Point point = this.geometryFactory.point(coordinates);
       return geometryFactory.copy(point);
     }
   }

@@ -1305,7 +1305,7 @@ public final class JtsGeometryUtil {
     final double newY = y + deltaY;
 
     final GeometryFactory factory = GeometryFactory.getFactory(point);
-    final Point newPoint = factory.createPoint(newX, newY);
+    final Point newPoint = factory.point(newX, newY);
     return newPoint;
   }
 

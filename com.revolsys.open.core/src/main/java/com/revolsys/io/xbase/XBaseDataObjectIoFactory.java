@@ -9,9 +9,9 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordIoFactory;
+import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.OutputStreamResource;
 
@@ -29,7 +29,7 @@ public class XBaseDataObjectIoFactory extends AbstractRecordIoFactory {
       final XbaseIterator iterator = new XbaseIterator(resource,
         dataObjectFactory);
 
-      return new DataObjectIteratorReader(iterator);
+      return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
     }

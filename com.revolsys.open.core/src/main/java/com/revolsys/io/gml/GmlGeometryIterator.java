@@ -64,11 +64,11 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
     } else {
       if (srsName.startsWith("urn:ogc:def:crs:EPSG:6.6:")) {
         final int srid = Integer.parseInt(srsName.substring("urn:ogc:def:crs:EPSG:6.6:".length()));
-        final GeometryFactory factory = GeometryFactory.getFactory(srid);
+        final GeometryFactory factory = GeometryFactory.floating3(srid);
         return factory;
       } else if (srsName.startsWith("EPSG:")) {
         final int srid = Integer.parseInt(srsName.substring("EPSG:".length()));
-        final GeometryFactory factory = GeometryFactory.getFactory(srid);
+        final GeometryFactory factory = GeometryFactory.floating3(srid);
         return factory;
       } else {
         return geometryFactory;

@@ -1,4 +1,4 @@
-package com.revolsys.io.wkt;
+package com.revolsys.format.wkt;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,9 +10,9 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
@@ -30,7 +30,7 @@ public class WktIoFactory extends AbstractRecordAndGeometryIoFactory
       final WktDataObjectIterator iterator = new WktDataObjectIterator(factory,
         resource);
 
-      return new DataObjectIteratorReader(iterator);
+      return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
     }

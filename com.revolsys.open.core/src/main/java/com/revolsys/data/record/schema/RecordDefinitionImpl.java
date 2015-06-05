@@ -21,13 +21,13 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.WeakCache;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.property.ValueRecordDefinitionProperty;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.Path;
@@ -158,6 +158,16 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     dataObjectFactory = dataObjectStore.getRecordFactory();
     this.schema = schema;
     METADATA_CACHE.put(instanceId, this);
+  }
+
+  public RecordDefinitionImpl(final RecordStoreSchema schema, final String path,
+    final Map<String, Object> properties, final List<FieldDefinition> fields) {
+    this(path);
+    // TODO implement schema support
+    for (final FieldDefinition field : fields) {
+      addField(field.clone());
+    }
+    cloneProperties(properties);
   }
 
   public RecordDefinitionImpl(final String name) {

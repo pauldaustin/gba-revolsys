@@ -25,7 +25,7 @@ public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
     BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox != null) {
       final String typePath = query.getTypeName();
-      final RecordDefinition metaData = getMetaData();
+      final RecordDefinition metaData = getRecordDefinition();
       if (metaData == null) {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
       } else {

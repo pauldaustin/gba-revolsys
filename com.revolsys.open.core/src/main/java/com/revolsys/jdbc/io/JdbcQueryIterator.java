@@ -19,16 +19,16 @@ import com.revolsys.data.query.Query;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttribute;
 
 public class JdbcQueryIterator extends AbstractIterator<Record> implements
-  DataObjectIterator {
+  RecordIterator {
 
   public static Record getNextObject(final JdbcDataObjectStore dataStore,
     final RecordDefinition metaData, final List<FieldDefinition> attributes,
@@ -150,7 +150,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     if (metaData == null) {
       hasNext();
     }

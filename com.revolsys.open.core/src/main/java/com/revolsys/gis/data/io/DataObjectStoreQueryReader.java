@@ -11,9 +11,11 @@ import javax.annotation.PreDestroy;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.collection.iterator.AbstractIterator;
+import com.revolsys.data.io.IteratorReader;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.query.SqlCondition;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -83,7 +85,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return ((DataObjectIterator)iterator()).getMetaData();
+    return ((RecordIterator)iterator()).getRecordDefinition();
   }
 
   public List<Query> getQueries() {

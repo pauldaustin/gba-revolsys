@@ -34,7 +34,7 @@ public class AbstractMapWrapper {
         if (srid == 102100) {
           srid = 3857;
         }
-        geometryFactory = GeometryFactory.getFactory(srid);
+        geometryFactory = GeometryFactory.floating3(srid);
       }
       return new BoundingBox(geometryFactory, minX, minY, maxX, maxY);
     }
@@ -103,7 +103,7 @@ public class AbstractMapWrapper {
       } else if (srid == 102190) {
         srid = 3005;
       }
-      return GeometryFactory.getFactory(srid);
+      return GeometryFactory.floating3(srid);
     }
   }
 

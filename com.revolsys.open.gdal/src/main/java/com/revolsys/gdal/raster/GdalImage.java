@@ -41,7 +41,7 @@ public class GdalImage extends AbstractGeoReferencedImage {
       final CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(esriCoordinateSystem);
       final int srid = epsgCoordinateSystem.getId();
       if (srid > 0 && srid < 2000000) {
-        setGeometryFactory(GeometryFactory.getFactory(srid, 2));
+        setGeometryFactory(GeometryFactory.floating(srid, 2));
       } else {
         setGeometryFactory(GeometryFactory.getFactory(epsgCoordinateSystem));
       }

@@ -7,11 +7,11 @@ import java.sql.Date;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
-import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
 import com.revolsys.util.DateUtil;

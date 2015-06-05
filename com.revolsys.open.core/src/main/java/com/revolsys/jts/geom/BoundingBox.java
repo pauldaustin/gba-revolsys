@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.format.wkt.WktParser;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.projection.CoordinatesListProjectionUtil;
@@ -26,7 +27,6 @@ import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.gis.model.geometry.LineSegment;
-import com.revolsys.io.wkt.WktParser;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -72,7 +72,7 @@ public class BoundingBox extends Envelope implements Cloneable {
       if (WktParser.hasText(text, "SRID=")) {
         final Integer srid = WktParser.parseInteger(text);
         if (srid != null) {
-          geometryFactory = GeometryFactory.getFactory(srid, 2);
+          geometryFactory = GeometryFactory.floating(srid, 2);
         }
         WktParser.hasText(text, ";");
       }
@@ -230,7 +230,7 @@ public class BoundingBox extends Envelope implements Cloneable {
       final double y1 = Double.valueOf(args[1]);
       final double x2 = Double.valueOf(args[2]);
       final double y2 = Double.valueOf(args[3]);
-      return new BoundingBox(GeometryFactory.getFactory(4326), x1, y1, x2, y2);
+      return new BoundingBox(GeometryFactory.floating3(4326), x1, y1, x2, y2);
     } else {
       throw new IllegalArgumentException(
         "BBOX must have match <minX>,<minY>,<maxX>,<maxY> not " + bbox);
@@ -269,7 +269,7 @@ public class BoundingBox extends Envelope implements Cloneable {
   }
 
   public BoundingBox(final double x, final double y) {
-    this(GeometryFactory.getFactory(0), x, y);
+    this(GeometryFactory.floating3(0), x, y);
   }
 
   public BoundingBox(final Envelope envelope) {
@@ -414,7 +414,7 @@ public class BoundingBox extends Envelope implements Cloneable {
    * @param geometryFactory The geometry factory.
    */
   public BoundingBox(final int srid) {
-    this.geometryFactory = GeometryFactory.getFactory(srid);
+    this.geometryFactory = GeometryFactory.floating3(srid);
   }
 
   public BoundingBox(final Point p1, final Point p2) {
@@ -707,11 +707,11 @@ public class BoundingBox extends Envelope implements Cloneable {
   }
 
   public Point getBottomLeftPoint() {
-    return getGeometryFactory().createPoint(getMinX(), getMinY());
+    return getGeometryFactory().point(getMinX(), getMinY());
   }
 
   public Point getBottomRightPoint() {
-    return getGeometryFactory().createPoint(getMaxX(), getMinY());
+    return getGeometryFactory().point(getMaxX(), getMinY());
   }
 
   public Coordinates getCentre() {
@@ -879,11 +879,11 @@ public class BoundingBox extends Envelope implements Cloneable {
   }
 
   public Point getTopLeftPoint() {
-    return getGeometryFactory().createPoint(getMinX(), getMaxY());
+    return getGeometryFactory().point(getMinX(), getMaxY());
   }
 
   public Point getTopRightPoint() {
-    return getGeometryFactory().createPoint(getMaxX(), getMaxY());
+    return getGeometryFactory().point(getMaxX(), getMaxY());
   }
 
   @SuppressWarnings("unchecked")

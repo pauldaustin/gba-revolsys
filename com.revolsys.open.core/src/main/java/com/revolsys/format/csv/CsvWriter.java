@@ -1,38 +1,44 @@
 package com.revolsys.format.csv;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Collection;
 
 import com.revolsys.io.FileUtil;
+import com.revolsys.util.WrappedException;
 
-public class CsvWriter {
+public class CsvWriter implements AutoCloseable {
 
   /** The writer */
-  private final PrintWriter out;
+  private final Writer out;
 
   /**
    * Constructs CSVReader with supplied separator and quote char.
-   * 
+   *
    * @param reader The reader to the CSV file.
    * @throws IOException
    */
   public CsvWriter(final Writer out) {
-    this.out = new PrintWriter(out);
+    this.out = new BufferedWriter(out);
   }
 
   /**
    * Closes the underlying reader.
-   * 
+   *
    * @throws IOException if the close fails
    */
+  @Override
   public void close() {
+    flush();
     FileUtil.closeSilent(out);
   }
 
   public void flush() {
-    out.flush();
+    try {
+      out.flush();
+    } catch (final IOException e) {
+    }
   }
 
   public void write(final Collection<? extends Object> values) {
@@ -40,18 +46,28 @@ public class CsvWriter {
   }
 
   public void write(final Object... values) {
-    for (int i = 0; i < values.length; i++) {
-      final Object value = values[i];
-      if (value != null) {
-        final String string = value.toString().replaceAll("\"", "\"\"");
-        out.write('"');
-        out.write(string);
-        out.write('"');
+    try {
+      for (int i = 0; i < values.length; i++) {
+        final Object value = values[i];
+        if (value != null) {
+          final String string = value.toString();
+          out.write('"');
+          for (int j = 0; j < string.length(); j++) {
+            final char c = string.charAt(j);
+            if (c == '"') {
+              out.write('"');
+            }
+            out.write(c);
+          }
+          out.write('"');
+        }
+        if (i < values.length - 1) {
+          out.write(',');
+        }
       }
-      if (i < values.length - 1) {
-        out.write(',');
-      }
+      out.write('\n');
+    } catch (final IOException e) {
+      throw new WrappedException(e);
     }
-    out.println();
   }
 }

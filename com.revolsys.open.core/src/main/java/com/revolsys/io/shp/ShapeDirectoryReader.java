@@ -8,12 +8,12 @@ import java.util.Map.Entry;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
-import com.revolsys.gis.data.io.DataObjectIteratorReader;
-import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.io.Reader;
 import com.revolsys.spring.SpringUtil;
 
@@ -59,7 +59,7 @@ public class ShapeDirectoryReader extends DataObjectDirectoryReader {
       final String baseName = SpringUtil.getBaseName(resource).toUpperCase();
       iterator.setTypeName(fileNameTypeMap.get(baseName));
       iterator.setMetaData(typeNameMetaDataMap.get(iterator.getTypeName()));
-      return new DataObjectIteratorReader(iterator);
+      return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
     }

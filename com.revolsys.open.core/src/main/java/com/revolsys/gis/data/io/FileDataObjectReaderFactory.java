@@ -7,11 +7,11 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
-import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
 public class FileDataObjectReaderFactory extends

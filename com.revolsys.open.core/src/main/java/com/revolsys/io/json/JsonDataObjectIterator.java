@@ -10,15 +10,15 @@ import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.FileUtil;
 
 public class JsonDataObjectIterator extends AbstractIterator<Record>
-  implements DataObjectIterator {
+  implements RecordIterator {
 
   private RecordDefinition metaData;
 
@@ -52,7 +52,7 @@ public class JsonDataObjectIterator extends AbstractIterator<Record>
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return metaData;
   }
 

@@ -1,18 +1,18 @@
 package com.revolsys.format.csv;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.revolsys.io.FileUtil;
+import com.revolsys.util.ExceptionUtil;
 
-public class CsvIterator implements Iterator<List<String>>,
-  Iterable<List<String>> {
+public class CsvIterator implements Iterator<List<String>>, Iterable<List<String>> {
+
+  private static final int BUFFER_SIZE = 8096;
 
   /** The current record. */
   private List<String> currentRecord;
@@ -21,23 +21,30 @@ public class CsvIterator implements Iterator<List<String>>,
   private boolean hasNext = true;
 
   /** The reader to */
-  private final BufferedReader in;
+  private final Reader in;
+
+  private final char[] buffer = new char[BUFFER_SIZE];
+
+  private int readCount;
+
+  private int index = 0;
+
+  private final StringBuilder sb = new StringBuilder();
 
   /**
    * Constructs CSVReader with supplied separator and quote char.
-   * 
+   *
    * @param reader The reader to the CSV file.
    * @throws IOException
    */
   public CsvIterator(final Reader in) {
-    this.in = new BufferedReader(in);
-
+    this.in = in;
     readNextRecord();
   }
 
   /**
    * Closes the underlying reader.
-   * 
+   *
    * @throws IOException if the close fails
    */
   public void close() {
@@ -45,29 +52,8 @@ public class CsvIterator implements Iterator<List<String>>,
   }
 
   /**
-   * Reads the next line from the file.
-   * 
-   * @return the next line from the file without trailing newline
-   * @throws IOException if bad things happen during the read
-   */
-  private String getNextLine() {
-    try {
-      final String nextLine = in.readLine();
-      if (nextLine == null) {
-        hasNext = false;
-        close();
-      }
-      return nextLine;
-    } catch (final IOException e) {
-      hasNext = false;
-      close();
-      return null;
-    }
-  }
-
-  /**
    * Returns <tt>true</tt> if the iteration has more elements.
-   * 
+   *
    * @return <tt>true</tt> if the iterator has more elements.
    */
   @Override
@@ -82,7 +68,7 @@ public class CsvIterator implements Iterator<List<String>>,
 
   /**
    * Return the next record from the iterator.
-   * 
+   *
    * @return The record
    */
   @Override
@@ -96,76 +82,120 @@ public class CsvIterator implements Iterator<List<String>>,
     }
   }
 
-  /**
-   * Parses an incoming String and returns an array of elements.
-   * 
-   * @param nextLine the string to parse
-   * @return the comma-tokenized list of elements, or null if nextLine is null
-   * @throws IOException if bad things happen during the read
-   */
-  private List<String> parseLine(String nextLine) {
-    if (nextLine.length() == 0) {
-      return Collections.emptyList();
-    } else {
-
-      final List<String> fields = new ArrayList<String>();
-      StringBuffer sb = new StringBuffer();
-      boolean inQuotes = false;
-      boolean hadQuotes = false;
-      do {
-        if (inQuotes) {
-          sb.append("\n");
-          nextLine = getNextLine();
-          if (nextLine == null) {
-            break;
+  private List<String> parseRecord() throws IOException {
+    final StringBuilder sb = this.sb;
+    final Reader in = this.in;
+    sb.delete(0, sb.length());
+    final List<String> fields = new ArrayList<>();
+    boolean inQuotes = false;
+    boolean hadQuotes = false;
+    while (readCount != -1) {
+      if (index >= readCount) {
+        index = 0;
+        readCount = in.read(buffer, 0, BUFFER_SIZE);
+        if (readCount < 0) {
+          if (fields.isEmpty()) {
+            hasNext = false;
+            return null;
+          } else {
+            return fields;
           }
         }
-        for (int i = 0; i < nextLine.length(); i++) {
-          final char c = nextLine.charAt(i);
-          if (c == '"') {
-            hadQuotes = true;
-            if (inQuotes && nextLine.length() > (i + 1)
-              && nextLine.charAt(i + 1) == '"') {
-              sb.append(nextLine.charAt(i + 1));
-              i++;
-            } else {
-              inQuotes = !inQuotes;
-              if (i > 2 && nextLine.charAt(i - 1) != ','
-                && nextLine.length() > (i + 1) && nextLine.charAt(i + 1) != ',') {
-                sb.append(c);
-              }
+      }
+      final char c = buffer[index++];
+      switch (c) {
+        case '"':
+          hadQuotes = true;
+          final char nextChar = previewNextChar();
+          if (inQuotes && nextChar == '"') {
+            sb.append('"');
+            index++;
+          } else {
+            inQuotes = !inQuotes;
+            if (sb.length() > 0 && nextChar != ',' && nextChar != '\n' && nextChar != 0) {
+              sb.append(c);
             }
-          } else if (c == ',' && !inQuotes) {
-            hadQuotes = false;
+          }
+        break;
+        case ',':
+          if (inQuotes) {
+            sb.append(c);
+          } else {
             if (hadQuotes || sb.length() > 0) {
               fields.add(sb.toString());
+              sb.delete(0, sb.length());
             } else {
               fields.add(null);
             }
-            sb = new StringBuffer();
-          } else {
-            sb.append(c);
+            hadQuotes = false;
           }
-        }
-      } while (inQuotes);
-      if (sb.length() > 0 || fields.size() > 0) {
-        fields.add(sb.toString());
+        break;
+        case '\r':
+          if (previewNextChar() == '\n') {
+          } else {
+            if (inQuotes) {
+              sb.append('\n');
+            } else {
+              if (hadQuotes || sb.length() > 0) {
+                fields.add(sb.toString());
+                sb.delete(0, sb.length());
+              } else {
+                fields.add(null);
+              }
+              return fields;
+            }
+          }
+        break;
+        case '\n':
+          if (previewNextChar() == '\r') {
+            index++;
+          }
+          if (inQuotes) {
+            sb.append(c);
+          } else {
+            if (hadQuotes || sb.length() > 0) {
+              fields.add(sb.toString());
+              sb.delete(0, sb.length());
+            } else {
+              fields.add(null);
+            }
+            return fields;
+          }
+        break;
+        default:
+          sb.append(c);
+        break;
       }
-      return fields;
     }
+    hasNext = false;
+    return null;
+  }
+
+  private char previewNextChar() throws IOException {
+    if (index >= readCount) {
+      index = 0;
+      readCount = in.read(buffer, 0, BUFFER_SIZE);
+      if (readCount < 0) {
+        return 0;
+      }
+    }
+    return buffer[index];
   }
 
   /**
    * Reads the next line from the buffer and converts to a string array.
-   * 
+   *
    * @return a string array with each comma-separated element as a separate
    *         entry.
    * @throws IOException if bad things happen during the read
    */
   private List<String> readNextRecord() {
-    final String nextLine = getNextLine();
     if (hasNext) {
-      currentRecord = parseLine(nextLine);
+      try {
+        currentRecord = parseRecord();
+      } catch (final IOException e) {
+        ExceptionUtil.throwUncheckedException(e);
+      }
       return currentRecord;
     } else {
       return null;

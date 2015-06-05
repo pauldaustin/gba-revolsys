@@ -225,7 +225,7 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements
       final GeometryFactory geometryFactory = GeometryFactory.wgs84();
       final Geometry projectedGeometry = geometryFactory.copy(geometry);
       final BoundingBox boundingBox = BoundingBox.getBoundingBox(projectedGeometry);
-      final Point centre = geometryFactory.createPoint(
+      final Point centre = geometryFactory.point(
         boundingBox.getCentreX(), boundingBox.getCentreY());
 
       final Number configRange = getProperty(LOOK_AT_RANGE_PROPERTY);

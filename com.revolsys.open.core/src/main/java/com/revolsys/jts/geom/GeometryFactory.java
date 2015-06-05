@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.revolsys.format.wkt.WktParser;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
@@ -31,7 +32,6 @@ import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesListFactory;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapSerializer;
-import com.revolsys.io.wkt.WktParser;
 import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
@@ -48,7 +48,7 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
 public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory implements
-CoordinatesPrecisionModel, MapSerializer {
+  CoordinatesPrecisionModel, MapSerializer {
 
   /** The cached geometry factories. */
   private static Map<String, GeometryFactory> factories = new HashMap<String, GeometryFactory>();
@@ -101,6 +101,32 @@ CoordinatesPrecisionModel, MapSerializer {
 
   /**
    * <p>
+   * Get a GeometryFactory with the coordinate system, 3D axis (x, y &amp; z)
+   * and a floating precision models.
+   * </p>
+   *
+   * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
+   *          coordinate system id</a>.
+   * @return The geometry factory.
+   */
+  public static GeometryFactory floating3(final int srid) {
+    return getFactory(srid, 3, 0, 0);
+  }
+
+  public static GeometryFactory get(final Object factory) {
+    if (factory instanceof GeometryFactory) {
+      return (GeometryFactory)factory;
+    } else if (factory instanceof Map) {
+      @SuppressWarnings("unchecked")
+      final Map<String, Object> properties = (Map<String, Object>)factory;
+      return create(properties);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * <p>
    * Get a GeometryFactory with no coordinate system, 3D axis (x, y &amp; z) and
    * a floating precision model.
    * </p>
@@ -119,7 +145,7 @@ CoordinatesPrecisionModel, MapSerializer {
     return getFactory(srid, 3, 0, 0);
   }
 
-  public static GeometryFactory getFactory(final CoordinateSystem coordinateSystem,
+  public static GeometryFactory fixed(final CoordinateSystem coordinateSystem,
     final int numAxis, final double scaleXY, final double scaleZ) {
     return new GeometryFactory(coordinateSystem, numAxis, scaleXY, scaleZ);
   }
@@ -159,20 +185,6 @@ CoordinatesPrecisionModel, MapSerializer {
         }
       }
     }
-  }
-
-  /**
-   * <p>
-   * Get a GeometryFactory with the coordinate system, 3D axis (x, y &amp; z)
-   * and a floating precision models.
-   * </p>
-   *
-   * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
-   *          coordinate system id</a>.
-   * @return The geometry factory.
-   */
-  public static GeometryFactory getFactory(final int srid) {
-    return getFactory(srid, 3, 0, 0);
   }
 
   /**
@@ -227,7 +239,7 @@ CoordinatesPrecisionModel, MapSerializer {
    *          coordinates. 3 for 3D x, y &amp; z coordinates.
    * @return The geometry factory.
    */
-  public static GeometryFactory getFactory(final int srid, final int numAxis) {
+  public static GeometryFactory floating(final int srid, final int numAxis) {
     return getFactory(srid, numAxis, 0, 0);
   }
 
@@ -282,11 +294,11 @@ CoordinatesPrecisionModel, MapSerializer {
   }
 
   public static GeometryFactory wgs84() {
-    return getFactory(4326);
+    return floating3(4326);
   }
 
   public static GeometryFactory worldMercator() {
-    return getFactory(3857);
+    return floating3(3857);
   }
 
   private final CoordinatesPrecisionModel coordinatesPrecisionModel;
@@ -300,15 +312,15 @@ CoordinatesPrecisionModel, MapSerializer {
     super(PrecisionModelUtil.getPrecisionModel(scaleXY), coordinateSystem.getId(),
       new DoubleCoordinatesListFactory());
     this.coordinateSystem = coordinateSystem;
-    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
+    coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
     this.numAxis = Math.max(numAxis, 2);
   }
 
   protected GeometryFactory(final int srid, final int numAxis, final double scaleXY,
     final double scaleZ) {
     super(PrecisionModelUtil.getPrecisionModel(scaleXY), srid, new DoubleCoordinatesListFactory());
-    this.coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
-    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
+    coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
+    coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
     this.numAxis = Math.max(numAxis, 2);
   }
 
@@ -334,13 +346,13 @@ CoordinatesPrecisionModel, MapSerializer {
   }
 
   public Coordinates createCoordinates(final Coordinates point) {
-    final Coordinates newPoint = new DoubleCoordinates(point, this.numAxis);
+    final Coordinates newPoint = new DoubleCoordinates(point, numAxis);
     makePrecise(newPoint);
     return newPoint;
   }
 
   public Coordinates createCoordinates(final double... coordinates) {
-    final Coordinates newPoint = new DoubleCoordinates(this.numAxis, coordinates);
+    final Coordinates newPoint = new DoubleCoordinates(numAxis, coordinates);
     makePrecise(newPoint);
     return newPoint;
   }
@@ -391,7 +403,7 @@ CoordinatesPrecisionModel, MapSerializer {
 
   public CoordinatesList createCoordinatesList(final Coordinates... points) {
     final DoubleCoordinatesList coordinatesList = new DoubleCoordinatesList(getNumAxis(), points);
-    coordinatesList.makePrecise(this.coordinatesPrecisionModel);
+    coordinatesList.makePrecise(coordinatesPrecisionModel);
     return coordinatesList;
   }
 
@@ -400,7 +412,7 @@ CoordinatesPrecisionModel, MapSerializer {
       return null;
     } else {
       final int size = points.size();
-      final CoordinatesList newPoints = new DoubleCoordinatesList(size, this.numAxis);
+      final CoordinatesList newPoints = new DoubleCoordinatesList(size, numAxis);
       final int numAxis2 = points.getDimension();
       final int numAxis = Math.min(this.numAxis, numAxis2);
       for (int i = 0; i < size; i++) {
@@ -425,13 +437,13 @@ CoordinatesPrecisionModel, MapSerializer {
   }
 
   public CoordinatesList createCoordinatesList(final double... coordinates) {
-    final CoordinatesList newPoints = new DoubleCoordinatesList(this.numAxis, coordinates);
+    final CoordinatesList newPoints = new DoubleCoordinatesList(numAxis, coordinates);
     makePrecise(newPoints);
     return newPoints;
   }
 
   public CoordinatesList createCoordinatesList(final int size) {
-    final CoordinatesList points = new DoubleCoordinatesList(size, this.numAxis);
+    final CoordinatesList points = new DoubleCoordinatesList(size, numAxis);
     return points;
   }
 
@@ -548,8 +560,8 @@ CoordinatesPrecisionModel, MapSerializer {
       final int srid = getSRID();
       final int geometrySrid = geometry.getSRID();
       if (srid == 0 && geometrySrid != 0) {
-        final GeometryFactory geometryFactory = GeometryFactory.getFactory(geometrySrid,
-          this.numAxis, getScaleXY(), getScaleZ());
+        final GeometryFactory geometryFactory = GeometryFactory.getFactory(geometrySrid, numAxis,
+          getScaleXY(), getScaleZ());
         return geometryFactory.createGeometry(geometry);
       } else if (srid != 0 && geometrySrid != 0 && geometrySrid != srid) {
         if (geometry instanceof GeometryCollection) {
@@ -731,12 +743,6 @@ CoordinatesPrecisionModel, MapSerializer {
     return super.createPoint(coordinatesList);
   }
 
-  public Point createPoint(final double... coordinates) {
-    final DoubleCoordinates coords = new DoubleCoordinates(this.numAxis, coordinates);
-    makePrecise(coords);
-    return createPoint(coords);
-  }
-
   public Point createPoint(final Object object) {
     Coordinates coordinates;
     if (object instanceof Coordinates) {
@@ -787,7 +793,7 @@ CoordinatesPrecisionModel, MapSerializer {
 
   public Polygon createPolygon(final List<?> rings) {
     if (rings.size() == 0) {
-      final DoubleCoordinatesList nullPoints = new DoubleCoordinatesList(0, this.numAxis);
+      final DoubleCoordinatesList nullPoints = new DoubleCoordinatesList(0, numAxis);
       final LinearRing ring = createLinearRing(nullPoints);
       return createPolygon(ring, null);
     } else {
@@ -828,18 +834,18 @@ CoordinatesPrecisionModel, MapSerializer {
   }
 
   public CoordinatesPrecisionModel getCoordinatesPrecisionModel() {
-    return this.coordinatesPrecisionModel;
+    return coordinatesPrecisionModel;
   }
 
   public CoordinateSystem getCoordinateSystem() {
-    return this.coordinateSystem;
+    return coordinateSystem;
   }
 
   public GeometryFactory getGeographicGeometryFactory() {
-    if (this.coordinateSystem instanceof GeographicCoordinateSystem) {
+    if (coordinateSystem instanceof GeographicCoordinateSystem) {
       return this;
-    } else if (this.coordinateSystem instanceof ProjectedCoordinateSystem) {
-      final ProjectedCoordinateSystem projectedCs = (ProjectedCoordinateSystem)this.coordinateSystem;
+    } else if (coordinateSystem instanceof ProjectedCoordinateSystem) {
+      final ProjectedCoordinateSystem projectedCs = (ProjectedCoordinateSystem)coordinateSystem;
       final GeographicCoordinateSystem geographicCs = projectedCs.getGeographicCoordinateSystem();
       final int srid = geographicCs.getId();
       return getFactory(srid, getNumAxis(), 0, 0);
@@ -905,7 +911,7 @@ CoordinatesPrecisionModel, MapSerializer {
   }
 
   public int getNumAxis() {
-    return this.numAxis;
+    return numAxis;
   }
 
   public Point[] getPointArray(final Collection<?> pointsList) {
@@ -944,7 +950,7 @@ CoordinatesPrecisionModel, MapSerializer {
 
   @Override
   public Coordinates getPreciseCoordinates(final Coordinates point) {
-    return this.coordinatesPrecisionModel.getPreciseCoordinates(point);
+    return coordinatesPrecisionModel.getPreciseCoordinates(point);
   }
 
   @Override
@@ -964,25 +970,25 @@ CoordinatesPrecisionModel, MapSerializer {
   }
 
   public boolean hasM() {
-    return this.numAxis > 3;
+    return numAxis > 3;
   }
 
   public boolean hasZ() {
-    return this.numAxis > 2;
+    return numAxis > 2;
   }
 
   @Override
   public boolean isFloating() {
-    return this.coordinatesPrecisionModel.isFloating();
+    return coordinatesPrecisionModel.isFloating();
   }
 
   @Override
   public void makePrecise(final Coordinates point) {
-    this.coordinatesPrecisionModel.makePrecise(point);
+    coordinatesPrecisionModel.makePrecise(point);
   }
 
   public void makePrecise(final CoordinatesList points) {
-    points.makePrecise(this.coordinatesPrecisionModel);
+    points.makePrecise(coordinatesPrecisionModel);
   }
 
   public double makePrecise(final double value) {
@@ -991,12 +997,18 @@ CoordinatesPrecisionModel, MapSerializer {
 
   @Override
   public double makeXyPrecise(final double value) {
-    return this.coordinatesPrecisionModel.makeXyPrecise(value);
+    return coordinatesPrecisionModel.makeXyPrecise(value);
   }
 
   @Override
   public double makeZPrecise(final double value) {
-    return this.coordinatesPrecisionModel.makeZPrecise(value);
+    return coordinatesPrecisionModel.makeZPrecise(value);
+  }
+
+  public Point point(final double... coordinates) {
+    final DoubleCoordinates coords = new DoubleCoordinates(numAxis, coordinates);
+    makePrecise(coords);
+    return createPoint(coords);
   }
 
   /**
@@ -1020,7 +1032,7 @@ CoordinatesPrecisionModel, MapSerializer {
     if (scaleXY > 0) {
       map.put("scaleXy", scaleXY);
     }
-    if (this.numAxis > 2) {
+    if (numAxis > 2) {
       final double scaleZ = getScaleZ();
       if (scaleZ > 0) {
         map.put("scaleZ", scaleZ);
@@ -1031,16 +1043,16 @@ CoordinatesPrecisionModel, MapSerializer {
 
   @Override
   public String toString() {
-    if (this.coordinateSystem == null) {
+    if (coordinateSystem == null) {
       return "Unknown coordinate system";
     } else {
-      final StringBuffer string = new StringBuffer(this.coordinateSystem.getName());
-      final int srid = this.coordinateSystem.getId();
+      final StringBuffer string = new StringBuffer(coordinateSystem.getName());
+      final int srid = coordinateSystem.getId();
       string.append(", srid=");
       string.append(srid);
       string.append(", numAxis=");
-      string.append(this.numAxis);
-      final double scaleXY = this.coordinatesPrecisionModel.getScaleXY();
+      string.append(numAxis);
+      final double scaleXY = coordinatesPrecisionModel.getScaleXY();
       string.append(", scaleXy=");
       if (scaleXY <= 0) {
         string.append("floating");
@@ -1048,7 +1060,7 @@ CoordinatesPrecisionModel, MapSerializer {
         string.append(scaleXY);
       }
       if (hasZ()) {
-        final double scaleZ = this.coordinatesPrecisionModel.getScaleZ();
+        final double scaleZ = coordinatesPrecisionModel.getScaleZ();
         string.append(", scaleZ=");
         if (scaleZ <= 0) {
           string.append("floating");

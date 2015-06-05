@@ -6,7 +6,7 @@ import java.util.List;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 
-public class FixedValueDataObject extends BaseDataObject {
+public class FixedValueDataObject extends BaseRecord {
   private static final long serialVersionUID = 1L;
 
   private static final RecordDefinition META_DATA = new RecordDefinitionImpl();

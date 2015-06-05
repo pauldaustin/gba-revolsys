@@ -5,11 +5,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.revolsys.beans.AbstractPropertyChangeObject;
+import com.revolsys.format.wkt.WktWriter;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.io.map.MapSerializer;
-import com.revolsys.io.wkt.WktWriter;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.CollectionUtil;
@@ -77,7 +77,7 @@ public class MappedLocation extends AbstractPropertyChangeObject implements
 
   private Point targetPoint;
 
-  private GeometryFactory geometryFactory = GeometryFactory.getFactory(0, 2);
+  private GeometryFactory geometryFactory = GeometryFactory.floating(0, 2);
 
   public MappedLocation(final Coordinates sourcePixel, final Point targetPoint) {
     this.sourcePixel = sourcePixel;
@@ -107,7 +107,7 @@ public class MappedLocation extends AbstractPropertyChangeObject implements
       useTransform, sourcePixel.getX(),
       image.getImageHeight() - sourcePixel.getY());
     final GeometryFactory geometryFactory = boundingBox.getGeometryFactory();
-    return geometryFactory.createPoint(sourcePoint[0], sourcePoint[1]);
+    return geometryFactory.point(sourcePoint[0], sourcePoint[1]);
   }
 
   // public Point getSourcePoint(final WarpFilter filter,

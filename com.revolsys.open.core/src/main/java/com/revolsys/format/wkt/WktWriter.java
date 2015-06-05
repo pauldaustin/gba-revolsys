@@ -30,7 +30,7 @@
  *     (250)385-6040
  *     www.vividsolutions.com
  */
-package com.revolsys.io.wkt;
+package com.revolsys.format.wkt;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

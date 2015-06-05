@@ -6,10 +6,10 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryReaderFactory;
+import com.revolsys.data.record.io.RecordIterator;
+import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.DataObjectIterator;
-import com.revolsys.gis.data.io.DataObjectIteratorReader;
 
 public class GpxReaderFactory extends
   AbstractRecordAndGeometryReaderFactory {
@@ -37,9 +37,9 @@ public class GpxReaderFactory extends
   public RecordReader createRecordReader(final Resource resource,
     final RecordFactory dataObjectFactory) {
     try {
-      final DataObjectIterator iterator = new GpxIterator(resource,
+      final RecordIterator iterator = new GpxIterator(resource,
         dataObjectFactory, null);
-      return new DataObjectIteratorReader(iterator);
+      return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new IllegalArgumentException("Unable to open resource " + resource,
         e);

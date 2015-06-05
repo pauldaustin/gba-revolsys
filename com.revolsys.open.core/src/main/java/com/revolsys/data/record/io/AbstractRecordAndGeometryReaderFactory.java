@@ -7,12 +7,12 @@ import java.util.Map;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
 import com.revolsys.gis.data.io.DataObjectGeometryIterator;
 import com.revolsys.gis.data.io.GeometryReader;
-import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.gis.geometry.io.AbstractGeometryReaderFactory;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.MapReaderFactory;

@@ -13,13 +13,13 @@ import org.springframework.util.StringUtils;
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
-import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.io.EndianInputStream;
 import com.revolsys.gis.io.EndianMappedByteBuffer;
@@ -34,7 +34,7 @@ import com.revolsys.spring.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class ShapefileIterator extends AbstractIterator<Record> implements
-  DataObjectIterator {
+  RecordIterator {
 
   private boolean closeFile = true;
 
@@ -140,7 +140,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
           if (srid < 1) {
             srid = 4326;
           }
-          geometryFactory = GeometryFactory.getFactory(srid, numAxis);
+          geometryFactory = GeometryFactory.floating(srid, numAxis);
         }
 
         if (xbaseIterator != null) {
@@ -176,7 +176,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return metaData;
   }
 
@@ -303,7 +303,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements
   public void updateMetaData() {
     assert this.metaData == null : "Cannot override metaData when set";
     if (xbaseIterator != null) {
-      final RecordDefinitionImpl metaData = xbaseIterator.getMetaData();
+      final RecordDefinitionImpl metaData = xbaseIterator.getRecordDefinition();
       this.metaData = metaData;
       if (metaData.getGeometryFieldIndex() == -1) {
         DataType geometryType = DataTypes.GEOMETRY;

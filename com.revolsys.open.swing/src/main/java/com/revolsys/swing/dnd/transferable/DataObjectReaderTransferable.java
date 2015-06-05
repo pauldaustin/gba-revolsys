@@ -10,7 +10,7 @@ import java.util.Collection;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.format.csv.CsvUtil;
+import com.revolsys.format.csv.Csv;
 
 public class DataObjectReaderTransferable implements Transferable {
 
@@ -39,11 +39,11 @@ public class DataObjectReaderTransferable implements Transferable {
       final StringWriter out = new StringWriter();
       final Collection<String> attributeNames = this.reader.getRecordDefinition()
         .getFieldNames();
-      CsvUtil.writeColumns(out, attributeNames, '\t', '\n');
+      Csv.writeColumns(out, attributeNames, '\t', '\n');
       for (final Record object : this.reader) {
         if (object != null) {
           final Collection<Object> values = object.values();
-          CsvUtil.writeColumns(out, values, '\t', '\n');
+          Csv.writeColumns(out, values, '\t', '\n');
         }
       }
       final String text = out.toString();

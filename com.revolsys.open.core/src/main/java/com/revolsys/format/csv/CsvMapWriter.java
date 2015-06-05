@@ -1,28 +1,45 @@
 package com.revolsys.format.csv;
 
-import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.io.AbstractMapWriter;
 import com.revolsys.io.FileUtil;
+import com.revolsys.util.WrappedException;
 
 public class CsvMapWriter extends AbstractMapWriter {
   private List<String> fieldNames;
 
   /** The writer */
-  private final PrintWriter out;
+  private final Writer out;
 
-  /**
-   * Constructs CSVReader with supplied separator and quote char.
-   * 
-   * @param reader The reader to the CSV file.
-   */
+  private final boolean useQuotes;
+
+  private final char fieldSeparator;
+
+  public CsvMapWriter(final File file) throws FileNotFoundException {
+    this(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
+  }
+
   public CsvMapWriter(final Writer out) {
-    this.out = new PrintWriter(out);
+    this(out, CsvConstants.FIELD_SEPARATOR, true);
+  }
+
+  public CsvMapWriter(final Writer out, final char fieldSeparator, final boolean useQuotes) {
+    this.out = new BufferedWriter(out);
+    this.fieldSeparator = fieldSeparator;
+    this.useQuotes = useQuotes;
   }
 
   /**
@@ -35,7 +52,10 @@ public class CsvMapWriter extends AbstractMapWriter {
 
   @Override
   public void flush() {
-    out.flush();
+    try {
+      out.flush();
+    } catch (final IOException e) {
+    }
   }
 
   public List<String> getFieldNames() {
@@ -66,18 +86,32 @@ public class CsvMapWriter extends AbstractMapWriter {
   }
 
   public void write(final Object... values) {
-    for (int i = 0; i < values.length; i++) {
-      final Object value = values[i];
-      if (value != null) {
-        final String string = value.toString().replaceAll("\"", "\"\"");
-        out.write('"');
-        out.write(string);
-        out.write('"');
+    try {
+      for (int i = 0; i < values.length; i++) {
+        if (i > 0) {
+          out.write(fieldSeparator);
+        }
+        final Object value = values[i];
+        if (value != null) {
+          final String string = StringConverterRegistry.toString(value);
+          if (useQuotes) {
+            out.write('"');
+            for (int j = 0; j < string.length(); j++) {
+              final char c = string.charAt(j);
+              if (c == '"') {
+                out.write('"');
+              }
+              out.write(c);
+            }
+            out.write('"');
+          } else {
+            out.write(string, 0, string.length());
+          }
+        }
       }
-      if (i < values.length - 1) {
-        out.write(',');
-      }
+      out.write('\n');
+    } catch (final IOException e) {
+      throw new WrappedException(e);
     }
-    out.println();
   }
 }

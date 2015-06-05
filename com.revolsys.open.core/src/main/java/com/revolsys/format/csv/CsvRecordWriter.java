@@ -1,6 +1,7 @@
 package com.revolsys.format.csv;
 
-import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.Writer;
 
 import com.revolsys.converter.string.StringConverter;
@@ -8,31 +9,49 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.io.AbstractWriter;
+import com.revolsys.format.wkt.EWktWriter;
+import com.revolsys.io.AbstractRecordWriter;
 import com.revolsys.io.FileUtil;
+import com.revolsys.util.WrappedException;
+import com.vividsolutions.jts.geom.Geometry;
 
-public class CsvRecordWriter extends AbstractWriter<Record> {
+public class CsvRecordWriter extends AbstractRecordWriter {
+  private final char fieldSeparator;
+
   /** The writer */
-  private final PrintWriter out;
+  private final Writer out;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
-  /**
-   * Constructs CSVReader with supplied separator and quote char.
-   * 
-   * @param reader The reader to the CSV file.
-   */
-  public CsvRecordWriter(final RecordDefinition metaData, final Writer out) {
-    this.metaData = metaData;
-    this.out = new PrintWriter(out);
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
-      if (i > 0) {
-        this.out.print(',');
+  private final boolean useQuotes;
+
+  private final boolean ewkt;
+
+  public CsvRecordWriter(final RecordDefinition recordDefinition, final Writer out,
+    final boolean ewkt) {
+    this(recordDefinition, out, CsvConstants.FIELD_SEPARATOR, true, ewkt);
+
+  }
+
+  public CsvRecordWriter(final RecordDefinition recordDefinition, final Writer out,
+    final char fieldSeparator, final boolean useQuotes, final boolean ewkt) {
+    try {
+      this.recordDefinition = recordDefinition;
+      this.out = new BufferedWriter(out);
+      this.fieldSeparator = fieldSeparator;
+      this.useQuotes = useQuotes;
+      this.ewkt = ewkt;
+      for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+        if (i > 0) {
+          this.out.write(fieldSeparator);
+        }
+        final String name = recordDefinition.getFieldName(i);
+        string(name);
       }
-      final String name = metaData.getFieldName(i);
-      string(name);
+      this.out.write('\n');
+    } catch (final IOException e) {
+      throw new WrappedException(e);
     }
-    this.out.println();
   }
 
   /**
@@ -45,44 +64,72 @@ public class CsvRecordWriter extends AbstractWriter<Record> {
 
   @Override
   public void flush() {
-    out.flush();
+    try {
+      out.flush();
+    } catch (final IOException e) {
+      throw new WrappedException(e);
+    }
+
   }
 
-  private void string(final Object value) {
-    final String string = value.toString().replaceAll("\"", "\"\"");
-    out.print('"');
-    out.print(string);
-    out.print('"');
+  private void string(final Object value) throws IOException {
+    final Writer out = this.out;
+    final String string = value.toString();
+    if (useQuotes) {
+      out.write('"');
+      for (int i = 0; i < string.length(); i++) {
+        final char c = string.charAt(i);
+        if (c == '"') {
+          out.write('"');
+        }
+        out.write(c);
+      }
+      out.write('"');
+    } else {
+      out.write(string, 0, string.length());
+    }
   }
 
   @Override
   public void write(final Record object) {
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
-      if (i > 0) {
-        out.print(',');
-      }
-      final Object value = object.getValue(i);
-      if (value != null) {
-        final String name = metaData.getFieldName(i);
-        final DataType dataType = metaData.getFieldType(name);
+    try {
+      final Writer out = this.out;
+      final RecordDefinition recordDefinition = this.recordDefinition;
+      final int fieldCount = recordDefinition.getFieldCount();
+      final char fieldSeparator = this.fieldSeparator;
+      for (int i = 0; i < fieldCount; i++) {
+        if (i > 0) {
+          out.write(fieldSeparator);
+        }
+        final Object value = object.getValue(i);
+        if (value instanceof Geometry) {
+          final Geometry geometry = (Geometry)value;
+          final String text = EWktWriter.toString(geometry, ewkt);
+          string(text);
+        } else if (value != null) {
+          final String name = recordDefinition.getFieldName(i);
+          final DataType dataType = recordDefinition.getFieldType(name);
 
-        @SuppressWarnings("unchecked")
-        final Class<Object> dataTypeClass = (Class<Object>)dataType.getJavaClass();
-        final StringConverter<Object> converter = StringConverterRegistry.getInstance()
-          .getConverter(dataTypeClass);
-        if (converter == null) {
-          string(value);
-        } else {
-          final String stringValue = converter.toString(value);
-          if (converter.requiresQuotes()) {
-            string(stringValue);
+          @SuppressWarnings("unchecked")
+          final Class<Object> dataTypeClass = (Class<Object>)dataType.getJavaClass();
+          final StringConverter<Object> converter = StringConverterRegistry.getInstance()
+            .getConverter(dataTypeClass);
+          if (converter == null) {
+            string(value);
           } else {
-            out.print(stringValue);
+            final String stringValue = converter.toString(value);
+            if (converter.requiresQuotes()) {
+              string(stringValue);
+            } else {
+              out.write(stringValue, 0, stringValue.length());
+            }
           }
         }
       }
+      out.write('\n');
+    } catch (final IOException e) {
+      throw new WrappedException(e);
     }
-    out.println();
   }
 
 }

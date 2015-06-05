@@ -602,7 +602,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     final String propertyName = event.getPropertyName();
     if ("srid".equals(propertyName)) {
       final Integer srid = (Integer)event.getNewValue();
-      setGeometryFactory(GeometryFactory.getFactory(srid));
+      setGeometryFactory(GeometryFactory.floating3(srid));
     } else if ("viewBoundingBox".equals(propertyName)) {
       final BoundingBox boundingBox = (BoundingBox)event.getNewValue();
       setBoundingBox(boundingBox);

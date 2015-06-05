@@ -557,7 +557,7 @@ public abstract class AbstractGeoReferencedImage extends
               }
             }
           }
-          final GeometryFactory geometryFactory = GeometryFactory.getFactory(
+          final GeometryFactory geometryFactory = GeometryFactory.floating(
             srid, 2);
           setGeometryFactory(geometryFactory);
 
@@ -576,7 +576,7 @@ public abstract class AbstractGeoReferencedImage extends
 
               final double x = targetControlPoints.get(i);
               final double y = targetControlPoints.get(i + 1);
-              final Point targetPoint = geometryFactory.createPoint(x, y);
+              final Point targetPoint = geometryFactory.point(x, y);
               final MappedLocation tiePoint = new MappedLocation(sourcePixel,
                 targetPoint);
               tiePoints.add(tiePoint);

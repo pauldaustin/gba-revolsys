@@ -329,7 +329,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public AbstractRecordLayer(final String name) {
-    this(name, GeometryFactory.getFactory(4326));
+    this(name, GeometryFactory.floating3(4326));
     setReadOnly(false);
     setSelectSupported(true);
     setQuerySupported(true);

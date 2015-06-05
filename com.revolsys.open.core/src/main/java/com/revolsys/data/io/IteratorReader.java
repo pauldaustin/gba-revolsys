@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.io;
+package com.revolsys.data.io;
 
 import java.util.Iterator;
 import java.util.Map;

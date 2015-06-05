@@ -1,4 +1,4 @@
-package com.revolsys.io.wkt;
+package com.revolsys.format.wkt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,10 +9,10 @@ import org.springframework.core.io.Resource;
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
@@ -20,7 +20,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class WktDataObjectIterator extends AbstractIterator<Record>
-  implements DataObjectIterator {
+  implements RecordIterator {
 
   private RecordFactory factory;
 
@@ -68,7 +68,7 @@ public class WktDataObjectIterator extends AbstractIterator<Record>
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return metaData;
   }
 
@@ -80,7 +80,7 @@ public class WktDataObjectIterator extends AbstractIterator<Record>
       if (geometry == null) {
         throw new NoSuchElementException();
       } else {
-        final Record object = factory.createRecord(getMetaData());
+        final Record object = factory.createRecord(getRecordDefinition());
         object.setGeometryValue(geometry);
         return object;
       }

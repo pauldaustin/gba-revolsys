@@ -1,7 +1,7 @@
-package com.revolsys.gis.data.model;
+package com.revolsys.data.record;
 
-import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.gis.data.model.ArrayRecord;
 
 /**
  * The ArrayRecordFactory is an implementation of {@link RecordFactory}

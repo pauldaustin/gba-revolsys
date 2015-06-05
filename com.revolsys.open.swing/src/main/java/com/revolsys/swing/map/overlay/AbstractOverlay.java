@@ -30,6 +30,7 @@ import javax.swing.undo.UndoableEdit;
 
 import com.revolsys.comparator.IntArrayComparator;
 import com.revolsys.converter.string.BooleanStringConverter;
+import com.revolsys.format.wkt.WktWriter;
 import com.revolsys.gis.algorithm.index.PointQuadTree;
 import com.revolsys.gis.algorithm.index.quadtree.QuadTree;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
@@ -38,7 +39,6 @@ import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.comparator.GeometryDistanceComparator;
 import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
 import com.revolsys.gis.model.geometry.util.IndexedLineSegment;
-import com.revolsys.io.wkt.WktWriter;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.Icons;

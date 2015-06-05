@@ -233,7 +233,7 @@ public class FgdbReader {
         final double minY = this.in.readLEDouble();
         final double maxX = this.in.readLEDouble();
         final double maxY = this.in.readLEDouble();
-        final GeometryFactory geometryFactory = GeometryFactory.getFactory(coordinateSystem,
+        final GeometryFactory geometryFactory = GeometryFactory.fixed(coordinateSystem,
           numAxis, xyScale, zScale);
         final BoundingBox boundingBox = new BoundingBox(geometryFactory, minX, minY, maxX, maxY);
         boolean run = true;

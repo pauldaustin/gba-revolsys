@@ -15,7 +15,7 @@ import com.revolsys.gis.model.data.equals.EqualsInstance;
  * 
  * @author Paul Austin
  */
-public class ArrayRecord extends BaseDataObject {
+public class ArrayRecord extends BaseRecord {
   /** Serialization version */
   private static final long serialVersionUID = 1L;
 

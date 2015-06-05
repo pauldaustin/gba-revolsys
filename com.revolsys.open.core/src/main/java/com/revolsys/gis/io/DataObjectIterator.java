@@ -1,5 +1,5 @@
 /*
- * $URL:https://secure.revolsys.com/svn/open.revolsys.com/GIS/trunk/src/main/java/com/revolsys/gis/format/core/io/DataObjectIterator.java $
+ * $URL:https://secure.revolsys.com/svn/open.revolsys.com/GIS/trunk/src/main/java/com/revolsys/gis/format/core/io/RecordIterator.java $
  * $Author:paul.austin@revolsys.com $
  * $Date:2007-06-09 09:28:28 -0700 (Sat, 09 Jun 2007) $
  * $Revision:265 $
@@ -26,7 +26,7 @@ import com.revolsys.data.record.Record;
 
 /**
  * <p>
- * The DataObjectIterator defines an interface for reading data objects from a
+ * The RecordIterator defines an interface for reading data objects from a
  * data store (flat file, database etc.). The reader interface extends from
  * {@link Iterator} to allow iteration through the features that are read.
  * </p>
@@ -40,7 +40,7 @@ import com.revolsys.data.record.Record;
  * </p>
  * 
  * <pre>
- *         DataObjectIterator reader = new ...;
+ *         RecordIterator reader = new ...;
  *         Writer<DataObject> writer = new ...;
  *         writer.setSchema(reader.getSchema());
  *         while (reader.hasNext()) {

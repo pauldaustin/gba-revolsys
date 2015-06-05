@@ -96,7 +96,7 @@ public class ArcSdeSpatialReferenceCache {
               final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
               srid = esriCoordinateSystem.getId();
               if (srid <= 0) {
-                geometryFactory = GeometryFactory.getFactory(coordinateSystem,
+                geometryFactory = GeometryFactory.fixed(coordinateSystem,
                   3, scale.doubleValue(), zScale.doubleValue());
               } else {
                 geometryFactory = GeometryFactory.getFactory(srid, 3,

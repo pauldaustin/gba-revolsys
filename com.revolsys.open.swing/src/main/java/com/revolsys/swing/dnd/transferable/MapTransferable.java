@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
-import com.revolsys.format.csv.CsvUtil;
+import com.revolsys.format.csv.Csv;
 
 public class MapTransferable implements Transferable {
 
@@ -38,9 +38,9 @@ public class MapTransferable implements Transferable {
     } else if (DataFlavor.stringFlavor.equals(flavor)) {
       final StringWriter out = new StringWriter();
       final Collection<String> attributeNames = this.map.keySet();
-      CsvUtil.writeColumns(out, attributeNames, '\t', '\n');
+      Csv.writeColumns(out, attributeNames, '\t', '\n');
       final Collection<Object> values = this.map.values();
-      CsvUtil.writeColumns(out, values, '\t', '\n');
+      Csv.writeColumns(out, values, '\t', '\n');
       final String text = out.toString();
       return text;
     } else {

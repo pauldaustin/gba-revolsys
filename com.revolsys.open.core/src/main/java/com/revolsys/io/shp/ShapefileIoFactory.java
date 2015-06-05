@@ -13,11 +13,11 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordStoreFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.io.DataObjectIteratorReader;
 import com.revolsys.io.DirectoryDataObjectStore;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.OutputStreamResource;
@@ -36,7 +36,7 @@ RecordStoreFactory {
     final RecordFactory dataObjectFactory) {
     try {
       final ShapefileIterator iterator = new ShapefileIterator(resource, dataObjectFactory);
-      return new DataObjectIteratorReader(iterator);
+      return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
     }

@@ -142,7 +142,7 @@ public class PdfUtil {
                 geometryFactory = GeometryFactory.getFactory(wkt);
               }
             } else {
-              geometryFactory = GeometryFactory.getFactory(srid);
+              geometryFactory = GeometryFactory.floating3(srid);
             }
             final GeometryFactory geoGeometryFactory = geometryFactory.getGeographicGeometryFactory();
 
@@ -152,7 +152,7 @@ public class PdfUtil {
             for (int i = 0; i < geoPoints.size(); i++) {
               final float lat = PdfUtil.getFloat(geoPoints, i++);
               final float lon = PdfUtil.getFloat(geoPoints, i);
-              final Point geoPoint = geoGeometryFactory.createPoint(lon, lat);
+              final Point geoPoint = geoGeometryFactory.point(lon, lat);
               boundingBox = boundingBox.expandToInclude(geoPoint);
             }
             return boundingBox;

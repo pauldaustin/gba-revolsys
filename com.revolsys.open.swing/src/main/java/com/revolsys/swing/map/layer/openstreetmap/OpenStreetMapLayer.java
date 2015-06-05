@@ -22,7 +22,7 @@ public class OpenStreetMapLayer extends AbstractTiledImageLayer {
     "openStreetMap", "Open Street Map Tiles", OpenStreetMapLayer.class,
     "create");
 
-  public static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.getFactory(4326);
+  public static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.floating3(4326);
 
   private static final BoundingBox MAX_BOUNDING_BOX = new BoundingBox(
     GEOMETRY_FACTORY, -180, -85, 180, 85);

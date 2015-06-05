@@ -24,8 +24,8 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -40,7 +40,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 
-public class GpxIterator implements DataObjectIterator {
+public class GpxIterator implements RecordIterator {
   private static final DateTimeFormatter XML_DATE_TIME_FORMAT = ISODateTimeFormat.dateTimeNoMillis();
 
   private static final XMLInputFactory FACTORY = XMLInputFactory.newInstance();
@@ -53,7 +53,7 @@ public class GpxIterator implements DataObjectIterator {
 
   private File file;
 
-  private final GeometryFactory geometryFactory = GeometryFactory.getFactory(4326);
+  private final GeometryFactory geometryFactory = GeometryFactory.floating3(4326);
 
   private boolean hasNext = true;
 
@@ -115,7 +115,7 @@ public class GpxIterator implements DataObjectIterator {
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return GpxConstants.GPX_TYPE;
   }
 
