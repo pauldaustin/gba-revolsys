@@ -47,7 +47,7 @@ public class SqlLayerFilter implements Filter<Record>, MapSerializer {
   private synchronized Condition getCondition() {
     if (condition == null) {
       if (!initialized) {
-        final RecordDefinition metaData = layer.getMetaData();
+        final RecordDefinition metaData = layer.getRecordDefinition();
         if (metaData != null) {
           initialized = true;
           try {

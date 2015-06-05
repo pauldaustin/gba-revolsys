@@ -150,7 +150,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
       }
       CodeTable codeTable = null;
       if (!name.equals(idFieldName)) {
-        codeTable = metaData.getCodeTableByColumn(name);
+        codeTable = metaData.getCodeTableByFieldName(name);
       }
       if (codeTable == null) {
         text = StringConverterRegistry.toString(objectValue);
@@ -182,7 +182,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     }
     final RecordDefinition metaData = getMetaData();
     final String name = getFieldName(attributeIndex);
-    final CodeTable codeTable = metaData.getCodeTableByColumn(name);
+    final CodeTable codeTable = metaData.getCodeTableByFieldName(name);
     if (codeTable == null) {
       final Class<?> fieldClass = metaData.getFieldClass(name);
       final Object objectValue = StringConverterRegistry.toObject(fieldClass,

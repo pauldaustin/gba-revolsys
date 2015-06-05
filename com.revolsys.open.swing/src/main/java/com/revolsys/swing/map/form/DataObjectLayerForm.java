@@ -178,7 +178,7 @@ public class DataObjectLayerForm extends JPanel implements
     setLayout(new BorderLayout());
     setName(layer.getName());
     this.layer = layer;
-    final RecordDefinition metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getRecordDefinition();
     setMetaData(metaData);
     addToolBar(layer);
 
@@ -679,7 +679,7 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   public String getCodeValue(final String fieldName, final Object value) {
-    final CodeTable codeTable = this.metaData.getCodeTableByColumn(fieldName);
+    final CodeTable codeTable = this.metaData.getCodeTableByFieldName(fieldName);
     String string;
     if (value == null) {
       return "-";
@@ -762,7 +762,7 @@ public class DataObjectLayerForm extends JPanel implements
   @SuppressWarnings("unchecked")
   public <T> T getFieldValue(final String name) {
     final Object value = this.fieldValues.get(name);
-    final CodeTable codeTable = this.metaData.getCodeTableByColumn(name);
+    final CodeTable codeTable = this.metaData.getCodeTableByFieldName(name);
     if (codeTable == null) {
       if (value != null && name.endsWith("_IND")) {
         if ("Y".equals(value) || Boolean.TRUE.equals(value)) {

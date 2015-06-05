@@ -111,7 +111,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
     final DataObjectLayerTableModel tableModel) {
     this.tableModel = tableModel;
     this.layer = tableModel.getLayer();
-    this.metaData = this.layer.getMetaData();
+    this.metaData = this.layer.getRecordDefinition();
 
     this.whereLabel = new JLabel();
     this.whereLabel.setMaximumSize(new Dimension(100, 250));
@@ -478,7 +478,7 @@ ItemListener, DocumentListener, PropertyChangeListener {
       if (searchFieldName.equals(metaData.getIdFieldName())) {
         this.codeTable = null;
       } else {
-        this.codeTable = this.metaData.getCodeTableByColumn(searchFieldName);
+        this.codeTable = this.metaData.getCodeTableByFieldName(searchFieldName);
       }
 
       ComboBox operatorField;

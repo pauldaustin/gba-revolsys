@@ -40,7 +40,7 @@ public class GeometryStylePanel extends BaseStylePanel implements
     this.geometryStyleRenderer = geometryStyleRenderer;
     this.geometryStyle = geometryStyleRenderer.getStyle().clone();
     final AbstractRecordLayer layer = geometryStyleRenderer.getLayer();
-    final RecordDefinition metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getRecordDefinition();
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
 
     if (geometryAttribute != null) {

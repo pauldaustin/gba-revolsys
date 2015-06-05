@@ -12,12 +12,12 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.AbstractRecordIoFactory;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
 import com.revolsys.io.filter.DirectoryFilenameFilter;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 import com.vividsolutions.jts.geom.Geometry;
@@ -130,7 +130,7 @@ public class DirectoryDataObjectStore extends AbstractRecordStore {
       final File file = new File(subDirectory, metaData.getTypeName() + "."
         + getFileExtension());
       final Resource resource = new FileSystemResource(file);
-      writer = AbstractDataObjectIoFactory.dataObjectWriter(metaData, resource);
+      writer = AbstractRecordIoFactory.dataObjectWriter(metaData, resource);
       if (writer instanceof ObjectWithProperties) {
         final ObjectWithProperties properties = writer;
         properties.setProperties(getProperties());

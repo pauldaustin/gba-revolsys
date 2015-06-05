@@ -110,8 +110,8 @@ public class FileGdbDomainCodeTable implements CodeTable {
   }
 
   @Override
-  public List<String> getValueAttributeNames() {
-    return this.domain.getValueAttributeNames();
+  public List<String> getValueFieldNames() {
+    return this.domain.getValueFieldNames();
   }
 
   @Override

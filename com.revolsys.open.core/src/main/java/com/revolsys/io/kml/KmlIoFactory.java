@@ -9,10 +9,10 @@ import java.util.Set;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
-import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryWriterFactory;
 import com.revolsys.gis.data.io.GeometryReader;
 import com.revolsys.gis.geometry.io.GeometryReaderFactory;
 import com.revolsys.io.FileUtil;
@@ -21,7 +21,7 @@ import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
-public class KmlIoFactory extends AbstractDataObjectAndGeometryWriterFactory
+public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory
   implements MapWriterFactory, GeometryReaderFactory {
 
   private final Set<CoordinateSystem> coordinateSystems = EpsgCoordinateSystems.getCoordinateSystems();
@@ -33,7 +33,7 @@ public class KmlIoFactory extends AbstractDataObjectAndGeometryWriterFactory
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final String baseName,
+  public Writer<Record> createRecordWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);

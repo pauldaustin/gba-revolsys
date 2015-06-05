@@ -153,7 +153,7 @@ public class SaifSchemaReader {
               if (typePath.equals(SPATIAL_OBJECT)
                 || typePath.equals(TEXT_OR_SYMBOL_OBJECT)) {
                 dataType = DataTypes.GEOMETRY;
-                currentClass.setGeometryAttributeIndex(currentClass.getFieldCount());
+                currentClass.setGeometryFieldIndex(currentClass.getFieldCount());
               } else if (dataType == null) {
                 dataType = new SimpleDataType(typePath, Record.class);
               }

@@ -19,7 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.gis.data.io.DataObjectWriterFactory;
+import com.revolsys.data.record.io.RecordWriterFactory;
 import com.revolsys.util.CollectionUtil;
 
 public class IoFactoryRegistry {
@@ -31,8 +31,8 @@ public class IoFactoryRegistry {
 
   public static String getFileExtension(final String resultFormat) {
     final IoFactoryRegistry ioFactory = getInstance();
-    final DataObjectWriterFactory writerFactory = ioFactory.getFactoryByMediaType(
-      DataObjectWriterFactory.class, resultFormat);
+    final RecordWriterFactory writerFactory = ioFactory.getFactoryByMediaType(
+      RecordWriterFactory.class, resultFormat);
     if (writerFactory == null) {
       return null;
     } else {

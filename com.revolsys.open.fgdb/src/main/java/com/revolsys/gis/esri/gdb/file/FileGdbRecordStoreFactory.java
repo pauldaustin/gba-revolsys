@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.revolsys.collection.map.Maps;
-import com.revolsys.data.io.RecordStoreFactory;
-import com.revolsys.data.io.RecordStoreFactoryRegistry;
+import com.revolsys.data.record.io.RecordStoreFactory;
+import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.FileUtil;
 
@@ -23,7 +23,7 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
   private static final Map<String, FileGdbRecordStore> RECORD_STORES = new HashMap<String, FileGdbRecordStore>();
 
   private static final List<String> URL_PATTERNS = Arrays.asList("file:/(//)?.*.gdb/?",
-      "folderconnection:/(//)?.*.gdb/?");
+    "folderconnection:/(//)?.*.gdb/?");
 
   public static FileGdbRecordStore create(final File file) {
     if (file == null) {
@@ -36,7 +36,6 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
         FileGdbRecordStore recordStore = RECORD_STORES.get(fileName);
         if (recordStore == null || recordStore.isClosed()) {
           recordStore = new FileGdbRecordStore(file);
-          recordStore.setCreateMissingRecordStore(false);
           RECORD_STORES.put(fileName, recordStore);
         }
         return recordStore;

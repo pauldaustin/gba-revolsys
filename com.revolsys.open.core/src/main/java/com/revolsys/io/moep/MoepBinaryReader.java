@@ -10,12 +10,12 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.DataObjectReader;
 import com.revolsys.io.AbstractReader;
 
 public class MoepBinaryReader extends AbstractReader<Record> implements
-  DataObjectReader {
+  RecordReader {
 
   private MoepBinaryIterator iterator;
 
@@ -62,7 +62,7 @@ public class MoepBinaryReader extends AbstractReader<Record> implements
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return MoepConstants.META_DATA;
   }
 

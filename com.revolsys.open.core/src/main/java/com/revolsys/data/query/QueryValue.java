@@ -140,7 +140,7 @@ public abstract class QueryValue implements Cloneable {
               throw new IllegalArgumentException("Values can't be null for "
                   + operator + " use IS NULL or IS NOT NULL instead.");
             } else {
-              final CodeTable codeTable = metaData.getCodeTableByColumn(name);
+              final CodeTable codeTable = metaData.getCodeTableByFieldName(name);
               if (codeTable == null || attribute == metaData.getIdField()) {
                 final Class<?> typeClass = attribute.getTypeClass();
                 try {

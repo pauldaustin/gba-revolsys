@@ -20,10 +20,10 @@ import javax.annotation.PreDestroy;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ListResultPager;
 import com.revolsys.collection.ResultPager;
-import com.revolsys.collection.ThreadSharedAttributes;
+import com.revolsys.collection.iterator.AbstractIterator;
+import com.revolsys.collection.map.ThreadSharedAttributes;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.query.Q;
@@ -35,7 +35,7 @@ import com.revolsys.filter.Filter;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
 import com.revolsys.gis.data.io.DataObjectStoreSchemaMapProxy;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
@@ -102,7 +102,7 @@ implements RecordStore {
   private final Set<DataObjectStoreExtension> dataStoreExtensions = new LinkedHashSet<DataObjectStoreExtension>();
 
   public AbstractRecordStore() {
-    this(new ArrayDataObjectFactory());
+    this(new ArrayRecordFactory());
   }
 
   public AbstractRecordStore(final RecordFactory dataObjectFactory) {

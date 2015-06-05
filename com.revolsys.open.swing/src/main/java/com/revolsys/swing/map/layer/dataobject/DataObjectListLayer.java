@@ -60,7 +60,7 @@ public class DataObjectListLayer extends AbstractRecordLayer {
   }
 
   protected void createRecordInternal(final Map<String, Object> values) {
-    final LayerDataObject record = createRecord(getMetaData());
+    final LayerDataObject record = createRecord(getRecordDefinition());
     record.setState(RecordState.Initalizing);
     try {
       record.setValues(values);

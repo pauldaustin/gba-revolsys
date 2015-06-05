@@ -73,7 +73,7 @@ public class CloseLocation {
   }
 
   public RecordDefinition getMetaData() {
-    return this.layer.getMetaData();
+    return this.layer.getRecordDefinition();
   }
 
   public LayerDataObject getObject() {

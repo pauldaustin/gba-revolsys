@@ -28,8 +28,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
+import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.codes.AbstractCodeTable;
 import com.revolsys.data.query.Query;
@@ -49,7 +49,7 @@ import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.jdbc.JdbcUtils;
@@ -113,7 +113,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
   private DataSourceTransactionManager transactionManager;
 
   public AbstractJdbcDataObjectStore() {
-    this(new ArrayDataObjectFactory());
+    this(new ArrayRecordFactory());
   }
 
   public AbstractJdbcDataObjectStore(final DataSource dataSource) {
@@ -122,7 +122,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
   }
 
   public AbstractJdbcDataObjectStore(final JdbcDatabaseFactory databaseFactory) {
-    this(databaseFactory, new ArrayDataObjectFactory());
+    this(databaseFactory, new ArrayRecordFactory());
   }
 
   public AbstractJdbcDataObjectStore(final JdbcDatabaseFactory databaseFactory,
@@ -816,7 +816,7 @@ implements JdbcDataObjectStore, DataObjectStoreExtension {
         for (final RecordDefinition metaData : schema.getTypes()) {
           final String typePath = metaData.getPath();
           final List<String> idAttributeNames = idAttributeNameMap.get(typePath);
-          ((RecordDefinitionImpl)metaData).setIdAttributeNames(idAttributeNames);
+          ((RecordDefinitionImpl)metaData).setIdFieldNames(idAttributeNames);
         }
 
       } finally {

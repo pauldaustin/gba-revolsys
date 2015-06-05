@@ -56,7 +56,7 @@ public class MapValues extends
       final Object targetValue = valueMap.get(sourceValue);
       if (targetValue != null) {
         final RecordDefinition targetMetaData = target.getRecordDefinition();
-        final CodeTable codeTable = targetMetaData.getCodeTableByColumn(targetAttributeName);
+        final CodeTable codeTable = targetMetaData.getCodeTableByFieldName(targetAttributeName);
         if (codeTable == null) {
           target.setValue(targetAttributeName, targetValue);
         } else {

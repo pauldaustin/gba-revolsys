@@ -18,7 +18,7 @@ public abstract class AbstractRecordDefinitionProperty implements
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return metaData;
   }
 
@@ -34,7 +34,7 @@ public abstract class AbstractRecordDefinitionProperty implements
   }
 
   public String getTypePath() {
-    return getMetaData().getPath();
+    return getRecordDefinition().getPath();
   }
 
 }

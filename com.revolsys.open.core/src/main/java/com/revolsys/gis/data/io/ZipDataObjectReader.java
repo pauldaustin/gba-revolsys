@@ -8,14 +8,16 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryReaderFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipUtil;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 
 public class ZipDataObjectReader extends DelegatingReader<Record> implements
-  DataObjectReader {
-  private DataObjectReader reader;
+  RecordReader {
+  private RecordReader reader;
 
   private File directory;
 
@@ -50,8 +52,8 @@ public class ZipDataObjectReader extends DelegatingReader<Record> implements
   }
 
   @Override
-  public RecordDefinition getMetaData() {
-    return reader.getMetaData();
+  public RecordDefinition getRecordDefinition() {
+    return reader.getRecordDefinition();
   }
 
   protected boolean openFile(final Resource resource,
@@ -59,7 +61,7 @@ public class ZipDataObjectReader extends DelegatingReader<Record> implements
     final File file = new File(directory, zipEntryName);
     if (file.exists()) {
       final FileSystemResource fileResource = new FileSystemResource(file);
-      reader = AbstractDataObjectAndGeometryReaderFactory.dataObjectReader(
+      reader = AbstractRecordAndGeometryReaderFactory.dataObjectReader(
         fileResource, factory);
       if (reader == null) {
         close();

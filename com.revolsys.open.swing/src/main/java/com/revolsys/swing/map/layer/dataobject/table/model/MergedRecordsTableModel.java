@@ -40,7 +40,7 @@ public class MergedRecordsTableModel extends DataObjectListTableModel implements
 
   public MergedRecordsTableModel(final AbstractRecordLayer layer,
     final Record mergedObject, final Collection<LayerDataObject> objects) {
-    super(layer.getMetaData(), objects, layer.getColumnNames());
+    super(layer.getRecordDefinition(), objects, layer.getColumnNames());
     setAttributesOffset(1);
     this.mergedObject = mergedObject;
     setEditable(true);

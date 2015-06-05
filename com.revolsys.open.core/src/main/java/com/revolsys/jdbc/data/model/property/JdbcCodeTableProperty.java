@@ -41,10 +41,10 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
         while (id == null) {
           final PreparedStatement statement = connection.prepareStatement(insertSql);
           try {
-            id = dataStore.getNextPrimaryKey(getMetaData());
+            id = dataStore.getNextPrimaryKey(getRecordDefinition());
             int index = 1;
             index = JdbcUtils.setValue(statement, index, id);
-            for (int i = 0; i < getValueAttributeNames().size(); i++) {
+            for (int i = 0; i < getValueFieldNames().size(); i++) {
               final Object value = values.get(i);
               index = JdbcUtils.setValue(statement, index, value);
             }
@@ -93,7 +93,7 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
     if (metaData != null) {
       this.tableName = JdbcUtils.getQualifiedTableName(metaData.getPath());
 
-      final List<String> valueAttributeNames = getValueAttributeNames();
+      final List<String> valueAttributeNames = getValueFieldNames();
       String idColumn = metaData.getIdFieldName();
       if (!StringUtils.hasText(idColumn)) {
         idColumn = metaData.getFieldName(0);

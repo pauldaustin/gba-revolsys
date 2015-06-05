@@ -9,21 +9,21 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.io.csv.CsvUtil;
+import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.format.csv.CsvUtil;
 
 public class DataObjectReaderTransferable implements Transferable {
 
   public static final DataFlavor DATA_OBJECT_READER_FLAVOR = new DataFlavor(
-    DataObjectReader.class, "Data Object List");
+    RecordReader.class, "Data Object List");
 
-  private final DataObjectReader reader;
+  private final RecordReader reader;
 
   private static final DataFlavor[] DATA_FLAVORS = {
     DATA_OBJECT_READER_FLAVOR, DataFlavor.stringFlavor
   };
 
-  public DataObjectReaderTransferable(final DataObjectReader reader) {
+  public DataObjectReaderTransferable(final RecordReader reader) {
     this.reader = reader;
   }
 
@@ -37,7 +37,7 @@ public class DataObjectReaderTransferable implements Transferable {
       return this.reader;
     } else if (DataFlavor.stringFlavor.equals(flavor)) {
       final StringWriter out = new StringWriter();
-      final Collection<String> attributeNames = this.reader.getMetaData()
+      final Collection<String> attributeNames = this.reader.getRecordDefinition()
         .getFieldNames();
       CsvUtil.writeColumns(out, attributeNames, '\t', '\n');
       for (final Record object : this.reader) {

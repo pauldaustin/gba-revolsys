@@ -48,7 +48,7 @@ import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.AbstractReader;
@@ -68,7 +68,7 @@ import com.revolsys.spring.SpringUtil;
  */
 public class SaifReader extends AbstractReader<Record> implements
   DataObjectIterator, RecordDefinitionFactory,
-  com.revolsys.gis.data.io.DataObjectReader {
+  com.revolsys.data.record.io.RecordReader {
   /** The logging instance. */
   private static final Logger log = Logger.getLogger(SaifReader.class);
 
@@ -84,7 +84,7 @@ public class SaifReader extends AbstractReader<Record> implements
   /** The list of exported objects. */
   private Record exportedObjects;
 
-  private RecordFactory factory = new ArrayDataObjectFactory();
+  private RecordFactory factory = new ArrayRecordFactory();
 
   /** The SAIF archive file. */
   private File file;
@@ -285,7 +285,7 @@ public class SaifReader extends AbstractReader<Record> implements
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     // TODO Auto-generated method stub
     return null;
   }

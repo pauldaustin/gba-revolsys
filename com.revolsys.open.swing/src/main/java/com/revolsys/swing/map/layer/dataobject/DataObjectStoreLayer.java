@@ -320,7 +320,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
         }
       }
     }
-    RecordDefinition metaData = this.getMetaData();
+    RecordDefinition metaData = this.getRecordDefinition();
     if (metaData == null) {
       metaData = dataStore.getRecordDefinition(this.typePath);
       if (metaData == null) {
@@ -476,7 +476,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
           if (dataStore != null) {
             final Writer<Record> writer = dataStore.createWriter();
             try {
-              final String idAttributeName = getMetaData().getIdFieldName();
+              final String idAttributeName = getRecordDefinition().getIdFieldName();
               final String idString = record.getIdString();
               if (this.deletedRecordIds.contains(idString)
                   || super.isDeleted(record)) {
@@ -599,7 +599,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
 
   @Override
   public LayerDataObject getRecordById(final Object id) {
-    final RecordDefinition metaData = getMetaData();
+    final RecordDefinition metaData = getRecordDefinition();
     final String idAttributeName = metaData.getIdFieldName();
     if (idAttributeName == null) {
       LoggerFactory.getLogger(getClass()).error(
@@ -736,7 +736,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   }
 
   public List<LayerDataObject> query(final Map<String, ? extends Object> filter) {
-    final RecordDefinition metaData = getMetaData();
+    final RecordDefinition metaData = getRecordDefinition();
     final Query query = Query.and(metaData, filter);
     return query(query);
   }

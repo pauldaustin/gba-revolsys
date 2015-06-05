@@ -28,13 +28,13 @@ public class DataObjectListTableModel extends DataObjectRowTableModel implements
   private static final long serialVersionUID = 1L;
 
   public static TablePanel createPanel(final AbstractRecordLayer layer) {
-    return createPanel(layer.getMetaData(), new ArrayList<LayerDataObject>(),
+    return createPanel(layer.getRecordDefinition(), new ArrayList<LayerDataObject>(),
       layer.getColumnNames());
   }
 
   public static TablePanel createPanel(final AbstractRecordLayer layer,
     final Collection<LayerDataObject> objects) {
-    return createPanel(layer.getMetaData(), objects, layer.getColumnNames());
+    return createPanel(layer.getRecordDefinition(), objects, layer.getColumnNames());
   }
 
   public static TablePanel createPanel(final RecordDefinition metaData,

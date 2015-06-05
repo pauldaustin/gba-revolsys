@@ -70,7 +70,7 @@ PropertyChangeListener {
     table.getTableCellEditor().addMouseListener(this);
     table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     this.tableModel = getTableModel();
-    final RecordDefinition metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getRecordDefinition();
     final boolean hasGeometry = metaData.getGeometryFieldIndex() != -1;
     final EnableCheck deletableEnableCheck = new DataObjectRowPropertyEnableCheck(
         "deletable");

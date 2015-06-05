@@ -108,7 +108,7 @@ public final class DataObjectUtil {
           if (propertyValue == null) {
             return null;
           } else if (i + 1 < propertyPath.length) {
-            final CodeTable codeTable = metaData.getCodeTableByColumn(propertyName);
+            final CodeTable codeTable = metaData.getCodeTableByFieldName(propertyName);
             if (codeTable != null) {
               propertyValue = codeTable.getMap(propertyValue);
             }
@@ -126,7 +126,7 @@ public final class DataObjectUtil {
         if (propertyValue == null) {
           return null;
         } else if (i + 1 < propertyPath.length) {
-          final CodeTable codeTable = metaData.getCodeTableByColumn(propertyName);
+          final CodeTable codeTable = metaData.getCodeTableByFieldName(propertyName);
           if (codeTable != null) {
             propertyValue = codeTable.getMap(propertyValue);
           }

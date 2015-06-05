@@ -114,7 +114,7 @@ public interface RecordDefinition extends ObjectWithProperties,
    */
   DataType getFieldType(int index);
 
-  CodeTable getCodeTableByColumn(String column);
+  CodeTable getCodeTableByFieldName(String column);
 
   RecordFactory getRecordFactory();
 

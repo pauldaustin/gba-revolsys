@@ -5,14 +5,14 @@ import java.io.IOException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryReaderFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryReaderFactory;
 import com.revolsys.gis.data.io.DataObjectIterator;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
-import com.revolsys.gis.data.io.DataObjectReader;
 
 public class GpxReaderFactory extends
-  AbstractDataObjectAndGeometryReaderFactory {
+  AbstractRecordAndGeometryReaderFactory {
   public GpxReaderFactory() {
     super("GPS Exchange Format", false);
     addMediaTypeAndFileExtension(GpxConstants.MEDIA_TYPE,
@@ -20,7 +20,7 @@ public class GpxReaderFactory extends
     setCustomAttributionSupported(false);
   }
 
-  public DataObjectReader createDataObjectReader(
+  public RecordReader createDataObjectReader(
     final RecordDefinition metaData, final Resource resource,
     final RecordFactory factory) {
     throw new UnsupportedOperationException();
@@ -34,7 +34,7 @@ public class GpxReaderFactory extends
    * @return The reader for the file.
    */
   @Override
-  public DataObjectReader createDataObjectReader(final Resource resource,
+  public RecordReader createRecordReader(final Resource resource,
     final RecordFactory dataObjectFactory) {
     try {
       final DataObjectIterator iterator = new GpxIterator(resource,

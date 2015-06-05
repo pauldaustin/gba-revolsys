@@ -16,9 +16,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import com.revolsys.data.io.RecordStoreFactory;
-import com.revolsys.data.io.RecordStoreFactoryRegistry;
-import com.revolsys.gis.data.io.DataObjectReaderFactory;
+import com.revolsys.data.record.io.RecordReaderFactory;
+import com.revolsys.data.record.io.RecordStoreFactory;
+import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;
 import com.revolsys.io.IoFactoryRegistry;
@@ -58,7 +58,7 @@ public class AddFileLayerAction extends AbstractAction {
 
     final List<FileFilter> dataObjectFileFilters = new ArrayList<FileFilter>();
     final Set<String> allDataObjectExtensions = new TreeSet<String>();
-    getFilters(dataObjectFileFilters, allDataObjectExtensions, DataObjectReaderFactory.class);
+    getFilters(dataObjectFileFilters, allDataObjectExtensions, RecordReaderFactory.class);
 
     final Set<String> allExtensions = new TreeSet<String>();
     allExtensions.addAll(allDataObjectExtensions);

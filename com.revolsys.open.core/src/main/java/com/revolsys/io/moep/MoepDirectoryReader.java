@@ -11,7 +11,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
 import com.revolsys.util.DateUtil;
@@ -45,7 +45,7 @@ public class MoepDirectoryReader extends DataObjectDirectoryReader implements
    */
   @Override
   protected Reader<Record> createReader(final Resource resource) {
-    return new MoepBinaryReader(this, resource, new ArrayDataObjectFactory());
+    return new MoepBinaryReader(this, resource, new ArrayRecordFactory());
   }
 
   public Date getIntegrationDate() {

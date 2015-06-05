@@ -40,7 +40,7 @@ public class TextNameField extends ValueField {
 
     final ArrayList<String> fieldNames = new ArrayList<String>(
       layer.getColumnNames());
-    final RecordDefinition metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getRecordDefinition();
     fieldNames.remove(metaData.getGeometryFieldName());
     final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(
       layer);

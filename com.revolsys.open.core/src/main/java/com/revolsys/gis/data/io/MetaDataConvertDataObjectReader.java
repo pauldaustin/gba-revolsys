@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
@@ -13,7 +14,7 @@ import com.revolsys.io.AbstractReader;
 import com.revolsys.io.Reader;
 
 public class MetaDataConvertDataObjectReader extends AbstractReader<Record>
-  implements DataObjectReader, Iterator<Record> {
+  implements RecordReader, Iterator<Record> {
 
   private final RecordDefinition metaData;
 
@@ -35,7 +36,7 @@ public class MetaDataConvertDataObjectReader extends AbstractReader<Record>
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return metaData;
   }
 

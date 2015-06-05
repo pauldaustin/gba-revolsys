@@ -9,16 +9,16 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryIoFactory;
-import com.revolsys.gis.data.io.DataObjectReader;
 import com.revolsys.gis.data.io.ZipDataObjectReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 import com.revolsys.io.ZipWriter;
 
 public class ShapefileZipIoFactory extends
-  AbstractDataObjectAndGeometryIoFactory {
+  AbstractRecordAndGeometryIoFactory {
 
   public ShapefileZipIoFactory() {
     super("ESRI Shapefile inside a ZIP archive", true, true);
@@ -26,14 +26,14 @@ public class ShapefileZipIoFactory extends
   }
 
   @Override
-  public DataObjectReader createDataObjectReader(final Resource resource,
+  public RecordReader createRecordReader(final Resource resource,
     final RecordFactory factory) {
     return new ZipDataObjectReader(resource, ShapefileConstants.FILE_EXTENSION,
       factory);
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final String baseName,
+  public Writer<Record> createRecordWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
     File directory;

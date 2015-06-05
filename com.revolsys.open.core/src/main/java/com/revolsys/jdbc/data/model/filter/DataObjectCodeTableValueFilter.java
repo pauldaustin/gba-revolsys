@@ -51,7 +51,7 @@ public class DataObjectCodeTableValueFilter implements Filter<Record> {
       return true;
     } else {
       final RecordDefinition metaData = object.getRecordDefinition();
-      final CodeTable codeTable = metaData.getCodeTableByColumn(attributeName);
+      final CodeTable codeTable = metaData.getCodeTableByFieldName(attributeName);
       if (codeTable != null) {
         final Object codeValue = codeTable.getValue((Number)propertyValue);
         if (values.contains(codeValue)) {

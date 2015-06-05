@@ -7,6 +7,8 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.io.Statistics;
@@ -24,8 +26,8 @@ public class DataObjectDirectoryReader extends
   public DataObjectDirectoryReader() {
   }
 
-  protected void addMetaData(final DataObjectReader reader) {
-    final RecordDefinition metaData = reader.getMetaData();
+  protected void addMetaData(final RecordReader reader) {
+    final RecordDefinition metaData = reader.getRecordDefinition();
     if (metaData != null) {
       final String path = metaData.getPath();
       typePathMetaDataMap.put(path, metaData);
@@ -37,9 +39,9 @@ public class DataObjectDirectoryReader extends
     final IoFactoryRegistry registry = IoFactoryRegistry.getInstance();
     final String filename = resource.getFilename();
     final String extension = FileUtil.getFileNameExtension(filename);
-    final DataObjectReaderFactory factory = registry.getFactoryByFileExtension(
-      DataObjectReaderFactory.class, extension);
-    final DataObjectReader reader = factory.createDataObjectReader(resource);
+    final RecordReaderFactory factory = registry.getFactoryByFileExtension(
+      RecordReaderFactory.class, extension);
+    final RecordReader reader = factory.createRecordReader(resource);
     addMetaData(reader);
     return reader;
   }

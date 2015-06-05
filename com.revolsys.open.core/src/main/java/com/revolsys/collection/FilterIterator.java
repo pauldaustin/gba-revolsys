@@ -3,6 +3,7 @@ package com.revolsys.collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.filter.Filter;
 
 public class FilterIterator<T> extends AbstractIterator<T> {

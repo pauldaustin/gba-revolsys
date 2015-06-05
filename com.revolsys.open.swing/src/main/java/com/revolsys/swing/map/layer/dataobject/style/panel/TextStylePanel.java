@@ -37,7 +37,7 @@ public class TextStylePanel extends BaseStylePanel implements
     this.textStyleRenderer = textStyleRenderer;
     this.textStyle = textStyleRenderer.getStyle().clone();
     final AbstractRecordLayer layer = textStyleRenderer.getLayer();
-    final RecordDefinition metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getRecordDefinition();
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
 
     if (geometryAttribute != null) {

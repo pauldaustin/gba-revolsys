@@ -27,8 +27,8 @@ public class DataObjectLayerTableRowSorter extends
   public Comparator<?> getComparator(final int columnIndex) {
     final DataObjectLayerTableModel model = getModel();
     final String attributeName = model.getFieldName(columnIndex);
-    final RecordDefinition metaData = layer.getMetaData();
-    final CodeTable codeTable = metaData.getCodeTableByColumn(attributeName);
+    final RecordDefinition metaData = layer.getRecordDefinition();
+    final CodeTable codeTable = metaData.getCodeTableByFieldName(attributeName);
     if (codeTable == null) {
       final Class<?> columnClass = model.getColumnClass(columnIndex);
       final Comparator<?> comparator = super.getComparator(columnIndex);

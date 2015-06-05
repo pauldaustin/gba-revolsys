@@ -5,19 +5,19 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryWriterFactory;
 import com.revolsys.io.Writer;
 
 public class XmlDataObjectIoFactory extends
-  AbstractDataObjectAndGeometryWriterFactory {
+  AbstractRecordAndGeometryWriterFactory {
   public XmlDataObjectIoFactory() {
     super("XML", true, true);
     addMediaTypeAndFileExtension("text/xml", "xml");
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final String baseName,
+  public Writer<Record> createRecordWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
     final OutputStreamWriter writer = new OutputStreamWriter(outputStream,

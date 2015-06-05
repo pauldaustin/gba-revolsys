@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
-import com.revolsys.collection.LruMap;
+import com.revolsys.collection.map.LruMap;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Cast;
@@ -59,7 +59,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   public static DataObjectLayerTable createTable(
     final AbstractRecordLayer layer) {
-    final RecordDefinition metaData = layer.getMetaData();
+    final RecordDefinition metaData = layer.getRecordDefinition();
     if (metaData == null) {
       return null;
     } else {
@@ -148,7 +148,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   public DataObjectLayerTableModel(final AbstractRecordLayer layer,
     final List<String> attributeNames) {
-    super(layer.getMetaData(), attributeNames);
+    super(layer.getRecordDefinition(), attributeNames);
     this.layer = layer;
     Property.addListener(layer, this);
     setEditable(true);

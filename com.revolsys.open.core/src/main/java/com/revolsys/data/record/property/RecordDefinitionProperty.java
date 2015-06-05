@@ -6,7 +6,7 @@ public interface RecordDefinitionProperty extends Cloneable {
 
   RecordDefinitionProperty clone();
 
-  RecordDefinition getMetaData();
+  RecordDefinition getRecordDefinition();
 
   String getPropertyName();
 

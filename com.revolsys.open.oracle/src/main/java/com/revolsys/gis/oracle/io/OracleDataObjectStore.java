@@ -10,8 +10,8 @@ import javax.sql.DataSource;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
+import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.query.SqlCondition;
 import com.revolsys.data.record.Record;
@@ -21,7 +21,7 @@ import com.revolsys.data.record.property.ShortNameProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.gis.oracle.esri.ArcSdeBinaryGeometryDataStoreExtension;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryAttribute;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryDataStoreExtension;
@@ -46,7 +46,7 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
   private boolean useSchemaSequencePrefix = true;
 
   public OracleDataObjectStore() {
-    this(new ArrayDataObjectFactory());
+    this(new ArrayRecordFactory());
   }
 
   public OracleDataObjectStore(final RecordFactory dataObjectFactory) {

@@ -2,8 +2,8 @@ package com.revolsys.gis.data.io;
 
 import java.util.NoSuchElementException;
 
-import com.revolsys.collection.AbstractIterator;
-import com.revolsys.collection.AbstractMultipleIterator;
+import com.revolsys.collection.iterator.AbstractIterator;
+import com.revolsys.collection.iterator.AbstractMultipleIterator;
 import com.revolsys.data.record.Record;
 
 public class DataStoreMultipleQueryIterator extends

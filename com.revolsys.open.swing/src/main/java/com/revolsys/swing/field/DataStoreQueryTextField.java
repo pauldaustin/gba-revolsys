@@ -43,7 +43,7 @@ import org.jdesktop.swingx.decorator.HighlighterFactory;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.collection.LruMap;
+import com.revolsys.collection.map.LruMap;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.query.Equal;
 import com.revolsys.data.query.Q;

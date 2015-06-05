@@ -13,7 +13,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.io.Reader;
 import com.revolsys.spring.SpringUtil;
 
@@ -53,7 +53,7 @@ public class ShapeDirectoryReader extends DataObjectDirectoryReader {
   @Override
   protected Reader<Record> createReader(final Resource resource) {
     try {
-      final ArrayDataObjectFactory factory = new ArrayDataObjectFactory();
+      final ArrayRecordFactory factory = new ArrayRecordFactory();
       final ShapefileIterator iterator = new ShapefileIterator(resource,
         factory);
       final String baseName = SpringUtil.getBaseName(resource).toUpperCase();

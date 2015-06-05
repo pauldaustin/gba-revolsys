@@ -27,7 +27,7 @@ import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.property.ValueRecordDefinitionProperty;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.Path;
@@ -42,15 +42,14 @@ import com.revolsys.util.JavaBeanUtil;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.util.AssertionFailedException;
 
-public class RecordDefinitionImpl extends AbstractObjectWithProperties
-implements RecordDefinition, Cloneable {
+public class RecordDefinitionImpl extends AbstractObjectWithProperties implements RecordDefinition,
+  Cloneable {
   private static final AtomicInteger INSTANCE_IDS = new AtomicInteger(0);
 
   private static final Map<Integer, RecordDefinitionImpl> METADATA_CACHE = new WeakCache<Integer, RecordDefinitionImpl>();
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "dataRecordDefinition", "Data Record Definition",
-    RecordDefinitionImpl.class, "create");
+    "dataRecordDefinition", "Data Record Definition", RecordDefinitionImpl.class, "create");
 
   public static RecordDefinitionImpl create(final Map<String, Object> properties) {
     return new RecordDefinitionImpl(properties);
@@ -66,17 +65,17 @@ implements RecordDefinition, Cloneable {
     return METADATA_CACHE.get(instanceId);
   }
 
-  private final Map<String, Integer> attributeIdMap = new HashMap<String, Integer>();
+  private final Map<String, Integer> fieldIdMap = new HashMap<String, Integer>();
 
-  private final Map<String, FieldDefinition> attributeMap = new HashMap<String, FieldDefinition>();
+  private final Map<String, FieldDefinition> fieldMap = new HashMap<String, FieldDefinition>();
 
-  private final List<String> attributeNames = new ArrayList<String>();
+  private final List<String> fieldNames = new ArrayList<String>();
 
-  private final List<FieldDefinition> attributes = new ArrayList<FieldDefinition>();
+  private final List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
 
   private Map<String, CodeTable> codeTableByColumnMap = new HashMap<String, CodeTable>();
 
-  private RecordFactory dataObjectFactory = new ArrayDataObjectFactory();
+  private RecordFactory dataObjectFactory = new ArrayRecordFactory();
 
   private RecordDefinitionFactory recordDefinitionFactory;
 
@@ -84,21 +83,21 @@ implements RecordDefinition, Cloneable {
 
   private Map<String, Object> defaultValues = new HashMap<String, Object>();
 
-  /** The index of the primary geometry attribute. */
-  private int geometryAttributeIndex = -1;
+  /** The index of the primary geometry field. */
+  private int geometryFieldIndex = -1;
 
   private final List<Integer> geometryAttributeIndexes = new ArrayList<Integer>();
 
   private final List<String> geometryAttributeNames = new ArrayList<String>();
 
-  private final List<Integer> idAttributeIndexes = new ArrayList<Integer>();
+  private final List<Integer> idFieldIndexes = new ArrayList<Integer>();
 
-  private final List<String> idAttributeNames = new ArrayList<String>();
+  private final List<String> idFieldNames = new ArrayList<String>();
 
-  private final List<FieldDefinition> idAttributes = new ArrayList<FieldDefinition>();
+  private final List<FieldDefinition> idFields = new ArrayList<FieldDefinition>();
 
-  /** The index of the ID attribute. */
-  private int idAttributeIndex = -1;
+  /** The index of the ID field. */
+  private int idFieldIndex = -1;
 
   private final Integer instanceId = INSTANCE_IDS.getAndIncrement();
 
@@ -140,86 +139,74 @@ implements RecordDefinition, Cloneable {
   public RecordDefinitionImpl(final RecordDefinition metaData) {
     this(metaData.getPath(), metaData.getProperties(), metaData.getFields());
     setIdAttributeIndex(metaData.getIdFieldIndex());
-    METADATA_CACHE.put(this.instanceId, this);
+    METADATA_CACHE.put(instanceId, this);
   }
 
-  public RecordDefinitionImpl(final RecordStore dataObjectStore,
-    final RecordStoreSchema schema, final RecordDefinition metaData) {
+  public RecordDefinitionImpl(final RecordStore dataObjectStore, final RecordStoreSchema schema,
+    final RecordDefinition metaData) {
     this(metaData);
-    this.dataStore = new WeakReference<RecordStore>(dataObjectStore);
-    this.dataObjectFactory = dataObjectStore.getRecordFactory();
+    dataStore = new WeakReference<RecordStore>(dataObjectStore);
+    dataObjectFactory = dataObjectStore.getRecordFactory();
     this.schema = schema;
-    METADATA_CACHE.put(this.instanceId, this);
+    METADATA_CACHE.put(instanceId, this);
   }
 
-  public RecordDefinitionImpl(final RecordStore dataObjectStore,
-    final RecordStoreSchema schema, final String typePath) {
+  public RecordDefinitionImpl(final RecordStore dataObjectStore, final RecordStoreSchema schema,
+    final String typePath) {
     this(typePath);
-    this.dataStore = new WeakReference<RecordStore>(dataObjectStore);
-    this.dataObjectFactory = dataObjectStore.getRecordFactory();
+    dataStore = new WeakReference<RecordStore>(dataObjectStore);
+    dataObjectFactory = dataObjectStore.getRecordFactory();
     this.schema = schema;
-    METADATA_CACHE.put(this.instanceId, this);
+    METADATA_CACHE.put(instanceId, this);
   }
 
   public RecordDefinitionImpl(final String name) {
-    this.path = name;
-    METADATA_CACHE.put(this.instanceId, this);
+    path = name;
+    METADATA_CACHE.put(instanceId, this);
   }
 
-  public RecordDefinitionImpl(final String name,
-    final FieldDefinition... attributes) {
-    this(name, null, attributes);
+  public RecordDefinitionImpl(final String name, final FieldDefinition... fields) {
+    this(name, null, fields);
   }
 
-  public RecordDefinitionImpl(final String name,
-    final List<FieldDefinition> attributes) {
-    this(name, null, attributes);
+  public RecordDefinitionImpl(final String name, final List<FieldDefinition> fields) {
+    this(name, null, fields);
   }
 
-  public RecordDefinitionImpl(final String name,
-    final Map<String, Object> properties, final FieldDefinition... attributes) {
-    this(name, properties, Arrays.asList(attributes));
+  public RecordDefinitionImpl(final String name, final Map<String, Object> properties,
+    final FieldDefinition... fields) {
+    this(name, properties, Arrays.asList(fields));
   }
 
-  public RecordDefinitionImpl(final String name,
-    final Map<String, Object> properties, final List<FieldDefinition> attributes) {
-    this.path = name;
-    for (final FieldDefinition attribute : attributes) {
-      addField(attribute.clone());
+  public RecordDefinitionImpl(final String name, final Map<String, Object> properties,
+    final List<FieldDefinition> fields) {
+    path = name;
+    for (final FieldDefinition field : fields) {
+      addField(field.clone());
     }
     cloneProperties(properties);
-    METADATA_CACHE.put(this.instanceId, this);
+    METADATA_CACHE.put(instanceId, this);
   }
 
-  public FieldDefinition addField(final String name, final DataType type,
-    final int length, final boolean required) {
-    final FieldDefinition attribute = new FieldDefinition(name, type, length,
-      required);
-    addField(attribute);
-    return attribute;
-  }
-
-  public FieldDefinition addAttribute(final String name, final DataType type,
-    final int length, final int scale, final boolean required) {
-    final FieldDefinition attribute = new FieldDefinition(name, type, length,
-      scale, required);
-    addField(attribute);
-    return attribute;
+  public FieldDefinition addAttribute(final String name, final DataType type, final int length,
+    final int scale, final boolean required) {
+    final FieldDefinition field = new FieldDefinition(name, type, length, scale, required);
+    addField(field);
+    return field;
   }
 
   public void addColumnCodeTable(final String column, final CodeTable codeTable) {
-    this.codeTableByColumnMap.put(column, codeTable);
+    codeTableByColumnMap.put(column, codeTable);
   }
 
   @Override
-  public void addDefaultValue(final String attributeName,
-    final Object defaultValue) {
-    this.defaultValues.put(attributeName, defaultValue);
+  public void addDefaultValue(final String fieldName, final Object defaultValue) {
+    defaultValues.put(fieldName, defaultValue);
   }
 
-  public void addField(final FieldDefinition attribute) {
-    final int index = this.attributeNames.size();
-    final String name = attribute.getName();
+  public void addField(final FieldDefinition field) {
+    final int index = fieldNames.size();
+    final String name = field.getName();
     String lowerName;
     if (name == null) {
       lowerName = null;
@@ -227,60 +214,77 @@ implements RecordDefinition, Cloneable {
       lowerName = name.toLowerCase();
 
     }
-    this.attributeNames.add(name);
-    this.attributes.add(attribute);
-    this.attributeMap.put(lowerName, attribute);
-    this.attributeIdMap.put(lowerName, this.attributeIdMap.size());
-    final DataType dataType = attribute.getType();
+    fieldNames.add(name);
+    fields.add(field);
+    fieldMap.put(lowerName, field);
+    fieldIdMap.put(lowerName, fieldIdMap.size());
+    final DataType dataType = field.getType();
     if (dataType == null) {
-      LoggerFactory.getLogger(getClass()).debug(attribute.toString());
+      LoggerFactory.getLogger(getClass()).debug(field.toString());
     } else {
       final Class<?> dataClass = dataType.getJavaClass();
       if (Geometry.class.isAssignableFrom(dataClass)) {
-        this.geometryAttributeIndexes.add(index);
-        this.geometryAttributeNames.add(name);
-        if (this.geometryAttributeIndex == -1) {
-          this.geometryAttributeIndex = index;
+        geometryAttributeIndexes.add(index);
+        geometryAttributeNames.add(name);
+        if (geometryFieldIndex == -1) {
+          geometryFieldIndex = index;
         }
       }
     }
-    attribute.setIndex(index);
-    attribute.setMetaData(this);
+    field.setIndex(index);
+    field.setMetaData(this);
   }
 
   /**
-   * Adds an attribute with the given case-sensitive name.
+   * Adds an field with the given case-sensitive name.
    *
    * @throws AssertionFailedException if a second Geometry is being added
    */
-  public FieldDefinition addField(final String attributeName,
-    final DataType type) {
-    return addField(attributeName, type, false);
+  public FieldDefinition addField(final String fieldName, final DataType type) {
+    return addField(fieldName, type, false);
   }
 
-  public FieldDefinition addField(final String name, final DataType type,
+  public FieldDefinition addField(final String name, final DataType type, final boolean required) {
+    final FieldDefinition field = new FieldDefinition(name, type, required);
+    addField(field);
+    return field;
+  }
+
+  public FieldDefinition addField(final String name, final DataType type, final int length,
     final boolean required) {
-    final FieldDefinition attribute = new FieldDefinition(name, type, required);
-    addField(attribute);
-    return attribute;
+    final FieldDefinition field = new FieldDefinition(name, type, length, required);
+    addField(field);
+    return field;
   }
 
-  public void addRestriction(final String attributePath,
-    final Collection<Object> values) {
-    this.restrictions.put(attributePath, values);
+  public FieldDefinition addField(final String name, final DataType type, final int length,
+    final int scale) {
+    final FieldDefinition field = new FieldDefinition(name, type, length, scale, false);
+    addField(field);
+    return field;
+  }
+
+  public FieldDefinition addField(final String name, final DataType type, final int length,
+    final int scale, final boolean required) {
+    final FieldDefinition fieldDefinition = new FieldDefinition(name, type, length, scale, required);
+    addField(fieldDefinition);
+    return fieldDefinition;
+  }
+
+  public void addRestriction(final String fieldPath, final Collection<Object> values) {
+    restrictions.put(fieldPath, values);
   }
 
   public void addSuperClass(final RecordDefinition superClass) {
-    if (!this.superClasses.contains(superClass)) {
-      this.superClasses.add(superClass);
+    if (!superClasses.contains(superClass)) {
+      superClasses.add(superClass);
     }
   }
 
   @Override
   public RecordDefinitionImpl clone() {
-    final RecordDefinitionImpl clone = new RecordDefinitionImpl(this.path,
-      getProperties(), this.attributes);
-    clone.setIdAttributeIndex(this.idAttributeIndex);
+    final RecordDefinitionImpl clone = new RecordDefinitionImpl(path, getProperties(), fields);
+    clone.setIdAttributeIndex(idFieldIndex);
     clone.setProperties(getProperties());
     return clone;
   }
@@ -304,14 +308,14 @@ implements RecordDefinition, Cloneable {
   @Override
   public int compareTo(final RecordDefinition other) {
     final String otherPath = other.getPath();
-    if (otherPath == this.path) {
+    if (otherPath == path) {
       return 0;
-    } else if (this.path == null) {
+    } else if (path == null) {
       return 1;
     } else if (otherPath == null) {
       return -1;
     } else {
-      return this.path.compareTo(otherPath);
+      return path.compareTo(otherPath);
     }
   }
 
@@ -339,23 +343,23 @@ implements RecordDefinition, Cloneable {
   @PreDestroy
   public void destroy() {
     super.close();
-    METADATA_CACHE.remove(this.instanceId);
-    this.attributeIdMap.clear();
-    this.attributeMap.clear();
-    this.attributeNames.clear();
-    this.attributes.clear();
-    this.codeTableByColumnMap.clear();
-    this.dataObjectFactory = null;
-    this.recordDefinitionFactory = new DataObjectMetaDataFactoryImpl();
-    this.dataStore = null;
-    this.defaultValues.clear();
-    this.description = "";
-    this.geometryAttributeIndex = -1;
-    this.geometryAttributeIndexes.clear();
-    this.geometryAttributeNames.clear();
-    this.restrictions.clear();
-    this.schema = new RecordStoreSchema();
-    this.superClasses.clear();
+    METADATA_CACHE.remove(instanceId);
+    fieldIdMap.clear();
+    fieldMap.clear();
+    fieldNames.clear();
+    fields.clear();
+    codeTableByColumnMap.clear();
+    dataObjectFactory = null;
+    recordDefinitionFactory = new DataObjectMetaDataFactoryImpl();
+    dataStore = null;
+    defaultValues.clear();
+    description = "";
+    geometryFieldIndex = -1;
+    geometryAttributeIndexes.clear();
+    geometryAttributeNames.clear();
+    restrictions.clear();
+    schema = new RecordStoreSchema();
+    superClasses.clear();
   }
 
   @Override
@@ -364,18 +368,46 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
+  public CodeTable getCodeTableByFieldName(final String column) {
+    final RecordStore dataStore = getRecordStore();
+    if (dataStore == null) {
+      return null;
+    } else {
+      CodeTable codeTable = codeTableByColumnMap.get(column);
+      if (codeTable == null && dataStore != null) {
+        codeTable = dataStore.getCodeTableByFieldName(column);
+      }
+      return codeTable;
+    }
+  }
+
+  @Override
+  public Object getDefaultValue(final String fieldName) {
+    return defaultValues.get(fieldName);
+  }
+
+  @Override
+  public Map<String, Object> getDefaultValues() {
+    return defaultValues;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  @Override
   public FieldDefinition getField(final CharSequence name) {
     if (name == null) {
       return null;
     } else {
       final String lowerName = name.toString().toLowerCase();
-      return this.attributeMap.get(lowerName);
+      return fieldMap.get(lowerName);
     }
   }
 
   @Override
   public FieldDefinition getField(final int i) {
-    return this.attributes.get(i);
+    return fields.get(i);
   }
 
   @Override
@@ -400,7 +432,7 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public int getFieldCount() {
-    return this.attributes.size();
+    return fields.size();
   }
 
   @Override
@@ -409,11 +441,11 @@ implements RecordDefinition, Cloneable {
       return -1;
     } else {
       final String lowerName = name.toString().toLowerCase();
-      final Integer attributeId = this.attributeIdMap.get(lowerName);
-      if (attributeId == null) {
+      final Integer fieldId = fieldIdMap.get(lowerName);
+      if (fieldId == null) {
         return -1;
       } else {
-        return attributeId;
+        return fieldId;
       }
     }
   }
@@ -421,8 +453,8 @@ implements RecordDefinition, Cloneable {
   @Override
   public int getFieldLength(final int i) {
     try {
-      final FieldDefinition attribute = this.attributes.get(i);
-      return attribute.getLength();
+      final FieldDefinition field = fields.get(i);
+      return field.getLength();
     } catch (final ArrayIndexOutOfBoundsException e) {
       throw e;
     }
@@ -433,11 +465,11 @@ implements RecordDefinition, Cloneable {
     try {
       if (i == -1) {
         return null;
-      } else if (this.attributes == null) {
+      } else if (fields == null) {
         return null;
       } else {
-        final FieldDefinition attribute = this.attributes.get(i);
-        return attribute.getName();
+        final FieldDefinition field = fields.get(i);
+        return field.getName();
       }
     } catch (final ArrayIndexOutOfBoundsException e) {
       throw e;
@@ -445,77 +477,38 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
+  public List<String> getFieldNames() {
+    return new ArrayList<String>(fieldNames);
+  }
+
+  @Override
+  public List<FieldDefinition> getFields() {
+    return new ArrayList<FieldDefinition>(fields);
+  }
+
+  @Override
   public int getFieldScale(final int i) {
-    final FieldDefinition attribute = this.attributes.get(i);
-    return attribute.getScale();
+    final FieldDefinition field = fields.get(i);
+    return field.getScale();
   }
 
   @Override
   public String getFieldTitle(final String fieldName) {
-    final FieldDefinition attribute = getField(fieldName);
-    if (attribute == null) {
+    final FieldDefinition field = getField(fieldName);
+    if (field == null) {
       return CaseConverter.toCapitalizedWords(fieldName);
     } else {
-      return attribute.getTitle();
+      return field.getTitle();
     }
   }
 
   @Override
   public List<String> getFieldTitles() {
     final List<String> titles = new ArrayList<String>();
-    for (final FieldDefinition attribute : getFields()) {
-      titles.add(attribute.getTitle());
+    for (final FieldDefinition field : getFields()) {
+      titles.add(field.getTitle());
     }
     return titles;
-  }
-
-  @Override
-  public DataType getFieldType(final int i) {
-    final FieldDefinition attribute = this.attributes.get(i);
-    return attribute.getType();
-  }
-
-  @Override
-  public CodeTable getCodeTableByColumn(final String column) {
-    final RecordStore dataStore = getRecordStore();
-    if (dataStore == null) {
-      return null;
-    } else {
-      CodeTable codeTable = this.codeTableByColumnMap.get(column);
-      if (codeTable == null && dataStore != null) {
-        codeTable = dataStore.getCodeTableByFieldName(column);
-      }
-      return codeTable;
-    }
-  }
-
-  @Override
-  public RecordFactory getRecordFactory() {
-    return this.dataObjectFactory;
-  }
-
-  @Override
-  public Object getDefaultValue(final String attributeName) {
-    return this.defaultValues.get(attributeName);
-  }
-
-  @Override
-  public Map<String, Object> getDefaultValues() {
-    return this.defaultValues;
-  }
-
-  public String getDescription() {
-    return this.description;
-  }
-
-  @Override
-  public List<String> getFieldNames() {
-    return new ArrayList<String>(this.attributeNames);
-  }
-
-  @Override
-  public List<FieldDefinition> getFields() {
-    return new ArrayList<FieldDefinition>(this.attributes);
   }
 
   @Override
@@ -529,18 +522,9 @@ implements RecordDefinition, Cloneable {
   }
 
   @Override
-  public int getGeometryFieldIndex() {
-    return this.geometryAttributeIndex;
-  }
-
-  @Override
-  public List<Integer> getGeometryFieldIndexes() {
-    return Collections.unmodifiableList(this.geometryAttributeIndexes);
-  }
-
-  @Override
-  public List<String> getGeometryFieldNames() {
-    return Collections.unmodifiableList(this.geometryAttributeNames);
+  public DataType getFieldType(final int i) {
+    final FieldDefinition field = fields.get(i);
+    return field.getType();
   }
 
   @Override
@@ -556,119 +540,139 @@ implements RecordDefinition, Cloneable {
 
   @Override
   public FieldDefinition getGeometryField() {
-    if (this.geometryAttributeIndex == -1) {
+    if (geometryFieldIndex == -1) {
       return null;
     } else {
-      return this.attributes.get(this.geometryAttributeIndex);
+      return fields.get(geometryFieldIndex);
     }
+  }
+
+  @Override
+  public int getGeometryFieldIndex() {
+    return geometryFieldIndex;
+  }
+
+  @Override
+  public List<Integer> getGeometryFieldIndexes() {
+    return Collections.unmodifiableList(geometryAttributeIndexes);
   }
 
   @Override
   public String getGeometryFieldName() {
-    return getFieldName(this.geometryAttributeIndex);
+    return getFieldName(geometryFieldIndex);
+  }
+
+  @Override
+  public List<String> getGeometryFieldNames() {
+    return Collections.unmodifiableList(geometryAttributeNames);
   }
 
   @Override
   public FieldDefinition getIdField() {
-    if (this.idAttributeIndex >= 0) {
-      return this.attributes.get(this.idAttributeIndex);
+    if (idFieldIndex >= 0) {
+      return fields.get(idFieldIndex);
     } else {
       return null;
     }
-  }
-
-  @Override
-  public List<Integer> getIdFieldIndexes() {
-    return Collections.unmodifiableList(this.idAttributeIndexes);
-  }
-
-  @Override
-  public List<String> getIdFieldNames() {
-    return Collections.unmodifiableList(this.idAttributeNames);
-  }
-
-  @Override
-  public List<FieldDefinition> getIdFields() {
-    return Collections.unmodifiableList(this.idAttributes);
   }
 
   @Override
   public int getIdFieldIndex() {
-    return this.idAttributeIndex;
+    return idFieldIndex;
+  }
+
+  @Override
+  public List<Integer> getIdFieldIndexes() {
+    return Collections.unmodifiableList(idFieldIndexes);
   }
 
   @Override
   public String getIdFieldName() {
-    return getFieldName(this.idAttributeIndex);
+    return getFieldName(idFieldIndex);
+  }
+
+  @Override
+  public List<String> getIdFieldNames() {
+    return Collections.unmodifiableList(idFieldNames);
+  }
+
+  @Override
+  public List<FieldDefinition> getIdFields() {
+    return Collections.unmodifiableList(idFields);
   }
 
   @Override
   public int getInstanceId() {
-    return this.instanceId;
+    return instanceId;
   }
 
   @Override
   public String getPath() {
-    return this.path;
+    return path;
   }
 
   @Override
   public RecordDefinitionFactory getRecordDefinitionFactory() {
-    if (this.recordDefinitionFactory == null) {
+    if (recordDefinitionFactory == null) {
       final RecordStore dataStore = getRecordStore();
       return dataStore;
     } else {
-      return this.recordDefinitionFactory;
+      return recordDefinitionFactory;
     }
+  }
+
+  @Override
+  public RecordFactory getRecordFactory() {
+    return dataObjectFactory;
   }
 
   @Override
   public RecordStore getRecordStore() {
-    if (this.dataStore == null) {
+    if (dataStore == null) {
       return null;
     } else {
-      return this.dataStore.get();
+      return dataStore.get();
     }
   }
 
   public Map<String, Collection<Object>> getRestrictions() {
-    return this.restrictions;
+    return restrictions;
   }
 
   public RecordStoreSchema getSchema() {
-    return this.schema;
+    return schema;
   }
 
   @Override
   public String getTypeName() {
-    return Path.getName(this.path);
+    return Path.getName(path);
   }
 
   @Override
   public boolean hasField(final CharSequence name) {
     final String lowerName = name.toString().toLowerCase();
-    return this.attributeMap.containsKey(lowerName);
+    return fieldMap.containsKey(lowerName);
   }
 
   @Override
   public int hashCode() {
-    if (this.path == null) {
+    if (path == null) {
       return super.hashCode();
     } else {
-      return this.path.hashCode();
+      return path.hashCode();
     }
   }
 
   @Override
   public boolean isFieldRequired(final CharSequence name) {
-    final FieldDefinition attribute = getField(name);
-    return attribute.isRequired();
+    final FieldDefinition field = getField(name);
+    return field.isRequired();
   }
 
   @Override
   public boolean isFieldRequired(final int i) {
-    final FieldDefinition attribute = getField(i);
-    return attribute.isRequired();
+    final FieldDefinition field = getField(i);
+    return field.isRequired();
   }
 
   @Override
@@ -679,7 +683,7 @@ implements RecordDefinition, Cloneable {
     if (equals(classDefinition)) {
       return true;
     }
-    for (final RecordDefinition superClass : this.superClasses) {
+    for (final RecordDefinition superClass : superClasses) {
       if (superClass.isInstanceOf(classDefinition)) {
         return true;
       }
@@ -687,29 +691,26 @@ implements RecordDefinition, Cloneable {
     return false;
   }
 
-  private void readObject(final ObjectInputStream ois)
-      throws ClassNotFoundException, IOException {
+  private void readObject(final ObjectInputStream ois) throws ClassNotFoundException, IOException {
     ois.defaultReadObject();
-    METADATA_CACHE.put(this.instanceId, this);
+    METADATA_CACHE.put(instanceId, this);
   }
 
-  public void replaceAttribute(final FieldDefinition attribute,
-    final FieldDefinition newAttribute) {
-    final String name = attribute.getName();
+  public void replaceAttribute(final FieldDefinition field, final FieldDefinition newAttribute) {
+    final String name = field.getName();
     final String lowerName = name.toLowerCase();
     final String newName = newAttribute.getName();
-    if (this.attributes.contains(attribute) && name.equals(newName)) {
-      final int index = attribute.getIndex();
-      this.attributes.set(index, newAttribute);
-      this.attributeMap.put(lowerName, newAttribute);
+    if (fields.contains(field) && name.equals(newName)) {
+      final int index = field.getIndex();
+      fields.set(index, newAttribute);
+      fieldMap.put(lowerName, newAttribute);
       newAttribute.setIndex(index);
     } else {
       addField(newAttribute);
     }
   }
 
-  public void setCodeTableByColumnMap(
-    final Map<String, CodeTable> codeTableByColumnMap) {
+  public void setCodeTableByColumnMap(final Map<String, CodeTable> codeTableByColumnMap) {
     this.codeTableByColumnMap = codeTableByColumnMap;
   }
 
@@ -726,41 +727,45 @@ implements RecordDefinition, Cloneable {
     this.description = description;
   }
 
-  /**
-   * @param geometryAttributeIndex the geometryAttributeIndex to set
-   */
-  public void setGeometryAttributeIndex(final int geometryAttributeIndex) {
-    this.geometryAttributeIndex = geometryAttributeIndex;
-  }
-
   @Override
   public void setGeometryFactory(final GeometryFactory geometryFactory) {
     final FieldDefinition geometryAttribute = getGeometryField();
     if (geometryAttribute != null) {
-      geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY,
-        geometryFactory);
+      geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     }
+  }
+
+  /**
+   * @param geometryFieldIndex the geometryFieldIndex to set
+   */
+  public void setGeometryFieldIndex(final int geometryAttributeIndex) {
+    geometryFieldIndex = geometryAttributeIndex;
   }
 
   public void setGeometryFieldName(final String name) {
     final int id = getFieldIndex(name);
-    setGeometryAttributeIndex(id);
+    setGeometryFieldIndex(id);
   }
 
   /**
-   * @param idAttributeIndex the idAttributeIndex to set
+   * @param idFieldIndex the idFieldIndex to set
    */
-  public void setIdAttributeIndex(final int idAttributeIndex) {
-    this.idAttributeIndex = idAttributeIndex;
-    this.idAttributeIndexes.clear();
-    this.idAttributeIndexes.add(idAttributeIndex);
-    this.idAttributeNames.clear();
-    this.idAttributeNames.add(getIdFieldName());
-    this.idAttributes.clear();
-    this.idAttributes.add(getIdField());
+  public void setIdAttributeIndex(final int idFieldIndex) {
+    this.idFieldIndex = idFieldIndex;
+    idFieldIndexes.clear();
+    idFieldIndexes.add(idFieldIndex);
+    idFieldNames.clear();
+    idFieldNames.add(getIdFieldName());
+    idFields.clear();
+    idFields.add(getIdField());
   }
 
-  public void setIdAttributeNames(final Collection<String> names) {
+  public void setIdFieldName(final String name) {
+    final int id = getFieldIndex(name);
+    setIdAttributeIndex(id);
+  }
+
+  public void setIdFieldNames(final Collection<String> names) {
     if (names != null) {
       if (names.size() == 1) {
         final String name = CollectionUtil.get(names, 0);
@@ -772,22 +777,17 @@ implements RecordDefinition, Cloneable {
             LoggerFactory.getLogger(getClass()).error(
               "Cannot set ID " + getPath() + "." + name + " does not exist");
           } else {
-            this.idAttributeIndexes.add(index);
-            this.idAttributeNames.add(name);
-            this.idAttributes.add(getField(index));
+            idFieldIndexes.add(index);
+            idFieldNames.add(name);
+            idFields.add(getField(index));
           }
         }
       }
     }
   }
 
-  public void setIdAttributeNames(final String... names) {
-    setIdAttributeNames(Arrays.asList(names));
-  }
-
-  public void setIdFieldName(final String name) {
-    final int id = getFieldIndex(name);
-    setIdAttributeIndex(id);
+  public void setIdFieldNames(final String... names) {
+    setIdFieldNames(Arrays.asList(names));
   }
 
   @Override
@@ -819,8 +819,7 @@ implements RecordDefinition, Cloneable {
 
   }
 
-  public void setRecordDefinitionFactory(
-    final RecordDefinitionFactory recordDefinitionFactory) {
+  public void setRecordDefinitionFactory(final RecordDefinitionFactory recordDefinitionFactory) {
     this.recordDefinitionFactory = recordDefinitionFactory;
   }
 
@@ -832,13 +831,13 @@ implements RecordDefinition, Cloneable {
     map.put("path", path);
     final GeometryFactory geometryFactory = getGeometryFactory();
     MapSerializerUtil.add(map, "geometryFactory", geometryFactory, null);
-    final List<FieldDefinition> attributes = getFields();
-    MapSerializerUtil.add(map, "fields", attributes);
+    final List<FieldDefinition> fields = getFields();
+    MapSerializerUtil.add(map, "fields", fields);
     return map;
   }
 
   @Override
   public String toString() {
-    return this.path.toString();
+    return path.toString();
   }
 }

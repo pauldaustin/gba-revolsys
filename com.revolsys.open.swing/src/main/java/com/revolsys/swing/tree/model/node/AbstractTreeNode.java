@@ -14,7 +14,7 @@ import javax.swing.tree.TreePath;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.collection.IteratorEnumeration;
+import com.revolsys.collection.iterator.IteratorEnumeration;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.menu.MenuFactory;

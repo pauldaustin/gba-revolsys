@@ -317,7 +317,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
           if (propertyValue == null) {
             return null;
           } else if (i + 1 < propertyPath.length) {
-            final CodeTable codeTable = metaData.getCodeTableByColumn(propertyName);
+            final CodeTable codeTable = metaData.getCodeTableByFieldName(propertyName);
             if (codeTable != null) {
               propertyValue = codeTable.getMap(propertyValue);
             }
@@ -335,7 +335,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
         if (propertyValue == null) {
           return null;
         } else if (i + 1 < propertyPath.length) {
-          final CodeTable codeTable = metaData.getCodeTableByColumn(propertyName);
+          final CodeTable codeTable = metaData.getCodeTableByFieldName(propertyName);
           if (codeTable != null) {
             propertyValue = codeTable.getMap(propertyValue);
           }
@@ -535,7 +535,7 @@ public abstract class BaseDataObject extends AbstractMap<String, Object>
       codeTableAttributeName = name.substring(0, dotIndex);
       codeTableValueName = name.substring(dotIndex + 1);
     }
-    final CodeTable codeTable = metaData.getCodeTableByColumn(codeTableAttributeName);
+    final CodeTable codeTable = metaData.getCodeTableByFieldName(codeTableAttributeName);
     if (codeTable == null) {
       if (dotIndex != -1) {
         LoggerFactory.getLogger(getClass()).debug(

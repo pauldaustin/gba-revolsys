@@ -9,14 +9,14 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
-import com.revolsys.gis.data.io.DataObjectReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
-public class WktIoFactory extends AbstractDataObjectAndGeometryIoFactory
+public class WktIoFactory extends AbstractRecordAndGeometryIoFactory
   implements WktConstants {
   public WktIoFactory() {
     super(WktConstants.DESCRIPTION, false, false);
@@ -24,7 +24,7 @@ public class WktIoFactory extends AbstractDataObjectAndGeometryIoFactory
   }
 
   @Override
-  public DataObjectReader createDataObjectReader(final Resource resource,
+  public RecordReader createRecordReader(final Resource resource,
     final RecordFactory factory) {
     try {
       final WktDataObjectIterator iterator = new WktDataObjectIterator(factory,
@@ -37,7 +37,7 @@ public class WktIoFactory extends AbstractDataObjectAndGeometryIoFactory
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final String baseName,
+  public Writer<Record> createRecordWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);

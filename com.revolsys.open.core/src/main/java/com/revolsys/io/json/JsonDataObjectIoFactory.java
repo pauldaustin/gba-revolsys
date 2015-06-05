@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryWriterFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.io.Writer;
 
 public class JsonDataObjectIoFactory extends
-  AbstractDataObjectAndGeometryWriterFactory {
+  AbstractRecordAndGeometryWriterFactory {
   public static final Record toDataObject(
     final RecordDefinition metaData, final String string) {
     final StringReader in = new StringReader(string);
@@ -91,7 +91,7 @@ public class JsonDataObjectIoFactory extends
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final String baseName,
+  public Writer<Record> createRecordWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);

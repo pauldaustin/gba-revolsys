@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
-import com.revolsys.data.io.RecordStoreFactoryRegistry;
+import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.util.Property;
 

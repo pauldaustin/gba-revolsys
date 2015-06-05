@@ -10,20 +10,20 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.io.RecordStoreFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.io.RecordStoreFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.io.AbstractDataObjectAndGeometryIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
-import com.revolsys.gis.data.io.DataObjectReader;
 import com.revolsys.io.DirectoryDataObjectStore;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.OutputStreamResource;
 import com.revolsys.spring.SpringUtil;
 
-public class ShapefileIoFactory extends AbstractDataObjectAndGeometryIoFactory implements
+public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory implements
 RecordStoreFactory {
   public ShapefileIoFactory() {
     super(ShapefileConstants.DESCRIPTION, true, true);
@@ -32,7 +32,7 @@ RecordStoreFactory {
   }
 
   @Override
-  public DataObjectReader createDataObjectReader(final Resource resource,
+  public RecordReader createRecordReader(final Resource resource,
     final RecordFactory dataObjectFactory) {
     try {
       final ShapefileIterator iterator = new ShapefileIterator(resource, dataObjectFactory);
@@ -43,15 +43,15 @@ RecordStoreFactory {
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final RecordDefinition metaData,
+  public Writer<Record> createRecordWriter(final RecordDefinition metaData,
     final Resource resource) {
     return new ShapefileDataObjectWriter(metaData, resource);
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final String baseName,
+  public Writer<Record> createRecordWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream, final Charset charset) {
-    return createDataObjectWriter(metaData, new OutputStreamResource(baseName, outputStream));
+    return createRecordWriter(metaData, new OutputStreamResource(baseName, outputStream));
   }
 
   @Override

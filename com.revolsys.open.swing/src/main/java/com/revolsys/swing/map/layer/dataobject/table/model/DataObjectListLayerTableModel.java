@@ -42,7 +42,7 @@ public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
   private List<LayerDataObject> records = Collections.emptyList();
 
   public DataObjectListLayerTableModel(final DataObjectListLayer layer) {
-    this(layer, layer.getMetaData().getFieldNames());
+    this(layer, layer.getRecordDefinition().getFieldNames());
   }
 
   public DataObjectListLayerTableModel(final DataObjectListLayer layer,

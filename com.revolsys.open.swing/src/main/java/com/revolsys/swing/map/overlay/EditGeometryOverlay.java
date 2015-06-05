@@ -188,7 +188,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements
   public void addRecord(final AbstractRecordLayer layer,
     final AddGeometryCompleteAction addCompleteAction) {
     if (layer != null) {
-      final RecordDefinition metaData = layer.getMetaData();
+      final RecordDefinition metaData = layer.getRecordDefinition();
       final FieldDefinition geometryAttribute = metaData.getGeometryField();
       if (geometryAttribute != null) {
         this.addLayer = layer;

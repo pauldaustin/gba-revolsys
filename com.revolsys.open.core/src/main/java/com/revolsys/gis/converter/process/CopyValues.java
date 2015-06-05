@@ -44,7 +44,7 @@ public class CopyValues extends
       }
       if (value != null) {
         final RecordDefinition targetMetaData = target.getRecordDefinition();
-        final CodeTable codeTable = targetMetaData.getCodeTableByColumn(targetName);
+        final CodeTable codeTable = targetMetaData.getCodeTableByFieldName(targetName);
         if (codeTable == null) {
           target.setValue(targetName, value);
         } else {

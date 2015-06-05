@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
 
-import com.revolsys.collection.AbstractIterator;
+import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.RecordFactory;

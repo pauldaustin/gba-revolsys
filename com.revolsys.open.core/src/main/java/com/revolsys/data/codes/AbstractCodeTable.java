@@ -152,7 +152,7 @@ public abstract class AbstractCodeTable implements Closeable,
   @Override
   @SuppressWarnings("unchecked")
   public <T> T getId(final Map<String, ? extends Object> valueMap) {
-    final List<String> valueAttributeNames = getValueAttributeNames();
+    final List<String> valueAttributeNames = getValueFieldNames();
     final Object[] values = new Object[valueAttributeNames.size()];
     for (int i = 0; i < values.length; i++) {
       final String name = valueAttributeNames.get(i);
@@ -187,7 +187,7 @@ public abstract class AbstractCodeTable implements Closeable,
     } else {
       final Map<String, Object> map = new HashMap<String, Object>();
       for (int i = 0; i < values.size(); i++) {
-        final String name = getValueAttributeNames().get(i);
+        final String name = getValueFieldNames().get(i);
         final Object value = values.get(i);
         map.put(name, value);
       }
@@ -241,7 +241,7 @@ public abstract class AbstractCodeTable implements Closeable,
   }
 
   @Override
-  public List<String> getValueAttributeNames() {
+  public List<String> getValueFieldNames() {
     return Arrays.asList("VALUE");
   }
 

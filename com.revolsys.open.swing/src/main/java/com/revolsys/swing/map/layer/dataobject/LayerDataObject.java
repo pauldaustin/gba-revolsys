@@ -22,7 +22,7 @@ public class LayerDataObject extends ArrayRecord {
   private Map<String, Object> originalValues;
 
   public LayerDataObject(final AbstractRecordLayer layer) {
-    super(layer.getMetaData());
+    super(layer.getRecordDefinition());
     this.layer = layer;
   }
 

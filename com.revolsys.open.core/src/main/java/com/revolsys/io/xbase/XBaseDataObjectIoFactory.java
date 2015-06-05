@@ -8,14 +8,14 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.AbstractRecordIoFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.AbstractDataObjectIoFactory;
 import com.revolsys.gis.data.io.DataObjectIteratorReader;
-import com.revolsys.gis.data.io.DataObjectReader;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.OutputStreamResource;
 
-public class XBaseDataObjectIoFactory extends AbstractDataObjectIoFactory {
+public class XBaseDataObjectIoFactory extends AbstractRecordIoFactory {
   public XBaseDataObjectIoFactory() {
     super("D-Base", true, false, true);
     addMediaTypeAndFileExtension("application/dbase", "dbf");
@@ -23,7 +23,7 @@ public class XBaseDataObjectIoFactory extends AbstractDataObjectIoFactory {
   }
 
   @Override
-  public DataObjectReader createDataObjectReader(final Resource resource,
+  public RecordReader createRecordReader(final Resource resource,
     final RecordFactory dataObjectFactory) {
     try {
       final XbaseIterator iterator = new XbaseIterator(resource,
@@ -36,16 +36,16 @@ public class XBaseDataObjectIoFactory extends AbstractDataObjectIoFactory {
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(
+  public Writer<Record> createRecordWriter(
     final RecordDefinition metaData, final Resource resource) {
     return new XbaseDataObjectWriter(metaData, resource);
   }
 
   @Override
-  public Writer<Record> createDataObjectWriter(final String baseName,
+  public Writer<Record> createRecordWriter(final String baseName,
     final RecordDefinition metaData, final OutputStream outputStream,
     final Charset charset) {
-    return createDataObjectWriter(metaData, new OutputStreamResource(baseName,
+    return createRecordWriter(metaData, new OutputStreamResource(baseName,
       outputStream));
   }
 

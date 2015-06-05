@@ -10,16 +10,17 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.collection.AbstractIterator;
+import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.query.SqlCondition;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jts.geom.BoundingBox;
 
 public class DataObjectStoreQueryReader extends IteratorReader<Record>
-  implements DataObjectReader {
+  implements RecordReader {
 
   private AbstractRecordStore dataStore;
 
@@ -81,7 +82,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return ((DataObjectIterator)iterator()).getMetaData();
   }
 

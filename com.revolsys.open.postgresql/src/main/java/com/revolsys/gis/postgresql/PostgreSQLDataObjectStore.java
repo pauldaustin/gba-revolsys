@@ -12,8 +12,8 @@ import org.postgis.PGbox2d;
 import org.postgis.Point;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.collection.AbstractIterator;
 import com.revolsys.collection.ResultPager;
+import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
@@ -21,7 +21,7 @@ import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.property.ShortNameProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.ArrayDataObjectFactory;
+import com.revolsys.gis.data.model.ArrayRecordFactory;
 import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
@@ -44,7 +44,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
   private boolean useSchemaSequencePrefix = true;
 
   public PostgreSQLDataObjectStore() {
-    this(new ArrayDataObjectFactory());
+    this(new ArrayRecordFactory());
   }
 
   public PostgreSQLDataObjectStore(final RecordFactory dataObjectFactory) {

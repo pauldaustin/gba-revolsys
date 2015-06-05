@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.collection.IntHashMap;
+import com.revolsys.collection.map.IntHashMap;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.geometry.Triangle;

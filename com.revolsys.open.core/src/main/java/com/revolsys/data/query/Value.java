@@ -139,10 +139,10 @@ public class Value extends QueryValue {
         final RecordDefinition metaData = attribute.getMetaData();
         if (metaData != null) {
           final String fieldName = attribute.getName();
-          codeTable = metaData.getCodeTableByColumn(fieldName);
+          codeTable = metaData.getCodeTableByFieldName(fieldName);
           if (codeTable instanceof CodeTableProperty) {
             final CodeTableProperty codeTableProperty = (CodeTableProperty)codeTable;
-            if (codeTableProperty.getMetaData() == metaData) {
+            if (codeTableProperty.getRecordDefinition() == metaData) {
               codeTable = null;
             }
           }

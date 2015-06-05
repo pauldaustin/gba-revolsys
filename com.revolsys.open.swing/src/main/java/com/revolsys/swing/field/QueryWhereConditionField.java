@@ -188,7 +188,7 @@ public class QueryWhereConditionField extends ValueField implements
     setTitle("Advanced Search");
     this.originalFilter = filter;
     this.listener = listener;
-    metaData = layer.getMetaData();
+    metaData = layer.getRecordDefinition();
     final List<FieldDefinition> attributes = metaData.getFields();
 
     fieldNamesList = new ComboBox(new AttributeTitleStringConveter(layer),
@@ -560,7 +560,7 @@ public class QueryWhereConditionField extends ValueField implements
       if (event.getStateChange() == ItemEvent.SELECTED) {
         final FieldDefinition attribute = (FieldDefinition)event.getItem();
         final String name = attribute.getName();
-        codeTable = metaData.getCodeTableByColumn(name);
+        codeTable = metaData.getCodeTableByFieldName(name);
         final JComponent binaryConditionField = createSearchField(attribute,
           codeTable);
         if (binaryConditionField instanceof DataStoreQueryTextField) {
@@ -781,7 +781,7 @@ public class QueryWhereConditionField extends ValueField implements
 
               final String name = column.getName();
               final FieldDefinition attribute = metaData.getField(name);
-              final CodeTable codeTable = metaData.getCodeTableByColumn(name);
+              final CodeTable codeTable = metaData.getCodeTableByFieldName(name);
               if (codeTable == null || attribute == metaData.getIdField()) {
                 final Class<?> typeClass = attribute.getTypeClass();
                 try {

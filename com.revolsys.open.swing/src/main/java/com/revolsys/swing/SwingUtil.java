@@ -312,7 +312,7 @@ public class SwingUtil {
       if (metaData.getIdFieldNames().contains(fieldName)) {
         codeTable = null;
       } else {
-        codeTable = metaData.getCodeTableByColumn(fieldName);
+        codeTable = metaData.getCodeTableByFieldName(fieldName);
       }
 
       final DataType type = attribute.getType();

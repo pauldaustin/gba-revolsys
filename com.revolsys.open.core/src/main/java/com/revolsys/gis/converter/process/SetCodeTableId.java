@@ -41,7 +41,7 @@ public class SetCodeTableId extends
           codeTableValueName = codeTableAttributeName.substring(dotIndex + 1);
           codeTableAttributeName = codeTableAttributeName.substring(0, dotIndex);
         }
-        final CodeTable targetCodeTable = targetMetaData.getCodeTableByColumn(codeTableAttributeName);
+        final CodeTable targetCodeTable = targetMetaData.getCodeTableByFieldName(codeTableAttributeName);
         if (targetCodeTable != null) {
           if (codeTableValueName == null) {
             sourceValue = targetCodeTable.getId(sourceValue);

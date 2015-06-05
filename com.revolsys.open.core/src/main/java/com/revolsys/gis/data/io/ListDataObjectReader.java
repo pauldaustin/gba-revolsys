@@ -7,11 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
 public class ListDataObjectReader extends AbstractReader<Record> implements
-  DataObjectReader {
+  RecordReader {
   private RecordDefinition metaData;
 
   private List<Record> objects = new ArrayList<Record>();
@@ -34,7 +35,7 @@ public class ListDataObjectReader extends AbstractReader<Record> implements
   }
 
   @Override
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     return metaData;
   }
 

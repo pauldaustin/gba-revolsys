@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,7 +25,6 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.io.ResourceEndianOutput;
 import com.revolsys.io.AbstractWriter;
-import com.revolsys.io.FileUtil;
 import com.revolsys.spring.NonExistingResource;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.DateUtil;
@@ -51,7 +51,7 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
 
   private Map<String, String> shortNames = new HashMap<String, String>();
 
-  private Charset charset = FileUtil.UTF8;
+  private Charset charset = StandardCharsets.UTF_8;
 
   public XbaseDataObjectWriter(final RecordDefinition metaData,
     final Resource resource) {

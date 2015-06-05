@@ -7,10 +7,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordIo;
+import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.AbstractDataObjectReaderFactory;
-import com.revolsys.gis.data.io.DataObjectReader;
-import com.revolsys.gis.data.io.DataObjectReaderFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
@@ -27,8 +27,8 @@ import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectFileLayer extends DataObjectListLayer {
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "dataObjectFile", "File", DataObjectFileLayer.class, "create");
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("dataObjectFile",
+    "File", DataObjectFileLayer.class, "create");
 
   public static DataObjectFileLayer create(final Map<String, Object> properties) {
     return new DataObjectFileLayer(properties);
@@ -57,9 +57,8 @@ public class DataObjectFileLayer extends DataObjectListLayer {
     final String fileNameExtension = FileUtil.getFileNameExtension(url);
     if (StringUtils.hasText(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
-      final DataObjectReaderFactory factory = IoFactoryRegistry.getInstance()
-        .getFactoryByFileExtension(DataObjectReaderFactory.class,
-          fileNameExtension);
+      final RecordReaderFactory factory = IoFactoryRegistry.getInstance()
+        .getFactoryByFileExtension(RecordReaderFactory.class, fileNameExtension);
       if (factory != null) {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }
@@ -83,7 +82,7 @@ public class DataObjectFileLayer extends DataObjectListLayer {
   }
 
   public String getUrl() {
-    return this.url;
+    return url;
   }
 
   public boolean revert() {
@@ -91,14 +90,14 @@ public class DataObjectFileLayer extends DataObjectListLayer {
       return false;
     } else {
       if (resource.exists()) {
-        final DataObjectReader reader = AbstractDataObjectReaderFactory.dataObjectReader(this.resource);
+        final Resource resource1 = resource;
+        final RecordReader reader = RecordIo.recordReader(resource1);
         if (reader == null) {
-          LoggerFactory.getLogger(getClass()).error(
-            "Cannot find reader for: " + this.resource);
+          LoggerFactory.getLogger(getClass()).error("Cannot find reader for: " + resource);
           return false;
         } else {
           try {
-            final RecordDefinition metaData = reader.getMetaData();
+            final RecordDefinition metaData = reader.getRecordDefinition();
             setRecordDefinition(metaData);
             final GeometryFactory geometryFactory = metaData.getGeometryFactory();
             BoundingBox boundingBox = new BoundingBox(geometryFactory);
@@ -118,7 +117,7 @@ public class DataObjectFileLayer extends DataObjectListLayer {
           }
         }
       } else {
-        LoggerFactory.getLogger(getClass()).error("Cannot find: " + this.url);
+        LoggerFactory.getLogger(getClass()).error("Cannot find: " + url);
       }
     }
     return false;
@@ -127,7 +126,7 @@ public class DataObjectFileLayer extends DataObjectListLayer {
   @Override
   public Map<String, Object> toMap() {
     final Map<String, Object> map = super.toMap();
-    MapSerializerUtil.add(map, "url", this.url);
+    MapSerializerUtil.add(map, "url", url);
     return map;
   }
 }
