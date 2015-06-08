@@ -27,15 +27,15 @@ abstract class AbstractPolygonContains extends PolygonPredicate {
   }
 
   protected boolean eval(final Geometry geometry) {
-    final boolean isAllInTargetArea = PolygonUtil.isAllTestComponentsInTarget(
-      polygon, geometry);
+    final boolean isAllInTargetArea = PolygonUtil.isAllTestComponentsInTarget(this.polygon,
+      geometry);
     if (!isAllInTargetArea) {
       return false;
     }
 
-    if (requireSomePointInInterior && geometry.getDimension() == 0) {
+    if (this.requireSomePointInInterior && geometry.getDimension() == 0) {
       final boolean isAnyInTargetInterior = PolygonUtil.isAnyTestComponentInTargetInterior(
-        polygon, geometry);
+        this.polygon, geometry);
       return isAnyInTargetInterior;
     } else {
 
@@ -43,15 +43,15 @@ abstract class AbstractPolygonContains extends PolygonPredicate {
 
       findAndClassifyIntersections(geometry);
 
-      if (properIntersectionImpliesNotContained && hasProperIntersection) {
+      if (properIntersectionImpliesNotContained && this.hasProperIntersection) {
         return false;
-      } else if (hasSegmentIntersection && !hasNonProperIntersection) {
+      } else if (this.hasSegmentIntersection && !this.hasNonProperIntersection) {
         return false;
-      } else if (hasSegmentIntersection) {
+      } else if (this.hasSegmentIntersection) {
         return fullTopologicalPredicate(geometry);
       } else if (geometry instanceof Polygonal) {
-        final boolean isTargetInTestArea = PolygonUtil.isAnyTargetComponentInAreaTest(
-          geometry, polygon.getCoordinatesLists());
+        final boolean isTargetInTestArea = PolygonUtil.isAnyTargetComponentInAreaTest(geometry,
+          this.polygon.getCoordinatesLists());
         if (isTargetInTestArea) {
           return false;
         }
@@ -64,24 +64,21 @@ abstract class AbstractPolygonContains extends PolygonPredicate {
     final List<SegmentString> lineSegStr = SegmentStringUtil.extractSegmentStrings(geometry);
 
     final LineIntersector li = new RobustLineIntersector();
-    final SegmentIntersectionDetector intDetector = new SegmentIntersectionDetector(
-      li);
+    final SegmentIntersectionDetector intDetector = new SegmentIntersectionDetector(li);
     intDetector.setFindAllIntersectionTypes(true);
-    FastSegmentSetIntersectionFinder.get(polygon).intersects(lineSegStr,
-      intDetector);
+    FastSegmentSetIntersectionFinder.get(this.polygon).intersects(lineSegStr, intDetector);
 
-    hasSegmentIntersection = intDetector.hasIntersection();
-    hasProperIntersection = intDetector.hasProperIntersection();
-    hasNonProperIntersection = intDetector.hasNonProperIntersection();
+    this.hasSegmentIntersection = intDetector.hasIntersection();
+    this.hasProperIntersection = intDetector.hasProperIntersection();
+    this.hasNonProperIntersection = intDetector.hasNonProperIntersection();
   }
 
   protected abstract boolean fullTopologicalPredicate(Geometry geometry);
 
-  private boolean isProperIntersectionImpliesNotContainedSituation(
-    final Geometry geometry) {
+  private boolean isProperIntersectionImpliesNotContainedSituation(final Geometry geometry) {
     if (geometry instanceof Polygonal) {
       return true;
-    } else if (isSingleShell(polygon)) {
+    } else if (isSingleShell(this.polygon)) {
       return true;
     } else {
       return false;

@@ -7,13 +7,13 @@ public abstract class AbstractCoordinates implements Coordinates {
 
   public static int hashCode(final double d) {
     final long f = Double.doubleToLongBits(d);
-    return (int)(f ^ (f >>> 32));
+    return (int)(f ^ f >>> 32);
   }
 
   /**
    * Calculate the angle in radians on a 2D plan between this point and another
    * point.
-   * 
+   *
    * @param other The other point.
    * @return The angle in radians.
    */

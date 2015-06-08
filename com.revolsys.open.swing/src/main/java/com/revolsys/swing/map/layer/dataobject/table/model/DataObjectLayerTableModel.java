@@ -31,8 +31,8 @@ import com.revolsys.data.query.Query;
 import com.revolsys.data.query.QueryValue;
 import com.revolsys.data.query.Value;
 import com.revolsys.data.query.functions.Function;
-import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.jts.geom.BoundingBox;
@@ -53,28 +53,32 @@ import com.revolsys.swing.table.filter.EqualFilter;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class DataObjectLayerTableModel extends DataObjectRowTableModel
-  implements SortableTableModel, PropertyChangeListener,
-  PropertyChangeSupportProxy {
+public class DataObjectLayerTableModel extends DataObjectRowTableModel implements
+  SortableTableModel, PropertyChangeListener, PropertyChangeSupportProxy {
 
-  public static DataObjectLayerTable createTable(
-    final AbstractRecordLayer layer) {
+  private static final long serialVersionUID = 1L;
+
+  public static final String MODE_ALL = "all";
+
+  public static final String MODE_SELECTED = "selected";
+
+  public static final String MODE_EDITS = "edits";
+
+  public static DataObjectLayerTable createTable(final AbstractRecordLayer layer) {
     final RecordDefinition metaData = layer.getRecordDefinition();
     if (metaData == null) {
       return null;
     } else {
       final List<String> columnNames = layer.getColumnNames();
-      final DataObjectLayerTableModel model = new DataObjectLayerTableModel(
-        layer, columnNames);
+      final DataObjectLayerTableModel model = new DataObjectLayerTableModel(layer, columnNames);
       final DataObjectLayerTable table = new DataObjectLayerTable(model);
 
       ModifiedPredicate.add(table);
       NewPredicate.add(table);
       DeletedPredicate.add(table);
 
-      Property.addListener(layer, "hasSelectedRecords",
-        new InvokeMethodListener(DataObjectLayerTableModel.class,
-          "selectionChanged", table, model));
+      Property.addListener(layer, "hasSelectedRecords", new InvokeMethodListener(
+        DataObjectLayerTableModel.class, "selectionChanged", table, model));
       return table;
     }
   }
@@ -89,16 +93,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     }
   }
 
-  private static final long serialVersionUID = 1L;
-
-  public static final String MODE_ALL = "all";
-
-  public static final String MODE_SELECTED = "selected";
-
-  public static final String MODE_EDITS = "edits";
-
-  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-    this);
+  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private final DataObjectLayerListSelectionModel selectionModel = new DataObjectLayerListSelectionModel(
     this);
@@ -110,8 +105,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
   private boolean filterByBoundingBox;
 
-  private List<String> attributeFilterModes = Arrays.asList(MODE_ALL,
-    MODE_SELECTED, MODE_EDITS);
+  private List<String> attributeFilterModes = Arrays.asList(MODE_ALL, MODE_SELECTED, MODE_EDITS);
 
   private List<String> sortableModes = Arrays.asList(MODE_SELECTED, MODE_EDITS);
 
@@ -233,16 +227,15 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
     return this.orderBy;
   }
 
-  protected LayerDataObject getPageRecord(final int pageNumber,
-    final int recordNumber) {
+  protected LayerDataObject getPageRecord(final int pageNumber, final int recordNumber) {
     synchronized (getSync()) {
       final List<LayerDataObject> page = this.pageCache.get(pageNumber);
       if (page == null) {
         this.loadingPageNumbers.add(pageNumber);
         synchronized (getSync()) {
           if (this.loadObjectsWorker == null) {
-            this.loadObjectsWorker = Invoke.background("Loading records "
-              + getTypeName(), this, "loadPages", this.refreshIndex);
+            this.loadObjectsWorker = Invoke.background("Loading records " + getTypeName(), this,
+              "loadPages", this.refreshIndex);
           }
         }
         return this.loadingRecord;
@@ -302,8 +295,8 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
 
         } else {
           if (this.rowCountWorker == null) {
-            this.rowCountWorker = Invoke.background("Query row count "
-              + this.layer.getName(), this, "loadRowCount", this.refreshIndex);
+            this.rowCountWorker = Invoke.background("Query row count " + this.layer.getName(),
+              this, "loadRowCount", this.refreshIndex);
           }
           return 0;
         }
@@ -314,8 +307,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   protected int getRowCountInternal() {
     if (this.attributeFilterMode.equals(MODE_SELECTED)) {
       synchronized (this.selectedSync) {
-        this.selectedRecords = new ArrayList<LayerDataObject>(
-          getLayerSelectedRecords());
+        this.selectedRecords = new ArrayList<LayerDataObject>(getLayerSelectedRecords());
         return this.selectedRecords.size();
       }
     } else if (this.attributeFilterMode.equals(MODE_EDITS)) {
@@ -366,8 +358,7 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   }
 
   @Override
-  public boolean isSelected(final boolean selected, final int rowIndex,
-    final int columnIndex) {
+  public boolean isSelected(final boolean selected, final int rowIndex, final int columnIndex) {
     final LayerDataObject object = getRecord(rowIndex);
     return this.layer.isSelected(object);
   }
@@ -421,9 +412,8 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   public void propertyChange(final PropertyChangeEvent e) {
     if (e.getSource() == this.layer) {
       final String propertyName = e.getPropertyName();
-      if (Arrays.asList("query", "editable", "recordInserted",
-        "recordsInserted", "recordDeleted", "recordsChanged").contains(
-        propertyName)) {
+      if (Arrays.asList("query", "editable", "recordInserted", "recordsInserted", "recordDeleted",
+        "recordsChanged").contains(propertyName)) {
         refresh();
       } else if ("recordUpdated".equals(propertyName)) {
         repaint();
@@ -505,11 +495,9 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
       } else {
         refresh();
       }
-      this.propertyChangeSupport.firePropertyChange("filter", oldValue,
-        this.filter);
+      this.propertyChangeSupport.firePropertyChange("filter", oldValue, this.filter);
       final boolean hasFilter = isHasFilter();
-      this.propertyChangeSupport.firePropertyChange("hasFilter", !hasFilter,
-        hasFilter);
+      this.propertyChangeSupport.firePropertyChange("hasFilter", !hasFilter, hasFilter);
       return true;
     }
   }
@@ -590,11 +578,9 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
             RowFilter<Object, Object> rowFilter;
             if (value instanceof Number) {
               final Number number = (Number)value;
-              rowFilter = RowFilter.numberFilter(ComparisonType.EQUAL, number,
-                columnIndex);
+              rowFilter = RowFilter.numberFilter(ComparisonType.EQUAL, number, columnIndex);
             } else {
-              rowFilter = new EqualFilter(
-                StringConverterRegistry.toString(value), columnIndex);
+              rowFilter = new EqualFilter(StringConverterRegistry.toString(value), columnIndex);
             }
             table.setRowFilter(rowFilter);
           } else if (operator.equals("LIKE")) {
@@ -642,8 +628,8 @@ public class DataObjectLayerTableModel extends DataObjectRowTableModel
   }
 
   @Override
-  public String toDisplayValueInternal(final int rowIndex,
-    final int attributeIndex, final Object objectValue) {
+  public String toDisplayValueInternal(final int rowIndex, final int attributeIndex,
+    final Object objectValue) {
     if (objectValue == null) {
       if (getMetaData().getIdFieldIndex() == attributeIndex) {
         return "NEW";

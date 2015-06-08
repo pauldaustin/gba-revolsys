@@ -36,8 +36,7 @@ public class CoordinateArrays {
    * Returns either the given coordinate array if its length is greater than the
    * given amount, or an empty coordinate array.
    */
-  public static Coordinates[] atLeastNCoordinatessOrNothing(final int n,
-    final Coordinates[] c) {
+  public static Coordinates[] atLeastNCoordinatessOrNothing(final int n, final Coordinates[] c) {
     return c.length >= n ? c : new Coordinates[] {};
   }
 
@@ -92,7 +91,7 @@ public class CoordinateArrays {
    *
    * @param src an array of Coordinatess
    * @param srcStart the index to start copying from
-   * @param dest the 
+   * @param dest the
    * @param destStart the destination index to start copying to
    * @param length the number of items to copy
    */
@@ -108,8 +107,7 @@ public class CoordinateArrays {
    * equal (as compared using Coordinates#equals)
    * @see Coordinates#equals(Object)
    */
-  public static boolean equals(final Coordinates[] coord1,
-    final Coordinates[] coord2) {
+  public static boolean equals(final Coordinates[] coord1, final Coordinates[] coord2) {
     if (coord1 == coord2) {
       return true;
     }
@@ -135,8 +133,8 @@ public class CoordinateArrays {
    * @param coord2 an array of Coordinatess
    * @param coordinateComparator a Comparator for Coordinatess
    */
-  public static boolean equals(final Coordinates[] coord1,
-    final Coordinates[] coord2, final Comparator coordinateComparator) {
+  public static boolean equals(final Coordinates[] coord1, final Coordinates[] coord2,
+    final Comparator coordinateComparator) {
     if (coord1 == coord2) {
       return true;
     }
@@ -167,8 +165,7 @@ public class CoordinateArrays {
    * @param end the index of the end of the subsequence to extract
    * @return a subsequence of the input array
    */
-  public static Coordinates[] extract(final Coordinates[] pts, int start,
-    int end) {
+  public static Coordinates[] extract(final Coordinates[] pts, int start, int end) {
     start = MathUtil.clamp(start, 0, pts.length);
     end = MathUtil.clamp(end, -1, pts.length);
 
@@ -244,8 +241,7 @@ public class CoordinateArrays {
    *@return              the position of <code>coordinate</code>, or -1 if it is
    *      not found
    */
-  public static int indexOf(final Coordinates coordinate,
-    final Coordinates[] coordinates) {
+  public static int indexOf(final Coordinates coordinate, final Coordinates[] coordinates) {
     for (int i = 0; i < coordinates.length; i++) {
       if (coordinate.equals(coordinates[i])) {
         return i;
@@ -255,30 +251,10 @@ public class CoordinateArrays {
   }
 
   /**
-   * Determines whether two {@link Coordinates} arrays of equal length
-   * are equal in opposite directions.
-   *
-   * @param pts1
-   * @param pts2
-   * @return <code>true</code> if the two arrays are equal in opposite directions.
-   */
-  private static boolean isEqualReversed(final Coordinates[] pts1,
-    final Coordinates[] pts2) {
-    for (int i = 0; i < pts1.length; i++) {
-      final Coordinates p1 = pts1[i];
-      final Coordinates p2 = pts2[pts1.length - i - 1];
-      if (p1.compareTo(p2) != 0) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
    * Tests whether an array of {@link Coordinates}s forms a ring,
-   * by checking length and closure. 
+   * by checking length and closure.
    * Self-intersection is not checked.
-   * 
+   *
    * @param pts an array of Coordinatess
    * @return true if the coordinate form a ring.
    */
@@ -301,9 +277,9 @@ public class CoordinateArrays {
    */
   public static Coordinates minCoordinates(final Coordinates[] coordinates) {
     Coordinates minCoord = null;
-    for (int i = 0; i < coordinates.length; i++) {
-      if (minCoord == null || minCoord.compareTo(coordinates[i]) > 0) {
-        minCoord = coordinates[i];
+    for (final Coordinates coordinate : coordinates) {
+      if (minCoord == null || minCoord.compareTo(coordinate) > 0) {
+        minCoord = coordinate;
       }
     }
     return minCoord;
@@ -316,10 +292,8 @@ public class CoordinateArrays {
    * @return a {@link Coordinates} from <code>testPts</code> which is not in <code>pts</code>, '
    * or <code>null</code>
    */
-  public static Coordinates ptNotInList(final Coordinates[] testPts,
-    final Coordinates[] pts) {
-    for (int i = 0; i < testPts.length; i++) {
-      final Coordinates testPt = testPts[i];
+  public static Coordinates ptNotInList(final Coordinates[] testPts, final Coordinates[] pts) {
+    for (final Coordinates testPt : testPts) {
       if (CoordinateArrays.indexOf(testPt, pts) < 0) {
         return testPt;
       }
@@ -347,8 +321,7 @@ public class CoordinateArrays {
    *@param  coordinates      the array to rearrange
    *@param  firstCoordinates  the coordinate to make first
    */
-  public static void scroll(final Coordinates[] coordinates,
-    final Coordinates firstCoordinates) {
+  public static void scroll(final Coordinates[] coordinates, final Coordinates firstCoordinates) {
     final int i = indexOf(firstCoordinates, coordinates);
     if (i < 0) {
       return;

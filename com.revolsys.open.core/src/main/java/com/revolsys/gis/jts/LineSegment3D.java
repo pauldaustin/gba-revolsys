@@ -9,12 +9,11 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 public class LineSegment3D extends LineSegment {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -4858771831440204506L;
 
-  public static Coordinate midpoint(final Coordinate coordinate1,
-    final Coordinate coordinate2) {
+  public static Coordinate midpoint(final Coordinate coordinate1, final Coordinate coordinate2) {
     final double x1 = coordinate1.x;
     final double y1 = coordinate1.y;
     final double z1 = coordinate1.z;
@@ -48,37 +47,36 @@ public class LineSegment3D extends LineSegment {
 
   /**
    * Add a evelation (z) value for a coordinate that is on this line segment.
-   * 
+   *
    * @param coordinate The Coordinate.
    * @param line The line segment the coordinate is on.
    */
   public void addElevation(final Coordinate coordinate) {
-    final double z0 = p0.z;
-    final double z1 = p1.z;
+    final double z0 = this.p0.z;
+    final double z1 = this.p1.z;
     if (!Double.isNaN(z0) && !Double.isNaN(z0)) {
-      final double fraction = coordinate.distance(p0) / getLength();
-      coordinate.z = z0 + (z1 - z0) * (fraction);
+      final double fraction = coordinate.distance(this.p0) / getLength();
+      coordinate.z = z0 + (z1 - z0) * fraction;
     }
   }
 
   /**
    * Add a evelation (z) value for a coordinate that is on this line segment.
-   * 
+   *
    * @param coordinate The Coordinate.
    * @param line The line segment the coordinate is on.
    */
-  public void addElevation(final Coordinate coordinate,
-    final PrecisionModel model) {
-    final double z0 = p0.z;
-    final double z1 = p1.z;
+  public void addElevation(final Coordinate coordinate, final PrecisionModel model) {
+    final double z0 = this.p0.z;
+    final double z1 = this.p1.z;
     if (!Double.isNaN(z0) && !Double.isNaN(z0)) {
-      final double fraction = coordinate.distance(p0) / getLength();
-      coordinate.z = model.makePrecise(z0 + (z1 - z0) * (fraction));
+      final double fraction = coordinate.distance(this.p0) / getLength();
+      coordinate.z = model.makePrecise(z0 + (z1 - z0) * fraction);
     }
   }
 
   public Envelope getEnvelope() {
-    return new Envelope(p0, p1);
+    return new Envelope(this.p0, this.p1);
   }
 
   public Coordinate intersection3D(final LineSegment line) {
@@ -91,8 +89,8 @@ public class LineSegment3D extends LineSegment {
 
   public Coordinate pointAlong3D(final double segmentLengthFraction) {
     final Coordinate coord = new Coordinate();
-    coord.x = p0.x + segmentLengthFraction * (p1.x - p0.x);
-    coord.y = p0.y + segmentLengthFraction * (p1.y - p0.y);
+    coord.x = this.p0.x + segmentLengthFraction * (this.p1.x - this.p0.x);
+    coord.y = this.p0.y + segmentLengthFraction * (this.p1.y - this.p0.y);
     addElevation(coord);
     return coord;
   }

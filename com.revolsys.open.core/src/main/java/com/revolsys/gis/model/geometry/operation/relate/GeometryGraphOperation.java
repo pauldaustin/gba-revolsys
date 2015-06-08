@@ -8,7 +8,7 @@ import com.vividsolutions.jts.algorithm.BoundaryNodeRule;
 
 /**
  * The base class for operations that require {@link GeometryGraph}s.
- * 
+ *
  * @version 1.7
  */
 public class GeometryGraphOperation {
@@ -25,8 +25,8 @@ public class GeometryGraphOperation {
   public GeometryGraphOperation(final Geometry g0) {
     // setComputationPrecision(g0.getPrecisionModel());
 
-    arg = new GeometryGraph[1];
-    arg[0] = new GeometryGraph(0, g0);
+    this.arg = new GeometryGraph[1];
+    this.arg[0] = new GeometryGraph(0, g0);
   }
 
   public GeometryGraphOperation(final Geometry g0, final Geometry g1) {
@@ -43,13 +43,13 @@ public class GeometryGraphOperation {
     // else
     // setComputationPrecision(g1.getPrecisionModel());
 
-    arg = new GeometryGraph[2];
-    arg[0] = new GeometryGraph(0, g0, boundaryNodeRule);
-    arg[1] = new GeometryGraph(1, g1, boundaryNodeRule);
+    this.arg = new GeometryGraph[2];
+    this.arg[0] = new GeometryGraph(0, g0, boundaryNodeRule);
+    this.arg[1] = new GeometryGraph(1, g1, boundaryNodeRule);
   }
 
   public Geometry getArgGeometry(final int i) {
-    return arg[i].getGeometry();
+    return this.arg[i].getGeometry();
   }
 
   // protected void setComputationPrecision(PrecisionModel pm) {

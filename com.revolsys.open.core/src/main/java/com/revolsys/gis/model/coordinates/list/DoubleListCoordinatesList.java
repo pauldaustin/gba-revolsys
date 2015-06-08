@@ -18,8 +18,7 @@ public class DoubleListCoordinatesList extends AbstractCoordinatesList {
     this(coordinatesList.getNumAxis(), coordinatesList.getCoordinates());
   }
 
-  public DoubleListCoordinatesList(final CoordinatesList coordinatesList,
-    final int numAxis) {
+  public DoubleListCoordinatesList(final CoordinatesList coordinatesList, final int numAxis) {
     this(coordinatesList.size(), numAxis);
     coordinatesList.copy(0, this, 0, numAxis, coordinatesList.size());
   }
@@ -28,40 +27,38 @@ public class DoubleListCoordinatesList extends AbstractCoordinatesList {
     this.numAxis = (byte)numAxis;
   }
 
-  public DoubleListCoordinatesList(final int numAxis,
-    final double... coordinates) {
+  public DoubleListCoordinatesList(final int numAxis, final double... coordinates) {
     this.numAxis = (byte)numAxis;
     for (final double coordinate : coordinates) {
       this.coordinates.add(coordinate);
     }
   }
 
-  public DoubleListCoordinatesList(final int numAxis,
-    final List<Number> coordinates) {
+  public DoubleListCoordinatesList(final int numAxis, final List<Number> coordinates) {
     this(numAxis, MathUtil.toDoubleArray(coordinates));
   }
 
   public void add(final Coordinates point) {
-    for (int axisIndex = 0; axisIndex < numAxis; axisIndex++) {
+    for (int axisIndex = 0; axisIndex < this.numAxis; axisIndex++) {
       double value;
       if (axisIndex < point.getNumAxis()) {
         value = point.getValue(axisIndex);
       } else {
         value = Double.NaN;
       }
-      coordinates.add(value);
+      this.coordinates.add(value);
     }
   }
 
   public void add(final CoordinatesList points, final int index) {
-    for (int axisIndex = 0; axisIndex < numAxis; axisIndex++) {
+    for (int axisIndex = 0; axisIndex < this.numAxis; axisIndex++) {
       double value;
       if (axisIndex < points.getNumAxis()) {
         value = points.getValue(index, axisIndex);
       } else {
         value = Double.NaN;
       }
-      coordinates.add(value);
+      this.coordinates.add(value);
     }
   }
 
@@ -72,13 +69,13 @@ public class DoubleListCoordinatesList extends AbstractCoordinatesList {
   }
 
   public void clear() {
-    coordinates.clear();
+    this.coordinates.clear();
   }
 
   @Override
   public DoubleListCoordinatesList clone() {
     final DoubleListCoordinatesList clone = (DoubleListCoordinatesList)super.clone();
-    clone.coordinates = new ArrayList<Double>(coordinates);
+    clone.coordinates = new ArrayList<Double>(this.coordinates);
     return clone;
   }
 
@@ -95,22 +92,22 @@ public class DoubleListCoordinatesList extends AbstractCoordinatesList {
 
   @Override
   public byte getNumAxis() {
-    return numAxis;
+    return this.numAxis;
   }
 
   @Override
   public double getValue(final int index, final int axisIndex) {
     final byte numAxis = getNumAxis();
     if (axisIndex < numAxis && index < size()) {
-      return coordinates.get(index * numAxis + axisIndex);
+      return this.coordinates.get(index * numAxis + axisIndex);
     } else {
       return Double.NaN;
     }
   }
 
   public void remove(final int index) {
-    for (int axisIndex = 0; axisIndex < numAxis; axisIndex++) {
-      coordinates.remove(index * numAxis);
+    for (int axisIndex = 0; axisIndex < this.numAxis; axisIndex++) {
+      this.coordinates.remove(index * this.numAxis);
     }
   }
 
@@ -119,16 +116,16 @@ public class DoubleListCoordinatesList extends AbstractCoordinatesList {
     final byte numAxis = getNumAxis();
     if (axisIndex < numAxis) {
       if (index <= size()) {
-        for (int i = coordinates.size(); i < (index + 1) * numAxis; i++) {
-          coordinates.add(0.0);
+        for (int i = this.coordinates.size(); i < (index + 1) * numAxis; i++) {
+          this.coordinates.add(0.0);
         }
       }
-      coordinates.set(index * numAxis + axisIndex, value);
+      this.coordinates.set(index * numAxis + axisIndex, value);
     }
   }
 
   @Override
   public int size() {
-    return coordinates.size() / numAxis;
+    return this.coordinates.size() / this.numAxis;
   }
 }

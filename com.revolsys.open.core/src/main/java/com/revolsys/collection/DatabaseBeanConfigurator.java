@@ -36,43 +36,43 @@ public class DatabaseBeanConfigurator extends BeanConfigurrer {
   }
 
   public DataSource getDataSource() {
-    return dataSource;
+    return this.dataSource;
   }
 
   public String getPropertyColumnName() {
-    return propertyColumnName;
+    return this.propertyColumnName;
   }
 
   public String getTableName() {
-    return tableName;
+    return this.tableName;
   }
 
   public String getTypeColumnName() {
-    return typeColumnName;
+    return this.typeColumnName;
   }
 
   public String getValueColumnName() {
-    return valueColumnName;
+    return this.valueColumnName;
   }
 
   public String getWhereClause() {
-    return whereClause;
+    return this.whereClause;
   }
 
   @Override
-  public void postProcessBeanFactory(
-    final ConfigurableListableBeanFactory beanFactory) throws BeansException {
+  public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
+    throws BeansException {
     try {
-      final boolean hasTypeColumnName = StringUtils.hasText(typeColumnName);
-      String sql = "SELECT " + propertyColumnName + ", " + valueColumnName;
+      final boolean hasTypeColumnName = StringUtils.hasText(this.typeColumnName);
+      String sql = "SELECT " + this.propertyColumnName + ", " + this.valueColumnName;
       if (hasTypeColumnName) {
-        sql += ", " + typeColumnName;
+        sql += ", " + this.typeColumnName;
       }
-      sql += " FROM " + JdbcUtils.getQualifiedTableName(tableName);
-      if (StringUtils.hasText(whereClause)) {
-        sql += " WHERE " + whereClause;
+      sql += " FROM " + JdbcUtils.getQualifiedTableName(this.tableName);
+      if (StringUtils.hasText(this.whereClause)) {
+        sql += " WHERE " + this.whereClause;
       }
-      final Connection connection = dataSource.getConnection();
+      final Connection connection = this.dataSource.getConnection();
       try {
         final PreparedStatement statement = connection.prepareStatement(sql);
         try {
@@ -105,7 +105,7 @@ public class DatabaseBeanConfigurator extends BeanConfigurrer {
           JdbcUtils.close(statement);
         }
       } finally {
-        JdbcUtils.release(connection, dataSource);
+        JdbcUtils.release(connection, this.dataSource);
       }
     } catch (final Throwable e) {
       LOG.error("Unable to load configuration from database ", e);

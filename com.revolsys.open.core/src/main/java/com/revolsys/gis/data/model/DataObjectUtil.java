@@ -5,13 +5,13 @@
  * $Revision$
 
  * Copyright 2004-2007 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,9 +32,9 @@ import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.jts.JtsGeometryUtil;
@@ -45,8 +45,7 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public final class DataObjectUtil {
 
-  public static Record copy(final RecordDefinition metaData,
-    final Record object) {
+  public static Record copy(final RecordDefinition metaData, final Record object) {
     final Record copy = new ArrayRecord(metaData);
     copy.setValues(object);
     return copy;
@@ -56,14 +55,13 @@ public final class DataObjectUtil {
    * Create a copy of the data object replacing the geometry with the new
    * geometry. If the existing geometry on the object has user data it will be
    * cloned to the new geometry.
-   * 
+   *
    * @param object The object to copy.
    * @param geometry The new geometry.
    * @return The copied object.
    */
   @SuppressWarnings("unchecked")
-  public static <T extends Record> T copy(final T object,
-    final Geometry geometry) {
+  public static <T extends Record> T copy(final T object, final Geometry geometry) {
     final Geometry oldGeometry = object.getGeometryValue();
     final T newObject = (T)object.clone();
     newObject.setGeometryValue(geometry);
@@ -72,14 +70,13 @@ public final class DataObjectUtil {
   }
 
   public static RecordDefinition createGeometryMetaData() {
-    final FieldDefinition geometryAttribute = new FieldDefinition("geometry",
-      DataTypes.GEOMETRY, true);
+    final FieldDefinition geometryAttribute = new FieldDefinition("geometry", DataTypes.GEOMETRY,
+      true);
     return new RecordDefinitionImpl("Feature", geometryAttribute);
   }
 
-  public static <D extends Record> List<D> filter(
-    final Collection<D> objects, final Geometry geometry,
-    final double maxDistance) {
+  public static <D extends Record> List<D> filter(final Collection<D> objects,
+    final Geometry geometry, final double maxDistance) {
     final List<D> results = new ArrayList<D>();
     for (final D object : objects) {
       final Geometry objectGeometry = object.getGeometryValue();
@@ -92,8 +89,7 @@ public final class DataObjectUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T getAttributeByPath(final Record object,
-    final String path) {
+  public static <T> T getAttributeByPath(final Record object, final String path) {
     final RecordDefinition metaData = object.getRecordDefinition();
 
     final String[] propertyPath = path.split("\\.");
@@ -118,8 +114,7 @@ public final class DataObjectUtil {
         }
       } else if (propertyValue instanceof Geometry) {
         final Geometry geometry = (Geometry)propertyValue;
-        propertyValue = JtsGeometryUtil.getGeometryProperty(geometry,
-          propertyName);
+        propertyValue = JtsGeometryUtil.getGeometryProperty(geometry, propertyName);
       } else if (propertyValue instanceof Map) {
         final Map<String, Object> map = (Map<String, Object>)propertyValue;
         propertyValue = map.get(propertyName);
@@ -142,8 +137,7 @@ public final class DataObjectUtil {
     return (T)propertyValue;
   }
 
-  public static boolean getBoolean(final Record object,
-    final String attributeName) {
+  public static boolean getBoolean(final Record object, final String attributeName) {
     if (object == null) {
       return false;
     } else {
@@ -167,8 +161,7 @@ public final class DataObjectUtil {
     }
   }
 
-  public static Double getDouble(final Record object,
-    final int attributeIndex) {
+  public static Double getDouble(final Record object, final int attributeIndex) {
     final Number value = object.getValue(attributeIndex);
     if (value == null) {
       return null;
@@ -179,8 +172,7 @@ public final class DataObjectUtil {
     }
   }
 
-  public static Double getDouble(final Record object,
-    final String attributeName) {
+  public static Double getDouble(final Record object, final String attributeName) {
     final Number value = object.getValue(attributeName);
     if (value == null) {
       return null;
@@ -191,8 +183,7 @@ public final class DataObjectUtil {
     }
   }
 
-  public static Integer getInteger(final Record object,
-    final String attributeName) {
+  public static Integer getInteger(final Record object, final String attributeName) {
     if (object == null) {
       return null;
     } else {
@@ -207,8 +198,8 @@ public final class DataObjectUtil {
     }
   }
 
-  public static Integer getInteger(final Record object,
-    final String attributeName, final Integer defaultValue) {
+  public static Integer getInteger(final Record object, final String attributeName,
+    final Integer defaultValue) {
     if (object == null) {
       return null;
     } else {
@@ -234,8 +225,7 @@ public final class DataObjectUtil {
     }
   }
 
-  public static Record getObject(final RecordDefinition metaData,
-    final Map<String, Object> values) {
+  public static Record getObject(final RecordDefinition metaData, final Map<String, Object> values) {
     final Record object = new ArrayRecord(metaData);
     for (final Entry<String, Object> entry : values.entrySet()) {
       final String name = entry.getKey();
@@ -274,9 +264,8 @@ public final class DataObjectUtil {
     return objects;
   }
 
-  public static void mergeValue(final Map<String, Object> object,
-    final Record object1, final Record object2, final String fieldName,
-    final String separator) {
+  public static void mergeValue(final Map<String, Object> object, final Record object1,
+    final Record object2, final String fieldName, final String separator) {
     final String value1 = object1.getString(fieldName);
     final String value2 = object2.getString(fieldName);
     Object value;
@@ -292,9 +281,8 @@ public final class DataObjectUtil {
     object.put(fieldName, value);
   }
 
-  public static void setValues(final Record target,
-    final Record source, final Collection<String> attributesNames,
-    final Collection<String> ignoreAttributeNames) {
+  public static void setValues(final Record target, final Record source,
+    final Collection<String> attributesNames, final Collection<String> ignoreAttributeNames) {
     for (final String attributeName : attributesNames) {
       if (!ignoreAttributeNames.contains(attributeName)) {
         final Object oldValue = target.getValue(attributeName);

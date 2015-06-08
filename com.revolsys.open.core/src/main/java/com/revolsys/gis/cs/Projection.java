@@ -28,8 +28,8 @@ public class Projection implements Serializable, Comparable<Projection> {
 
   private static final Map<String, String> PROJECTION_ALIASES = new TreeMap<>();
   static {
-    for (final String alias : Arrays.asList(ALBERS_EQUAL_AREA, "Albers",
-      "Albers_Equal_Area_Conic", "Albers_Conic_Equal_Area")) {
+    for (final String alias : Arrays.asList(ALBERS_EQUAL_AREA, "Albers", "Albers_Equal_Area_Conic",
+      "Albers_Conic_Equal_Area")) {
       addAlias(alias, ALBERS_EQUAL_AREA);
     }
 
@@ -37,8 +37,7 @@ public class Projection implements Serializable, Comparable<Projection> {
 
     addAlias(LAMBERT_CONIC_CONFORMAL_2SP, LAMBERT_CONIC_CONFORMAL_2SP);
 
-    addAlias(LAMBERT_CONIC_CONFORMAL_2SP_BELGIUM,
-      LAMBERT_CONIC_CONFORMAL_2SP_BELGIUM);
+    addAlias(LAMBERT_CONIC_CONFORMAL_2SP_BELGIUM, LAMBERT_CONIC_CONFORMAL_2SP_BELGIUM);
 
     addAlias(MERCATOR, MERCATOR);
 
@@ -48,12 +47,11 @@ public class Projection implements Serializable, Comparable<Projection> {
 
     addAlias(MERCATOR_2SP, MERCATOR_2SP);
 
-    addAlias(POPULAR_VISUALISATION_PSEUDO_MERCATOR,
-      POPULAR_VISUALISATION_PSEUDO_MERCATOR);
+    addAlias(POPULAR_VISUALISATION_PSEUDO_MERCATOR, POPULAR_VISUALISATION_PSEUDO_MERCATOR);
   }
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 6199958151692874551L;
 
@@ -103,7 +101,7 @@ public class Projection implements Serializable, Comparable<Projection> {
   public boolean equals(final Object obj) {
     if (obj instanceof Projection) {
       final Projection projection = (Projection)obj;
-      if (EqualsRegistry.equal(authority, projection.authority)) {
+      if (EqualsRegistry.equal(this.authority, projection.authority)) {
         return true;
       } else {
         return getNormalizedName().equals(projection.getNormalizedName());
@@ -113,15 +111,15 @@ public class Projection implements Serializable, Comparable<Projection> {
   }
 
   public Authority getAuthority() {
-    return authority;
+    return this.authority;
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public String getNormalizedName() {
-    return normalizedName;
+    return this.normalizedName;
   }
 
   @Override

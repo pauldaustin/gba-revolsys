@@ -15,8 +15,7 @@ public class SetRecordValuesUndo extends AbstractUndoableEdit {
 
   private final Map<String, Object> newValues = new HashMap<String, Object>();
 
-  public SetRecordValuesUndo(final LayerDataObject record,
-    final Map<String, Object> newValues) {
+  public SetRecordValuesUndo(final LayerDataObject record, final Map<String, Object> newValues) {
     this.record = record;
     if (record != null) {
       this.originalValues.putAll(record);
@@ -29,7 +28,7 @@ public class SetRecordValuesUndo extends AbstractUndoableEdit {
   @Override
   public boolean canRedo() {
     if (super.canRedo()) {
-      return MapEquals.equalMap1Keys(record, originalValues);
+      return MapEquals.equalMap1Keys(this.record, this.originalValues);
     }
     return false;
   }
@@ -37,22 +36,22 @@ public class SetRecordValuesUndo extends AbstractUndoableEdit {
   @Override
   public boolean canUndo() {
     if (super.canUndo()) {
-      return MapEquals.equalMap1Keys(record, newValues);
+      return MapEquals.equalMap1Keys(this.record, this.newValues);
     }
     return false;
   }
 
   @Override
   protected void doRedo() {
-    if (record != null) {
-      record.getLayer().replaceValues(record, newValues);
+    if (this.record != null) {
+      this.record.getLayer().replaceValues(this.record, this.newValues);
     }
   }
 
   @Override
   protected void doUndo() {
-    if (record != null) {
-      record.getLayer().replaceValues(record, originalValues);
+    if (this.record != null) {
+      this.record.getLayer().replaceValues(this.record, this.originalValues);
     }
   }
 

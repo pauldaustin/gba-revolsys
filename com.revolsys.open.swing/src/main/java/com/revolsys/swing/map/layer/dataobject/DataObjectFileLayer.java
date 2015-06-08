@@ -69,9 +69,9 @@ public class DataObjectFileLayer extends DataObjectListLayer {
 
   @Override
   protected boolean doInitialize() {
-    url = getProperty("url");
-    if (StringUtils.hasText(url)) {
-      resource = SpringUtil.getResource(url);
+    this.url = getProperty("url");
+    if (StringUtils.hasText(this.url)) {
+      this.resource = SpringUtil.getResource(this.url);
       return revert();
     } else {
       LoggerFactory.getLogger(getClass()).error(
@@ -82,18 +82,18 @@ public class DataObjectFileLayer extends DataObjectListLayer {
   }
 
   public String getUrl() {
-    return url;
+    return this.url;
   }
 
   public boolean revert() {
-    if (resource == null) {
+    if (this.resource == null) {
       return false;
     } else {
-      if (resource.exists()) {
-        final Resource resource1 = resource;
+      if (this.resource.exists()) {
+        final Resource resource1 = this.resource;
         final RecordReader reader = RecordIo.recordReader(resource1);
         if (reader == null) {
-          LoggerFactory.getLogger(getClass()).error("Cannot find reader for: " + resource);
+          LoggerFactory.getLogger(getClass()).error("Cannot find reader for: " + this.resource);
           return false;
         } else {
           try {
@@ -110,14 +110,14 @@ public class DataObjectFileLayer extends DataObjectListLayer {
             setBoundingBox(boundingBox);
             return true;
           } catch (final Throwable e) {
-            ExceptionUtil.log(getClass(), "Error reading: " + resource, e);
+            ExceptionUtil.log(getClass(), "Error reading: " + this.resource, e);
           } finally {
             fireRecordsChanged();
             reader.close();
           }
         }
       } else {
-        LoggerFactory.getLogger(getClass()).error("Cannot find: " + url);
+        LoggerFactory.getLogger(getClass()).error("Cannot find: " + this.url);
       }
     }
     return false;
@@ -126,7 +126,7 @@ public class DataObjectFileLayer extends DataObjectListLayer {
   @Override
   public Map<String, Object> toMap() {
     final Map<String, Object> map = super.toMap();
-    MapSerializerUtil.add(map, "url", url);
+    MapSerializerUtil.add(map, "url", this.url);
     return map;
   }
 }

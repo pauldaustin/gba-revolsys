@@ -18,8 +18,7 @@ import org.jdesktop.swingx.color.ColorUtil;
 
 import com.revolsys.swing.layout.GroupLayoutUtil;
 
-public class ColorAlphaPanel extends AbstractColorChooserPanel implements
-  ChangeListener {
+public class ColorAlphaPanel extends AbstractColorChooserPanel implements ChangeListener {
   private static final long serialVersionUID = 3533569797414988165L;
 
   private final JSlider alphaSlider;
@@ -69,8 +68,7 @@ public class ColorAlphaPanel extends AbstractColorChooserPanel implements
   @Override
   public void stateChanged(final ChangeEvent e) {
     final Color color = getColorFromModel();
-    final Color newColor = ColorUtil.setAlpha(color,
-      this.alphaSlider.getValue());
+    final Color newColor = ColorUtil.setAlpha(color, this.alphaSlider.getValue());
     final ColorSelectionModel colorSelectionModel = getColorSelectionModel();
     colorSelectionModel.setSelectedColor(newColor);
   }
@@ -78,7 +76,7 @@ public class ColorAlphaPanel extends AbstractColorChooserPanel implements
   @Override
   public void updateChooser() {
     final Color color = getColorFromModel();
-    int alpha = color.getAlpha();
+    final int alpha = color.getAlpha();
     this.alphaSlider.setValue(alpha);
   }
 }

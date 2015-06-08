@@ -81,11 +81,11 @@ public class TileInfo extends AbstractMapWrapper {
   }
 
   public double getOriginX() {
-    return originX;
+    return this.originX;
   }
 
   public double getOriginY() {
-    return originY;
+    return this.originY;
   }
 
   public double getPixelSize() {
@@ -103,11 +103,11 @@ public class TileInfo extends AbstractMapWrapper {
     super.setValues(values);
     final Map<String, Object> origin = getValue("origin");
     if (origin == null) {
-      originX = Double.NaN;
-      originY = Double.NaN;
+      this.originX = Double.NaN;
+      this.originY = Double.NaN;
     } else {
-      originX = CollectionUtil.getDoubleValue(origin, "x");
-      originY = CollectionUtil.getDoubleValue(origin, "y");
+      this.originX = CollectionUtil.getDoubleValue(origin, "x");
+      this.originY = CollectionUtil.getDoubleValue(origin, "y");
     }
   }
 }

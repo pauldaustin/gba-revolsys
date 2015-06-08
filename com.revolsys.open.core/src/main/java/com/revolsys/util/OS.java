@@ -19,8 +19,7 @@ public class OS {
 
   public final static boolean IS_LINUX = OS_NAME.equals("Linux");
 
-  public final static boolean IS_MAC = OS_NAME.contains("OS X")
-    || OS_NAME.equals("Darwin");
+  public final static boolean IS_MAC = OS_NAME.contains("OS X") || OS_NAME.equals("Darwin");
 
   public static File getApplicationDataDirectory(final String applicationName) {
     String path;
@@ -54,15 +53,14 @@ public class OS {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T getPreference(final String applicationName,
-    final String path, final String propertyName) {
-    final Map<String, Object> preferences = getPreferences(applicationName,
-      path);
+  public static <T> T getPreference(final String applicationName, final String path,
+    final String propertyName) {
+    final Map<String, Object> preferences = getPreferences(applicationName, path);
     return (T)Property.get(preferences, propertyName);
   }
 
-  public static <T> T getPreference(final String applicationName,
-    final String path, final String propertyName, final T defaultValue) {
+  public static <T> T getPreference(final String applicationName, final String path,
+    final String propertyName, final T defaultValue) {
     final T value = getPreference(applicationName, path, propertyName);
     if (value == null) {
       return defaultValue;
@@ -71,11 +69,10 @@ public class OS {
     }
   }
 
-  public static File getPreferenceFile(final String applicationName,
-    final String path) {
+  public static File getPreferenceFile(final String applicationName, final String path) {
     if (path.contains("..")) {
-      throw new IllegalArgumentException(
-        "Path cannot contain the '..' character sequernce: " + path);
+      throw new IllegalArgumentException("Path cannot contain the '..' character sequernce: "
+        + path);
     }
     final File preferencesDirectory = getPreferencesDirectory(applicationName);
     final File file = FileUtil.getFile(preferencesDirectory, path + ".rgobject");
@@ -83,8 +80,7 @@ public class OS {
     return file;
   }
 
-  public static Map<String, Object> getPreferences(
-    final String applicationName, final String path) {
+  public static Map<String, Object> getPreferences(final String applicationName, final String path) {
     final File file = getPreferenceFile(applicationName, path);
     if (file.exists()) {
       return JsonMapIoFactory.toMap(file);
@@ -98,11 +94,9 @@ public class OS {
     if (OS.isWindows()) {
       path = System.getenv("APPDATA") + "/" + applicationName + "/Preferences";
     } else if (OS.isMac()) {
-      path = System.getProperty("user.home") + "/Library/Preferences/"
-        + applicationName;
+      path = System.getProperty("user.home") + "/Library/Preferences/" + applicationName;
     } else {
-      path = System.getProperty("user.home") + "/.config/" + applicationName
-        + "/Preferences";
+      path = System.getProperty("user.home") + "/.config/" + applicationName + "/Preferences";
     }
     final File directory = FileUtil.getFile(path);
     directory.mkdirs();
@@ -131,10 +125,9 @@ public class OS {
     return IS_WINDOWS;
   }
 
-  public static void setPreference(final String applicationName,
-    final String path, final String propertyName, final Object value) {
-    final Map<String, Object> preferences = getPreferences(applicationName,
-      path);
+  public static void setPreference(final String applicationName, final String path,
+    final String propertyName, final Object value) {
+    final Map<String, Object> preferences = getPreferences(applicationName, path);
     Property.set(preferences, propertyName, value);
     final File file = getPreferenceFile(applicationName, path);
     JsonMapIoFactory.write(preferences, file, true);

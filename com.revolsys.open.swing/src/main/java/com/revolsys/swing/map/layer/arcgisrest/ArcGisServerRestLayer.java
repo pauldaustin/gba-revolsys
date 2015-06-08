@@ -19,11 +19,9 @@ import com.revolsys.swing.map.layer.MapTile;
 public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "arcgisServerRest", "Arc GIS Server REST", ArcGisServerRestLayer.class,
-    "create");
+    "arcgisServerRest", "Arc GIS Server REST", ArcGisServerRestLayer.class, "create");
 
-  public static ArcGisServerRestLayer create(
-    final Map<String, Object> properties) {
+  public static ArcGisServerRestLayer create(final Map<String, Object> properties) {
     return new ArcGisServerRestLayer(properties);
   }
 
@@ -56,8 +54,7 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
           }
         } catch (final Throwable e) {
           setError(e);
-          throw new RuntimeException("Error connecting to ArcGIS rest server "
-            + this.url, e);
+          throw new RuntimeException("Error connecting to ArcGIS rest server " + this.url, e);
         }
       } else {
         return true;
@@ -92,8 +89,8 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
           if (resolution > 0) {
             final BoundingBox viewBoundingBox = viewport.getBoundingBox();
             final BoundingBox maxBoundingBox = getBoundingBox();
-            final BoundingBox boundingBox = viewBoundingBox.convert(
-              this.geometryFactory).intersection(maxBoundingBox);
+            final BoundingBox boundingBox = viewBoundingBox.convert(this.geometryFactory)
+              .intersection(maxBoundingBox);
             final double minX = boundingBox.getMinX();
             final double minY = boundingBox.getMinY();
             final double maxX = boundingBox.getMaxX();
@@ -107,8 +104,8 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
 
             for (int tileY = minTileY; tileY <= maxTileY; tileY++) {
               for (int tileX = minTileX; tileX <= maxTileX; tileX++) {
-                final ArcGisServerRestMapTile tile = new ArcGisServerRestMapTile(
-                  this, mapServer, zoomLevel, resolution, tileX, tileY);
+                final ArcGisServerRestMapTile tile = new ArcGisServerRestMapTile(this, mapServer,
+                  zoomLevel, resolution, tileX, tileY);
                 tiles.add(tile);
               }
             }

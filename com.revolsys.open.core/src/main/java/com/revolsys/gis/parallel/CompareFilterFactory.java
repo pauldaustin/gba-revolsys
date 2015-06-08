@@ -10,8 +10,7 @@ import com.revolsys.filter.Filter;
 import com.revolsys.gis.data.model.filter.AttributesEqualFilter;
 import com.revolsys.gis.data.model.filter.AttributesEqualOrNullFilter;
 
-public class CompareFilterFactory implements
-  Factory<Filter<Record>, Record> {
+public class CompareFilterFactory implements Factory<Filter<Record>, Record> {
   private List<String> equalAttributeNames = new ArrayList<String>();
 
   private List<String> equalOrNullAttributeNames = new ArrayList<String>();
@@ -19,14 +18,14 @@ public class CompareFilterFactory implements
   @Override
   public Filter<Record> create(final Record object) {
     final AndFilter<Record> filters = new AndFilter<Record>();
-    if (!equalAttributeNames.isEmpty()) {
+    if (!this.equalAttributeNames.isEmpty()) {
       final Filter<Record> valuesFilter = new AttributesEqualFilter(object,
-        equalAttributeNames);
+        this.equalAttributeNames);
       filters.addFilter(valuesFilter);
     }
-    if (!equalOrNullAttributeNames.isEmpty()) {
-      final Filter<Record> valuesFilter = new AttributesEqualOrNullFilter(
-        object, equalOrNullAttributeNames);
+    if (!this.equalOrNullAttributeNames.isEmpty()) {
+      final Filter<Record> valuesFilter = new AttributesEqualOrNullFilter(object,
+        this.equalOrNullAttributeNames);
       filters.addFilter(valuesFilter);
     }
 
@@ -34,19 +33,18 @@ public class CompareFilterFactory implements
   }
 
   public List<String> getEqualAttributeNames() {
-    return equalAttributeNames;
+    return this.equalAttributeNames;
   }
 
   public List<String> getEqualOrNullAttributeNames() {
-    return equalOrNullAttributeNames;
+    return this.equalOrNullAttributeNames;
   }
 
   public void setEqualAttributeNames(final List<String> equalAttributeNames) {
     this.equalAttributeNames = equalAttributeNames;
   }
 
-  public void setEqualOrNullAttributeNames(
-    final List<String> equalOrNullAttributeNames) {
+  public void setEqualOrNullAttributeNames(final List<String> equalOrNullAttributeNames) {
     this.equalOrNullAttributeNames = equalOrNullAttributeNames;
   }
 

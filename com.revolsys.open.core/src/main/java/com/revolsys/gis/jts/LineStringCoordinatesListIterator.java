@@ -27,7 +27,7 @@ public class LineStringCoordinatesListIterator implements Iterator<LineString>,
 
   @Override
   public boolean hasNext() {
-    return index < points.size() - 1;
+    return this.index < this.points.size() - 1;
   }
 
   @Override
@@ -37,9 +37,8 @@ public class LineStringCoordinatesListIterator implements Iterator<LineString>,
 
   @Override
   public LineString next() {
-    final LineString lineString = factory.createLineString(points.subList(
-      index, 2));
-    index++;
+    final LineString lineString = this.factory.createLineString(this.points.subList(this.index, 2));
+    this.index++;
     return lineString;
   }
 

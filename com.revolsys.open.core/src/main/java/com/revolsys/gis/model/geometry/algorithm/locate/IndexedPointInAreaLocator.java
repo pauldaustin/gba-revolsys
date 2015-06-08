@@ -28,7 +28,7 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
           final LineSegment seg = new LineSegment(x1, y1, x2, y2);
           final double min = Math.min(y1, y2);
           final double max = Math.max(y1, y2);
-          index.insert(min, max, seg);
+          this.index.insert(min, max, seg);
         }
       }
     }
@@ -39,9 +39,8 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
       }
     }
 
-    public void query(final double min, final double max,
-      final Visitor<LineSegment> visitor) {
-      index.query(min, max, visitor);
+    public void query(final double min, final double max, final Visitor<LineSegment> visitor) {
+      this.index.query(min, max, visitor);
     }
   }
 
@@ -62,7 +61,7 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
 
   /**
    * Creates a netor for a given {@link Geometry}
-   * 
+   *
    * @param geometry the Geometry to locate in
    */
   public IndexedPointInAreaLocator(final Geometry geometry) {
@@ -71,15 +70,15 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
   }
 
   public Geometry getGeometry() {
-    return geometry;
+    return this.geometry;
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometry.getGeometryFactory();
+    return this.geometry.getGeometryFactory();
   }
 
   public IntervalIndexedGeometry getIndex() {
-    return index;
+    return this.index;
   }
 
   @Override
@@ -91,7 +90,7 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
   public Location locate(final double x, final double y) {
     final GeometryFactory geometryFactory = getGeometryFactory();
     final PointInArea visitor = new PointInArea(geometryFactory, x, y);
-    index.query(y, y, visitor);
+    this.index.query(y, y, visitor);
 
     return visitor.getLocation();
   }

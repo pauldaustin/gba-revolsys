@@ -6,7 +6,7 @@ import com.revolsys.gis.data.model.DataObjectUtil;
 
 /**
  * Filter DataObjects by the the attribute not having a null value.
- * 
+ *
  * @author Paul Austin
  */
 public class AttributeValueNotNullFilter implements Filter<Record> {
@@ -23,19 +23,18 @@ public class AttributeValueNotNullFilter implements Filter<Record> {
 
   /**
    * Match the property on the data object with the required value.
-   * 
+   *
    * @param object The object.
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
   public boolean accept(final Record object) {
-    final Object propertyValue = DataObjectUtil.getAttributeByPath(object,
-      attributeName);
+    final Object propertyValue = DataObjectUtil.getAttributeByPath(object, this.attributeName);
     return propertyValue != null;
   }
 
   public String getAttributeName() {
-    return attributeName;
+    return this.attributeName;
   }
 
   public void setAttributeName(final String attributeName) {
@@ -47,6 +46,6 @@ public class AttributeValueNotNullFilter implements Filter<Record> {
    */
   @Override
   public String toString() {
-    return attributeName + " != null ";
+    return this.attributeName + " != null ";
   }
 }

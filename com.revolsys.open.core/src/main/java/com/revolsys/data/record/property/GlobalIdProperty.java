@@ -34,7 +34,7 @@ public class GlobalIdProperty extends AbstractRecordDefinitionProperty {
   }
 
   public String getAttributeName() {
-    return attributeName;
+    return this.attributeName;
   }
 
   @Override
@@ -48,8 +48,8 @@ public class GlobalIdProperty extends AbstractRecordDefinitionProperty {
 
   @Override
   public void setRecordDefinition(final RecordDefinition metaData) {
-    if (attributeName == null) {
-      attributeName = metaData.getIdFieldName();
+    if (this.attributeName == null) {
+      this.attributeName = metaData.getIdFieldName();
     }
     super.setRecordDefinition(metaData);
   }

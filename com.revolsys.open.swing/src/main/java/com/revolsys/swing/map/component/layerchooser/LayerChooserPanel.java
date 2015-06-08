@@ -36,8 +36,8 @@ import com.revolsys.swing.tree.model.node.AbstractTreeNode;
 import com.revolsys.swing.tree.model.node.ListTreeNode;
 import com.revolsys.swing.tree.renderer.BaseTreeCellRenderer;
 
-public class LayerChooserPanel extends ValueField implements
-  TreeSelectionListener, TableCellRenderer {
+public class LayerChooserPanel extends ValueField implements TreeSelectionListener,
+  TableCellRenderer {
   private static final long serialVersionUID = 1L;
 
   public static BaseTree createTree() {
@@ -50,8 +50,7 @@ public class LayerChooserPanel extends ValueField implements
     final FileSystemsTreeNode fileSystems = new FileSystemsTreeNode(root);
     root.add(fileSystems);
 
-    final FolderConnectionsTreeNode folderConnections = new FolderConnectionsTreeNode(
-      root);
+    final FolderConnectionsTreeNode folderConnections = new FolderConnectionsTreeNode(root);
     root.add(folderConnections);
 
     final TreeModel treeModel = new DefaultTreeModel(root, true);
@@ -80,30 +79,27 @@ public class LayerChooserPanel extends ValueField implements
     super(new BorderLayout());
     setPreferredSize(new Dimension(640, 480));
 
-    tree = createTree();
-    final TreeSelectionModel selectionModel = tree.getSelectionModel();
+    this.tree = createTree();
+    final TreeSelectionModel selectionModel = this.tree.getSelectionModel();
     selectionModel.addTreeSelectionListener(this);
-    final JScrollPane treeScroll = new JScrollPane(tree);
+    final JScrollPane treeScroll = new JScrollPane(this.tree);
 
     final JScrollPane list = createList();
-    final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-      true, treeScroll, list);
+    final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, treeScroll, list);
     splitPane.setDividerLocation(300);
     add(splitPane, BorderLayout.CENTER);
   }
 
   public JScrollPane createList() {
-    childNodesTable = new ObjectListTable<TreeNode>("name", "type");
-    childNodesTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-    childNodesTable.setSortable(true);
-    childNodesTable.addHighlighter(new ColorHighlighter(HighlightPredicate.ODD,
-      WebColors.LightSteelBlue, WebColors.Black, WebColors.Navy,
-      WebColors.White));
-    childNodesTable.addHighlighter(new ColorHighlighter(
-      HighlightPredicate.EVEN, WebColors.White, WebColors.Black,
-      WebColors.Blue, WebColors.White));
-    for (int columnIndex = 0; columnIndex < childNodesTable.getColumnCount(); columnIndex++) {
-      final TableColumnExt column = childNodesTable.getColumnExt(columnIndex);
+    this.childNodesTable = new ObjectListTable<TreeNode>("name", "type");
+    this.childNodesTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    this.childNodesTable.setSortable(true);
+    this.childNodesTable.addHighlighter(new ColorHighlighter(HighlightPredicate.ODD,
+      WebColors.LightSteelBlue, WebColors.Black, WebColors.Navy, WebColors.White));
+    this.childNodesTable.addHighlighter(new ColorHighlighter(HighlightPredicate.EVEN,
+      WebColors.White, WebColors.Black, WebColors.Blue, WebColors.White));
+    for (int columnIndex = 0; columnIndex < this.childNodesTable.getColumnCount(); columnIndex++) {
+      final TableColumnExt column = this.childNodesTable.getColumnExt(columnIndex);
       if (columnIndex == 0) {
         column.setPreferredWidth(70);
         column.setCellRenderer(this);
@@ -111,24 +107,23 @@ public class LayerChooserPanel extends ValueField implements
         column.setPreferredWidth(30);
       }
     }
-    return new JScrollPane(childNodesTable);
+    return new JScrollPane(this.childNodesTable);
   }
 
   @Override
-  public Component getTableCellRendererComponent(final JTable table,
-    final Object value, final boolean isSelected, final boolean hasFocus,
-    final int row, final int column) {
-    tableCellRenderer.getTableCellRendererComponent(table, value, isSelected,
-      hasFocus, row, column);
+  public Component getTableCellRendererComponent(final JTable table, final Object value,
+    final boolean isSelected, final boolean hasFocus, final int row, final int column) {
+    this.tableCellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+      column);
     if (column == 0) {
-      final TreeNode node = childNodesTable.getObjects().get(row);
+      final TreeNode node = this.childNodesTable.getObjects().get(row);
       if (node instanceof AbstractTreeNode) {
         final AbstractTreeNode iconNode = (AbstractTreeNode)node;
         final Icon icon = iconNode.getIcon();
-        tableCellRenderer.setIcon(icon);
+        this.tableCellRenderer.setIcon(icon);
       }
     }
-    return tableCellRenderer;
+    return this.tableCellRenderer;
   }
 
   @Override
@@ -143,7 +138,7 @@ public class LayerChooserPanel extends ValueField implements
       } else {
         children = Collections.emptyList();
       }
-      childNodesTable.setObjects(children);
+      this.childNodesTable.setObjects(children);
     }
   }
 }

@@ -65,9 +65,8 @@ import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
-public abstract class AbstractLayer extends AbstractObjectWithProperties
-  implements Layer, PropertyChangeListener, PropertyChangeSupportProxy,
-  ProjectFramePanel {
+public abstract class AbstractLayer extends AbstractObjectWithProperties implements Layer,
+  PropertyChangeListener, PropertyChangeSupportProxy, ProjectFramePanel {
   private static final AtomicLong ID_GEN = new AtomicLong();
 
   static {
@@ -75,30 +74,27 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
     final EnableCheck exists = new TreeItemPropertyEnableCheck("exists");
 
-    final EnableCheck hasGeometry = new TreeItemPropertyEnableCheck(
-      "hasGeometry");
-    menu.addMenuItem("zoom", TreeItemRunnable.createAction("Zoom to Layer",
-      "magnifier", new AndEnableCheck(exists, hasGeometry), "zoomToLayer"));
+    final EnableCheck hasGeometry = new TreeItemPropertyEnableCheck("hasGeometry");
+    menu.addMenuItem("zoom", TreeItemRunnable.createAction("Zoom to Layer", "magnifier",
+      new AndEnableCheck(exists, hasGeometry), "zoomToLayer"));
 
     menu.addComponentFactory("scale", new TreeItemScaleMenu(true));
     menu.addComponentFactory("scale", new TreeItemScaleMenu(false));
 
-    menu.addMenuItem(TreeItemRunnable.createAction("Refresh", "arrow_refresh",
-      exists, "refresh"));
+    menu.addMenuItem(TreeItemRunnable.createAction("Refresh", "arrow_refresh", exists, "refresh"));
 
-    menu.addMenuItem("layer", TreeItemRunnable.createAction("Delete Layer",
-      "delete", "deleteWithConfirm"));
+    menu.addMenuItem("layer",
+      TreeItemRunnable.createAction("Delete Layer", "delete", "deleteWithConfirm"));
 
-    menu.addMenuItem("layer", TreeItemRunnable.createAction("Layer Properties",
-      "information", exists, "showProperties"));
+    menu.addMenuItem("layer",
+      TreeItemRunnable.createAction("Layer Properties", "information", exists, "showProperties"));
   }
 
   private Icon icon;
 
   private boolean exists = true;
 
-  private PropertyChangeListener beanPropertyListener = new BeanPropertyListener(
-    this);
+  private PropertyChangeListener beanPropertyListener = new BeanPropertyListener(this);
 
   private boolean editable = false;
 
@@ -106,8 +102,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   private String name;
 
-  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-    this);
+  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private GeometryFactory geometryFactory;
 
@@ -149,8 +144,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     this.name = name;
   }
 
-  public AbstractLayer(final String name,
-    final Map<String, ? extends Object> properties) {
+  public AbstractLayer(final String name, final Map<String, ? extends Object> properties) {
     this.name = name;
     setProperties(properties);
   }
@@ -163,8 +157,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     }
   }
 
-  protected JPanel addPropertiesTabCoordinateSystem(
-    final TabbedValuePanel tabPanel) {
+  protected JPanel addPropertiesTabCoordinateSystem(final TabbedValuePanel tabPanel) {
     final GeometryFactory geometryFactory = getGeometryFactory();
     if (geometryFactory != null) {
       final JPanel panel = new JPanel(new VerticalLayout(5));
@@ -180,17 +173,11 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
         extentPanel.add(new JLabel(
           "<html><table cellspacing=\"3\" style=\"margin:0px\">"
             + "<tr><td>&nbsp;</td><th style=\"text-align:left\">Top:</th><td style=\"text-align:right\">"
-            + boundingBox.getMaximumY()
-            + "</td><td>&nbsp;</td></tr><tr>"
-            + "<td><b>Left</b>: "
-            + boundingBox.getMinimumX()
-            + "</td><td>&nbsp;</td><td>&nbsp;</td>"
-            + "<td><b>Right</b>: "
-            + boundingBox.getMaximumX()
-            + "</td></tr>"
+            + boundingBox.getMaximumY() + "</td><td>&nbsp;</td></tr><tr>" + "<td><b>Left</b>: "
+            + boundingBox.getMinimumX() + "</td><td>&nbsp;</td><td>&nbsp;</td>"
+            + "<td><b>Right</b>: " + boundingBox.getMaximumX() + "</td></tr>"
             + "<tr><td>&nbsp;</td><th>Bottom:</th><td style=\"text-align:right\">"
-            + boundingBox.getMinimumY() + "</td><td>&nbsp;</td></tr><tr>"
-            + "</tr></table></html>"));
+            + boundingBox.getMinimumY() + "</td><td>&nbsp;</td></tr><tr>" + "</tr></table></html>"));
 
       }
       GroupLayoutUtil.makeColumns(extentPanel, 1, true);
@@ -203,35 +190,29 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
         coordinateSystemPanel.add(new JLabel("Unknown"));
       } else {
         final int numAxis = geometryFactory.getNumAxis();
-        SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "ID",
-          coordinateSystem.getId(), 10);
-        SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "numAxis",
-          numAxis, 10);
+        SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "ID", coordinateSystem.getId(), 10);
+        SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "numAxis", numAxis, 10);
 
         final double scaleXY = geometryFactory.getScaleXY();
         if (scaleXY > 0) {
-          SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleXy",
-            scaleXY, 10);
+          SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleXy", scaleXY, 10);
         } else {
-          SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleXy",
-            "Floating", 10);
+          SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleXy", "Floating", 10);
         }
 
         if (numAxis > 2) {
           final double scaleZ = geometryFactory.getScaleZ();
           if (scaleZ > 0) {
-            SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleZ",
-              scaleZ, 10);
+            SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleZ", scaleZ, 10);
           } else {
-            SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleZ",
-              "Floating", 10);
+            SwingUtil.addReadOnlyTextField(coordinateSystemPanel, "scaleZ", "Floating", 10);
           }
         }
 
         final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
         SwingUtil.addLabel(coordinateSystemPanel, "ESRI WKT");
-        final TextArea wktTextArea = new TextArea(
-          EsriCsWktWriter.toString(esriCoordinateSystem), 10, 80);
+        final TextArea wktTextArea = new TextArea(EsriCsWktWriter.toString(esriCoordinateSystem),
+          10, 80);
         wktTextArea.setEditable(false);
         wktTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
         coordinateSystemPanel.add(wktTextArea);
@@ -259,8 +240,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     return generalPanel;
   }
 
-  protected ValueField addPropertiesTabGeneralPanelGeneral(
-    final BasePanel parent) {
+  protected ValueField addPropertiesTabGeneralPanelGeneral(final BasePanel parent) {
     final ValueField panel = new ValueField(this);
     SwingUtil.setTitledBorder(panel, "General");
     final Field nameField = (Field)SwingUtil.addObjectField(panel, this, "name");
@@ -287,14 +267,11 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     if (directory != null) {
       final Logger log = LoggerFactory.getLogger(getClass());
       if (!directory.exists()) {
-        log.error("Unable to save layer " + getPath()
-          + " directory does not exist " + directory);
+        log.error("Unable to save layer " + getPath() + " directory does not exist " + directory);
       } else if (!directory.isDirectory()) {
-        log.error("Unable to save layer " + getPath()
-          + " file is not a directory " + directory);
+        log.error("Unable to save layer " + getPath() + " file is not a directory " + directory);
       } else if (!directory.canWrite()) {
-        log.error("Unable to save layer " + getPath()
-          + " directory is not writable " + directory);
+        log.error("Unable to save layer " + getPath() + " directory is not writable " + directory);
       } else {
         return true;
       }
@@ -326,8 +303,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   @Override
   public TabbedValuePanel createPropertiesPanel() {
-    final TabbedValuePanel tabPanel = new TabbedValuePanel("Layer " + this
-      + " Properties", this);
+    final TabbedValuePanel tabPanel = new TabbedValuePanel("Layer " + this + " Properties", this);
     addPropertiesTabGeneral(tabPanel);
     addPropertiesTabCoordinateSystem(tabPanel);
     return tabPanel;
@@ -360,8 +336,8 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   public void deleteWithConfirm() {
     final int confirm = JOptionPane.showConfirmDialog(MapPanel.get(this),
-      "Delete the layer and any child layers? This action cannot be undone.",
-      "Delete Layer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+      "Delete the layer and any child layers? This action cannot be undone.", "Delete Layer",
+      JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
     if (confirm == JOptionPane.OK_OPTION) {
       delete();
     }
@@ -382,19 +358,17 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     return true;
   }
 
-  protected void fireIndexedPropertyChange(final String propertyName,
-    final int index, final Object oldValue, final Object newValue) {
+  protected void fireIndexedPropertyChange(final String propertyName, final int index,
+    final Object oldValue, final Object newValue) {
     if (this.propertyChangeSupport != null) {
-      this.propertyChangeSupport.fireIndexedPropertyChange(propertyName, index,
-        oldValue, newValue);
+      this.propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
     }
   }
 
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     if (this.propertyChangeSupport != null && isEventsEnabled()) {
-      this.propertyChangeSupport.firePropertyChange(propertyName, oldValue,
-        newValue);
+      this.propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
     }
   }
 
@@ -540,8 +514,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
         final boolean exists = doInitialize();
         setExists(exists);
       } catch (final Throwable e) {
-        ExceptionUtil.log(getClass(), "Unable to initialize layer: "
-          + getPath(), e);
+        ExceptionUtil.log(getClass(), "Unable to initialize layer: " + getPath(), e);
         setExists(false);
       } finally {
         setInitialized(true);
@@ -609,8 +582,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   @Override
   public boolean isSelectable() {
-    return isExists() && isVisible()
-      && (isSelectSupported() && this.selectable || isEditable());
+    return isExists() && isVisible() && (isSelectSupported() && this.selectable || isEditable());
   }
 
   @Override
@@ -772,8 +744,8 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
     } else {
       final Object oldValue = getProperty(name);
       if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {
-        final KeyedPropertyChangeEvent event = new KeyedPropertyChangeEvent(
-          this, "property", oldValue, value, name);
+        final KeyedPropertyChangeEvent event = new KeyedPropertyChangeEvent(this, "property",
+          oldValue, value, name);
         if (this.propertyChangeSupport != null) {
           this.propertyChangeSupport.firePropertyChange(event);
         }
@@ -781,8 +753,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
           JavaBeanUtil.setProperty(this, name, value);
           super.setProperty(name, value);
         } catch (final Throwable e) {
-          LoggerFactory.getLogger(getClass()).error(
-            "Unable to set property:" + name, e);
+          LoggerFactory.getLogger(getClass()).error("Unable to set property:" + name, e);
         }
       }
     }

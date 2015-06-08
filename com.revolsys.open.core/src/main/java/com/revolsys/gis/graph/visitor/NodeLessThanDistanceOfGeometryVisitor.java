@@ -13,10 +13,9 @@ import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
-public class NodeLessThanDistanceOfGeometryVisitor<T> implements
-  Visitor<Node<T>> {
-  public static <T> List<Node<T>> getNodes(final Graph<T> graph,
-    final Geometry geometry, final double maxDistance) {
+public class NodeLessThanDistanceOfGeometryVisitor<T> implements Visitor<Node<T>> {
+  public static <T> List<Node<T>> getNodes(final Graph<T> graph, final Geometry geometry,
+    final double maxDistance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
     BoundingBox env = BoundingBox.getBoundingBox(geometry);
     env = env.expand(maxDistance);
@@ -35,8 +34,8 @@ public class NodeLessThanDistanceOfGeometryVisitor<T> implements
 
   private final GeometryFactory geometryFactory;
 
-  public NodeLessThanDistanceOfGeometryVisitor(final Geometry geometry,
-    final double maxDistance, final Visitor<Node<T>> matchVisitor) {
+  public NodeLessThanDistanceOfGeometryVisitor(final Geometry geometry, final double maxDistance,
+    final Visitor<Node<T>> matchVisitor) {
     this.geometry = geometry;
     this.maxDistance = maxDistance;
     this.matchVisitor = matchVisitor;
@@ -46,10 +45,10 @@ public class NodeLessThanDistanceOfGeometryVisitor<T> implements
   @Override
   public boolean visit(final Node<T> node) {
     final Coordinates coordinate = node;
-    final Point point = geometryFactory.createPoint(coordinate);
-    final double distance = geometry.distance(point);
-    if (distance < maxDistance) {
-      matchVisitor.visit(node);
+    final Point point = this.geometryFactory.createPoint(coordinate);
+    final double distance = this.geometry.distance(point);
+    if (distance < this.maxDistance) {
+      this.matchVisitor.visit(node);
     }
     return true;
   }

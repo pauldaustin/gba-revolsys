@@ -21,8 +21,7 @@ import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jts.geom.BoundingBox;
 
-public class DataObjectStoreQueryReader extends IteratorReader<Record>
-  implements RecordReader {
+public class DataObjectStoreQueryReader extends IteratorReader<Record> implements RecordReader {
 
   private AbstractRecordStore dataStore;
 
@@ -44,43 +43,47 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
   }
 
   public void addQuery(final Query query) {
-    queries.add(query);
+    this.queries.add(query);
   }
 
   @Override
   @PreDestroy
   public void close() {
     super.close();
-    boundingBox = null;
-    dataStore = null;
-    queries = null;
-    typePaths = null;
-    whereClause = null;
+    this.boundingBox = null;
+    this.dataStore = null;
+    this.queries = null;
+    this.typePaths = null;
+    this.whereClause = null;
   }
 
   protected AbstractIterator<Record> createQueryIterator(final int i) {
-    if (i < queries.size()) {
-      final Query query = queries.get(i);
-      if (StringUtils.hasText(whereClause)) {
-        query.and(new SqlCondition(whereClause));
+    if (i < this.queries.size()) {
+      final Query query = this.queries.get(i);
+      if (StringUtils.hasText(this.whereClause)) {
+        query.and(new SqlCondition(this.whereClause));
       }
-      if (boundingBox != null) {
-        query.setBoundingBox(boundingBox);
+      if (this.boundingBox != null) {
+        query.setBoundingBox(this.boundingBox);
       }
 
-      final AbstractIterator<Record> iterator = dataStore.createIterator(
-        query, getProperties());
+      final AbstractIterator<Record> iterator = this.dataStore.createIterator(query,
+        getProperties());
       return iterator;
     }
     throw new NoSuchElementException();
   }
 
   public BoundingBox getBoundingBox() {
-    return boundingBox;
+    return this.boundingBox;
   }
 
   public AbstractRecordStore getDataStore() {
-    return dataStore;
+    return this.dataStore;
+  }
+
+  public List<Query> getQueries() {
+    return this.queries;
   }
 
   @Override
@@ -88,28 +91,24 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record>
     return ((RecordIterator)iterator()).getRecordDefinition();
   }
 
-  public List<Query> getQueries() {
-    return queries;
-  }
-
   public String getWhereClause() {
-    return whereClause;
+    return this.whereClause;
   }
 
   @Override
   @PostConstruct
   public void open() {
-    if (typePaths != null) {
-      for (final String tableName : typePaths) {
-        final RecordDefinition metaData = dataStore.getRecordDefinition(tableName);
+    if (this.typePaths != null) {
+      for (final String tableName : this.typePaths) {
+        final RecordDefinition metaData = this.dataStore.getRecordDefinition(tableName);
         if (metaData != null) {
           Query query;
-          if (boundingBox == null) {
+          if (this.boundingBox == null) {
             query = new Query(metaData);
-            query.setWhereCondition(new SqlCondition(whereClause));
+            query.setWhereCondition(new SqlCondition(this.whereClause));
           } else {
             query = new Query(metaData);
-            query.setBoundingBox(boundingBox);
+            query.setBoundingBox(this.boundingBox);
           }
           addQuery(query);
         }

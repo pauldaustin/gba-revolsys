@@ -19,8 +19,7 @@ import com.revolsys.io.connection.AbstractConnectionRegistryManager;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.OS;
 
-public class DataObjectStoreConnectionManager
-  extends
+public class DataObjectStoreConnectionManager extends
   AbstractConnectionRegistryManager<DataObjectStoreConnectionRegistry, DataObjectStoreConnection> {
 
   private static final DataObjectStoreConnectionManager INSTANCE;
@@ -28,8 +27,7 @@ public class DataObjectStoreConnectionManager
   static {
     INSTANCE = new DataObjectStoreConnectionManager();
     final File dataStoresDirectory = OS.getApplicationDataDirectory("com.revolsys.gis/Data Stores");
-    INSTANCE.addConnectionRegistry("User", new FileSystemResource(
-      dataStoresDirectory));
+    INSTANCE.addConnectionRegistry("User", new FileSystemResource(dataStoresDirectory));
   }
 
   // TODO make this garbage collectable with reference counting.
@@ -42,10 +40,10 @@ public class DataObjectStoreConnectionManager
   }
 
   public static <V extends RecordStore> V getDataStore(final File file) {
-    final Map<String, String> connectionProperties = Collections.singletonMap(
-      "url", FileUtil.toUrlString(file));
-    final Map<String, Object> config = Collections.<String, Object> singletonMap(
-      "connection", connectionProperties);
+    final Map<String, String> connectionProperties = Collections.singletonMap("url",
+      FileUtil.toUrlString(file));
+    final Map<String, Object> config = Collections.<String, Object> singletonMap("connection",
+      connectionProperties);
     return getDataStore(config);
   }
 
@@ -55,8 +53,7 @@ public class DataObjectStoreConnectionManager
    * @return
    */
   @SuppressWarnings("unchecked")
-  public static <T extends RecordStore> T getDataStore(
-    final Map<String, ? extends Object> config) {
+  public static <T extends RecordStore> T getDataStore(final Map<String, ? extends Object> config) {
     @SuppressWarnings("rawtypes")
     final Map<String, Object> configClone = (Map)JavaBeanUtil.clone(config);
     synchronized (dataStoreByConfig) {
@@ -129,18 +126,18 @@ public class DataObjectStoreConnectionManager
     super("Data Stores");
   }
 
-  public DataObjectStoreConnectionRegistry addConnectionRegistry(
-    final String name, final boolean visible) {
-    final DataObjectStoreConnectionRegistry registry = new DataObjectStoreConnectionRegistry(
-      this, name, visible);
+  public DataObjectStoreConnectionRegistry addConnectionRegistry(final String name,
+    final boolean visible) {
+    final DataObjectStoreConnectionRegistry registry = new DataObjectStoreConnectionRegistry(this,
+      name, visible);
     addConnectionRegistry(registry);
     return registry;
   }
 
-  public DataObjectStoreConnectionRegistry addConnectionRegistry(
-    final String name, final Resource dataStoresDirectory) {
-    final DataObjectStoreConnectionRegistry registry = new DataObjectStoreConnectionRegistry(
-      this, name, dataStoresDirectory);
+  public DataObjectStoreConnectionRegistry addConnectionRegistry(final String name,
+    final Resource dataStoresDirectory) {
+    final DataObjectStoreConnectionRegistry registry = new DataObjectStoreConnectionRegistry(this,
+      name, dataStoresDirectory);
     addConnectionRegistry(registry);
     return registry;
   }

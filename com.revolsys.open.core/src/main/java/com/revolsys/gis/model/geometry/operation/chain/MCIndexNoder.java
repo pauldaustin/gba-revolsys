@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.revolsys.gis.algorithm.index.quadtree.linesegment.LineSegmentQuadTree;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.vividsolutions.jts.index.SpatialIndex;
 import com.vividsolutions.jts.index.strtree.STRtree;
@@ -27,11 +28,11 @@ public class MCIndexNoder extends SinglePassNoder {
     }
 
     @Override
-    public void overlap(final MonotoneChain mc1, final int start1,
-      final MonotoneChain mc2, final int start2) {
+    public void overlap(final MonotoneChain mc1, final int start1, final MonotoneChain mc2,
+      final int start2) {
       final SegmentString ss1 = (SegmentString)mc1.getContext();
       final SegmentString ss2 = (SegmentString)mc2.getContext();
-      si.processIntersections(ss1, start1, ss2, start2);
+      this.si.processIntersections(ss1, start1, ss2, start2);
     }
 
   }
@@ -44,20 +45,16 @@ public class MCIndexNoder extends SinglePassNoder {
 
   private Collection nodedSegStrings;
 
-  // statistics
-  private int nOverlaps = 0;
-
   public MCIndexNoder() {
   }
 
   private void add(final SegmentString segStr) {
-    final List segChains = MonotoneChainBuilder.getChains(
-      segStr.getCoordinates(), segStr);
+    final List segChains = MonotoneChainBuilder.getChains(segStr.getCoordinates(), segStr);
     for (final Iterator i = segChains.iterator(); i.hasNext();) {
       final MonotoneChain mc = (MonotoneChain)i.next();
-      mc.setId(idCounter++);
-      index.insert(JtsGeometryUtil.getEnvelope(mc.getBoundingBox()), mc);
-      monoChains.add(mc);
+      mc.setId(this.idCounter++);
+      this.index.insert(JtsGeometryUtil.getEnvelope(mc.getBoundingBox()), mc);
+      this.monoChains.add(mc);
     }
   }
 
@@ -72,25 +69,24 @@ public class MCIndexNoder extends SinglePassNoder {
   }
 
   public SpatialIndex getIndex() {
-    return index;
+    return this.index;
   }
 
   public List getMonotoneChains() {
-    return monoChains;
+    return this.monoChains;
   }
 
   @Override
   public Collection getNodedSubstrings() {
-    return NodedSegmentString.getNodedSubstrings(nodedSegStrings);
+    return NodedSegmentString.getNodedSubstrings(this.nodedSegStrings);
   }
 
   private void intersectChains() {
-    final MonotoneChainOverlapAction overlapAction = new SegmentOverlapAction(
-      segInt);
+    final MonotoneChainOverlapAction overlapAction = new SegmentOverlapAction(this.segInt);
 
-    for (final Iterator i = monoChains.iterator(); i.hasNext();) {
+    for (final Iterator i = this.monoChains.iterator(); i.hasNext();) {
       final MonotoneChain queryChain = (MonotoneChain)i.next();
-      final List overlapChains = index.query(JtsGeometryUtil.getEnvelope(queryChain.getBoundingBox()));
+      final List overlapChains = this.index.query(JtsGeometryUtil.getEnvelope(queryChain.getBoundingBox()));
       for (final Iterator j = overlapChains.iterator(); j.hasNext();) {
         final MonotoneChain testChain = (MonotoneChain)j.next();
         /**
@@ -99,10 +95,9 @@ public class MCIndexNoder extends SinglePassNoder {
          */
         if (testChain.getId() > queryChain.getId()) {
           queryChain.computeOverlaps(testChain, overlapAction);
-          nOverlaps++;
         }
         // short-circuit if possible
-        if (segInt.isDone()) {
+        if (this.segInt.isDone()) {
           return;
         }
       }

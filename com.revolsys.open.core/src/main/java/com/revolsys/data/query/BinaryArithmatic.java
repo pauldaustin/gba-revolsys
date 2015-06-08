@@ -15,15 +15,13 @@ public abstract class BinaryArithmatic extends QueryValue {
 
   private QueryValue right;
 
-  public BinaryArithmatic(final QueryValue left, final String operator,
-    final QueryValue right) {
+  public BinaryArithmatic(final QueryValue left, final String operator, final QueryValue right) {
     this.left = left;
     this.operator = operator;
     this.right = right;
   }
 
-  public BinaryArithmatic(final String name, final String operator,
-    final Object value) {
+  public BinaryArithmatic(final String name, final String operator, final Object value) {
     this(new Column(name), operator, new Value(value));
   }
 
@@ -99,7 +97,7 @@ public abstract class BinaryArithmatic extends QueryValue {
 
   @Override
   public String toString() {
-    return StringConverterRegistry.toString(this.left) + " " + this.operator
-      + " " + StringConverterRegistry.toString(this.right);
+    return StringConverterRegistry.toString(this.left) + " " + this.operator + " "
+      + StringConverterRegistry.toString(this.right);
   }
 }

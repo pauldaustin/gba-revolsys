@@ -11,13 +11,12 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.visitor.CreateListVisitor;
 
-public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements
-  Visitor<Node<T>> {
-  public static <T> List<Node<T>> getNodes(final Graph<T> graph,
-    final Coordinates point, final double maxDistance) {
+public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements Visitor<Node<T>> {
+  public static <T> List<Node<T>> getNodes(final Graph<T> graph, final Coordinates point,
+    final double maxDistance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
-    final Visitor<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(
-      point, maxDistance, results);
+    final Visitor<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(point,
+      maxDistance, results);
     BoundingBox envelope = new BoundingBox(point);
     envelope = envelope.expand(maxDistance);
     final IdObjectIndex<Node<T>> nodeIndex = graph.getNodeIndex();
@@ -33,9 +32,8 @@ public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements
 
   private final double maxDistance;
 
-  public NodeLessThanDistanceOfCoordinatesVisitor(
-    final Coordinates coordinates, final double maxDistance,
-    final Visitor<Node<T>> matchVisitor) {
+  public NodeLessThanDistanceOfCoordinatesVisitor(final Coordinates coordinates,
+    final double maxDistance, final Visitor<Node<T>> matchVisitor) {
     this.coordinates = coordinates;
     this.maxDistance = maxDistance;
     this.matchVisitor = matchVisitor;
@@ -44,8 +42,8 @@ public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements
   @Override
   public boolean visit(final Node<T> node) {
     final double distance = this.coordinates.distance(node);
-    if (distance < maxDistance) {
-      matchVisitor.visit(node);
+    if (distance < this.maxDistance) {
+      this.matchVisitor.visit(node);
     }
     return true;
   }

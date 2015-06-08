@@ -15,8 +15,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-public class SplitGeometryProcess extends
-  BaseInOutProcess<Record, Record> {
+public class SplitGeometryProcess extends BaseInOutProcess<Record, Record> {
   /** The statistics to record the number new observations created. */
   private Statistics createdStatistics;
 
@@ -33,71 +32,67 @@ public class SplitGeometryProcess extends
 
   private GeometryFactory geometryFactory;
 
-  protected Record createSplitObject(final Record object,
-    final LineString newLine) {
+  protected Record createSplitObject(final Record object, final LineString newLine) {
     return DataObjectUtil.copy(object, newLine);
   }
 
   /**
    * Get the statistics to record the number new observations created.
-   * 
+   *
    * @return The statistics to record the number new observations created.
    */
   public Statistics getCreatedStatistics() {
-    if (createdStatistics == null) {
-      createdStatistics = new Statistics("Created");
+    if (this.createdStatistics == null) {
+      this.createdStatistics = new Statistics("Created");
     }
-    return createdStatistics;
+    return this.createdStatistics;
   }
 
   public PrecisionModel getElevationPrecisionModel() {
-    return elevationPrecisionModel;
+    return this.elevationPrecisionModel;
   }
 
   public Geometry getGeometry() {
-    return geometry;
+    return this.geometry;
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometryFactory;
+    return this.geometryFactory;
   }
 
   public Statistics getNotWrittenStatistics() {
-    if (notWrittenStatistics == null) {
-      notWrittenStatistics = new Statistics("Discarded");
+    if (this.notWrittenStatistics == null) {
+      this.notWrittenStatistics = new Statistics("Discarded");
     }
-    return notWrittenStatistics;
+    return this.notWrittenStatistics;
   }
 
   public double getTolerance() {
-    return tolerance;
+    return this.tolerance;
   }
 
   @Override
-  protected void postRun(final Channel<Record> in,
-    final Channel<Record> out) {
-    if (createdStatistics != null) {
-      createdStatistics.disconnect();
+  protected void postRun(final Channel<Record> in, final Channel<Record> out) {
+    if (this.createdStatistics != null) {
+      this.createdStatistics.disconnect();
     }
-    if (notWrittenStatistics != null) {
-      notWrittenStatistics.disconnect();
-    }
-  }
-
-  @Override
-  protected void preRun(final Channel<Record> in,
-    final Channel<Record> out) {
-    if (createdStatistics != null) {
-      createdStatistics.connect();
-    }
-    if (notWrittenStatistics != null) {
-      notWrittenStatistics.connect();
+    if (this.notWrittenStatistics != null) {
+      this.notWrittenStatistics.disconnect();
     }
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
+  protected void preRun(final Channel<Record> in, final Channel<Record> out) {
+    if (this.createdStatistics != null) {
+      this.createdStatistics.connect();
+    }
+    if (this.notWrittenStatistics != null) {
+      this.notWrittenStatistics.connect();
+    }
+  }
+
+  @Override
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
     final Geometry geometry = object.getGeometryValue();
     if (geometry instanceof LineString) {
       final LineString line = (LineString)geometry;
@@ -107,11 +102,11 @@ public class SplitGeometryProcess extends
           out.write(newObject);
         }
         if (newObjects.size() > 1) {
-          if (notWrittenStatistics != null) {
-            notWrittenStatistics.add(object);
+          if (this.notWrittenStatistics != null) {
+            this.notWrittenStatistics.add(object);
           }
-          if (createdStatistics != null) {
-            createdStatistics.add(object, newObjects.size());
+          if (this.createdStatistics != null) {
+            this.createdStatistics.add(object, newObjects.size());
           }
         }
 
@@ -125,7 +120,7 @@ public class SplitGeometryProcess extends
 
   /**
    * Set the statistics to record the number new observations created.
-   * 
+   *
    * @param createdStatistics The statistics to record the number new
    *          observations created.
    */
@@ -133,15 +128,14 @@ public class SplitGeometryProcess extends
     this.createdStatistics = createdStatistics;
   }
 
-  public void setElevationPrecisionModel(
-    final PrecisionModel elevationPrecisionModel) {
+  public void setElevationPrecisionModel(final PrecisionModel elevationPrecisionModel) {
     this.elevationPrecisionModel = elevationPrecisionModel;
   }
 
   public void setGeometry(final Geometry geometry) {
     this.geometry = geometry;
-    index = new LineSegmentIndex();
-    index.insert(geometry);
+    this.index = new LineSegmentIndex();
+    this.index.insert(geometry);
   }
 
   public void setGeometryFactory(final GeometryFactory geometryFactory) {
@@ -156,11 +150,10 @@ public class SplitGeometryProcess extends
     this.tolerance = tolerance;
   }
 
-  protected List<Record> split(final Record object,
-    final LineString line) {
+  protected List<Record> split(final Record object, final LineString line) {
     final List<Record> newObjects = new ArrayList<Record>();
-    final List<LineString> newLines = LineStringUtil.split(geometryFactory,
-      line, index, tolerance);
+    final List<LineString> newLines = LineStringUtil.split(this.geometryFactory, line, this.index,
+      this.tolerance);
     if (newLines.size() == 1) {
       final LineString newLine = newLines.get(0);
       if (newLine == line) {

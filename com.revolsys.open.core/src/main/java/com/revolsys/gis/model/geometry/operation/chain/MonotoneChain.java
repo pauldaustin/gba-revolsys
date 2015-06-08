@@ -40,7 +40,7 @@ import com.revolsys.gis.model.geometry.impl.BoundingBox;
  * advantages, since it is not necessary to build lists of instantiated objects
  * to represent the segments returned by the query. However, it does mean that
  * the queries are not thread-safe.
- * 
+ *
  * @version 1.7
  */
 public class MonotoneChain {
@@ -55,19 +55,18 @@ public class MonotoneChain {
 
   private int id;// useful for optimizing chain comparisons
 
-  public MonotoneChain(final CoordinatesList pts, final int start,
-    final int end, final Object context) {
+  public MonotoneChain(final CoordinatesList pts, final int start, final int end,
+    final Object context) {
     this.pts = pts;
     this.start = start;
     this.end = end;
     this.context = context;
   }
 
-  private void computeOverlaps(final int start0, final int end0,
-    final MonotoneChain mc, final int start1, final int end1,
-    final MonotoneChainOverlapAction mco) {
-    final Coordinates p00 = pts.get(start0);
-    final Coordinates p01 = pts.get(end0);
+  private void computeOverlaps(final int start0, final int end0, final MonotoneChain mc,
+    final int start1, final int end1, final MonotoneChainOverlapAction mco) {
+    final Coordinates p00 = this.pts.get(start0);
+    final Coordinates p01 = this.pts.get(end0);
     final Coordinates p10 = mc.pts.get(start1);
     final Coordinates p11 = mc.pts.get(end1);
     // Debug.println("computeIntersectsForChain:" + p00 + p01 + p10 + p11);
@@ -116,19 +115,18 @@ public class MonotoneChain {
    * overlap. However, it *may* call the overlap action on segments which do not
    * actually interact. This saves on the overhead of checking intersection each
    * time, since clients may be able to do this more efficiently.
-   * 
+   *
    * @param searchEnv the search envelope
    * @param mco the overlap action to execute on selected segments
    */
-  public void computeOverlaps(final MonotoneChain mc,
-    final MonotoneChainOverlapAction mco) {
-    computeOverlaps(start, end, mc, mc.start, mc.end, mco);
+  public void computeOverlaps(final MonotoneChain mc, final MonotoneChainOverlapAction mco) {
+    computeOverlaps(this.start, this.end, mc, mc.start, mc.end, mco);
   }
 
-  private void computeSelect(final BoundingBox searchEnv, final int start0,
-    final int end0, final MonotoneChainSelectAction mcs) {
-    final Coordinates p0 = pts.get(start0);
-    final Coordinates p1 = pts.get(end0);
+  private void computeSelect(final BoundingBox searchEnv, final int start0, final int end0,
+    final MonotoneChainSelectAction mcs) {
+    final Coordinates p0 = this.pts.get(start0);
+    final Coordinates p1 = this.pts.get(end0);
     mcs.tempEnv1 = new BoundingBox(p0, p1);
 
     // Debug.println("trying:" + p0 + p1 + " [ " + start0 + ", " + end0 + " ]");
@@ -157,16 +155,16 @@ public class MonotoneChain {
   }
 
   public BoundingBox getBoundingBox() {
-    if (env == null) {
-      final Coordinates p0 = pts.get(start);
-      final Coordinates p1 = pts.get(end);
-      env = new BoundingBox(p0, p1);
+    if (this.env == null) {
+      final Coordinates p0 = this.pts.get(this.start);
+      final Coordinates p1 = this.pts.get(this.end);
+      this.env = new BoundingBox(p0, p1);
     }
-    return env;
+    return this.env;
   }
 
   public Object getContext() {
-    return context;
+    return this.context;
   }
 
   /**
@@ -174,30 +172,30 @@ public class MonotoneChain {
    * array to hold the Coordinates
    */
   public CoordinatesList getCoordinates() {
-    final CoordinatesList coord = new DoubleCoordinatesList(end - start + 1,
-      pts.getNumAxis());
+    final CoordinatesList coord = new DoubleCoordinatesList(this.end - this.start + 1,
+      this.pts.getNumAxis());
     int index = 0;
-    for (int i = start; i <= end; i++) {
-      coord.setPoint(index++, pts.get(i));
+    for (int i = this.start; i <= this.end; i++) {
+      coord.setPoint(index++, this.pts.get(i));
     }
     return coord;
   }
 
   public int getEndIndex() {
-    return end;
+    return this.end;
   }
 
   public int getId() {
-    return id;
+    return this.id;
   }
 
   public void getLineSegment(final int index, final LineSegment ls) {
-    ls.setPoint(0, pts.get(index));
-    ls.setPoint(1, pts.get(index + 1));
+    ls.setPoint(0, this.pts.get(index));
+    ls.setPoint(1, this.pts.get(index + 1));
   }
 
   public int getStartIndex() {
-    return start;
+    return this.start;
   }
 
   /**
@@ -210,13 +208,12 @@ public class MonotoneChain {
    * segments which do not intersect the search envelope. This saves on the
    * overhead of checking envelope intersection each time, since clients may be
    * able to do this more efficiently.
-   * 
+   *
    * @param searchEnv the search envelope
    * @param mcs the select action to execute on selected segments
    */
-  public void select(final BoundingBox searchEnv,
-    final MonotoneChainSelectAction mcs) {
-    computeSelect(searchEnv, start, end, mcs);
+  public void select(final BoundingBox searchEnv, final MonotoneChainSelectAction mcs) {
+    computeSelect(searchEnv, this.start, this.end, mcs);
   }
 
   public void setId(final int id) {

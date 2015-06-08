@@ -14,8 +14,7 @@ public class CoordinateSystemParser {
   public static List<GeographicCoordinateSystem> getGeographicCoordinateSystems(
     final String authorityName, final InputStream in) {
     final List<GeographicCoordinateSystem> coordinateSystems = new ArrayList<GeographicCoordinateSystem>();
-    final BufferedReader reader = new BufferedReader(
-      FileUtil.createUtf8Reader(in));
+    final BufferedReader reader = new BufferedReader(FileUtil.createUtf8Reader(in));
     try {
       for (String line = reader.readLine(); line != null; line = reader.readLine()) {
         final String[] fields = line.split("\t");
@@ -30,17 +29,13 @@ public class CoordinateSystemParser {
         final String angularUnitName = fields[8];
         final double conversionFactor = Double.parseDouble(fields[9]);
 
-        final Spheroid spheroid = new Spheroid(spheroidName, semiMajorAxis,
-          inverseFlattening, null);
+        final Spheroid spheroid = new Spheroid(spheroidName, semiMajorAxis, inverseFlattening, null);
         final Datum datum = new Datum(datumName, spheroid, null);
-        final PrimeMeridian primeMeridian = new PrimeMeridian(
-          primeMeridianName, longitude, null);
-        final AngularUnit angularUnit = new AngularUnit(angularUnitName,
-          conversionFactor, null);
+        final PrimeMeridian primeMeridian = new PrimeMeridian(primeMeridianName, longitude, null);
+        final AngularUnit angularUnit = new AngularUnit(angularUnitName, conversionFactor, null);
         final Authority authority = new BaseAuthority(authorityName, id);
-        final GeographicCoordinateSystem cs = new GeographicCoordinateSystem(
-          Integer.parseInt(id), csName, datum, primeMeridian, angularUnit,
-          null, authority);
+        final GeographicCoordinateSystem cs = new GeographicCoordinateSystem(Integer.parseInt(id),
+          csName, datum, primeMeridian, angularUnit, null, authority);
         coordinateSystems.add(cs);
       }
     } catch (final IOException e) {
@@ -55,11 +50,9 @@ public class CoordinateSystemParser {
   }
 
   public static List<ProjectedCoordinateSystem> getProjectedCoordinateSystems(
-    final Map<Integer, CoordinateSystem> geoCsById, final String authorityName,
-    final InputStream in) {
+    final Map<Integer, CoordinateSystem> geoCsById, final String authorityName, final InputStream in) {
     final List<ProjectedCoordinateSystem> coordinateSystems = new ArrayList<ProjectedCoordinateSystem>();
-    final BufferedReader reader = new BufferedReader(
-      FileUtil.createUtf8Reader(in));
+    final BufferedReader reader = new BufferedReader(FileUtil.createUtf8Reader(in));
     try {
       for (String line = reader.readLine(); line != null; line = reader.readLine()) {
         final String[] fields = line.split("\t");
@@ -74,8 +67,8 @@ public class CoordinateSystemParser {
           final double conversionFactor = Double.parseDouble(fields[6]);
 
           final Map<String, Object> parameters = new LinkedHashMap<String, Object>();
-          for (final String param : parameterString.substring(1,
-            parameterString.length() - 1).split(",")) {
+          for (final String param : parameterString.substring(1, parameterString.length() - 1)
+            .split(",")) {
             final String[] paramValues = param.split("=");
             if (paramValues.length == 2) {
               final String key = new String(paramValues[0].trim());
@@ -85,12 +78,10 @@ public class CoordinateSystemParser {
           }
 
           final Projection projection = new Projection(projectionName);
-          final LinearUnit unit = new LinearUnit(unitName, conversionFactor,
-            null);
+          final LinearUnit unit = new LinearUnit(unitName, conversionFactor, null);
           final Authority authority = new BaseAuthority(authorityName, id);
-          final ProjectedCoordinateSystem cs = new ProjectedCoordinateSystem(
-            Integer.parseInt(id), csName, geoCs, projection, parameters, unit,
-            null, authority);
+          final ProjectedCoordinateSystem cs = new ProjectedCoordinateSystem(Integer.parseInt(id),
+            csName, geoCs, projection, parameters, unit, null, authority);
           coordinateSystems.add(cs);
         } catch (final Throwable t) {
 

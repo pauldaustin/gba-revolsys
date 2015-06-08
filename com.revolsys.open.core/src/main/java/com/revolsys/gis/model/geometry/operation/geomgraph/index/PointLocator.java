@@ -61,7 +61,7 @@ import com.vividsolutions.jts.geom.Location;
  * still in the EXTERIOR of the ring.
  * </ul>
  * Instances of this class are not reentrant.
- * 
+ *
  * @version 1.7
  */
 public class PointLocator {
@@ -122,7 +122,7 @@ public class PointLocator {
 
   /**
    * Convenience method to test a point for intersection with a Geometry
-   * 
+   *
    * @param p the coordinate to test
    * @param geom the Geometry to test
    * @return <code>true</code> if the point is in the interior or boundary of
@@ -137,7 +137,7 @@ public class PointLocator {
    * to a Geometry. It handles both single-element and multi-element Geometries.
    * The algorithm for multi-part Geometries takes into account the SFS Boundary
    * Determination Rule.
-   * 
+   *
    * @return the {@link Location} of the point relative to the input Geometry
    */
   public int locate(final Coordinates p, final Geometry geom) {
@@ -151,13 +151,13 @@ public class PointLocator {
       return locate(p, (Polygon)geom);
     }
 
-    isIn = false;
-    numBoundaries = 0;
+    this.isIn = false;
+    this.numBoundaries = 0;
     computeLocation(p, geom);
-    if (boundaryRule.isInBoundary(numBoundaries)) {
+    if (this.boundaryRule.isInBoundary(this.numBoundaries)) {
       return Location.BOUNDARY;
     }
-    if (numBoundaries > 0 || isIn) {
+    if (this.numBoundaries > 0 || this.isIn) {
       return Location.INTERIOR;
     }
 
@@ -175,7 +175,7 @@ public class PointLocator {
         return Location.BOUNDARY;
       }
     }
-    if (CoordinatesListUtil.isPointOnLine(geometryFactory, l, p)) {
+    if (CoordinatesListUtil.isPointOnLine(this.geometryFactory, l, p)) {
       return Location.INTERIOR;
     } else {
       return Location.EXTERIOR;
@@ -230,10 +230,10 @@ public class PointLocator {
 
   private void updateLocationInfo(final int loc) {
     if (loc == Location.INTERIOR) {
-      isIn = true;
+      this.isIn = true;
     }
     if (loc == Location.BOUNDARY) {
-      numBoundaries++;
+      this.numBoundaries++;
     }
   }
 

@@ -39,7 +39,7 @@ public class WktCsParser {
   }
 
   public CoordinateSystem parse() {
-    if (value.length() == 0) {
+    if (this.value.length() == 0) {
       return null;
     } else {
       return (CoordinateSystem)parseValue();
@@ -48,57 +48,56 @@ public class WktCsParser {
   }
 
   private String parseName() {
-    final int startIndex = index;
+    final int startIndex = this.index;
 
-    while (value.charAt(index) != '[' && value.charAt(index) != ']') {
-      index++;
+    while (this.value.charAt(this.index) != '[' && this.value.charAt(this.index) != ']') {
+      this.index++;
     }
-    final String name = new String(value.substring(startIndex, index));
+    final String name = new String(this.value.substring(startIndex, this.index));
     return name;
   }
 
   private double parseNumber() {
-    final int startIndex = index;
+    final int startIndex = this.index;
 
-    char currentChar = value.charAt(index);
-    while (Character.isDigit(currentChar) || currentChar == '.'
-      || currentChar == '-') {
-      index++;
-      currentChar = value.charAt(index);
+    char currentChar = this.value.charAt(this.index);
+    while (Character.isDigit(currentChar) || currentChar == '.' || currentChar == '-') {
+      this.index++;
+      currentChar = this.value.charAt(this.index);
     }
-    final String string = value.substring(startIndex, index);
+    final String string = this.value.substring(startIndex, this.index);
     return Double.parseDouble(string);
   }
 
   private String parseString() {
-    final int startIndex = index;
+    final int startIndex = this.index;
 
-    char currentChar = value.charAt(index);
+    char currentChar = this.value.charAt(this.index);
     while (currentChar != '"') {
-      index++;
-      currentChar = value.charAt(index);
+      this.index++;
+      currentChar = this.value.charAt(this.index);
     }
-    final String string = new String(value.substring(startIndex, index));
-    index++;
+    final String string = new String(this.value.substring(startIndex, this.index));
+    this.index++;
     return string;
   }
 
   private Object parseValue() {
-    char currentChar = value.charAt(index);
+    char currentChar = this.value.charAt(this.index);
     if (currentChar == '"') {
-      index++;
+      this.index++;
       return parseString();
     } else if (Character.isDigit(currentChar) || currentChar == '-') {
       return parseNumber();
     } else {
       final String name = parseName();
-      nameStack.push(name);
+      this.nameStack.push(name);
       try {
         final List<Object> values = new ArrayList<Object>();
-        currentChar = value.charAt(index);
+        currentChar = this.value.charAt(this.index);
         if (currentChar == '[') {
           do {
-            index++;
+            this.index++;
             currentChar = skipWhitespace();
             if (currentChar != ']') {
               final Object value = parseValue();
@@ -106,7 +105,7 @@ public class WktCsParser {
             }
             currentChar = skipWhitespace();
           } while (currentChar == ',');
-          index++;
+          this.index++;
           if (name.equals("AUTHORITY")) {
             return processAuthority(values);
           } else if (name.equals("AXIS")) {
@@ -126,7 +125,7 @@ public class WktCsParser {
           } else if (name.equals("TOWGS84")) {
             return processToWgs84(values);
           } else if (name.equals("UNIT")) {
-            if (nameStack.get(nameStack.size() - 2).equals("GEOGCS")) {
+            if (this.nameStack.get(this.nameStack.size() - 2).equals("GEOGCS")) {
               return processAngularUnit(values);
             } else {
               return processLinearUnit(values);
@@ -138,7 +137,7 @@ public class WktCsParser {
           return name;
         }
       } finally {
-        nameStack.pop();
+        this.nameStack.pop();
       }
     }
   }
@@ -183,15 +182,14 @@ public class WktCsParser {
     return new Datum(name, spheroid, toWgs84, authority);
   }
 
-  private GeographicCoordinateSystem processGeographicCoordinateSystem(
-    final List<Object> values) {
+  private GeographicCoordinateSystem processGeographicCoordinateSystem(final List<Object> values) {
     final String name = (String)values.get(0);
     final Datum datum = (Datum)values.get(1);
     final PrimeMeridian primeMeridian = (PrimeMeridian)values.get(2);
     final AngularUnit angularUnit = (AngularUnit)values.get(3);
     int index = 4;
     List<Axis> axis = null;
-    if (index < values.size() && (values.get(index) instanceof Axis)) {
+    if (index < values.size() && values.get(index) instanceof Axis) {
       axis = Arrays.asList((Axis)values.get(index++), (Axis)values.get(index++));
 
     }
@@ -210,8 +208,8 @@ public class WktCsParser {
         authorityId = Integer.parseInt(authorityCode);
       }
     }
-    return new GeographicCoordinateSystem(authorityId, name, datum,
-      primeMeridian, angularUnit, axis, authority);
+    return new GeographicCoordinateSystem(authorityId, name, datum, primeMeridian, angularUnit,
+      axis, authority);
   }
 
   private LinearUnit processLinearUnit(final List<Object> values) {
@@ -235,8 +233,7 @@ public class WktCsParser {
   }
 
   @SuppressWarnings("unchecked")
-  private ProjectedCoordinateSystem processProjectedCoordinateSystem(
-    final List<Object> values) {
+  private ProjectedCoordinateSystem processProjectedCoordinateSystem(final List<Object> values) {
     int index = 0;
     final String name = (String)values.get(index++);
     final GeographicCoordinateSystem geographicCoordinateSystem = (GeographicCoordinateSystem)values.get(index++);
@@ -275,9 +272,8 @@ public class WktCsParser {
         srid = Integer.parseInt(code);
       }
     }
-    return new ProjectedCoordinateSystem(srid, name,
-      geographicCoordinateSystem, projection, parameters, linearUnit, axis,
-      authority);
+    return new ProjectedCoordinateSystem(srid, name, geographicCoordinateSystem, projection,
+      parameters, linearUnit, axis, authority);
   }
 
   private Projection processProjection(final List<Object> values) {
@@ -293,8 +289,8 @@ public class WktCsParser {
     if (values.size() > 3) {
       authority = (Authority)values.get(3);
     }
-    return new Spheroid(name, semiMajorAxis.doubleValue(),
-      inverseFlattening.doubleValue(), authority);
+    return new Spheroid(name, semiMajorAxis.doubleValue(), inverseFlattening.doubleValue(),
+      authority);
   }
 
   private ToWgs84 processToWgs84(final List<Object> values) {
@@ -302,10 +298,10 @@ public class WktCsParser {
   }
 
   private char skipWhitespace() {
-    char currentChar = value.charAt(index);
+    char currentChar = this.value.charAt(this.index);
     while (Character.isWhitespace(currentChar)) {
-      index++;
-      currentChar = value.charAt(index);
+      this.index++;
+      currentChar = this.value.charAt(this.index);
     }
     return currentChar;
   }

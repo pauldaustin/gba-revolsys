@@ -9,7 +9,7 @@ import com.revolsys.util.MathUtil;
 public class DoubleCoordinatesList extends AbstractCoordinatesList {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 7579865828939708871L;
 
@@ -25,8 +25,7 @@ public class DoubleCoordinatesList extends AbstractCoordinatesList {
     this(0, numAxis);
   }
 
-  public DoubleCoordinatesList(final int numAxis,
-    final Collection<Coordinates> points) {
+  public DoubleCoordinatesList(final int numAxis, final Collection<Coordinates> points) {
     this(points.size(), numAxis);
     int i = 0;
     for (final Coordinates point : points) {
@@ -42,8 +41,7 @@ public class DoubleCoordinatesList extends AbstractCoordinatesList {
     }
   }
 
-  public DoubleCoordinatesList(final int numAxis,
-    final CoordinatesList coordinatesList) {
+  public DoubleCoordinatesList(final int numAxis, final CoordinatesList coordinatesList) {
     this(coordinatesList.size(), numAxis);
     coordinatesList.copy(0, this, 0, numAxis, coordinatesList.size());
   }
@@ -61,8 +59,7 @@ public class DoubleCoordinatesList extends AbstractCoordinatesList {
     this.numAxis = (byte)numAxis;
   }
 
-  public DoubleCoordinatesList(final int numAxis,
-    final List<? extends Number> coordinates) {
+  public DoubleCoordinatesList(final int numAxis, final List<? extends Number> coordinates) {
     this(numAxis, MathUtil.toDoubleArray(coordinates));
   }
 
@@ -80,14 +77,14 @@ public class DoubleCoordinatesList extends AbstractCoordinatesList {
 
   @Override
   public byte getNumAxis() {
-    return numAxis;
+    return this.numAxis;
   }
 
   @Override
   public double getValue(final int index, final int axisIndex) {
     final byte numAxis = getNumAxis();
     if (axisIndex < numAxis) {
-      return coordinates[index * numAxis + axisIndex];
+      return this.coordinates[index * numAxis + axisIndex];
     } else {
       return Double.NaN;
     }
@@ -97,16 +94,16 @@ public class DoubleCoordinatesList extends AbstractCoordinatesList {
   public void setValue(final int index, final int axisIndex, final double value) {
     final byte numAxis = getNumAxis();
     if (axisIndex < numAxis) {
-      coordinates[index * numAxis + axisIndex] = value;
+      this.coordinates[index * numAxis + axisIndex] = value;
     }
   }
 
   @Override
   public int size() {
-    if (numAxis < 2) {
+    if (this.numAxis < 2) {
       return 0;
     } else {
-      return coordinates.length / numAxis;
+      return this.coordinates.length / this.numAxis;
     }
   }
 }

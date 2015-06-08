@@ -15,6 +15,6 @@ public class LruMap<K, V> extends LinkedHashMap<K, V> {
 
   @Override
   protected boolean removeEldestEntry(final Entry<K, V> eldest) {
-    return size() > maxSize;
+    return size() > this.maxSize;
   }
 }

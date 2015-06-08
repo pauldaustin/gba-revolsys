@@ -4,16 +4,14 @@ import java.math.BigDecimal;
 
 import org.springframework.util.StringUtils;
 
-public class BigDecimalStringConverter extends
-  AbstractNumberStringConverter<BigDecimal> {
+public class BigDecimalStringConverter extends AbstractNumberStringConverter<BigDecimal> {
 
   public static boolean isNumber(final Object value) {
     if (value instanceof Number) {
       return true;
     } else {
       try {
-        final Object number = StringConverterRegistry.toObject(
-          BigDecimal.class, value);
+        final Object number = StringConverterRegistry.toObject(BigDecimal.class, value);
         if (number instanceof Number) {
           return true;
         } else {

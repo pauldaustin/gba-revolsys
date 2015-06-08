@@ -22,8 +22,8 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class AbstractDataObjectTableModel extends AbstractTableModel
-  implements PropertyChangeSupportProxy {
+public abstract class AbstractDataObjectTableModel extends AbstractTableModel implements
+  PropertyChangeSupportProxy {
 
   private static final long serialVersionUID = 1L;
 
@@ -33,8 +33,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
 
   private boolean editable;
 
-  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-    this);
+  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   public AbstractDataObjectTableModel() {
     this(null);
@@ -44,8 +43,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     this.metaData = metaData;
   }
 
-  public void addPropertyChangeListener(
-    final PropertyChangeListener propertyChangeListener) {
+  public void addPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
     Property.addListener(this.propertyChangeSupport, propertyChangeListener);
   }
 
@@ -66,14 +64,12 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
 
   protected void firePropertyChange(final String propertyName, final int index,
     final Object oldValue, final Object newValue) {
-    this.propertyChangeSupport.fireIndexedPropertyChange(propertyName, index,
-      oldValue, newValue);
+    this.propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
   }
 
-  protected void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
-    this.propertyChangeSupport.firePropertyChange(propertyName, oldValue,
-      newValue);
+  protected void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
+    this.propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
   }
 
   public String getFieldName(final int attributeIndex) {
@@ -104,11 +100,9 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     return this.readOnlyFieldNames.contains(attributeName);
   }
 
-  public abstract boolean isSelected(boolean selected, int rowIndex,
-    int columnIndex);
+  public abstract boolean isSelected(boolean selected, int rowIndex, int columnIndex);
 
-  public void removePropertyChangeListener(
-    final PropertyChangeListener propertyChangeListener) {
+  public void removePropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
     Property.removeListener(this.propertyChangeSupport, propertyChangeListener);
   }
 
@@ -169,8 +163,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     return text;
   }
 
-  public Object toObjectValue(final int attributeIndex,
-    final Object displayValue) {
+  public Object toObjectValue(final int attributeIndex, final Object displayValue) {
     if (displayValue == null) {
       return null;
     }
@@ -185,8 +178,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel
     final CodeTable codeTable = metaData.getCodeTableByFieldName(name);
     if (codeTable == null) {
       final Class<?> fieldClass = metaData.getFieldClass(name);
-      final Object objectValue = StringConverterRegistry.toObject(fieldClass,
-        displayValue);
+      final Object objectValue = StringConverterRegistry.toObject(fieldClass, displayValue);
       return objectValue;
     } else {
       final Object objectValue = codeTable.getId(displayValue);

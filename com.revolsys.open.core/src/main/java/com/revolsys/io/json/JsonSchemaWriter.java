@@ -24,13 +24,13 @@ public class JsonSchemaWriter {
 
   public JsonSchemaWriter(final Resource resource) {
     final Writer out = SpringUtil.getWriter(resource);
-    writer = new JsonMapWriter(out, true);
-    writer.setListRoot(true);
+    this.writer = new JsonMapWriter(out, true);
+    this.writer.setListRoot(true);
   }
 
   @PreDestroy
   public void close() {
-    writer.close();
+    this.writer.close();
   }
 
   @Override
@@ -117,6 +117,6 @@ public class JsonSchemaWriter {
       fields.add(field);
     }
 
-    writer.write(metaDataMap);
+    this.writer.write(metaDataMap);
   }
 }

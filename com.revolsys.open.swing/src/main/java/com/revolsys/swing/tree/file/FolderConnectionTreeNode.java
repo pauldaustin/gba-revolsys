@@ -20,35 +20,30 @@ import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 import com.revolsys.util.UrlProxy;
 import com.revolsys.util.UrlUtil;
 
-public class FolderConnectionTreeNode extends LazyLoadTreeNode implements
-  UrlProxy {
+public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlProxy {
   private static final MenuFactory MENU = new MenuFactory();
   static {
-    final InvokeMethodAction refresh = TreeItemRunnable.createAction("Refresh",
-      "arrow_refresh", "refresh");
+    final InvokeMethodAction refresh = TreeItemRunnable.createAction("Refresh", "arrow_refresh",
+      "refresh");
     MENU.addMenuItem("default", refresh);
 
-    final TreeItemPropertyEnableCheck readOnly = new TreeItemPropertyEnableCheck(
-      "readOnly", false);
-    MENU.addMenuItemTitleIcon("default", "Delete Folder Connection", "delete",
-      readOnly, FolderConnectionTreeNode.class, "deleteConnection");
+    final TreeItemPropertyEnableCheck readOnly = new TreeItemPropertyEnableCheck("readOnly", false);
+    MENU.addMenuItemTitleIcon("default", "Delete Folder Connection", "delete", readOnly,
+      FolderConnectionTreeNode.class, "deleteConnection");
   }
 
   public static void deleteConnection() {
     final FolderConnectionTreeNode node = BaseTree.getMouseClickItem();
     final FolderConnection connection = node.getUserData();
-    final int confirm = JOptionPane.showConfirmDialog(
-      SwingUtil.getActiveWindow(),
-      "Delete folder connection '" + connection.getName()
-        + "'? This action cannot be undone.", "Delete Layer",
-      JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+    final int confirm = JOptionPane.showConfirmDialog(SwingUtil.getActiveWindow(),
+      "Delete folder connection '" + connection.getName() + "'? This action cannot be undone.",
+      "Delete Layer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
     if (confirm == JOptionPane.OK_OPTION) {
       connection.delete();
     }
   }
 
-  public FolderConnectionTreeNode(
-    final FolderConnectionRegistryTreeNode parent,
+  public FolderConnectionTreeNode(final FolderConnectionRegistryTreeNode parent,
     final FolderConnection connection) {
     super(parent, connection);
     setType("Folder Connection");
@@ -87,8 +82,7 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements
   @Override
   public URL getUrl() {
     final String name = getName();
-    final String urlstring = "folderconnection://"
-      + UrlUtil.percentEncode(name) + "/";
+    final String urlstring = "folderconnection://" + UrlUtil.percentEncode(name) + "/";
     try {
       final URL url = new URL(urlstring);
       return url;
@@ -115,8 +109,7 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements
         final List<FileTreeNode> oldNodes = (List)children;
         final ListIterator<FileTreeNode> oldIterator = oldNodes.listIterator();
 
-        final List<FileTreeNode> newNodes = (List)FileTreeNode.getFileNodes(
-          this, file);
+        final List<FileTreeNode> newNodes = (List)FileTreeNode.getFileNodes(this, file);
         final ListIterator<FileTreeNode> newIterator = newNodes.listIterator();
         int i = 0;
 

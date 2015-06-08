@@ -9,8 +9,7 @@ import com.revolsys.parallel.channel.MultiInputSelector;
 import com.revolsys.parallel.channel.store.Buffer;
 import com.revolsys.parallel.process.AbstractInOutProcess;
 
-public abstract class AbstractMergeProcess extends
-  AbstractInOutProcess<Record, Record> {
+public abstract class AbstractMergeProcess extends AbstractInOutProcess<Record, Record> {
 
   private static final int OTHER_INDEX = 1;
 
@@ -24,8 +23,8 @@ public abstract class AbstractMergeProcess extends
     return true;
   }
 
-  private void addObjectFromOtherChannel(final Channel<Record>[] channels,
-    final boolean[] guard, final Record[] objects, final int channelIndex) {
+  private void addObjectFromOtherChannel(final Channel<Record>[] channels, final boolean[] guard,
+    final Record[] objects, final int channelIndex) {
     int otherIndex;
     if (channelIndex == SOURCE_INDEX) {
       otherIndex = OTHER_INDEX;
@@ -55,14 +54,13 @@ public abstract class AbstractMergeProcess extends
 
   /**
    * Add an object from the other (otherId) channel.
-   * 
+   *
    * @param object The object to add.
    */
   protected abstract void addOtherObject(Record object);
 
-  private RecordDefinition addSavedObjects(
-    final RecordDefinition currentType, final String currentTypeName,
-    final Channel<Record> out, final boolean[] guard,
+  private RecordDefinition addSavedObjects(final RecordDefinition currentType,
+    final String currentTypeName, final Channel<Record> out, final boolean[] guard,
     final Record[] objects) {
     final Record sourceObject = objects[SOURCE_INDEX];
     final Record otherObject = objects[OTHER_INDEX];
@@ -105,8 +103,7 @@ public abstract class AbstractMergeProcess extends
         return currentType;
       } else {
         processObjects(currentType, out);
-        final int nameCompare = sourceTypeName.toString().compareTo(
-          otherTypeName.toString());
+        final int nameCompare = sourceTypeName.toString().compareTo(otherTypeName.toString());
         if (nameCompare < 0) {
           // If the first feature type name is < second feature type
           // name
@@ -146,7 +143,7 @@ public abstract class AbstractMergeProcess extends
 
   /**
    * Add an object from the source (in) channel.
-   * 
+   *
    * @param object The object to add.
    */
   protected abstract void addSourceObject(Record object);
@@ -155,24 +152,22 @@ public abstract class AbstractMergeProcess extends
    * @return the in
    */
   public Channel<Record> getOtherIn() {
-    if (otherIn == null) {
-      if (otherInBufferSize < 1) {
+    if (this.otherIn == null) {
+      if (this.otherInBufferSize < 1) {
         setOtherIn(new Channel<Record>());
       } else {
-        final Buffer<Record> buffer = new Buffer<Record>(
-          otherInBufferSize);
+        final Buffer<Record> buffer = new Buffer<Record>(this.otherInBufferSize);
         setOtherIn(new Channel<Record>(buffer));
       }
     }
-    return otherIn;
+    return this.otherIn;
   }
 
   public int getOtherInBufferSize() {
-    return otherInBufferSize;
+    return this.otherInBufferSize;
   }
 
-  protected abstract void processObjects(RecordDefinition currentType,
-    Channel<Record> out);
+  protected abstract void processObjects(RecordDefinition currentType, Channel<Record> out);
 
   @Override
   @SuppressWarnings("unchecked")
@@ -181,7 +176,7 @@ public abstract class AbstractMergeProcess extends
     try {
       RecordDefinition currentType = null;
       String currentTypeName = null;
-      final Channel<Record>[] channels = ArrayUtil.create(in, otherIn);
+      final Channel<Record>[] channels = ArrayUtil.create(in, this.otherIn);
 
       final boolean[] guard = new boolean[] {
         true, true
@@ -270,10 +265,8 @@ public abstract class AbstractMergeProcess extends
                 }
               } else {
                 objects[channelIndex] = object;
-                addObjectFromOtherChannel(channels, guard, objects,
-                  channelIndex);
-                currentType = addSavedObjects(currentType, currentTypeName,
-                  out, guard, objects);
+                addObjectFromOtherChannel(channels, guard, objects, channelIndex);
+                currentType = addSavedObjects(currentType, currentTypeName, out, guard, objects);
                 if (currentType != null) {
                   currentTypeName = currentType.getPath();
                 }
@@ -289,8 +282,7 @@ public abstract class AbstractMergeProcess extends
         }
       } finally {
         try {
-          while (addSavedObjects(currentType, currentTypeName, out, guard,
-            objects) != null) {
+          while (addSavedObjects(currentType, currentTypeName, out, guard, objects) != null) {
           }
           processObjects(currentType, out);
         } finally {
@@ -298,7 +290,7 @@ public abstract class AbstractMergeProcess extends
         }
       }
     } finally {
-      otherIn.readDisconnect();
+      this.otherIn.readDisconnect();
       tearDown();
     }
   }

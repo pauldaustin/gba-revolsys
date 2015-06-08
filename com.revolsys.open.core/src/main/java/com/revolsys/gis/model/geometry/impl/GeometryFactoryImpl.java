@@ -30,8 +30,8 @@ import com.revolsys.gis.model.geometry.MultiPolygon;
 import com.revolsys.gis.model.geometry.Point;
 import com.revolsys.gis.model.geometry.Polygon;
 
-public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
-  implements com.revolsys.gis.model.geometry.GeometryFactory {
+public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel implements
+  com.revolsys.gis.model.geometry.GeometryFactory {
   private static Map<String, GeometryFactoryImpl> factories = new HashMap<String, GeometryFactoryImpl>();
 
   private static final long serialVersionUID = 4328651897279304108L;
@@ -50,8 +50,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
   /**
    * get a 3d geometry factory with a floating scale.
    */
-  public static GeometryFactoryImpl getFactory(
-    final CoordinateSystem coordinateSystem) {
+  public static GeometryFactoryImpl getFactory(final CoordinateSystem coordinateSystem) {
     final int crsId = getId(coordinateSystem);
     return getFactory(crsId, 3, 0, 0);
   }
@@ -67,8 +66,8 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
     return getFactory(crsId, 3, 0, 0);
   }
 
-  public static GeometryFactoryImpl getFactory(final int crsId,
-    final byte numAxis, final double scaleXY, final double scaleZ) {
+  public static GeometryFactoryImpl getFactory(final int crsId, final byte numAxis,
+    final double scaleXY, final double scaleZ) {
     synchronized (factories) {
       final String key = crsId + "-" + numAxis + "-" + scaleXY + "-" + scaleZ;
       GeometryFactoryImpl factory = factories.get(key);
@@ -82,35 +81,33 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
 
   /**
    * Get a 2D geometry factory with the specified scale
-   * 
+   *
    * @param crsId
    * @param scale
    * @return
    */
-  public static GeometryFactoryImpl getFactory(final int crsId,
-    final double scale) {
+  public static GeometryFactoryImpl getFactory(final int crsId, final double scale) {
     return getFactory(crsId, 2, scale, 0);
   }
 
-  public static GeometryFactoryImpl getFactory(final int crsId,
-    final double scaleXy, final double scaleZ) {
+  public static GeometryFactoryImpl getFactory(final int crsId, final double scaleXy,
+    final double scaleZ) {
     return getFactory(crsId, 3, scaleXy, scaleZ);
   }
 
   /**
    * Get a 2D geometry factory with the specified scale
-   * 
+   *
    * @param crsId
    * @param scale
    * @return
    */
-  public static GeometryFactoryImpl getFactory(final int crsId,
-    final int numAxis) {
+  public static GeometryFactoryImpl getFactory(final int crsId, final int numAxis) {
     return getFactory(crsId, numAxis, 0, 0);
   }
 
-  public static GeometryFactoryImpl getFactory(final int crsId,
-    final int numAxis, final double scaleXY, final double scaleZ) {
+  public static GeometryFactoryImpl getFactory(final int crsId, final int numAxis,
+    final double scaleXY, final double scaleZ) {
     return getFactory(crsId, (byte)numAxis, scaleXY, scaleZ);
   }
 
@@ -126,16 +123,15 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
 
   private byte numAxis = 2;
 
-  private GeometryFactoryImpl(final int crsId, final byte numAxis,
-    final double scaleXY, final double scaleZ) {
+  private GeometryFactoryImpl(final int crsId, final byte numAxis, final double scaleXY,
+    final double scaleZ) {
     super(scaleXY, scaleZ);
     this.coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(crsId);
     this.numAxis = numAxis;
   }
 
   protected CoordinatesList createCoordinatesList(
-    final com.revolsys.gis.model.geometry.GeometryFactory factory,
-    final CoordinatesList points) {
+    final com.revolsys.gis.model.geometry.GeometryFactory factory, final CoordinatesList points) {
     final byte numAxis = getNumAxis();
     CoordinatesList newPoints;
     if (factory == this) {
@@ -149,8 +145,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
         newPoints = new DoubleCoordinatesList(numAxis, points);
       } else {
         newPoints = new DoubleCoordinatesList(size, numAxis);
-        final CoordinatesListCoordinates sourceCoordinates = new CoordinatesListCoordinates(
-          points);
+        final CoordinatesListCoordinates sourceCoordinates = new CoordinatesListCoordinates(points);
         final CoordinatesListCoordinates targetCoordinates = new CoordinatesListCoordinates(
           newPoints);
         for (int i = 0; i < size; i++) {
@@ -166,8 +161,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
 
   @SuppressWarnings("unchecked")
   @Override
-  public <G extends Geometry> G createGeometry(
-    final Collection<? extends Geometry> geometries) {
+  public <G extends Geometry> G createGeometry(final Collection<? extends Geometry> geometries) {
     if (geometries.isEmpty()) {
       return (G)createGeometryCollection();
     } else {
@@ -187,8 +181,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
           } else if (geomClass == Point.class) {
             return (G)createMultiPoint(geometries);
           } else {
-            throw new IllegalArgumentException("Unhandled class: "
-              + geometry.getClass());
+            throw new IllegalArgumentException("Unhandled class: " + geometry.getClass());
           }
         }
         return (G)geometry;
@@ -229,8 +222,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
       final MultiPolygon polygon = (MultiPolygon)geometry;
       return (G)createMultiPolygon(polygon);
     } else {
-      throw new IllegalArgumentException("Geometry class not supported "
-        + geometry.getClass());
+      throw new IllegalArgumentException("Geometry class not supported " + geometry.getClass());
     }
   }
 
@@ -286,8 +278,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
       if (operation != null) {
         final CoordinatesListCoordinates sourceCoordinates = new CoordinatesListCoordinates(
           lineString);
-        final CoordinatesListCoordinates targetCoordinates = new CoordinatesListCoordinates(
-          points);
+        final CoordinatesListCoordinates targetCoordinates = new CoordinatesListCoordinates(points);
         for (int i = 0; i < size; i++) {
           sourceCoordinates.setIndex(i);
           targetCoordinates.setIndex(i);
@@ -309,8 +300,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
       final double[] coordinates = (double[])points;
       return createLinearRing(coordinates);
     } else {
-      throw new IllegalArgumentException("Class not supported "
-        + points.getClass());
+      throw new IllegalArgumentException("Class not supported " + points.getClass());
     }
   }
 
@@ -341,13 +331,11 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
       final double[] coordinates = (double[])points;
       return createLineString(coordinates);
     } else {
-      throw new IllegalArgumentException("Class not supported "
-        + points.getClass());
+      throw new IllegalArgumentException("Class not supported " + points.getClass());
     }
   }
 
-  private MultiLinearRingImpl createMultiLinearRing(
-    final Collection<? extends Geometry> geometries) {
+  private MultiLinearRingImpl createMultiLinearRing(final Collection<? extends Geometry> geometries) {
     return new MultiLinearRingImpl(this, geometries);
   }
 
@@ -360,8 +348,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
     return createMultiLinearRing(geometries);
   }
 
-  private MultiLineStringImpl createMultiLineString(
-    final Collection<? extends Geometry> geometries) {
+  private MultiLineStringImpl createMultiLineString(final Collection<? extends Geometry> geometries) {
     return new MultiLineStringImpl(this, geometries);
   }
 
@@ -382,8 +369,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
     return createMultiLineString(geometries);
   }
 
-  private MultiPointImpl createMultiPoint(
-    final Collection<? extends Geometry> geometries) {
+  private MultiPointImpl createMultiPoint(final Collection<? extends Geometry> geometries) {
     return new MultiPointImpl(this, geometries);
   }
 
@@ -393,8 +379,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
     return null;
   }
 
-  private MultiPolygonImpl createMultiPolygon(
-    final Collection<? extends Geometry> geometries) {
+  private MultiPolygonImpl createMultiPolygon(final Collection<? extends Geometry> geometries) {
     return new MultiPolygonImpl(this, geometries);
   }
 
@@ -467,7 +452,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
 
   @Override
   public CoordinateSystem getCoordinateSystem() {
-    return coordinateSystem;
+    return this.coordinateSystem;
   }
 
   @SuppressWarnings("unchecked")
@@ -501,8 +486,7 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
       } else if (geometry instanceof Polygon) {
         partClass = Polygon.class;
       } else {
-        throw new IllegalArgumentException("Unsupported geometry class "
-          + geometry.getClass());
+        throw new IllegalArgumentException("Unsupported geometry class " + geometry.getClass());
       }
       if (geomClass == null) {
         geomClass = partClass;
@@ -514,33 +498,33 @@ public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel
   }
 
   public byte getNumAxis() {
-    return numAxis;
+    return this.numAxis;
   }
 
   @Override
   public int getSrid() {
-    return coordinateSystem.getId();
+    return this.coordinateSystem.getId();
   }
 
   public boolean hasM() {
-    return numAxis > 3;
+    return this.numAxis > 3;
   }
 
   public boolean hasZ() {
-    return numAxis > 2;
+    return this.numAxis > 2;
   }
 
   @Override
   public String toString() {
-    if (coordinateSystem == null) {
+    if (this.coordinateSystem == null) {
       return "Unknown coordinate system";
     } else {
-      final StringBuffer string = new StringBuffer(coordinateSystem.getName());
-      final int srid = coordinateSystem.getId();
+      final StringBuffer string = new StringBuffer(this.coordinateSystem.getName());
+      final int srid = this.coordinateSystem.getId();
       string.append(", srid=");
       string.append(srid);
       string.append(", numAxis=");
-      string.append(numAxis);
+      string.append(this.numAxis);
       final double scaleXY = getScaleXY();
       string.append(", scaleXy=");
       if (scaleXY <= 0) {

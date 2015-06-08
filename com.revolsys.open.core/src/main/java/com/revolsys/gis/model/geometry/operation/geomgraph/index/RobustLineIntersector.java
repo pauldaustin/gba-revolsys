@@ -13,7 +13,7 @@ import com.vividsolutions.jts.algorithm.RobustDeterminant;
 
 /**
  * A robust version of {@link LineIntersector}.
- * 
+ *
  * @version 1.7
  * @see RobustDeterminant
  */
@@ -22,54 +22,50 @@ public class RobustLineIntersector extends LineIntersector {
   public RobustLineIntersector() {
   }
 
-  private int computeCollinearIntersection(final Coordinates p1,
-    final Coordinates p2, final Coordinates q1, final Coordinates q2) {
+  private int computeCollinearIntersection(final Coordinates p1, final Coordinates p2,
+    final Coordinates q1, final Coordinates q2) {
     final boolean p1q1p2 = BoundingBox.intersects(p1, p2, q1);
     final boolean p1q2p2 = BoundingBox.intersects(p1, p2, q2);
     final boolean q1p1q2 = BoundingBox.intersects(q1, q2, p1);
     final boolean q1p2q2 = BoundingBox.intersects(q1, q2, p2);
 
     if (p1q1p2 && p1q2p2) {
-      intPt[0] = q1;
-      intPt[1] = q2;
+      this.intPt[0] = q1;
+      this.intPt[1] = q2;
       return COLLINEAR_INTERSECTION;
     }
     if (q1p1q2 && q1p2q2) {
-      intPt[0] = p1;
-      intPt[1] = p2;
+      this.intPt[0] = p1;
+      this.intPt[1] = p2;
       return COLLINEAR_INTERSECTION;
     }
     if (p1q1p2 && q1p1q2) {
-      intPt[0] = q1;
-      intPt[1] = p1;
-      return q1.equals(p1) && !p1q2p2 && !q1p2q2 ? POINT_INTERSECTION
-        : COLLINEAR_INTERSECTION;
+      this.intPt[0] = q1;
+      this.intPt[1] = p1;
+      return q1.equals(p1) && !p1q2p2 && !q1p2q2 ? POINT_INTERSECTION : COLLINEAR_INTERSECTION;
     }
     if (p1q1p2 && q1p2q2) {
-      intPt[0] = q1;
-      intPt[1] = p2;
-      return q1.equals(p2) && !p1q2p2 && !q1p1q2 ? POINT_INTERSECTION
-        : COLLINEAR_INTERSECTION;
+      this.intPt[0] = q1;
+      this.intPt[1] = p2;
+      return q1.equals(p2) && !p1q2p2 && !q1p1q2 ? POINT_INTERSECTION : COLLINEAR_INTERSECTION;
     }
     if (p1q2p2 && q1p1q2) {
-      intPt[0] = q2;
-      intPt[1] = p1;
-      return q2.equals(p1) && !p1q1p2 && !q1p2q2 ? POINT_INTERSECTION
-        : COLLINEAR_INTERSECTION;
+      this.intPt[0] = q2;
+      this.intPt[1] = p1;
+      return q2.equals(p1) && !p1q1p2 && !q1p2q2 ? POINT_INTERSECTION : COLLINEAR_INTERSECTION;
     }
     if (p1q2p2 && q1p2q2) {
-      intPt[0] = q2;
-      intPt[1] = p2;
-      return q2.equals(p2) && !p1q1p2 && !q1p1q2 ? POINT_INTERSECTION
-        : COLLINEAR_INTERSECTION;
+      this.intPt[0] = q2;
+      this.intPt[1] = p2;
+      return q2.equals(p2) && !p1q1p2 && !q1p1q2 ? POINT_INTERSECTION : COLLINEAR_INTERSECTION;
     }
     return NO_INTERSECTION;
   }
 
   @Override
-  protected int computeIntersect(final Coordinates p1, final Coordinates p2,
-    final Coordinates q1, final Coordinates q2) {
-    isProper = false;
+  protected int computeIntersect(final Coordinates p1, final Coordinates p2, final Coordinates q1,
+    final Coordinates q2) {
+    this.isProper = false;
 
     // first try a fast test to see if the envelopes of the lines intersect
     if (!BoundingBox.intersects(p1, p2, q1, q2)) {
@@ -82,14 +78,14 @@ public class RobustLineIntersector extends LineIntersector {
     final int Pq1 = CoordinatesUtil.orientationIndex(p1, p2, q1);
     final int Pq2 = CoordinatesUtil.orientationIndex(p1, p2, q2);
 
-    if ((Pq1 > 0 && Pq2 > 0) || (Pq1 < 0 && Pq2 < 0)) {
+    if (Pq1 > 0 && Pq2 > 0 || Pq1 < 0 && Pq2 < 0) {
       return NO_INTERSECTION;
     }
 
     final int Qp1 = CoordinatesUtil.orientationIndex(q1, q2, p1);
     final int Qp2 = CoordinatesUtil.orientationIndex(q1, q2, p2);
 
-    if ((Qp1 > 0 && Qp2 > 0) || (Qp1 < 0 && Qp2 < 0)) {
+    if (Qp1 > 0 && Qp2 > 0 || Qp1 < 0 && Qp2 < 0) {
       return NO_INTERSECTION;
     }
 
@@ -111,7 +107,7 @@ public class RobustLineIntersector extends LineIntersector {
      * line, since at this point we know that the inputLines must intersect.
      */
     if (Pq1 == 0 || Pq2 == 0 || Qp1 == 0 || Qp2 == 0) {
-      isProper = false;
+      this.isProper = false;
 
       /**
        * Check for two equal endpoints. This is done explicitly rather than by
@@ -125,9 +121,9 @@ public class RobustLineIntersector extends LineIntersector {
        * (20.31970698357233, 46.76654261437082, NaN)
        */
       if (p1.equals2d(q1) || p1.equals2d(q2)) {
-        intPt[0] = p1;
+        this.intPt[0] = p1;
       } else if (p2.equals2d(q1) || p2.equals2d(q2)) {
-        intPt[0] = p2;
+        this.intPt[0] = p2;
       }
 
       /**
@@ -135,38 +131,37 @@ public class RobustLineIntersector extends LineIntersector {
        * segment.
        */
       else if (Pq1 == 0) {
-        intPt[0] = new DoubleCoordinates(q1);
+        this.intPt[0] = new DoubleCoordinates(q1);
       } else if (Pq2 == 0) {
-        intPt[0] = new DoubleCoordinates(q2);
+        this.intPt[0] = new DoubleCoordinates(q2);
       } else if (Qp1 == 0) {
-        intPt[0] = new DoubleCoordinates(p1);
+        this.intPt[0] = new DoubleCoordinates(p1);
       } else if (Qp2 == 0) {
-        intPt[0] = new DoubleCoordinates(p2);
+        this.intPt[0] = new DoubleCoordinates(p2);
       }
     } else {
-      isProper = true;
-      intPt[0] = intersection(p1, p2, q1, q2);
+      this.isProper = true;
+      this.intPt[0] = intersection(p1, p2, q1, q2);
     }
     return POINT_INTERSECTION;
   }
 
   @Override
-  public void computeIntersection(final Coordinates p, final Coordinates p1,
-    final Coordinates p2) {
-    isProper = false;
+  public void computeIntersection(final Coordinates p, final Coordinates p1, final Coordinates p2) {
+    this.isProper = false;
     // do between check first, since it is faster than the orientation test
     if (BoundingBox.intersects(p1, p2, p)) {
-      if ((CoordinatesUtil.orientationIndex(p1, p2, p) == 0)
-        && (CoordinatesUtil.orientationIndex(p2, p1, p) == 0)) {
-        isProper = true;
+      if (CoordinatesUtil.orientationIndex(p1, p2, p) == 0
+        && CoordinatesUtil.orientationIndex(p2, p1, p) == 0) {
+        this.isProper = true;
         if (p.equals(p1) || p.equals(p2)) {
-          isProper = false;
+          this.isProper = false;
         }
-        result = POINT_INTERSECTION;
+        this.result = POINT_INTERSECTION;
         return;
       }
     }
-    result = NO_INTERSECTION;
+    this.result = NO_INTERSECTION;
   }
 
   /**
@@ -201,15 +196,15 @@ public class RobustLineIntersector extends LineIntersector {
       // System.out.println("Snapped to " + intPt);
     }
 
-    if (precisionModel != null) {
-      precisionModel.makePrecise(intPt);
+    if (this.precisionModel != null) {
+      this.precisionModel.makePrecise(intPt);
     }
 
     return intPt;
   }
 
-  private Coordinates intersectionWithNormalization(final Coordinates p1,
-    final Coordinates p2, final Coordinates q1, final Coordinates q2) {
+  private Coordinates intersectionWithNormalization(final Coordinates p1, final Coordinates p2,
+    final Coordinates q1, final Coordinates q2) {
     final Coordinates n1 = new DoubleCoordinates(p1);
     final Coordinates n2 = new DoubleCoordinates(p2);
     final Coordinates n3 = new DoubleCoordinates(q1);
@@ -230,29 +225,28 @@ public class RobustLineIntersector extends LineIntersector {
    * correctly computed intersection point should return <code>true</code> for
    * this test. Since this test is for debugging purposes only, no attempt is
    * made to optimize the envelope test.
-   * 
+   *
    * @return <code>true</code> if the input point lies within both input segment
    *         envelopes
    */
   private boolean isInSegmentBoundingBoxs(final Coordinates intPt) {
-    final BoundingBox env0 = new BoundingBox(inputLines[0][0], inputLines[0][1]);
-    final BoundingBox env1 = new BoundingBox(inputLines[1][0], inputLines[1][1]);
+    final BoundingBox env0 = new BoundingBox(this.inputLines[0][0], this.inputLines[0][1]);
+    final BoundingBox env1 = new BoundingBox(this.inputLines[1][0], this.inputLines[1][1]);
     return env0.contains(intPt) && env1.contains(intPt);
   }
 
   /**
    * Normalize the supplied coordinates to so that the midpoint of their
    * intersection envelope lies at the origin.
-   * 
+   *
    * @param n00
    * @param n01
    * @param n10
    * @param n11
    * @param normPt
    */
-  private void normalizeToEnvCentre(final Coordinates n00,
-    final Coordinates n01, final Coordinates n10, final Coordinates n11,
-    final Coordinates normPt) {
+  private void normalizeToEnvCentre(final Coordinates n00, final Coordinates n01,
+    final Coordinates n10, final Coordinates n11, final Coordinates normPt) {
     final double minX0 = n00.getX() < n01.getX() ? n00.getX() : n01.getX();
     final double minY0 = n00.getY() < n01.getY() ? n00.getY() : n01.getY();
     final double maxX0 = n00.getX() > n01.getX() ? n00.getX() : n01.getX();
@@ -292,44 +286,19 @@ public class RobustLineIntersector extends LineIntersector {
   }
 
   /**
-   * Normalize the supplied coordinates so that their minimum ordinate values
-   * lie at the origin. NOTE: this normalization technique appears to cause
-   * large errors in the position of the intersection point for some cases.
-   * 
-   * @param n1
-   * @param n2
-   * @param n3
-   * @param n4
-   * @param normPt
-   */
-  private void normalizeToMinimum(final Coordinates n1, final Coordinates n2,
-    final Coordinates n3, final Coordinates n4, final Coordinates normPt) {
-    normPt.setX(smallestInAbsValue(n1.getX(), n2.getX(), n3.getX(), n4.getX()));
-    normPt.setY(smallestInAbsValue(n1.getY(), n2.getY(), n3.getY(), n4.getY()));
-    n1.setX(n1.getX() - normPt.getX());
-    n1.setY(n1.getY() - normPt.getY());
-    n2.setX(n2.getX() - normPt.getX());
-    n2.setY(n2.getY() - normPt.getY());
-    n3.setX(n3.getX() - normPt.getX());
-    n3.setY(n3.getY() - normPt.getY());
-    n4.setX(n4.getX() - normPt.getX());
-    n4.setY(n4.getY() - normPt.getY());
-  }
-
-  /**
    * Computes a segment intersection using homogeneous coordinates. Round-off
    * error can cause the raw computation to fail, (usually due to the segments
    * being approximately parallel). If this happens, a reasonable approximation
    * is computed instead.
-   * 
+   *
    * @param p1 a segment endpoint
    * @param p2 a segment endpoint
    * @param q1 a segment endpoint
    * @param q2 a segment endpoint
    * @return the computed intersection point
    */
-  private Coordinates safeHCoordinatesIntersection(final Coordinates p1,
-    final Coordinates p2, final Coordinates q1, final Coordinates q2) {
+  private Coordinates safeHCoordinatesIntersection(final Coordinates p1, final Coordinates p2,
+    final Coordinates q1, final Coordinates q2) {
     Coordinates intPt = null;
     try {
       intPt = HCoordinate.intersection(p1, p2, q1, q2);
@@ -342,8 +311,8 @@ public class RobustLineIntersector extends LineIntersector {
     return intPt;
   }
 
-  private double smallestInAbsValue(final double x1, final double x2,
-    final double x3, final double x4) {
+  private double smallestInAbsValue(final double x1, final double x2, final double x3,
+    final double x4) {
     double x = x1;
     double xabs = Math.abs(x);
     if (Math.abs(x2) < xabs) {

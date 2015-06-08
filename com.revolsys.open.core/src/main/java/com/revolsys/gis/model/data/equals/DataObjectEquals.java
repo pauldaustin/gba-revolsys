@@ -10,12 +10,10 @@ public class DataObjectEquals implements Equals<Record> {
   public static final String EXCLUDE_GEOMETRY = DataObjectEquals.class.getName()
     + ".excludeGeometry";
 
-  public static final String EXCLUDE_ID = DataObjectEquals.class.getName()
-    + ".excludeId";
+  public static final String EXCLUDE_ID = DataObjectEquals.class.getName() + ".excludeId";
 
-  public static boolean equalAttributes(
-    final Collection<String> excludedAttributes, final Record object1,
-    final Record object2, final Collection<String> attributeNames) {
+  public static boolean equalAttributes(final Collection<String> excludedAttributes,
+    final Record object1, final Record object2, final Collection<String> attributeNames) {
     for (final String attributeName : attributeNames) {
       if (!equals(excludedAttributes, object1, object2, attributeName)) {
         return false;
@@ -24,25 +22,13 @@ public class DataObjectEquals implements Equals<Record> {
     return true;
   }
 
-  public static boolean equalAttributes(final Record object1,
-    final Record object2, final Collection<String> attributeNames) {
-    for (final String attributeName : attributeNames) {
-      if (!equals(object1, object2, attributeName)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  public static boolean equalAttributes(final Record object1,
-    final Map<String, Object> values2) {
+  public static boolean equalAttributes(final Record object1, final Map<String, Object> values2) {
     if (object1 == null) {
       return values2 == null;
     } else if (values2 == null) {
       return false;
     } else {
-      for (final String attributeName : object1.getRecordDefinition()
-        .getFieldNames()) {
+      for (final String attributeName : object1.getRecordDefinition().getFieldNames()) {
         if (!MapEquals.equals(object1, values2, attributeName)) {
           return false;
         }
@@ -51,9 +37,18 @@ public class DataObjectEquals implements Equals<Record> {
     }
   }
 
-  public static boolean equals(final Collection<String> excludedAttributes,
-    final Record object1, final Record object2,
-    final String attributeName) {
+  public static boolean equalAttributes(final Record object1, final Record object2,
+    final Collection<String> attributeNames) {
+    for (final String attributeName : attributeNames) {
+      if (!equals(object1, object2, attributeName)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public static boolean equals(final Collection<String> excludedAttributes, final Record object1,
+    final Record object2, final String attributeName) {
     final RecordDefinition metaData = object1.getRecordDefinition();
     if (excludedAttributes.contains(attributeName)) {
       return true;
@@ -70,8 +65,8 @@ public class DataObjectEquals implements Equals<Record> {
     }
   }
 
-  public static boolean equals(final Record object1,
-    final Record object2, final String attributeName) {
+  public static boolean equals(final Record object1, final Record object2,
+    final String attributeName) {
     final Object value1 = object1.getValue(attributeName);
     final Object value2 = object2.getValue(attributeName);
     return EqualsInstance.INSTANCE.equals(value1, value2);
@@ -109,14 +104,12 @@ public class DataObjectEquals implements Equals<Record> {
             final String name = metaData1.getFieldName(i);
             if (excludedAttributes.contains(name)) {
             } else if (i == idIndex && excludedAttributes.contains(EXCLUDE_ID)) {
-            } else if (i == geometryIndex
-              && excludedAttributes.contains(EXCLUDE_GEOMETRY)) {
-            } else if (i == objectIdIndex
-              && excludedAttributes.contains(EXCLUDE_GEOMETRY)) {
+            } else if (i == geometryIndex && excludedAttributes.contains(EXCLUDE_GEOMETRY)) {
+            } else if (i == objectIdIndex && excludedAttributes.contains(EXCLUDE_GEOMETRY)) {
             } else {
               final Object value1 = object1.getValue(i);
               final Object value2 = object2.getValue(i);
-              if (!equalsRegistry.equals(value1, value2, excludedAttributes)) {
+              if (!this.equalsRegistry.equals(value1, value2, excludedAttributes)) {
                 return false;
               }
             }

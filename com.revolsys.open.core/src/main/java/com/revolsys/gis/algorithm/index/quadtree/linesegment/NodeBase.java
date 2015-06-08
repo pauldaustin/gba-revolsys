@@ -10,8 +10,7 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.geom.Envelope;
 
 public abstract class NodeBase {
-  public static int getSubnodeIndex(final Envelope envelope,
-    final Coordinates centre) {
+  public static int getSubnodeIndex(final Envelope envelope, final Coordinates centre) {
     int subnodeIndex = -1;
     final double minX = envelope.getMinX();
     final double minY = envelope.getMinY();
@@ -46,18 +45,18 @@ public abstract class NodeBase {
 
   public NodeBase() {
     for (int i = 0; i < 4; i++) {
-      nodes.add(null);
+      this.nodes.add(null);
     }
   }
 
   public void add(final Envelope envelope, final int[] item) {
-    for (int i = 0; i < segmentIndexes.size(); i++) {
-      final int[] oldItem = segmentIndexes.get(i);
+    for (int i = 0; i < this.segmentIndexes.size(); i++) {
+      final int[] oldItem = this.segmentIndexes.get(i);
       if (oldItem == item) {
         return;
       }
     }
-    segmentIndexes.add(item);
+    this.segmentIndexes.add(item);
   }
 
   public int depth() {
@@ -75,7 +74,7 @@ public abstract class NodeBase {
   }
 
   protected Node getNode(final int i) {
-    return nodes.get(i);
+    return this.nodes.get(i);
   }
 
   protected int getNodeCount() {
@@ -99,12 +98,12 @@ public abstract class NodeBase {
   }
 
   public boolean hasItems() {
-    return !segmentIndexes.isEmpty();
+    return !this.segmentIndexes.isEmpty();
   }
 
   public boolean isEmpty() {
     boolean isEmpty = true;
-    if (!segmentIndexes.isEmpty()) {
+    if (!this.segmentIndexes.isEmpty()) {
       isEmpty = false;
     }
     for (int i = 0; i < 4; i++) {
@@ -125,7 +124,7 @@ public abstract class NodeBase {
   protected abstract boolean isSearchMatch(Envelope searchEnv);
 
   protected void setNode(final int i, final Node node) {
-    nodes.set(i, node);
+    this.nodes.set(i, node);
   }
 
   protected int size() {
@@ -136,18 +135,18 @@ public abstract class NodeBase {
         subSize += node.size();
       }
     }
-    return subSize + segmentIndexes.size();
+    return subSize + this.segmentIndexes.size();
   }
 
   @Override
   public String toString() {
-    return nodes + "=" + segmentIndexes.size();
+    return this.nodes + "=" + this.segmentIndexes.size();
   }
 
-  public boolean visit(final LineSegmentQuadTree tree,
-    final BoundingBox boundingBox, final Visitor<LineSegment> visitor) {
+  public boolean visit(final LineSegmentQuadTree tree, final BoundingBox boundingBox,
+    final Visitor<LineSegment> visitor) {
     if (isSearchMatch(boundingBox)) {
-      for (final int[] segmentIndex : segmentIndexes) {
+      for (final int[] segmentIndex : this.segmentIndexes) {
         final LineSegment segment = tree.getLineSegment(segmentIndex);
         if (segment.intersects(boundingBox)) {
           if (!visitor.visit(segment)) {
@@ -168,9 +167,8 @@ public abstract class NodeBase {
     return true;
   }
 
-  public boolean visit(final LineSegmentQuadTree tree,
-    final Visitor<LineSegment> visitor) {
-    for (final int[] segmentIndex : segmentIndexes) {
+  public boolean visit(final LineSegmentQuadTree tree, final Visitor<LineSegment> visitor) {
+    for (final int[] segmentIndex : this.segmentIndexes) {
       final LineSegment segment = tree.getLineSegment(segmentIndex);
       if (!visitor.visit(segment)) {
         return false;

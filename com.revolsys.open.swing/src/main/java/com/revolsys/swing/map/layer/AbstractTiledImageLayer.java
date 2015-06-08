@@ -57,16 +57,14 @@ public abstract class AbstractTiledImageLayer extends AbstractLayer {
     if (!this.hasError) {
       this.hasError = true;
       LoggerFactory.getLogger(getClass()).error(
-        "Unable to get map tiles for " + this + " (" + getSourceLocation()
-        + ")", e);
+        "Unable to get map tiles for " + this + " (" + getSourceLocation() + ")", e);
     }
   }
 
   @Override
   public Map<String, Object> toMap() {
     final Map<String, Object> map = super.toMap();
-    map.keySet().removeAll(
-      Arrays.asList("readOnly", "querySupported", "selectSupported"));
+    map.keySet().removeAll(Arrays.asList("readOnly", "querySupported", "selectSupported"));
     return map;
   }
 }

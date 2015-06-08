@@ -43,7 +43,7 @@ public class ShapeMarker extends AbstractMarker {
 
   /**
    * Get an arrow shape pointing right for the size of the graphic.
-   * 
+   *
    * @return The shape.
    */
   public static Shape arrow(final double size) {
@@ -97,7 +97,7 @@ public class ShapeMarker extends AbstractMarker {
 
   /**
    * Get a solid arrow shape pointing right for the size of the graphic.
-   * 
+   *
    * @return The shape.
    */
   public static Shape solidArrow(final double size) {
@@ -140,7 +140,7 @@ public class ShapeMarker extends AbstractMarker {
 
   /**
    * Get an X shape for the size of the graphic.
-   * 
+   *
    * @return The shape.
    */
   public static Shape x(final double size) {
@@ -177,8 +177,7 @@ public class ShapeMarker extends AbstractMarker {
       } else {
         scale = 1 / height;
       }
-      final AffineTransform transform = AffineTransform.getTranslateInstance(
-        -bounds.x, -bounds.y);
+      final AffineTransform transform = AffineTransform.getTranslateInstance(-bounds.x, -bounds.y);
       transform.concatenate(AffineTransform.getScaleInstance(scale, scale));
       this.shape = new GeneralPath(shape).createTransformedShape(transform);
     }
@@ -205,11 +204,9 @@ public class ShapeMarker extends AbstractMarker {
   @Override
   public Icon getIcon(final MarkerStyle style) {
     final Shape shape = getShape();
-    final AffineTransform shapeTransform = AffineTransform.getScaleInstance(16,
-      16);
+    final AffineTransform shapeTransform = AffineTransform.getScaleInstance(16, 16);
 
-    final BufferedImage image = new BufferedImage(16, 16,
-      BufferedImage.TYPE_INT_ARGB);
+    final BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
     final Graphics2D graphics = image.createGraphics();
     final Shape newShape = new GeneralPath(shape).createTransformedShape(shapeTransform);
     if (style.setMarkerFillStyle(null, graphics)) {
@@ -223,7 +220,7 @@ public class ShapeMarker extends AbstractMarker {
   }
 
   public String getName() {
-    if (StringUtils.hasText(name)) {
+    if (StringUtils.hasText(this.name)) {
       return this.name;
     } else {
       return "unknown";
@@ -231,7 +228,7 @@ public class ShapeMarker extends AbstractMarker {
   }
 
   public Shape getShape() {
-    return shape;
+    return this.shape;
   }
 
   @Override
@@ -240,9 +237,8 @@ public class ShapeMarker extends AbstractMarker {
   }
 
   @Override
-  public void render(final Viewport2D viewport, final Graphics2D graphics,
-    final MarkerStyle style, final double modelX, final double modelY,
-    double orientation) {
+  public void render(final Viewport2D viewport, final Graphics2D graphics, final MarkerStyle style,
+    final double modelX, final double modelY, double orientation) {
 
     final AffineTransform savedTransform = graphics.getTransform();
     final Measure<Length> markerWidth = style.getMarkerWidth();
@@ -254,11 +250,9 @@ public class ShapeMarker extends AbstractMarker {
       orientation = 0;
     }
 
-    translateMarker(viewport, graphics, style, modelX, modelY, mapWidth,
-      mapHeight, orientation);
+    translateMarker(viewport, graphics, style, modelX, modelY, mapWidth, mapHeight, orientation);
 
-    final AffineTransform shapeTransform = AffineTransform.getScaleInstance(
-      mapWidth, mapHeight);
+    final AffineTransform shapeTransform = AffineTransform.getScaleInstance(mapWidth, mapHeight);
     final Shape newShape = new GeneralPath(this.getShape()).createTransformedShape(shapeTransform);
     if (style.setMarkerFillStyle(viewport, graphics)) {
       graphics.fill(newShape);

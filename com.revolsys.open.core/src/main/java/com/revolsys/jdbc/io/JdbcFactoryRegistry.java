@@ -37,8 +37,7 @@ public class JdbcFactoryRegistry {
     return jdbcFactoryRegistry.getDatabaseFactory(dataSource);
   }
 
-  public static JdbcDatabaseFactory databaseFactory(
-    final Map<String, ? extends Object> config) {
+  public static JdbcDatabaseFactory databaseFactory(final Map<String, ? extends Object> config) {
     final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry.getFactory();
     return jdbcFactoryRegistry.getDatabaseFactory(config);
   }
@@ -69,8 +68,7 @@ public class JdbcFactoryRegistry {
     }
   }
 
-  public static JdbcFactoryRegistry getFactory(
-    final ApplicationContext applicationContext) {
+  public static JdbcFactoryRegistry getFactory(final ApplicationContext applicationContext) {
     synchronized (factoriesByApplicationContext) {
       final WeakReference<JdbcFactoryRegistry> reference = factoriesByApplicationContext.get(applicationContext);
       JdbcFactoryRegistry jdbcFactoryRegistry;
@@ -103,7 +101,7 @@ public class JdbcFactoryRegistry {
 
   @Override
   protected void finalize() throws Throwable {
-    databaseFactoriesByProductName = null;
+    this.databaseFactoriesByProductName = null;
   }
 
   public JdbcDatabaseFactory getDatabaseFactory(final DataSource dataSource) {
@@ -111,34 +109,30 @@ public class JdbcFactoryRegistry {
     return getDatabaseFactory(productName);
   }
 
-  public JdbcDatabaseFactory getDatabaseFactory(
-    final Map<String, ? extends Object> config) {
+  public JdbcDatabaseFactory getDatabaseFactory(final Map<String, ? extends Object> config) {
     final String url = (String)config.get("url");
     if (url == null) {
       throw new IllegalArgumentException("The url parameter must be specified");
     } else {
-      for (final JdbcDatabaseFactory databaseFactory : databaseFactoriesByProductName.values()) {
+      for (final JdbcDatabaseFactory databaseFactory : this.databaseFactoriesByProductName.values()) {
         if (databaseFactory.canHandleUrl(url)) {
           return databaseFactory;
         }
       }
-      throw new IllegalArgumentException("Data Source Factory not found for "
-        + url);
+      throw new IllegalArgumentException("Data Source Factory not found for " + url);
     }
   }
 
   public JdbcDatabaseFactory getDatabaseFactory(final String productName) {
-    final JdbcDatabaseFactory databaseFactory = databaseFactoriesByProductName.get(productName);
+    final JdbcDatabaseFactory databaseFactory = this.databaseFactoriesByProductName.get(productName);
     if (databaseFactory == null) {
-      throw new IllegalArgumentException("Data Store not found for "
-        + productName);
+      throw new IllegalArgumentException("Data Store not found for " + productName);
     } else {
       return databaseFactory;
     }
   }
 
-  private void loadFactories(final ClassLoader classLoader,
-    final Resource resource) {
+  private void loadFactories(final ClassLoader classLoader, final Resource resource) {
     try {
       for (final Map<String, Object> factoryDefinition : AbstractMapReaderFactory.mapReader(resource)) {
         final String jdbcFactoryClassName = (String)factoryDefinition.get("jdbcFactoryClassName");
@@ -148,7 +142,7 @@ public class JdbcFactoryRegistry {
             jdbcFactoryClassName, true, classLoader);
           final JdbcDatabaseFactory factory = factoryClass.newInstance();
           for (final String productName : factory.getProductNames()) {
-            databaseFactoriesByProductName.put(productName, factory);
+            this.databaseFactoriesByProductName.put(productName, factory);
           }
         }
       }

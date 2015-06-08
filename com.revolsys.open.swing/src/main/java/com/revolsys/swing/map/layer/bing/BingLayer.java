@@ -21,13 +21,13 @@ import com.revolsys.swing.map.layer.MapTile;
 
 public class BingLayer extends AbstractTiledImageLayer {
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "bing", "Bing Tiles", BingLayer.class, "create");
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("bing",
+    "Bing Tiles", BingLayer.class, "create");
 
   public static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.floating3(4326);
 
-  private static final BoundingBox MAX_BOUNDING_BOX = new BoundingBox(
-    GEOMETRY_FACTORY, -180, -85, 180, 85);
+  private static final BoundingBox MAX_BOUNDING_BOX = new BoundingBox(GEOMETRY_FACTORY, -180, -85,
+    180, 85);
 
   public static BingLayer create(final Map<String, Object> properties) {
     return new BingLayer(properties);
@@ -53,8 +53,7 @@ public class BingLayer extends AbstractTiledImageLayer {
       try {
         imagerySet = ImagerySet.valueOf(imagerySetName);
       } catch (final Throwable e) {
-        throw new RuntimeException(
-          "Unknown Bing imagery set " + imagerySetName, e);
+        throw new RuntimeException("Unknown Bing imagery set " + imagerySetName, e);
       }
     }
     MapLayer mapLayer = null;
@@ -87,7 +86,7 @@ public class BingLayer extends AbstractTiledImageLayer {
   }
 
   public ImagerySet getImagerySetEnum() {
-    return imagerySet;
+    return this.imagerySet;
   }
 
   public String getMapLayer() {
@@ -95,7 +94,7 @@ public class BingLayer extends AbstractTiledImageLayer {
   }
 
   public MapLayer getMapLayerEnum() {
-    return mapLayer;
+    return this.mapLayer;
   }
 
   @Override
@@ -121,15 +120,13 @@ public class BingLayer extends AbstractTiledImageLayer {
 
       for (int tileY = minTileY; tileY <= maxTileY; tileY++) {
         for (int tileX = minTileX; tileX <= maxTileX; tileX++) {
-          final BingMapTile tile = new BingMapTile(this, zoomLevel, resolution,
-            tileX, tileY);
+          final BingMapTile tile = new BingMapTile(this, zoomLevel, resolution, tileX, tileY);
           tiles.add(tile);
         }
       }
 
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(getClass()).error("Error getting tile envelopes",
-        e);
+      LoggerFactory.getLogger(getClass()).error("Error getting tile envelopes", e);
     }
     return tiles;
   }
@@ -143,8 +140,7 @@ public class BingLayer extends AbstractTiledImageLayer {
 
   public void setClient(final BingClient client) {
     this.client = client;
-    ExecutorServiceFactory.getExecutorService().execute(
-      new InvokeMethodRunnable(this, "init"));
+    ExecutorServiceFactory.getExecutorService().execute(new InvokeMethodRunnable(this, "init"));
   }
 
   public void setImagerySet(final ImagerySet imagerySet) {

@@ -17,9 +17,8 @@ public class SortByType extends BaseInOutProcess<Record, Record> {
     new DataObjectMetaDataNameComparator());
 
   @Override
-  protected void postRun(final Channel<Record> in,
-    final Channel<Record> out) {
-    for (final Collection<Record> objects : objectsByType.values()) {
+  protected void postRun(final Channel<Record> in, final Channel<Record> out) {
+    for (final Collection<Record> objects : this.objectsByType.values()) {
       for (final Record object : objects) {
         out.write(object);
       }
@@ -27,13 +26,12 @@ public class SortByType extends BaseInOutProcess<Record, Record> {
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
     final RecordDefinition metaData = object.getRecordDefinition();
-    Collection<Record> objects = objectsByType.get(metaData);
+    Collection<Record> objects = this.objectsByType.get(metaData);
     if (objects == null) {
       objects = new ArrayList<Record>();
-      objectsByType.put(metaData, objects);
+      this.objectsByType.put(metaData, objects);
     }
     objects.add(object);
   }

@@ -36,15 +36,14 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
    * section which is within 1m any additional noding from the other line will
    * be introduced, this may result in the line being slightly different from
    * the other line.
-   * 
+   *
    * @param graph The graph containing the two lines.
    * @param line The line
    * @param index The index of the line in the graph.
    * @return The split lines.
    */
-  private List<LineString> getSplitLines(
-    final LineMatchGraph<LineSegmentMatch> graph, final LineString line,
-    final int index) {
+  private List<LineString> getSplitLines(final LineMatchGraph<LineSegmentMatch> graph,
+    final LineString line, final int index) {
     final Coordinates startCoordinate = CoordinatesUtil.get(line);
     Node<LineSegmentMatch> currentNode = graph.findNode(startCoordinate);
     final Set<Edge<LineSegmentMatch>> processedEdges = new HashSet<Edge<LineSegmentMatch>>();
@@ -57,18 +56,16 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
     while (currentNode != null) {
       final Coordinates coordinate = currentNode;
       coordinates.add(coordinate);
-      final Edge<LineSegmentMatch> edge = graph.getUnprocessedEdgeWithSegment(
-        currentNode, index, processedEdges);
+      final Edge<LineSegmentMatch> edge = graph.getUnprocessedEdgeWithSegment(currentNode, index,
+        processedEdges);
       if (edge != null) {
         final LineSegmentMatch lineEdge = edge.getObject();
         boolean hasMatches = lineEdge.hasMatches(index);
         if (!hasMatches) {
           final Node<LineSegmentMatch> endNode = edge.getOppositeNode(currentNode);
-          for (final Edge<LineSegmentMatch> matchEdge : Node.getEdgesBetween(
-            currentNode, endNode)) {
+          for (final Edge<LineSegmentMatch> matchEdge : Node.getEdgesBetween(currentNode, endNode)) {
             if (matchEdge != edge) {
-              final List<LineSegment> segments = matchEdge.getObject()
-                .getSegments();
+              final List<LineSegment> segments = matchEdge.getObject().getSegments();
               for (int i = 0; i < segments.size(); i++) {
                 if (i != index) {
                   final LineSegment segment = segments.get(i);
@@ -116,15 +113,13 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
    * being the list of split lines from the second line. For each section which
    * is within 1m any additional noding from the other line will be introduced,
    * this may result in the line being slightly different from the other line.
-   * 
+   *
    * @param line1 The first line.
    * @param line2 The second line.
    * @return The split lines.
    */
-  private List<List<LineString>> getSplitLines(final LineString line1,
-    final LineString line2) {
-    final LineMatchGraph<LineSegmentMatch> graph = new LineMatchGraph<LineSegmentMatch>(
-      line1);
+  private List<List<LineString>> getSplitLines(final LineString line1, final LineString line2) {
+    final LineMatchGraph<LineSegmentMatch> graph = new LineMatchGraph<LineSegmentMatch>(line1);
     graph.add(line2);
     final List<List<LineString>> lines = new ArrayList<List<LineString>>();
     final List<LineString> lines1 = getSplitLines(graph, line1, 0);
@@ -139,7 +134,7 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
    * the edge and are not geometrically equal. The current edge and the matched
    * edge will be split into parts for each section which is equal and each
    * section which is not equal.
-   * 
+   *
    * @param edge The edge to process.
    * @return True
    */
@@ -159,7 +154,7 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
           final List<LineString> lines1 = lines.get(0);
           final List<LineString> lines2 = lines.get(1);
           if (!lines1.isEmpty() && !lines2.isEmpty()) {
-            if ((lines1.size() > 1 && lines2.size() > 1)) {
+            if (lines1.size() > 1 && lines2.size() > 1) {
               edge.replace(lines1);
               edge2.replace(lines2);
               return true;

@@ -20,8 +20,8 @@ import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.tree.model.node.AbstractObjectTreeNodeModel;
 
 public class BaseLayerRendererTreeNodeModel extends
-  AbstractObjectTreeNodeModel<AbstractLayerRenderer<? extends Layer>, Void>
-  implements MouseListener {
+  AbstractObjectTreeNodeModel<AbstractLayerRenderer<? extends Layer>, Void> implements
+  MouseListener {
 
   private final Set<Class<?>> SUPPORTED_CHILD_CLASSES = Collections.<Class<?>> singleton(AbstractLayerRenderer.class);
 
@@ -47,12 +47,11 @@ public class BaseLayerRendererTreeNodeModel extends
   }
 
   @Override
-  public Component getRenderer(
-    final AbstractLayerRenderer<? extends Layer> node, final JTree tree,
-    final boolean selected, final boolean expanded, final boolean leaf,
-    final int row, final boolean hasFocus) {
-    final Component renderer = super.getRenderer(node, tree, selected,
-      expanded, leaf, row, hasFocus);
+  public Component getRenderer(final AbstractLayerRenderer<? extends Layer> node, final JTree tree,
+    final boolean selected, final boolean expanded, final boolean leaf, final int row,
+    final boolean hasFocus) {
+    final Component renderer = super.getRenderer(node, tree, selected, expanded, leaf, row,
+      hasFocus);
     if (renderer instanceof JLabel) {
       final JLabel label = (JLabel)renderer;
       final Icon icon = node.getIcon();

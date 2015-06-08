@@ -18,8 +18,7 @@ import com.vividsolutions.jts.geom.Point;
 
 public class PdfUtil {
 
-  public static COSArray getArray(final COSDictionary dictionary,
-    final String key) {
+  public static COSArray getArray(final COSDictionary dictionary, final String key) {
     final COSBase item = dictionary.getDictionaryObject(key);
     if (item instanceof COSArray) {
       return (COSArray)item;
@@ -43,8 +42,7 @@ public class PdfUtil {
     }
   }
 
-  public static COSDictionary getDictionary(final COSDictionary dictionary,
-    final String key) {
+  public static COSDictionary getDictionary(final COSDictionary dictionary, final String key) {
     final COSBase item = dictionary.getDictionaryObject(key);
     if (item instanceof COSDictionary) {
       return (COSDictionary)item;
@@ -69,8 +67,7 @@ public class PdfUtil {
     for (final COSBase item : viewports) {
       if (item instanceof COSDictionary) {
         final COSDictionary viewport = (COSDictionary)item;
-        final BoundingBox boundingBox = PdfUtil.getViewportBoundingBox(
-          mediaBox, viewport);
+        final BoundingBox boundingBox = PdfUtil.getViewportBoundingBox(mediaBox, viewport);
         if (!boundingBox.isEmpty()) {
           return boundingBox;
         }
@@ -111,8 +108,7 @@ public class PdfUtil {
     return null;
   }
 
-  public static List<Point2D> getPoints(final COSDictionary dictionary,
-    final String key) {
+  public static List<Point2D> getPoints(final COSDictionary dictionary, final String key) {
     final COSArray array = PdfUtil.getArray(dictionary, key);
     final List<Point2D> points = new ArrayList<Point2D>();
     if (array != null) {
@@ -163,8 +159,8 @@ public class PdfUtil {
     return new BoundingBox();
   }
 
-  public static boolean hasNameValue(final COSDictionary dictionary,
-    final String key, final String value) {
+  public static boolean hasNameValue(final COSDictionary dictionary, final String key,
+    final String value) {
     final String name = dictionary.getNameAsString(key);
     return value.equals(name);
   }

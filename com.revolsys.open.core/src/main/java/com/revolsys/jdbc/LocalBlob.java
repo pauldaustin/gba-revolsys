@@ -32,10 +32,10 @@ public class LocalBlob implements Blob {
 
   @Override
   public InputStream getBinaryStream() throws SQLException {
-    if (resource == null) {
+    if (this.resource == null) {
       return null;
     } else {
-      final InputStream in = SpringUtil.getInputStream(resource);
+      final InputStream in = SpringUtil.getInputStream(this.resource);
       if (in instanceof FileInputStream) {
         final FileInputStream fileIn = (FileInputStream)in;
         return new BufferedInputStream(fileIn);
@@ -46,8 +46,7 @@ public class LocalBlob implements Blob {
   }
 
   @Override
-  public InputStream getBinaryStream(final long pos, final long length)
-    throws SQLException {
+  public InputStream getBinaryStream(final long pos, final long length) throws SQLException {
     throw new UnsupportedOperationException();
   }
 
@@ -59,22 +58,19 @@ public class LocalBlob implements Blob {
   @Override
   public long length() throws SQLException {
     try {
-      return resource.contentLength();
+      return this.resource.contentLength();
     } catch (final IOException e) {
-      throw new RuntimeException("Unable to get length for resource: "
-        + resource, e);
+      throw new RuntimeException("Unable to get length for resource: " + this.resource, e);
     }
   }
 
   @Override
-  public long position(final Blob pattern, final long start)
-    throws SQLException {
+  public long position(final Blob pattern, final long start) throws SQLException {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public long position(final byte pattern[], final long start)
-    throws SQLException {
+  public long position(final byte pattern[], final long start) throws SQLException {
     throw new UnsupportedOperationException();
   }
 
@@ -89,8 +85,8 @@ public class LocalBlob implements Blob {
   }
 
   @Override
-  public int setBytes(final long pos, final byte[] bytes, final int offset,
-    final int len) throws SQLException {
+  public int setBytes(final long pos, final byte[] bytes, final int offset, final int len)
+    throws SQLException {
     throw new UnsupportedOperationException();
   }
 

@@ -78,12 +78,11 @@ public class DataObjectQuadTree extends QuadTree<Record> {
     query(boundingBox, visitor);
   }
 
-  public List<Record> queryDistance(final Geometry geometry,
-    final double distance) {
+  public List<Record> queryDistance(final Geometry geometry, final double distance) {
     BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     boundingBox = boundingBox.expand(distance);
-    final DataObjectGeometryDistanceFilter filter = new DataObjectGeometryDistanceFilter(
-      geometry, distance);
+    final DataObjectGeometryDistanceFilter filter = new DataObjectGeometryDistanceFilter(geometry,
+      distance);
     return queryList(boundingBox, filter);
   }
 
@@ -92,16 +91,13 @@ public class DataObjectQuadTree extends QuadTree<Record> {
     return queryBoundingBox(geometry);
   }
 
-  public Record queryFirst(final Record object,
-    final Filter<Record> filter) {
+  public Record queryFirst(final Record object, final Filter<Record> filter) {
     final Geometry geometry = object.getGeometryValue();
     return queryFirst(geometry, filter);
   }
 
-  public Record queryFirstEquals(final Record object,
-    final Collection<String> excludedAttributes) {
-    final DataObjectEqualsFilter filter = new DataObjectEqualsFilter(object,
-      excludedAttributes);
+  public Record queryFirstEquals(final Record object, final Collection<String> excludedAttributes) {
+    final DataObjectEqualsFilter filter = new DataObjectEqualsFilter(object, excludedAttributes);
     return queryFirst(object, filter);
   }
 
@@ -128,15 +124,13 @@ public class DataObjectQuadTree extends QuadTree<Record> {
     return queryList(geometry, filter);
   }
 
-  public List<Record> queryList(final BoundingBox boundingBox,
-    final Filter<Record> filter) {
+  public List<Record> queryList(final BoundingBox boundingBox, final Filter<Record> filter) {
     return queryList(boundingBox, filter, null);
   }
 
-  public List<Record> queryList(final BoundingBox boundingBox,
-    final Filter<Record> filter, final Comparator<Record> comparator) {
-    final CreateListVisitor<Record> listVisitor = new CreateListVisitor<Record>(
-      filter);
+  public List<Record> queryList(final BoundingBox boundingBox, final Filter<Record> filter,
+    final Comparator<Record> comparator) {
+    final CreateListVisitor<Record> listVisitor = new CreateListVisitor<Record>(filter);
     query(boundingBox, listVisitor);
     final List<Record> list = listVisitor.getList();
     if (comparator != null) {
@@ -145,22 +139,20 @@ public class DataObjectQuadTree extends QuadTree<Record> {
     return list;
   }
 
-  public List<Record> queryList(final Record object,
-    final Filter<Record> filter) {
-    final Geometry geometry = object.getGeometryValue();
-    return queryList(geometry, filter);
-  }
-
-  public List<Record> queryList(final Geometry geometry,
-    final Filter<Record> filter) {
+  public List<Record> queryList(final Geometry geometry, final Filter<Record> filter) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     return queryList(boundingBox, filter);
   }
 
-  public List<Record> queryList(final Geometry geometry,
-    final Filter<Record> filter, final Comparator<Record> comparator) {
+  public List<Record> queryList(final Geometry geometry, final Filter<Record> filter,
+    final Comparator<Record> comparator) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     return queryList(boundingBox, filter, comparator);
+  }
+
+  public List<Record> queryList(final Record object, final Filter<Record> filter) {
+    final Geometry geometry = object.getGeometryValue();
+    return queryList(geometry, filter);
   }
 
   public void remove(final Collection<? extends Record> objects) {

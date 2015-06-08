@@ -81,8 +81,8 @@ public class ValueField extends JPanel implements Field {
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -156,8 +156,8 @@ public class ValueField extends JPanel implements Field {
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setBackground(backgroundColor);
     this.errorMessage = message;
@@ -221,16 +221,14 @@ public class ValueField extends JPanel implements Field {
     } else {
       window = SwingUtilities.windowForComponent(component);
     }
-    final JDialog dialog = new JDialog(window, this.title,
-      ModalityType.APPLICATION_MODAL);
+    final JDialog dialog = new JDialog(window, this.title, ModalityType.APPLICATION_MODAL);
     dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     dialog.setLayout(new BorderLayout());
 
     dialog.add(this, BorderLayout.CENTER);
 
     final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    buttons.add(InvokeMethodAction.createButton("Cancel", this, "cancel",
-      dialog));
+    buttons.add(InvokeMethodAction.createButton("Cancel", this, "cancel", dialog));
     buttons.add(InvokeMethodAction.createButton("OK", this, "save", dialog));
     dialog.add(buttons, BorderLayout.SOUTH);
 

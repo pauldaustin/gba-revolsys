@@ -16,8 +16,7 @@ import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.Property;
 
-public class DateField extends JXDatePicker implements Field,
-  PropertyChangeListener {
+public class DateField extends JXDatePicker implements Field, PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private String fieldName;
@@ -41,8 +40,8 @@ public class DateField extends JXDatePicker implements Field,
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -101,8 +100,8 @@ public class DateField extends JXDatePicker implements Field,
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     final JFormattedTextField editor = getEditor();
     editor.setForeground(foregroundColor);
     editor.setSelectedTextColor(foregroundColor);
@@ -141,8 +140,7 @@ public class DateField extends JXDatePicker implements Field,
     if (!EqualsRegistry.equal(oldValue, date)) {
       this.fieldValue = date;
       firePropertyChange(this.fieldName, oldValue, date);
-      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this,
-        oldValue, date);
+      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, date);
     }
   }
 

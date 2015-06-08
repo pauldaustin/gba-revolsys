@@ -11,30 +11,29 @@ public class CoordinateSequenceCoordinates extends AbstractCoordinates {
     this.coordinates = coordinates;
   }
 
-  public CoordinateSequenceCoordinates(final CoordinateSequence coordinates,
-    final int index) {
+  public CoordinateSequenceCoordinates(final CoordinateSequence coordinates, final int index) {
     this.coordinates = coordinates;
     this.index = index;
   }
 
   @Override
   public CoordinateSequenceCoordinates cloneCoordinates() {
-    return new CoordinateSequenceCoordinates(coordinates, index);
+    return new CoordinateSequenceCoordinates(this.coordinates, this.index);
   }
 
   public int getIndex() {
-    return index;
+    return this.index;
   }
 
   @Override
   public byte getNumAxis() {
-    return (byte)coordinates.getDimension();
+    return (byte)this.coordinates.getDimension();
   }
 
   @Override
   public double getValue(final int index) {
     if (index >= 0 && index < getNumAxis()) {
-      return coordinates.getOrdinate(this.index, index);
+      return this.coordinates.getOrdinate(this.index, index);
     } else {
       return 0;
     }
@@ -47,17 +46,17 @@ public class CoordinateSequenceCoordinates extends AbstractCoordinates {
   @Override
   public void setValue(final int index, final double value) {
     if (index >= 0 && index < getNumAxis()) {
-      coordinates.setOrdinate(this.index, index, value);
+      this.coordinates.setOrdinate(this.index, index, value);
     }
   }
 
   public int size() {
-    return coordinates.size();
+    return this.coordinates.size();
   }
 
   @Override
   public String toString() {
-    return coordinates.getCoordinate(index).toString();
+    return this.coordinates.getCoordinate(this.index).toString();
   }
 
 }

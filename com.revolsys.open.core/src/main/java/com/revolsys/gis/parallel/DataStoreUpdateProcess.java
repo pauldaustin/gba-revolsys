@@ -2,8 +2,8 @@ package com.revolsys.gis.parallel;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInProcess;
@@ -40,21 +40,21 @@ public class DataStoreUpdateProcess extends BaseInProcess<Record> {
 
   @PreDestroy
   public void close() {
-    dataStore.close();
+    this.dataStore.close();
   }
 
   /**
    * Get the data store.
-   * 
+   *
    * @return The data store.
    */
   public RecordStore getDataStore() {
-    return dataStore;
+    return this.dataStore;
   }
 
   /**
    * Process each object from the channel
-   * 
+   *
    * @param in The input channel.
    * @param object The object to process.
    */
@@ -63,15 +63,15 @@ public class DataStoreUpdateProcess extends BaseInProcess<Record> {
     final RecordState state = object.getState();
     switch (state) {
       case New:
-        dataStore.insert(object);
+        this.dataStore.insert(object);
       break;
       case Persisted:
       break;
       case Modified:
-        dataStore.update(object);
+        this.dataStore.update(object);
       break;
       case Deleted:
-        dataStore.delete(object);
+        this.dataStore.delete(object);
       break;
       default:
       break;
@@ -80,7 +80,7 @@ public class DataStoreUpdateProcess extends BaseInProcess<Record> {
 
   /**
    * Set the data store.
-   * 
+   *
    * @param dataStore The data store.
    */
   public void setDataStore(final RecordStore dataStore) {

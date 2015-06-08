@@ -5,13 +5,13 @@
  * $Revision:$
 
  * Copyright 2004-2007 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,16 +40,15 @@ public class LineContainsWithinToleranceFilter implements Filter<LineString> {
     this.envelope = BoundingBox.getBoundingBox(line);
   }
 
-  public LineContainsWithinToleranceFilter(final LineString line,
-    final double tolerance) {
+  public LineContainsWithinToleranceFilter(final LineString line, final double tolerance) {
     this.points = CoordinatesListUtil.get(line);
     this.tolerance = tolerance;
     this.envelope = BoundingBox.getBoundingBox(line);
     this.envelope = this.envelope.expand(tolerance);
   }
 
-  public LineContainsWithinToleranceFilter(final LineString line,
-    final double tolerance, final boolean flip) {
+  public LineContainsWithinToleranceFilter(final LineString line, final double tolerance,
+    final boolean flip) {
     this(line, tolerance);
     this.flip = flip;
   }
@@ -60,12 +59,10 @@ public class LineContainsWithinToleranceFilter implements Filter<LineString> {
       final CoordinatesList points = CoordinatesListUtil.get(line);
 
       final boolean contains;
-      if (flip) {
-        contains = CoordinatesListUtil.containsWithinTolerance(points,
-          this.points, tolerance);
+      if (this.flip) {
+        contains = CoordinatesListUtil.containsWithinTolerance(points, this.points, this.tolerance);
       } else {
-        contains = CoordinatesListUtil.containsWithinTolerance(this.points,
-          points, tolerance);
+        contains = CoordinatesListUtil.containsWithinTolerance(this.points, points, this.tolerance);
       }
       if (contains) {
         return true;

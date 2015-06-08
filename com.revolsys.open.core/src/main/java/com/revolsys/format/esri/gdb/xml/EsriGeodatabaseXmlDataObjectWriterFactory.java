@@ -20,11 +20,9 @@ public class EsriGeodatabaseXmlDataObjectWriterFactory extends
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
-    final OutputStreamWriter writer = new OutputStreamWriter(outputStream,
-      charset);
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
+    final OutputStreamWriter writer = new OutputStreamWriter(outputStream, charset);
     return new EsriGeodatabaseXmlDataObjectWriter(metaData, writer);
   }
 }

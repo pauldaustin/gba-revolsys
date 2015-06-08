@@ -21,31 +21,35 @@ import java.beans.PropertyChangeEvent;
  */
 @SuppressWarnings("serial")
 public class KeyedPropertyChangeEvent extends PropertyChangeEvent {
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
   /** The key. */
   private final Object key;
 
   /**
    * Construct a new KeyedPropertyChangeEvent.
-   * 
+   *
    * @param source The source object.
    * @param propertyName The property name.
    * @param oldValue The old value.
    * @param newValue The new value.
    * @param key The key.
    */
-  public KeyedPropertyChangeEvent(final Object source,
-    final String propertyName, final Object oldValue, final Object newValue,
-    final Object key) {
+  public KeyedPropertyChangeEvent(final Object source, final String propertyName,
+    final Object oldValue, final Object newValue, final Object key) {
     super(source, propertyName, oldValue, newValue);
     this.key = key;
   }
 
   /**
    * Get the key.
-   * 
+   *
    * @return The key.
    */
   public Object getKey() {
-    return key;
+    return this.key;
   }
 }

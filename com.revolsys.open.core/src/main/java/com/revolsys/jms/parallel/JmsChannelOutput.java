@@ -13,11 +13,11 @@ public class JmsChannelOutput<T> extends AbstractChannelOutput<T> {
 
   @Override
   protected void doWrite(final T value) {
-    jmsTemplate.convertAndSend(value);
+    this.jmsTemplate.convertAndSend(value);
   }
 
   public JmsTemplate getJmsTemplate() {
-    return jmsTemplate;
+    return this.jmsTemplate;
   }
 
   public void setJmsTemplate(final JmsTemplate jmsTemplate) {

@@ -16,8 +16,7 @@ public class In extends Condition {
 
   private CollectionValue values;
 
-  public In(final FieldDefinition attribute,
-    final Collection<? extends Object> values) {
+  public In(final FieldDefinition attribute, final Collection<? extends Object> values) {
     this(attribute.getName(), new CollectionValue(attribute, values));
   }
 
@@ -122,6 +121,6 @@ public class In extends Condition {
   @Override
   public String toString() {
     return StringConverterRegistry.toString(this.left) + " IN "
-        + StringConverterRegistry.toString(this.values);
+      + StringConverterRegistry.toString(this.values);
   }
 }

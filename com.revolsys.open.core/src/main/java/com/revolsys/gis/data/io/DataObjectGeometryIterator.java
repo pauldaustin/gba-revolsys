@@ -7,8 +7,8 @@ import com.revolsys.data.record.Record;
 import com.revolsys.io.DelegatingObjectWithProperties;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectGeometryIterator extends DelegatingObjectWithProperties
-  implements Iterator<Geometry> {
+public class DataObjectGeometryIterator extends DelegatingObjectWithProperties implements
+  Iterator<Geometry> {
   private Iterator<Record> iterator;
 
   public DataObjectGeometryIterator(final Iterator<Record> iterator) {
@@ -19,18 +19,18 @@ public class DataObjectGeometryIterator extends DelegatingObjectWithProperties
   @Override
   public void close() {
     super.close();
-    iterator = null;
+    this.iterator = null;
   }
 
   @Override
   public boolean hasNext() {
-    return iterator.hasNext();
+    return this.iterator.hasNext();
   }
 
   @Override
   public Geometry next() {
-    if (iterator.hasNext()) {
-      final Record dataObject = iterator.next();
+    if (this.iterator.hasNext()) {
+      final Record dataObject = this.iterator.next();
       return dataObject.getGeometryValue();
     } else {
       throw new NoSuchElementException();
@@ -39,6 +39,6 @@ public class DataObjectGeometryIterator extends DelegatingObjectWithProperties
 
   @Override
   public void remove() {
-    iterator.remove();
+    this.iterator.remove();
   }
 }

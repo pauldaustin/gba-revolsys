@@ -18,7 +18,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.Edge;
  * be used to find the intersection points of two monotone chains. For many
  * types of real-world data, these properties eliminate a large number of
  * segment comparisons, producing substantial speed gains.
- * 
+ *
  * @version 1.7
  */
 public class MonotoneChainEdge {
@@ -38,14 +38,13 @@ public class MonotoneChainEdge {
 
   public MonotoneChainEdge(final Edge e) {
     this.e = e;
-    pts = e.getCoordinates();
+    this.pts = e.getCoordinates();
     final MonotoneChainIndexer mcb = new MonotoneChainIndexer();
-    startIndex = mcb.getChainStartIndices(pts);
+    this.startIndex = mcb.getChainStartIndices(this.pts);
   }
 
-  public void computeIntersects(final MonotoneChainEdge mce,
-    final SegmentIntersector si) {
-    for (int i = 0; i < startIndex.length - 1; i++) {
+  public void computeIntersects(final MonotoneChainEdge mce, final SegmentIntersector si) {
+    for (int i = 0; i < this.startIndex.length - 1; i++) {
       for (int j = 0; j < mce.startIndex.length - 1; j++) {
         computeIntersectsForChain(i, mce, j, si);
       }
@@ -53,22 +52,21 @@ public class MonotoneChainEdge {
   }
 
   private void computeIntersectsForChain(final int start0, final int end0,
-    final MonotoneChainEdge mce, final int start1, final int end1,
-    final SegmentIntersector ei) {
-    final Coordinates p00 = pts.get(start0);
-    final Coordinates p01 = pts.get(end0);
+    final MonotoneChainEdge mce, final int start1, final int end1, final SegmentIntersector ei) {
+    final Coordinates p00 = this.pts.get(start0);
+    final Coordinates p01 = this.pts.get(end0);
     final Coordinates p10 = mce.pts.get(start1);
     final Coordinates p11 = mce.pts.get(end1);
     // Debug.println("computeIntersectsForChain:" + p00 + p01 + p10 + p11);
     // terminating condition for the recursion
     if (end0 - start0 == 1 && end1 - start1 == 1) {
-      ei.addIntersections(e, start0, mce.e, start1);
+      ei.addIntersections(this.e, start0, mce.e, start1);
       return;
     }
     // nothing to do if the envelopes of these chains don't overlap
-    env1 = new BoundingBox(null, p00.getX(), p00.getY(), p01.getX(), p01.getY());
-    env2 = new BoundingBox(null, p10.getX(), p10.getY(), p11.getX(), p11.getY());
-    if (!env1.intersects(env2)) {
+    this.env1 = new BoundingBox(null, p00.getX(), p00.getY(), p01.getX(), p01.getY());
+    this.env2 = new BoundingBox(null, p10.getX(), p10.getY(), p11.getX(), p11.getY());
+    if (!this.env1.intersects(this.env2)) {
       return;
     }
 
@@ -96,31 +94,29 @@ public class MonotoneChainEdge {
     }
   }
 
-  public void computeIntersectsForChain(final int chainIndex0,
-    final MonotoneChainEdge mce, final int chainIndex1,
-    final SegmentIntersector si) {
-    computeIntersectsForChain(startIndex[chainIndex0],
-      startIndex[chainIndex0 + 1], mce, mce.startIndex[chainIndex1],
-      mce.startIndex[chainIndex1 + 1], si);
+  public void computeIntersectsForChain(final int chainIndex0, final MonotoneChainEdge mce,
+    final int chainIndex1, final SegmentIntersector si) {
+    computeIntersectsForChain(this.startIndex[chainIndex0], this.startIndex[chainIndex0 + 1], mce,
+      mce.startIndex[chainIndex1], mce.startIndex[chainIndex1 + 1], si);
   }
 
   public CoordinatesList getCoordinates() {
-    return pts;
+    return this.pts;
   }
 
   public double getMaxX(final int chainIndex) {
-    final double x1 = pts.getX(startIndex[chainIndex]);
-    final double x2 = pts.getX(startIndex[chainIndex + 1]);
+    final double x1 = this.pts.getX(this.startIndex[chainIndex]);
+    final double x2 = this.pts.getX(this.startIndex[chainIndex + 1]);
     return x1 > x2 ? x1 : x2;
   }
 
   public double getMinX(final int chainIndex) {
-    final double x1 = pts.getX(startIndex[chainIndex]);
-    final double x2 = pts.getX(startIndex[chainIndex + 1]);
+    final double x1 = this.pts.getX(this.startIndex[chainIndex]);
+    final double x2 = this.pts.getX(this.startIndex[chainIndex + 1]);
     return x1 < x2 ? x1 : x2;
   }
 
   public int[] getStartIndexes() {
-    return startIndex;
+    return this.startIndex;
   }
 }

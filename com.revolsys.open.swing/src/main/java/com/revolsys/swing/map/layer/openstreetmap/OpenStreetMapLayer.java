@@ -18,14 +18,13 @@ import com.revolsys.swing.map.layer.MapTile;
 
 public class OpenStreetMapLayer extends AbstractTiledImageLayer {
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "openStreetMap", "Open Street Map Tiles", OpenStreetMapLayer.class,
-    "create");
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("openStreetMap",
+    "Open Street Map Tiles", OpenStreetMapLayer.class, "create");
 
   public static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.floating3(4326);
 
-  private static final BoundingBox MAX_BOUNDING_BOX = new BoundingBox(
-    GEOMETRY_FACTORY, -180, -85, 180, 85);
+  private static final BoundingBox MAX_BOUNDING_BOX = new BoundingBox(GEOMETRY_FACTORY, -180, -85,
+    180, 85);
 
   public static OpenStreetMapLayer create(final Map<String, Object> properties) {
     return new OpenStreetMapLayer(properties);
@@ -42,9 +41,9 @@ public class OpenStreetMapLayer extends AbstractTiledImageLayer {
   protected boolean doInitialize() {
     final String serverUrl = getProperty("url");
     if (StringUtils.hasText(serverUrl)) {
-      client = new OpenStreetMapClient(serverUrl);
+      this.client = new OpenStreetMapClient(serverUrl);
     } else {
-      client = new OpenStreetMapClient();
+      this.client = new OpenStreetMapClient();
     }
     return true;
   }
@@ -81,15 +80,14 @@ public class OpenStreetMapLayer extends AbstractTiledImageLayer {
 
       for (int tileY = minTileY; tileY <= maxTileY; tileY++) {
         for (int tileX = minTileX; tileX <= maxTileX; tileX++) {
-          final OpenStreetMapTile tile = new OpenStreetMapTile(this, zoomLevel,
-            resolution, tileX, tileY);
+          final OpenStreetMapTile tile = new OpenStreetMapTile(this, zoomLevel, resolution, tileX,
+            tileY);
           tiles.add(tile);
         }
       }
 
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(getClass()).error("Error getting tile envelopes",
-        e);
+      LoggerFactory.getLogger(getClass()).error("Error getting tile envelopes", e);
     }
     return tiles;
   }

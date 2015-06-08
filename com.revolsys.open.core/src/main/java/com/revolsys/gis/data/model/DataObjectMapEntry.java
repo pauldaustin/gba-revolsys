@@ -17,18 +17,18 @@ public class DataObjectMapEntry implements Entry<String, Object> {
 
   @Override
   public String getKey() {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    return metaData.getFieldName(index);
+    final RecordDefinition metaData = this.object.getRecordDefinition();
+    return metaData.getFieldName(this.index);
   }
 
   @Override
   public Object getValue() {
-    return object.getValue(index);
+    return this.object.getValue(this.index);
   }
 
   @Override
   public Object setValue(final Object value) {
-    object.setValue(index, value);
+    this.object.setValue(this.index, value);
     return value;
   }
 }

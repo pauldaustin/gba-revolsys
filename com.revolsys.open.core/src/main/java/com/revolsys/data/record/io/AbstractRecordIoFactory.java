@@ -21,7 +21,7 @@ import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
 public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactory implements
-RecordWriterFactory {
+  RecordWriterFactory {
 
   public static Writer<Record> dataObjectWriter(final RecordDefinition metaData,
     final Resource resource) {
@@ -60,8 +60,7 @@ RecordWriterFactory {
    * @return The writer.
    */
   @Override
-  public Writer<Record> createRecordWriter(final RecordDefinition metaData,
-    final Resource resource) {
+  public Writer<Record> createRecordWriter(final RecordDefinition metaData, final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
     final String baseName = FileUtil.getBaseName(fileName);
@@ -69,8 +68,8 @@ RecordWriterFactory {
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream) {
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream) {
     return createRecordWriter(baseName, metaData, outputStream, StandardCharsets.UTF_8);
   }
 

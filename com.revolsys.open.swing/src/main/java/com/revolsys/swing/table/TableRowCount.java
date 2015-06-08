@@ -13,7 +13,7 @@ import javax.swing.table.TableModel;
 
 public class TableRowCount extends JLabel implements TableModelListener {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 

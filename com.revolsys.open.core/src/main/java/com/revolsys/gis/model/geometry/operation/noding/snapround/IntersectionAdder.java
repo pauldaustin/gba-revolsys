@@ -46,7 +46,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.index.LineIntersector
  * {@link Noder}. The {@link addIntersections} method is called whenever the
  * {@link Noder} detects that two SegmentStrings <i>might</i> intersect. This
  * class is an example of the <i>Strategy</i> pattern.
- * 
+ *
  * @version 1.7
  */
 public class IntersectionAdder implements SegmentIntersector {
@@ -71,8 +71,6 @@ public class IntersectionAdder implements SegmentIntersector {
 
   private final LineIntersector li;
 
-  private boolean isSelfIntersection;
-
   // private boolean intersectionFound;
   public int numIntersections = 0;
 
@@ -88,7 +86,7 @@ public class IntersectionAdder implements SegmentIntersector {
   }
 
   public LineIntersector getLineIntersector() {
-    return li;
+    return this.li;
   }
 
   /**
@@ -96,7 +94,7 @@ public class IntersectionAdder implements SegmentIntersector {
    *         found
    */
   public Coordinates getProperIntersectionPoint() {
-    return properIntersectionPoint;
+    return this.properIntersectionPoint;
   }
 
   /**
@@ -104,11 +102,11 @@ public class IntersectionAdder implements SegmentIntersector {
    * some segment.
    */
   public boolean hasInteriorIntersection() {
-    return hasInterior;
+    return this.hasInterior;
   }
 
   public boolean hasIntersection() {
-    return hasIntersection;
+    return this.hasIntersection;
   }
 
   /**
@@ -116,7 +114,7 @@ public class IntersectionAdder implements SegmentIntersector {
    * contained in the set of boundary nodes set for this SegmentIntersector.
    */
   public boolean hasProperInteriorIntersection() {
-    return hasProperInterior;
+    return this.hasProperInterior;
   }
 
   /**
@@ -127,12 +125,12 @@ public class IntersectionAdder implements SegmentIntersector {
    * the point being on the Boundary of the Geometry.
    */
   public boolean hasProperIntersection() {
-    return hasProper;
+    return this.hasProper;
   }
 
   /**
    * Always process all intersections
-   * 
+   *
    * @return false always
    */
   @Override
@@ -146,17 +144,17 @@ public class IntersectionAdder implements SegmentIntersector {
    * require a special check for the point shared by the beginning and end
    * segments.
    */
-  private boolean isTrivialIntersection(final SegmentString e0,
-    final int segIndex0, final SegmentString e1, final int segIndex1) {
+  private boolean isTrivialIntersection(final SegmentString e0, final int segIndex0,
+    final SegmentString e1, final int segIndex1) {
     if (e0 == e1) {
-      if (li.getIntersectionNum() == 1) {
+      if (this.li.getIntersectionNum() == 1) {
         if (isAdjacentSegments(segIndex0, segIndex1)) {
           return true;
         }
         if (e0.isClosed()) {
           final int maxSegIndex = e0.size() - 1;
-          if ((segIndex0 == 0 && segIndex1 == maxSegIndex)
-            || (segIndex1 == 0 && segIndex0 == maxSegIndex)) {
+          if (segIndex0 == 0 && segIndex1 == maxSegIndex || segIndex1 == 0
+            && segIndex0 == maxSegIndex) {
             return true;
           }
         }
@@ -178,20 +176,20 @@ public class IntersectionAdder implements SegmentIntersector {
     if (e0 == e1 && segIndex0 == segIndex1) {
       return;
     }
-    numTests++;
+    this.numTests++;
     final Coordinates p00 = e0.getCoordinate(segIndex0);
     final Coordinates p01 = e0.getCoordinate(segIndex0 + 1);
     final Coordinates p10 = e1.getCoordinate(segIndex1);
     final Coordinates p11 = e1.getCoordinate(segIndex1 + 1);
 
-    li.computeIntersection(p00, p01, p10, p11);
+    this.li.computeIntersection(p00, p01, p10, p11);
     // if (li.hasIntersection() && li.isProper()) Debug.println(li);
-    if (li.hasIntersection()) {
+    if (this.li.hasIntersection()) {
       // intersectionFound = true;
-      numIntersections++;
-      if (li.isInteriorIntersection()) {
-        numInteriorIntersections++;
-        hasInterior = true;
+      this.numIntersections++;
+      if (this.li.isInteriorIntersection()) {
+        this.numInteriorIntersections++;
+        this.hasInterior = true;
         // System.out.println(li);
       }
       // if the segments are adjacent they have at least one trivial
@@ -199,16 +197,16 @@ public class IntersectionAdder implements SegmentIntersector {
       // the shared endpoint. Don't bother adding it if it is the
       // only intersection.
       if (!isTrivialIntersection(e0, segIndex0, e1, segIndex1)) {
-        hasIntersection = true;
-        ((NodedSegmentString)e0).addIntersections(li, segIndex0, 0);
-        ((NodedSegmentString)e1).addIntersections(li, segIndex1, 1);
-        if (li.isProper()) {
-          numProperIntersections++;
+        this.hasIntersection = true;
+        ((NodedSegmentString)e0).addIntersections(this.li, segIndex0, 0);
+        ((NodedSegmentString)e1).addIntersections(this.li, segIndex1, 1);
+        if (this.li.isProper()) {
+          this.numProperIntersections++;
           // Debug.println(li.toString()); Debug.println(li.getIntersection(0));
           // properIntersectionPoint = (Coordinate)
           // li.getIntersection(0).clone();
-          hasProper = true;
-          hasProperInterior = true;
+          this.hasProper = true;
+          this.hasProperInterior = true;
         }
       }
     }

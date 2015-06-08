@@ -2,7 +2,7 @@ package com.revolsys.gis.model.coordinates.list;
 
 public class ReverseCoordinatesList extends AbstractCoordinatesList {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 8489637345116642703L;
 
@@ -19,26 +19,26 @@ public class ReverseCoordinatesList extends AbstractCoordinatesList {
 
   @Override
   public byte getNumAxis() {
-    return coordinateList.getNumAxis();
+    return this.coordinateList.getNumAxis();
   }
 
   @Override
   public double getValue(final int index, final int axisIndex) {
-    return coordinateList.getValue(size() - index - 1, axisIndex);
+    return this.coordinateList.getValue(size() - index - 1, axisIndex);
   }
 
   @Override
   public CoordinatesList reverse() {
-    return coordinateList;
+    return this.coordinateList;
   }
 
   @Override
   public void setValue(final int index, final int axisIndex, final double value) {
-    coordinateList.setValue(size() - index - 1, axisIndex, value);
+    this.coordinateList.setValue(size() - index - 1, axisIndex, value);
   }
 
   @Override
   public int size() {
-    return coordinateList.size();
+    return this.coordinateList.size();
   }
 }

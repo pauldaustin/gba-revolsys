@@ -23,8 +23,8 @@ import com.revolsys.swing.table.BaseJxTable;
 public class Log4jTableModel extends AbstractTableModel {
   private static final long serialVersionUID = 1L;
 
-  private static final List<String> columnNames = Arrays.asList("Time",
-    "Level", "Category", "Message");
+  private static final List<String> columnNames = Arrays.asList("Time", "Level", "Category",
+    "Message");
 
   public static JPanel createPanel() {
     final JPanel taskPanel = new JPanel(new BorderLayout());

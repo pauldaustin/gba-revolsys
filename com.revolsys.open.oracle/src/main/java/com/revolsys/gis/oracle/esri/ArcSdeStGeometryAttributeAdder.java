@@ -31,8 +31,8 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcFieldAdder {
     final String description) {
     final RecordStoreSchema schema = metaData.getSchema();
     final String typePath = metaData.getPath();
-    final String owner = dataStore.getDatabaseSchemaName(schema);
-    final String tableName = dataStore.getDatabaseTableName(typePath);
+    final String owner = this.dataStore.getDatabaseSchemaName(schema);
+    final String tableName = this.dataStore.getDatabaseTableName(typePath);
     final String columnName = name.toUpperCase();
     final int esriSrid = JdbcFieldAdder.getIntegerColumnProperty(schema, typePath, columnName,
       ArcSdeConstants.ESRI_SRID_PROPERTY);

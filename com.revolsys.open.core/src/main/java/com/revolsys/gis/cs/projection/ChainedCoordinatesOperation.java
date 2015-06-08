@@ -21,7 +21,7 @@ public class ChainedCoordinatesOperation implements CoordinatesOperation {
   public void perform(final Coordinates from, final Coordinates to) {
     Coordinates source = from;
     final Coordinates target = to;
-    for (final CoordinatesOperation operation : operations) {
+    for (final CoordinatesOperation operation : this.operations) {
       operation.perform(source, target);
       source = target;
     }
@@ -29,6 +29,6 @@ public class ChainedCoordinatesOperation implements CoordinatesOperation {
 
   @Override
   public String toString() {
-    return operations.toString();
+    return this.operations.toString();
   }
 }

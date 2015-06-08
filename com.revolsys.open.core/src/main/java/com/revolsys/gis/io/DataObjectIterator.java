@@ -5,13 +5,13 @@
  * $Revision:265 $
 
  * Copyright 2004-2005 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@ import com.revolsys.data.record.Record;
  * <p>
  * The following code fragment shows how a reader would typically be used.
  * </p>
- * 
+ *
  * <pre>
  *         RecordIterator reader = new ...;
  *         Writer<DataObject> writer = new ...;
@@ -51,7 +51,7 @@ import com.revolsys.data.record.Record;
  *         writer.close();
  *         read.close()
  * </pre>
- * 
+ *
  * @author Paul Austin
  * @see Writer<DataObject>
  */

@@ -10,7 +10,7 @@ import com.vividsolutions.jts.util.Assert;
  * segment. This means that this algorithm will only return correct results if
  * the input coordinates have the same precision and correspond to rounded
  * values of exact coordinates lying on the segment.
- * 
+ *
  * @version 1.7
  */
 public class SegmentPointComparator {
@@ -18,13 +18,12 @@ public class SegmentPointComparator {
   /**
    * Compares two {@link Coordinates}s for their relative position along a
    * segment lying in the specified {@link Octant}.
-   * 
+   *
    * @return -1 node0 occurs first
    * @return 0 the two nodes are equal
    * @return 1 node1 occurs first
    */
-  public static int compare(final int octant, final Coordinates p0,
-    final Coordinates p1) {
+  public static int compare(final int octant, final Coordinates p0, final Coordinates p1) {
     // nodes can only be equal if their coordinates are equal
     if (p0.equals2d(p1)) {
       return 0;

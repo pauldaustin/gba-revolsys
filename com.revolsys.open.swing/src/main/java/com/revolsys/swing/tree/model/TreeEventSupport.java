@@ -8,8 +8,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-public class TreeEventSupport implements TreeSelectionListener,
-  TreeModelListener {
+public class TreeEventSupport implements TreeSelectionListener, TreeModelListener {
   private final Set<TreeModelListener> modelListeners = new LinkedHashSet<TreeModelListener>();
 
   private final Set<TreeSelectionListener> selectionListeners = new LinkedHashSet<TreeSelectionListener>();

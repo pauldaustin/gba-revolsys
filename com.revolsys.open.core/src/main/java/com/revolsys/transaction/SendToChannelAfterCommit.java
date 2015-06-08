@@ -7,12 +7,11 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.channel.ClosedException;
 
-public class SendToChannelAfterCommit<T> extends
-  TransactionSynchronizationAdapter {
+public class SendToChannelAfterCommit<T> extends TransactionSynchronizationAdapter {
   public static <V> void send(final Channel<V> channel, final V value) {
     if (TransactionSynchronizationManager.isSynchronizationActive()) {
-      final SendToChannelAfterCommit<V> synchronization = new SendToChannelAfterCommit<V>(
-        channel, value);
+      final SendToChannelAfterCommit<V> synchronization = new SendToChannelAfterCommit<V>(channel,
+        value);
       TransactionSynchronizationManager.registerSynchronization(synchronization);
     } else {
       channel.write(value);
@@ -31,9 +30,9 @@ public class SendToChannelAfterCommit<T> extends
   @Override
   public void afterCommit() {
     try {
-      channel.write(object);
+      this.channel.write(this.object);
     } catch (final ClosedException e) {
-      LoggerFactory.getLogger(getClass()).error("Channel closed " + channel, e);
+      LoggerFactory.getLogger(getClass()).error("Channel closed " + this.channel, e);
     }
   }
 }

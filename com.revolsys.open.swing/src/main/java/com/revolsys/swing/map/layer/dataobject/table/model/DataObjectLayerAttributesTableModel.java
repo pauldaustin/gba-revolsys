@@ -13,8 +13,8 @@ import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.swing.table.dataobject.model.AbstractSingleDataObjectTableModel;
 import com.revolsys.util.Property;
 
-public class DataObjectLayerAttributesTableModel extends
-  AbstractSingleDataObjectTableModel implements PropertyChangeListener {
+public class DataObjectLayerAttributesTableModel extends AbstractSingleDataObjectTableModel
+  implements PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class DataObjectLayerAttributesTableModel extends
 
   @Override
   public String getFieldTitle(final String fieldName) {
-    return layer.getFieldTitle(fieldName);
+    return this.layer.getFieldTitle(fieldName);
   }
 
   public LayerDataObject getObject() {

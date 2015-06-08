@@ -15,8 +15,7 @@ public class GeometryDistanceComparator implements Comparator<Geometry> {
     this.invert = false;
   }
 
-  public GeometryDistanceComparator(final Geometry geometry,
-    final boolean invert) {
+  public GeometryDistanceComparator(final Geometry geometry, final boolean invert) {
     this.geometry = geometry;
     this.invert = invert;
   }
@@ -24,8 +23,8 @@ public class GeometryDistanceComparator implements Comparator<Geometry> {
   @Override
   public int compare(final Geometry geometry1, final Geometry geometry2) {
     int compare;
-    final double distance1 = geometry1.distance(geometry);
-    final double distance2 = geometry2.distance(geometry);
+    final double distance1 = geometry1.distance(this.geometry);
+    final double distance2 = geometry2.distance(this.geometry);
     if (distance1 == distance2) {
       compare = geometry1.compareTo(geometry2);
     } else if (distance1 < distance2) {
@@ -34,7 +33,7 @@ public class GeometryDistanceComparator implements Comparator<Geometry> {
       compare = 1;
     }
 
-    if (invert) {
+    if (this.invert) {
       return -compare;
     } else {
       return compare;
@@ -42,7 +41,7 @@ public class GeometryDistanceComparator implements Comparator<Geometry> {
   }
 
   public boolean isInvert() {
-    return invert;
+    return this.invert;
   }
 
 }

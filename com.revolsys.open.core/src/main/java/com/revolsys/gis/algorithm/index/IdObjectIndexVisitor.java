@@ -7,16 +7,15 @@ public final class IdObjectIndexVisitor<T> implements Visitor<Integer> {
 
   private final Visitor<T> visitor;
 
-  public IdObjectIndexVisitor(final IdObjectIndex<T> index,
-    final Visitor<T> visitor) {
+  public IdObjectIndexVisitor(final IdObjectIndex<T> index, final Visitor<T> visitor) {
     this.index = index;
     this.visitor = visitor;
   }
 
   @Override
   public boolean visit(final Integer id) {
-    final T object = index.getObject(id);
-    if (!visitor.visit(object)) {
+    final T object = this.index.getObject(id);
+    if (!this.visitor.visit(object)) {
       return false;
     }
     return true;

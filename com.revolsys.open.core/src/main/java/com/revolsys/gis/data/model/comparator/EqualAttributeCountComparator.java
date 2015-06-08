@@ -12,13 +12,11 @@ import com.revolsys.util.CompareUtil;
  * The EqualAttributeCountComparator compares the number of attributes of the
  * two objects which are equal to a test object. Unless invert is true a smaller
  * number of equal attributes will appear before a large amount.
- * 
+ *
  * @author Paul Austin
  */
 public class EqualAttributeCountComparator implements Comparator<Record> {
   private final Record object;
-
-  private final boolean invert;
 
   private final List<String> attributeNames;
 
@@ -26,12 +24,10 @@ public class EqualAttributeCountComparator implements Comparator<Record> {
     this(object, false);
   }
 
-  public EqualAttributeCountComparator(final Record object,
-    final boolean invert) {
+  public EqualAttributeCountComparator(final Record object, final boolean invert) {
     this.object = object;
     final RecordDefinition metaData = object.getRecordDefinition();
-    attributeNames = metaData.getFieldNames();
-    this.invert = invert;
+    this.attributeNames = metaData.getFieldNames();
   }
 
   @Override
@@ -49,8 +45,8 @@ public class EqualAttributeCountComparator implements Comparator<Record> {
       int count1 = 0;
       int count2 = 0;
 
-      for (final String attributeName : attributeNames) {
-        final Object value = object.getValue(attributeName);
+      for (final String attributeName : this.attributeNames) {
+        final Object value = this.object.getValue(attributeName);
 
         final Object value1 = object1.getValue(attributeName);
         if (EqualsInstance.INSTANCE.equals(value, value1)) {

@@ -5,11 +5,10 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractConnectionRegistryManager<T extends ConnectionRegistry<V>, V>
-  implements ConnectionRegistryManager<T> {
+public class AbstractConnectionRegistryManager<T extends ConnectionRegistry<V>, V> implements
+  ConnectionRegistryManager<T> {
 
-  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-    this);
+  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private final List<T> registries = new ArrayList<T>();
 
@@ -23,25 +22,24 @@ public class AbstractConnectionRegistryManager<T extends ConnectionRegistry<V>, 
   public void addConnectionRegistry(final T registry) {
     if (registry != null) {
       int index = -1;
-      synchronized (registries) {
-        if (!registries.contains(registry)) {
-          index = registries.size();
-          registries.add(registry);
+      synchronized (this.registries) {
+        if (!this.registries.contains(registry)) {
+          index = this.registries.size();
+          this.registries.add(registry);
           registry.setConnectionManager(this);
         }
       }
       if (index != -1) {
         index = getVisibleConnectionRegistries().indexOf(registry);
         if (index != -1) {
-          propertyChangeSupport.fireIndexedPropertyChange("registries", index,
-            null, registry);
+          this.propertyChangeSupport.fireIndexedPropertyChange("registries", index, null, registry);
         }
       }
     }
   }
 
   protected T findConnectionRegistry(final String name) {
-    for (final T registry : registries) {
+    for (final T registry : this.registries) {
       if (registry.getName().equals(name)) {
         return registry;
       }
@@ -58,19 +56,19 @@ public class AbstractConnectionRegistryManager<T extends ConnectionRegistry<V>, 
   public T getConnectionRegistry(final String name) {
     final T connectionRegistry = findConnectionRegistry(name);
     if (connectionRegistry == null) {
-      return registries.get(0);
+      return this.registries.get(0);
     }
     return connectionRegistry;
   }
 
   @Override
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @Override
   public PropertyChangeSupport getPropertyChangeSupport() {
-    return propertyChangeSupport;
+    return this.propertyChangeSupport;
   }
 
   @Override
@@ -86,7 +84,7 @@ public class AbstractConnectionRegistryManager<T extends ConnectionRegistry<V>, 
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
-    propertyChangeSupport.firePropertyChange(event);
+    this.propertyChangeSupport.firePropertyChange(event);
   }
 
   public void removeConnectionRegistry(final String name) {
@@ -98,24 +96,22 @@ public class AbstractConnectionRegistryManager<T extends ConnectionRegistry<V>, 
   public void removeConnectionRegistry(final T registry) {
     if (registry != null) {
       int index;
-      synchronized (registries) {
-        index = registries.indexOf(registry);
+      synchronized (this.registries) {
+        index = this.registries.indexOf(registry);
         if (index != -1) {
-          registries.remove(registry);
+          this.registries.remove(registry);
           registry.setConnectionManager(null);
-          registry.getPropertyChangeSupport()
-            .removePropertyChangeListener(this);
+          registry.getPropertyChangeSupport().removePropertyChangeListener(this);
         }
       }
       if (index != -1) {
-        propertyChangeSupport.fireIndexedPropertyChange("registries", index,
-          registry, null);
+        this.propertyChangeSupport.fireIndexedPropertyChange("registries", index, registry, null);
       }
     }
   }
 
   @Override
   public String toString() {
-    return name;
+    return this.name;
   }
 }

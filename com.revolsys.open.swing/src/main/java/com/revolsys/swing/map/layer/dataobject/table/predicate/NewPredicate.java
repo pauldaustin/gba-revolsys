@@ -18,8 +18,7 @@ import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
 
 public class NewPredicate implements HighlightPredicate {
 
-  private static final Border BORDER = BorderFactory.createLineBorder(
-    WebColors.Blue, 2);
+  private static final Border BORDER = BorderFactory.createLineBorder(WebColors.Blue, 2);
 
   public static void add(final DataObjectRowTable table) {
     final DataObjectLayerTableModel model = (DataObjectLayerTableModel)table.getModel();
@@ -39,8 +38,7 @@ public class NewPredicate implements HighlightPredicate {
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToModel(adapter.row);
       final LayerDataObject object = this.model.getRecord(rowIndex);

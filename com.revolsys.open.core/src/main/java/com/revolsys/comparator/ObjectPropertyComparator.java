@@ -16,8 +16,7 @@ public class ObjectPropertyComparator<V> implements Comparator<V> {
   public ObjectPropertyComparator() {
   }
 
-  public ObjectPropertyComparator(final boolean sortAsceding,
-    final String... attributeNames) {
+  public ObjectPropertyComparator(final boolean sortAsceding, final String... attributeNames) {
     this(Arrays.asList(attributeNames));
     this.invert = !sortAsceding;
   }
@@ -32,7 +31,7 @@ public class ObjectPropertyComparator<V> implements Comparator<V> {
 
   @Override
   public int compare(final Object object1, final Object object2) {
-    for (final String attributeName : attributeNames) {
+    for (final String attributeName : this.attributeNames) {
       final int compare = compare(object1, object2, attributeName);
       if (compare != 0) {
         return compare;
@@ -42,29 +41,28 @@ public class ObjectPropertyComparator<V> implements Comparator<V> {
     return 0;
   }
 
-  public int compare(final Object object1, final Object object2,
-    final String attributeName) {
+  public int compare(final Object object1, final Object object2, final String attributeName) {
     final Comparable<Object> value1 = Property.get(object1, attributeName);
     final Comparable<Object> value2 = Property.get(object2, attributeName);
     if (value1 == null) {
       if (value2 == null) {
         return 0;
       } else {
-        if (nullFirst) {
+        if (this.nullFirst) {
           return -1;
         } else {
           return 1;
         }
       }
     } else if (value2 == null) {
-      if (nullFirst) {
+      if (this.nullFirst) {
         return 1;
       } else {
         return -1;
       }
     } else {
       final int compare = value1.compareTo(value2);
-      if (invert) {
+      if (this.invert) {
         return -compare;
       } else {
         return compare;
@@ -73,15 +71,15 @@ public class ObjectPropertyComparator<V> implements Comparator<V> {
   }
 
   public List<String> getAttributeNames() {
-    return attributeNames;
+    return this.attributeNames;
   }
 
   public boolean isInvert() {
-    return invert;
+    return this.invert;
   }
 
   public boolean isNullFirst() {
-    return nullFirst;
+    return this.nullFirst;
   }
 
   public void setAttributeNames(final List<String> attributeNames) {

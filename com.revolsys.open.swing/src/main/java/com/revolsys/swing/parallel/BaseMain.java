@@ -24,8 +24,7 @@ import com.revolsys.util.ExceptionUtil;
 
 public class BaseMain implements UncaughtExceptionHandler {
 
-  public static void run(final Class<? extends BaseMain> mainClass,
-    final String[] args) {
+  public static void run(final Class<? extends BaseMain> mainClass, final String[] args) {
     try {
       final BaseMain main = mainClass.newInstance();
       main.processArguments(args);
@@ -43,10 +42,9 @@ public class BaseMain implements UncaughtExceptionHandler {
       MethodUtils.invokeMethod(application, "setDockIconImage", image);
 
       final Class<?> quitStrategyClass = Class.forName("com.apple.eawt.QuitStrategy");
-      final Object closeAllWindows = quitStrategyClass.getField(
-        "CLOSE_ALL_WINDOWS").get(quitStrategyClass);
-      MethodUtils.invokeExactMethod(application, "setQuitStrategy",
-        closeAllWindows);
+      final Object closeAllWindows = quitStrategyClass.getField("CLOSE_ALL_WINDOWS").get(
+        quitStrategyClass);
+      MethodUtils.invokeExactMethod(application, "setQuitStrategy", closeAllWindows);
       MacApplicationListenerHandler.init(application);
     } catch (final ClassNotFoundException t) {
     } catch (final Throwable t) {
@@ -81,11 +79,11 @@ public class BaseMain implements UncaughtExceptionHandler {
       Invoke.later(this, "doRun");
     } catch (final Throwable e) {
       final Logger logger = Logger.getLogger(getClass());
-      final LoggingEvent event = new LoggingEvent(logger.getClass().getName(),
-        logger, Level.ERROR, "Unable to start application", e);
+      final LoggingEvent event = new LoggingEvent(logger.getClass().getName(), logger, Level.ERROR,
+        "Unable to start application", e);
 
       LoggingEventPanel.showDialog(null, event);
-      ExceptionUtil.log(getClass(), "Unable to start application " + name, e);
+      ExceptionUtil.log(getClass(), "Unable to start application " + this.name, e);
     }
   }
 
@@ -102,8 +100,7 @@ public class BaseMain implements UncaughtExceptionHandler {
     }
     ExceptionUtil.log(logClass, message, e);
     @SuppressWarnings("unchecked")
-    final Enumeration<Appender> allAppenders = Logger.getRootLogger()
-      .getAllAppenders();
+    final Enumeration<Appender> allAppenders = Logger.getRootLogger().getAllAppenders();
     while (allAppenders.hasMoreElements()) {
       final Appender appender = allAppenders.nextElement();
       if (appender instanceof ListLog4jAppender) {
@@ -111,8 +108,8 @@ public class BaseMain implements UncaughtExceptionHandler {
       }
     }
     final Logger logger = Logger.getLogger(logClass);
-    final LoggingEvent event = new LoggingEvent(logger.getClass().getName(),
-      logger, Level.ERROR, message, e);
+    final LoggingEvent event = new LoggingEvent(logger.getClass().getName(), logger, Level.ERROR,
+      message, e);
 
     LoggingEventPanel.showDialog(null, event);
 

@@ -8,8 +8,7 @@ import com.revolsys.data.record.schema.RecordStoreSchema;
 public class DataObjectStoreSchemaProxy extends RecordStoreSchema {
   private final RecordStoreSchema schema;
 
-  public DataObjectStoreSchemaProxy(
-    final AbstractRecordStore dataObjectStore, final String name,
+  public DataObjectStoreSchemaProxy(final AbstractRecordStore dataObjectStore, final String name,
     final RecordStoreSchema schema) {
     super(dataObjectStore, name);
     this.schema = schema;
@@ -19,10 +18,9 @@ public class DataObjectStoreSchemaProxy extends RecordStoreSchema {
   public synchronized RecordDefinition findMetaData(final String typePath) {
     RecordDefinition metaData = super.findMetaData(typePath);
     if (metaData == null) {
-      metaData = schema.findMetaData(typePath);
+      metaData = this.schema.findMetaData(typePath);
       if (metaData != null) {
-        metaData = new RecordDefinitionImpl(getDataStore(), this,
-          metaData);
+        metaData = new RecordDefinitionImpl(getDataStore(), this, metaData);
         addMetaData(typePath, metaData);
       }
     }
@@ -33,10 +31,9 @@ public class DataObjectStoreSchemaProxy extends RecordStoreSchema {
   public synchronized RecordDefinition getRecordDefinition(final String typePath) {
     RecordDefinition metaData = findMetaData(typePath);
     if (metaData == null) {
-      metaData = schema.getRecordDefinition(typePath);
+      metaData = this.schema.getRecordDefinition(typePath);
       if (metaData != null) {
-        metaData = new RecordDefinitionImpl(getDataStore(), this,
-          metaData);
+        metaData = new RecordDefinitionImpl(getDataStore(), this, metaData);
         addMetaData(typePath, metaData);
       }
     }

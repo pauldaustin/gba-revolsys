@@ -8,8 +8,7 @@ import com.revolsys.gis.graph.visitor.AbstractEdgeListenerVisitor;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.geometry.LineSegment;
 
-public class LineSegmentIntersectionVisitor extends
-  AbstractEdgeListenerVisitor<LineSegment> {
+public class LineSegmentIntersectionVisitor extends AbstractEdgeListenerVisitor<LineSegment> {
 
   private final Set<CoordinatesList> intersections = new LinkedHashSet<CoordinatesList>();
 
@@ -20,16 +19,16 @@ public class LineSegmentIntersectionVisitor extends
   }
 
   public Set<CoordinatesList> getIntersections() {
-    return intersections;
+    return this.intersections;
   }
 
   @Override
   public boolean visit(final Edge<LineSegment> edge) {
     final LineSegment lineSegment = edge.getObject();
-    if (lineSegment.getEnvelope().intersects(querySeg.getEnvelope())) {
-      final CoordinatesList intersection = querySeg.getIntersection(lineSegment);
+    if (lineSegment.getEnvelope().intersects(this.querySeg.getEnvelope())) {
+      final CoordinatesList intersection = this.querySeg.getIntersection(lineSegment);
       if (intersection != null && intersection.size() > 0) {
-        intersections.add(intersection);
+        this.intersections.add(intersection);
       }
     }
     return true;

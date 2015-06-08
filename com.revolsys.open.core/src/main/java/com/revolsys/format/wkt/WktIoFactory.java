@@ -16,19 +16,16 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
-public class WktIoFactory extends AbstractRecordAndGeometryIoFactory
-  implements WktConstants {
+public class WktIoFactory extends AbstractRecordAndGeometryIoFactory implements WktConstants {
   public WktIoFactory() {
     super(WktConstants.DESCRIPTION, false, false);
     addMediaTypeAndFileExtension(MEDIA_TYPE, FILE_EXTENSION);
   }
 
   @Override
-  public RecordReader createRecordReader(final Resource resource,
-    final RecordFactory factory) {
+  public RecordReader createRecordReader(final Resource resource, final RecordFactory factory) {
     try {
-      final WktDataObjectIterator iterator = new WktDataObjectIterator(factory,
-        resource);
+      final WktDataObjectIterator iterator = new WktDataObjectIterator(factory, resource);
 
       return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
@@ -37,9 +34,8 @@ public class WktIoFactory extends AbstractRecordAndGeometryIoFactory
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
     return new WktDataObjectWriter(metaData, writer);
   }

@@ -17,14 +17,13 @@ public class OutputStreamResource extends AbstractResource {
 
   private boolean read;
 
-  public OutputStreamResource(final String filename,
-    final OutputStream outputStream) {
+  public OutputStreamResource(final String filename, final OutputStream outputStream) {
     this.outputStream = outputStream;
     this.filename = filename;
   }
 
-  public OutputStreamResource(final String filename,
-    final OutputStream outputStream, final String description) {
+  public OutputStreamResource(final String filename, final OutputStream outputStream,
+    final String description) {
     this.filename = filename;
     this.outputStream = outputStream;
     this.description = description;
@@ -37,7 +36,7 @@ public class OutputStreamResource extends AbstractResource {
 
   @Override
   public boolean equals(final Object object) {
-    return (object == this);
+    return object == this;
   }
 
   @Override
@@ -52,7 +51,7 @@ public class OutputStreamResource extends AbstractResource {
 
   @Override
   public String getFilename() throws IllegalStateException {
-    return filename;
+    return this.filename;
   }
 
   @Override
@@ -61,18 +60,17 @@ public class OutputStreamResource extends AbstractResource {
   }
 
   public OutputStream getOutputStream() {
-    if (read) {
-      throw new IllegalStateException(
-        "OutputStream has already been read - "
-          + "do not use OutputStreamResource if a stream needs to be read multiple times");
+    if (this.read) {
+      throw new IllegalStateException("OutputStream has already been read - "
+        + "do not use OutputStreamResource if a stream needs to be read multiple times");
     }
-    read = true;
-    return outputStream;
+    this.read = true;
+    return this.outputStream;
   }
 
   @Override
   public int hashCode() {
-    return outputStream.hashCode();
+    return this.outputStream.hashCode();
   }
 
   @Override

@@ -12,7 +12,7 @@ import com.revolsys.filter.Filter;
 
 /**
  * Filter DataObjects by the value of the attributeName.
- * 
+ *
  * @author Paul Austin
  */
 public class DataObjectCodeTableValueFilter implements Filter<Record> {
@@ -27,35 +27,33 @@ public class DataObjectCodeTableValueFilter implements Filter<Record> {
   public DataObjectCodeTableValueFilter() {
   }
 
-  public DataObjectCodeTableValueFilter(final String attributeName,
-    final List<Object> values) {
+  public DataObjectCodeTableValueFilter(final String attributeName, final List<Object> values) {
     this.attributeName = attributeName;
     this.values.addAll(values);
   }
 
-  public DataObjectCodeTableValueFilter(final String attributeName,
-    final Object... values) {
+  public DataObjectCodeTableValueFilter(final String attributeName, final Object... values) {
     this(attributeName, Arrays.asList(values));
   }
 
   /**
    * Match the attributeName on the data object with the required value.
-   * 
+   *
    * @param object The object.
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
   public boolean accept(final Record object) {
-    final Object propertyValue = object.getValue(attributeName);
-    if (values.contains(propertyValue)) {
+    final Object propertyValue = object.getValue(this.attributeName);
+    if (this.values.contains(propertyValue)) {
       return true;
     } else {
       final RecordDefinition metaData = object.getRecordDefinition();
-      final CodeTable codeTable = metaData.getCodeTableByFieldName(attributeName);
+      final CodeTable codeTable = metaData.getCodeTableByFieldName(this.attributeName);
       if (codeTable != null) {
         final Object codeValue = codeTable.getValue((Number)propertyValue);
-        if (values.contains(codeValue)) {
-          values.add(propertyValue);
+        if (this.values.contains(codeValue)) {
+          this.values.add(propertyValue);
           return true;
         } else {
           return false;
@@ -69,18 +67,18 @@ public class DataObjectCodeTableValueFilter implements Filter<Record> {
 
   /**
    * Get the attributeName name, or path to match.
-   * 
+   *
    * @return The attributeName name, or path to match.
    */
   public String getAttributeName() {
-    return attributeName;
+    return this.attributeName;
   }
 
   /**
    * @return the values
    */
   public List<Object> getValues() {
-    return values;
+    return this.values;
   }
 
   public void setAttributeName(final String attributeName) {
@@ -111,10 +109,10 @@ public class DataObjectCodeTableValueFilter implements Filter<Record> {
    */
   @Override
   public String toString() {
-    if (name == null) {
-      return attributeName + " in " + values;
+    if (this.name == null) {
+      return this.attributeName + " in " + this.values;
     } else {
-      return name;
+      return this.name;
     }
   }
 

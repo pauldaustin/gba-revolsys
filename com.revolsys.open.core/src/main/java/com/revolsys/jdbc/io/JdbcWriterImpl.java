@@ -28,8 +28,7 @@ import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.transaction.Transaction;
 
-public class JdbcWriterImpl extends AbstractWriter<Record> implements
-JdbcWriter {
+public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter {
   private static final Logger LOG = Logger.getLogger(JdbcWriterImpl.class);
 
   private int batchSize = 1;
@@ -88,8 +87,7 @@ JdbcWriter {
     this(dataStore, dataStore.getStatistics());
   }
 
-  public JdbcWriterImpl(final JdbcDataObjectStore dataStore,
-    final StatisticsMap statistics) {
+  public JdbcWriterImpl(final JdbcDataObjectStore dataStore, final StatisticsMap statistics) {
     this.dataStore = dataStore;
     this.statistics = statistics;
     setConnection(dataStore.getConnection());
@@ -117,8 +115,7 @@ JdbcWriter {
   }
 
   private void close(final Map<String, String> sqlMap,
-    final Map<String, PreparedStatement> statementMap,
-    final Map<String, Integer> batchCountMap) {
+    final Map<String, PreparedStatement> statementMap, final Map<String, Integer> batchCountMap) {
     for (final Entry<String, PreparedStatement> entry : statementMap.entrySet()) {
       final String typePath = entry.getKey();
       final PreparedStatement statement = entry.getValue();
@@ -158,8 +155,7 @@ JdbcWriter {
     }
     int parameterIndex = 1;
     final JdbcFieldDefinition idAttribute = (JdbcFieldDefinition)metaData.getIdField();
-    parameterIndex = idAttribute.setInsertPreparedStatementValue(statement,
-      parameterIndex, object);
+    parameterIndex = idAttribute.setInsertPreparedStatementValue(statement, parameterIndex, object);
     statement.addBatch();
     Integer batchCount = this.typeDeleteBatchCountMap.get(typePath);
     if (batchCount == null) {
@@ -183,15 +179,11 @@ JdbcWriter {
     if (this.dataStore != null) {
       try {
 
-        close(this.typeInsertSqlMap, this.typeInsertStatementMap,
-          this.typeInsertBatchCountMap);
-        close(this.typeInsertSequenceSqlMap,
-          this.typeInsertSequenceStatementMap,
+        close(this.typeInsertSqlMap, this.typeInsertStatementMap, this.typeInsertBatchCountMap);
+        close(this.typeInsertSequenceSqlMap, this.typeInsertSequenceStatementMap,
           this.typeInsertSequenceBatchCountMap);
-        close(this.typeUpdateSqlMap, this.typeUpdateStatementMap,
-          this.typeUpdateBatchCountMap);
-        close(this.typeDeleteSqlMap, this.typeDeleteStatementMap,
-          this.typeDeleteBatchCountMap);
+        close(this.typeUpdateSqlMap, this.typeUpdateStatementMap, this.typeUpdateBatchCountMap);
+        close(this.typeDeleteSqlMap, this.typeDeleteStatementMap, this.typeDeleteBatchCountMap);
         if (this.statistics != null) {
           this.statistics.disconnect();
           this.statistics = null;
@@ -229,19 +221,15 @@ JdbcWriter {
 
   @Override
   public synchronized void flush() {
-    flush(this.typeInsertSqlMap, this.typeInsertStatementMap,
-      this.typeInsertBatchCountMap);
+    flush(this.typeInsertSqlMap, this.typeInsertStatementMap, this.typeInsertBatchCountMap);
     flush(this.typeInsertSequenceSqlMap, this.typeInsertSequenceStatementMap,
       this.typeInsertSequenceBatchCountMap);
-    flush(this.typeUpdateSqlMap, this.typeUpdateStatementMap,
-      this.typeUpdateBatchCountMap);
-    flush(this.typeDeleteSqlMap, this.typeDeleteStatementMap,
-      this.typeDeleteBatchCountMap);
+    flush(this.typeUpdateSqlMap, this.typeUpdateStatementMap, this.typeUpdateBatchCountMap);
+    flush(this.typeDeleteSqlMap, this.typeDeleteStatementMap, this.typeDeleteBatchCountMap);
   }
 
   private void flush(final Map<String, String> sqlMap,
-    final Map<String, PreparedStatement> statementMap,
-    final Map<String, Integer> batchCountMap) {
+    final Map<String, PreparedStatement> statementMap, final Map<String, Integer> batchCountMap) {
     if (statementMap != null) {
       for (final Entry<String, PreparedStatement> entry : statementMap.entrySet()) {
         final String typePath = entry.getKey();
@@ -328,8 +316,7 @@ JdbcWriter {
     return this.hints;
   }
 
-  private String getInsertSql(final RecordDefinition type,
-    final boolean generatePrimaryKey) {
+  private String getInsertSql(final RecordDefinition type, final boolean generatePrimaryKey) {
     final String typePath = type.getPath();
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     String sql;
@@ -474,13 +461,11 @@ JdbcWriter {
     final GlobalIdProperty globalIdProperty = GlobalIdProperty.getProperty(object);
     if (globalIdProperty != null) {
       if (object.getValue(globalIdProperty.getAttributeName()) == null) {
-        object.setValue(globalIdProperty.getAttributeName(), UUID.randomUUID()
-          .toString());
+        object.setValue(globalIdProperty.getAttributeName(), UUID.randomUUID().toString());
       }
     }
 
-    final boolean hasIdValue = hasId
-        && object.getValue(idAttributeName) != null;
+    final boolean hasIdValue = hasId && object.getValue(idAttributeName) != null;
 
     if (!hasId || hasIdValue) {
       insert(object, typePath, metaData);
@@ -491,8 +476,8 @@ JdbcWriter {
     this.dataStore.addStatistic("Insert", object);
   }
 
-  private void insert(final Record object, final String typePath,
-    final RecordDefinition metaData) throws SQLException {
+  private void insert(final Record object, final String typePath, final RecordDefinition metaData)
+    throws SQLException {
     PreparedStatement statement = this.typeInsertStatementMap.get(typePath);
     if (statement == null) {
       final String sql = getInsertSql(metaData, false);
@@ -506,8 +491,8 @@ JdbcWriter {
     int parameterIndex = 1;
     for (final FieldDefinition attribute : metaData.getFields()) {
       final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
-      parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement,
-        parameterIndex, object);
+      parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement, parameterIndex,
+        object);
     }
     statement.addBatch();
     Integer batchCount = this.typeInsertBatchCountMap.get(typePath);
@@ -520,8 +505,7 @@ JdbcWriter {
     }
     if (batchCount >= this.batchSize) {
       final String sql = getInsertSql(metaData, false);
-      processCurrentBatch(typePath, sql, statement,
-        this.typeInsertBatchCountMap);
+      processCurrentBatch(typePath, sql, statement, this.typeInsertBatchCountMap);
     }
   }
 
@@ -542,8 +526,8 @@ JdbcWriter {
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (attribute != idAttribute) {
         final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
-        parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(
-          statement, parameterIndex, object);
+        parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement, parameterIndex,
+          object);
       }
     }
     statement.addBatch();
@@ -557,8 +541,7 @@ JdbcWriter {
     }
     if (batchCount >= this.batchSize) {
       final String sql = getInsertSql(metaData, true);
-      processCurrentBatch(typePath, sql, statement,
-        this.typeInsertSequenceBatchCountMap);
+      processCurrentBatch(typePath, sql, statement, this.typeInsertSequenceBatchCountMap);
     }
   }
 
@@ -590,8 +573,7 @@ JdbcWriter {
       this.typeCountMap.put(typePath, typeCount);
       statement.executeBatch();
     } catch (final SQLException e) {
-      throw JdbcUtils.getException(getDataSource(), this.connection,
-        "Process Batch", sql, e);
+      throw JdbcUtils.getException(getDataSource(), this.connection, "Process Batch", sql, e);
     } catch (final RuntimeException e) {
       LOG.error(sql, e);
       throw e;
@@ -678,14 +660,14 @@ JdbcWriter {
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (!idAttributes.contains(attribute)) {
         final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
-        parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(
-          statement, parameterIndex, object);
+        parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement, parameterIndex,
+          object);
       }
     }
     for (final FieldDefinition idAttribute : idAttributes) {
       final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)idAttribute;
-      parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement,
-        parameterIndex, object);
+      parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement, parameterIndex,
+        object);
 
     }
     statement.addBatch();
@@ -699,8 +681,7 @@ JdbcWriter {
     }
     if (batchCount >= this.batchSize) {
       final String sql = getUpdateSql(metaData);
-      processCurrentBatch(typePath, sql, statement,
-        this.typeUpdateBatchCountMap);
+      processCurrentBatch(typePath, sql, statement, this.typeUpdateBatchCountMap);
     }
     this.dataStore.addStatistic("Update", object);
   }
@@ -719,16 +700,16 @@ JdbcWriter {
         switch (state) {
           case New:
             insert(object);
-            break;
+          break;
           case Modified:
             update(object);
-            break;
+          break;
           case Persisted:
-            // No action required
-            break;
+          // No action required
+          break;
           case Deleted:
             delete(object);
-            break;
+          break;
           default:
             throw new IllegalStateException("State not known");
         }

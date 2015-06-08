@@ -21,8 +21,7 @@ import com.revolsys.swing.map.layer.dataobject.style.TextStyle;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
-public class TextStylePanel extends BaseStylePanel implements
-  PropertyChangeListener {
+public class TextStylePanel extends BaseStylePanel implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private final TextStyleRenderer textStyleRenderer;
@@ -50,33 +49,30 @@ public class TextStylePanel extends BaseStylePanel implements
       panel.add(stylePanels, BorderLayout.CENTER);
 
       this.previews = new JPanel(new VerticalLayout(5));
-      SwingUtil.setTitledBorder(previews, "Preview");
+      SwingUtil.setTitledBorder(this.previews, "Preview");
 
       final JPanel previewContainer = new JPanel(new VerticalLayout());
       previewContainer.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
       previewContainer.setBackground(WebColors.White);
-      previewContainer.add(previews);
+      previewContainer.add(this.previews);
       panel.add(previewContainer, BorderLayout.EAST);
 
-      addPanel(stylePanels, "Text Label", textStyle, "textName", "textSize",
-        "textFaceName");
-      addPanel(stylePanels, "Text Color", textStyle, "textFill",
-        "textBoxColor", "textHaloFill", "textHaloRadius");
-      addPanel(stylePanels, "Text Position", textStyle,
-        "textHorizontalAlignment", "textVerticalAlignment", "textDx", "textDy",
-        "textOrientationType", "textOrientation", "textPlacementType");
+      addPanel(stylePanels, "Text Label", this.textStyle, "textName", "textSize", "textFaceName");
+      addPanel(stylePanels, "Text Color", this.textStyle, "textFill", "textBoxColor",
+        "textHaloFill", "textHaloRadius");
+      addPanel(stylePanels, "Text Position", this.textStyle, "textHorizontalAlignment",
+        "textVerticalAlignment", "textDx", "textDy", "textOrientationType", "textOrientation",
+        "textPlacementType");
 
       this.previews.add(new TextStylePreview(this.textStyle));
     }
   }
 
   @Override
-  protected Field createField(final String fieldName,
-    final Class<?> fieldClass, final Object value) {
+  protected Field createField(final String fieldName, final Class<?> fieldClass, final Object value) {
     if (fieldName.equals("textName")) {
       final AbstractRecordLayer layer = getLayer();
-      final TextNameField textNameField = new TextNameField(layer, fieldName,
-        value);
+      final TextNameField textNameField = new TextNameField(layer, fieldName, value);
       Property.addListener(textNameField, fieldName, this);
       return textNameField;
     } else {

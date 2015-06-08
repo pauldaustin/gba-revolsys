@@ -29,8 +29,7 @@ public final class TreeUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <L> L getFirstSelectedNode(final Object source,
-    final Class<L> nodeClass) {
+  public static <L> L getFirstSelectedNode(final Object source, final Class<L> nodeClass) {
     final List<Object> nodes = getSelectedNodes(source);
     if (!nodes.isEmpty()) {
       final Object node = nodes.get(0);
@@ -83,8 +82,7 @@ public final class TreeUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <L> List<L> getSelectedNodes(final Object source,
-    final Class<L> nodeClass) {
+  public static <L> List<L> getSelectedNodes(final Object source, final Class<L> nodeClass) {
     final List<L> nodes = new ArrayList<L>();
     final List<Object> selectedNodes = getSelectedNodes(source);
     for (final Object node : selectedNodes) {

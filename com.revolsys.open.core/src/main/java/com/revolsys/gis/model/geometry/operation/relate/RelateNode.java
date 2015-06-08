@@ -15,7 +15,7 @@ import com.vividsolutions.jts.geom.IntersectionMatrix;
 /**
  * Represents a node in the topological graph used to compute spatial
  * relationships.
- * 
+ *
  * @version 1.7
  */
 public class RelateNode extends Node {
@@ -30,14 +30,14 @@ public class RelateNode extends Node {
    */
   @Override
   protected void computeIM(final IntersectionMatrix im) {
-    im.setAtLeastIfValid(label.getLocation(0), label.getLocation(1), 0);
+    im.setAtLeastIfValid(this.label.getLocation(0), this.label.getLocation(1), 0);
   }
 
   /**
    * Update the IM with the contribution for the EdgeEnds incident on this node.
    */
   void updateIMFromEdges(final IntersectionMatrix im) {
-    ((EdgeEndBundleStar)edges).updateIM(im);
+    ((EdgeEndBundleStar)this.edges).updateIM(im);
   }
 
 }

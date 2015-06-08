@@ -9,8 +9,8 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
@@ -38,7 +38,7 @@ public class MoepDirectoryReader extends DataObjectDirectoryReader implements
 
   /**
    * Create a new {@link MoepBinaryReader} to read the file.
-   * 
+   *
    * @param file The file to read.
    * @return The reader for the file.
    * @throws IOException If an I/O error occurs.
@@ -49,7 +49,7 @@ public class MoepDirectoryReader extends DataObjectDirectoryReader implements
   }
 
   public Date getIntegrationDate() {
-    return integrationDate;
+    return this.integrationDate;
   }
 
   @Override
@@ -62,15 +62,15 @@ public class MoepDirectoryReader extends DataObjectDirectoryReader implements
   }
 
   public String getRevisionKey() {
-    return revisionKey;
+    return this.revisionKey;
   }
 
   public String getSpecificationsRelease() {
-    return specificationsRelease;
+    return this.specificationsRelease;
   }
 
   public Date getSubmissionDate() {
-    return submissionDate;
+    return this.submissionDate;
   }
 
   @Override
@@ -78,8 +78,7 @@ public class MoepDirectoryReader extends DataObjectDirectoryReader implements
     super.setDirectory(directory);
     final String name = FileUtil.getFileName(directory);
     final File file = new File(directory, name + "s.bin");
-    final Reader<Record> supDataReader = createReader(new FileSystemResource(
-      file));
+    final Reader<Record> supDataReader = createReader(new FileSystemResource(file));
     for (final Record supData : supDataReader) {
       final String featureCode = supData.getValue(MoepConstants.FEATURE_CODE);
       if (featureCode.equals("KN00020000")) {
@@ -87,12 +86,10 @@ public class MoepDirectoryReader extends DataObjectDirectoryReader implements
         final String[] versionFields = text.split(" ");
 
         final String dateString = versionFields[2];
-        submissionDate = new Date(DateUtil.getDate("yyyyMMdd", dateString)
-          .getTime());
-        revisionKey = versionFields[3];
-        integrationDate = new Date(DateUtil.getDate("yyyyMMdd", versionFields[4])
-          .getTime());
-        specificationsRelease = versionFields[5];
+        this.submissionDate = new Date(DateUtil.getDate("yyyyMMdd", dateString).getTime());
+        this.revisionKey = versionFields[3];
+        this.integrationDate = new Date(DateUtil.getDate("yyyyMMdd", versionFields[4]).getTime());
+        this.specificationsRelease = versionFields[5];
       }
     }
 

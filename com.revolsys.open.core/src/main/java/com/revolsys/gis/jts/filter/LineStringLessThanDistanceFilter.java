@@ -5,13 +5,13 @@
  * $Revision:$
 
  * Copyright 2004-2007 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,11 +30,10 @@ import com.vividsolutions.jts.geom.LineString;
 
 public class LineStringLessThanDistanceFilter implements Filter<LineString> {
 
-  public static Filter<Record> getFilter(final Record object,
-    final double maxDistance) {
+  public static Filter<Record> getFilter(final Record object, final double maxDistance) {
     final LineString line = object.getGeometryValue();
-    final LineStringLessThanDistanceFilter lineFilter = new LineStringLessThanDistanceFilter(
-      line, maxDistance);
+    final LineStringLessThanDistanceFilter lineFilter = new LineStringLessThanDistanceFilter(line,
+      maxDistance);
     return new DataObjectGeometryFilter<LineString>(lineFilter);
   }
 
@@ -51,21 +50,19 @@ public class LineStringLessThanDistanceFilter implements Filter<LineString> {
 
   /**
    * Construct a new LineStringLessThanDistanceFilter.
-   * 
+   *
    * @param geometry The geometry to compare the data objects to to.
    * @param distance
    */
-  public LineStringLessThanDistanceFilter(final LineString geometry,
-    final double distance) {
+  public LineStringLessThanDistanceFilter(final LineString geometry, final double distance) {
     this.distance = distance;
     setGeometry(geometry);
   }
 
   @Override
   public boolean accept(final LineString line) {
-    if (line.getEnvelopeInternal().intersects(envelope)) {
-      final double distance = LineStringUtil.distance(line, this.geometry,
-        this.distance);
+    if (line.getEnvelopeInternal().intersects(this.envelope)) {
+      final double distance = LineStringUtil.distance(line, this.geometry, this.distance);
       if (distance < this.distance) {
         return true;
       } else {
@@ -79,24 +76,24 @@ public class LineStringLessThanDistanceFilter implements Filter<LineString> {
 
   /**
    * Get the maximum distance the object can be from the source geometry.
-   * 
+   *
    * @return The maximum distance the object can be from the source geometry.
    */
   public double getDistance() {
-    return distance;
+    return this.distance;
   }
 
   public Envelope getEnvelope() {
-    return envelope;
+    return this.envelope;
   }
 
   /**
    * Get the geometry to compare the data objects to to.
-   * 
+   *
    * @return The geometry to compare the data objects to to.
    */
   public LineString getGeometry() {
-    return geometry;
+    return this.geometry;
   }
 
   public void setDistance(final double distance) {
@@ -106,6 +103,6 @@ public class LineStringLessThanDistanceFilter implements Filter<LineString> {
   public void setGeometry(final LineString geometry) {
     this.geometry = geometry;
     this.envelope = BoundingBox.getBoundingBox(geometry);
-    this.envelope = this.envelope.expand(distance);
+    this.envelope = this.envelope.expand(this.distance);
   }
 }

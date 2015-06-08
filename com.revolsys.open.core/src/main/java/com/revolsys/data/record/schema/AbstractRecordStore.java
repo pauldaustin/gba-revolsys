@@ -53,8 +53,8 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class AbstractRecordStore extends AbstractObjectWithProperties
-implements RecordStore {
+public abstract class AbstractRecordStore extends AbstractObjectWithProperties implements
+  RecordStore {
 
   public static RecordStore close(final Collection<RecordStore> dataStores) {
     final List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
@@ -158,8 +158,7 @@ implements RecordStore {
     schema.addMetaData(metaData);
   }
 
-  protected void addRecordDefinitionProperties(
-    final RecordDefinitionImpl metaData) {
+  protected void addRecordDefinitionProperties(final RecordDefinitionImpl metaData) {
     final String typePath = metaData.getPath();
     for (final RecordDefinitionProperty property : this.commonMetaDataProperties) {
       final RecordDefinitionProperty clonedProperty = property.clone();
@@ -181,8 +180,7 @@ implements RecordStore {
   }
 
   @Override
-  public void addStatistic(final String statisticName, final String typePath,
-    final int count) {
+  public void addStatistic(final String statisticName, final String typePath, final int count) {
     if (this.statistics != null) {
       this.statistics.add(statisticName, typePath, count);
     }
@@ -254,12 +252,10 @@ implements RecordStore {
   }
 
   @Override
-  public Record create(final String typePath,
-    final Map<String, ? extends Object> values) {
+  public Record create(final String typePath, final Map<String, ? extends Object> values) {
     final RecordDefinition metaData = getRecordDefinition(typePath);
     if (metaData == null) {
-      throw new IllegalArgumentException("Cannot find table " + typePath
-        + " for " + this);
+      throw new IllegalArgumentException("Cannot find table " + typePath + " for " + this);
     } else {
       final Record record = create(metaData);
       if (record != null) {
@@ -277,8 +273,7 @@ implements RecordStore {
 
   }
 
-  public AbstractIterator<Record> createIterator(final Query query,
-    Map<String, Object> properties) {
+  public AbstractIterator<Record> createIterator(final Query query, Map<String, Object> properties) {
     if (properties == null) {
       properties = Collections.emptyMap();
     }
@@ -289,8 +284,8 @@ implements RecordStore {
       if (metaData != null) {
         final DataStoreIteratorFactory metaDataIteratorFactory = metaData.getProperty("dataStoreIteratorFactory");
         if (metaDataIteratorFactory != null) {
-          final AbstractIterator<Record> iterator = metaDataIteratorFactory.createIterator(
-            this, query, properties);
+          final AbstractIterator<Record> iterator = metaDataIteratorFactory.createIterator(this,
+            query, properties);
           if (iterator != null) {
             return iterator;
           }
@@ -312,8 +307,7 @@ implements RecordStore {
   }
 
   public DataObjectStoreQueryReader createReader() {
-    final DataObjectStoreQueryReader reader = new DataObjectStoreQueryReader(
-      this);
+    final DataObjectStoreQueryReader reader = new DataObjectStoreQueryReader(this);
     return reader;
   }
 
@@ -428,8 +422,7 @@ implements RecordStore {
   }
 
   @Override
-  public RecordDefinition getRecordDefinition(
-    final RecordDefinition objectMetaData) {
+  public RecordDefinition getRecordDefinition(final RecordDefinition objectMetaData) {
     final String typePath = objectMetaData.getPath();
     final RecordDefinition metaData = getRecordDefinition(typePath);
     return metaData;
@@ -601,11 +594,10 @@ implements RecordStore {
     } else {
       final List<String> idAttributeNames = metaData.getIdFieldNames();
       if (idAttributeNames.isEmpty()) {
-        throw new IllegalArgumentException(typePath
-          + " does not have a primary key");
+        throw new IllegalArgumentException(typePath + " does not have a primary key");
       } else if (id.length != idAttributeNames.size()) {
-        throw new IllegalArgumentException(Arrays.toString(id)
-          + " not a valid id for " + typePath + " requires " + idAttributeNames);
+        throw new IllegalArgumentException(Arrays.toString(id) + " not a valid id for " + typePath
+          + " requires " + idAttributeNames);
       } else {
         final Query query = new Query(metaData);
         for (int i = 0; i < idAttributeNames.size(); i++) {
@@ -619,8 +611,8 @@ implements RecordStore {
     }
   }
 
-  protected abstract void loadSchemaDataObjectMetaData(
-    RecordStoreSchema schema, Map<String, RecordDefinition> metaDataMap);
+  protected abstract void loadSchemaDataObjectMetaData(RecordStoreSchema schema,
+    Map<String, RecordDefinition> metaDataMap);
 
   protected abstract void loadSchemas(Map<String, RecordStoreSchema> schemaMap);
 
@@ -632,8 +624,7 @@ implements RecordStore {
     } else {
       final String idAttributeName = metaData.getIdFieldName();
       if (idAttributeName == null) {
-        throw new IllegalArgumentException(typePath
-          + " does not have a primary key");
+        throw new IllegalArgumentException(typePath + " does not have a primary key");
       } else {
         final Query query = Query.equal(metaData, idAttributeName, id);
         query.setLockResults(true);
@@ -675,21 +666,20 @@ implements RecordStore {
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory dataObjectFactory,
-    final String typePath, final Geometry geometry) {
+  public Reader<Record> query(final RecordFactory dataObjectFactory, final String typePath,
+    final Geometry geometry) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     final Query query = new Query(typePath);
     query.setBoundingBox(boundingBox);
     query.setProperty("recordFactory", dataObjectFactory);
     final Reader<Record> reader = query(query);
-    final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(
-      geometry);
+    final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(geometry);
     return new FilterReader<Record>(filter, reader);
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory dataObjectFactory,
-    final String typePath, final Geometry geometry, final double distance) {
+  public Reader<Record> query(final RecordFactory dataObjectFactory, final String typePath,
+    final Geometry geometry, final double distance) {
     final Geometry searchGeometry;
     if (geometry == null || geometry.isEmpty() || distance <= 0) {
       searchGeometry = geometry;
@@ -726,8 +716,7 @@ implements RecordStore {
   }
 
   @Override
-  public Reader<Record> query(final String typePath, final Geometry geometry,
-    final double distance) {
+  public Reader<Record> query(final String typePath, final Geometry geometry, final double distance) {
     final RecordFactory dataObjectFactory = getRecordFactory();
     return query(dataObjectFactory, typePath, geometry, distance);
   }
@@ -762,8 +751,7 @@ implements RecordStore {
   protected void releaseConnected() {
   }
 
-  public void setCodeTableColumNames(
-    final Map<String, List<String>> domainColumNames) {
+  public void setCodeTableColumNames(final Map<String, List<String>> domainColumNames) {
     this.codeTableColumNames = domainColumNames;
   }
 
@@ -772,8 +760,7 @@ implements RecordStore {
     this.commonMetaDataProperties = commonMetaDataProperties;
   }
 
-  protected void setConnectionProperties(
-    final Map<String, ? extends Object> connectionProperties) {
+  protected void setConnectionProperties(final Map<String, ? extends Object> connectionProperties) {
     this.connectionProperties = CollectionUtil.createHashMap(connectionProperties);
   }
 

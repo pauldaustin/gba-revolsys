@@ -28,17 +28,16 @@ public class LineStringImpl extends GeometryImpl implements LineString {
 
   private final double[] coordinates;
 
-  public LineStringImpl(final GeometryFactoryImpl geometryFactory,
-    final CoordinatesList points) {
+  public LineStringImpl(final GeometryFactoryImpl geometryFactory, final CoordinatesList points) {
     super(geometryFactory);
     final byte numAxis = geometryFactory.getNumAxis();
     final int size = points.size();
     int k = 0;
-    coordinates = new double[numAxis * size];
+    this.coordinates = new double[numAxis * size];
     for (int i = 0; i < points.size(); i++) {
       for (int j = 0; j < numAxis; j++) {
         final double value = points.getValue(i, j);
-        coordinates[k++] = value;
+        this.coordinates[k++] = value;
       }
     }
   }
@@ -70,8 +69,8 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   }
 
   @Override
-  public void copy(final int sourceIndex, final CoordinatesList target,
-    final int targetIndex, final int numAxis, final int count) {
+  public void copy(final int sourceIndex, final CoordinatesList target, final int targetIndex,
+    final int numAxis, final int count) {
     for (int i = 0; i < count; i++) {
       for (int j = 0; j < numAxis; j++) {
         final double coordinate = getValue(sourceIndex + i, j);
@@ -98,8 +97,7 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   }
 
   @Override
-  public double distance(final int index, final CoordinatesList other,
-    final int otherIndex) {
+  public double distance(final int index, final CoordinatesList other, final int otherIndex) {
     if (index < size() || otherIndex < other.size()) {
       final double x1 = getX(index);
       final double y1 = getY(index);
@@ -118,8 +116,7 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   }
 
   @Override
-  public boolean equal(final int index, final Coordinates point,
-    final int numAxis) {
+  public boolean equal(final int index, final Coordinates point, final int numAxis) {
     int maxAxis = Math.max(getNumAxis(), point.getNumAxis());
     if (maxAxis > numAxis) {
       maxAxis = numAxis;
@@ -143,8 +140,7 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   }
 
   @Override
-  public boolean equal(final int index, final CoordinatesList other,
-    final int otherIndex) {
+  public boolean equal(final int index, final CoordinatesList other, final int otherIndex) {
     final int numAxis = Math.max(getNumAxis(), other.getNumAxis());
     if (index < size() || otherIndex < other.size()) {
       for (int j = 0; j < numAxis; j++) {
@@ -161,8 +157,8 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   }
 
   @Override
-  public boolean equal(final int index, final CoordinatesList other,
-    final int otherIndex, int numAxis) {
+  public boolean equal(final int index, final CoordinatesList other, final int otherIndex,
+    int numAxis) {
     numAxis = Math.min(numAxis, Math.max(getNumAxis(), other.getNumAxis()));
     if (index < size() || otherIndex < other.size()) {
       for (int j = 0; j < numAxis; j++) {
@@ -359,7 +355,7 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   public double getValue(final int index, final int axisIndex) {
     final byte numAxis = getNumAxis();
     if (axisIndex < numAxis) {
-      return coordinates[index * numAxis + axisIndex];
+      return this.coordinates[index * numAxis + axisIndex];
     } else {
       return Double.NaN;
     }
@@ -439,8 +435,7 @@ public class LineStringImpl extends GeometryImpl implements LineString {
 
   @Override
   @Deprecated
-  public void setOrdinate(final int index, final int axisIndex,
-    final double value) {
+  public void setOrdinate(final int index, final int axisIndex, final double value) {
     setValue(index, axisIndex, value);
   }
 
@@ -462,7 +457,7 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   public void setValue(final int index, final int axisIndex, final double value) {
     final byte numAxis = getNumAxis();
     if (axisIndex < numAxis) {
-      coordinates[index * numAxis + axisIndex] = value;
+      this.coordinates[index * numAxis + axisIndex] = value;
     }
   }
 
@@ -483,12 +478,11 @@ public class LineStringImpl extends GeometryImpl implements LineString {
 
   @Override
   public int size() {
-    return coordinates.length / getNumAxis();
+    return this.coordinates.length / getNumAxis();
   }
 
   @Override
-  public boolean startsWith(final CoordinatesList coordinatesList,
-    final int numAxis) {
+  public boolean startsWith(final CoordinatesList coordinatesList, final int numAxis) {
     if (size() > 1 && coordinatesList.size() > 1) {
       if (getNumAxis() >= numAxis && coordinatesList.getNumAxis() >= numAxis) {
         for (int i = 0; i < 2; i++) {
@@ -517,14 +511,13 @@ public class LineStringImpl extends GeometryImpl implements LineString {
   }
 
   @Override
-  public CoordinatesList subList(final int length, final int index,
-    final int count) {
+  public CoordinatesList subList(final int length, final int index, final int count) {
     return subList(length, index, 0, count);
   }
 
   @Override
-  public CoordinatesList subList(final int length, final int sourceIndex,
-    final int targetIndex, final int count) {
+  public CoordinatesList subList(final int length, final int sourceIndex, final int targetIndex,
+    final int count) {
     final int numAxis = getNumAxis();
     final CoordinatesList target = create(length, numAxis);
     copy(sourceIndex, target, targetIndex, numAxis, count);

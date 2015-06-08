@@ -22,8 +22,7 @@ public class GeometryProjectionUtil {
       return null;
     } else {
       final CoordinateSystem fromCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(fromSrid);
-      return ProjectionFactory.getGeometryOperation(fromCoordinateSystem,
-        toCoordinateSystem);
+      return ProjectionFactory.getGeometryOperation(fromCoordinateSystem, toCoordinateSystem);
     }
   }
 
@@ -33,13 +32,11 @@ public class GeometryProjectionUtil {
       return null;
     } else {
       final CoordinateSystem fromCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(fromSrid);
-      return ProjectionFactory.getGeometryOperation(fromCoordinateSystem,
-        toGeometryFactory);
+      return ProjectionFactory.getGeometryOperation(fromCoordinateSystem, toGeometryFactory);
     }
   }
 
-  public static GeometryOperation getGeometryOperation(final int sourceSrid,
-    final int targetSrid) {
+  public static GeometryOperation getGeometryOperation(final int sourceSrid, final int targetSrid) {
     if (sourceSrid == 0 || targetSrid == 0) {
       return null;
     } else {
@@ -48,8 +45,7 @@ public class GeometryProjectionUtil {
     }
   }
 
-  public static <T extends Geometry> T perform(
-    final GeometryOperation operation, final T geometry) {
+  public static <T extends Geometry> T perform(final GeometryOperation operation, final T geometry) {
     if (operation == null) {
       return geometry;
     } else {
@@ -63,15 +59,13 @@ public class GeometryProjectionUtil {
     if (geometrySrid == 0) {
       return geometry;
     } else {
-      final GeometryOperation operation = getGeometryOperation(geometrySrid,
-        coordinateSystem);
+      final GeometryOperation operation = getGeometryOperation(geometrySrid, coordinateSystem);
       return perform(operation, geometry);
     }
   }
 
   public static <T extends Geometry> T perform(final T geometry,
-    final CoordinateSystem fromCoordinateSystem,
-    final CoordinateSystem toCoordinateSystem) {
+    final CoordinateSystem fromCoordinateSystem, final CoordinateSystem toCoordinateSystem) {
     if (fromCoordinateSystem == null || toCoordinateSystem == null) {
       return geometry;
     } else {
@@ -85,7 +79,7 @@ public class GeometryProjectionUtil {
    * Convert the geometry to the geometry factory. If the geometry has a
    * geometry factory with the same coordinate system it will not be copied. The
    * number of axis are not changed if the SRID is the same
-   * 
+   *
    * @param geometry
    * @param geometryFactory
    * @return
@@ -102,8 +96,7 @@ public class GeometryProjectionUtil {
       } else if (geometrySrid == 0) {
         return geometry;
       } else {
-        final GeometryOperation operation = getGeometryOperation(geometrySrid,
-          geometryFactory);
+        final GeometryOperation operation = getGeometryOperation(geometrySrid, geometryFactory);
         final T newGeometry = perform(operation, geometry);
         return newGeometry;
       }
@@ -115,8 +108,7 @@ public class GeometryProjectionUtil {
     if (geometrySrid == 0) {
       return geometry;
     } else {
-      final GeometryOperation operation = getGeometryOperation(geometrySrid,
-        srid);
+      final GeometryOperation operation = getGeometryOperation(geometrySrid, srid);
       return perform(operation, geometry);
     }
   }
@@ -124,7 +116,7 @@ public class GeometryProjectionUtil {
   /**
    * Convert the geometry to the geometry factory. Even if the geometry is the
    * same it will be copied.
-   * 
+   *
    * @param geometry
    * @param geometryFactory
    * @return
@@ -138,8 +130,7 @@ public class GeometryProjectionUtil {
       if (geometrySrid == 0) {
         return geometry;
       } else {
-        final GeometryOperation operation = getGeometryOperation(geometrySrid,
-          geometryFactory);
+        final GeometryOperation operation = getGeometryOperation(geometrySrid, geometryFactory);
         T newGeometry = perform(operation, geometry);
         if (geometry == newGeometry) {
           newGeometry = (T)geometryFactory.createGeometry(geometry);

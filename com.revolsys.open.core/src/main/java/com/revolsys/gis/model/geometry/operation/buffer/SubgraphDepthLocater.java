@@ -35,7 +35,7 @@ public class SubgraphDepthLocater {
 
     public DepthSegment(final LineSegment seg, final int depth) {
       // input seg is assumed to be normalized
-      upwardSeg = new LineSegment(seg);
+      this.upwardSeg = new LineSegment(seg);
       // upwardSeg.normalize();
       this.leftDepth = depth;
     }
@@ -59,7 +59,7 @@ public class SubgraphDepthLocater {
        * try and compute a determinate orientation for the segments.
        * Test returns 1 if other is left of this (i.e. this > other)
        */
-      int orientIndex = upwardSeg.orientationIndex(other.upwardSeg);
+      int orientIndex = this.upwardSeg.orientationIndex(other.upwardSeg);
 
       /**
        * If comparison between this and other is indeterminate,
@@ -69,7 +69,7 @@ public class SubgraphDepthLocater {
        * -1 if this is leftmost
        */
       if (orientIndex == 0) {
-        orientIndex = -1 * other.upwardSeg.orientationIndex(upwardSeg);
+        orientIndex = -1 * other.upwardSeg.orientationIndex(this.upwardSeg);
       }
 
       // if orientation is determinate, return it
@@ -93,8 +93,7 @@ public class SubgraphDepthLocater {
      * @return
      */
     private int compareX(final LineSegment seg0, final LineSegment seg1) {
-      final int compare0 = seg0.getCoordinate(0).compareTo(
-        seg1.getCoordinate(0));
+      final int compare0 = seg0.getCoordinate(0).compareTo(seg1.getCoordinate(0));
       if (compare0 != 0) {
         return compare0;
       }
@@ -123,19 +122,17 @@ public class SubgraphDepthLocater {
    */
   private List findStabbedSegments(final Coordinates stabbingRayLeftPt) {
     final List stabbedSegments = new ArrayList();
-    for (final Iterator i = subgraphs.iterator(); i.hasNext();) {
+    for (final Iterator i = this.subgraphs.iterator(); i.hasNext();) {
       final BufferSubgraph bsg = (BufferSubgraph)i.next();
 
       // optimization - don't bother checking subgraphs which the ray does not
       // intersect
       final Envelope env = bsg.getEnvelope();
-      if (stabbingRayLeftPt.getY() < env.getMinY()
-        || stabbingRayLeftPt.getY() > env.getMaxY()) {
+      if (stabbingRayLeftPt.getY() < env.getMinY() || stabbingRayLeftPt.getY() > env.getMaxY()) {
         continue;
       }
 
-      findStabbedSegments(stabbingRayLeftPt, bsg.getDirectedEdges(),
-        stabbedSegments);
+      findStabbedSegments(stabbingRayLeftPt, bsg.getDirectedEdges(), stabbedSegments);
     }
     return stabbedSegments;
   }
@@ -148,48 +145,47 @@ public class SubgraphDepthLocater {
    * @param stabbingRayLeftPt the left-hand origin of the stabbing line
    * @param stabbedSegments the current list of {@link DepthSegments} intersecting the stabbing line
    */
-  private void findStabbedSegments(final Coordinates stabbingRayLeftPt,
-    final DirectedEdge dirEdge, final List stabbedSegments) {
+  private void findStabbedSegments(final Coordinates stabbingRayLeftPt, final DirectedEdge dirEdge,
+    final List stabbedSegments) {
     final CoordinatesList pts = dirEdge.getEdge().getCoordinates();
     for (int i = 0; i < pts.size() - 1; i++) {
-      seg.setPoint(0, pts.get(i));
-      seg.setPoint(1, pts.get(i + 1));
+      this.seg.setPoint(0, pts.get(i));
+      this.seg.setPoint(1, pts.get(i + 1));
       // ensure segment always points upwards
-      if (seg.get(0).getY() > seg.get(1).getY()) {
-        seg.reverse();
+      if (this.seg.get(0).getY() > this.seg.get(1).getY()) {
+        this.seg.reverse();
       }
 
       // skip segment if it is left of the stabbing line
-      final double maxx = Math.max(seg.get(0).getX(), seg.get(1).getX());
+      final double maxx = Math.max(this.seg.get(0).getX(), this.seg.get(1).getX());
       if (maxx < stabbingRayLeftPt.getX()) {
         continue;
       }
 
       // skip horizontal segments (there will be a non-horizontal one carrying
       // the same depth info
-      if (seg.isHorizontal()) {
+      if (this.seg.isHorizontal()) {
         continue;
       }
 
       // skip if segment is above or below stabbing line
-      if (stabbingRayLeftPt.getY() < seg.get(0).getY()
-        || stabbingRayLeftPt.getY() > seg.get(1).getY()) {
+      if (stabbingRayLeftPt.getY() < this.seg.get(0).getY()
+        || stabbingRayLeftPt.getY() > this.seg.get(1).getY()) {
         continue;
       }
 
       // skip if stabbing ray is right of the segment
-      if (CoordinatesUtil.orientationIndex(seg.get(0), seg.get(1),
-        stabbingRayLeftPt) == CGAlgorithms.RIGHT) {
+      if (CoordinatesUtil.orientationIndex(this.seg.get(0), this.seg.get(1), stabbingRayLeftPt) == CGAlgorithms.RIGHT) {
         continue;
       }
 
       // stabbing line cuts this segment, so record it
       int depth = dirEdge.getDepth(Position.LEFT);
       // if segment direction was flipped, use RHS depth instead
-      if (!seg.get(0).equals(pts.get(i))) {
+      if (!this.seg.get(0).equals(pts.get(i))) {
         depth = dirEdge.getDepth(Position.RIGHT);
       }
-      final DepthSegment ds = new DepthSegment(seg, depth);
+      final DepthSegment ds = new DepthSegment(this.seg, depth);
       stabbedSegments.add(ds);
     }
   }
@@ -202,8 +198,8 @@ public class SubgraphDepthLocater {
    * @param stabbingRayLeftPt the left-hand origin of the stabbing line
    * @param stabbedSegments the current list of {@link DepthSegments} intersecting the stabbing line
    */
-  private void findStabbedSegments(final Coordinates stabbingRayLeftPt,
-    final List dirEdges, final List stabbedSegments) {
+  private void findStabbedSegments(final Coordinates stabbingRayLeftPt, final List dirEdges,
+    final List stabbedSegments) {
     /**
      * Check all forward DirectedEdges only.  This is still general,
      * because each Edge has a forward DirectedEdge.

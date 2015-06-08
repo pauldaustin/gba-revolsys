@@ -17,10 +17,8 @@ public class NumericComparator<T> implements Comparator<T> {
     } else if (value2 == null) {
       return 1;
     } else {
-      final BigDecimal number1 = StringConverterRegistry.toObject(
-        BigDecimal.class, value1);
-      final BigDecimal number2 = StringConverterRegistry.toObject(
-        BigDecimal.class, value2);
+      final BigDecimal number1 = StringConverterRegistry.toObject(BigDecimal.class, value1);
+      final BigDecimal number2 = StringConverterRegistry.toObject(BigDecimal.class, value2);
       return number1.compareTo(number2);
     }
   }

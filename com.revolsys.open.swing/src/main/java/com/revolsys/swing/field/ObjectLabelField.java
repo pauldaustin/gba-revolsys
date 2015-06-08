@@ -48,8 +48,8 @@ public class ObjectLabelField extends JLabel implements Field {
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -72,7 +72,7 @@ public class ObjectLabelField extends JLabel implements Field {
 
   @Override
   public boolean isFieldValid() {
-    return !StringUtils.hasText(errorMessage);
+    return !StringUtils.hasText(this.errorMessage);
   }
 
   @Override
@@ -92,8 +92,8 @@ public class ObjectLabelField extends JLabel implements Field {
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setBackground(backgroundColor);
     this.errorMessage = message;

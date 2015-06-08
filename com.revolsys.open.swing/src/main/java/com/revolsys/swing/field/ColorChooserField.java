@@ -20,8 +20,8 @@ public class ColorChooserField extends ValueField {
 
   public ColorChooserField(final String fieldName, final Color color) {
     super(fieldName, color);
-    Property.addListener(this.colorButton, "background",
-      new InvokeMethodListener(this, "updateFieldValue"));
+    Property.addListener(this.colorButton, "background", new InvokeMethodListener(this,
+      "updateFieldValue"));
     setLayout(new VerticalLayout());
     setBorder(BorderFactory.createEmptyBorder(0, 3, 3, 0));
     add(this.colorButton);

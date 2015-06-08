@@ -11,31 +11,29 @@ import com.revolsys.gis.model.data.equals.EqualsInstance;
 
 /**
  * Filter DataObjects by the value of the property.
- * 
+ *
  * @author Paul Austin
  */
 public class MultipleAttributeValuesFilter implements Filter<Record> {
   /** The values to match. */
   private Map<String, ? extends Object> values = Collections.emptyMap();
 
-  public MultipleAttributeValuesFilter(
-    final Map<String, ? extends Object> values) {
+  public MultipleAttributeValuesFilter(final Map<String, ? extends Object> values) {
     this.values = values;
   }
 
   /**
    * Match the property on the data object with the required value.
-   * 
+   *
    * @param object The object.
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
   public boolean accept(final Record object) {
-    for (final Entry<String, ? extends Object> entry : values.entrySet()) {
+    for (final Entry<String, ? extends Object> entry : this.values.entrySet()) {
       final String attributeName = entry.getKey();
       final Object value = entry.getValue();
-      final Object objectValue = DataObjectUtil.getAttributeByPath(object,
-        attributeName);
+      final Object objectValue = DataObjectUtil.getAttributeByPath(object, attributeName);
       if (objectValue == null) {
         if (value != null) {
           if (!EqualsInstance.INSTANCE.equals(value, objectValue)) {
@@ -52,7 +50,7 @@ public class MultipleAttributeValuesFilter implements Filter<Record> {
   }
 
   public Map<String, ? extends Object> getValues() {
-    return values;
+    return this.values;
   }
 
   public void setValues(final Map<String, ? extends Object> values) {
@@ -64,7 +62,7 @@ public class MultipleAttributeValuesFilter implements Filter<Record> {
    */
   @Override
   public String toString() {
-    return values.toString();
+    return this.values.toString();
   }
 
 }

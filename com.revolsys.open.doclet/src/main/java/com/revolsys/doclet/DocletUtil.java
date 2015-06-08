@@ -36,16 +36,14 @@ public class DocletUtil {
 
   static {
     addPackageUrl("java.", "http://docs.oracle.com/javase/6/docs/api/");
-    addPackageUrl("com.vividsolutions.jts.",
-      "http://tsusiatsoftware.net/jts/javadoc/");
+    addPackageUrl("com.vividsolutions.jts.", "http://tsusiatsoftware.net/jts/javadoc/");
   }
 
   public static void addPackageUrl(final String packagePrefix, final String url) {
     PACKAGE_URLS.put(packagePrefix, url);
   }
 
-  public static void anchor(final XmlWriter writer, final String name,
-    final String title) {
+  public static void anchor(final XmlWriter writer, final String name, final String title) {
     writer.startTag(HtmlUtil.A);
     writer.attribute(HtmlUtil.ATTR_NAME, name);
     writer.text(title);
@@ -53,22 +51,21 @@ public class DocletUtil {
   }
 
   public static void copyFiles(final String destDir) {
-    for (final String name : Arrays.asList("javadoc.css", "javadoc.js",
-      "javadoc.js", "prettify.js", "prettify.css")) {
-      FileUtil.copy(
-        DocletUtil.class.getResourceAsStream("/com/revolsys/doclet/" + name),
-        new File(destDir, name));
+    for (final String name : Arrays.asList("javadoc.css", "javadoc.js", "javadoc.js",
+      "prettify.js", "prettify.css")) {
+      FileUtil.copy(DocletUtil.class.getResourceAsStream("/com/revolsys/doclet/" + name), new File(
+        destDir, name));
     }
   }
 
-  public static void description(final XmlWriter writer,
-    final ClassDoc containingClass, final Doc doc) {
+  public static void description(final XmlWriter writer, final ClassDoc containingClass,
+    final Doc doc) {
     final Tag[] tags = doc.inlineTags();
     description(writer, containingClass, tags);
   }
 
-  public static void description(final XmlWriter writer,
-    final ClassDoc containingClass, final Tag[] tags) {
+  public static void description(final XmlWriter writer, final ClassDoc containingClass,
+    final Tag[] tags) {
     if (tags != null && tags.length > 0) {
       for (final Tag tag : tags) {
         final String kind = tag.kind();
@@ -82,9 +79,8 @@ public class DocletUtil {
     }
   }
 
-  public static void descriptionTd(final XmlWriter writer,
-    final ClassDoc containingClass, final Map<String, Tag[]> descriptions,
-    final String name) {
+  public static void descriptionTd(final XmlWriter writer, final ClassDoc containingClass,
+    final Map<String, Tag[]> descriptions, final String name) {
     writer.startTag(HtmlUtil.TD);
     writer.attribute(HtmlUtil.ATTR_CLASS, "description");
     final Tag[] description = descriptions.get(name);
@@ -92,8 +88,7 @@ public class DocletUtil {
     writer.endTagLn(HtmlUtil.TD);
   }
 
-  public static void documentationReturn(final XmlWriter writer,
-    final MethodDoc method) {
+  public static void documentationReturn(final XmlWriter writer, final MethodDoc method) {
     final Type type = method.returnType();
     if (type != null && !"void".equals(type.qualifiedTypeName())) {
       Tag[] descriptionTags = null;
@@ -137,8 +132,7 @@ public class DocletUtil {
     }
   }
 
-  public static AnnotationDesc getAnnotation(
-    final AnnotationDesc[] annotations, final String name) {
+  public static AnnotationDesc getAnnotation(final AnnotationDesc[] annotations, final String name) {
     for (final AnnotationDesc annotation : annotations) {
       final AnnotationTypeDoc annotationType = annotation.annotationType();
       final String annotationName = qualifiedName(annotationType);
@@ -149,8 +143,7 @@ public class DocletUtil {
     return null;
   }
 
-  public static AnnotationDesc getAnnotation(final ProgramElementDoc doc,
-    final String name) {
+  public static AnnotationDesc getAnnotation(final ProgramElementDoc doc, final String name) {
     final AnnotationDesc[] annotations = doc.annotations();
     return getAnnotation(annotations, name);
   }
@@ -168,8 +161,7 @@ public class DocletUtil {
     return null;
   }
 
-  public static Map<String, Tag[]> getParameterDescriptions(
-    final ExecutableMemberDoc method) {
+  public static Map<String, Tag[]> getParameterDescriptions(final ExecutableMemberDoc method) {
     final Map<String, Tag[]> descriptions = new HashMap<String, Tag[]>();
     for (final ParamTag tag : method.paramTags()) {
       final String parameterName = tag.parameterName();
@@ -179,14 +171,12 @@ public class DocletUtil {
     return descriptions;
   }
 
-  public static boolean hasAnnotation(final AnnotationDesc[] annotations,
-    final String name) {
+  public static boolean hasAnnotation(final AnnotationDesc[] annotations, final String name) {
     final AnnotationDesc annotation = getAnnotation(annotations, name);
     return annotation != null;
   }
 
-  public static boolean hasAnnotation(final ProgramElementDoc doc,
-    final String name) {
+  public static boolean hasAnnotation(final ProgramElementDoc doc, final String name) {
     final AnnotationDesc annotation = getAnnotation(doc, name);
     return annotation != null;
   }
@@ -194,11 +184,9 @@ public class DocletUtil {
   public static void head(final XmlWriter writer, final String docTitle) {
     writer.startTag(HtmlUtil.HEAD);
     writer.element(HtmlUtil.TITLE, docTitle);
-    HtmlUtil.serializeCss(
-      writer,
+    HtmlUtil.serializeCss(writer,
       "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css");
-    HtmlUtil.serializeCss(
-      writer,
+    HtmlUtil.serializeCss(writer,
       "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css");
     HtmlUtil.serializeCss(writer, "prettify.css");
     HtmlUtil.serializeCss(writer, "javadoc.css");
@@ -206,8 +194,7 @@ public class DocletUtil {
       "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js");
     HtmlUtil.serializeScriptLink(writer,
       "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js");
-    HtmlUtil.serializeScriptLink(
-      writer,
+    HtmlUtil.serializeScriptLink(writer,
       "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js");
     HtmlUtil.serializeScriptLink(writer, "prettify.js");
     HtmlUtil.serializeScriptLink(writer, "javadoc.js");
@@ -217,14 +204,12 @@ public class DocletUtil {
   public static boolean isTypeIncluded(final Type type) {
     final ClassDoc classDoc = type.asClassDoc();
     final ClassDoc annotationDoc = type.asAnnotationTypeDoc();
-    final boolean included = annotationDoc != null
-      && annotationDoc.isIncluded() || classDoc != null
-      && classDoc.isIncluded();
+    final boolean included = annotationDoc != null && annotationDoc.isIncluded()
+      || classDoc != null && classDoc.isIncluded();
     return included;
   }
 
-  public static void label(final XmlWriter writer, final String label,
-    final boolean code) {
+  public static void label(final XmlWriter writer, final String label, final boolean code) {
     if (code) {
       writer.startTag(HtmlUtil.CODE);
     }
@@ -234,8 +219,8 @@ public class DocletUtil {
     }
   }
 
-  public static void link(final XmlWriter writer, final String url,
-    final String label, final boolean code) {
+  public static void link(final XmlWriter writer, final String url, final String label,
+    final boolean code) {
     final boolean hasUrl = StringUtils.hasText(url);
     if (hasUrl) {
       writer.startTag(HtmlUtil.A);
@@ -282,8 +267,8 @@ public class DocletUtil {
     }
   }
 
-  public static void seeTag(final XmlWriter writer,
-    final ClassDoc containingClass, final SeeTag seeTag) {
+  public static void seeTag(final XmlWriter writer, final ClassDoc containingClass,
+    final SeeTag seeTag) {
     final String name = seeTag.name();
     if (name.startsWith("@link") || name.equals("@see")) {
       final boolean code = !name.equalsIgnoreCase("@linkplain");
@@ -338,8 +323,7 @@ public class DocletUtil {
             if (referencedMember instanceof ExecutableMemberDoc) {
               if (referencedMemberName.indexOf('(') < 0) {
                 final ExecutableMemberDoc executableDoc = (ExecutableMemberDoc)referencedMember;
-                referencedMemberName = referencedMemberName
-                  + executableDoc.signature();
+                referencedMemberName = referencedMemberName + executableDoc.signature();
               }
               if (StringUtils.hasText(referencedMemberName)) {
                 label = referencedMemberName;
@@ -364,6 +348,17 @@ public class DocletUtil {
     }
   }
 
+  public static void tagWithAnchor(final XmlWriter writer, final QName tag, final String name,
+    final String title) {
+    writer.startTag(tag);
+    writer.attribute(HtmlUtil.ATTR_CLASS, "title");
+    writer.startTag(HtmlUtil.A);
+    writer.attribute(HtmlUtil.ATTR_NAME, name);
+    writer.text(title);
+    writer.endTag(HtmlUtil.A);
+    writer.endTag(tag);
+  }
+
   public static void title(final XmlWriter writer, final String title) {
     writer.startTag(HtmlUtil.DIV);
     writer.attribute(HtmlUtil.ATTR_CLASS, "title");
@@ -371,8 +366,7 @@ public class DocletUtil {
     writer.endTagLn(HtmlUtil.DIV);
   }
 
-  public static void title(final XmlWriter writer, final String name,
-    final String title) {
+  public static void title(final XmlWriter writer, final String name, final String title) {
     writer.startTag(HtmlUtil.DIV);
     writer.attribute(HtmlUtil.ATTR_CLASS, "title");
     anchor(writer, name, title);
@@ -437,16 +431,5 @@ public class DocletUtil {
       }
     }
     writer.text(type.dimension());
-  }
-
-  public static void tagWithAnchor(final XmlWriter writer, final QName tag,
-    final String name, final String title) {
-    writer.startTag(tag);
-    writer.attribute(HtmlUtil.ATTR_CLASS, "title");
-    writer.startTag(HtmlUtil.A);
-    writer.attribute(HtmlUtil.ATTR_NAME, name);
-    writer.text(title);
-    writer.endTag(HtmlUtil.A);
-    writer.endTag(tag);
   }
 }

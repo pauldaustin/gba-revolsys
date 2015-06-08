@@ -31,8 +31,8 @@ public class PolygonNodeRemovalVisitor implements Visitor<Node<Record>> {
 
   private final DataObjectGraph graph;
 
-  public PolygonNodeRemovalVisitor(final RecordDefinition metaData,
-    final DataObjectGraph graph, final Collection<String> excludedAttributes) {
+  public PolygonNodeRemovalVisitor(final RecordDefinition metaData, final DataObjectGraph graph,
+    final Collection<String> excludedAttributes) {
     super();
     this.graph = graph;
     if (excludedAttributes != null) {
@@ -43,13 +43,12 @@ public class PolygonNodeRemovalVisitor implements Visitor<Node<Record>> {
   /**
    * Check the direction of the edge by checking following the edge to the TO
    * node until the degree of the node != 2 of the next edge is reversed.
-   * 
+   *
    * @param node
    * @param edge The edge.
    * @return The type of edge.
    */
-  private EdgeType checkDirection(final Node<Record> node,
-    final Edge<Record> edge) {
+  private EdgeType checkDirection(final Node<Record> node, final Edge<Record> edge) {
     final Node<Record> toNode = edge.getToNode();
     final int degree = toNode.getDegree();
     if (degree == 1) {
@@ -72,41 +71,9 @@ public class PolygonNodeRemovalVisitor implements Visitor<Node<Record>> {
 
   }
 
-  /**
-   * Check to see if one of the two edges can be reversed and add the edge to
-   * the list of resersedEdges.
-   * 
-   * @param node
-   * @param reversedEdges The edges that can be reversed.
-   * @param edge1 The first edge.
-   * @param edge2 The second edge.
-   * @return True if one of the edges can be reversed, false otherwise.
-   */
-  private boolean fixReversedEdges(final Node<Record> node,
-    final Set<Edge<Record>> reversedEdges, final Edge<Record> edge1,
-    final Edge<Record> edge2) {
-    final EdgeType edge1Direction = checkDirection(node, edge1);
-    final EdgeType edge2Direction = checkDirection(node, edge2);
-    if (edge1Direction == edge2Direction) {
-      return false;
-    } else if (edge1Direction == EdgeType.BACKWARDS) {
-      reversedEdges.add(edge1);
-      return true;
-    } else if (edge2Direction == EdgeType.BACKWARDS) {
-      reversedEdges.add(edge2);
-      return true;
-    } else if (edge1Direction == EdgeType.END_DEGREE_N
-      || edge1Direction == EdgeType.END_DEGREE_N) {
-      return false;
-    } else {
-      return false;
-    }
-  }
-
   @Override
   public boolean visit(final Node<Record> node) {
-    final Set<Edge<Record>> edges = new LinkedHashSet<Edge<Record>>(
-      node.getEdges());
+    final Set<Edge<Record>> edges = new LinkedHashSet<Edge<Record>>(node.getEdges());
     while (edges.size() > 1) {
       final Edge<Record> edge = edges.iterator().next();
       final Record object = edge.getObject();
@@ -115,8 +82,7 @@ public class PolygonNodeRemovalVisitor implements Visitor<Node<Record>> {
         final Record matchObject = matchEdge.getObject();
         if (edge != matchEdge) {
           if (edge.isForwards(node) != matchEdge.isForwards(node)) {
-            if (EqualsInstance.INSTANCE.equals(object, matchObject,
-              excludedAttributes)) {
+            if (EqualsInstance.INSTANCE.equals(object, matchObject, this.excludedAttributes)) {
               matchedEdges.add(matchEdge);
             }
           }
@@ -125,9 +91,9 @@ public class PolygonNodeRemovalVisitor implements Visitor<Node<Record>> {
       if (matchedEdges.size() == 1) {
         final Edge<Record> matchedEdge = matchedEdges.iterator().next();
         if (edge.isForwards(node)) {
-          graph.merge(node, matchedEdge, edge);
+          this.graph.merge(node, matchedEdge, edge);
         } else {
-          graph.merge(node, edge, matchedEdge);
+          this.graph.merge(node, edge, matchedEdge);
         }
       }
       edges.removeAll(matchedEdges);

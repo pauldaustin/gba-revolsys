@@ -17,8 +17,7 @@ public class FormAllFieldsModifiedPredicate implements HighlightPredicate {
 
   public static void add(final DataObjectLayerForm form, final BaseJxTable table) {
     final DataObjectLayerAttributesTableModel model = table.getTableModel();
-    final FormAllFieldsModifiedPredicate predicate = new FormAllFieldsModifiedPredicate(
-      form, model);
+    final FormAllFieldsModifiedPredicate predicate = new FormAllFieldsModifiedPredicate(form, model);
     ModifiedAttributePredicate.addModifiedHighlighters(table, predicate);
   }
 
@@ -33,11 +32,10 @@ public class FormAllFieldsModifiedPredicate implements HighlightPredicate {
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToModel(adapter.row);
-      final String fieldName = model.getFieldName(rowIndex);
+      final String fieldName = this.model.getFieldName(rowIndex);
       if (fieldName != null) {
         final DataObjectLayerForm form = this.form.get();
         if (form.isFieldValid(fieldName)) {

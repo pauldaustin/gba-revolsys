@@ -19,19 +19,18 @@ import com.esri.sde.sdk.client.SeShapeFilter;
 import com.esri.sde.sdk.client.SeSqlConstruct;
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.query.Query;
+import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
-import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public class ArcSdeBinaryGeometryQueryIterator extends
-  AbstractIterator<Record> {
+public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> {
 
   private SeConnection connection;
 
@@ -51,10 +50,8 @@ public class ArcSdeBinaryGeometryQueryIterator extends
 
   private ArcSdeBinaryGeometryDataStoreUtil sdeUtil;
 
-  public ArcSdeBinaryGeometryQueryIterator(
-    final ArcSdeBinaryGeometryDataStoreUtil sdeUtil,
-    final JdbcDataObjectStore dataStore, final Query query,
-    final Map<String, Object> properties) {
+  public ArcSdeBinaryGeometryQueryIterator(final ArcSdeBinaryGeometryDataStoreUtil sdeUtil,
+    final JdbcDataObjectStore dataStore, final Query query, final Map<String, Object> properties) {
     this.sdeUtil = sdeUtil;
     this.dataObjectFactory = query.getProperty("recordFactory");
     if (this.dataObjectFactory == null) {
@@ -68,11 +65,11 @@ public class ArcSdeBinaryGeometryQueryIterator extends
   @Override
   @PreDestroy
   public void doClose() {
-    if (sdeUtil != null) {
+    if (this.sdeUtil != null) {
       try {
-        this.seQuery = sdeUtil.close(seQuery);
+        this.seQuery = this.sdeUtil.close(this.seQuery);
       } finally {
-        this.connection = sdeUtil.close(connection);
+        this.connection = this.sdeUtil.close(this.connection);
       }
     }
     this.sdeUtil = null;
@@ -97,12 +94,11 @@ public class ArcSdeBinaryGeometryQueryIterator extends
       }
     }
     if (this.metaData != null) {
-      tableName = sdeUtil.getTableName(this.metaData);
+      tableName = this.sdeUtil.getTableName(this.metaData);
     }
     try {
 
-      final List<String> attributeNames = new ArrayList<String>(
-        this.query.getFieldNames());
+      final List<String> attributeNames = new ArrayList<String>(this.query.getFieldNames());
       if (attributeNames.isEmpty()) {
         this.attributes.addAll(this.metaData.getFields());
         attributeNames.addAll(this.metaData.getFieldNames());
@@ -121,27 +117,26 @@ public class ArcSdeBinaryGeometryQueryIterator extends
         }
       }
 
-      connection = this.sdeUtil.createSeConnection();
+      this.connection = this.sdeUtil.createSeConnection();
       final SeSqlConstruct sqlConstruct = new SeSqlConstruct(tableName);
       final String[] columnNames = attributeNames.toArray(new String[0]);
-      this.seQuery = new SeQuery(connection, columnNames, sqlConstruct);
+      this.seQuery = new SeQuery(this.connection, columnNames, sqlConstruct);
       BoundingBox boundingBox = this.query.getBoundingBox();
       if (boundingBox != null) {
-        final SeLayer layer = new SeLayer(connection, tableName,
+        final SeLayer layer = new SeLayer(this.connection, tableName,
           this.metaData.getGeometryFieldName());
 
         final GeometryFactory geometryFactory = this.metaData.getGeometryFactory();
         boundingBox = boundingBox.convert(geometryFactory);
-        final SeEnvelope envelope = new SeEnvelope(boundingBox.getMinX(),
-          boundingBox.getMinY(), boundingBox.getMaxX(), boundingBox.getMaxY());
+        final SeEnvelope envelope = new SeEnvelope(boundingBox.getMinX(), boundingBox.getMinY(),
+          boundingBox.getMaxX(), boundingBox.getMaxY());
         final SeShape shape = new SeShape(layer.getCoordRef());
         shape.generateRectangle(envelope);
         final SeShapeFilter filter = new SeShapeFilter(tableName,
           this.metaData.getGeometryFieldName(), shape, SeFilter.METHOD_ENVP);
-        this.seQuery.setSpatialConstraints(SeQuery.SE_SPATIAL_FIRST, false,
-          new SeFilter[] {
-            filter
-          });
+        this.seQuery.setSpatialConstraints(SeQuery.SE_SPATIAL_FIRST, false, new SeFilter[] {
+          filter
+        });
       }
       // TODO where clause
       // TODO how to load geometry for non-spatial queries
@@ -155,7 +150,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
         this.metaData = newMetaData;
       }
     } catch (final SeException e) {
-      this.seQuery = sdeUtil.close(seQuery);
+      this.seQuery = this.sdeUtil.close(this.seQuery);
       throw new RuntimeException("Error performing query", e);
     }
   }
@@ -173,7 +168,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends
       if (this.seQuery != null) {
         final SeRow row = this.seQuery.fetch();
         if (row != null) {
-          final Record object = getNextRecord(metaData, row);
+          final Record object = getNextRecord(this.metaData, row);
           if (this.statistics != null) {
             this.statistics.add(object);
           }
@@ -194,13 +189,12 @@ public class ArcSdeBinaryGeometryQueryIterator extends
     }
   }
 
-  private Record getNextRecord(final RecordDefinition metaData,
-    final SeRow row) {
+  private Record getNextRecord(final RecordDefinition metaData, final SeRow row) {
     final Record object = this.dataObjectFactory.createRecord(metaData);
     if (object != null) {
       object.setState(RecordState.Initalizing);
       for (int columnIndex = 0; columnIndex < this.attributes.size(); columnIndex++) {
-        sdeUtil.setValueFromRow(object, row, columnIndex);
+        this.sdeUtil.setValueFromRow(object, row, columnIndex);
       }
       object.setState(RecordState.Persisted);
       this.dataStore.addStatistic("query", object);

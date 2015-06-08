@@ -27,7 +27,7 @@ import com.vividsolutions.jts.geom.Coordinate;
  * result in invalid topology beging created, so the number and location of
  * snapped vertices is decided using heuristics to determine when it is safe to
  * snap. This can result in some potential snaps being omitted, however.
- * 
+ *
  * @author Martin Davis
  * @version 1.7
  */
@@ -37,7 +37,7 @@ public class GeometrySnapper {
   /**
    * Estimates the snap tolerance for a Geometry, taking into account its
    * precision model.
-   * 
+   *
    * @param g a Geometry
    * @return the estimated snap tolerance
    */
@@ -54,7 +54,7 @@ public class GeometrySnapper {
     final GeometryFactory pm = g.getGeometryFactory();
     final double scaleXY = pm.getScaleXY();
     if (scaleXY > 0) {
-      final double fixedSnapTol = (1 / scaleXY) * 2 / 1.415;
+      final double fixedSnapTol = 1 / scaleXY * 2 / 1.415;
       if (fixedSnapTol > snapTolerance) {
         snapTolerance = fixedSnapTol;
       }
@@ -62,10 +62,8 @@ public class GeometrySnapper {
     return snapTolerance;
   }
 
-  public static double computeOverlaySnapTolerance(final Geometry g0,
-    final Geometry g1) {
-    return Math.min(computeOverlaySnapTolerance(g0),
-      computeOverlaySnapTolerance(g1));
+  public static double computeOverlaySnapTolerance(final Geometry g0, final Geometry g1) {
+    return Math.min(computeOverlaySnapTolerance(g0), computeOverlaySnapTolerance(g1));
   }
 
   public static double computeSizeBasedSnapTolerance(final Geometry g) {
@@ -77,14 +75,13 @@ public class GeometrySnapper {
 
   /**
    * Snaps two geometries together with a given tolerance.
-   * 
+   *
    * @param g0 a geometry to snap
    * @param g1 a geometry to snap
    * @param snapTolerance the tolerance to use
    * @return the snapped geometries
    */
-  public static Geometry[] snap(final Geometry g0, final Geometry g1,
-    final double snapTolerance) {
+  public static Geometry[] snap(final Geometry g0, final Geometry g1, final double snapTolerance) {
     final Geometry[] snapGeom = new Geometry[2];
     final GeometrySnapper snapper0 = new GeometrySnapper(g0);
     snapGeom[0] = snapper0.snapTo(g1, snapTolerance);
@@ -101,8 +98,8 @@ public class GeometrySnapper {
     return snapGeom;
   }
 
-  public static Geometry snapToSelf(final Geometry g0,
-    final double snapTolerance, final boolean cleanResult) {
+  public static Geometry snapToSelf(final Geometry g0, final double snapTolerance,
+    final boolean cleanResult) {
     final GeometrySnapper snapper0 = new GeometrySnapper(g0);
     return snapper0.snapToSelf(snapTolerance, cleanResult);
   }
@@ -111,7 +108,7 @@ public class GeometrySnapper {
 
   /**
    * Creates a new snapper acting on the given geometry
-   * 
+   *
    * @param srcGeom the geometry to snap
    */
   public GeometrySnapper(final Geometry srcGeom) {
@@ -127,19 +124,6 @@ public class GeometrySnapper {
       }
     }
     return minSegLen;
-  }
-
-  /**
-   * Computes the snap tolerance based on the input geometries.
-   * 
-   * @param ringPts
-   * @return
-   */
-  private double computeSnapTolerance(final Coordinate[] ringPts) {
-    final double minSegLen = computeMinimumSegmentLength(ringPts);
-    // use a small percentage of this to be safe
-    final double snapTol = minSegLen / 10;
-    return snapTol;
   }
 
   public List<Coordinates> extractTargetCoordinates(final Geometry g) {
@@ -158,32 +142,29 @@ public class GeometrySnapper {
   /**
    * Snaps the vertices in the component {@link LineString}s of the source
    * geometry to the vertices of the given snap geometry.
-   * 
+   *
    * @param snapGeom a geometry to snap the source to
    * @return a new snapped Geometry
    */
   public Geometry snapTo(final Geometry snapGeom, final double snapTolerance) {
     final List<Coordinates> snapPts = extractTargetCoordinates(snapGeom);
 
-    final SnapTransformer snapTrans = new SnapTransformer(snapTolerance,
-      snapPts);
-    return snapTrans.transform(srcGeom);
+    final SnapTransformer snapTrans = new SnapTransformer(snapTolerance, snapPts);
+    return snapTrans.transform(this.srcGeom);
   }
 
   /**
    * Snaps the vertices in the component {@link LineString}s of the source
    * geometry to the vertices of the given snap geometry.
-   * 
+   *
    * @param snapGeom a geometry to snap the source to
    * @return a new snapped Geometry
    */
-  public Geometry snapToSelf(final double snapTolerance,
-    final boolean cleanResult) {
-    final List<Coordinates> snapPts = extractTargetCoordinates(srcGeom);
+  public Geometry snapToSelf(final double snapTolerance, final boolean cleanResult) {
+    final List<Coordinates> snapPts = extractTargetCoordinates(this.srcGeom);
 
-    final SnapTransformer snapTrans = new SnapTransformer(snapTolerance,
-      snapPts, true);
-    final Geometry snappedGeom = snapTrans.transform(srcGeom);
+    final SnapTransformer snapTrans = new SnapTransformer(snapTolerance, snapPts, true);
+    final Geometry snappedGeom = snapTrans.transform(this.srcGeom);
     Geometry result = snappedGeom;
     if (cleanResult && result instanceof Polygonal) {
       // TODO: use better cleaning approach
@@ -213,26 +194,22 @@ class SnapTransformer extends GeometryTransformer {
     this.isSelfSnap = isSelfSnap;
   }
 
-  private List<Coordinates> snapLine(final CoordinatesList srcPts,
-    final List<Coordinates> snapPts) {
-    final LineStringSnapper snapper = new LineStringSnapper(srcPts,
-      snapTolerance);
-    snapper.setAllowSnappingToSourceVertices(isSelfSnap);
+  private List<Coordinates> snapLine(final CoordinatesList srcPts, final List<Coordinates> snapPts) {
+    final LineStringSnapper snapper = new LineStringSnapper(srcPts, this.snapTolerance);
+    snapper.setAllowSnappingToSourceVertices(this.isSelfSnap);
     return snapper.snapTo(snapPts);
   }
 
   @Override
-  protected Coordinates transformCoordinates(final Coordinates coords,
-    final Geometry parent) {
-    final List<Coordinates> newPts = snapLine(
-      new ListCoordinatesList(coords.getNumAxis(), coords), snapPts);
+  protected Coordinates transformCoordinates(final Coordinates coords, final Geometry parent) {
+    final List<Coordinates> newPts = snapLine(new ListCoordinatesList(coords.getNumAxis(), coords),
+      this.snapPts);
     return new DoubleCoordinates(newPts.get(0));
   }
 
   @Override
-  protected CoordinatesList transformCoordinates(final CoordinatesList coords,
-    final Geometry parent) {
-    final List<Coordinates> newPts = snapLine(coords, snapPts);
+  protected CoordinatesList transformCoordinates(final CoordinatesList coords, final Geometry parent) {
+    final List<Coordinates> newPts = snapLine(coords, this.snapPts);
     return new DoubleCoordinatesList(coords.getNumAxis(), newPts);
   }
 }

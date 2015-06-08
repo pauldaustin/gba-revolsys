@@ -6,7 +6,7 @@ public interface Coordinates extends Comparable<Coordinates>, Cloneable {
    * point to another point. The angle is relative to the positive x-axis
    * relative to the positive X-axis. The angle will be in the range -PI -> PI
    * where negative values have a clockwise orientation.
-   * 
+   *
    * @return The angle in radians.
    */
   double angle2d(Coordinates other);

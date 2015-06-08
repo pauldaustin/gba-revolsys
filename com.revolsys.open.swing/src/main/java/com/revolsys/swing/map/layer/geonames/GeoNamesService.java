@@ -28,8 +28,7 @@ public class GeoNamesService {
   public static final RecordDefinition WIKIPEDIA_METADATA;
 
   static {
-    final RecordDefinitionImpl meta = new RecordDefinitionImpl(
-      Path.toPath("/geoname.org", "name"));
+    final RecordDefinitionImpl meta = new RecordDefinitionImpl(Path.toPath("/geoname.org", "name"));
     meta.addField("geonameId", DataTypes.STRING, false);
     meta.addField("name", DataTypes.STRING, false);
     meta.addField("fcode", DataTypes.STRING, false);
@@ -48,8 +47,8 @@ public class GeoNamesService {
     meta.addField("geometry", DataTypes.POINT, false);
     NAME_METADATA = meta;
 
-    final RecordDefinitionImpl wikipediaMetaData = new RecordDefinitionImpl(
-      Path.toPath("/geoname.org", "wikipedia"));
+    final RecordDefinitionImpl wikipediaMetaData = new RecordDefinitionImpl(Path.toPath(
+      "/geoname.org", "wikipedia"));
     wikipediaMetaData.addField("summary", DataTypes.STRING, false);
     wikipediaMetaData.addField("title", DataTypes.STRING, false);
     wikipediaMetaData.addField("wikipediaUrl", DataTypes.STRING, false);
@@ -92,24 +91,20 @@ public class GeoNamesService {
     final double height = geographicBoundingBox.getHeight();
     final double width = geographicBoundingBox.getWidth();
     final double diagonal = Math.sqrt(width * width + height * height);
-    final double radiusKm = cs.getUnit()
-      .getConverterTo(SI.RADIAN)
-      .convert(diagonal)
-      * radius / 1000;
+    final double radiusKm = cs.getUnit().getConverterTo(SI.RADIAN).convert(diagonal) * radius
+      / 1000;
 
     params.put("lat", geographicBoundingBox.getCentreY());
     params.put("lng", geographicBoundingBox.getCentreX());
     params.put("radius", radiusKm);
     params.put("maxRows", "50");
-    final String searchUrlString = UrlUtil.getUrl(
-      this.findNearbyBoundingBoxJsonUrl, params);
+    final String searchUrlString = UrlUtil.getUrl(this.findNearbyBoundingBoxJsonUrl, params);
     try {
       final URL searchUrl = new URL(searchUrlString);
       final Map<String, Object> result = JsonParser.getMap(searchUrl.openStream());
       return mapToObjects(NAME_METADATA, result);
     } catch (final IOException e) {
-      throw new IllegalArgumentException("Unable to connect to URL:"
-        + searchUrlString);
+      throw new IllegalArgumentException("Unable to connect to URL:" + searchUrlString);
     }
   }
 
@@ -122,25 +117,21 @@ public class GeoNamesService {
     params.put("south", geographicBoundingBox.getMinY());
     params.put("west", geographicBoundingBox.getMinX());
     params.put("maxRows", "50");
-    final String searchUrlString = UrlUtil.getUrl(
-      this.wikipediaBoundingBoxJsonUrl, params);
+    final String searchUrlString = UrlUtil.getUrl(this.wikipediaBoundingBoxJsonUrl, params);
     try {
       final URL searchUrl = new URL(searchUrlString);
       final Map<String, Object> result = JsonParser.getMap(searchUrl.openStream());
       return mapToObjects(WIKIPEDIA_METADATA, result);
     } catch (final IOException e) {
-      throw new IllegalArgumentException("Unable to connect to URL:"
-        + searchUrlString);
+      throw new IllegalArgumentException("Unable to connect to URL:" + searchUrlString);
     }
   }
 
   private void init(final URL url) {
     try {
       this.searchJsonUrl = new URL(url.toString() + "/searchJSON");
-      this.wikipediaBoundingBoxJsonUrl = new URL(url.toString()
-        + "/wikipediaBoundingBoxJSON");
-      this.findNearbyBoundingBoxJsonUrl = new URL(url.toString()
-        + "/findNearbyJSON");
+      this.wikipediaBoundingBoxJsonUrl = new URL(url.toString() + "/wikipediaBoundingBoxJSON");
+      this.findNearbyBoundingBoxJsonUrl = new URL(url.toString() + "/findNearbyJSON");
     } catch (final MalformedURLException e) {
       throw new IllegalArgumentException("Invalid URL:" + url);
     }
@@ -166,8 +157,7 @@ public class GeoNamesService {
       if (elevation != null) {
         coordinate.z = elevation.doubleValue();
       }
-      dataObject.setGeometryValue(GeometryFactory.getFactory().createPoint(
-        coordinate));
+      dataObject.setGeometryValue(GeometryFactory.getFactory().createPoint(coordinate));
       results.add(dataObject);
     }
     return results;
@@ -177,8 +167,7 @@ public class GeoNamesService {
     return searchByName(name, null);
   }
 
-  public List<Record> searchByName(final String name,
-    final String countryCode) {
+  public List<Record> searchByName(final String name, final String countryCode) {
     final Map<String, String> params = new HashMap<String, String>();
     params.put("name", name);
     params.put("style", "FULL");
@@ -189,8 +178,7 @@ public class GeoNamesService {
       final Map<String, Object> result = JsonParser.getMap(searchUrl.openStream());
       return mapToObjects(NAME_METADATA, result);
     } catch (final IOException e) {
-      throw new IllegalArgumentException("Unable to connect to URL:"
-        + searchUrlString);
+      throw new IllegalArgumentException("Unable to connect to URL:" + searchUrlString);
     }
   }
 }

@@ -87,10 +87,9 @@ public class TopologyValidationError {
    * Messages corresponding to error codes
    */
   public static final String[] errMsg = {
-    "Topology Validation Error", "Repeated Point", "Hole lies outside shell",
-    "Holes are nested", "Interior is disconnected", "Self-intersection",
-    "Ring Self-intersection", "Nested shells", "Duplicate Rings",
-    "Too few distinct points in geometry component", "Invalid Coordinate",
+    "Topology Validation Error", "Repeated Point", "Hole lies outside shell", "Holes are nested",
+    "Interior is disconnected", "Self-intersection", "Ring Self-intersection", "Nested shells",
+    "Duplicate Rings", "Too few distinct points in geometry component", "Invalid Coordinate",
     "Ring is not closed"
   };
 
@@ -127,7 +126,7 @@ public class TopologyValidationError {
    * @return a {@link Coordinate} on the input geometry
    */
   public Coordinates getCoordinate() {
-    return pt;
+    return this.pt;
   }
 
   /**
@@ -136,7 +135,7 @@ public class TopologyValidationError {
    * @return the error type
    */
   public int getErrorType() {
-    return errorType;
+    return this.errorType;
   }
 
   /**
@@ -146,7 +145,7 @@ public class TopologyValidationError {
    * @return the error message
    */
   public String getMessage() {
-    return errMsg[errorType];
+    return errMsg[this.errorType];
   }
 
   /**
@@ -156,8 +155,8 @@ public class TopologyValidationError {
   @Override
   public String toString() {
     String locStr = "";
-    if (pt != null) {
-      locStr = " at or near point " + pt;
+    if (this.pt != null) {
+      locStr = " at or near point " + this.pt;
     }
     return getMessage() + locStr;
   }

@@ -27,10 +27,9 @@ public class DataObjectStoreTableTreeNode extends LazyLoadTreeNode {
   private static final MenuFactory MENU = new MenuFactory();
 
   static {
-    for (final String geometryType : Arrays.asList("Point", "MultiPoint",
-      "LineString", "MultiLineString", "Polygon", "MultiPolygon")) {
-      ICONS_GEOMETRY.put(geometryType,
-        Icons.getIcon("table_" + geometryType.toLowerCase()));
+    for (final String geometryType : Arrays.asList("Point", "MultiPoint", "LineString",
+      "MultiLineString", "Polygon", "MultiPolygon")) {
+      ICONS_GEOMETRY.put(geometryType, Icons.getIcon("table_" + geometryType.toLowerCase()));
     }
 
     MENU.addMenuItemTitleIcon("default", "Add Layer", "map_add", null,
@@ -53,15 +52,13 @@ public class DataObjectStoreTableTreeNode extends LazyLoadTreeNode {
     // TODO different layer groups?
   }
 
-  public DataObjectStoreTableTreeNode(
-    final DataObjectStoreSchemaTreeNode parent, final String typePath,
-    final String geometryType) {
+  public DataObjectStoreTableTreeNode(final DataObjectStoreSchemaTreeNode parent,
+    final String typePath, final String geometryType) {
     super(parent, typePath);
     if (geometryType == null) {
       setType("Data Table");
     } else {
-      setType("Data Table (" + CaseConverter.toCapitalizedWords(geometryType)
-        + ")");
+      setType("Data Table (" + CaseConverter.toCapitalizedWords(geometryType) + ")");
     }
     setAllowsChildren(false);
     setParent(parent);

@@ -19,7 +19,7 @@ public class DataObjectJexlContext implements JexlContext {
 
   @Override
   public Map getVars() {
-    return map;
+    return this.map;
   }
 
   public void setObject(final Record object) {

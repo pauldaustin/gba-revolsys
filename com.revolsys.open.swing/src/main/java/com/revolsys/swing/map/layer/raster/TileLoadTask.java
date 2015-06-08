@@ -20,15 +20,15 @@ public class TileLoadTask implements Runnable {
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometryFactory;
+    return this.geometryFactory;
   }
 
   public MapTile getMapTile() {
-    return mapTile;
+    return this.mapTile;
   }
 
   public TiledImageLayerRenderer getRenderer() {
-    return renderer;
+    return this.renderer;
   }
 
   @Override
@@ -37,8 +37,7 @@ public class TileLoadTask implements Runnable {
       this.mapTile.loadImage(this.geometryFactory);
       this.renderer.setLoaded(this);
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(getClass()).error(
-        "Unable to load " + this.mapTile, e);
+      LoggerFactory.getLogger(getClass()).error("Unable to load " + this.mapTile, e);
     }
   }
 

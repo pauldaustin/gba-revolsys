@@ -27,29 +27,24 @@ public final class ProjectionFactory {
   private static final Map<String, Class<? extends CoordinatesProjection>> projectionClasses = new HashMap<String, Class<? extends CoordinatesProjection>>();
 
   static {
-    registerCoordinatesProjection(Projection.ALBERS_EQUAL_AREA,
-      AlbersConicEqualArea.class);
-    registerCoordinatesProjection(Projection.TRANSVERSE_MERCATOR,
-      TransverseMercator.class);
+    registerCoordinatesProjection(Projection.ALBERS_EQUAL_AREA, AlbersConicEqualArea.class);
+    registerCoordinatesProjection(Projection.TRANSVERSE_MERCATOR, TransverseMercator.class);
     registerCoordinatesProjection(Projection.MERCATOR, Mercator1SP.class);
-    registerCoordinatesProjection(
-      Projection.POPULAR_VISUALISATION_PSEUDO_MERCATOR, WebMercator.class);
+    registerCoordinatesProjection(Projection.POPULAR_VISUALISATION_PSEUDO_MERCATOR,
+      WebMercator.class);
     registerCoordinatesProjection(Projection.MERCATOR_1SP, Mercator1SP.class);
     registerCoordinatesProjection(Projection.MERCATOR_2SP, Mercator2SP.class);
-    registerCoordinatesProjection(Projection.MERCATOR_1SP_SPHERICAL,
-      Mercator1SPSpherical.class);
+    registerCoordinatesProjection(Projection.MERCATOR_1SP_SPHERICAL, Mercator1SPSpherical.class);
     registerCoordinatesProjection(Projection.LAMBERT_CONIC_CONFORMAL_1SP,
       LambertConicConformal1SP.class);
     registerCoordinatesProjection(Projection.LAMBERT_CONIC_CONFORMAL_2SP,
       LambertConicConformal.class);
-    registerCoordinatesProjection(
-      Projection.LAMBERT_CONIC_CONFORMAL_2SP_BELGIUM,
+    registerCoordinatesProjection(Projection.LAMBERT_CONIC_CONFORMAL_2SP_BELGIUM,
       LambertConicConformal.class);
   }
 
   public static Coordinates convert(final Coordinates point,
-    final GeometryFactory sourceGeometryFactory,
-    final GeometryFactory targetGeometryFactory) {
+    final GeometryFactory sourceGeometryFactory, final GeometryFactory targetGeometryFactory) {
     if (point == null) {
       return point;
     } else if (sourceGeometryFactory == targetGeometryFactory) {
@@ -59,13 +54,12 @@ public final class ProjectionFactory {
     } else if (targetGeometryFactory == null) {
       return point;
     } else {
-      final CoordinatesOperation operation = getCoordinatesOperation(
-        sourceGeometryFactory, targetGeometryFactory);
+      final CoordinatesOperation operation = getCoordinatesOperation(sourceGeometryFactory,
+        targetGeometryFactory);
       if (operation == null) {
         return point;
       } else {
-        final DoubleCoordinates newPoint = new DoubleCoordinates(
-          point.getNumAxis());
+        final DoubleCoordinates newPoint = new DoubleCoordinates(point.getNumAxis());
         operation.perform(point, newPoint);
         targetGeometryFactory.makePrecise(newPoint);
         return newPoint;
@@ -91,8 +85,8 @@ public final class ProjectionFactory {
     }
   }
 
-  public static CoordinatesOperation getCoordinatesOperation(
-    final CoordinateSystem cs1, final CoordinateSystem cs2) {
+  public static CoordinatesOperation getCoordinatesOperation(final CoordinateSystem cs1,
+    final CoordinateSystem cs2) {
     if (cs1 == null || cs2 == null || cs1.equals(cs2)) {
       return null;
     } else {
@@ -126,8 +120,7 @@ public final class ProjectionFactory {
             if (angularUnit1.equals(NonSI.DEGREE_ANGLE)) {
               converstionOperation = DegreesToRadiansOperation.INSTANCE;
             } else {
-              converstionOperation = new UnitConverstionOperation(angularUnit1,
-                SI.RADIAN, 2);
+              converstionOperation = new UnitConverstionOperation(angularUnit1, SI.RADIAN, 2);
             }
 
             operations.add(converstionOperation);
@@ -150,8 +143,7 @@ public final class ProjectionFactory {
         final GeographicCoordinateSystem gcs2 = (GeographicCoordinateSystem)cs2;
         final Unit<Angle> angularUnit2 = gcs2.getUnit();
         if (!angularUnit2.equals(SI.RADIAN)) {
-          operations.add(new UnitConverstionOperation(SI.RADIAN, angularUnit2,
-            2));
+          operations.add(new UnitConverstionOperation(SI.RADIAN, angularUnit2, 2));
         }
       }
       switch (operations.size()) {
@@ -166,17 +158,15 @@ public final class ProjectionFactory {
   }
 
   public static CoordinatesOperation getCoordinatesOperation(
-    final GeometryFactory sourceGeometryFactory,
-    final GeometryFactory targetGeometryFactory) {
+    final GeometryFactory sourceGeometryFactory, final GeometryFactory targetGeometryFactory) {
     final CoordinateSystem sourceCoordinateSystem = sourceGeometryFactory.getCoordinateSystem();
     final CoordinateSystem targetCoordinateSystem = targetGeometryFactory.getCoordinateSystem();
-    return getCoordinatesOperation(sourceCoordinateSystem,
-      targetCoordinateSystem);
+    return getCoordinatesOperation(sourceCoordinateSystem, targetCoordinateSystem);
   }
 
   /**
    * Get the projection for a projected coordinate system.
-   * 
+   *
    * @param coordinateSystem The coordinate system.
    * @return The projection.
    */
@@ -196,15 +186,12 @@ public final class ProjectionFactory {
             final CoordinatesProjection coordinateProjection = constructor.newInstance(coordinateSystem);
             return coordinateProjection;
           } catch (final NoSuchMethodException e) {
-            throw new IllegalArgumentException("Constructor " + projectionClass
-              + "(" + ProjectedCoordinateSystem.class.getName()
-              + ") does not exist");
+            throw new IllegalArgumentException("Constructor " + projectionClass + "("
+              + ProjectedCoordinateSystem.class.getName() + ") does not exist");
           } catch (final InstantiationException e) {
-            throw new IllegalArgumentException(projectionClass
-              + " cannot be instantiated", e);
+            throw new IllegalArgumentException(projectionClass + " cannot be instantiated", e);
           } catch (final IllegalAccessException e) {
-            throw new IllegalArgumentException(projectionClass
-              + " cannot be instantiated", e);
+            throw new IllegalArgumentException(projectionClass + " cannot be instantiated", e);
           } catch (final InvocationTargetException e) {
             final Throwable cause = e.getCause();
             if (cause instanceof RuntimeException) {
@@ -212,8 +199,7 @@ public final class ProjectionFactory {
             } else if (cause instanceof Error) {
               throw (Error)cause;
             } else {
-              throw new IllegalArgumentException(projectionClass
-                + " cannot be instantiated", cause);
+              throw new IllegalArgumentException(projectionClass + " cannot be instantiated", cause);
             }
           }
         }
@@ -227,14 +213,13 @@ public final class ProjectionFactory {
    * Return a geometry operation which convert between the source and target
    * coordinate systems. The geometry operation will create a new geometry
    * instead of modifying the existing geometry.
-   * 
+   *
    * @param sourceCoordinateSystem The source coordinate system.
    * @param targetCoordinateSystem The target coordinate system.
    * @return The geometry operation.
    */
   public static GeometryOperation getGeometryOperation(
-    final CoordinateSystem sourceCoordinateSystem,
-    final CoordinateSystem targetCoordinateSystem) {
+    final CoordinateSystem sourceCoordinateSystem, final CoordinateSystem targetCoordinateSystem) {
     return getGeometryOperation(sourceCoordinateSystem, targetCoordinateSystem,
       GeometryFactory.getFactory(targetCoordinateSystem));
   }
@@ -244,21 +229,19 @@ public final class ProjectionFactory {
    * coordinate systems. The geometry operation will create a new geometry
    * instead of modifying the existing geometry. All coordinates in the geometry
    * will be made precise using the precision model of the geometry factory.
-   * 
+   *
    * @param sourceCoordinateSystem The source coordinate system.
    * @param targetCoordinateSystem The target coordinate system.
    * @param geometryFactory The geometry factory.
    * @return The geometry operation.
    */
-  public static GeometryOperation getGeometryOperation(
-    final CoordinateSystem cs1, final CoordinateSystem cs2,
-    final GeometryFactory geometryFactory) {
+  public static GeometryOperation getGeometryOperation(final CoordinateSystem cs1,
+    final CoordinateSystem cs2, final GeometryFactory geometryFactory) {
     final CoordinatesOperation operation = getCoordinatesOperation(cs1, cs2);
     if (operation == null) {
       return null;
     } else {
-      return new CoordinatesOperationGeometryOperation(operation,
-        geometryFactory);
+      return new CoordinatesOperationGeometryOperation(operation, geometryFactory);
     }
   }
 
@@ -267,27 +250,24 @@ public final class ProjectionFactory {
    * coordinate systems. The geometry operation will create a new geometry
    * instead of modifying the existing geometry. All coordinates in the geometry
    * will be made precise using the precision model of the geometry factory.
-   * 
+   *
    * @param sourceCoordinateSystem The source coordinate system.
    * @param targetGeometryFactory The geometry factory.
    * @return The geometry operation.
    */
   public static GeometryOperation getGeometryOperation(
-    final CoordinateSystem sourceCoordinateSystem,
-    final GeometryFactory targetGeometryFactory) {
+    final CoordinateSystem sourceCoordinateSystem, final GeometryFactory targetGeometryFactory) {
     final CoordinateSystem targetCoordinateSystem = targetGeometryFactory.getCoordinateSystem();
-    final CoordinatesOperation operation = getCoordinatesOperation(
-      sourceCoordinateSystem, targetCoordinateSystem);
+    final CoordinatesOperation operation = getCoordinatesOperation(sourceCoordinateSystem,
+      targetCoordinateSystem);
     if (operation == null) {
       return new PrecisionModelGeometryOperation(targetGeometryFactory);
     } else {
-      return new CoordinatesOperationGeometryOperation(operation,
-        targetGeometryFactory);
+      return new CoordinatesOperationGeometryOperation(operation, targetGeometryFactory);
     }
   }
 
-  public static GeometryOperation getGeometryOperation(
-    final GeometryFactory sourceGeometryFactory,
+  public static GeometryOperation getGeometryOperation(final GeometryFactory sourceGeometryFactory,
     final GeometryFactory targetGeometryFactory) {
     final CoordinateSystem sourceCoodinateSystem = sourceGeometryFactory.getCoordinateSystem();
     return getGeometryOperation(sourceCoodinateSystem, targetGeometryFactory);
@@ -295,7 +275,7 @@ public final class ProjectionFactory {
 
   /**
    * Get the operation to convert coordinates to geographics coordinates.
-   * 
+   *
    * @param coordinateSystem The coordinate system.
    * @return The coordinates operation.
    */
@@ -312,7 +292,7 @@ public final class ProjectionFactory {
   /**
    * Get the operation to convert geographics coordinates to projected
    * coordinates.
-   * 
+   *
    * @param coordinateSystem The coordinate system.
    * @return The coordinates operation.
    */
@@ -328,7 +308,7 @@ public final class ProjectionFactory {
 
   /**
    * Get the operation to convert coordinates to geographics coordinates.
-   * 
+   *
    * @param coordinateSystem The coordinate system.
    * @return The coordinates operation.
    */
@@ -347,8 +327,7 @@ public final class ProjectionFactory {
         if (angularUnit.equals(NonSI.DEGREE_ANGLE)) {
           converstionOperation = RadiansToDegreesOperation.INSTANCE;
         } else {
-          converstionOperation = new UnitConverstionOperation(SI.RADIAN,
-            angularUnit, 2);
+          converstionOperation = new UnitConverstionOperation(SI.RADIAN, angularUnit, 2);
         }
         return new ChainedCoordinatesOperation(operation, converstionOperation);
       }
@@ -359,7 +338,7 @@ public final class ProjectionFactory {
 
   /**
    * Register a projection for the named projection.
-   * 
+   *
    * @param name The name.
    * @param projectionClass The projection class.
    */

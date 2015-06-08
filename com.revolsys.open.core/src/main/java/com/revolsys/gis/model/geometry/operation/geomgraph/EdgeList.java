@@ -13,7 +13,7 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 /**
  * A EdgeList is a list of Edges. It supports locating edges that are pointwise
  * equals to a target edge.
- * 
+ *
  * @version 1.7
  */
 public class EdgeList {
@@ -31,10 +31,9 @@ public class EdgeList {
    * Insert an edge unless it is already in the list
    */
   public void add(final Edge e) {
-    edges.add(e);
-    final OrientedCoordinateArray oca = new OrientedCoordinateArray(
-      e.getCoordinates());
-    ocaMap.put(oca, e);
+    this.edges.add(e);
+    final OrientedCoordinateArray oca = new OrientedCoordinateArray(e.getCoordinates());
+    this.ocaMap.put(oca, e);
   }
 
   public void addAll(final Collection edgeColl) {
@@ -45,12 +44,12 @@ public class EdgeList {
 
   /**
    * If the edge e is already in the list, return its index.
-   * 
+   *
    * @return index, if e is already in the list -1 otherwise
    */
   public int findEdgeIndex(final Edge e) {
-    for (int i = 0; i < edges.size(); i++) {
-      if (((Edge)edges.get(i)).equals(e)) {
+    for (int i = 0; i < this.edges.size(); i++) {
+      if (((Edge)this.edges.get(i)).equals(e)) {
         return i;
       }
     }
@@ -60,33 +59,32 @@ public class EdgeList {
   /**
    * If there is an edge equal to e already in the list, return it. Otherwise
    * return null.
-   * 
+   *
    * @return equal edge, if there is one already in the list null otherwise
    */
   public Edge findEqualEdge(final Edge e) {
-    final OrientedCoordinateArray oca = new OrientedCoordinateArray(
-      e.getCoordinates());
+    final OrientedCoordinateArray oca = new OrientedCoordinateArray(e.getCoordinates());
     // will return null if no edge matches
-    final Edge matchEdge = (Edge)ocaMap.get(oca);
+    final Edge matchEdge = (Edge)this.ocaMap.get(oca);
     return matchEdge;
   }
 
   public Edge get(final int i) {
-    return (Edge)edges.get(i);
+    return (Edge)this.edges.get(i);
   }
 
   public List getEdges() {
-    return edges;
+    return this.edges;
   }
 
   public Iterator iterator() {
-    return edges.iterator();
+    return this.edges.iterator();
   }
 
   public void print(final PrintStream out) {
     out.print("MULTILINESTRING ( ");
-    for (int j = 0; j < edges.size(); j++) {
-      final Edge e = (Edge)edges.get(j);
+    for (int j = 0; j < this.edges.size(); j++) {
+      final Edge e = (Edge)this.edges.get(j);
       if (j > 0) {
         out.print(",");
       }

@@ -12,14 +12,12 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.map.layer.AbstractLayer;
 import com.revolsys.swing.parallel.AbstractSwingWorker;
 
-public class LoadingWorker extends
-  AbstractSwingWorker<DataObjectQuadTree, Void> {
+public class LoadingWorker extends AbstractSwingWorker<DataObjectQuadTree, Void> {
   private final BoundingBox viewportBoundingBox;
 
   private final DataObjectStoreLayer layer;
 
-  public LoadingWorker(final DataObjectStoreLayer layer,
-    final BoundingBox viewportBoundingBox) {
+  public LoadingWorker(final DataObjectStoreLayer layer, final BoundingBox viewportBoundingBox) {
     this.layer = layer;
     this.viewportBoundingBox = viewportBoundingBox;
 
@@ -66,8 +64,7 @@ public class LoadingWorker extends
       this.layer.clearLoading(this.viewportBoundingBox);
     } catch (final Throwable t) {
       final String typePath = this.layer.getTypePath();
-      LoggerFactory.getLogger(getClass())
-        .error("Unable to load " + typePath, t);
+      LoggerFactory.getLogger(getClass()).error("Unable to load " + typePath, t);
       this.layer.clearLoading(this.viewportBoundingBox);
     }
   }

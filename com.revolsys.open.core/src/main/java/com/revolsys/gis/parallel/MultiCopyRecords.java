@@ -40,13 +40,11 @@ public class MultiCopyRecords implements Process {
       if ("copyRecords".equals(type)) {
         final String typePath = (String)processDefinition.get("typePath");
         if (StringUtils.hasText(typePath)) {
-          final boolean hasSequence = CollectionUtil.getBool(processDefinition,
-            "hasSequence");
-          final Map<String, Boolean> orderBy = CollectionUtil.get(
-            processDefinition, "orderBy",
+          final boolean hasSequence = CollectionUtil.getBool(processDefinition, "hasSequence");
+          final Map<String, Boolean> orderBy = CollectionUtil.get(processDefinition, "orderBy",
             Collections.<String, Boolean> emptyMap());
-          final CopyRecords copy = new CopyRecords(sourceDataStore, typePath,
-            orderBy, targetDataStore, hasSequence);
+          final CopyRecords copy = new CopyRecords(this.sourceDataStore, typePath, orderBy,
+            this.targetDataStore, hasSequence);
           return copy;
         } else {
           LoggerFactory.getLogger(getClass()).error(
@@ -75,8 +73,7 @@ public class MultiCopyRecords implements Process {
 
       } else {
         LoggerFactory.getLogger(getClass()).error(
-          "Parameter type=" + type
-            + " not in 'copyRecords', 'sequential', 'copyRecords'");
+          "Parameter type=" + type + " not in 'copyRecords', 'sequential', 'copyRecords'");
       }
       return null;
     }
@@ -94,7 +91,7 @@ public class MultiCopyRecords implements Process {
 
   @Override
   public String getBeanName() {
-    return name;
+    return this.name;
   }
 
   @Override
@@ -103,21 +100,21 @@ public class MultiCopyRecords implements Process {
   }
 
   public RecordStore getSourceDataStore() {
-    return sourceDataStore;
+    return this.sourceDataStore;
   }
 
   public RecordStore getTargetDataStore() {
-    return targetDataStore;
+    return this.targetDataStore;
   }
 
   @Override
   public void run() {
-    process = createProcess(processDefinition);
-    if (process != null) {
-      if (processNetwork != null) {
-        processNetwork.addProcess(process);
+    this.process = createProcess(this.processDefinition);
+    if (this.process != null) {
+      if (this.processNetwork != null) {
+        this.processNetwork.addProcess(this.process);
       } else {
-        process.run();
+        this.process.run();
       }
     }
   }

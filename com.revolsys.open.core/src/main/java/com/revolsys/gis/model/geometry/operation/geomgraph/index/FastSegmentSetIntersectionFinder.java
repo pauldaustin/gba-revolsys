@@ -14,18 +14,13 @@ import com.revolsys.gis.model.geometry.operation.chain.SegmentStringUtil;
  * Finds if two sets of {@link SegmentString}s intersect. Uses indexing for fast
  * performance and to optimize repeated tests against a target set of lines.
  * Short-circuited to return as soon an intersection is found.
- * 
+ *
  * @version 1.7
  */
 public class FastSegmentSetIntersectionFinder {
-  private SegmentSetMutualIntersector segSetMutInt;
-
   private static final String KEY = FastSegmentSetIntersectionFinder.class.getName();
 
   private static LineIntersector li = new RobustLineIntersector();
-
-  // for testing purposes
-  // private SimpleSegmentSetMutualIntersector mci;
 
   public static FastSegmentSetIntersectionFinder get(final Geometry geometry) {
     FastSegmentSetIntersectionFinder instance = geometry.getProperty(KEY);
@@ -37,43 +32,46 @@ public class FastSegmentSetIntersectionFinder {
     return instance;
   }
 
-  public FastSegmentSetIntersectionFinder(
-    final Collection<SegmentString> baseSegStrings) {
+  // for testing purposes
+  // private SimpleSegmentSetMutualIntersector mci;
+
+  private SegmentSetMutualIntersector segSetMutInt;
+
+  public FastSegmentSetIntersectionFinder(final Collection<SegmentString> baseSegStrings) {
     init(baseSegStrings);
   }
 
   /**
    * Gets the segment set intersector used by this class. This allows other uses
    * of the same underlying indexed structure.
-   * 
+   *
    * @return the segment set intersector used
    */
   public SegmentSetMutualIntersector getSegmentSetIntersector() {
-    return segSetMutInt;
+    return this.segSetMutInt;
   }
 
   private void init(final Collection<SegmentString> baseSegStrings) {
-    segSetMutInt = new MCIndexSegmentSetMutualIntersector();
+    this.segSetMutInt = new MCIndexSegmentSetMutualIntersector();
     // segSetMutInt = new MCIndexIntersectionSegmentSetMutualIntersector();
 
     // mci = new SimpleSegmentSetMutualIntersector();
-    segSetMutInt.setBaseSegments(baseSegStrings);
+    this.segSetMutInt.setBaseSegments(baseSegStrings);
   }
 
   public boolean intersects(final Collection<SegmentString> segStrings) {
-    final SegmentIntersectionDetector intFinder = new SegmentIntersectionDetector(
-      li);
-    segSetMutInt.setSegmentIntersector(intFinder);
+    final SegmentIntersectionDetector intFinder = new SegmentIntersectionDetector(li);
+    this.segSetMutInt.setSegmentIntersector(intFinder);
 
-    segSetMutInt.process(segStrings);
+    this.segSetMutInt.process(segStrings);
     return intFinder.hasIntersection();
   }
 
   public boolean intersects(final Collection<SegmentString> segStrings,
     final SegmentIntersectionDetector intDetector) {
-    segSetMutInt.setSegmentIntersector(intDetector);
+    this.segSetMutInt.setSegmentIntersector(intDetector);
 
-    segSetMutInt.process(segStrings);
+    this.segSetMutInt.process(segStrings);
     return intDetector.hasIntersection();
   }
 }

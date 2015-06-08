@@ -26,14 +26,14 @@ public class BoundingBox implements Serializable {
 
   /**
    * Point intersects the bounding box of the line.
-   * 
+   *
    * @param lineStart
    * @param lineEnd
    * @param point
    * @return
    */
-  public static boolean intersects(final Coordinates lineStart,
-    final Coordinates lineEnd, final Coordinates point) {
+  public static boolean intersects(final Coordinates lineStart, final Coordinates lineEnd,
+    final Coordinates point) {
     final double x1 = lineStart.getX();
     final double y1 = lineStart.getY();
     final double x2 = lineEnd.getX();
@@ -44,9 +44,8 @@ public class BoundingBox implements Serializable {
     return intersects(x1, y1, x2, y2, x, y);
   }
 
-  public static boolean intersects(final Coordinates line1Start,
-    final Coordinates line1End, final Coordinates line2Start,
-    final Coordinates line2End) {
+  public static boolean intersects(final Coordinates line1Start, final Coordinates line1End,
+    final Coordinates line2Start, final Coordinates line2End) {
     final double line1x1 = line1Start.getX();
     final double line1y1 = line1Start.getY();
     final double line1x2 = line1End.getX();
@@ -56,31 +55,29 @@ public class BoundingBox implements Serializable {
     final double line2y1 = line2Start.getY();
     final double line2x2 = line2End.getX();
     final double line2y2 = line2End.getY();
-    return intersects(line1x1, line1y1, line1x2, line1y2, line2x1, line2y1,
-      line2x2, line2y2);
+    return intersects(line1x1, line1y1, line1x2, line1y2, line2x1, line2y1, line2x2, line2y2);
   }
 
   /**
    * Point intersects the bounding box of the line.
-   * 
+   *
    * @param lineStart
    * @param lineEnd
    * @param point
    * @return
    */
-  public static boolean intersects(final double p1X, final double p1Y,
-    final double p2X, final double p2Y, final double qX, final double qY) {
-    if (((qX >= (p1X < p2X ? p1X : p2X)) && (qX <= (p1X > p2X ? p1X : p2X)))
-      && ((qY >= (p1Y < p2Y ? p1Y : p2Y)) && (qY <= (p1Y > p2Y ? p1Y : p2Y)))) {
+  public static boolean intersects(final double p1X, final double p1Y, final double p2X,
+    final double p2Y, final double qX, final double qY) {
+    if (qX >= (p1X < p2X ? p1X : p2X) && qX <= (p1X > p2X ? p1X : p2X)
+      && qY >= (p1Y < p2Y ? p1Y : p2Y) && qY <= (p1Y > p2Y ? p1Y : p2Y)) {
       return true;
     } else {
       return false;
     }
   }
 
-  public static boolean intersects(final double p1X, final double p1Y,
-    final double p2X, final double p2Y, final double q1X, final double q1Y,
-    final double q2X, final double q2Y) {
+  public static boolean intersects(final double p1X, final double p1Y, final double p2X,
+    final double p2Y, final double q1X, final double q1Y, final double q2X, final double q2Y) {
     double minp = Math.min(p1X, p2X);
     double maxq = Math.max(q1X, q2X);
     if (minp > maxq) {
@@ -130,8 +127,8 @@ public class BoundingBox implements Serializable {
   }
 
   public BoundingBox(final Coordinates point1, final Coordinates point2) {
-    this(null, point1.getX(), point1.getY(), point1.getZ(), point2.getX(),
-      point2.getY(), point2.getZ());
+    this(null, point1.getX(), point1.getY(), point1.getZ(), point2.getX(), point2.getY(),
+      point2.getZ());
   }
 
   public BoundingBox(final Geometry geometry) {
@@ -150,8 +147,7 @@ public class BoundingBox implements Serializable {
     this.geometryFactory = geometryFactory;
   }
 
-  public BoundingBox(final GeometryFactory geometryFactory,
-    final BoundingBox boundingBox) {
+  public BoundingBox(final GeometryFactory geometryFactory, final BoundingBox boundingBox) {
     this.geometryFactory = geometryFactory;
     final double x1 = boundingBox.getMinX();
     final double y1 = boundingBox.getMinY();
@@ -164,22 +160,21 @@ public class BoundingBox implements Serializable {
     add(x2, y2, z2);
   }
 
-  public BoundingBox(final GeometryFactory geometryFactory, final double x,
-    final double y, final double z) {
+  public BoundingBox(final GeometryFactory geometryFactory, final double x, final double y,
+    final double z) {
     this.geometryFactory = geometryFactory;
     add(x, y, z);
   }
 
-  public BoundingBox(final GeometryFactory geometryFactory, final double x1,
-    final double y1, final double x2, final double y2) {
+  public BoundingBox(final GeometryFactory geometryFactory, final double x1, final double y1,
+    final double x2, final double y2) {
     this.geometryFactory = geometryFactory;
     add(x1, y1, Double.NaN);
     add(x2, y2, Double.NaN);
   }
 
-  public BoundingBox(final GeometryFactory geometryFactory, final double x1,
-    final double y1, final double z1, final double x2, final double y2,
-    final double z2) {
+  public BoundingBox(final GeometryFactory geometryFactory, final double x1, final double y1,
+    final double z1, final double x2, final double y2, final double z2) {
     this.geometryFactory = geometryFactory;
     add(x1, y1, z1);
     add(x2, y2, z2);
@@ -218,7 +213,7 @@ public class BoundingBox implements Serializable {
     } else {
       final double x = (getMinX() + getMaxX()) / 2.0;
       final double y = (getMinY() + getMaxY()) / 2.0;
-      return geometryFactory.createPoint(x, y);
+      return this.geometryFactory.createPoint(x, y);
     }
   }
 
@@ -237,7 +232,7 @@ public class BoundingBox implements Serializable {
    * <p>
    * Note that this is <b>not</b> the same definition as the SFS
    * <tt>contains</tt>, which would exclude the envelope boundary.
-   * 
+   *
    * @param x the x-coordinate of the point which this <code>BoundingBox</code>
    *          is being checked for containing
    * @param y the y-coordinate of the point which this <code>BoundingBox</code>
@@ -317,11 +312,9 @@ public class BoundingBox implements Serializable {
   public boolean equals(final Object other) {
     if (other instanceof BoundingBox) {
       final BoundingBox boundingBox = (BoundingBox)other;
-      return geometryFactory.equals(boundingBox.getGeometryFactory())
-        && getMaxX() == boundingBox.getMaxX()
-        && getMaxY() == boundingBox.getMaxY()
-        && getMinX() == boundingBox.getMinX()
-        && getMinY() == boundingBox.getMinY();
+      return this.geometryFactory.equals(boundingBox.getGeometryFactory())
+        && getMaxX() == boundingBox.getMaxX() && getMaxY() == boundingBox.getMaxY()
+        && getMinX() == boundingBox.getMinX() && getMinY() == boundingBox.getMinY();
     } else {
       return false;
     }
@@ -330,7 +323,7 @@ public class BoundingBox implements Serializable {
   /**
    * Expands this envelope by a given distance in all directions. Both positive
    * and negative distances are supported.
-   * 
+   *
    * @param distance the distance to expand the envelope
    */
   public void expandBy(final double distance) {
@@ -360,8 +353,7 @@ public class BoundingBox implements Serializable {
         return new BoundingBox(getGeometryFactory());
 
       } else {
-        return new BoundingBox(geometryFactory, minX, minY, minZ, maxX, maxY,
-          maxZ);
+        return new BoundingBox(this.geometryFactory, minX, minY, minZ, maxX, maxY, maxZ);
       }
     }
   }
@@ -380,8 +372,7 @@ public class BoundingBox implements Serializable {
       final double maxY = Math.max(getMaxY(), convertedBoundingBox.getMaxY());
       final double maxZ = Math.max(getMaxZ(), convertedBoundingBox.getMaxZ());
 
-      return new BoundingBox(geometryFactory, minX, minY, minZ, maxX, maxY,
-        maxZ);
+      return new BoundingBox(this.geometryFactory, minX, minY, minZ, maxX, maxY, maxZ);
     }
   }
 
@@ -389,8 +380,7 @@ public class BoundingBox implements Serializable {
     return expandToInclude(p.getX(), p.getY(), p.getZ());
   }
 
-  public BoundingBox expandToInclude(final double x, final double y,
-    final double z) {
+  public BoundingBox expandToInclude(final double x, final double y, final double z) {
     if (isNull()) {
       return new BoundingBox(getGeometryFactory(), x, y, Double.NaN);
     } else {
@@ -401,8 +391,7 @@ public class BoundingBox implements Serializable {
       final double maxY = Math.max(getMaxY(), y);
       final double maxZ = Math.max(getMaxZ(), z);
 
-      return new BoundingBox(geometryFactory, minX, minY, minZ, maxX, maxY,
-        maxZ);
+      return new BoundingBox(this.geometryFactory, minX, minY, minZ, maxX, maxY, maxZ);
     }
   }
 
@@ -413,7 +402,7 @@ public class BoundingBox implements Serializable {
 
   /**
    * Gets the area of this envelope.
-   * 
+   *
    * @return the area of the envelope
    * @return 0.0 if the envelope is null
    */
@@ -423,7 +412,7 @@ public class BoundingBox implements Serializable {
 
   /**
    * Get the aspect ratio x:y.
-   * 
+   *
    * @return The aspect ratio.
    */
   public double getAspectRatio() {
@@ -434,29 +423,29 @@ public class BoundingBox implements Serializable {
   }
 
   public double getCentreX() {
-    return getMinX() + (getWidth() / 2);
+    return getMinX() + getWidth() / 2;
   }
 
   public double getCentreY() {
-    return getMinY() + (getHeight() / 2);
+    return getMinY() + getHeight() / 2;
   }
 
   /**
    * Get the geometry factory.
-   * 
+   *
    * @return The geometry factory.
    */
   public CoordinateSystem getCoordinateSystem() {
-    return geometryFactory.getCoordinateSystem();
+    return this.geometryFactory.getCoordinateSystem();
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometryFactory;
+    return this.geometryFactory;
   }
 
   /**
    * Returns the difference between the maximum and minimum y values.
-   * 
+   *
    * @return max y - min y, or 0 if this is a null <code>BoundingBox</code>
    */
   public double getHeight() {
@@ -472,13 +461,12 @@ public class BoundingBox implements Serializable {
   }
 
   public String getId() {
-    final String string = MathUtil.toString(getMinX()) + "_"
-      + MathUtil.toString(getMinY()) + "_" + MathUtil.toString(getMaxX()) + "_"
-      + MathUtil.toString(getMaxY());
-    if (geometryFactory == null) {
+    final String string = MathUtil.toString(getMinX()) + "_" + MathUtil.toString(getMinY()) + "_"
+      + MathUtil.toString(getMaxX()) + "_" + MathUtil.toString(getMaxY());
+    if (this.geometryFactory == null) {
       return string;
     } else {
-      return geometryFactory.getSrid() + "-" + string;
+      return this.geometryFactory.getSrid() + "-" + string;
     }
   }
 
@@ -493,18 +481,18 @@ public class BoundingBox implements Serializable {
   }
 
   public double getMaxX() {
-    return maxX;
+    return this.maxX;
   }
 
   public double getMaxY() {
-    return maxY;
+    return this.maxY;
   }
 
   public double getMaxZ() {
-    if (Double.isNaN(maxZ)) {
+    if (Double.isNaN(this.maxZ)) {
       return 0;
     } else {
-      return maxZ;
+      return this.maxZ;
     }
   }
 
@@ -519,24 +507,24 @@ public class BoundingBox implements Serializable {
   }
 
   public double getMinX() {
-    return minX;
+    return this.minX;
   }
 
   public double getMinY() {
-    return minY;
+    return this.minY;
   }
 
   public double getMinZ() {
-    if (Double.isNaN(minZ)) {
+    if (Double.isNaN(this.minZ)) {
       return 0;
     } else {
-      return minZ;
+      return this.minZ;
     }
   }
 
   /**
    * Returns the difference between the maximum and minimum x values.
-   * 
+   *
    * @return max x - min x, or 0 if this is a null <code>BoundingBox</code>
    */
   public double getWidth() {
@@ -552,10 +540,9 @@ public class BoundingBox implements Serializable {
   }
 
   public BoundingBox intersection(final BoundingBox boundingBox) {
-    final BoundingBox convertedBoundingBox = boundingBox.convert(geometryFactory);
-    if (isNull() || convertedBoundingBox.isNull()
-      || !intersects(convertedBoundingBox)) {
-      return new BoundingBox(geometryFactory);
+    final BoundingBox convertedBoundingBox = boundingBox.convert(this.geometryFactory);
+    if (isNull() || convertedBoundingBox.isNull() || !intersects(convertedBoundingBox)) {
+      return new BoundingBox(this.geometryFactory);
     } else {
 
       final double intMinX = getMinX() > convertedBoundingBox.getMinX() ? getMinX()
@@ -566,20 +553,18 @@ public class BoundingBox implements Serializable {
         : convertedBoundingBox.getMaxX();
       final double intMaxY = getMaxY() < convertedBoundingBox.getMaxY() ? getMaxY()
         : convertedBoundingBox.getMaxY();
-      return new BoundingBox(geometryFactory, intMinX, intMaxX, intMinY,
-        intMaxY);
+      return new BoundingBox(this.geometryFactory, intMinX, intMaxX, intMinY, intMaxY);
     }
   }
 
   public boolean intersects(final BoundingBox boundingBox) {
-    final BoundingBox convertedBoundingBox = boundingBox.convert(geometryFactory);
+    final BoundingBox convertedBoundingBox = boundingBox.convert(this.geometryFactory);
 
     if (isNull() || convertedBoundingBox.isNull()) {
       return false;
     }
     return !(convertedBoundingBox.getMinX() > getMaxX()
-      || convertedBoundingBox.getMaxX() < getMinX()
-      || convertedBoundingBox.getMinY() > getMaxY() || convertedBoundingBox.getMaxY() < getMinY());
+      || convertedBoundingBox.getMaxX() < getMinX() || convertedBoundingBox.getMinY() > getMaxY() || convertedBoundingBox.getMaxY() < getMinY());
   }
 
   public boolean intersects(final Coordinates point) {
@@ -596,7 +581,7 @@ public class BoundingBox implements Serializable {
   /**
    * Returns <code>true</code> if this <code>BoundingBox</code> is a "null"
    * envelope.
-   * 
+   *
    * @return <code>true</code> if this <code>BoundingBox</code> is uninitialized
    *         or is the envelope of the empty geometry.
    */
@@ -624,7 +609,7 @@ public class BoundingBox implements Serializable {
 
   /**
    * Gets the maximum extent of this envelope across both dimensions.
-   * 
+   *
    * @return the maximum extent of this envelope
    */
   public double maxExtent() {
@@ -641,7 +626,7 @@ public class BoundingBox implements Serializable {
 
   /**
    * Gets the minimum extent of this envelope across both dimensions.
-   * 
+   *
    * @return the minimum extent of this envelope
    */
   public double minExtent() {
@@ -674,8 +659,7 @@ public class BoundingBox implements Serializable {
         minZ += deltas[2];
         maxZ += deltas[2];
       }
-      return new BoundingBox(geometryFactory, minX, minY, minZ, maxX, maxY,
-        maxZ);
+      return new BoundingBox(this.geometryFactory, minX, minY, minZ, maxX, maxY, maxZ);
     }
   }
 
@@ -735,14 +719,13 @@ public class BoundingBox implements Serializable {
     final double width = getWidth();
     final double height = getHeight();
     if (width == 0 && height == 0) {
-      return geometryFactory.createPoint(getMinX(), getMinY());
+      return this.geometryFactory.createPoint(getMinX(), getMinY());
     } else if (width == 0 || height == 0) {
-      return geometryFactory.createLineString(new DoubleCoordinatesList(2,
-        getMinX(), getMinY(), getMaxX(), getMaxY()));
+      return this.geometryFactory.createLineString(new DoubleCoordinatesList(2, getMinX(),
+        getMinY(), getMaxX(), getMaxY()));
     } else {
-      return geometryFactory.createPolygon(new DoubleCoordinatesList(2,
-        getMinX(), getMinY(), getMinX(), getMaxY(), getMaxX(), getMaxY(),
-        getMaxX(), getMinY(), getMinX(), getMinY()));
+      return this.geometryFactory.createPolygon(new DoubleCoordinatesList(2, getMinX(), getMinY(),
+        getMinX(), getMaxY(), getMaxX(), getMaxY(), getMaxX(), getMinY(), getMinX(), getMinY()));
     }
   }
 
@@ -759,8 +742,7 @@ public class BoundingBox implements Serializable {
     return toPolygon(factory, numSegments, numSegments);
   }
 
-  public Polygon toPolygon(final GeometryFactory geometryFactory,
-    final int numX, final int numY) {
+  public Polygon toPolygon(final GeometryFactory geometryFactory, final int numX, final int numY) {
     final double xStep = getWidth() / numX;
     final double yStep = getHeight() / numY;
     final int numCoordinates = 2 * (numX + numY) + 1;
@@ -791,8 +773,7 @@ public class BoundingBox implements Serializable {
     coordinates.setY(coordinates.size() - 1, getMinY());
     if (geometryFactory != this.geometryFactory) {
       coordinates = CoordinatesListProjectionUtil.perform(coordinates,
-        this.geometryFactory.getCoordinateSystem(),
-        geometryFactory.getCoordinateSystem());
+        this.geometryFactory.getCoordinateSystem(), geometryFactory.getCoordinateSystem());
     }
 
     final Polygon polygon = geometryFactory.createPolygon(coordinates);
@@ -804,17 +785,16 @@ public class BoundingBox implements Serializable {
   }
 
   public Polygon toPolygon(final int numX, final int numY) {
-    return toPolygon(geometryFactory, numX, numY);
+    return toPolygon(this.geometryFactory, numX, numY);
   }
 
   @Override
   public String toString() {
-    if (geometryFactory == null) {
-      return "BBOX(" + getMinX() + "," + getMinY() + " " + getMaxX() + ","
-        + getMaxY() + ")";
+    if (this.geometryFactory == null) {
+      return "BBOX(" + getMinX() + "," + getMinY() + " " + getMaxX() + "," + getMaxY() + ")";
     } else {
-      return "SRID=" + geometryFactory.getSrid() + ";BBOX(" + getMinX() + ","
-        + getMinY() + " " + getMaxX() + "," + getMaxY() + ")";
+      return "SRID=" + this.geometryFactory.getSrid() + ";BBOX(" + getMinX() + "," + getMinY()
+        + " " + getMaxX() + "," + getMaxY() + ")";
     }
   }
 

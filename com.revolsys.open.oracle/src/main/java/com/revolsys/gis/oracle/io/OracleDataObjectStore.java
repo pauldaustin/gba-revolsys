@@ -34,30 +34,18 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 
 public class OracleDataObjectStore extends AbstractJdbcRecordStore {
-  private boolean initialized;
+  public static final List<String> ORACLE_INTERNAL_SCHEMAS = Arrays.asList("ANONYMOUS",
+    "APEX_030200", "AURORA$JIS$UTILITY$", "AURORA$ORB$UNAUTHENTICATED", "AWR_STAGE", "CSMIG",
+    "CTXSYS", "DBSNMP", "DEMO", "DIP", "DMSYS", "DSSYS", "EXFSYS", "LBACSYS", "MDSYS", "OLAPSYS",
+    "ORACLE_OCM", "ORDDATA", "ORDPLUGINS", "ORDSYS", "OSE$HTTP$ADMIN", "OUTLN", "PERFSTAT", "SDE",
+    "SYS", "SYSTEM", "TRACESVR", "TSMSYS", "WMSYS", "XDB");
 
-  public static final List<String> ORACLE_INTERNAL_SCHEMAS = Arrays.asList(
-    "ANONYMOUS", "APEX_030200", "AURORA$JIS$UTILITY$",
-    "AURORA$ORB$UNAUTHENTICATED", "AWR_STAGE", "CSMIG", "CTXSYS", "DBSNMP",
-    "DEMO", "DIP", "DMSYS", "DSSYS", "EXFSYS", "LBACSYS", "MDSYS", "OLAPSYS",
-    "ORACLE_OCM", "ORDDATA", "ORDPLUGINS", "ORDSYS", "OSE$HTTP$ADMIN", "OUTLN",
-    "PERFSTAT", "SDE", "SYS", "SYSTEM", "TRACESVR", "TSMSYS", "WMSYS", "XDB");
+  private boolean initialized;
 
   private boolean useSchemaSequencePrefix = true;
 
   public OracleDataObjectStore() {
     this(new ArrayRecordFactory());
-  }
-
-  public OracleDataObjectStore(final RecordFactory dataObjectFactory) {
-    super(dataObjectFactory);
-    initSettings();
-  }
-
-  public OracleDataObjectStore(final RecordFactory dataObjectFactory,
-    final DataSource dataSource) {
-    this(dataObjectFactory);
-    setDataSource(dataSource);
   }
 
   public OracleDataObjectStore(final DataSource dataSource) {
@@ -73,6 +61,16 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
     setDataSource(dataSource);
     initSettings();
 
+  }
+
+  public OracleDataObjectStore(final RecordFactory dataObjectFactory) {
+    super(dataObjectFactory);
+    initSettings();
+  }
+
+  public OracleDataObjectStore(final RecordFactory dataObjectFactory, final DataSource dataSource) {
+    this(dataObjectFactory);
+    setDataSource(dataSource);
   }
 
   protected Query addBoundingBoxFilter(Query query) {
@@ -102,24 +100,20 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
             + geometryColumnName
             + ","
             + "MDSYS.SDO_GEOMETRY(2003,?,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,3),MDSYS.SDO_ORDINATE_ARRAY(?,?,?,?)),'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'";
-          query.and(new SqlCondition(where, geometryFactory.getSRID(), x1, y1,
-            x2, y2));
+          query.and(new SqlCondition(where, geometryFactory.getSRID(), x1, y1, x2, y2));
         } else if (geometryAttribute instanceof ArcSdeStGeometryAttribute) {
-          final String where = " SDE.ST_ENVINTERSECTS(" + geometryColumnName
-            + ", ?, ?, ?, ?) = 1";
+          final String where = " SDE.ST_ENVINTERSECTS(" + geometryColumnName + ", ?, ?, ?, ?) = 1";
           query.and(new SqlCondition(where, x1, y1, x2, y2));
         } else {
-          throw new IllegalArgumentException("Unknown geometry attribute "
-            + geometryAttribute);
+          throw new IllegalArgumentException("Unknown geometry attribute " + geometryAttribute);
         }
       }
     }
     return query;
   }
 
-  public AbstractIterator<Record> createOracleIterator(
-    final OracleDataObjectStore dataStore, final Query query,
-    final Map<String, Object> properties) {
+  public AbstractIterator<Record> createOracleIterator(final OracleDataObjectStore dataStore,
+    final Query query, final Map<String, Object> properties) {
     return new OracleJdbcQueryIterator(dataStore, query, properties);
   }
 
@@ -141,8 +135,7 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
     try {
       return JdbcUtils.selectLong(getDataSource(), getConnection(), sql);
     } catch (final SQLException e) {
-      throw new IllegalArgumentException(
-        "Cannot create ID for " + sequenceName, e);
+      throw new IllegalArgumentException("Cannot create ID for " + sequenceName, e);
     }
   }
 
@@ -232,8 +225,7 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
     setExcludeTablePatterns(".*\\$");
     setSqlPrefix("BEGIN ");
     setSqlSuffix(";END;");
-    setIteratorFactory(new DataStoreIteratorFactory(this,
-      "createOracleIterator"));
+    setIteratorFactory(new DataStoreIteratorFactory(this, "createOracleIterator"));
   }
 
   @Override

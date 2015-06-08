@@ -8,7 +8,7 @@ import com.revolsys.swing.action.enablecheck.EnableCheck;
 public abstract class AbstractAction extends javax.swing.AbstractAction {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -57,13 +57,11 @@ public abstract class AbstractAction extends javax.swing.AbstractAction {
 
   public void setEnableCheck(final EnableCheck enableCheck) {
     if (this.enableCheck != null) {
-      this.enableCheck.removeListener("enabled",
-        this.enabledListener);
+      this.enableCheck.removeListener("enabled", this.enabledListener);
     }
     this.enableCheck = enableCheck;
     if (this.enableCheck != null) {
-      this.enableCheck.addListener("enabled",
-        this.enabledListener);
+      this.enableCheck.addListener("enabled", this.enabledListener);
       enableCheck.isEnabled();
     }
   }

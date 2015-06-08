@@ -7,7 +7,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 public class Area implements Serializable {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 2662773652065582230L;
 
@@ -19,8 +19,8 @@ public class Area implements Serializable {
 
   private final String name;
 
-  public Area(final String name, final Envelope latLonBounds,
-    final Authority authority, final boolean deprecated) {
+  public Area(final String name, final Envelope latLonBounds, final Authority authority,
+    final boolean deprecated) {
     this.name = name;
     this.latLonBounds = latLonBounds;
     this.authority = authority;
@@ -31,7 +31,7 @@ public class Area implements Serializable {
   public boolean equals(final Object obj) {
     if (obj instanceof Area) {
       final Area area = (Area)obj;
-      if (!EqualsRegistry.equal(latLonBounds, area.latLonBounds)) {
+      if (!EqualsRegistry.equal(this.latLonBounds, area.latLonBounds)) {
         return false;
       } else {
         return true;
@@ -42,28 +42,28 @@ public class Area implements Serializable {
   }
 
   public Authority getAuthority() {
-    return authority;
+    return this.authority;
   }
 
   public Envelope getLatLonBounds() {
-    return latLonBounds;
+    return this.latLonBounds;
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @Override
   public int hashCode() {
-    return latLonBounds.hashCode();
+    return this.latLonBounds.hashCode();
   }
 
   public boolean isDeprecated() {
-    return deprecated;
+    return this.deprecated;
   }
 
   @Override
   public String toString() {
-    return name;
+    return this.name;
   }
 }

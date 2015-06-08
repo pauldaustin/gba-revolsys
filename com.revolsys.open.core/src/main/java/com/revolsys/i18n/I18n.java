@@ -17,8 +17,7 @@ public final class I18n extends AbstractPropertyChangeObject {
 
   private static Locale locale = Locale.getDefault();
 
-  public static CharSequence getCharSequence(final Class<?> clazz,
-    final String key) {
+  public static CharSequence getCharSequence(final Class<?> clazz, final String key) {
     final I18n i18n = I18n.getInstance(clazz);
     String fullKey;
     if (key != null && key.trim().length() > 0) {
@@ -29,8 +28,7 @@ public final class I18n extends AbstractPropertyChangeObject {
     return new I18nCharSequence(i18n, fullKey);
   }
 
-  private static I18n getExactInstance(final ClassLoader classLoader,
-    final String resourcePath) {
+  private static I18n getExactInstance(final ClassLoader classLoader, final String resourcePath) {
     synchronized (instances) {
       WeakReference<I18n> i18nRef = instances.get(resourcePath);
       I18n i18n = null;
@@ -52,8 +50,7 @@ public final class I18n extends AbstractPropertyChangeObject {
     return getInstance(classLoader, className);
   }
 
-  private static I18n getInstance(final ClassLoader classLoader,
-    final String resourceName) {
+  private static I18n getInstance(final ClassLoader classLoader, final String resourceName) {
     synchronized (instances) {
       final String resourcePath = resourceName.replace('.', '/');
       try {
@@ -63,8 +60,7 @@ public final class I18n extends AbstractPropertyChangeObject {
       } catch (final MissingResourceException e) {
         try {
 
-          final I18n i18n = getExactInstance(classLoader, resourcePath
-            + "/i18n");
+          final I18n i18n = getExactInstance(classLoader, resourcePath + "/i18n");
           return i18n;
         } catch (final MissingResourceException e2) {
 
@@ -110,7 +106,7 @@ public final class I18n extends AbstractPropertyChangeObject {
 
   /**
    * Construct an I18n instance for the category.
-   * 
+   *
    * @param resourcePath The path to the language files.
    */
   private I18n(final ClassLoader classLoader, final String resourcePath) {
@@ -127,14 +123,14 @@ public final class I18n extends AbstractPropertyChangeObject {
    * Get the I18n text from the language file associated with this instance. If
    * no label is defined then a default string is created from the last part of
    * the key.
-   * 
+   *
    * @param key The key of the text in the language file.
    * @return The I18Nized text.
    */
   public String getString(final String key) {
-    if (resourceBundle != null) {
+    if (this.resourceBundle != null) {
       try {
-        return resourceBundle.getString(key);
+        return this.resourceBundle.getString(key);
       } catch (final java.util.MissingResourceException e) {
 
       }
@@ -144,13 +140,13 @@ public final class I18n extends AbstractPropertyChangeObject {
   }
 
   private void loadResourceBundle() {
-    final ClassLoader classLoader = classLoaderReference.get();
-    resourceBundle = ResourceBundle.getBundle(resourcePath,
-      Locale.getDefault(), classLoader);
+    final ClassLoader classLoader = this.classLoaderReference.get();
+    this.resourceBundle = ResourceBundle.getBundle(this.resourcePath, Locale.getDefault(),
+      classLoader);
   }
 
   @Override
   public String toString() {
-    return resourcePath;
+    return this.resourcePath;
   }
 }

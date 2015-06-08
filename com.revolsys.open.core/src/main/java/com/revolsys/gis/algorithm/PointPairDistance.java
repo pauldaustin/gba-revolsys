@@ -52,50 +52,49 @@ public class PointPairDistance {
   }
 
   public Coordinate getCoordinate(final int i) {
-    return pt[i];
+    return this.pt[i];
   }
 
   public Coordinate[] getCoordinates() {
-    return pt;
+    return this.pt;
   }
 
   public double getDistance() {
-    return distance;
+    return this.distance;
   }
 
   public void initialize() {
-    isNull = true;
+    this.isNull = true;
   }
 
   public void initialize(final Coordinate p0, final Coordinate p1) {
-    pt[0].setCoordinate(p0);
-    pt[1].setCoordinate(p1);
-    distance = p0.distance(p1);
-    isNull = false;
+    this.pt[0].setCoordinate(p0);
+    this.pt[1].setCoordinate(p1);
+    this.distance = p0.distance(p1);
+    this.isNull = false;
   }
 
   /**
    * Initializes the points, avoiding recomputing the distance.
-   * 
+   *
    * @param p0
    * @param p1
    * @param distance the distance between p0 and p1
    */
-  private void initialize(final Coordinate p0, final Coordinate p1,
-    final double distance) {
-    pt[0].setCoordinate(p0);
-    pt[1].setCoordinate(p1);
+  private void initialize(final Coordinate p0, final Coordinate p1, final double distance) {
+    this.pt[0].setCoordinate(p0);
+    this.pt[1].setCoordinate(p1);
     this.distance = distance;
-    isNull = false;
+    this.isNull = false;
   }
 
   public void setMaximum(final Coordinate p0, final Coordinate p1) {
-    if (isNull) {
+    if (this.isNull) {
       initialize(p0, p1);
       return;
     }
     final double dist = p0.distance(p1);
-    if (dist > distance) {
+    if (dist > this.distance) {
       initialize(p0, p1, dist);
     }
   }
@@ -105,12 +104,12 @@ public class PointPairDistance {
   }
 
   public void setMinimum(final Coordinate p0, final Coordinate p1) {
-    if (isNull) {
+    if (this.isNull) {
       initialize(p0, p1);
       return;
     }
     final double dist = p0.distance(p1);
-    if (dist < distance) {
+    if (dist < this.distance) {
       initialize(p0, p1, dist);
     }
   }

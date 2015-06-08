@@ -16,17 +16,16 @@ public interface JdbcDatabaseFactory extends RecordStoreFactory {
 
   JdbcDataObjectStore createDataObjectStore(DataSource dataSource);
 
-  @Override
-  JdbcDataObjectStore createRecordStore(
-    Map<String, ? extends Object> connectionProperties);
-
   DataSource createDataSource(Map<String, ? extends Object> connectionProperties);
+
+  @Override
+  JdbcDataObjectStore createRecordStore(Map<String, ? extends Object> connectionProperties);
+
+  List<String> getProductNames();
 
   @Override
   Class<? extends RecordStore> getRecordStoreInterfaceClass(
     Map<String, ? extends Object> connectionProperties);
-
-  List<String> getProductNames();
 
   @Override
   List<String> getUrlPatterns();

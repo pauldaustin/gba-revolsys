@@ -23,8 +23,7 @@ public class PointConverter implements OsnConverter {
     this.geometryFactory = geometryFactory;
   }
 
-  public PointConverter(final GeometryFactory geometryFactory,
-    final String geometryClass) {
+  public PointConverter(final GeometryFactory geometryFactory, final String geometryClass) {
     this.geometryFactory = geometryFactory;
     this.geometryClass = geometryClass;
   }
@@ -32,7 +31,7 @@ public class PointConverter implements OsnConverter {
   @Override
   public Object read(final OsnIterator iterator) {
     final Map<String, Object> values = new TreeMap<String, Object>();
-    values.put("type", geometryClass);
+    values.put("type", this.geometryClass);
     Geometry geometry = null;
 
     String attributeName = iterator.nextAttributeName();
@@ -56,7 +55,7 @@ public class PointConverter implements OsnConverter {
           iterator.throwParseError("Expecting Coord2D or Coord3D");
         }
         iterator.nextEndObject();
-        geometry = geometryFactory.createPoint(coordinate);
+        geometry = this.geometryFactory.createPoint(coordinate);
       } else {
         readAttribute(iterator, attributeName, values);
       }
@@ -68,15 +67,14 @@ public class PointConverter implements OsnConverter {
     return geometry;
   }
 
-  protected void readAttribute(final OsnIterator iterator,
-    final String attributeName, final Map<String, Object> values) {
+  protected void readAttribute(final OsnIterator iterator, final String attributeName,
+    final Map<String, Object> values) {
     iterator.next();
     values.put(attributeName, iterator.getValue());
   }
 
   @Override
-  public void write(final OsnSerializer serializer, final Object object)
-    throws IOException {
+  public void write(final OsnSerializer serializer, final Object object) throws IOException {
     if (object instanceof Point) {
       final Point point = (Point)object;
       final CoordinatesList points = CoordinatesListUtil.get(point);
@@ -85,7 +83,7 @@ public class PointConverter implements OsnConverter {
       final double x = points.getX(0);
       final double y = points.getY(0);
       final double z = points.getZ(0);
-      serializer.startObject(geometryClass);
+      serializer.startObject(this.geometryClass);
       serializer.attributeName("coords");
       if (numAxis == 2) {
         serializer.startObject("/Coord2D");
@@ -110,8 +108,8 @@ public class PointConverter implements OsnConverter {
     }
   }
 
-  protected void writeAttribute(final OsnSerializer serializer,
-    final Map<String, Object> values, final String name) throws IOException {
+  protected void writeAttribute(final OsnSerializer serializer, final Map<String, Object> values,
+    final String name) throws IOException {
     final Object value = values.get(name);
     if (value != null) {
       serializer.endLine();
@@ -120,8 +118,8 @@ public class PointConverter implements OsnConverter {
 
   }
 
-  protected void writeAttributes(final OsnSerializer serializer,
-    final Map<String, Object> values) throws IOException {
+  protected void writeAttributes(final OsnSerializer serializer, final Map<String, Object> values)
+    throws IOException {
     writeEnumAttribute(serializer, values, "qualifier");
   }
 

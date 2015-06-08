@@ -56,8 +56,8 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
     return path;
   }
 
-  public static Shape getShape(final Viewport2D viewport,
-    final GeometryStyle style, final Geometry geometry) {
+  public static Shape getShape(final Viewport2D viewport, final GeometryStyle style,
+    final Geometry geometry) {
     final BoundingBox viewExtent = viewport.getBoundingBox();
     if (geometry != null) {
       if (!viewExtent.isEmpty()) {
@@ -73,9 +73,8 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
     return null;
   }
 
-  public static final void renderGeometry(final Viewport2D viewport,
-    final Graphics2D graphics, final Geometry geometry,
-    final GeometryStyle style) {
+  public static final void renderGeometry(final Viewport2D viewport, final Graphics2D graphics,
+    final Geometry geometry, final GeometryStyle style) {
     if (geometry != null) {
       for (int i = 0; i < geometry.getNumGeometries(); i++) {
         final Geometry part = geometry.getGeometryN(i);
@@ -93,13 +92,11 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
     }
   }
 
-  public static final void renderLineString(final Viewport2D viewport,
-    final Graphics2D graphics, final LineString lineString,
-    final GeometryStyle style) {
+  public static final void renderLineString(final Viewport2D viewport, final Graphics2D graphics,
+    final LineString lineString, final GeometryStyle style) {
     final Shape shape = getShape(viewport, style, lineString);
     if (shape != null) {
-      final boolean savedUseModelUnits = viewport.setUseModelCoordinates(false,
-        graphics);
+      final boolean savedUseModelUnits = viewport.setUseModelCoordinates(false, graphics);
       final Paint paint = graphics.getPaint();
       try {
         style.setLineStyle(viewport, graphics);
@@ -111,9 +108,8 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
     }
   }
 
-  public static final void renderOutline(final Viewport2D viewport,
-    final Graphics2D graphics, final Geometry geometry,
-    final GeometryStyle style) {
+  public static final void renderOutline(final Viewport2D viewport, final Graphics2D graphics,
+    final Geometry geometry, final GeometryStyle style) {
     if (geometry != null) {
       for (int i = 0; i < geometry.getNumGeometries(); i++) {
         final Geometry part = geometry.getGeometryN(i);
@@ -135,12 +131,11 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
     }
   }
 
-  public static final void renderPolygon(final Viewport2D viewport,
-    final Graphics2D graphics, final Polygon polygon, final GeometryStyle style) {
+  public static final void renderPolygon(final Viewport2D viewport, final Graphics2D graphics,
+    final Polygon polygon, final GeometryStyle style) {
     final Shape shape = getShape(viewport, style, polygon);
     if (shape != null) {
-      final boolean savedUseModelUnits = viewport.setUseModelCoordinates(false,
-        graphics);
+      final boolean savedUseModelUnits = viewport.setUseModelCoordinates(false, graphics);
       final Paint paint = graphics.getPaint();
       try {
         style.setFillStyle(viewport, graphics);
@@ -160,25 +155,23 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
     this(layer, new GeometryStyle());
   }
 
-  public GeometryStyleRenderer(final AbstractRecordLayer layer,
-    final GeometryStyle style) {
+  public GeometryStyleRenderer(final AbstractRecordLayer layer, final GeometryStyle style) {
     this(layer, null, style);
   }
 
-  public GeometryStyleRenderer(final AbstractRecordLayer layer,
-    final LayerRenderer<?> parent) {
+  public GeometryStyleRenderer(final AbstractRecordLayer layer, final LayerRenderer<?> parent) {
     this(layer, parent, new GeometryStyle());
   }
 
-  public GeometryStyleRenderer(final AbstractRecordLayer layer,
-    final LayerRenderer<?> parent, final GeometryStyle style) {
+  public GeometryStyleRenderer(final AbstractRecordLayer layer, final LayerRenderer<?> parent,
+    final GeometryStyle style) {
     super("geometryStyle", "Geometry Style", layer, parent);
     this.style = style;
     setIcon(ICON);
   }
 
-  public GeometryStyleRenderer(final AbstractRecordLayer layer,
-    final LayerRenderer<?> parent, final Map<String, Object> geometryStyle) {
+  public GeometryStyleRenderer(final AbstractRecordLayer layer, final LayerRenderer<?> parent,
+    final Map<String, Object> geometryStyle) {
     super("geometryStyle", "Geometry Style", layer, parent, geometryStyle);
     this.style = new GeometryStyle(geometryStyle);
     setIcon(ICON);
@@ -187,7 +180,7 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
   @Override
   public GeometryStyleRenderer clone() {
     final GeometryStyleRenderer clone = (GeometryStyleRenderer)super.clone();
-    clone.style = style.clone();
+    clone.style = this.style.clone();
     return clone;
   }
 
@@ -207,7 +200,7 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
       final DataType geometryDataType = layer.getGeometryType();
       if (DataTypes.POINT.equals(geometryDataType)
         || DataTypes.MULTI_POINT.equals(geometryDataType)) {
-        return style.getMarker().getIcon(geometryStyle);
+        return this.style.getMarker().getIcon(geometryStyle);
       } else if (DataTypes.LINE_STRING.equals(geometryDataType)
         || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
         shape = GeometryStylePreview.getLineShape(16);
@@ -218,11 +211,9 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
         return super.getIcon();
       }
 
-      final BufferedImage image = new BufferedImage(16, 16,
-        BufferedImage.TYPE_INT_ARGB);
+      final BufferedImage image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
       final Graphics2D graphics = image.createGraphics();
-      graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON);
+      graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
       if (DataTypes.POLYGON.equals(geometryDataType)) {
         graphics.setPaint(geometryStyle.getPolygonFill());
@@ -243,12 +234,10 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
   }
 
   @Override
-  public void renderRecord(final Viewport2D viewport,
-    final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractRecordLayer layer, final LayerDataObject object) {
+  public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject object) {
     final Geometry geometry = object.getGeometryValue();
-    graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-      RenderingHints.VALUE_ANTIALIAS_ON);
+    graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     renderGeometry(viewport, graphics, geometry, this.style);
   }
 

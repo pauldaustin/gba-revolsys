@@ -9,15 +9,15 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
 
-public class DataObjectDirectoryReader extends
-  AbstractDirectoryReader<Record> implements RecordDefinitionFactory {
+public class DataObjectDirectoryReader extends AbstractDirectoryReader<Record> implements
+  RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
 
@@ -30,7 +30,7 @@ public class DataObjectDirectoryReader extends
     final RecordDefinition metaData = reader.getRecordDefinition();
     if (metaData != null) {
       final String path = metaData.getPath();
-      typePathMetaDataMap.put(path, metaData);
+      this.typePathMetaDataMap.put(path, metaData);
     }
   }
 
@@ -48,24 +48,24 @@ public class DataObjectDirectoryReader extends
 
   @Override
   public RecordDefinition getRecordDefinition(final String path) {
-    final RecordDefinition metaData = typePathMetaDataMap.get(path);
+    final RecordDefinition metaData = this.typePathMetaDataMap.get(path);
     return metaData;
   }
 
   public Statistics getStatistics() {
-    return statistics;
+    return this.statistics;
   }
 
   /**
    * Get the next data object read by this reader.
-   * 
+   *
    * @return The next DataObject.
    * @exception NoSuchElementException If the reader has no more data objects.
    */
   @Override
   public Record next() {
     final Record record = super.next();
-    statistics.add(record);
+    this.statistics.add(record);
     return record;
   }
 

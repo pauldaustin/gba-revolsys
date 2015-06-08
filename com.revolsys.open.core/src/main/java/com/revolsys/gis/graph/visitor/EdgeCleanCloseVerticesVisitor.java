@@ -27,27 +27,21 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
 
   private final double minDistance;
 
-  private Visitor<Edge<T>> visitor;
-
-  public EdgeCleanCloseVerticesVisitor(final Graph<T> graph,
-    final double minDistance) {
+  public EdgeCleanCloseVerticesVisitor(final Graph<T> graph, final double minDistance) {
     this.graph = graph;
     this.minDistance = minDistance;
   }
 
-  public EdgeCleanCloseVerticesVisitor(final Graph<T> graph,
-    final double minDistance, final Visitor<Edge<T>> visitor) {
+  public EdgeCleanCloseVerticesVisitor(final Graph<T> graph, final double minDistance,
+    final Visitor<Edge<T>> visitor) {
     this.graph = graph;
     this.minDistance = minDistance;
-    this.visitor = visitor;
   }
 
   private double getAngle(final Edge<T> edge,
-    final CoordinateSequenceCoordinatesIterator ordinates,
-    final int relativeIndex) {
+    final CoordinateSequenceCoordinatesIterator ordinates, final int relativeIndex) {
     final int index = ordinates.getIndex();
-    if (index + relativeIndex - 1 < 0
-      || index + relativeIndex + 1 >= ordinates.size()) {
+    if (index + relativeIndex - 1 < 0 || index + relativeIndex + 1 >= ordinates.size()) {
       return Double.NaN;
     } else {
       final double x1 = ordinates.getValue(relativeIndex - 1, 0);
@@ -61,11 +55,11 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
   }
 
   public CoordinateEventListenerList getCoordinateListeners() {
-    return coordinateListeners;
+    return this.coordinateListeners;
   }
 
   public EdgeEventListenerList<T> getEdgeListeners() {
-    return edgeListeners;
+    return this.edgeListeners;
   }
 
   // TODO look at the angles with the previous and next segments to decide
@@ -74,7 +68,7 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
   // of the next and previous segments.
   /**
    * Visit the edge performing any required cleanup.
-   * 
+   *
    * @param edge The edge to visit.
    * @return true If further edges should be processed.
    */
@@ -97,7 +91,7 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
         final double x2 = ordinates.getX();
         final double y2 = ordinates.getY();
         final double distance = MathUtil.distance(x1, y1, x2, y2);
-        if (distance < minDistance) {
+        if (distance < this.minDistance) {
           final double previousAngle = getAngle(edge, ordinates, -1);
           final double angle = getAngle(edge, ordinates, 0);
           final double nextAngle = getAngle(edge, ordinates, 1);
@@ -112,20 +106,13 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
 
           }
           if (fixed) {
-            coordinateListeners.coordinateEvent(
-              new Coordinate(x2, y2),
-              typePath,
-              "Short Segment",
-              "Fixed",
-              distance + " " + Math.toDegrees(previousAngle) + " "
-                + Math.toDegrees(angle) + " " + Math.toDegrees(nextAngle));
+            this.coordinateListeners.coordinateEvent(new Coordinate(x2, y2), typePath,
+              "Short Segment", "Fixed",
+              distance + " " + Math.toDegrees(previousAngle) + " " + Math.toDegrees(angle) + " "
+                + Math.toDegrees(nextAngle));
           } else {
-            coordinateListeners.coordinateEvent(
-              new Coordinate(x2, y2),
-              typePath,
-              "Short Segment",
-              "Review",
-              distance + " " + Math.toDegrees(previousAngle) + " "
+            this.coordinateListeners.coordinateEvent(new Coordinate(x2, y2), typePath,
+              "Short Segment", "Review", distance + " " + Math.toDegrees(previousAngle) + " "
                 + Math.toDegrees(angle) + " " + Math.toDegrees(nextAngle));
           }
         }
@@ -134,8 +121,8 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
       }
       if (!removeIndicies.isEmpty()) {
         final int dimension = coordinates.getDimension();
-        final CoordinatesList newCoordinates = new DoubleCoordinatesList(
-          numCoordinates - removeIndicies.size(), dimension);
+        final CoordinatesList newCoordinates = new DoubleCoordinatesList(numCoordinates
+          - removeIndicies.size(), dimension);
         int k = 0;
         for (int j = 0; j < numCoordinates; j++) {
           if (!removeIndicies.contains(j)) {
@@ -147,9 +134,8 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
           }
         }
         final LineString newLine = geometryFactory.createLineString(newCoordinates);
-        final Edge<T> newEdge = graph.replaceEdge(edge, newLine);
-        edgeListeners.edgeEvent(newEdge, "Edge close indicies",
-          EdgeEvent.EDGE_CHANGED, null);
+        final Edge<T> newEdge = this.graph.replaceEdge(edge, newLine);
+        this.edgeListeners.edgeEvent(newEdge, "Edge close indicies", EdgeEvent.EDGE_CHANGED, null);
       }
     }
     return true;

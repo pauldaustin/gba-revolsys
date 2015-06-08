@@ -20,13 +20,12 @@ import com.revolsys.swing.map.layer.dataobject.table.DataObjectLayerTable;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
-  implements PropertyChangeListener {
+public class DataObjectListLayerTableModel extends DataObjectLayerTableModel implements
+  PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   public static DataObjectLayerTable createTable(final DataObjectListLayer layer) {
-    final DataObjectLayerTableModel model = new DataObjectListLayerTableModel(
-      layer);
+    final DataObjectLayerTableModel model = new DataObjectListLayerTableModel(layer);
     final DataObjectLayerTable table = new DataObjectLayerTable(model);
 
     Property.addListener(layer, "hasSelectedRecords", new InvokeMethodListener(
@@ -54,8 +53,7 @@ public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
   }
 
   @Override
-  public void addPropertyChangeListener(
-    final PropertyChangeListener propertyChangeListener) {
+  public void addPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
     this.propertyChangeListeners.add(propertyChangeListener);
   }
 
@@ -66,10 +64,9 @@ public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
     this.layer = null;
   }
 
-  private void firePropertyChange(final Record object, final String name,
-    final Object oldValue, final Object newValue) {
-    final PropertyChangeEvent event = new PropertyChangeEvent(object, name,
-      oldValue, newValue);
+  private void firePropertyChange(final Record object, final String name, final Object oldValue,
+    final Object newValue) {
+    final PropertyChangeEvent event = new PropertyChangeEvent(object, name, oldValue, newValue);
     for (final PropertyChangeListener listener : this.propertyChangeListeners) {
       listener.propertyChange(event);
     }
@@ -84,7 +81,7 @@ public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
     if (getAttributeFilterMode().equals(MODE_ALL)) {
       final Query query = getFilterQuery();
       query.setOrderBy(getOrderBy());
-      this.records = layer.query(query);
+      this.records = this.layer.query(query);
       return this.records.size();
     } else {
       return super.getRowCountInternal();
@@ -110,21 +107,19 @@ public class DataObjectListLayerTableModel extends DataObjectLayerTableModel
   @Override
   protected LayerDataObject loadLayerRecord(final int row) {
     if (row >= 0 && row < this.records.size()) {
-      return records.get(row);
+      return this.records.get(row);
     } else {
       return null;
     }
   }
 
   @Override
-  public void removePropertyChangeListener(
-    final PropertyChangeListener propertyChangeListener) {
+  public void removePropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
     this.propertyChangeListeners.remove(propertyChangeListener);
   }
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
     final Record record = getRecord(rowIndex);
     if (record != null) {
       final String name = getColumnName(columnIndex);

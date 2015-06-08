@@ -6,8 +6,8 @@ import com.revolsys.gis.model.geometry.LineSegment;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
-public class CoordinatesListIndexLineSegmentIterator implements
-  Iterator<LineSegment>, Iterable<LineSegment> {
+public class CoordinatesListIndexLineSegmentIterator implements Iterator<LineSegment>,
+  Iterable<LineSegment> {
   private static final GeometryFactory FACTORY = GeometryFactory.getFactory();
 
   private final GeometryFactory factory;
@@ -33,7 +33,7 @@ public class CoordinatesListIndexLineSegmentIterator implements
 
   @Override
   public boolean hasNext() {
-    return index < points.size() - 2;
+    return this.index < this.points.size() - 2;
   }
 
   @Override
@@ -43,8 +43,9 @@ public class CoordinatesListIndexLineSegmentIterator implements
 
   @Override
   public LineSegment next() {
-    index++;
-    return new LineSegment(factory, points.get(index), points.get(index + 1));
+    this.index++;
+    return new LineSegment(this.factory, this.points.get(this.index),
+      this.points.get(this.index + 1));
   }
 
   @Override

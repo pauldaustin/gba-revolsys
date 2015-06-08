@@ -15,8 +15,8 @@ import com.revolsys.jts.geom.GeometryFactory;
 
 public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
 
-  public PostgreSQLJdbcQueryIterator(final JdbcDataObjectStore dataStore,
-    final Query query, final Map<String, Object> properties) {
+  public PostgreSQLJdbcQueryIterator(final JdbcDataObjectStore dataStore, final Query query,
+    final Map<String, Object> properties) {
     super(dataStore, query, properties);
   }
 

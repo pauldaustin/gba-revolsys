@@ -14,8 +14,8 @@ public class SimpleRectangularMapTile implements RectangularMapTile {
 
   private final String name;
 
-  public SimpleRectangularMapTile(final RectangularMapGrid grid,
-    final String formattedName, final String name, final BoundingBox boundingBox) {
+  public SimpleRectangularMapTile(final RectangularMapGrid grid, final String formattedName,
+    final String name, final BoundingBox boundingBox) {
     this.grid = grid;
     this.name = name;
     this.formattedName = formattedName;
@@ -24,33 +24,33 @@ public class SimpleRectangularMapTile implements RectangularMapTile {
 
   @Override
   public BoundingBox getBoundingBox() {
-    return boundingBox;
+    return this.boundingBox;
   }
 
   @Override
   public String getFormattedName() {
-    return formattedName;
+    return this.formattedName;
   }
 
   @Override
   public RectangularMapGrid getGrid() {
-    return grid;
+    return this.grid;
   }
 
   @Override
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @Override
   public Polygon getPolygon(final GeometryFactory factory, final int numPoints) {
-    return boundingBox.toPolygon(factory, numPoints);
+    return this.boundingBox.toPolygon(factory, numPoints);
   }
 
   @Override
-  public Polygon getPolygon(final GeometryFactory factory,
-    final int numXPoints, final int numYPoints) {
-    return boundingBox.toPolygon(factory, numXPoints, numYPoints);
+  public Polygon getPolygon(final GeometryFactory factory, final int numXPoints,
+    final int numYPoints) {
+    return this.boundingBox.toPolygon(factory, numXPoints, numYPoints);
   }
 
   @Override
@@ -67,6 +67,6 @@ public class SimpleRectangularMapTile implements RectangularMapTile {
 
   @Override
   public String toString() {
-    return name;
+    return this.name;
   }
 }

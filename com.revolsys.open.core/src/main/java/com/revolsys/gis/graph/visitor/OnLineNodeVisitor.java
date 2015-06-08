@@ -13,8 +13,8 @@ import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
 public class OnLineNodeVisitor<T> implements Visitor<Node<T>> {
-  public static <T> List<Node<T>> getNodes(final Graph<T> graph,
-    final LineString line, final double maxDistance) {
+  public static <T> List<Node<T>> getNodes(final Graph<T> graph, final LineString line,
+    final double maxDistance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
     BoundingBox env = BoundingBox.getBoundingBox(line);
     env = env.expand(maxDistance);
@@ -28,8 +28,7 @@ public class OnLineNodeVisitor<T> implements Visitor<Node<T>> {
 
   private final Visitor<Node<T>> matchVisitor;
 
-  public OnLineNodeVisitor(final LineString line,
-    final Visitor<Node<T>> matchVisitor) {
+  public OnLineNodeVisitor(final LineString line, final Visitor<Node<T>> matchVisitor) {
     this.line = line;
     this.matchVisitor = matchVisitor;
   }
@@ -37,8 +36,8 @@ public class OnLineNodeVisitor<T> implements Visitor<Node<T>> {
   @Override
   public boolean visit(final Node<T> node) {
     final Coordinates point = node;
-    if (LineStringUtil.isPointOnLine(line, point)) {
-      matchVisitor.visit(node);
+    if (LineStringUtil.isPointOnLine(this.line, point)) {
+      this.matchVisitor.visit(node);
     }
     return true;
   }

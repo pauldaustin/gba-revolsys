@@ -15,7 +15,7 @@ import com.revolsys.gis.model.geometry.LineString;
  * performed.
  * <p>
  * The implementation handles empty geometry and empty snap vertex sets.
- * 
+ *
  * @author Martin Davis
  * @version 1.7
  */
@@ -38,19 +38,18 @@ public class LineStringSnapper {
   /**
    * Creates a new snapper using the given points as source points to be
    * snapped.
-   * 
+   *
    * @param srcPts the points to snap
    * @param snapTolerance the snap tolerance to use
    */
-  public LineStringSnapper(final CoordinatesList srcPts,
-    final double snapTolerance) {
+  public LineStringSnapper(final CoordinatesList srcPts, final double snapTolerance) {
     this.srcPts = srcPts;
-    isClosed = isClosed(srcPts);
+    this.isClosed = isClosed(srcPts);
     this.snapTolerance = snapTolerance;
   }
 
-  public void add(final List<Coordinates> list, final int i,
-    final Coordinates coord, final boolean allowRepeated) {
+  public void add(final List<Coordinates> list, final int i, final Coordinates coord,
+    final boolean allowRepeated) {
     // don't add duplicate coordinates
     if (!allowRepeated) {
       final int size = list.size();
@@ -83,14 +82,13 @@ public class LineStringSnapper {
    * <p>
    * Also, if the snap vertex occurs as a vertex in the src coordinate list, no
    * snapping is performed.
-   * 
+   *
    * @param snapPt the point to snap to
    * @param srcCoords the source segment coordinates
    * @return the index of the snapped segment
    * @return -1 if no segment snaps to the snap point
    */
-  private int findSegmentIndexToSnap(final Coordinates snapPt,
-    final List<Coordinates> srcCoords) {
+  private int findSegmentIndexToSnap(final Coordinates snapPt, final List<Coordinates> srcCoords) {
     double minDist = Double.MAX_VALUE;
     int snapIndex = -1;
     for (int i = 0; i < srcCoords.size() - 1; i++) {
@@ -102,7 +100,7 @@ public class LineStringSnapper {
        * snap pt is already in the src list, don't snap at all.
        */
       if (p0.equals2d(snapPt) || p1.equals2d(snapPt)) {
-        if (allowSnappingToSourceVertices) {
+        if (this.allowSnappingToSourceVertices) {
           continue;
         } else {
           return -1;
@@ -110,7 +108,7 @@ public class LineStringSnapper {
       }
 
       final double dist = LineSegmentUtil.distance(p0, p1, snapPt);
-      if (dist < snapTolerance && dist < minDist) {
+      if (dist < this.snapTolerance && dist < minDist) {
         minDist = dist;
         snapIndex = i;
       }
@@ -118,22 +116,20 @@ public class LineStringSnapper {
     return snapIndex;
   }
 
-  private Coordinates findSnapForVertex(final Coordinates pt,
-    final List<Coordinates> snapPts) {
+  private Coordinates findSnapForVertex(final Coordinates pt, final List<Coordinates> snapPts) {
     for (int i = 0; i < snapPts.size(); i++) {
       // if point is already equal to a src pt, don't snap
       final Coordinates snapPoint = snapPts.get(i);
       if (pt.equals2d(snapPoint)) {
         return null;
-      } else if (pt.distance(snapPoint) < snapTolerance) {
+      } else if (pt.distance(snapPoint) < this.snapTolerance) {
         return snapPoint;
       }
     }
     return null;
   }
 
-  public void setAllowSnappingToSourceVertices(
-    final boolean allowSnappingToSourceVertices) {
+  public void setAllowSnappingToSourceVertices(final boolean allowSnappingToSourceVertices) {
     this.allowSnappingToSourceVertices = allowSnappingToSourceVertices;
   }
 
@@ -145,12 +141,11 @@ public class LineStringSnapper {
    * For each distinct snap vertex, at most one source segment is snapped to.
    * This prevents "cracking" multiple segments at the same point, which would
    * likely cause topology collapse when being used on polygonal linework.
-   * 
+   *
    * @param srcCoords the coordinates of the source linestring to be snapped
    * @param snapPts the target snap vertices
    */
-  private void snapSegments(final List<Coordinates> srcCoords,
-    final List<Coordinates> snapPts) {
+  private void snapSegments(final List<Coordinates> srcCoords, final List<Coordinates> snapPts) {
     // guard against empty input
     if (snapPts.size() == 0) {
       return;
@@ -183,13 +178,12 @@ public class LineStringSnapper {
   /**
    * Snaps the vertices and segments of the source LineString to the given set
    * of snap vertices.
-   * 
+   *
    * @param snapPts the vertices to snap to
    * @return a list of the snapped points
    */
   public List<Coordinates> snapTo(final List<Coordinates> snapPts) {
-    final List<Coordinates> coordList = new ArrayList<Coordinates>(
-      srcPts.getList());
+    final List<Coordinates> coordList = new ArrayList<Coordinates>(this.srcPts.getList());
 
     snapVertices(coordList, snapPts);
     snapSegments(coordList, snapPts);
@@ -199,15 +193,14 @@ public class LineStringSnapper {
 
   /**
    * Snap source vertices to vertices in the target.
-   * 
+   *
    * @param srcCoords the points to snap
    * @param snapPts the points to snap to
    */
-  private void snapVertices(final List<Coordinates> srcCoords,
-    final List<Coordinates> snapPts) {
+  private void snapVertices(final List<Coordinates> srcCoords, final List<Coordinates> snapPts) {
     // try snapping vertices
     // if src is a ring then don't snap final vertex
-    final int end = isClosed ? srcCoords.size() - 1 : srcCoords.size();
+    final int end = this.isClosed ? srcCoords.size() - 1 : srcCoords.size();
     for (int i = 0; i < end; i++) {
       final Coordinates srcPt = srcCoords.get(i);
       final Coordinates snapVert = findSnapForVertex(srcPt, snapPts);
@@ -215,7 +208,7 @@ public class LineStringSnapper {
         // update src with snap pt
         srcCoords.set(i, new DoubleCoordinates(snapVert));
         // keep final closing point in synch (rings only)
-        if (i == 0 && isClosed) {
+        if (i == 0 && this.isClosed) {
           srcCoords.set(srcCoords.size() - 1, new DoubleCoordinates(snapVert));
         }
       }

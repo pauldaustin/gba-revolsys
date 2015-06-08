@@ -5,13 +5,13 @@
  * $Revision: 112 $
 
  * Copyright 2004-2005 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ package com.revolsys.gis.parallel;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -31,15 +30,14 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.types.DataType;
 import com.revolsys.io.Path;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.AbstractInOutProcess;
 
-public class AddDefaultValuesProcess extends
-  AbstractInOutProcess<Record, Record> {
+public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record> {
   private static final Logger log = Logger.getLogger(AddDefaultValuesProcess.class);
 
   private Set<String> excludedAttributeNames = new HashSet<String>();
@@ -50,8 +48,7 @@ public class AddDefaultValuesProcess extends
 
   private final Map<RecordDefinition, Map<String, Object>> typeDefaultValues = new HashMap<RecordDefinition, Map<String, Object>>();
 
-  private void addDefaultValues(final Map<String, Object> defaultValues,
-    final RecordDefinition type) {
+  private void addDefaultValues(final Map<String, Object> defaultValues, final RecordDefinition type) {
     if (Path.getPath(type.getPath()).equals(schemaName)) {
       defaultValues.putAll(type.getDefaultValues());
     }
@@ -74,7 +71,7 @@ public class AddDefaultValuesProcess extends
   /**
    * Get the list of attribute names that will be excluded from having the
    * default values set.
-   * 
+   *
    * @return The names of the attributes to exclude.
    */
   public Set<String> getExcludedAttributeNames() {
@@ -87,7 +84,7 @@ public class AddDefaultValuesProcess extends
 
   /**
    * Get the schema name of the type definitions to get the default values from.
-   * 
+   *
    * @return The schema name.
    */
   public String getSchemaName() {
@@ -115,11 +112,8 @@ public class AddDefaultValuesProcess extends
     }
   }
 
-  private void processDefaultValues(final Record dataObject,
-    final Map<String, Object> defaultValues) {
-    for (final Iterator<Entry<String, Object>> defaults = defaultValues.entrySet()
-      .iterator(); defaults.hasNext();) {
-      final Entry<String, Object> defaultValue = defaults.next();
+  private void processDefaultValues(final Record dataObject, final Map<String, Object> defaultValues) {
+    for (final Entry<String, Object> defaultValue : defaultValues.entrySet()) {
       final String key = defaultValue.getKey();
       final Object value = defaultValue.getValue();
       setDefaultValue(dataObject, key, value);
@@ -134,12 +128,10 @@ public class AddDefaultValuesProcess extends
     }
   }
 
-  private void setDefaultValue(final Record dataObject, final String key,
-    final Object value) {
+  private void setDefaultValue(final Record dataObject, final String key, final Object value) {
     final int dotIndex = key.indexOf('.');
     if (dotIndex == -1) {
-      if (dataObject.getValue(key) == null
-        && !excludedAttributeNames.contains(key)) {
+      if (dataObject.getValue(key) == null && !excludedAttributeNames.contains(key)) {
         log.info("Adding attribute " + key + "=" + value);
         dataObject.setValue(key, value);
       }
@@ -165,8 +157,7 @@ public class AddDefaultValuesProcess extends
         } else if (attributeValue instanceof Record) {
           final Record subObject = (Record)attributeValue;
           setDefaultValue(subObject, subKey, value);
-        } else if (!attributeName.equals(dataObject.getRecordDefinition()
-          .getGeometryFieldName())) {
+        } else if (!attributeName.equals(dataObject.getRecordDefinition().getGeometryFieldName())) {
           log.error("Attribute '" + attributeName + "' must be a DataObject");
         }
       } finally {
@@ -178,7 +169,7 @@ public class AddDefaultValuesProcess extends
   /**
    * Set the list of attribute names that will be excluded from having the
    * default values set.
-   * 
+   *
    * @param excludedAttributeNames The names of the attributes to exclude.
    */
   public void setExcludedAttributeNames(final Set<String> excludedAttributeNames) {
@@ -191,7 +182,7 @@ public class AddDefaultValuesProcess extends
 
   /**
    * Set the schema name of the type definitions to get the default values from.
-   * 
+   *
    * @param schemaName The schema name.
    */
   public void setSchemaName(final String schemaName) {

@@ -25,8 +25,7 @@ public class EdgeEndBundle extends EdgeEnd {
   private final List edgeEnds = new ArrayList();
 
   public EdgeEndBundle(final BoundaryNodeRule boundaryNodeRule, final EdgeEnd e) {
-    super(e.getEdge(), e.getCoordinate(), e.getDirectedCoordinate(), new Label(
-      e.getLabel()));
+    super(e.getEdge(), e.getCoordinate(), e.getDirectedCoordinate(), new Label(e.getLabel()));
     insert(e);
     /*
      * if (boundaryNodeRule != null) this.boundaryNodeRule = boundaryNodeRule;
@@ -55,9 +54,9 @@ public class EdgeEndBundle extends EdgeEnd {
       }
     }
     if (isArea) {
-      label = new Label(Location.NONE, Location.NONE, Location.NONE);
+      this.label = new Label(Location.NONE, Location.NONE, Location.NONE);
     } else {
-      label = new Label(Location.NONE);
+      this.label = new Label(Location.NONE);
     }
 
     // compute the On label, and the side labels if present
@@ -89,8 +88,7 @@ public class EdgeEndBundle extends EdgeEnd {
    * <li> otherwise, the attribute is NULL.
    * </ul>
    */
-  private void computeLabelOn(final int geomIndex,
-    final BoundaryNodeRule boundaryNodeRule) {
+  private void computeLabelOn(final int geomIndex, final BoundaryNodeRule boundaryNodeRule) {
     // compute the ON location value
     int boundaryCount = 0;
     boolean foundInterior = false;
@@ -112,7 +110,7 @@ public class EdgeEndBundle extends EdgeEnd {
     if (boundaryCount > 0) {
       loc = GeometryGraph.determineBoundary(boundaryNodeRule, boundaryCount);
     }
-    label.setLocation(geomIndex, loc);
+    this.label.setLocation(geomIndex, loc);
 
   }
 
@@ -136,10 +134,10 @@ public class EdgeEndBundle extends EdgeEnd {
       if (e.getLabel().isArea()) {
         final int loc = e.getLabel().getLocation(geomIndex, side);
         if (loc == Location.INTERIOR) {
-          label.setLocation(geomIndex, side, Location.INTERIOR);
+          this.label.setLocation(geomIndex, side, Location.INTERIOR);
           return;
         } else if (loc == Location.EXTERIOR) {
-          label.setLocation(geomIndex, side, Location.EXTERIOR);
+          this.label.setLocation(geomIndex, side, Location.EXTERIOR);
         }
       }
     }
@@ -154,27 +152,27 @@ public class EdgeEndBundle extends EdgeEnd {
   }
 
   public List getEdgeEnds() {
-    return edgeEnds;
+    return this.edgeEnds;
   }
 
   @Override
   public Label getLabel() {
-    return label;
+    return this.label;
   }
 
   public void insert(final EdgeEnd e) {
     // Assert: start point is the same
     // Assert: direction is the same
-    edgeEnds.add(e);
+    this.edgeEnds.add(e);
   }
 
   public Iterator iterator() {
-    return edgeEnds.iterator();
+    return this.edgeEnds.iterator();
   }
 
   @Override
   public void print(final PrintStream out) {
-    out.println("EdgeEndBundle--> Label: " + label);
+    out.println("EdgeEndBundle--> Label: " + this.label);
     for (final Iterator it = iterator(); it.hasNext();) {
       final EdgeEnd ee = (EdgeEnd)it.next();
       ee.print(out);
@@ -186,6 +184,6 @@ public class EdgeEndBundle extends EdgeEnd {
    * Update the IM with the contribution for the computed label for the EdgeStubs.
    */
   void updateIM(final IntersectionMatrix im) {
-    Edge.updateIM(label, im);
+    Edge.updateIM(this.label, im);
   }
 }

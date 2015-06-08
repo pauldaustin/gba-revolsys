@@ -6,11 +6,10 @@ import java.util.TreeMap;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 
-public class DataObjectStoreSchemaMapProxy extends
-  TreeMap<String, RecordStoreSchema> {
+public class DataObjectStoreSchemaMapProxy extends TreeMap<String, RecordStoreSchema> {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -1711922998363200190L;
 
@@ -18,8 +17,7 @@ public class DataObjectStoreSchemaMapProxy extends
 
   private final AbstractRecordStore dataObjectStore;
 
-  public DataObjectStoreSchemaMapProxy(
-    final AbstractRecordStore dataObjectStore,
+  public DataObjectStoreSchemaMapProxy(final AbstractRecordStore dataObjectStore,
     final Map<String, RecordStoreSchema> map) {
     this.dataObjectStore = dataObjectStore;
     this.map = map;
@@ -29,10 +27,10 @@ public class DataObjectStoreSchemaMapProxy extends
   public RecordStoreSchema get(final Object key) {
     RecordStoreSchema schema = super.get(key);
     if (schema == null) {
-      schema = map.get(key);
+      schema = this.map.get(key);
       if (schema != null) {
         final String path = schema.getPath();
-        schema = new DataObjectStoreSchemaProxy(dataObjectStore, path, schema);
+        schema = new DataObjectStoreSchemaProxy(this.dataObjectStore, path, schema);
         super.put(path, schema);
       }
     }
@@ -40,11 +38,10 @@ public class DataObjectStoreSchemaMapProxy extends
   }
 
   @Override
-  public RecordStoreSchema put(final String key,
-    final RecordStoreSchema schema) {
+  public RecordStoreSchema put(final String key, final RecordStoreSchema schema) {
     final DataObjectStoreSchemaProxy schemaProxy = new DataObjectStoreSchemaProxy(
-      dataObjectStore, key, schema);
-    map.put(key, schema);
+      this.dataObjectStore, key, schema);
+    this.map.put(key, schema);
     return super.put(key, schemaProxy);
   }
 }

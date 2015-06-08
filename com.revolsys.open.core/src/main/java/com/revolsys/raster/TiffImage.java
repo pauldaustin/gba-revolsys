@@ -39,8 +39,7 @@ public class TiffImage extends JaiGeoReferencedImage {
 
   static {
     try {
-      final OperationRegistry reg = JAI.getDefaultInstance()
-        .getOperationRegistry();
+      final OperationRegistry reg = JAI.getDefaultInstance().getOperationRegistry();
       ImageCodec.unregisterCodec("tiff");
       reg.unregisterOperationDescriptor("tiff");
 
@@ -123,9 +122,8 @@ public class TiffImage extends JaiGeoReferencedImage {
     // LambertConicConformal.class);
   }
 
-  private static void addGeoKey(final Map<Integer, Object> geoKeys,
-    final XTIFFDirectory dir, final int keyId, final int tiffTag,
-    final int valueCount, final int valueOrOffset) {
+  private static void addGeoKey(final Map<Integer, Object> geoKeys, final XTIFFDirectory dir,
+    final int keyId, final int tiffTag, final int valueCount, final int valueOrOffset) {
     int type = XTIFFField.TIFF_SHORT;
     Object value = null;
     if (tiffTag > 0) {
@@ -176,8 +174,8 @@ public class TiffImage extends JaiGeoReferencedImage {
     super(imageResource);
   }
 
-  private void addDoubleParameter(final Map<String, Object> parameters,
-    final String name, final Map<Integer, Object> geoKeys, final int key) {
+  private void addDoubleParameter(final Map<String, Object> parameters, final String name,
+    final Map<Integer, Object> geoKeys, final int key) {
     final Double value = getDouble(geoKeys, key);
     if (value != null) {
       parameters.put(name, value);
@@ -193,8 +191,8 @@ public class TiffImage extends JaiGeoReferencedImage {
     }
   }
 
-  private double getFieldAsDouble(final XTIFFDirectory directory,
-    final int fieldIndex, final double defaultValue) {
+  private double getFieldAsDouble(final XTIFFDirectory directory, final int fieldIndex,
+    final double defaultValue) {
     final XTIFFField field = directory.getField(fieldIndex);
     if (field == null) {
       return defaultValue;
@@ -203,8 +201,7 @@ public class TiffImage extends JaiGeoReferencedImage {
     }
   }
 
-  private int getInteger(final Map<Integer, Object> map, final int key,
-    final int defaultValue) {
+  private int getInteger(final Map<Integer, Object> map, final int key, final int defaultValue) {
     final Number value = (Number)map.get(key);
     if (value == null) {
       return defaultValue;
@@ -225,8 +222,7 @@ public class TiffImage extends JaiGeoReferencedImage {
       return null;
     } else {
       final Authority projectionAuthority = new EpsgAuthority(projectionId);
-      final Projection projection = new Projection(projectionName,
-        projectionAuthority);
+      final Projection projection = new Projection(projectionName, projectionAuthority);
       return projection;
     }
   }
@@ -238,18 +234,15 @@ public class TiffImage extends JaiGeoReferencedImage {
 
   private boolean loadGeoTiffMetaData(final XTIFFDirectory directory) {
     try {
-      final int xResolution = (int)getFieldAsDouble(directory,
-        TAG_X_RESOLUTION, 1);
-      final int yResolution = (int)getFieldAsDouble(directory,
-        TAG_Y_RESOLUTION, 1);
+      final int xResolution = (int)getFieldAsDouble(directory, TAG_X_RESOLUTION, 1);
+      final int yResolution = (int)getFieldAsDouble(directory, TAG_Y_RESOLUTION, 1);
       setDpi(xResolution, yResolution);
     } catch (final Throwable e) {
       ExceptionUtil.log(getClass(), e);
     }
     GeometryFactory geometryFactory = null;
     final Map<Integer, Object> geoKeys = getGeoKeys(directory);
-    int coordinateSystemId = getInteger(geoKeys,
-      PROJECTED_COORDINATE_SYSTEM_ID, 0);
+    int coordinateSystemId = getInteger(geoKeys, PROJECTED_COORDINATE_SYSTEM_ID, 0);
     if (coordinateSystemId == 0) {
       coordinateSystemId = getInteger(geoKeys, GEOGRAPHIC_TYPE_GEO_KEY, 0);
       if (coordinateSystemId != 0) {
@@ -265,33 +258,27 @@ public class TiffImage extends JaiGeoReferencedImage {
           final Area area = null;
 
           final Map<String, Object> parameters = new LinkedHashMap<String, Object>();
-          addDoubleParameter(parameters,
-            ProjectionParameterNames.STANDARD_PARALLEL_1, geoKeys,
+          addDoubleParameter(parameters, ProjectionParameterNames.STANDARD_PARALLEL_1, geoKeys,
             STANDARD_PARALLEL_1_KEY);
-          addDoubleParameter(parameters,
-            ProjectionParameterNames.STANDARD_PARALLEL_2, geoKeys,
+          addDoubleParameter(parameters, ProjectionParameterNames.STANDARD_PARALLEL_2, geoKeys,
             STANDARD_PARALLEL_2_KEY);
-          addDoubleParameter(parameters,
-            ProjectionParameterNames.LONGITUDE_OF_CENTER, geoKeys,
+          addDoubleParameter(parameters, ProjectionParameterNames.LONGITUDE_OF_CENTER, geoKeys,
             LONGITUDE_OF_CENTER_2_KEY);
-          addDoubleParameter(parameters,
-            ProjectionParameterNames.LATITUDE_OF_CENTER, geoKeys,
+          addDoubleParameter(parameters, ProjectionParameterNames.LATITUDE_OF_CENTER, geoKeys,
             LATITUDE_OF_CENTER_2_KEY);
-          addDoubleParameter(parameters,
-            ProjectionParameterNames.FALSE_EASTING, geoKeys, FALSE_EASTING_KEY);
-          addDoubleParameter(parameters,
-            ProjectionParameterNames.FALSE_NORTHING, geoKeys,
+          addDoubleParameter(parameters, ProjectionParameterNames.FALSE_EASTING, geoKeys,
+            FALSE_EASTING_KEY);
+          addDoubleParameter(parameters, ProjectionParameterNames.FALSE_NORTHING, geoKeys,
             FALSE_NORTHING_KEY);
 
           final LinearUnit linearUnit = getLinearUnit(geoKeys);
           final List<Axis> axis = null;
           final Authority authority = null;
           final ProjectedCoordinateSystem coordinateSystem = new ProjectedCoordinateSystem(
-            coordinateSystemId, name, geographicCoordinateSystem, area,
-            projection, parameters, linearUnit, axis, authority, false);
+            coordinateSystemId, name, geographicCoordinateSystem, area, projection, parameters,
+            linearUnit, axis, authority, false);
           final CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(coordinateSystem);
-          geometryFactory = GeometryFactory.floating(
-            epsgCoordinateSystem.getId(), 2);
+          geometryFactory = GeometryFactory.floating(epsgCoordinateSystem.getId(), 2);
         }
       }
     } else {
@@ -356,8 +343,7 @@ public class TiffImage extends JaiGeoReferencedImage {
     final RenderedImage image = getRenderedImage();
     final Object tiffDirectory = image.getProperty("tiff.directory");
     if (tiffDirectory == null) {
-      throw new IllegalArgumentException(
-        "This is not a (geo)tiff file. Missing TIFF directory.");
+      throw new IllegalArgumentException("This is not a (geo)tiff file. Missing TIFF directory.");
     } else {
       if (!(tiffDirectory instanceof XTIFFDirectory)
         || !loadGeoTiffMetaData((XTIFFDirectory)tiffDirectory)) {

@@ -43,14 +43,14 @@ import com.vividsolutions.jts.noding.Noder;
  * the latter case, Noders may choose to short-circuit their computation by
  * calling the {@link isDone} method. This class is an example of the
  * <i>Strategy</i> pattern.
- * 
+ *
  * @version 1.7
  */
 public interface SegmentIntersector {
   /**
    * Reports whether the client of this class needs to continue testing all
    * intersections in an arrangement.
-   * 
+   *
    * @return true if there is no need to continue testing segments
    */
   boolean isDone();
@@ -60,6 +60,5 @@ public interface SegmentIntersector {
    * interface to process intersections for two segments of the
    * {@link SegmentString}s being intersected.
    */
-  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1,
-    int segIndex1);
+  void processIntersections(SegmentString e0, int segIndex0, SegmentString e1, int segIndex1);
 }

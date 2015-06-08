@@ -17,24 +17,21 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class CodeTableComboBoxModel extends AbstractListModel<Object> implements
-ComboBoxModel<Object>, PropertyChangeListener, Closeable {
-  public static ComboBox create(final String fieldName,
-    final CodeTable codeTable, final boolean allowNull) {
-    final CodeTableComboBoxModel model = new CodeTableComboBoxModel(codeTable,
-      allowNull);
-    final CodeTableObjectToStringConverter stringConverter = new CodeTableObjectToStringConverter(
-      codeTable);
-
-    final CodeTableListCellRenderer renderer = new CodeTableListCellRenderer(
-      codeTable);
-    final ComboBox comboBox = new ComboBox(fieldName, model, stringConverter,
-      renderer);
-    return comboBox;
-  }
-
+  ComboBoxModel<Object>, PropertyChangeListener, Closeable {
   private static final long serialVersionUID = 1L;
 
   public static final Object NULL = new Object();
+
+  public static ComboBox create(final String fieldName, final CodeTable codeTable,
+    final boolean allowNull) {
+    final CodeTableComboBoxModel model = new CodeTableComboBoxModel(codeTable, allowNull);
+    final CodeTableObjectToStringConverter stringConverter = new CodeTableObjectToStringConverter(
+      codeTable);
+
+    final CodeTableListCellRenderer renderer = new CodeTableListCellRenderer(codeTable);
+    final ComboBox comboBox = new ComboBox(fieldName, model, stringConverter, renderer);
+    return comboBox;
+  }
 
   private Object selectedItem;
 
@@ -46,8 +43,7 @@ ComboBoxModel<Object>, PropertyChangeListener, Closeable {
     this(codeTable, true);
   }
 
-  public CodeTableComboBoxModel(final CodeTable codeTable,
-    final boolean allowNull) {
+  public CodeTableComboBoxModel(final CodeTable codeTable, final boolean allowNull) {
     this.codeTable = codeTable;
     this.allowNull = allowNull;
     Property.addListener(codeTable, "valuesChanged", this);
@@ -61,8 +57,7 @@ ComboBoxModel<Object>, PropertyChangeListener, Closeable {
   }
 
   @Override
-  public void fireContentsChanged(final Object source, final int index0,
-    final int index1) {
+  public void fireContentsChanged(final Object source, final int index0, final int index1) {
     super.fireContentsChanged(source, index0, index1);
   }
 
@@ -119,8 +114,8 @@ ComboBoxModel<Object>, PropertyChangeListener, Closeable {
 
   @Override
   public void setSelectedItem(final Object item) {
-    if (this.selectedItem != null && !this.selectedItem.equals(item)
-        || this.selectedItem == null && item != null) {
+    if (this.selectedItem != null && !this.selectedItem.equals(item) || this.selectedItem == null
+      && item != null) {
       this.selectedItem = item;
       fireContentsChanged(this, -1, -1);
     }

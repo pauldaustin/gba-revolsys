@@ -12,6 +12,11 @@ import javax.swing.text.html.StyleSheet;
 import com.revolsys.swing.SwingUtil;
 
 public class JRendererTextPane extends JTextPane {
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
   static {
     UIManager.put("TextPane.font", SwingUtil.FONT);
   }
@@ -27,13 +32,13 @@ public class JRendererTextPane extends JTextPane {
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final boolean oldValue, final boolean newValue) {
+  public void firePropertyChange(final String propertyName, final boolean oldValue,
+    final boolean newValue) {
   }
 
   @Override
-  protected void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  protected void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     if ("text".equals(propertyName) || "document".equals(propertyName)) {
       super.firePropertyChange(propertyName, oldValue, newValue);
     }
@@ -54,8 +59,7 @@ public class JRendererTextPane extends JTextPane {
   }
 
   @Override
-  public void repaint(final long tm, final int x, final int y, final int width,
-    final int height) {
+  public void repaint(final long tm, final int x, final int y, final int width, final int height) {
   }
 
   @Override

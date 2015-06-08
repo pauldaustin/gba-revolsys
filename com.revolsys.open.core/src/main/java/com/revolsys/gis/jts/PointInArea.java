@@ -6,13 +6,11 @@ import com.revolsys.gis.model.geometry.LineSegment;
 import com.revolsys.gis.model.geometry.algorithm.RayCrossingCounter;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public class PointInArea extends RayCrossingCounter implements
-  Visitor<LineSegment> {
+public class PointInArea extends RayCrossingCounter implements Visitor<LineSegment> {
 
   private final GeometryFactory geometryFactory;
 
-  public PointInArea(final GeometryFactory geometryFactory, final double x,
-    final double y) {
+  public PointInArea(final GeometryFactory geometryFactory, final double x, final double y) {
     super(x, y);
     this.geometryFactory = geometryFactory;
   }
@@ -27,7 +25,7 @@ public class PointInArea extends RayCrossingCounter implements
     final double y = getY();
     if (!this.geometryFactory.isFloating()) {
       final double distance = LineSegmentUtil.distance(x1, y1, x2, y2, x, y);
-      final double minDistance = 1.0 / geometryFactory.getScaleXY();
+      final double minDistance = 1.0 / this.geometryFactory.getScaleXY();
       if (distance < minDistance) {
         setPointOnSegment(true);
         return true;

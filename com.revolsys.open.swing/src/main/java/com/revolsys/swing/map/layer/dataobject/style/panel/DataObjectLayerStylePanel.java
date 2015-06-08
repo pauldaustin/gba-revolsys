@@ -28,8 +28,8 @@ import com.revolsys.swing.tree.model.node.ListObjectTreeNodeModel;
 import com.revolsys.swing.tree.model.node.ObjectTreeNodeModel;
 import com.revolsys.util.Property;
 
-public class DataObjectLayerStylePanel extends ValueField implements
-  MouseListener, PropertyChangeListener {
+public class DataObjectLayerStylePanel extends ValueField implements MouseListener,
+  PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -51,26 +51,25 @@ public class DataObjectLayerStylePanel extends ValueField implements
     add(instructions, BorderLayout.NORTH);
 
     final ListObjectTreeNodeModel listModel = new ListObjectTreeNodeModel(
-      new MultipleLayerRendererTreeNodeModel(),
-      new BaseLayerRendererTreeNodeModel());
+      new MultipleLayerRendererTreeNodeModel(), new BaseLayerRendererTreeNodeModel());
 
     this.renderer = layer.getRenderer().clone();
     Property.removeAllListeners(this.renderer);
     this.renderer.setEditing(true);
-    renderers.add(renderer);
-    Property.addListener(renderer, this);
+    this.renderers.add(this.renderer);
+    Property.addListener(this.renderer, this);
 
-    final ObjectTreePanel styleTree = new ObjectTreePanel(renderers, listModel);
-    tree = styleTree.getTree();
-    tree.setRootVisible(false);
-    tree.setExpandsSelectedPaths(true);
-    final TreePath rendererPath = ObjectTree.createTreePath(renderers, renderer);
-    tree.setSelectionPath(rendererPath);
-    tree.expandPath(rendererPath);
-    tree.addMouseListener(this);
-    setEditStylePanel(renderer);
-    final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-      styleTree, editStyleContainer);
+    final ObjectTreePanel styleTree = new ObjectTreePanel(this.renderers, listModel);
+    this.tree = styleTree.getTree();
+    this.tree.setRootVisible(false);
+    this.tree.setExpandsSelectedPaths(true);
+    final TreePath rendererPath = ObjectTree.createTreePath(this.renderers, this.renderer);
+    this.tree.setSelectionPath(rendererPath);
+    this.tree.expandPath(rendererPath);
+    this.tree.addMouseListener(this);
+    setEditStylePanel(this.renderer);
+    final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, styleTree,
+      this.editStyleContainer);
 
     splitPane.setDividerLocation(200);
     setPreferredSize(new Dimension(810, 600));
@@ -82,10 +81,10 @@ public class DataObjectLayerStylePanel extends ValueField implements
     if (e.getClickCount() == 1 && SwingUtil.isLeftButtonAndNoModifiers(e)) {
       final int x = e.getX();
       final int y = e.getY();
-      final TreePath path = tree.getPathForLocation(x, y);
+      final TreePath path = this.tree.getPathForLocation(x, y);
       if (path != null) {
-        final ObjectTreeNodeModel<Object, Object> nodeModel = tree.getModel()
-          .getNodeModel(path);
+        final ObjectTreeNodeModel<Object, Object> nodeModel = this.tree.getModel().getNodeModel(
+          path);
         if (nodeModel != null) {
           final Object node = path.getLastPathComponent();
           if (node instanceof LayerRenderer<?>) {
@@ -122,9 +121,9 @@ public class DataObjectLayerStylePanel extends ValueField implements
 
       final LayerRenderer<? extends Layer> newRenderer = (LayerRenderer<? extends Layer>)event.getNewValue();
       Property.addListener(newRenderer, this);
-      renderers.remove(0);
-      renderers.add(newRenderer);
-      tree.setVisible(newRenderer, true);
+      this.renderers.remove(0);
+      this.renderers.add(newRenderer);
+      this.tree.setVisible(newRenderer, true);
 
       setSelectedRenderer(newRenderer);
     }
@@ -133,18 +132,18 @@ public class DataObjectLayerStylePanel extends ValueField implements
   @Override
   public void save() {
     super.save();
-    this.layer.setRenderer(renderer);
+    this.layer.setRenderer(this.renderer);
   }
 
   public void setEditStylePanel(final LayerRenderer<? extends Layer> renderer) {
-    final Component view = editStyleContainer.getViewport().getView();
-    editStyleContainer.setViewportView(null);
+    final Component view = this.editStyleContainer.getViewport().getView();
+    this.editStyleContainer.setViewportView(null);
     if (view instanceof ValueField) {
       final ValueField valueField = (ValueField)view;
       valueField.save();
     }
     final ValueField stylePanel = renderer.createStylePanel();
-    editStyleContainer.setViewportView(stylePanel);
+    this.editStyleContainer.setViewportView(stylePanel);
   }
 
   @SuppressWarnings({
@@ -156,10 +155,10 @@ public class DataObjectLayerStylePanel extends ValueField implements
     if (selectedRenderer != null) {
       final List path = selectedRenderer.getPathRenderers();
       if (!path.isEmpty()) {
-        path.add(0, renderers);
+        path.add(0, this.renderers);
         final TreePath treePath = ObjectTree.createTreePath(path);
-        tree.setSelectionPath(treePath);
-        tree.expandPath(treePath);
+        this.tree.setSelectionPath(treePath);
+        this.tree.expandPath(treePath);
         setEditStylePanel(selectedRenderer);
       }
     }

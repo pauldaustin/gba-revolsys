@@ -12,8 +12,8 @@ import com.revolsys.gis.data.io.GeometryReader;
 import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
-public abstract class AbstractGeometryReaderFactory extends AbstractIoFactory
-  implements GeometryReaderFactory {
+public abstract class AbstractGeometryReaderFactory extends AbstractIoFactory implements
+  GeometryReaderFactory {
   public static GeometryReader geometryReader(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     final GeometryReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
@@ -37,28 +37,24 @@ public abstract class AbstractGeometryReaderFactory extends AbstractIoFactory
 
   @Override
   public Set<CoordinateSystem> getCoordinateSystems() {
-    return coordinateSystems;
+    return this.coordinateSystems;
   }
 
   @Override
   public boolean isBinary() {
-    return binary;
+    return this.binary;
   }
 
   @Override
-  public boolean isCoordinateSystemSupported(
-    final CoordinateSystem coordinateSystem) {
-    return coordinateSystems.contains(coordinateSystem);
+  public boolean isCoordinateSystemSupported(final CoordinateSystem coordinateSystem) {
+    return this.coordinateSystems.contains(coordinateSystem);
   }
 
-  protected void setCoordinateSystems(
-    final CoordinateSystem... coordinateSystems) {
-    setCoordinateSystems(new LinkedHashSet<CoordinateSystem>(
-      Arrays.asList(coordinateSystems)));
+  protected void setCoordinateSystems(final CoordinateSystem... coordinateSystems) {
+    setCoordinateSystems(new LinkedHashSet<CoordinateSystem>(Arrays.asList(coordinateSystems)));
   }
 
-  protected void setCoordinateSystems(
-    final Set<CoordinateSystem> coordinateSystems) {
+  protected void setCoordinateSystems(final Set<CoordinateSystem> coordinateSystems) {
     this.coordinateSystems = coordinateSystems;
   }
 }

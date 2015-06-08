@@ -12,15 +12,14 @@ public class DataObjectMapTableModel extends AbstractSingleDataObjectTableModel 
 
   public static JComponent create(final RecordDefinition metaData,
     final Map<String, Object> values, final boolean editable) {
-    final DataObjectMapTableModel model = new DataObjectMapTableModel(metaData,
-      values, editable);
+    final DataObjectMapTableModel model = new DataObjectMapTableModel(metaData, values, editable);
     return createTable(model);
   }
 
   private Map<String, Object> values;
 
-  public DataObjectMapTableModel(final RecordDefinition metaData,
-    final Map<String, Object> values, final boolean editable) {
+  public DataObjectMapTableModel(final RecordDefinition metaData, final Map<String, Object> values,
+    final boolean editable) {
     super(metaData, editable);
     this.values = values;
   }

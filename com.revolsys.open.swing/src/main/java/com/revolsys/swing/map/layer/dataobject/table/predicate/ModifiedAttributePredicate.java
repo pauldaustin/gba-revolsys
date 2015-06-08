@@ -23,22 +23,18 @@ import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
 public class ModifiedAttributePredicate implements HighlightPredicate {
   public static void add(final DataObjectRowTable table) {
     final DataObjectRowTableModel model = (DataObjectRowTableModel)table.getModel();
-    final ModifiedAttributePredicate predicate = new ModifiedAttributePredicate(
-      model);
+    final ModifiedAttributePredicate predicate = new ModifiedAttributePredicate(model);
     addModifiedHighlighters(table, predicate);
   }
 
-  public static void addModifiedHighlighters(final JXTable table,
-    final HighlightPredicate predicate) {
+  public static void addModifiedHighlighters(final JXTable table, final HighlightPredicate predicate) {
 
-    table.addHighlighter(new ColorHighlighter(new AndHighlightPredicate(
-      predicate, HighlightPredicate.EVEN), ColorUtil.setAlpha(
-      WebColors.YellowGreen, 127), WebColors.Black, WebColors.LimeGreen,
-      Color.WHITE));
+    table.addHighlighter(new ColorHighlighter(new AndHighlightPredicate(predicate,
+      HighlightPredicate.EVEN), ColorUtil.setAlpha(WebColors.YellowGreen, 127), WebColors.Black,
+      WebColors.LimeGreen, Color.WHITE));
 
-    table.addHighlighter(new ColorHighlighter(new AndHighlightPredicate(
-      predicate, HighlightPredicate.ODD), WebColors.YellowGreen,
-      WebColors.Black, WebColors.Green, Color.WHITE));
+    table.addHighlighter(new ColorHighlighter(new AndHighlightPredicate(predicate,
+      HighlightPredicate.ODD), WebColors.YellowGreen, WebColors.Black, WebColors.Green, Color.WHITE));
   }
 
   private final DataObjectRowTableModel model;
@@ -48,8 +44,7 @@ public class ModifiedAttributePredicate implements HighlightPredicate {
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToModel(adapter.row);
       final Record object = this.model.getRecord(rowIndex);

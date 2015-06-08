@@ -9,8 +9,7 @@ import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 
-public abstract class AbstractIdObjectQuadTree<T> extends Quadtree implements
-  IdObjectIndex<T> {
+public abstract class AbstractIdObjectQuadTree<T> extends Quadtree implements IdObjectIndex<T> {
 
   public void add(final Collection<Integer> ids) {
     for (final Integer id : ids) {
@@ -61,8 +60,8 @@ public abstract class AbstractIdObjectQuadTree<T> extends Quadtree implements
 
   @Override
   public void visit(final Envelope envelope, final Visitor<T> visitor) {
-    final IdObjectIndexItemVisitor<T> itemVisitor = new IdObjectIndexItemVisitor<T>(
-      this, envelope, visitor);
+    final IdObjectIndexItemVisitor<T> itemVisitor = new IdObjectIndexItemVisitor<T>(this, envelope,
+      visitor);
     this.query(envelope, itemVisitor);
   }
 

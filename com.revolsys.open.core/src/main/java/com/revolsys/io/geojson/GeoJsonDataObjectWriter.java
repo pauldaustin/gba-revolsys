@@ -21,8 +21,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
-  implements GeoJsonConstants {
+public class GeoJsonDataObjectWriter extends AbstractWriter<Record> implements GeoJsonConstants {
 
   boolean initialized = false;
 
@@ -50,12 +49,12 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
    */
   @Override
   public void close() {
-    if (out != null) {
+    if (this.out != null) {
       try {
         writeFooter();
       } finally {
-        out.close();
-        out = null;
+        this.out.close();
+        this.out = null;
       }
     }
   }
@@ -64,7 +63,7 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
     double x = coordinates.getX(i);
     double y = coordinates.getY(i);
 
-    if (cogo && i > 0) {
+    if (this.cogo && i > 0) {
       final double currentX = x;
       final double previousX = coordinates.getX(i - 1);
       final double previousY = coordinates.getY(i - 1);
@@ -72,30 +71,30 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
       y = MathUtil.angleNorthDegrees(previousX, previousY, currentX, y);
     }
 
-    out.print('[');
-    out.value(x);
+    this.out.print('[');
+    this.out.value(x);
 
-    out.print(',');
-    out.value(y);
+    this.out.print(',');
+    this.out.value(y);
 
     final double z = coordinates.getZ(i);
     if (!Double.isNaN(z)) {
-      out.print(',');
-      out.value(z);
+      this.out.print(',');
+      this.out.value(z);
     }
-    out.print(']');
+    this.out.print(']');
   }
 
   private void coordinates(final CoordinatesList coordinates) {
-    out.startList(false);
-    out.indent();
+    this.out.startList(false);
+    this.out.indent();
     coordinate(coordinates, 0);
     for (int i = 1; i < coordinates.size(); i++) {
-      out.endAttribute();
-      out.indent();
+      this.out.endAttribute();
+      this.out.indent();
       coordinate(coordinates, i);
     }
-    out.endList();
+    this.out.endList();
   }
 
   private void coordinates(final LineString line) {
@@ -109,28 +108,28 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
   }
 
   public void coordinates(final Polygon polygon) {
-    out.startList(false);
-    out.indent();
+    this.out.startList(false);
+    this.out.indent();
 
     final LineString exteriorRing = polygon.getExteriorRing();
     coordinates(exteriorRing);
     for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
       final LineString interiorRing = polygon.getInteriorRingN(i);
-      out.endAttribute();
-      out.indent();
+      this.out.endAttribute();
+      this.out.indent();
       coordinates(interiorRing);
     }
 
-    out.endList();
+    this.out.endList();
   }
 
   @Override
   public void flush() {
-    out.flush();
+    this.out.flush();
   }
 
   private void geometry(final Geometry geometry) {
-    out.startObject();
+    this.out.startObject();
     if (geometry instanceof Point) {
       final Point point = (Point)geometry;
       point(point);
@@ -153,175 +152,175 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
       final GeometryCollection geometryCollection = (GeometryCollection)geometry;
       geometryCollection(geometryCollection);
     }
-    out.endObject();
+    this.out.endObject();
   }
 
   private void geometryCollection(final GeometryCollection geometryCollection) {
     type(GEOMETRY_COLLECTION);
 
-    out.endAttribute();
-    out.label(GEOMETRIES);
-    out.startList();
+    this.out.endAttribute();
+    this.out.label(GEOMETRIES);
+    this.out.startList();
     final int numGeometries = geometryCollection.getNumGeometries();
     if (numGeometries > 0) {
       geometry(geometryCollection.getGeometryN(0));
       for (int i = 1; i < numGeometries; i++) {
         final Geometry geometry = geometryCollection.getGeometryN(i);
-        out.endAttribute();
+        this.out.endAttribute();
         geometry(geometry);
       }
     }
-    out.endList();
+    this.out.endList();
   }
 
   public boolean isCogo() {
-    return cogo;
+    return this.cogo;
   }
 
   private void line(final LineString line) {
-    if (cogo) {
+    if (this.cogo) {
       type(COGO_LINE_STRING);
     } else {
       type(LINE_STRING);
     }
-    out.endAttribute();
-    out.label(COORDINATES);
+    this.out.endAttribute();
+    this.out.label(COORDINATES);
     coordinates(line);
   }
 
   private void multiLineString(final MultiLineString multiLineString) {
-    if (cogo) {
+    if (this.cogo) {
       type(COGO_LINE_STRING);
     } else {
       type(MULTI_LINE_STRING);
     }
 
-    out.endAttribute();
-    out.label(COORDINATES);
-    out.startList();
-    out.indent();
+    this.out.endAttribute();
+    this.out.label(COORDINATES);
+    this.out.startList();
+    this.out.indent();
     final int numGeometries = multiLineString.getNumGeometries();
     if (numGeometries > 0) {
       coordinates((LineString)multiLineString.getGeometryN(0));
       for (int i = 1; i < numGeometries; i++) {
         final LineString lineString = (LineString)multiLineString.getGeometryN(i);
-        out.endAttribute();
-        out.indent();
+        this.out.endAttribute();
+        this.out.indent();
         coordinates(lineString);
       }
     }
-    out.endList();
+    this.out.endList();
   }
 
   private void multiPoint(final MultiPoint multiPoint) {
     type(MULTI_POINT);
 
-    out.endAttribute();
-    out.label(COORDINATES);
-    out.startList();
-    out.indent();
+    this.out.endAttribute();
+    this.out.label(COORDINATES);
+    this.out.startList();
+    this.out.indent();
     final int numGeometries = multiPoint.getNumGeometries();
     if (numGeometries > 0) {
       coordinates((Point)multiPoint.getGeometryN(0));
       for (int i = 1; i < numGeometries; i++) {
         final Point point = (Point)multiPoint.getGeometryN(i);
-        out.endAttribute();
-        out.indent();
+        this.out.endAttribute();
+        this.out.indent();
         coordinates(point);
       }
     }
-    out.endList();
+    this.out.endList();
   }
 
   private void multiPolygon(final MultiPolygon multiPolygon) {
-    if (cogo) {
+    if (this.cogo) {
       type(COGO_MULTI_POLYGON);
     } else {
       type(MULTI_POLYGON);
     }
 
-    out.endAttribute();
-    out.label(COORDINATES);
-    out.startList();
-    out.indent();
+    this.out.endAttribute();
+    this.out.label(COORDINATES);
+    this.out.startList();
+    this.out.indent();
     final int numGeometries = multiPolygon.getNumGeometries();
     if (numGeometries > 0) {
       coordinates((Polygon)multiPolygon.getGeometryN(0));
       for (int i = 1; i < numGeometries; i++) {
         final Polygon polygon = (Polygon)multiPolygon.getGeometryN(i);
-        out.endAttribute();
-        out.indent();
+        this.out.endAttribute();
+        this.out.indent();
         coordinates(polygon);
       }
     }
-    out.endList();
+    this.out.endList();
   }
 
   private void point(final Point point) {
     type(POINT);
-    out.endAttribute();
-    out.label(COORDINATES);
+    this.out.endAttribute();
+    this.out.label(COORDINATES);
     coordinates(point);
   }
 
   private void polygon(final Polygon polygon) {
-    if (cogo) {
+    if (this.cogo) {
       type(COGO_POLYGON);
     } else {
       type(POLYGON);
     }
 
-    out.endAttribute();
-    out.label(COORDINATES);
+    this.out.endAttribute();
+    this.out.label(COORDINATES);
     coordinates(polygon);
   }
 
   private void srid(final int srid) {
     final String urn = URN_OGC_DEF_CRS_EPSG + srid;
-    out.label(CRS);
-    out.startObject();
+    this.out.label(CRS);
+    this.out.startObject();
     type(NAME);
-    out.endAttribute();
-    out.label(PROPERTIES);
-    out.startObject();
-    out.label(NAME);
-    out.value(urn);
-    out.endObject();
-    out.endObject();
+    this.out.endAttribute();
+    this.out.label(PROPERTIES);
+    this.out.startObject();
+    this.out.label(NAME);
+    this.out.value(urn);
+    this.out.endObject();
+    this.out.endObject();
   }
 
   private void type(final String type) {
-    out.label(TYPE);
-    out.value(type);
+    this.out.label(TYPE);
+    this.out.value(type);
   }
 
   @Override
   public void write(final Record object) {
-    if (initialized) {
-      out.endAttribute();
+    if (this.initialized) {
+      this.out.endAttribute();
     } else {
       writeHeader();
-      initialized = true;
+      this.initialized = true;
     }
-    out.startObject();
+    this.out.startObject();
     type(FEATURE);
     final Geometry mainGeometry = object.getGeometryValue();
     writeSrid(mainGeometry);
     final RecordDefinition metaData = object.getRecordDefinition();
     final int geometryIndex = metaData.getGeometryFieldIndex();
     boolean geometryWritten = false;
-    out.endAttribute();
-    out.label(GEOMETRY);
+    this.out.endAttribute();
+    this.out.label(GEOMETRY);
     if (mainGeometry != null) {
       geometryWritten = true;
       geometry(mainGeometry);
     }
     if (!geometryWritten) {
-      out.value(null);
+      this.out.value(null);
     }
-    out.endAttribute();
-    out.label(PROPERTIES);
-    out.startObject();
+    this.out.endAttribute();
+    this.out.label(PROPERTIES);
+    this.out.startObject();
     final int numAttributes = metaData.getFieldCount();
     if (numAttributes > 1 || numAttributes == 1 && geometryIndex == -1) {
       int lastIndex = numAttributes - 1;
@@ -332,48 +331,48 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
         if (i != geometryIndex) {
           final String name = metaData.getFieldName(i);
           final Object value = object.getValue(i);
-          out.label(name);
+          this.out.label(name);
           if (value instanceof Geometry) {
             final Geometry geometry = (Geometry)value;
             geometry(geometry);
           } else {
-            out.value(value);
+            this.out.value(value);
           }
           if (i < lastIndex) {
-            out.endAttribute();
+            this.out.endAttribute();
           }
         }
       }
     }
-    out.endObject();
-    out.endObject();
+    this.out.endObject();
+    this.out.endObject();
   }
 
   private void writeFooter() {
-    if (!singleObject) {
-      out.endList();
-      out.endObject();
+    if (!this.singleObject) {
+      this.out.endList();
+      this.out.endObject();
     }
     final String callback = getProperty(IoConstants.JSONP_PROPERTY);
     if (callback != null) {
-      out.print(");");
+      this.out.print(");");
     }
   }
 
   private void writeHeader() {
     final String callback = getProperty(IoConstants.JSONP_PROPERTY);
     if (callback != null) {
-      out.print(callback);
-      out.print('(');
+      this.out.print(callback);
+      this.out.print('(');
     }
-    singleObject = Boolean.TRUE.equals(getProperty(IoConstants.SINGLE_OBJECT_PROPERTY));
-    if (!singleObject) {
-      out.startObject();
+    this.singleObject = Boolean.TRUE.equals(getProperty(IoConstants.SINGLE_OBJECT_PROPERTY));
+    if (!this.singleObject) {
+      this.out.startObject();
       type(FEATURE_COLLECTION);
-      srid = writeSrid();
-      out.endAttribute();
-      out.label(FEATURES);
-      out.startList();
+      this.srid = writeSrid();
+      this.out.endAttribute();
+      this.out.label(FEATURES);
+      this.out.startList();
     }
   }
 
@@ -393,7 +392,7 @@ public class GeoJsonDataObjectWriter extends AbstractWriter<Record>
     if (geometryFactory != null) {
       final int srid = geometryFactory.getSRID();
       if (srid != 0 && srid != this.srid) {
-        out.endAttribute();
+        this.out.endAttribute();
         srid(srid);
         return srid;
       }

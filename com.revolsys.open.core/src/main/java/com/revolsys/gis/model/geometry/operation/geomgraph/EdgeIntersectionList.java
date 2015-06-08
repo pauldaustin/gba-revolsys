@@ -45,7 +45,7 @@ import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 /**
  * A list of edge intersections along an {@link Edge}. Implements splitting an
  * edge with intersections into multiple resultant edges.
- * 
+ *
  * @version 1.7
  */
 public class EdgeIntersectionList {
@@ -61,18 +61,16 @@ public class EdgeIntersectionList {
   /**
    * Adds an intersection into the list, if it isn't already there. The input
    * segmentIndex and dist are expected to be normalized.
-   * 
+   *
    * @return the EdgeIntersection found or added
    */
-  public EdgeIntersection add(final Coordinates intPt, final int segmentIndex,
-    final double dist) {
-    final EdgeIntersection eiNew = new EdgeIntersection(intPt, segmentIndex,
-      dist);
-    final EdgeIntersection ei = (EdgeIntersection)nodeMap.get(eiNew);
+  public EdgeIntersection add(final Coordinates intPt, final int segmentIndex, final double dist) {
+    final EdgeIntersection eiNew = new EdgeIntersection(intPt, segmentIndex, dist);
+    final EdgeIntersection ei = (EdgeIntersection)this.nodeMap.get(eiNew);
     if (ei != null) {
       return ei;
     }
-    nodeMap.put(eiNew, eiNew);
+    this.nodeMap.put(eiNew, eiNew);
     return eiNew;
   }
 
@@ -80,16 +78,16 @@ public class EdgeIntersectionList {
    * Adds entries for the first and last points of the edge to the list
    */
   public void addEndpoints() {
-    final int maxSegIndex = edge.pts.size() - 1;
-    add(edge.pts.get(0), 0, 0.0);
-    add(edge.pts.get(maxSegIndex), maxSegIndex, 0.0);
+    final int maxSegIndex = this.edge.pts.size() - 1;
+    add(this.edge.pts.get(0), 0, 0.0);
+    add(this.edge.pts.get(maxSegIndex), maxSegIndex, 0.0);
   }
 
   /**
    * Creates new edges for all the edges that the intersections in this list
    * split the parent edge into. Adds the edges to the input list (this is so a
    * single list can be used to accumulate all split edges for a Geometry).
-   * 
+   *
    * @param edgeList a list of EdgeIntersections
    */
   public void addSplitEdges(final List edgeList) {
@@ -117,34 +115,32 @@ public class EdgeIntersectionList {
     // Debug.print("\ncreateSplitEdge"); Debug.print(ei0); Debug.print(ei1);
     int npts = ei1.segmentIndex - ei0.segmentIndex + 2;
 
-    final Coordinates lastSegStartPt = edge.pts.get(ei1.segmentIndex);
+    final Coordinates lastSegStartPt = this.edge.pts.get(ei1.segmentIndex);
     // if the last intersection point is not equal to the its segment start pt,
     // add it to the points list as well.
     // (This check is needed because the distance metric is not totally
     // reliable!)
     // The check for point equality is 2D only - Z values are ignored
-    final boolean useIntPt1 = ei1.dist > 0.0
-      || !ei1.coord.equals2d(lastSegStartPt);
+    final boolean useIntPt1 = ei1.dist > 0.0 || !ei1.coord.equals2d(lastSegStartPt);
     if (!useIntPt1) {
       npts--;
     }
 
-    final CoordinatesList pts = new DoubleCoordinatesList(npts,
-      edge.pts.getNumAxis());
+    final CoordinatesList pts = new DoubleCoordinatesList(npts, this.edge.pts.getNumAxis());
     int ipt = 0;
     pts.setPoint(ipt++, ei0.coord);
     for (int i = ei0.segmentIndex + 1; i <= ei1.segmentIndex; i++) {
-      pts.setPoint(ipt++, edge.pts.get(i));
+      pts.setPoint(ipt++, this.edge.pts.get(i));
     }
     if (useIntPt1) {
       pts.setPoint(ipt, ei1.coord);
     }
-    return new Edge(pts, new Label(edge.label));
+    return new Edge(pts, new Label(this.edge.label));
   }
 
   /**
    * Tests if the given point is an edge intersection
-   * 
+   *
    * @param pt the point to test
    * @return true if the point is an intersection
    */
@@ -160,11 +156,11 @@ public class EdgeIntersectionList {
 
   /**
    * Returns an iterator of {@link EdgeIntersection}s
-   * 
+   *
    * @return an Iterator of EdgeIntersections
    */
   public Iterator iterator() {
-    return nodeMap.values().iterator();
+    return this.nodeMap.values().iterator();
   }
 
   public void print(final PrintStream out) {

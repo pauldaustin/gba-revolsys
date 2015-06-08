@@ -27,7 +27,7 @@ import com.revolsys.spring.SpringUtil;
  * See the {@link AbstractDirectoryReader} class for examples on how to use
  * dataset readers.
  * </p>
- * 
+ *
  * @author Paul Austin
  * @see AbstractDirectoryReader
  */
@@ -42,7 +42,7 @@ public class ShapeDirectoryReader extends DataObjectDirectoryReader {
 
   /**
    * Construct a new ShapeDirectoryReader.
-   * 
+   *
    * @param directory The containing the .shp files.
    */
   public ShapeDirectoryReader(final File directory) {
@@ -54,11 +54,10 @@ public class ShapeDirectoryReader extends DataObjectDirectoryReader {
   protected Reader<Record> createReader(final Resource resource) {
     try {
       final ArrayRecordFactory factory = new ArrayRecordFactory();
-      final ShapefileIterator iterator = new ShapefileIterator(resource,
-        factory);
+      final ShapefileIterator iterator = new ShapefileIterator(resource, factory);
       final String baseName = SpringUtil.getBaseName(resource).toUpperCase();
-      iterator.setTypeName(fileNameTypeMap.get(baseName));
-      iterator.setMetaData(typeNameMetaDataMap.get(iterator.getTypeName()));
+      iterator.setTypeName(this.fileNameTypeMap.get(baseName));
+      iterator.setMetaData(this.typeNameMetaDataMap.get(iterator.getTypeName()));
       return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
@@ -66,11 +65,11 @@ public class ShapeDirectoryReader extends DataObjectDirectoryReader {
   }
 
   public Map<String, String> getFileNameTypeMap() {
-    return fileNameTypeMap;
+    return this.fileNameTypeMap;
   }
 
   public Map<String, RecordDefinition> getTypeNameMetaDataMap() {
-    return typeNameMetaDataMap;
+    return this.typeNameMetaDataMap;
   }
 
   public void setFileNameTypeMap(final Map<String, String> fileNameTypeMap) {
@@ -83,8 +82,7 @@ public class ShapeDirectoryReader extends DataObjectDirectoryReader {
     setBaseFileNames(fileNameTypeMap.keySet());
   }
 
-  public void setTypeNameMetaDataMap(
-    final Map<String, RecordDefinition> typeNameMetaDataMap) {
+  public void setTypeNameMetaDataMap(final Map<String, RecordDefinition> typeNameMetaDataMap) {
     this.typeNameMetaDataMap = typeNameMetaDataMap;
   }
 

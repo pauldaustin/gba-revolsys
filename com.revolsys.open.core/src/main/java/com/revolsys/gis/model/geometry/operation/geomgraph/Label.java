@@ -23,7 +23,7 @@ import com.vividsolutions.jts.geom.Location;
  * <P>
  * It is up to the client code to associate the 0 and 1
  * <code>TopologyLocation</code>s with specific geometries.
- * 
+ *
  * @version 1.7
  */
 public class Label {
@@ -44,8 +44,8 @@ public class Label {
    * the locations to Null
    */
   public Label(final int onLoc) {
-    elt[0] = new TopologyLocation(onLoc);
-    elt[1] = new TopologyLocation(onLoc);
+    this.elt[0] = new TopologyLocation(onLoc);
+    this.elt[1] = new TopologyLocation(onLoc);
   }
 
   /**
@@ -53,9 +53,9 @@ public class Label {
    * the location for the Geometry index.
    */
   public Label(final int geomIndex, final int onLoc) {
-    elt[0] = new TopologyLocation(Location.NONE);
-    elt[1] = new TopologyLocation(Location.NONE);
-    elt[geomIndex].setLocation(onLoc);
+    this.elt[0] = new TopologyLocation(Location.NONE);
+    this.elt[1] = new TopologyLocation(Location.NONE);
+    this.elt[geomIndex].setLocation(onLoc);
   }
 
   /**
@@ -63,63 +63,62 @@ public class Label {
    * Initialize the locations for both Geometries to the given values.
    */
   public Label(final int onLoc, final int leftLoc, final int rightLoc) {
-    elt[0] = new TopologyLocation(onLoc, leftLoc, rightLoc);
-    elt[1] = new TopologyLocation(onLoc, leftLoc, rightLoc);
+    this.elt[0] = new TopologyLocation(onLoc, leftLoc, rightLoc);
+    this.elt[1] = new TopologyLocation(onLoc, leftLoc, rightLoc);
   }
 
   /**
    * Construct a Label with On, Left and Right locations for both Geometries.
    * Initialize the locations for the given Geometry index.
    */
-  public Label(final int geomIndex, final int onLoc, final int leftLoc,
-    final int rightLoc) {
-    elt[0] = new TopologyLocation(Location.NONE, Location.NONE, Location.NONE);
-    elt[1] = new TopologyLocation(Location.NONE, Location.NONE, Location.NONE);
-    elt[geomIndex].setLocations(onLoc, leftLoc, rightLoc);
+  public Label(final int geomIndex, final int onLoc, final int leftLoc, final int rightLoc) {
+    this.elt[0] = new TopologyLocation(Location.NONE, Location.NONE, Location.NONE);
+    this.elt[1] = new TopologyLocation(Location.NONE, Location.NONE, Location.NONE);
+    this.elt[geomIndex].setLocations(onLoc, leftLoc, rightLoc);
   }
 
   /**
    * Construct a Label with the same values as the argument Label.
    */
   public Label(final Label lbl) {
-    elt[0] = new TopologyLocation(lbl.elt[0]);
-    elt[1] = new TopologyLocation(lbl.elt[1]);
+    this.elt[0] = new TopologyLocation(lbl.elt[0]);
+    this.elt[1] = new TopologyLocation(lbl.elt[1]);
   }
 
   public boolean allPositionsEqual(final int geomIndex, final int loc) {
-    return elt[geomIndex].allPositionsEqual(loc);
+    return this.elt[geomIndex].allPositionsEqual(loc);
   }
 
   public void flip() {
-    elt[0].flip();
-    elt[1].flip();
+    this.elt[0].flip();
+    this.elt[1].flip();
   }
 
   public int getGeometryCount() {
     int count = 0;
-    if (!elt[0].isNull()) {
+    if (!this.elt[0].isNull()) {
       count++;
     }
-    if (!elt[1].isNull()) {
+    if (!this.elt[1].isNull()) {
       count++;
     }
     return count;
   }
 
   public int getLocation(final int geomIndex) {
-    return elt[geomIndex].get(Position.ON);
+    return this.elt[geomIndex].get(Position.ON);
   }
 
   public int getLocation(final int geomIndex, final int posIndex) {
-    return elt[geomIndex].get(posIndex);
+    return this.elt[geomIndex].get(posIndex);
   }
 
   public boolean isAnyNull(final int geomIndex) {
-    return elt[geomIndex].isAnyNull();
+    return this.elt[geomIndex].isAnyNull();
   }
 
   public boolean isArea() {
-    return elt[0].isArea() || elt[1].isArea();
+    return this.elt[0].isArea() || this.elt[1].isArea();
   }
 
   public boolean isArea(final int geomIndex) {
@@ -127,7 +126,7 @@ public class Label {
      * Testing if (elt[0].getLocations().length != elt[1].getLocations().length)
      * { System.out.println(this); }
      */
-    return elt[geomIndex].isArea();
+    return this.elt[geomIndex].isArea();
   }
 
   public boolean isEqualOnSide(final Label lbl, final int side) {
@@ -136,11 +135,11 @@ public class Label {
   }
 
   public boolean isLine(final int geomIndex) {
-    return elt[geomIndex].isLine();
+    return this.elt[geomIndex].isLine();
   }
 
   public boolean isNull(final int geomIndex) {
-    return elt[geomIndex].isNull();
+    return this.elt[geomIndex].isNull();
   }
 
   /**
@@ -149,16 +148,16 @@ public class Label {
    */
   public void merge(final Label lbl) {
     for (int i = 0; i < 2; i++) {
-      if (elt[i] == null && lbl.elt[i] != null) {
-        elt[i] = new TopologyLocation(lbl.elt[i]);
+      if (this.elt[i] == null && lbl.elt[i] != null) {
+        this.elt[i] = new TopologyLocation(lbl.elt[i]);
       } else {
-        elt[i].merge(lbl.elt[i]);
+        this.elt[i].merge(lbl.elt[i]);
       }
     }
   }
 
   public void setAllLocations(final int geomIndex, final int location) {
-    elt[geomIndex].setAllLocations(location);
+    this.elt[geomIndex].setAllLocations(location);
   }
 
   public void setAllLocationsIfNull(final int location) {
@@ -167,37 +166,36 @@ public class Label {
   }
 
   public void setAllLocationsIfNull(final int geomIndex, final int location) {
-    elt[geomIndex].setAllLocationsIfNull(location);
+    this.elt[geomIndex].setAllLocationsIfNull(location);
   }
 
   public void setLocation(final int geomIndex, final int location) {
-    elt[geomIndex].setLocation(Position.ON, location);
+    this.elt[geomIndex].setLocation(Position.ON, location);
   }
 
-  public void setLocation(final int geomIndex, final int posIndex,
-    final int location) {
-    elt[geomIndex].setLocation(posIndex, location);
+  public void setLocation(final int geomIndex, final int posIndex, final int location) {
+    this.elt[geomIndex].setLocation(posIndex, location);
   }
 
   /**
    * Converts one GeometryLocation to a Line location
    */
   public void toLine(final int geomIndex) {
-    if (elt[geomIndex].isArea()) {
-      elt[geomIndex] = new TopologyLocation(elt[geomIndex].location[0]);
+    if (this.elt[geomIndex].isArea()) {
+      this.elt[geomIndex] = new TopologyLocation(this.elt[geomIndex].location[0]);
     }
   }
 
   @Override
   public String toString() {
     final StringBuffer buf = new StringBuffer();
-    if (elt[0] != null) {
+    if (this.elt[0] != null) {
       buf.append("A:");
-      buf.append(elt[0].toString());
+      buf.append(this.elt[0].toString());
     }
-    if (elt[1] != null) {
+    if (this.elt[1] != null) {
       buf.append(" B:");
-      buf.append(elt[1].toString());
+      buf.append(this.elt[1].toString());
     }
     return buf.toString();
   }

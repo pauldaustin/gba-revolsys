@@ -9,11 +9,11 @@ import com.revolsys.swing.action.AbstractAction;
 import com.revolsys.swing.component.ComponentFactory;
 import com.revolsys.util.ExceptionUtil;
 
-public abstract class AbstractActionMainMenuItemFactory extends AbstractAction
-  implements ComponentFactory<JMenuItem> {
+public abstract class AbstractActionMainMenuItemFactory extends AbstractAction implements
+  ComponentFactory<JMenuItem> {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 

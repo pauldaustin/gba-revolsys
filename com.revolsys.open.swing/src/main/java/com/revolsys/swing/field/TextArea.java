@@ -48,8 +48,7 @@ public class TextArea extends JTextArea implements Field, FocusListener {
     this(fieldName, fieldValue, 0, 0);
   }
 
-  public TextArea(final String fieldName, final Object fieldValue,
-    final int rows, final int columns) {
+  public TextArea(final String fieldName, final Object fieldValue, final int rows, final int columns) {
     setRows(rows);
     setColumns(columns);
     this.fieldName = fieldName;
@@ -64,8 +63,8 @@ public class TextArea extends JTextArea implements Field, FocusListener {
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -117,8 +116,8 @@ public class TextArea extends JTextArea implements Field, FocusListener {
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setSelectedTextColor(foregroundColor);
     setBackground(backgroundColor);
@@ -150,8 +149,7 @@ public class TextArea extends JTextArea implements Field, FocusListener {
     if (!EqualsRegistry.equal(oldValue, value)) {
       this.fieldValue = (String)value;
       firePropertyChange(this.fieldName, oldValue, value);
-      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this,
-        oldValue, value);
+      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, value);
     }
   }
 

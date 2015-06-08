@@ -4,8 +4,7 @@ import org.springframework.core.convert.converter.Converter;
 
 import com.revolsys.data.record.Record;
 
-public class SourceValueConverter extends
-  AbstractSourceToTargetProcess<Record, Record> {
+public class SourceValueConverter extends AbstractSourceToTargetProcess<Record, Record> {
   private Converter<Record, ? extends Object> sourceValueConverter;
 
   private String targetAttributeName;
@@ -21,14 +20,14 @@ public class SourceValueConverter extends
 
   @Override
   public void process(final Record source, final Record target) {
-    final Object value = sourceValueConverter.convert(source);
-    if (value != null && (!(value instanceof String) || !("".equals(value)))) {
-      target.setValueByPath(targetAttributeName, value);
+    final Object value = this.sourceValueConverter.convert(source);
+    if (value != null && (!(value instanceof String) || !"".equals(value))) {
+      target.setValueByPath(this.targetAttributeName, value);
     }
   }
 
   @Override
   public String toString() {
-    return "set " + targetAttributeName + "=" + sourceValueConverter;
+    return "set " + this.targetAttributeName + "=" + this.sourceValueConverter;
   }
 }

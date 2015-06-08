@@ -8,8 +8,7 @@ import com.revolsys.gis.model.geometry.Geometry;
 import com.revolsys.gis.model.geometry.LinearRing;
 import com.revolsys.gis.model.geometry.MultiLinearRing;
 
-public class MultiLinearRingImpl extends MultiLineStringImpl implements
-  MultiLinearRing {
+public class MultiLinearRingImpl extends MultiLineStringImpl implements MultiLinearRing {
 
   protected MultiLinearRingImpl(final GeometryFactoryImpl geometryFactory,
     final Collection<? extends Geometry> geometries) {

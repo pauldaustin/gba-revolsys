@@ -6,8 +6,8 @@ import com.revolsys.collection.Visitor;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.vividsolutions.jts.geom.Envelope;
 
-public abstract class AbstractIdObjectPointQuadTree<T> extends
-  AbstractPointSpatialIndex<T> implements IdObjectIndex<T> {
+public abstract class AbstractIdObjectPointQuadTree<T> extends AbstractPointSpatialIndex<T>
+  implements IdObjectIndex<T> {
 
   private final PointSpatialIndex<Integer> index = new PointQuadTree<Integer>();
 
@@ -30,13 +30,13 @@ public abstract class AbstractIdObjectPointQuadTree<T> extends
   @Override
   public void put(final Coordinates point, final T object) {
     final int id = getId(object);
-    index.put(point, id);
+    this.index.put(point, id);
   }
 
   @Override
   public boolean remove(final Coordinates point, final T object) {
     final int id = getId(object);
-    return index.remove(point, id);
+    return this.index.remove(point, id);
   }
 
   @Override
@@ -53,16 +53,15 @@ public abstract class AbstractIdObjectPointQuadTree<T> extends
 
   @Override
   public void visit(final Envelope envelope, final Visitor<T> visitor) {
-    final IdObjectIndexEnvelopeVisitor<T> itemVisitor = new IdObjectIndexEnvelopeVisitor<T>(
-      this, envelope, visitor);
-    index.visit(envelope, itemVisitor);
+    final IdObjectIndexEnvelopeVisitor<T> itemVisitor = new IdObjectIndexEnvelopeVisitor<T>(this,
+      envelope, visitor);
+    this.index.visit(envelope, itemVisitor);
   }
 
   @Override
   public void visit(final Visitor<T> visitor) {
-    final IdObjectIndexVisitor<T> itemVisitor = new IdObjectIndexVisitor<T>(
-      this, visitor);
-    index.visit(itemVisitor);
+    final IdObjectIndexVisitor<T> itemVisitor = new IdObjectIndexVisitor<T>(this, visitor);
+    this.index.visit(itemVisitor);
   }
 
 }

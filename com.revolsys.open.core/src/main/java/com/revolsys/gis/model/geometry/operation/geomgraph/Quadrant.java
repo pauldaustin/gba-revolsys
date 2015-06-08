@@ -7,14 +7,14 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Utility functions for working with quadrants, which are numbered as follows:
- * 
+ *
  * <pre>
  * 1 | 0
  * --+--
  * 2 | 3
- * 
+ *
  * <pre>
- * 
+ *
  * @version 1.7
  */
 public class Quadrant {
@@ -44,8 +44,8 @@ public class Quadrant {
       return -1;
     }
     //
-    final int min = (quad1 < quad2) ? quad1 : quad2;
-    final int max = (quad1 > quad2) ? quad1 : quad2;
+    final int min = quad1 < quad2 ? quad1 : quad2;
+    final int max = quad1 > quad2 ? quad1 : quad2;
     // for this one case, the righthand plane is NOT the minimum index;
     if (min == 0 && max == 3) {
       return 3;
@@ -90,13 +90,13 @@ public class Quadrant {
 
   /**
    * Returns the quadrant of a directed line segment from p0 to p1.
-   * 
+   *
    * @throws IllegalArgumentException if the points are equal
    */
   public static int quadrant(final Coordinates p0, final Coordinates p1) {
     if (p1.getX() == p0.getX() && p1.getY() == p0.getY()) {
-      throw new IllegalArgumentException(
-        "Cannot compute the quadrant for two identical points " + p0);
+      throw new IllegalArgumentException("Cannot compute the quadrant for two identical points "
+        + p0);
     }
 
     if (p1.getX() >= p0.getX()) {
@@ -117,13 +117,13 @@ public class Quadrant {
   /**
    * Returns the quadrant of a directed line segment (specified as x and y
    * displacements, which cannot both be 0).
-   * 
+   *
    * @throws IllegalArgumentException if the displacements are both 0
    */
   public static int quadrant(final double dx, final double dy) {
     if (dx == 0.0 && dy == 0.0) {
-      throw new IllegalArgumentException(
-        "Cannot compute the quadrant for point ( " + dx + ", " + dy + " )");
+      throw new IllegalArgumentException("Cannot compute the quadrant for point ( " + dx + ", "
+        + dy + " )");
     }
     if (dx >= 0.0) {
       if (dy >= 0.0) {

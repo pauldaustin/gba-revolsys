@@ -12,16 +12,15 @@ import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 
 public class DelegatingDataObjectStoreHandler implements InvocationHandler {
-  public static <T extends RecordStore> T create(final String label,
-    final Class<T> interfaceClass, final T dataStore) {
+  public static <T extends RecordStore> T create(final String label, final Class<T> interfaceClass,
+    final T dataStore) {
     final ClassLoader classLoader = dataStore.getClass().getClassLoader();
     final Class<?>[] interfaces = new Class<?>[] {
       interfaceClass
     };
-    final DelegatingDataObjectStoreHandler handler = new DelegatingDataObjectStoreHandler(
-      label, dataStore);
-    final T proxyStore = (T)Proxy.newProxyInstance(classLoader, interfaces,
-      handler);
+    final DelegatingDataObjectStoreHandler handler = new DelegatingDataObjectStoreHandler(label,
+      dataStore);
+    final T proxyStore = (T)Proxy.newProxyInstance(classLoader, interfaces, handler);
     return proxyStore;
 
   }
@@ -29,15 +28,13 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
   @SuppressWarnings("unchecked")
   public static <T extends RecordStore> T create(final String label,
     final Map<String, ? extends Object> config) {
-    final ClassLoader classLoader = Thread.currentThread()
-      .getContextClassLoader();
+    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     final Class<?>[] interfaces = new Class<?>[] {
       RecordStoreFactoryRegistry.getDataObjectStoreInterfaceClass(config)
     };
-    final DelegatingDataObjectStoreHandler handler = new DelegatingDataObjectStoreHandler(
-      label, config);
-    final T proxyStore = (T)Proxy.newProxyInstance(classLoader, interfaces,
-      handler);
+    final DelegatingDataObjectStoreHandler handler = new DelegatingDataObjectStoreHandler(label,
+      config);
+    final T proxyStore = (T)Proxy.newProxyInstance(classLoader, interfaces, handler);
     try {
       proxyStore.initialize();
     } catch (final Throwable t) {
@@ -57,20 +54,19 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
   }
 
   public DelegatingDataObjectStoreHandler(final String label,
-    final RecordStore dataStore) {
-    this.label = label;
-    this.dataStore = dataStore;
-  }
-
-  public DelegatingDataObjectStoreHandler(final String label,
     final Map<String, ? extends Object> config) {
     this.label = label;
     this.config = new HashMap<String, Object>(config);
   }
 
+  public DelegatingDataObjectStoreHandler(final String label, final RecordStore dataStore) {
+    this.label = label;
+    this.dataStore = dataStore;
+  }
+
   protected RecordStore createDataStore() {
-    if (config != null) {
-      final RecordStore dataStore = RecordStoreFactoryRegistry.createDataObjectStore(config);
+    if (this.config != null) {
+      final RecordStore dataStore = RecordStoreFactoryRegistry.createDataObjectStore(this.config);
       return dataStore;
     } else {
       throw new UnsupportedOperationException("Data store must be set manually");
@@ -78,16 +74,16 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
   }
 
   public RecordStore getDataStore() {
-    if (dataStore == null) {
-      dataStore = createDataStore();
-      dataStore.initialize();
+    if (this.dataStore == null) {
+      this.dataStore = createDataStore();
+      this.dataStore.initialize();
     }
-    return dataStore;
+    return this.dataStore;
   }
 
   @Override
-  public Object invoke(final Object proxy, final Method method,
-    final Object[] args) throws Throwable {
+  public Object invoke(final Object proxy, final Method method, final Object[] args)
+    throws Throwable {
     int numArgs;
     if (args == null) {
       numArgs = 0;
@@ -95,16 +91,16 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
       numArgs = args.length;
     }
     if (method.getName().equals("toString") && numArgs == 0) {
-      return label;
+      return this.label;
     } else if (method.getName().equals("getLabel") && numArgs == 0) {
-      return label;
+      return this.label;
     } else if (method.getName().equals("hashCode") && numArgs == 0) {
-      return label.hashCode();
+      return this.label.hashCode();
     } else if (method.getName().equals("equals") && numArgs == 1) {
       final boolean equal = args[0] == proxy;
       return equal;
     } else if (method.getName().equals("close") && numArgs == 0) {
-      if (dataStore != null) {
+      if (this.dataStore != null) {
         final RecordStore dataStore = getDataStore();
 
         dataStore.close();

@@ -18,15 +18,14 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public class MaximalNearestSubline {
 
-  public static LineString getMaximalNearestSubline(final LineString a,
-    final LineString b) {
+  public static LineString getMaximalNearestSubline(final LineString a, final LineString b) {
     final MaximalNearestSubline mns = new MaximalNearestSubline(a, b);
     final LineStringLocation[] interval = mns.getInterval();
     return getSubline(a, interval[0], interval[1]);
   }
 
-  public static LineString getSubline(final LineString line,
-    final LineStringLocation start, final LineStringLocation end) {
+  public static LineString getSubline(final LineString line, final LineStringLocation start,
+    final LineStringLocation end) {
     final CoordinateList newCoordinates = new CoordinateList();
 
     int includedStartIndex = start.getSegmentIndex();
@@ -76,34 +75,34 @@ public class MaximalNearestSubline {
   /**
    * Create a new Maximal Nearest Subline of {@link LineString} <code>a</code>
    * relative to {@link LineString} <code>b</code>
-   * 
+   *
    * @param a the LineString on which to compute the subline
    * @param b the LineString to compute the subline relative to
    */
   public MaximalNearestSubline(final LineString a, final LineString b) {
     this.a = a;
     this.b = b;
-    aPtLocator = new LocationOfPoint(a);
+    this.aPtLocator = new LocationOfPoint(a);
   }
 
   private void expandInterval(final LineStringLocation loc) {
     // expand maximal interval if this point is outside it
-    if (maxInterval[0] == null || loc.compareTo(maxInterval[0]) < 0) {
-      maxInterval[0] = loc;
+    if (this.maxInterval[0] == null || loc.compareTo(this.maxInterval[0]) < 0) {
+      this.maxInterval[0] = loc;
     }
-    if (maxInterval[1] == null || loc.compareTo(maxInterval[1]) > 0) {
-      maxInterval[1] = loc;
+    if (this.maxInterval[1] == null || loc.compareTo(this.maxInterval[1]) > 0) {
+      this.maxInterval[1] = loc;
     }
   }
 
   private void findNearestOnA(final Coordinate bPt) {
-    final LineStringLocation nearestLocationOnA = aPtLocator.locate(bPt);
+    final LineStringLocation nearestLocationOnA = this.aPtLocator.locate(bPt);
     expandInterval(nearestLocationOnA);
   }
 
   /**
    * Computes the interval (range) containing the Maximal Nearest Subline.
-   * 
+   *
    * @return an array containing the minimum and maximum locations of the
    *         Maximal Nearest Subline of <code>A</code>
    */
@@ -116,7 +115,7 @@ public class MaximalNearestSubline {
      */
 
     // Heuristic #1: use every vertex of B as a test point
-    final CoordinateSequence bCoords = b.getCoordinateSequence();
+    final CoordinateSequence bCoords = this.b.getCoordinateSequence();
     for (int ib = 0; ib < bCoords.size(); ib++) {
       findNearestOnA(bCoords.getCoordinate(ib));
     }
@@ -126,8 +125,8 @@ public class MaximalNearestSubline {
      * those points of B as test points. For efficiency use only vertices of A
      * outside current max interval.
      */
-    final LocationOfPoint bPtLocator = new LocationOfPoint(b);
-    final CoordinateSequence aCoords = a.getCoordinateSequence();
+    final LocationOfPoint bPtLocator = new LocationOfPoint(this.b);
+    final CoordinateSequence aCoords = this.a.getCoordinateSequence();
     for (int ia = 0; ia < aCoords.size(); ia++) {
       if (isOutsideInterval(ia)) {
         final LineStringLocation bLoc = bPtLocator.locate(aCoords.getCoordinate(ia));
@@ -136,14 +135,14 @@ public class MaximalNearestSubline {
       }
     }
 
-    return maxInterval;
+    return this.maxInterval;
   }
 
   private boolean isOutsideInterval(final int ia) {
-    if (ia <= maxInterval[0].getSegmentIndex()) {
+    if (ia <= this.maxInterval[0].getSegmentIndex()) {
       return true;
     }
-    if (ia > maxInterval[1].getSegmentIndex()) {
+    if (ia > this.maxInterval[1].getSegmentIndex()) {
       return true;
     }
     return false;

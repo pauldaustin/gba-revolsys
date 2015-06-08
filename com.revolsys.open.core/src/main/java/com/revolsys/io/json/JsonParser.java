@@ -22,8 +22,7 @@ import org.springframework.core.io.Resource;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.MathUtil;
 
-public class JsonParser implements Iterator<JsonParser.EventType>,
-  AutoCloseable {
+public class JsonParser implements Iterator<JsonParser.EventType>, AutoCloseable {
   public enum EventType {
     booleanValue, colon, comma, endArray, endDocument, endObject, nullValue, number, startArray, startDocument, startObject, string, unknown
   }
@@ -48,8 +47,7 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
       }
       return list;
     } else {
-      throw new IllegalStateException("Exepecting start array, not:"
-        + parser.getEvent());
+      throw new IllegalStateException("Exepecting start array, not:" + parser.getEvent());
     }
 
   }
@@ -76,8 +74,7 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
 
       return MathUtil.toDoubleArray(list);
     } else {
-      throw new IllegalStateException("Exepecting start array, not: "
-        + parser.getEvent());
+      throw new IllegalStateException("Exepecting start array, not: " + parser.getEvent());
     }
   }
 
@@ -107,8 +104,7 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
               if (parser.hasNext()) {
                 final Object value = getValue(parser);
                 if (value instanceof EventType) {
-                  throw new IllegalStateException("Exepecting a value, not:"
-                    + value);
+                  throw new IllegalStateException("Exepecting a value, not:" + value);
                 }
                 map.put(key, value);
               }
@@ -124,8 +120,7 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
       }
       return map;
     } else {
-      throw new IllegalStateException("Exepecting end object, not:"
-        + parser.getEvent());
+      throw new IllegalStateException("Exepecting end object, not:" + parser.getEvent());
     }
 
   }
@@ -250,12 +245,11 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
   /**
    * Skip through the document until the specified object attribute name is
    * found.
-   * 
+   *
    * @param parser The parser.
    * @param attributeName The name of the attribute to skip through.
    */
-  public static void skipToAttribute(final JsonParser parser,
-    final String attributeName) {
+  public static void skipToAttribute(final JsonParser parser, final String attributeName) {
     while (parser.hasNext()) {
       final EventType eventType = parser.next();
       if (eventType == EventType.string) {
@@ -315,7 +309,7 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
   public JsonParser(final Reader reader) {
     this.reader = new BufferedReader(reader);
     try {
-      currentCharacter = this.reader.read();
+      this.currentCharacter = this.reader.read();
     } catch (final IOException e) {
       throw new RuntimeException(e);
     }
@@ -327,117 +321,117 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
 
   @Override
   public void close() {
-    FileUtil.closeSilent(reader);
+    FileUtil.closeSilent(this.reader);
   }
 
   public int getDepth() {
-    return depth;
+    return this.depth;
   }
 
   public EventType getEvent() {
-    return currentEvent;
+    return this.currentEvent;
   }
 
   @SuppressWarnings("unchecked")
   public <T> T getValue() {
-    return (T)currentValue;
+    return (T)this.currentValue;
   }
 
   @Override
   public boolean hasNext() {
-    return currentEvent != EventType.endDocument;
+    return this.currentEvent != EventType.endDocument;
   }
 
   private void moveNext() {
-    nextValue = null;
+    this.nextValue = null;
     try {
       skipWhitespace();
-      switch (currentCharacter) {
+      switch (this.currentCharacter) {
         case ',':
-          nextEvent = EventType.comma;
-          currentCharacter = reader.read();
+          this.nextEvent = EventType.comma;
+          this.currentCharacter = this.reader.read();
         break;
         case ':':
-          nextEvent = EventType.colon;
-          currentCharacter = reader.read();
+          this.nextEvent = EventType.colon;
+          this.currentCharacter = this.reader.read();
         break;
         case '{':
-          nextEvent = EventType.startObject;
-          currentCharacter = reader.read();
-          depth++;
+          this.nextEvent = EventType.startObject;
+          this.currentCharacter = this.reader.read();
+          this.depth++;
         break;
         case '}':
-          nextEvent = EventType.endObject;
-          currentCharacter = reader.read();
-          depth--;
+          this.nextEvent = EventType.endObject;
+          this.currentCharacter = this.reader.read();
+          this.depth--;
         break;
         case '[':
-          nextEvent = EventType.startArray;
-          currentCharacter = reader.read();
+          this.nextEvent = EventType.startArray;
+          this.currentCharacter = this.reader.read();
         break;
         case ']':
-          nextEvent = EventType.endArray;
-          currentCharacter = reader.read();
+          this.nextEvent = EventType.endArray;
+          this.currentCharacter = this.reader.read();
         break;
         case 't':
           for (int i = 0; i < 3; i++) {
-            currentCharacter = reader.read();
+            this.currentCharacter = this.reader.read();
           }
-          nextEvent = EventType.booleanValue;
-          nextValue = Boolean.TRUE;
-          currentCharacter = reader.read();
+          this.nextEvent = EventType.booleanValue;
+          this.nextValue = Boolean.TRUE;
+          this.currentCharacter = this.reader.read();
         break;
         case 'f':
           for (int i = 0; i < 4; i++) {
-            currentCharacter = reader.read();
+            this.currentCharacter = this.reader.read();
           }
-          nextEvent = EventType.booleanValue;
-          nextValue = Boolean.FALSE;
-          currentCharacter = reader.read();
+          this.nextEvent = EventType.booleanValue;
+          this.nextValue = Boolean.FALSE;
+          this.currentCharacter = this.reader.read();
         break;
         case 'n':
           for (int i = 0; i < 3; i++) {
-            currentCharacter = reader.read();
+            this.currentCharacter = this.reader.read();
           }
-          nextEvent = EventType.nullValue;
-          nextValue = null;
-          currentCharacter = reader.read();
+          this.nextEvent = EventType.nullValue;
+          this.nextValue = null;
+          this.currentCharacter = this.reader.read();
         break;
         case '"':
-          nextEvent = EventType.string;
+          this.nextEvent = EventType.string;
 
           processString();
-          currentCharacter = reader.read();
+          this.currentCharacter = this.reader.read();
         break;
         case '-':
-          nextEvent = EventType.number;
+          this.nextEvent = EventType.number;
 
           processNumber();
         break;
         case -1:
-          nextEvent = EventType.endDocument;
+          this.nextEvent = EventType.endDocument;
         break;
         default:
-          if (currentCharacter >= '0' && currentCharacter <= '9') {
-            nextEvent = EventType.number;
+          if (this.currentCharacter >= '0' && this.currentCharacter <= '9') {
+            this.nextEvent = EventType.number;
             processNumber();
           } else {
-            nextEvent = EventType.unknown;
+            this.nextEvent = EventType.unknown;
           }
         break;
       }
     } catch (final IOException e) {
-      nextEvent = EventType.endDocument;
+      this.nextEvent = EventType.endDocument;
     }
   }
 
   @Override
   public EventType next() {
     if (hasNext()) {
-      currentValue = nextValue;
-      currentEvent = nextEvent;
+      this.currentValue = this.nextValue;
+      this.currentEvent = this.nextEvent;
       moveNext();
-      return currentEvent;
+      return this.currentEvent;
     } else {
       throw new NoSuchElementException();
     }
@@ -445,45 +439,45 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
 
   private void processNumber() throws IOException {
     final StringBuffer text = new StringBuffer();
-    if (currentCharacter == '-') {
-      text.append((char)currentCharacter);
-      currentCharacter = reader.read();
+    if (this.currentCharacter == '-') {
+      text.append((char)this.currentCharacter);
+      this.currentCharacter = this.reader.read();
     }
-    while (currentCharacter >= '0' && currentCharacter <= '9') {
-      text.append((char)currentCharacter);
-      currentCharacter = reader.read();
+    while (this.currentCharacter >= '0' && this.currentCharacter <= '9') {
+      text.append((char)this.currentCharacter);
+      this.currentCharacter = this.reader.read();
     }
-    if (currentCharacter == '.') {
-      text.append((char)currentCharacter);
-      currentCharacter = reader.read();
-      while (currentCharacter >= '0' && currentCharacter <= '9') {
-        text.append((char)currentCharacter);
-        currentCharacter = reader.read();
+    if (this.currentCharacter == '.') {
+      text.append((char)this.currentCharacter);
+      this.currentCharacter = this.reader.read();
+      while (this.currentCharacter >= '0' && this.currentCharacter <= '9') {
+        text.append((char)this.currentCharacter);
+        this.currentCharacter = this.reader.read();
       }
     }
 
-    if (currentCharacter == 'e' || currentCharacter == 'E') {
-      text.append((char)currentCharacter);
-      currentCharacter = reader.read();
-      if (currentCharacter == '-' || currentCharacter == '+') {
-        text.append((char)currentCharacter);
-        currentCharacter = reader.read();
+    if (this.currentCharacter == 'e' || this.currentCharacter == 'E') {
+      text.append((char)this.currentCharacter);
+      this.currentCharacter = this.reader.read();
+      if (this.currentCharacter == '-' || this.currentCharacter == '+') {
+        text.append((char)this.currentCharacter);
+        this.currentCharacter = this.reader.read();
       }
-      while (currentCharacter >= '0' && currentCharacter <= '9') {
-        text.append((char)currentCharacter);
-        currentCharacter = reader.read();
+      while (this.currentCharacter >= '0' && this.currentCharacter <= '9') {
+        text.append((char)this.currentCharacter);
+        this.currentCharacter = this.reader.read();
       }
     }
-    nextValue = new BigDecimal(text.toString());
+    this.nextValue = new BigDecimal(text.toString());
   }
 
   private void processString() throws IOException {
     final StringBuffer text = new StringBuffer();
-    currentCharacter = reader.read();
-    while (currentCharacter != '"') {
-      if (currentCharacter == '\\') {
-        currentCharacter = reader.read();
-        switch (currentCharacter) {
+    this.currentCharacter = this.reader.read();
+    while (this.currentCharacter != '"') {
+      if (this.currentCharacter == '\\') {
+        this.currentCharacter = this.reader.read();
+        switch (this.currentCharacter) {
           case 'n':
             text.append('\n');
           break;
@@ -500,15 +494,15 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
           // TODO process hex
           break;
           default:
-            text.append((char)currentCharacter);
+            text.append((char)this.currentCharacter);
           break;
         }
       } else {
-        text.append((char)currentCharacter);
+        text.append((char)this.currentCharacter);
       }
-      currentCharacter = reader.read();
+      this.currentCharacter = this.reader.read();
     }
-    nextValue = text.toString();
+    this.nextValue = text.toString();
   }
 
   @Override
@@ -516,13 +510,13 @@ public class JsonParser implements Iterator<JsonParser.EventType>,
   }
 
   private void skipWhitespace() throws IOException {
-    while (Character.isWhitespace(currentCharacter)) {
-      currentCharacter = reader.read();
+    while (Character.isWhitespace(this.currentCharacter)) {
+      this.currentCharacter = this.reader.read();
     }
   }
 
   @Override
   public String toString() {
-    return currentEvent + " : " + currentValue;
+    return this.currentEvent + " : " + this.currentValue;
   }
 }

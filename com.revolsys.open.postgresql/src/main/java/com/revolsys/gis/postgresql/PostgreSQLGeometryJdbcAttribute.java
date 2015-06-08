@@ -36,10 +36,9 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
 
   private final int numAxis;
 
-  public PostgreSQLGeometryJdbcAttribute(final String name,
-    final DataType type, final boolean required, final String description,
-    final Map<String, Object> properties, final int srid, final int numAxis,
-    final GeometryFactory geometryFactory) {
+  public PostgreSQLGeometryJdbcAttribute(final String name, final DataType type,
+    final boolean required, final String description, final Map<String, Object> properties,
+    final int srid, final int numAxis, final GeometryFactory geometryFactory) {
     super(name, type, -1, 0, 0, required, description, properties);
     this.srid = srid;
     this.geometryFactory = geometryFactory;
@@ -49,9 +48,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
 
   @Override
   public JdbcFieldDefinition clone() {
-    return new PostgreSQLGeometryJdbcAttribute(getName(), getType(),
-      isRequired(), getDescription(), getProperties(), srid, numAxis,
-      geometryFactory);
+    return new PostgreSQLGeometryJdbcAttribute(getName(), getType(), isRequired(),
+      getDescription(), getProperties(), this.srid, this.numAxis, this.geometryFactory);
   }
 
   public Object getInsertUpdateValue(Object object) throws SQLException {
@@ -60,7 +58,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     } else {
       if (object instanceof com.vividsolutions.jts.geom.Geometry) {
         final com.vividsolutions.jts.geom.Geometry geometry = (com.vividsolutions.jts.geom.Geometry)object;
-        object = geometryFactory.copy(geometry);
+        object = this.geometryFactory.copy(geometry);
       }
       Geometry geometry = null;
 
@@ -82,7 +80,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         geometry = toPgPoint(point);
       } else if (object instanceof Coordinates) {
         final Coordinates coordinates = (Coordinates)object;
-        final com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinates);
+        final com.vividsolutions.jts.geom.Point point = this.geometryFactory.createPoint(coordinates);
         geometry = toPgPoint(point);
       } else if (object instanceof com.vividsolutions.jts.geom.MultiPoint) {
         final com.vividsolutions.jts.geom.MultiPoint point = (com.vividsolutions.jts.geom.MultiPoint)object;
@@ -107,8 +105,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final Record object) throws SQLException {
+  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record object) throws SQLException {
     final Object oracleValue = resultSet.getObject(columnIndex);
     final Object value = toJava(oracleValue);
     object.setValue(getIndex(), value);
@@ -126,8 +124,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
   }
 
   @Override
-  public int setPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final Object value) throws SQLException {
+  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
+    final Object value) throws SQLException {
     final Object jdbcValue = toJdbc(value);
     statement.setObject(parameterIndex, jdbcValue);
     return parameterIndex + 1;
@@ -139,17 +137,17 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
       final Geometry geometry = pgGeometry.getGeometry();
       final int type = geometry.getType();
       if (type == Geometry.POINT) {
-        return toJtsPoint(geometryFactory, (Point)geometry);
+        return toJtsPoint(this.geometryFactory, (Point)geometry);
       } else if (type == Geometry.LINESTRING) {
-        return toJtsLineString(geometryFactory, (LineString)geometry);
+        return toJtsLineString(this.geometryFactory, (LineString)geometry);
       } else if (type == Geometry.POLYGON) {
-        return toJtsPolygon(geometryFactory, (Polygon)geometry);
+        return toJtsPolygon(this.geometryFactory, (Polygon)geometry);
       } else if (type == Geometry.MULTIPOINT) {
-        return toJtsMultiPoint(geometryFactory, (MultiPoint)geometry);
+        return toJtsMultiPoint(this.geometryFactory, (MultiPoint)geometry);
       } else if (type == Geometry.MULTILINESTRING) {
-        return toJtsMultiLineString(geometryFactory, (MultiLineString)geometry);
+        return toJtsMultiLineString(this.geometryFactory, (MultiLineString)geometry);
       } else if (type == Geometry.MULTIPOLYGON) {
-        return toJtsMultiPolygon(geometryFactory, (MultiPolygon)geometry);
+        return toJtsMultiPolygon(this.geometryFactory, (MultiPolygon)geometry);
       } else {
         throw new RuntimeException("Unsopported postgis geometry type " + type);
       }
@@ -162,7 +160,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     Geometry geometry = null;
     if (object instanceof Coordinates) {
       final Coordinates coordinates = (Coordinates)object;
-      final com.vividsolutions.jts.geom.Point point = geometryFactory.createPoint(coordinates);
+      final com.vividsolutions.jts.geom.Point point = this.geometryFactory.createPoint(coordinates);
       geometry = toPgPoint(point);
     } else if (object instanceof com.vividsolutions.jts.geom.Point) {
       final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point)object;
@@ -188,18 +186,17 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return new PGgeometry(geometry);
   }
 
-  private com.vividsolutions.jts.geom.LineString toJtsLineString(
-    final GeometryFactory factory, final LineString lineString) {
+  private com.vividsolutions.jts.geom.LineString toJtsLineString(final GeometryFactory factory,
+    final LineString lineString) {
     final Point[] points = lineString.getPoints();
-    final CoordinatesList coordinates = new DoubleCoordinatesList(
-      points.length, numAxis);
+    final CoordinatesList coordinates = new DoubleCoordinatesList(points.length, this.numAxis);
     for (int i = 0; i < points.length; i++) {
       final Point point = points[i];
       coordinates.setX(i, point.x);
       coordinates.setY(i, point.y);
-      if (numAxis > 2) {
+      if (this.numAxis > 2) {
         coordinates.setZ(i, point.z);
-        if (numAxis > 3) {
+        if (this.numAxis > 3) {
           coordinates.setValue(i, 3, point.m);
         }
       }
@@ -207,8 +204,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return factory.createLineString(coordinates);
   }
 
-  private com.vividsolutions.jts.geom.Geometry toJtsMultiLineString(
-    final GeometryFactory factory, final MultiLineString multiLine) {
+  private com.vividsolutions.jts.geom.Geometry toJtsMultiLineString(final GeometryFactory factory,
+    final MultiLineString multiLine) {
     final LineString[] lines = multiLine.getLines();
     if (lines.length == 1) {
       return toJtsLineString(factory, lines[0]);
@@ -222,12 +219,11 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     }
   }
 
-  private com.vividsolutions.jts.geom.Geometry toJtsMultiPoint(
-    final GeometryFactory factory, final MultiPoint multiPoint) {
+  private com.vividsolutions.jts.geom.Geometry toJtsMultiPoint(final GeometryFactory factory,
+    final MultiPoint multiPoint) {
     final List<com.vividsolutions.jts.geom.Point> points = new ArrayList<com.vividsolutions.jts.geom.Point>();
     for (final Point point : multiPoint.getPoints()) {
-      final com.vividsolutions.jts.geom.Point jtsPoint = toJtsPoint(factory,
-        point);
+      final com.vividsolutions.jts.geom.Point jtsPoint = toJtsPoint(factory, point);
       points.add(jtsPoint);
     }
     if (points.size() == 1) {
@@ -237,12 +233,11 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     }
   }
 
-  private com.vividsolutions.jts.geom.Geometry toJtsMultiPolygon(
-    final GeometryFactory factory, final MultiPolygon multiPolygon) {
+  private com.vividsolutions.jts.geom.Geometry toJtsMultiPolygon(final GeometryFactory factory,
+    final MultiPolygon multiPolygon) {
     final List<com.vividsolutions.jts.geom.Polygon> polygons = new ArrayList<com.vividsolutions.jts.geom.Polygon>();
     for (final Polygon polygon : multiPolygon.getPolygons()) {
-      final com.vividsolutions.jts.geom.Polygon jtsPolygon = toJtsPolygon(
-        factory, polygon);
+      final com.vividsolutions.jts.geom.Polygon jtsPolygon = toJtsPolygon(factory, polygon);
       polygons.add(jtsPolygon);
     }
     if (polygons.size() == 1) {
@@ -252,10 +247,10 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     }
   }
 
-  private com.vividsolutions.jts.geom.Point toJtsPoint(
-    final GeometryFactory factory, final Point point) {
+  private com.vividsolutions.jts.geom.Point toJtsPoint(final GeometryFactory factory,
+    final Point point) {
     final Coordinates coordinate;
-    switch (numAxis) {
+    switch (this.numAxis) {
       case 3:
         coordinate = new DoubleCoordinates(point.x, point.y, point.z);
       break;
@@ -269,21 +264,20 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return factory.createPoint(coordinate);
   }
 
-  private com.vividsolutions.jts.geom.Polygon toJtsPolygon(
-    final GeometryFactory factory, final Polygon polygon) {
+  private com.vividsolutions.jts.geom.Polygon toJtsPolygon(final GeometryFactory factory,
+    final Polygon polygon) {
     final List<CoordinatesList> rings = new ArrayList<CoordinatesList>();
     for (int ringIndex = 0; ringIndex < polygon.numRings(); ringIndex++) {
       final LinearRing ring = polygon.getRing(ringIndex);
       final Point[] points = ring.getPoints();
-      final CoordinatesList coordinates = new DoubleCoordinatesList(
-        points.length, numAxis);
+      final CoordinatesList coordinates = new DoubleCoordinatesList(points.length, this.numAxis);
       for (int i = 0; i < points.length; i++) {
         final Point point = points[i];
         coordinates.setValue(i, 0, point.x);
         coordinates.setValue(i, 1, point.y);
-        if (numAxis > 2) {
+        if (this.numAxis > 2) {
           coordinates.setOrdinate(i, 2, point.z);
-          if (numAxis > 3) {
+          if (this.numAxis > 3) {
             coordinates.setOrdinate(i, 3, point.m);
           }
         }
@@ -293,8 +287,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return factory.createPolygon(rings);
   }
 
-  private LinearRing toPgLinearRing(
-    final com.vividsolutions.jts.geom.LineString ring) {
+  private LinearRing toPgLinearRing(final com.vividsolutions.jts.geom.LineString ring) {
     final CoordinatesList points = CoordinatesListUtil.get(ring);
     final Point[] pgPoints = toPgPoints(points);
     final LinearRing linearRing = new LinearRing(pgPoints);
@@ -302,8 +295,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return linearRing;
   }
 
-  private LineString toPgLineString(
-    final com.vividsolutions.jts.geom.LineString lineString) {
+  private LineString toPgLineString(final com.vividsolutions.jts.geom.LineString lineString) {
     final CoordinatesList points = CoordinatesListUtil.get(lineString);
     final Point[] pgPoints = toPgPoints(points);
     final LineString pgLineString = new LineString(pgPoints);
@@ -324,9 +316,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
           final com.vividsolutions.jts.geom.LineString line = (com.vividsolutions.jts.geom.LineString)firstGeometry;
           return toPgLineString(line);
         } else {
-          throw new RuntimeException(
-            "GeometryCollection must contain a single LineString not a "
-              + firstGeometry.getClass());
+          throw new RuntimeException("GeometryCollection must contain a single LineString not a "
+            + firstGeometry.getClass());
         }
       } else {
         throw new RuntimeException("MultiLineString has more than one geometry");
@@ -336,8 +327,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     }
   }
 
-  private Geometry toPgMultiLineString(
-    final com.vividsolutions.jts.geom.Geometry geometry) {
+  private Geometry toPgMultiLineString(final com.vividsolutions.jts.geom.Geometry geometry) {
     final List<LineString> pgLineStrings = new ArrayList<LineString>();
     for (int i = 0; i < geometry.getNumGeometries(); i++) {
       final com.vividsolutions.jts.geom.Geometry subGeometry = geometry.getGeometryN(i);
@@ -346,16 +336,14 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         final LineString pgLineString = toPgLineString(line);
         pgLineStrings.add(pgLineString);
       } else {
-        throw new RuntimeException(
-          "Geometry must contain only LineStrings not a "
-            + subGeometry.getClass());
+        throw new RuntimeException("Geometry must contain only LineStrings not a "
+          + subGeometry.getClass());
       }
     }
     return toPgMultiLineString(geometry.getSRID(), pgLineStrings);
   }
 
-  private MultiLineString toPgMultiLineString(final int srid,
-    final List<LineString> lineStrings) {
+  private MultiLineString toPgMultiLineString(final int srid, final List<LineString> lineStrings) {
     final LineString[] pgLineStrings = new LineString[lineStrings.size()];
     lineStrings.toArray(pgLineStrings);
     final MultiLineString pgMultiLineString = new MultiLineString(pgLineStrings);
@@ -363,8 +351,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return pgMultiLineString;
   }
 
-  private Geometry toPgMultiPoint(
-    final com.vividsolutions.jts.geom.Geometry geometry) {
+  private Geometry toPgMultiPoint(final com.vividsolutions.jts.geom.Geometry geometry) {
     final List<Point> pgPoints = new ArrayList<Point>();
     for (int i = 0; i < geometry.getNumGeometries(); i++) {
       final com.vividsolutions.jts.geom.Geometry subGeometry = geometry.getGeometryN(i);
@@ -388,8 +375,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return pgMultiPoint;
   }
 
-  private Geometry toPgMultiPolygon(
-    final com.vividsolutions.jts.geom.Geometry geometry) {
+  private Geometry toPgMultiPolygon(final com.vividsolutions.jts.geom.Geometry geometry) {
     final List<Polygon> pgPolygons = new ArrayList<Polygon>();
     for (int i = 0; i < geometry.getNumGeometries(); i++) {
       final com.vividsolutions.jts.geom.Geometry subGeometry = geometry.getGeometryN(i);
@@ -405,8 +391,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     return toPgMultiPolygon(geometry.getSRID(), pgPolygons);
   }
 
-  private MultiPolygon toPgMultiPolygon(final int srid,
-    final List<Polygon> polygons) {
+  private MultiPolygon toPgMultiPolygon(final int srid, final List<Polygon> polygons) {
     final Polygon[] pgPolygons = new Polygon[polygons.size()];
     polygons.toArray(pgPolygons);
     final MultiPolygon pgMultiPolygon = new MultiPolygon(pgPolygons);
@@ -453,13 +438,11 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
           final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point)firstGeometry;
           return toPgPoint(point);
         } else {
-          throw new RuntimeException(
-            "GeometryCollection must contain a single Point not a "
-              + firstGeometry.getClass());
+          throw new RuntimeException("GeometryCollection must contain a single Point not a "
+            + firstGeometry.getClass());
         }
       } else {
-        throw new RuntimeException(
-          "GeometryCollection has more than one geometry");
+        throw new RuntimeException("GeometryCollection has more than one geometry");
       }
     } else {
       throw new RuntimeException("Expecting a point");
@@ -473,13 +456,13 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
       final double y = coordinates.getY(i);
       final double x = coordinates.getX(i);
 
-      if (numAxis > 2) {
+      if (this.numAxis > 2) {
         double z = coordinates.getZ(i);
         if (Double.isNaN(z)) {
           z = 0;
         }
         pgPoint = new Point(x, y, z);
-        if (numAxis > 3) {
+        if (this.numAxis > 3) {
           double m = coordinates.getM(i);
           if (Double.isNaN(m)) {
             m = 0;
@@ -520,13 +503,12 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
           final com.vividsolutions.jts.geom.Polygon polygon = (com.vividsolutions.jts.geom.Polygon)firstGeometry;
           return toPgPolygon(polygon);
         } else {
-          throw new RuntimeException(
-            "GeometryCollection must contain a single Polygon not a "
-              + firstGeometry.getClass());
+          throw new RuntimeException("GeometryCollection must contain a single Polygon not a "
+            + firstGeometry.getClass());
         }
       } else {
-        throw new RuntimeException("Expecting a single Polygon not a "
-          + object.getClass() + " with more than one geometry");
+        throw new RuntimeException("Expecting a single Polygon not a " + object.getClass()
+          + " with more than one geometry");
       }
     } else if (object == null) {
       return null;

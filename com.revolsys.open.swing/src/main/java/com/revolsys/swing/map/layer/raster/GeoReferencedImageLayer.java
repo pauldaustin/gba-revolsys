@@ -44,43 +44,38 @@ import com.vividsolutions.jts.geom.Point;
 public class GeoReferencedImageLayer extends AbstractLayer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "geoReferencedImage", "Geo-referenced Image",
-    GeoReferencedImageLayer.class, "create");
+    "geoReferencedImage", "Geo-referenced Image", GeoReferencedImageLayer.class, "create");
 
   static {
     final MenuFactory menu = ObjectTreeModel.getMenu(GeoReferencedImageLayer.class);
     menu.addGroup(1, "edit");
 
-    final EnableCheck readonly = new TreeItemPropertyEnableCheck("readOnly",
-      false);
+    final EnableCheck readonly = new TreeItemPropertyEnableCheck("readOnly", false);
     final EnableCheck editable = new TreeItemPropertyEnableCheck("editable");
-    final EnableCheck showOriginalImage = new TreeItemPropertyEnableCheck(
-        "showOriginalImage");
+    final EnableCheck showOriginalImage = new TreeItemPropertyEnableCheck("showOriginalImage");
 
-    menu.addCheckboxMenuItem("edit", TreeItemRunnable.createAction("Editable",
-      "pencil", readonly, "toggleEditable"), editable);
+    menu.addCheckboxMenuItem("edit",
+      TreeItemRunnable.createAction("Editable", "pencil", readonly, "toggleEditable"), editable);
 
     final EnableCheck hasChanges = new TreeItemPropertyEnableCheck("hasChanges");
 
-    menu.addMenuItem("edit", TreeItemRunnable.createAction("Save Changes",
-      "map_save", hasChanges, "saveChanges"));
+    menu.addMenuItem("edit",
+      TreeItemRunnable.createAction("Save Changes", "map_save", hasChanges, "saveChanges"));
 
-    menu.addMenuItem("edit", TreeItemRunnable.createAction("Cancel Changes",
-      "map_cancel", "cancelChanges"));
+    menu.addMenuItem("edit",
+      TreeItemRunnable.createAction("Cancel Changes", "map_cancel", "cancelChanges"));
 
-    menu.addMenuItem("edit", TreeItemRunnable.createAction("View Tie-Points",
-      "table_go", "showTiePointsTable"));
+    menu.addMenuItem("edit",
+      TreeItemRunnable.createAction("View Tie-Points", "table_go", "showTiePointsTable"));
 
-    menu.addCheckboxMenuItem("edit",
-      TreeItemRunnable.createAction("Show Original Image", (String)null,
-        editable, "toggleShowOriginalImage"), showOriginalImage);
+    menu.addCheckboxMenuItem("edit", TreeItemRunnable.createAction("Show Original Image",
+      (String)null, editable, "toggleShowOriginalImage"), showOriginalImage);
 
-    menu.addMenuItem("edit", TreeItemRunnable.createAction("Fit to Screen",
-      "arrow_out", editable, "fitToViewport"));
+    menu.addMenuItem("edit",
+      TreeItemRunnable.createAction("Fit to Screen", "arrow_out", editable, "fitToViewport"));
   }
 
-  public static GeoReferencedImageLayer create(
-    final Map<String, Object> properties) {
+  public static GeoReferencedImageLayer create(final Map<String, Object> properties) {
     return new GeoReferencedImageLayer(properties);
   }
 
@@ -115,8 +110,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     if (StringUtils.hasText(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final GeoReferencedImageFactory factory = IoFactoryRegistry.getInstance()
-          .getFactoryByFileExtension(GeoReferencedImageFactory.class,
-            fileNameExtension);
+        .getFactoryByFileExtension(GeoReferencedImageFactory.class, fileNameExtension);
       if (factory != null) {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }
@@ -176,7 +170,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
       return true;
     } else {
       LoggerFactory.getLogger(getClass()).error(
-          "Layer definition does not contain a 'url' property");
+        "Layer definition does not contain a 'url' property");
       return false;
     }
   }
@@ -204,11 +198,9 @@ public class GeoReferencedImageLayer extends AbstractLayer {
         final double imageRatio = this.image.getImageAspectRatio();
         BoundingBox boundingBox;
         if (viewRatio > imageRatio) {
-          boundingBox = viewBoundingBox.expandPercent(-1 + imageRatio
-            / viewRatio, 0.0);
+          boundingBox = viewBoundingBox.expandPercent(-1 + imageRatio / viewRatio, 0.0);
         } else if (viewRatio < imageRatio) {
-          boundingBox = viewBoundingBox.expandPercent(0.0, -1 + viewRatio
-            / imageRatio);
+          boundingBox = viewBoundingBox.expandPercent(0.0, -1 + viewRatio / imageRatio);
         } else {
           boundingBox = viewBoundingBox;
         }
@@ -359,8 +351,8 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     };
     if (!isShowOriginalImage()) {
       try {
-        final AffineTransform transform = image.getAffineTransformation(
-          boundingBox).createInverse();
+        final AffineTransform transform = image.getAffineTransformation(boundingBox)
+          .createInverse();
         transform.transform(coordinates, 0, coordinates, 0, 1);
       } catch (final NoninvertibleTransformException e) {
       }

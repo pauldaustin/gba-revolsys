@@ -1,8 +1,8 @@
 package com.revolsys.swing.builder;
 
 public abstract class AbstractUiBuilder implements UiBuilder {
-  public final static String escapeHTML(final String value,
-    final boolean escapeSpaces, final boolean escapeNewlines) {
+  public final static String escapeHTML(final String value, final boolean escapeSpaces,
+    final boolean escapeNewlines) {
     if (value == null) {
       return null;
     }

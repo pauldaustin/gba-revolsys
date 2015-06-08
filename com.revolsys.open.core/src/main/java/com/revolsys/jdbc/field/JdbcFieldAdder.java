@@ -160,25 +160,32 @@ public class JdbcFieldAdder {
         case Types.LONGVARCHAR:
         case Types.VARCHAR:
           final Map<String, Object> properties = recordStore.getProperties();
-          attribute = new JdbcStringFieldDefinition(name, sqlType, length, required, description, properties);
+          attribute = new JdbcStringFieldDefinition(name, sqlType, length, required, description,
+            properties);
         break;
         case Types.BIGINT:
-          attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         case Types.INTEGER:
-          attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         case Types.SMALLINT:
-          attribute = new JdbcShortFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcShortFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         case Types.TINYINT:
-          attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         case Types.DOUBLE:
-          attribute = new JdbcDoubleFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcDoubleFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         case Types.REAL:
-          attribute = new JdbcFloatFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcFloatFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         case Types.DECIMAL:
         case Types.NUMERIC:
@@ -187,21 +194,24 @@ public class JdbcFieldAdder {
             attribute = new JdbcBigDecimalFieldDefinition(name, sqlType, length, scale, required,
               description, null);
           } else if (length == 131089 || length == 0) {
-            attribute = new JdbcBigDecimalFieldDefinition(name, sqlType, -1, -1, required, description,
-              null);
+            attribute = new JdbcBigDecimalFieldDefinition(name, sqlType, -1, -1, required,
+              description, null);
           } else {
             if (length <= 2) {
-              attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description, null);
+              attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description,
+                null);
             } else if (length <= 4) {
-              attribute = new JdbcShortFieldDefinition(name, sqlType, length, required, description, null);
+              attribute = new JdbcShortFieldDefinition(name, sqlType, length, required,
+                description, null);
             } else if (length <= 9) {
-              attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required, description,
-                null);
+              attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required,
+                description, null);
             } else if (length <= 18) {
-              attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description, null);
-            } else {
-              attribute = new JdbcBigIntegerFieldDefinition(name, sqlType, length, required, description,
+              attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description,
                 null);
+            } else {
+              attribute = new JdbcBigIntegerFieldDefinition(name, sqlType, length, required,
+                description, null);
             }
           }
         break;
@@ -212,14 +222,16 @@ public class JdbcFieldAdder {
           attribute = new JdbcTimestampFieldDefinition(name, sqlType, required, description, null);
         break;
         case Types.BIT:
-          attribute = new JdbcBooleanFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcBooleanFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         case Types.BLOB:
-          attribute = new JdbcBlobFieldDefinition(name, sqlType, length, required, description, null);
+          attribute = new JdbcBlobFieldDefinition(name, sqlType, length, required, description,
+            null);
         break;
         default:
-          attribute = new JdbcFieldDefinition(name, this.dataType, sqlType, length, scale, required,
-            description, null);
+          attribute = new JdbcFieldDefinition(name, this.dataType, sqlType, length, scale,
+            required, description, null);
         break;
       }
     }

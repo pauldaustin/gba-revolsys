@@ -33,25 +33,25 @@ public class Mercator1SP implements CoordinatesProjection {
     this.lambda0 = Math.toRadians(centralMeridian);
     this.a = spheroid.getSemiMajorAxis();
     this.e = spheroid.getEccentricity();
-    this.eOver2 = e / 2;
+    this.eOver2 = this.e / 2;
 
   }
 
   @Override
   public void inverse(final Coordinates from, final Coordinates to) {
-    final double x = (from.getX() - x0);
-    final double y = (from.getY() - y0);
+    final double x = from.getX() - this.x0;
+    final double y = from.getY() - this.y0;
 
-    final double lambda = x / a + lambda0;
+    final double lambda = x / this.a + this.lambda0;
 
-    final double t = Math.pow(Math.E, -y / a);
+    final double t = Math.pow(Math.E, -y / this.a);
     // TODO phi
     double phi = Angle.PI_OVER_2 - 2 * Math.atan(t);
     double delta = 10e010;
     do {
-      final double eSinPhi = e * Math.sin(phi);
+      final double eSinPhi = this.e * Math.sin(phi);
       final double phi1 = Angle.PI_OVER_2 - 2
-        * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), eOver2));
+        * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.eOver2));
       delta = Math.abs(phi1 - phi);
       phi = phi1;
     } while (delta > 1.0e-011);
@@ -69,15 +69,15 @@ public class Mercator1SP implements CoordinatesProjection {
     final double lambda = from.getX();
     final double phi = from.getY();
 
-    final double x = a * (lambda - lambda0);
+    final double x = this.a * (lambda - this.lambda0);
 
-    final double eSinPhi = e * Math.sin(phi);
-    final double y = a
+    final double eSinPhi = this.e * Math.sin(phi);
+    final double y = this.a
       * Math.log(Math.tan(Angle.PI_OVER_4 + phi / 2)
-        * Math.pow((1 - eSinPhi) / (1 + eSinPhi), eOver2));
+        * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.eOver2));
 
-    to.setValue(0, x0 + x);
-    to.setValue(1, y0 + y);
+    to.setValue(0, this.x0 + x);
+    to.setValue(1, this.y0 + y);
 
     for (int i = 2; i < from.getNumAxis() && i < to.getNumAxis(); i++) {
       final double ordinate = from.getValue(i);

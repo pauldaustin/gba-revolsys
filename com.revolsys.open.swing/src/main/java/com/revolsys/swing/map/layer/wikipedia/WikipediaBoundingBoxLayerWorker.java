@@ -21,19 +21,15 @@ import com.revolsys.swing.map.layer.geonames.GeoNamesService;
 import com.revolsys.swing.parallel.AbstractSwingWorker;
 import com.vividsolutions.jts.geom.Point;
 
-public class WikipediaBoundingBoxLayerWorker extends
-  AbstractSwingWorker<DataObjectQuadTree, Void> {
+public class WikipediaBoundingBoxLayerWorker extends AbstractSwingWorker<DataObjectQuadTree, Void> {
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "wikipedia", "Wikipedia Articles", WikipediaBoundingBoxLayerWorker.class,
-    "create");
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("wikipedia",
+    "Wikipedia Articles", WikipediaBoundingBoxLayerWorker.class, "create");
 
-  public static DataObjectBoundingBoxLayer create(
-    final Map<String, Object> properties) {
+  public static DataObjectBoundingBoxLayer create(final Map<String, Object> properties) {
     final GeometryFactory wgs84 = GeometryFactory.floating3(4326);
-    final DataObjectBoundingBoxLayer layer1 = new DataObjectBoundingBoxLayer(
-      "wikipedia", "Wikipedia Articles", WikipediaBoundingBoxLayerWorker.class,
-      wgs84);
+    final DataObjectBoundingBoxLayer layer1 = new DataObjectBoundingBoxLayer("wikipedia",
+      "Wikipedia Articles", WikipediaBoundingBoxLayerWorker.class, wgs84);
 
     final BufferedImage image = Icons.getImage("wikipedia");
     final ImageMarker marker = new ImageMarker(image);
@@ -53,8 +49,8 @@ public class WikipediaBoundingBoxLayerWorker extends
 
   private final GeometryFactory geometryFactory;
 
-  public WikipediaBoundingBoxLayerWorker(
-    final DataObjectBoundingBoxLayer layer, final BoundingBox boundingBox) {
+  public WikipediaBoundingBoxLayerWorker(final DataObjectBoundingBoxLayer layer,
+    final BoundingBox boundingBox) {
     this.layer = layer;
     this.boundingBox = boundingBox;
     this.geometryFactory = boundingBox.getGeometryFactory();

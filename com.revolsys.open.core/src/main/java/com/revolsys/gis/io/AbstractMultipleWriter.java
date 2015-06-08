@@ -20,7 +20,7 @@ public abstract class AbstractMultipleWriter extends AbstractWriter<Record> {
 
   @Override
   public void close() {
-    for (final Writer<Record> writer : writers.values()) {
+    for (final Writer<Record> writer : this.writers.values()) {
       try {
         writer.close();
       } catch (final Throwable t) {
@@ -29,14 +29,13 @@ public abstract class AbstractMultipleWriter extends AbstractWriter<Record> {
     }
   }
 
-  protected abstract Writer<Record> createWriter(
-    final RecordDefinition metaData);
+  protected abstract Writer<Record> createWriter(final RecordDefinition metaData);
 
   private Writer<Record> getWriter(final RecordDefinition metaData) {
-    Writer<Record> writer = writers.get(metaData);
+    Writer<Record> writer = this.writers.get(metaData);
     if (writer == null) {
       writer = createWriter(metaData);
-      writers.put(metaData, writer);
+      this.writers.put(metaData, writer);
     }
     return writer;
   }

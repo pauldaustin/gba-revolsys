@@ -10,8 +10,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
-public class XhtmlDataObjectWriterFactory extends
-  AbstractRecordAndGeometryWriterFactory {
+public class XhtmlDataObjectWriterFactory extends AbstractRecordAndGeometryWriterFactory {
   public XhtmlDataObjectWriterFactory() {
     super("XHMTL", true, true);
     addMediaTypeAndFileExtension("text/html", "html");
@@ -20,9 +19,8 @@ public class XhtmlDataObjectWriterFactory extends
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
     return new XhtmlDataObjectWriter(metaData, writer);
   }

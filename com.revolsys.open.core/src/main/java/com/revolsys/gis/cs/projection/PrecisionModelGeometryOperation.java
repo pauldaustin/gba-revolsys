@@ -25,8 +25,7 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
     this.geometryFactory = geometryFactory;
   }
 
-  private void addUserData(final Geometry oldGeometry,
-    final Geometry newGeometry) {
+  private void addUserData(final Geometry oldGeometry, final Geometry newGeometry) {
     final Object userData = oldGeometry.getUserData();
     if (userData != null) {
       if (userData instanceof Map) {
@@ -38,17 +37,16 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
   }
 
   public CoordinatesList perform(final CoordinatesList coordinates) {
-    final int numAxis = geometryFactory.getNumAxis();
-    final CoordinatesList newCoordinates = new DoubleCoordinatesList(numAxis,
-      coordinates);
-    newCoordinates.makePrecise(geometryFactory);
+    final int numAxis = this.geometryFactory.getNumAxis();
+    final CoordinatesList newCoordinates = new DoubleCoordinatesList(numAxis, coordinates);
+    newCoordinates.makePrecise(this.geometryFactory);
     return newCoordinates;
   }
 
   public LinearRing perform(final LinearRing ring) {
     if (ring != null) {
       final CoordinatesList newCoordinates = perform(CoordinatesListUtil.get(ring));
-      final LinearRing newRing = geometryFactory.createLinearRing(newCoordinates);
+      final LinearRing newRing = this.geometryFactory.createLinearRing(newCoordinates);
       addUserData(ring, newRing);
       return newRing;
     } else {
@@ -59,7 +57,7 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
   public LineString perform(final LineString line) {
     if (line != null) {
       final CoordinatesList newCoordinates = perform(CoordinatesListUtil.get(line));
-      final LineString newLine = geometryFactory.createLineString(newCoordinates);
+      final LineString newLine = this.geometryFactory.createLineString(newCoordinates);
       addUserData(line, newLine);
       return newLine;
     } else {
@@ -76,7 +74,7 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
         addUserData(line, newLineString);
         newLineStrings[i] = newLineString;
       }
-      final MultiLineString newMultiLineString = geometryFactory.createMultiLineString(newLineStrings);
+      final MultiLineString newMultiLineString = this.geometryFactory.createMultiLineString(newLineStrings);
       addUserData(multiLineString, newMultiLineString);
       return newMultiLineString;
     } else {
@@ -93,7 +91,7 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
         addUserData(point, newPoint);
         newPoints[i] = newPoint;
       }
-      final MultiPoint newMultiPoint = geometryFactory.createMultiPoint(newPoints);
+      final MultiPoint newMultiPoint = this.geometryFactory.createMultiPoint(newPoints);
       addUserData(multiPoint, newMultiPoint);
       return newMultiPoint;
     } else {
@@ -110,7 +108,7 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
         addUserData(polygon, newPolygon);
         newPolygons[i] = newPolygon;
       }
-      final MultiPolygon newMultiPolygon = geometryFactory.createMultiPolygon(newPolygons);
+      final MultiPolygon newMultiPolygon = this.geometryFactory.createMultiPolygon(newPolygons);
       addUserData(multiPolygon, newMultiPolygon);
       return newMultiPolygon;
     } else {
@@ -121,7 +119,7 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
   public Point perform(final Point point) {
     if (point != null) {
       final CoordinatesList newCoordinate = perform(CoordinatesListUtil.get(point));
-      final Point newPoint = geometryFactory.createPoint(newCoordinate);
+      final Point newPoint = this.geometryFactory.createPoint(newCoordinate);
       addUserData(point, newPoint);
       return newPoint;
     } else {
@@ -138,7 +136,7 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
       final LinearRing hole = (LinearRing)polygon.getInteriorRingN(i);
       newHoles[i] = perform(hole);
     }
-    final Polygon newPolygon = geometryFactory.createPolygon(newShell, newHoles);
+    final Polygon newPolygon = this.geometryFactory.createPolygon(newShell, newHoles);
     addUserData(newPolygon, polygon);
     return newPolygon;
 

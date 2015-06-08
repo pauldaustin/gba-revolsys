@@ -39,18 +39,16 @@ public class LengthMeasureTextField extends ValueField implements ItemListener {
 
   private final ComboBox unitField;
 
-  public LengthMeasureTextField(final Measure<Length> value,
-    final Unit<Length> unit) {
+  public LengthMeasureTextField(final Measure<Length> value, final Unit<Length> unit) {
     this(null, value, unit);
   }
 
-  public LengthMeasureTextField(final String fieldName,
-    final Measure<Length> value) {
+  public LengthMeasureTextField(final String fieldName, final Measure<Length> value) {
     this(fieldName, value, value.getUnit());
   }
 
-  public LengthMeasureTextField(final String fieldName,
-    final Measure<Length> value, final Unit<Length> unit) {
+  public LengthMeasureTextField(final String fieldName, final Measure<Length> value,
+    final Unit<Length> unit) {
     super(fieldName, value);
     setOpaque(false);
     this.valueField = new NumberTextField(fieldName, DataTypes.DOUBLE, 6, 2);
@@ -66,14 +64,13 @@ public class LengthMeasureTextField extends ValueField implements ItemListener {
       this.unit = value.getUnit();
     }
     this.valueField.setFieldValue(this.number);
-    final InvokeMethodListener updateNumberListener = new InvokeMethodListener(
-      this, "updateNumber");
+    final InvokeMethodListener updateNumberListener = new InvokeMethodListener(this, "updateNumber");
     this.valueField.addFocusListener(new WeakFocusListener(updateNumberListener));
     add(this.valueField);
     this.valueField.addActionListener(updateNumberListener);
 
-    this.unitField = new ComboBox(
-      new InvokeMethodStringConverter(UNITS, "get"), true, UNITS.keySet());
+    this.unitField = new ComboBox(new InvokeMethodStringConverter(UNITS, "get"), true,
+      UNITS.keySet());
     this.unitField.addItemListener(this);
     this.unitField.setSelectedItem(this.unit);
     add(this.unitField);
@@ -100,8 +97,7 @@ public class LengthMeasureTextField extends ValueField implements ItemListener {
   @SuppressWarnings("unchecked")
   @Override
   public void itemStateChanged(final ItemEvent e) {
-    if (e.getSource() == this.unitField
-      && e.getStateChange() == ItemEvent.SELECTED) {
+    if (e.getSource() == this.unitField && e.getStateChange() == ItemEvent.SELECTED) {
       final Object selectedItem = this.unitField.getSelectedItem();
       if (selectedItem instanceof Unit<?>) {
         setUnit((Unit<Length>)selectedItem);

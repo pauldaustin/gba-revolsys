@@ -9,15 +9,14 @@ public class LineEqualIgnoreDirectionFilter implements Filter<LineString> {
 
   private final LineString line;
 
-  public LineEqualIgnoreDirectionFilter(final LineString line,
-    final int dimension) {
+  public LineEqualIgnoreDirectionFilter(final LineString line, final int dimension) {
     this.line = line;
     this.dimension = dimension;
   }
 
   @Override
   public boolean accept(final LineString line) {
-    return LineStringUtil.equalsIgnoreDirection(line, this.line, dimension);
+    return LineStringUtil.equalsIgnoreDirection(line, this.line, this.dimension);
   }
 
 }

@@ -53,7 +53,7 @@ import com.vividsolutions.jts.geom.util.GeometryEditor;
  * case, it should return <code>null</code>). The {@link #transform(Geometry)
  * transform} method itself will always return a non-null Geometry object (but
  * this may be empty).
- * 
+ *
  * @version 1.7
  * @see GeometryEditor
  */
@@ -81,12 +81,6 @@ public class GeometryTransformer {
   private final boolean preserveGeometryCollectionType = true;
 
   /**
-   * <code>true</code> if the output from a collection argument should still be
-   * a collection
-   */
-  private final boolean preserveCollections = false;
-
-  /**
    * <code>true</code> if the type of the input should be preserved
    */
   private final boolean preserveType = false;
@@ -96,11 +90,11 @@ public class GeometryTransformer {
 
   /**
    * Utility function to make input geometry available
-   * 
+   *
    * @return the input geometry
    */
   public Geometry getInputGeometry() {
-    return inputGeom;
+    return this.inputGeom;
   }
 
   public final Geometry transform(final Geometry inputGeom) {
@@ -136,8 +130,7 @@ public class GeometryTransformer {
       + inputGeom.getClass().getName());
   }
 
-  protected Coordinates transformCoordinates(final Coordinates coords,
-    final Geometry parent) {
+  protected Coordinates transformCoordinates(final Coordinates coords, final Geometry parent) {
     return new DoubleCoordinates(coords);
   }
 
@@ -146,13 +139,12 @@ public class GeometryTransformer {
    * valid coordinate list for the desired result type. (E.g. a coordinate list
    * for a LineString must have 0 or at least 2 points). If this is not
    * possible, return an empty sequence - this will be pruned out.
-   * 
+   *
    * @param coords the coordinates to transform
    * @param parent the parent geometry
    * @return the transformed coordinates
    */
-  protected CoordinatesList transformCoordinates(final CoordinatesList coords,
-    final Geometry parent) {
+  protected CoordinatesList transformCoordinates(final CoordinatesList coords, final Geometry parent) {
     return new DoubleCoordinatesList(coords);
   }
 
@@ -162,15 +154,14 @@ public class GeometryTransformer {
     final List<Geometry> parts = geom.getGeometries();
     for (final Geometry part : parts) {
       final Geometry transformGeom = transform(part);
-      if (transformGeom != null
-        && (!pruneEmptyGeometry || !transformGeom.isEmpty())) {
+      if (transformGeom != null && (!this.pruneEmptyGeometry || !transformGeom.isEmpty())) {
         transGeomList.add(transformGeom);
       }
     }
-    if (preserveGeometryCollectionType) {
-      return factory.createGeometryCollection(transGeomList);
+    if (this.preserveGeometryCollectionType) {
+      return this.factory.createGeometryCollection(transGeomList);
     }
-    return factory.createGeometry(transGeomList);
+    return this.factory.createGeometry(transGeomList);
   }
 
   /**
@@ -179,7 +170,7 @@ public class GeometryTransformer {
    * degnerate ring of 3 or fewer points). In this case a LineString is
    * returned. Subclasses may wish to override this method and check for this
    * situation (e.g. a subclass may choose to eliminate degenerate linear rings)
-   * 
+   *
    * @param geom the ring to simplify
    * @param parent the parent geometry
    * @return a LinearRing if the transformation resulted in a structurally valid
@@ -187,37 +178,33 @@ public class GeometryTransformer {
    * @return a LineString if the transformation caused the LinearRing to
    *         collapse to 3 or fewer points
    */
-  protected LineString transformLinearRing(final LinearRing geom,
-    final Geometry parent) {
+  protected LineString transformLinearRing(final LinearRing geom, final Geometry parent) {
     final CoordinatesList points = transformCoordinates(geom, geom);
     final int seqSize = points.size();
     // ensure a valid LinearRing
-    if (seqSize > 0 && seqSize < 4 && !preserveType) {
-      return factory.createLineString(points);
+    if (seqSize > 0 && seqSize < 4 && !this.preserveType) {
+      return this.factory.createLineString(points);
     }
-    return factory.createLinearRing(points);
+    return this.factory.createLinearRing(points);
 
   }
 
   /**
    * Transforms a {@link LineString} geometry.
-   * 
+   *
    * @param geom
    * @param parent
    * @return
    */
-  protected Geometry transformLineString(final LineString geom,
-    final Geometry parent) {
+  protected Geometry transformLineString(final LineString geom, final Geometry parent) {
     // should check for 1-point sequences and downgrade them to points
-    return factory.createLineString(transformCoordinates(geom, geom));
+    return this.factory.createLineString(transformCoordinates(geom, geom));
   }
 
-  protected Geometry transformMultiLineString(final MultiLineString geom,
-    final Geometry parent) {
+  protected Geometry transformMultiLineString(final MultiLineString geom, final Geometry parent) {
     final List transGeomList = new ArrayList();
     for (int i = 0; i < geom.getGeometryCount(); i++) {
-      final Geometry transformGeom = transformLineString(
-        (LineString)geom.getGeometry(i), geom);
+      final Geometry transformGeom = transformLineString((LineString)geom.getGeometry(i), geom);
       if (transformGeom == null) {
         continue;
       }
@@ -226,15 +213,13 @@ public class GeometryTransformer {
       }
       transGeomList.add(transformGeom);
     }
-    return factory.createGeometry(transGeomList);
+    return this.factory.createGeometry(transGeomList);
   }
 
-  protected Geometry transformMultiPoint(final MultiPoint geom,
-    final Geometry parent) {
+  protected Geometry transformMultiPoint(final MultiPoint geom, final Geometry parent) {
     final List transGeomList = new ArrayList();
     for (int i = 0; i < geom.getGeometryCount(); i++) {
-      final Geometry transformGeom = transformPoint((Point)geom.getGeometry(i),
-        geom);
+      final Geometry transformGeom = transformPoint((Point)geom.getGeometry(i), geom);
       if (transformGeom == null) {
         continue;
       }
@@ -243,11 +228,10 @@ public class GeometryTransformer {
       }
       transGeomList.add(transformGeom);
     }
-    return factory.createGeometry(transGeomList);
+    return this.factory.createGeometry(transGeomList);
   }
 
-  protected Geometry transformMultiPolygon(final MultiPolygon geom,
-    final Geometry parent) {
+  protected Geometry transformMultiPolygon(final MultiPolygon geom, final Geometry parent) {
     final List<Geometry> transGeomList = new ArrayList<Geometry>();
     final List<Polygon> polygons = geom.getGeometries();
     for (final Polygon polygon : polygons) {
@@ -256,11 +240,11 @@ public class GeometryTransformer {
         transGeomList.add(transformGeom);
       }
     }
-    return factory.createGeometry(transGeomList);
+    return this.factory.createGeometry(transGeomList);
   }
 
   protected Geometry transformPoint(final Point geom, final Geometry parent) {
-    return factory.createPoint(transformCoordinates(geom, geom));
+    return this.factory.createPoint(transformCoordinates(geom, geom));
   }
 
   protected Geometry transformPolygon(final Polygon geom, final Geometry parent) {
@@ -278,9 +262,9 @@ public class GeometryTransformer {
     }
 
     if (isAllValidLinearRings) {
-      return factory.createPolygon(rings);
+      return this.factory.createPolygon(rings);
     } else {
-      return factory.createGeometry(rings);
+      return this.factory.createGeometry(rings);
     }
   }
 

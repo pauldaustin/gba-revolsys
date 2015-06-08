@@ -21,26 +21,23 @@ import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
-public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode
-  implements DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
+public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode implements
+  DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
   public static final Icon ICON = Icons.getIcon("database_link");
 
   private static final MenuFactory MENU = new MenuFactory();
 
   static {
-    final TreeItemPropertyEnableCheck readOnly = new TreeItemPropertyEnableCheck(
-      "readOnly", false);
-    MENU.addMenuItemTitleIcon("default", "Delete Data Store Connection",
-      "delete", readOnly, DataObjectStoreConnectionTreeNode.class,
-      "deleteConnection");
+    final TreeItemPropertyEnableCheck readOnly = new TreeItemPropertyEnableCheck("readOnly", false);
+    MENU.addMenuItemTitleIcon("default", "Delete Data Store Connection", "delete", readOnly,
+      DataObjectStoreConnectionTreeNode.class, "deleteConnection");
   }
 
   public static void deleteConnection() {
     final DataObjectStoreConnectionTreeNode node = BaseTree.getMouseClickItem();
     final DataObjectStoreConnection connection = node.getConnection();
-    final int confirm = JOptionPane.showConfirmDialog(
-      SwingUtil.getActiveWindow(), "Delete data store connection '"
-        + connection.getName() + "'? This action cannot be undone.",
+    final int confirm = JOptionPane.showConfirmDialog(SwingUtil.getActiveWindow(),
+      "Delete data store connection '" + connection.getName() + "'? This action cannot be undone.",
       "Delete Layer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
     if (confirm == JOptionPane.OK_OPTION) {
       connection.delete();
@@ -64,8 +61,8 @@ public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode
       for (final RecordStoreSchema schema : dataStore.getSchemas()) {
         final String schemaPath = schema.getPath();
 
-        final DataObjectStoreSchemaTreeNode schemaNode = new DataObjectStoreSchemaTreeNode(
-          this, schemaPath);
+        final DataObjectStoreSchemaTreeNode schemaNode = new DataObjectStoreSchemaTreeNode(this,
+          schemaPath);
         children.add(schemaNode);
       }
     }

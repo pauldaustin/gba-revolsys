@@ -16,13 +16,12 @@ public class PointImpl extends GeometryImpl implements Point {
 
   public static int hashCode(final double d) {
     final long f = Double.doubleToLongBits(d);
-    return (int)(f ^ (f >>> 32));
+    return (int)(f ^ f >>> 32);
   }
 
   protected final double[] coordinates;
 
-  protected PointImpl(final GeometryFactoryImpl geometryFactory,
-    final Coordinates coordinates) {
+  protected PointImpl(final GeometryFactoryImpl geometryFactory, final Coordinates coordinates) {
     super(geometryFactory);
     final int numAxis = geometryFactory.getNumAxis();
     this.coordinates = new double[numAxis];
@@ -37,8 +36,7 @@ public class PointImpl extends GeometryImpl implements Point {
     }
   }
 
-  protected PointImpl(final GeometryFactoryImpl geometryFactory,
-    final double[] coordinates) {
+  protected PointImpl(final GeometryFactoryImpl geometryFactory, final double[] coordinates) {
     super(geometryFactory);
     final int numAxis = geometryFactory.getNumAxis();
     this.coordinates = new double[numAxis];
@@ -149,15 +147,14 @@ public class PointImpl extends GeometryImpl implements Point {
   @Override
   public double[] getCoordinates() {
     final double[] coordinates = new double[this.coordinates.length];
-    System.arraycopy(this.coordinates, 0, coordinates, 0,
-      this.coordinates.length);
+    System.arraycopy(this.coordinates, 0, coordinates, 0, this.coordinates.length);
     return coordinates;
   }
 
   @Override
   public List<CoordinatesList> getCoordinatesLists() {
-    final CoordinatesList coordinatesList = new DoubleCoordinatesList(
-      getNumAxis(), getCoordinates());
+    final CoordinatesList coordinatesList = new DoubleCoordinatesList(getNumAxis(),
+      getCoordinates());
     return Collections.singletonList(coordinatesList);
   }
 
@@ -184,7 +181,7 @@ public class PointImpl extends GeometryImpl implements Point {
   @Override
   public double getValue(final int index) {
     if (index >= 0 && index < getNumAxis()) {
-      return coordinates[index];
+      return this.coordinates[index];
     } else {
       return Double.NaN;
     }
@@ -215,7 +212,7 @@ public class PointImpl extends GeometryImpl implements Point {
 
   @Override
   public boolean isEmpty() {
-    return coordinates.length == 0;
+    return this.coordinates.length == 0;
   }
 
   @Override
@@ -231,7 +228,7 @@ public class PointImpl extends GeometryImpl implements Point {
   @Override
   public void setValue(final int index, final double value) {
     if (index >= 0 && index < getNumAxis()) {
-      coordinates[index] = value;
+      this.coordinates[index] = value;
     }
   }
 
@@ -254,9 +251,9 @@ public class PointImpl extends GeometryImpl implements Point {
   public String toString() {
     final byte numAxis = getNumAxis();
     if (numAxis > 0) {
-      final StringBuffer s = new StringBuffer(String.valueOf(coordinates[0]));
+      final StringBuffer s = new StringBuffer(String.valueOf(this.coordinates[0]));
       for (int i = 1; i < numAxis; i++) {
-        final Double ordinate = coordinates[i];
+        final Double ordinate = this.coordinates[i];
         s.append(',');
         s.append(ordinate);
       }

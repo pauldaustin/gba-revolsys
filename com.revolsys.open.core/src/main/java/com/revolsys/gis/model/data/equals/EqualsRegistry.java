@@ -26,8 +26,7 @@ public class EqualsRegistry implements Equals<Object> {
     return EqualsInstance.INSTANCE.equals(object1, object2, exclude);
   }
 
-  public static boolean equal(final Object object1, final Object object2,
-    final String... exclude) {
+  public static boolean equal(final Object object1, final Object object2, final String... exclude) {
     return equal(object1, object2, Arrays.asList(exclude));
   }
 
@@ -63,8 +62,7 @@ public class EqualsRegistry implements Equals<Object> {
   }
 
   @Override
-  public boolean equals(final Object object1, final Object object2,
-    final Collection<String> exclude) {
+  public boolean equals(final Object object1, final Object object2, final Collection<String> exclude) {
     if (object1 == null) {
       if (object2 == null) {
         return true;
@@ -88,7 +86,7 @@ public class EqualsRegistry implements Equals<Object> {
       return EqualsInstance.DEFAULT_EQUALS;
     } else {
       @SuppressWarnings("unchecked")
-      Equals<Object> equals = (Equals<Object>)classEqualsMap.get(clazz);
+      Equals<Object> equals = (Equals<Object>)this.classEqualsMap.get(clazz);
       if (equals == null) {
         final Class<?>[] interfaces = clazz.getInterfaces();
         if (interfaces != null) {
@@ -107,7 +105,7 @@ public class EqualsRegistry implements Equals<Object> {
   }
 
   public void register(final Class<?> clazz, final Equals<?> equals) {
-    classEqualsMap.put(clazz, equals);
+    this.classEqualsMap.put(clazz, equals);
     equals.setEqualsRegistry(this);
   }
 

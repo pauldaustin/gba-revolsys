@@ -18,7 +18,7 @@ public class Node extends GraphComponent {
   public Node(final Coordinates coord, final EdgeEndStar edges) {
     this.coord = coord;
     this.edges = edges;
-    label = new Label(0, Location.NONE);
+    this.label = new Label(0, Location.NONE);
   }
 
   /**
@@ -26,7 +26,7 @@ public class Node extends GraphComponent {
    */
   public void add(final EdgeEnd e) {
     // Assert: start pt of e is equal to node point
-    edges.insert(e);
+    this.edges.insert(e);
     e.setNode(this);
   }
 
@@ -46,7 +46,7 @@ public class Node extends GraphComponent {
    */
   int computeMergedLocation(final Label label2, final int eltIndex) {
     int loc = Location.NONE;
-    loc = label.getLocation(eltIndex);
+    loc = this.label.getLocation(eltIndex);
     if (!label2.isNull(eltIndex)) {
       final int nLoc = label2.getLocation(eltIndex);
       if (loc != Location.BOUNDARY) {
@@ -58,18 +58,18 @@ public class Node extends GraphComponent {
 
   @Override
   public Coordinates getCoordinate() {
-    return coord;
+    return this.coord;
   }
 
   public EdgeEndStar getEdges() {
-    return edges;
+    return this.edges;
   }
 
   /**
    * Tests whether any incident edge is flagged as being in the result. This
    * test can be used to determine if the node is in the result, since if any
    * incident edge is in the result, the node must be in the result as well.
-   * 
+   *
    * @return <code>true</code> if any indicident edge in the in the result
    */
   public boolean isIncidentEdgeInResult() {
@@ -84,7 +84,7 @@ public class Node extends GraphComponent {
 
   @Override
   public boolean isIsolated() {
-    return (label.getGeometryCount() == 1);
+    return this.label.getGeometryCount() == 1;
   }
 
   /**
@@ -96,9 +96,9 @@ public class Node extends GraphComponent {
   public void mergeLabel(final Label label2) {
     for (int i = 0; i < 2; i++) {
       final int loc = computeMergedLocation(label2, i);
-      final int thisLoc = label.getLocation(i);
+      final int thisLoc = this.label.getLocation(i);
       if (thisLoc == Location.NONE) {
-        label.setLocation(i, loc);
+        this.label.setLocation(i, loc);
       }
     }
   }
@@ -108,14 +108,14 @@ public class Node extends GraphComponent {
   }
 
   public void print(final PrintStream out) {
-    out.println("node " + coord + " lbl: " + label);
+    out.println("node " + this.coord + " lbl: " + this.label);
   }
 
   public void setLabel(final int argIndex, final int onLocation) {
-    if (label == null) {
-      label = new Label(argIndex, onLocation);
+    if (this.label == null) {
+      this.label = new Label(argIndex, onLocation);
     } else {
-      label.setLocation(argIndex, onLocation);
+      this.label.setLocation(argIndex, onLocation);
     }
   }
 
@@ -126,8 +126,8 @@ public class Node extends GraphComponent {
   public void setLabelBoundary(final int argIndex) {
     // determine the current location for the point (if any)
     int loc = Location.NONE;
-    if (label != null) {
-      loc = label.getLocation(argIndex);
+    if (this.label != null) {
+      loc = this.label.getLocation(argIndex);
     }
     // flip the loc
     int newLoc;
@@ -142,6 +142,6 @@ public class Node extends GraphComponent {
         newLoc = Location.BOUNDARY;
       break;
     }
-    label.setLocation(argIndex, newLoc);
+    this.label.setLocation(argIndex, newLoc);
   }
 }

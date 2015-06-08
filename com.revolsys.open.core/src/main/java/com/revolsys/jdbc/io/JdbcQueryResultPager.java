@@ -58,9 +58,9 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     this.connection = dataStore.getConnection();
     this.dataSource = dataStore.getDataSource();
 
-    if (dataSource != null) {
+    if (this.dataSource != null) {
       try {
-        this.connection = JdbcUtils.getConnection(dataSource);
+        this.connection = JdbcUtils.getConnection(this.dataSource);
         boolean autoCommit = false;
         if (BooleanStringConverter.getBoolean(properties.get("autoCommit"))) {
           autoCommit = true;
@@ -76,10 +76,10 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     this.query = query;
 
     final String tableName = query.getTypeName();
-    metaData = query.getRecordDefinition();
-    if (metaData == null) {
-      metaData = dataStore.getRecordDefinition(tableName);
-      query.setMetaData(metaData);
+    this.metaData = query.getRecordDefinition();
+    if (this.metaData == null) {
+      this.metaData = dataStore.getRecordDefinition(tableName);
+      query.setMetaData(this.metaData);
     }
 
     this.sql = JdbcUtils.getSelectSql(query);
@@ -88,16 +88,16 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
   @Override
   @PreDestroy
   public void close() {
-    JdbcUtils.close(statement, resultSet);
-    JdbcUtils.release(connection, dataSource);
-    connection = null;
-    dataObjectFactory = null;
-    dataSource = null;
-    dataStore = null;
-    metaData = null;
-    results = null;
-    resultSet = null;
-    statement = null;
+    JdbcUtils.close(this.statement, this.resultSet);
+    JdbcUtils.release(this.connection, this.dataSource);
+    this.connection = null;
+    this.dataObjectFactory = null;
+    this.dataSource = null;
+    this.dataStore = null;
+    this.metaData = null;
+    this.results = null;
+    this.resultSet = null;
+    this.statement = null;
 
   }
 
@@ -108,199 +108,198 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
   }
 
   public Connection getConnection() {
-    return connection;
+    return this.connection;
   }
 
   public RecordFactory getDataObjectFactory() {
-    return dataObjectFactory;
+    return this.dataObjectFactory;
   }
 
   public DataSource getDataSource() {
-    return dataSource;
+    return this.dataSource;
   }
 
   public JdbcDataObjectStore getDataStore() {
-    return dataStore;
+    return this.dataStore;
   }
 
   /**
    * Get the index of the last object in the current page.
-   * 
+   *
    * @return The index of the last object in the current page.
    */
   @Override
   public int getEndIndex() {
-    if (pageNumber == getNumPages()) {
-      return numResults;
+    if (this.pageNumber == getNumPages()) {
+      return this.numResults;
     } else {
-      return (pageNumber + 1) * pageSize;
+      return (this.pageNumber + 1) * this.pageSize;
     }
   }
 
   /**
    * Get the list of objects in the current page.
-   * 
+   *
    * @return The list of objects in the current page.
    */
   @Override
   public List<Record> getList() {
-    if (results == null) {
-      throw new IllegalStateException(
-        "The page number must be set using setPageNumber");
+    if (this.results == null) {
+      throw new IllegalStateException("The page number must be set using setPageNumber");
     }
-    return results;
+    return this.results;
   }
 
   public RecordDefinition getMetaData() {
-    return metaData;
+    return this.metaData;
   }
 
   /**
    * Get the page number of the next page.
-   * 
+   *
    * @return Thepage number of the next page.
    */
   @Override
   public int getNextPageNumber() {
-    return pageNumber + 2;
+    return this.pageNumber + 2;
   }
 
   /**
    * Get the number of pages.
-   * 
+   *
    * @return The number of pages.
    */
   @Override
   public int getNumPages() {
-    return numPages + 1;
+    return this.numPages + 1;
   }
 
   /**
    * Get the total number of results returned.
-   * 
+   *
    * @return The total number of results returned.
    */
   @Override
   public int getNumResults() {
-    return numResults;
+    return this.numResults;
   }
 
   /**
    * Get the page number of the current page. Index starts at 1.
-   * 
+   *
    * @return The page number of the current page.
    */
   @Override
   public int getPageNumber() {
-    return pageNumber + 1;
+    return this.pageNumber + 1;
   }
 
   /**
    * Get the number of objects to display in a page.
-   * 
+   *
    * @return The number of objects to display in a page.
    */
   @Override
   public int getPageSize() {
-    return pageSize;
+    return this.pageSize;
   }
 
   /**
    * Get the page number of the previous page.
-   * 
+   *
    * @return Thepage number of the previous page.
    */
   @Override
   public int getPreviousPageNumber() {
-    return pageNumber;
+    return this.pageNumber;
   }
 
   public Query getQuery() {
-    return query;
+    return this.query;
   }
 
   protected String getSql() {
-    return sql;
+    return this.sql;
   }
 
   /**
    * Get the index of the first object in the current page. Index starts at 1.
-   * 
+   *
    * @return The index of the first object in the current page.
    */
   @Override
   public int getStartIndex() {
-    if (numResults == 0) {
+    if (this.numResults == 0) {
       return 0;
     } else {
-      return (pageNumber * pageSize) + 1;
+      return this.pageNumber * this.pageSize + 1;
     }
   }
 
   /**
    * Check to see if there is a next page.
-   * 
+   *
    * @return True if there is a next page.
    */
   @Override
   public boolean hasNextPage() {
-    return pageNumber < getNumPages();
+    return this.pageNumber < getNumPages();
   }
 
   /**
    * Check to see if there is a previous page.
-   * 
+   *
    * @return True if there is a previous page.
    */
   @Override
   public boolean hasPreviousPage() {
-    return pageNumber > 0;
+    return this.pageNumber > 0;
   }
 
   private void initResultSet() {
-    if (resultSet == null) {
+    if (this.resultSet == null) {
       try {
-        statement = connection.prepareStatement(sql,
+        this.statement = this.connection.prepareStatement(this.sql,
           ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        statement.setFetchSize(pageSize);
+        this.statement.setFetchSize(this.pageSize);
 
-        resultSet = JdbcQueryIterator.getResultSet(metaData, statement, query);
-        resultSet.last();
-        this.numResults = resultSet.getRow();
+        this.resultSet = JdbcQueryIterator.getResultSet(this.metaData, this.statement, this.query);
+        this.resultSet.last();
+        this.numResults = this.resultSet.getRow();
       } catch (final SQLException e) {
-        JdbcUtils.close(statement, resultSet);
-        throw new RuntimeException("Error executing query:" + sql, e);
+        JdbcUtils.close(this.statement, this.resultSet);
+        throw new RuntimeException("Error executing query:" + this.sql, e);
       }
     }
   }
 
   public boolean isClosed() {
-    return dataStore == null;
+    return this.dataStore == null;
   }
 
   /**
    * Check to see if this is the first page.
-   * 
+   *
    * @return True if this is the first page.
    */
   @Override
   public boolean isFirstPage() {
-    return pageNumber == 0;
+    return this.pageNumber == 0;
   }
 
   /**
    * Check to see if this is the last page.
-   * 
+   *
    * @return True if this is the last page.
    */
   @Override
   public boolean isLastPage() {
-    return pageNumber == getNumPages();
+    return this.pageNumber == getNumPages();
   }
 
   /**
    * Set the current page number.
-   * 
+   *
    * @param pageNumber The current page number.
    */
   @Override
@@ -317,7 +316,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
 
   /**
    * Set the number of objects per page.
-   * 
+   *
    * @param pageSize The number of objects per page.
    */
   @Override
@@ -328,31 +327,29 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
   }
 
   protected void updateNumPages() {
-    this.numPages = Math.max(0, ((getNumResults() - 1) / getPageSize()));
+    this.numPages = Math.max(0, (getNumResults() - 1) / getPageSize());
   }
 
   /**
    * Update the cached results for the current page.
    */
   protected void updateResults() {
-    results = new ArrayList<Record>();
+    this.results = new ArrayList<Record>();
     try {
       initResultSet();
-      if (pageNumber != -1 && resultSet != null) {
-        if (resultSet.absolute(pageNumber * pageSize + 1)) {
+      if (this.pageNumber != -1 && this.resultSet != null) {
+        if (this.resultSet.absolute(this.pageNumber * this.pageSize + 1)) {
           int i = 0;
           do {
-            final Record object = JdbcQueryIterator.getNextObject(
-              dataStore, metaData, metaData.getFields(), dataObjectFactory,
-              resultSet);
-            results.add(object);
+            final Record object = JdbcQueryIterator.getNextObject(this.dataStore, this.metaData,
+              this.metaData.getFields(), this.dataObjectFactory, this.resultSet);
+            this.results.add(object);
             i++;
-          } while (resultSet.next() && i < pageSize);
+          } while (this.resultSet.next() && i < this.pageSize);
         }
       }
     } catch (final SQLException e) {
-      JdbcUtils.getException(getDataSource(), getConnection(), "updateResults",
-        sql, e);
+      JdbcUtils.getException(getDataSource(), getConnection(), "updateResults", this.sql, e);
     } catch (final RuntimeException e) {
       close();
     } catch (final Error e) {

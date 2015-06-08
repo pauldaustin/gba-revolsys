@@ -20,7 +20,7 @@ import com.revolsys.gis.model.geometry.util.TopologyException;
  * <p>
  * The client may either test the {@link #isValid} condition, or request that a
  * suitable {@link TopologyException} be thrown.
- * 
+ *
  * @version 1.7
  */
 public class FastNodingValidator {
@@ -36,7 +36,7 @@ public class FastNodingValidator {
 
   /**
    * Creates a new noding validator for a given set of linework.
-   * 
+   *
    * @param segStrings a collection of {@link SegmentString}s
    */
   public FastNodingValidator(final Collection segStrings) {
@@ -49,33 +49,32 @@ public class FastNodingValidator {
      * SegmentStrings) have an interior intersection, since noding should have
      * split any true interior intersections already.
      */
-    isValid = true;
-    segInt = new InteriorIntersectionFinder(li);
-    segInt.setFindAllIntersections(findAllIntersections);
+    this.isValid = true;
+    this.segInt = new InteriorIntersectionFinder(this.li);
+    this.segInt.setFindAllIntersections(this.findAllIntersections);
     final MCIndexNoder noder = new MCIndexNoder();
-    noder.setSegmentIntersector(segInt);
-    noder.computeNodes(segStrings);
-    if (segInt.hasIntersection()) {
-      isValid = false;
+    noder.setSegmentIntersector(this.segInt);
+    noder.computeNodes(this.segStrings);
+    if (this.segInt.hasIntersection()) {
+      this.isValid = false;
       return;
     }
   }
 
   /**
    * Checks for an intersection and throws a TopologyException if one is found.
-   * 
+   *
    * @throws TopologyException if an intersection is found
    */
   public void checkValid() {
     execute();
-    if (!isValid) {
-      throw new TopologyException(getErrorMessage(),
-        segInt.getInteriorIntersection());
+    if (!this.isValid) {
+      throw new TopologyException(getErrorMessage(), this.segInt.getInteriorIntersection());
     }
   }
 
   private void execute() {
-    if (segInt != null) {
+    if (this.segInt != null) {
       return;
     }
     checkInteriorIntersections();
@@ -84,31 +83,31 @@ public class FastNodingValidator {
   /**
    * Returns an error message indicating the segments containing the
    * intersection.
-   * 
+   *
    * @return an error message documenting the intersection location
    */
   public String getErrorMessage() {
-    if (isValid) {
+    if (this.isValid) {
       return "no intersections found";
     }
 
-    final Coordinates[] intSegs = segInt.getIntersectionSegments();
-    return "found non-noded intersection between " + intSegs[0] + ","
-      + intSegs[1] + " and " + intSegs[2] + " " + intSegs[3];
+    final Coordinates[] intSegs = this.segInt.getIntersectionSegments();
+    return "found non-noded intersection between " + intSegs[0] + "," + intSegs[1] + " and "
+      + intSegs[2] + " " + intSegs[3];
   }
 
   public List getIntersections() {
-    return segInt.getIntersections();
+    return this.segInt.getIntersections();
   }
 
   /**
    * Checks for an intersection and reports if one is found.
-   * 
+   *
    * @return true if the arrangement contains an interior intersection
    */
   public boolean isValid() {
     execute();
-    return isValid;
+    return this.isValid;
   }
 
   public void setFindAllIntersections(final boolean findAllIntersections) {

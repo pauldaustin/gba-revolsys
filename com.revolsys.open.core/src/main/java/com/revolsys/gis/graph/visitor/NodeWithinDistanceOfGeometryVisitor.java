@@ -14,8 +14,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class NodeWithinDistanceOfGeometryVisitor<T> implements Visitor<Node<T>> {
-  public static <T> List<Node<T>> getNodes(final Graph<T> graph,
-    final Geometry geometry, final double maxDistance) {
+  public static <T> List<Node<T>> getNodes(final Graph<T> graph, final Geometry geometry,
+    final double maxDistance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
     BoundingBox env = BoundingBox.getBoundingBox(geometry);
     env = env.expand(maxDistance);
@@ -34,8 +34,8 @@ public class NodeWithinDistanceOfGeometryVisitor<T> implements Visitor<Node<T>> 
 
   private final double maxDistance;
 
-  public NodeWithinDistanceOfGeometryVisitor(final Geometry geometry,
-    final double maxDistance, final Visitor<Node<T>> matchVisitor) {
+  public NodeWithinDistanceOfGeometryVisitor(final Geometry geometry, final double maxDistance,
+    final Visitor<Node<T>> matchVisitor) {
     this.geometry = geometry;
     this.maxDistance = maxDistance;
     this.matchVisitor = matchVisitor;
@@ -45,10 +45,10 @@ public class NodeWithinDistanceOfGeometryVisitor<T> implements Visitor<Node<T>> 
   @Override
   public boolean visit(final Node<T> node) {
     final Coordinates coordinates = node;
-    final Point point = geometryFactory.createPoint(coordinates);
-    final double distance = geometry.distance(point);
-    if (distance <= maxDistance) {
-      matchVisitor.visit(node);
+    final Point point = this.geometryFactory.createPoint(coordinates);
+    final double distance = this.geometry.distance(point);
+    if (distance <= this.maxDistance) {
+      this.matchVisitor.visit(node);
     }
     return true;
   }

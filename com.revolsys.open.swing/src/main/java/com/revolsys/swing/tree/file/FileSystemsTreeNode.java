@@ -14,17 +14,17 @@ import com.revolsys.swing.tree.TreeItemRunnable;
 import com.revolsys.swing.tree.model.node.AbstractTreeNode;
 
 public class FileSystemsTreeNode extends AbstractTreeNode {
-  private List<TreeNode> children;
-
   public static final Icon ICON_FOLDER_DRIVE = Icons.getIcon("folder_drive");
 
   private static final MenuFactory MENU = new MenuFactory();
 
   static {
-    final InvokeMethodAction refresh = TreeItemRunnable.createAction("Refresh",
-      "arrow_refresh", "refresh");
+    final InvokeMethodAction refresh = TreeItemRunnable.createAction("Refresh", "arrow_refresh",
+      "refresh");
     MENU.addMenuItem("default", refresh);
   }
+
+  private List<TreeNode> children;
 
   public FileSystemsTreeNode(final TreeNode parent) {
     super(parent, null);
@@ -45,7 +45,7 @@ public class FileSystemsTreeNode extends AbstractTreeNode {
 
   @Override
   public List<TreeNode> getChildren() {
-    return children;
+    return this.children;
   }
 
   @Override
@@ -60,7 +60,7 @@ public class FileSystemsTreeNode extends AbstractTreeNode {
 
   protected void init() {
     final File[] roots = File.listRoots();
-    children = FileTreeNode.getFileNodes(this, roots);
+    this.children = FileTreeNode.getFileNodes(this, roots);
   }
 
   @SuppressWarnings({
@@ -71,8 +71,7 @@ public class FileSystemsTreeNode extends AbstractTreeNode {
     final ListIterator<FileTreeNode> oldIterator = oldNodes.listIterator();
     final File[] roots = File.listRoots();
 
-    final List<FileTreeNode> newNodes = (List)FileTreeNode.getFileNodes(this,
-      roots);
+    final List<FileTreeNode> newNodes = (List)FileTreeNode.getFileNodes(this, roots);
     final ListIterator<FileTreeNode> newIterator = newNodes.listIterator();
     int i = 0;
 

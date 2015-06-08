@@ -19,8 +19,8 @@ import com.revolsys.swing.field.InvokeMethodStringConverter;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.util.Property;
 
-public class SelectMapCoordinateSystem extends ComboBox implements
-  ItemListener, PropertyChangeListener {
+public class SelectMapCoordinateSystem extends ComboBox implements ItemListener,
+  PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private final Reference<MapPanel> map;
@@ -32,8 +32,8 @@ public class SelectMapCoordinateSystem extends ComboBox implements
     this.map = new WeakReference<MapPanel>(map);
     setSelectedItem(map.getGeometryFactory().getSRID());
     setEditable(true);
-    final InvokeMethodStringConverter renderer = new InvokeMethodStringConverter(
-      this, "formatCoordinateSystem");
+    final InvokeMethodStringConverter renderer = new InvokeMethodStringConverter(this,
+      "formatCoordinateSystem");
     setRenderer(renderer);
     AutoCompleteDecorator.decorate(this, renderer);
     addItemListener(this);
@@ -67,7 +67,7 @@ public class SelectMapCoordinateSystem extends ComboBox implements
   }
 
   public MapPanel getMap() {
-    return map.get();
+    return this.map.get();
   }
 
   @Override

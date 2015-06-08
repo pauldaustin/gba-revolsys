@@ -66,7 +66,7 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
         if (this.geometryFactory == null) {
           throw new IllegalArgumentException(
             "Field definition does not include a valid coordinate system "
-                + spatialReference.getLatestWKID());
+              + spatialReference.getLatestWKID());
         }
 
         int axisCount = 2;
@@ -157,7 +157,7 @@ public class GeometryFieldDefinition extends AbstractFileGdbFieldDefinition {
       return bytes;
     } else {
       throw new IllegalArgumentException("Expecting a " + Geometry.class + " not a "
-          + value.getClass() + "=" + value);
+        + value.getClass() + "=" + value);
     }
   }
 }

@@ -11,12 +11,12 @@ public class DataSourceTransactionManagerFactory implements
   private DataSource dataSource;
 
   public DataSource getDataSource() {
-    return dataSource;
+    return this.dataSource;
   }
 
   @Override
   public DataSourceTransactionManager getObject() throws Exception {
-    return new DataSourceTransactionManager(dataSource);
+    return new DataSourceTransactionManager(this.dataSource);
   }
 
   @Override

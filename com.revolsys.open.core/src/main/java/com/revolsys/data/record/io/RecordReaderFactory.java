@@ -13,17 +13,15 @@ import com.revolsys.io.Reader;
 
 public interface RecordReaderFactory extends IoFactory {
 
-  RecordReader createRecordReader(Resource resource);
-
-  RecordReader createRecordReader(Resource resource,
-    RecordFactory factory);
-
   Reader<Record> createDirectoryRecordReader();
 
   Reader<Record> createDirectoryRecordReader(File file);
 
-  Reader<Record> createDirectoryRecordReader(File file,
-    RecordFactory factory);
+  Reader<Record> createDirectoryRecordReader(File file, RecordFactory factory);
+
+  RecordReader createRecordReader(Resource resource);
+
+  RecordReader createRecordReader(Resource resource, RecordFactory factory);
 
   Set<CoordinateSystem> getCoordinateSystems();
 

@@ -121,28 +121,23 @@ public class ProjectFrame extends BaseFrame {
   // }
   public static final String PROJECT_FRAME = "projectFrame";
 
-  public static void addSaveActions(final JComponent component,
-    final Project project) {
+  public static void addSaveActions(final JComponent component, final Project project) {
     final InputMap inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    inputMap.put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK),
-      SAVE_PROJECT_KEY);
-    inputMap.put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK),
-      SAVE_PROJECT_KEY);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), SAVE_PROJECT_KEY);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK), SAVE_PROJECT_KEY);
 
     inputMap.put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK
-        | InputEvent.ALT_DOWN_MASK), SAVE_CHANGES_KEY);
+      KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK),
+      SAVE_CHANGES_KEY);
     inputMap.put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK
-        | InputEvent.ALT_DOWN_MASK), SAVE_CHANGES_KEY);
+      KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK | InputEvent.ALT_DOWN_MASK),
+      SAVE_CHANGES_KEY);
 
     final ActionMap actionMap = component.getActionMap();
-    actionMap.put(SAVE_PROJECT_KEY, new InvokeMethodAction(SAVE_PROJECT_KEY,
-      project, "saveAllSettings"));
-    actionMap.put(SAVE_CHANGES_KEY, new InvokeMethodAction(SAVE_CHANGES_KEY,
-      project, "saveChanges"));
+    actionMap.put(SAVE_PROJECT_KEY, new InvokeMethodAction(SAVE_PROJECT_KEY, project,
+      "saveAllSettings"));
+    actionMap.put(SAVE_CHANGES_KEY,
+      new InvokeMethodAction(SAVE_CHANGES_KEY, project, "saveChanges"));
   }
 
   public static ProjectFrame get(final Layer layer) {
@@ -247,8 +242,8 @@ public class ProjectFrame extends BaseFrame {
     menuBar.add(fileMenu);
   }
 
-  public int addTabIcon(final JTabbedPane tabs, final String iconName,
-    final String toolTipText, Component component, final boolean useScrollPane) {
+  public int addTabIcon(final JTabbedPane tabs, final String iconName, final String toolTipText,
+    Component component, final boolean useScrollPane) {
 
     if (useScrollPane) {
       final JScrollPane scrollPane = new JScrollPane(component);
@@ -273,9 +268,8 @@ public class ProjectFrame extends BaseFrame {
     final ObjectTree tree = this.tocPanel.getTree();
     tree.setRootVisible(true);
 
-    Property.addListener(this.project, "layers",
-      new InvokeMethodPropertyChangeListener(true, this, "expandLayers",
-        PropertyChangeEvent.class));
+    Property.addListener(this.project, "layers", new InvokeMethodPropertyChangeListener(true, this,
+      "expandLayers", PropertyChangeEvent.class));
     panel.add(this.tocPanel, BorderLayout.CENTER);
 
     addTabIcon(this.leftTabs, "tree_layers", "TOC", panel, true);
@@ -283,13 +277,11 @@ public class ProjectFrame extends BaseFrame {
 
   protected void addTasksPanel() {
     final JPanel panel = SwingWorkerTableModel.createPanel();
-    final int tabIndex = addTabIcon(this.bottomTabs, "time",
-      "Background Tasks", panel, false);
+    final int tabIndex = addTabIcon(this.bottomTabs, "time", "Background Tasks", panel, false);
 
     final SwingWorkerProgressBar progressBar = this.mapPanel.getProgressBar();
-    final JButton viewTasksAction = InvokeMethodAction.createButton(null,
-      "View Running Tasks", Icons.getIcon("time_go"), this.bottomTabs,
-      "setSelectedIndex", tabIndex);
+    final JButton viewTasksAction = InvokeMethodAction.createButton(null, "View Running Tasks",
+      Icons.getIcon("time_go"), this.bottomTabs, "setSelectedIndex", tabIndex);
     viewTasksAction.setBorderPainted(false);
     viewTasksAction.setBorder(null);
     progressBar.add(viewTasksAction, BorderLayout.EAST);
@@ -304,8 +296,8 @@ public class ProjectFrame extends BaseFrame {
     final MenuFactory tools = createMenuTools();
 
     if (OS.isWindows()) {
-      tools.addMenuItem("options", "Options...", "Options...", null, null,
-        PreferencesDialog.get(), "showPanel");
+      tools.addMenuItem("options", "Options...", "Options...", null, null, PreferencesDialog.get(),
+        "showPanel");
     }
     addMenu(menuBar, tools);
     WindowManager.addMenu(menuBar);
@@ -315,8 +307,8 @@ public class ProjectFrame extends BaseFrame {
   protected MenuFactory createMenuFile() {
     final MenuFactory file = new MenuFactory("File");
 
-    file.addMenuItem("project", "Save Project", "Save Project",
-      Icons.getIcon("layout_save"), this.project, "saveAllSettings");
+    file.addMenuItem("project", "Save Project", "Save Project", Icons.getIcon("layout_save"),
+      this.project, "saveAllSettings");
     file.addMenuItemTitleIcon("exit", "Exit", null, this, "exit");
     return file;
   }
@@ -324,8 +316,8 @@ public class ProjectFrame extends BaseFrame {
   protected MenuFactory createMenuTools() {
     final MenuFactory tools = new MenuFactory("Tools");
 
-    tools.addMenuItem("script", "Run Script...", "Run Script",
-      Icons.getIcon("script_go"), this, "runScript");
+    tools.addMenuItem("script", "Run Script...", "Run Script", Icons.getIcon("script_go"), this,
+      "runScript");
     return tools;
   }
 
@@ -337,8 +329,7 @@ public class ProjectFrame extends BaseFrame {
       Property.removeAllListeners(this);
       if (this.project != null) {
         final DataObjectStoreConnectionRegistry dataStores = this.project.getDataStores();
-        DataObjectStoreConnectionManager.get().removeConnectionRegistry(
-          dataStores);
+        DataObjectStoreConnectionManager.get().removeConnectionRegistry(dataStores);
         if (Project.get() == this.project) {
           Project.set(null);
         }
@@ -453,15 +444,14 @@ public class ProjectFrame extends BaseFrame {
 
     this.mapPanel.setMinimumSize(new Dimension(300, 300));
     this.mapPanel.setPreferredSize(new Dimension(700, 700));
-    this.leftRightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-      this.leftTabs, this.mapPanel);
+    this.leftRightSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.leftTabs, this.mapPanel);
 
     this.leftRightSplit.setBorder(BorderFactory.createEmptyBorder());
     this.bottomTabs.setBorder(BorderFactory.createEmptyBorder());
     this.bottomTabs.setPreferredSize(new Dimension(700, 200));
 
-    this.topBottomSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-      this.leftRightSplit, this.bottomTabs);
+    this.topBottomSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, this.leftRightSplit,
+      this.bottomTabs);
     this.bottomTabs.setMinimumSize(new Dimension(600, 100));
 
     this.topBottomSplit.setResizeWeight(1);
@@ -514,10 +504,10 @@ public class ProjectFrame extends BaseFrame {
   }
 
   public void runScript() {
-    final JFileChooser fileChooser = SwingUtil.createFileChooser(
-      "Select Script", "com.revolsys.swing.tools.script", "directory");
-    final FileNameExtensionFilter groovyFilter = new FileNameExtensionFilter(
-      "Groovy Script", "groovy");
+    final JFileChooser fileChooser = SwingUtil.createFileChooser("Select Script",
+      "com.revolsys.swing.tools.script", "directory");
+    final FileNameExtensionFilter groovyFilter = new FileNameExtensionFilter("Groovy Script",
+      "groovy");
     fileChooser.addChoosableFileFilter(groovyFilter);
     fileChooser.setMultiSelectionEnabled(false);
     final int returnVal = fileChooser.showOpenDialog(this);
@@ -528,8 +518,8 @@ public class ProjectFrame extends BaseFrame {
       final File scriptFile = fileChooser.getSelectedFile();
       final String[] args = new String[0];
       try {
-        PreferencesUtil.setUserString("com.revolsys.swing.tools.script",
-          "directory", scriptFile.getParent());
+        PreferencesUtil.setUserString("com.revolsys.swing.tools.script", "directory",
+          scriptFile.getParent());
         shell.run(scriptFile, args);
       } catch (final Throwable e) {
         ExceptionUtil.log(getClass(), "Unable to run script:" + scriptFile, e);

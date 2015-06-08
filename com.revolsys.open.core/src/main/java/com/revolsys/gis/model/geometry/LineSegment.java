@@ -17,21 +17,18 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class LineSegment extends AbstractCoordinatesList implements
-  Comparable<LineSegment> {
+public class LineSegment extends AbstractCoordinatesList implements Comparable<LineSegment> {
   private static final long serialVersionUID = 3905321662159212931L;
 
   private static final GeometryFactory FACTORY = GeometryFactory.getFactory();
 
-  public static void visit(final LineString line,
-    final Visitor<LineSegment> visitor) {
+  public static void visit(final LineString line, final Visitor<LineSegment> visitor) {
     final CoordinatesList coords = CoordinatesListUtil.get(line);
     Coordinates previousCoordinate = coords.get(0);
     for (int i = 1; i < coords.size(); i++) {
       final Coordinates coordinate = coords.get(i);
       final GeometryFactory geometryFactory = GeometryFactory.getFactory(line);
-      final LineSegment segment = new LineSegment(geometryFactory,
-        previousCoordinate, coordinate);
+      final LineSegment segment = new LineSegment(geometryFactory, previousCoordinate, coordinate);
       if (segment.getLength() > 0) {
         if (!visitor.visit(segment)) {
           return;
@@ -46,41 +43,37 @@ public class LineSegment extends AbstractCoordinatesList implements
   private GeometryFactory geometryFactory;
 
   public LineSegment() {
-    points = new double[6];
+    this.points = new double[6];
   }
 
-  public LineSegment(final Coordinates coordinates1,
-    final Coordinates coordinates2) {
+  public LineSegment(final Coordinates coordinates1, final Coordinates coordinates2) {
     this(FACTORY, coordinates1, coordinates2);
   }
 
-  public LineSegment(final double x1, final double y1, final double x2,
-    final double y2) {
+  public LineSegment(final double x1, final double y1, final double x2, final double y2) {
     this(FACTORY, x1, y1, x2, y2);
   }
 
-  public LineSegment(final GeometryFactory geometryFactory,
-    final Coordinates coordinates1, final Coordinates coordinates2) {
+  public LineSegment(final GeometryFactory geometryFactory, final Coordinates coordinates1,
+    final Coordinates coordinates2) {
     this.geometryFactory = geometryFactory;
-    final int numAxis = Math.max(coordinates1.getNumAxis(),
-      coordinates2.getNumAxis());
-    points = new double[numAxis * 2];
+    final int numAxis = Math.max(coordinates1.getNumAxis(), coordinates2.getNumAxis());
+    this.points = new double[numAxis * 2];
     for (int i = 0; i < numAxis; i++) {
       setValue(0, i, coordinates1.getValue(i));
       setValue(1, i, coordinates2.getValue(i));
     }
   }
 
-  public LineSegment(final GeometryFactory geometryFactory, final double x1,
-    final double y1, final double x2, final double y2) {
+  public LineSegment(final GeometryFactory geometryFactory, final double x1, final double y1,
+    final double x2, final double y2) {
     this.geometryFactory = geometryFactory;
     this.points = new double[] {
       x1, y1, x2, y2
     };
   }
 
-  public LineSegment(final GeometryFactory geometryFactory,
-    final LineSegment line) {
+  public LineSegment(final GeometryFactory geometryFactory, final LineSegment line) {
     this(geometryFactory, line.get(0), line.get(1));
   }
 
@@ -94,14 +87,13 @@ public class LineSegment extends AbstractCoordinatesList implements
   }
 
   public double angle() {
-    return Math.atan2(getCoordinates2().getY() - getCoordinates1().getY(),
-      getCoordinates2().getX() - getCoordinates1().getX());
+    return Math.atan2(getCoordinates2().getY() - getCoordinates1().getY(), getCoordinates2().getX()
+      - getCoordinates1().getX());
   }
 
   @Override
   public LineSegment clone() {
-    return new LineSegment(geometryFactory, getCoordinates1(),
-      getCoordinates2());
+    return new LineSegment(this.geometryFactory, getCoordinates1(), getCoordinates2());
   }
 
   public Coordinates closestPoint(final Coordinates p) {
@@ -191,10 +183,10 @@ public class LineSegment extends AbstractCoordinatesList implements
     if (geometryFactory == this.geometryFactory) {
       return this;
     } else {
-      final Coordinates point1 = ProjectionFactory.convert(getCoordinates1(),
-        this.geometryFactory, geometryFactory);
-      final Coordinates point2 = ProjectionFactory.convert(getCoordinates2(),
-        this.geometryFactory, geometryFactory);
+      final Coordinates point1 = ProjectionFactory.convert(getCoordinates1(), this.geometryFactory,
+        geometryFactory);
+      final Coordinates point2 = ProjectionFactory.convert(getCoordinates2(), this.geometryFactory,
+        geometryFactory);
       return new LineSegment(geometryFactory, point1, point2);
     }
   }
@@ -210,10 +202,8 @@ public class LineSegment extends AbstractCoordinatesList implements
 
   public LineSegment extend(final double startDistance, final double endDistance) {
     final double angle = angle();
-    final Coordinates c1 = CoordinatesUtil.offset(getCoordinates1(), angle,
-      -startDistance);
-    final Coordinates c2 = CoordinatesUtil.offset(getCoordinates2(), angle,
-      endDistance);
+    final Coordinates c1 = CoordinatesUtil.offset(getCoordinates1(), angle, -startDistance);
+    final Coordinates c2 = CoordinatesUtil.offset(getCoordinates2(), angle, endDistance);
     return new LineSegment(c1, c2);
 
   }
@@ -242,8 +232,8 @@ public class LineSegment extends AbstractCoordinatesList implements
     return coordinates;
   }
 
-  private Coordinates getCrossing(final Coordinates coordinates1,
-    final Coordinates coordinates2, final BoundingBox boundingBox) {
+  private Coordinates getCrossing(final Coordinates coordinates1, final Coordinates coordinates2,
+    final BoundingBox boundingBox) {
     Coordinates intersection = null;
     final Polygon polygon = boundingBox.toPolygon(1);
     final LineString ring = polygon.getExteriorRing();
@@ -252,7 +242,7 @@ public class LineSegment extends AbstractCoordinatesList implements
       final Coordinates ringC1 = points.get(i);
       final Coordinates ringC2 = points.get(i);
       final CoordinatesList currentIntersections = LineSegmentUtil.getIntersection(
-        geometryFactory, coordinates1, coordinates2, ringC1, ringC2);
+        this.geometryFactory, coordinates1, coordinates2, ringC1, ringC2);
       if (currentIntersections.size() == 1) {
         final Coordinates currentIntersection = currentIntersections.get(0);
         if (intersection == null) {
@@ -266,8 +256,7 @@ public class LineSegment extends AbstractCoordinatesList implements
   }
 
   public double getElevation(final Coordinates point) {
-    return CoordinatesUtil.getElevation(point, getCoordinates1(),
-      getCoordinates2());
+    return CoordinatesUtil.getElevation(point, getCoordinates1(), getCoordinates2());
   }
 
   public Envelope getEnvelope() {
@@ -275,11 +264,11 @@ public class LineSegment extends AbstractCoordinatesList implements
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometryFactory;
+    return this.geometryFactory;
   }
 
   public LineSegment getIntersection(BoundingBox boundingBox) {
-    boundingBox = boundingBox.convert(geometryFactory);
+    boundingBox = boundingBox.convert(this.geometryFactory);
     final boolean contains1 = boundingBox.contains(getCoordinates1());
     final boolean contains2 = boundingBox.contains(getCoordinates2());
     if (contains1) {
@@ -287,51 +276,44 @@ public class LineSegment extends AbstractCoordinatesList implements
         return this;
       } else {
         final Coordinates c1 = getCoordinates1();
-        final Coordinates c2 = getCrossing(getCoordinates2(),
-          getCoordinates1(), boundingBox);
-        return new LineSegment(geometryFactory, c1, c2);
+        final Coordinates c2 = getCrossing(getCoordinates2(), getCoordinates1(), boundingBox);
+        return new LineSegment(this.geometryFactory, c1, c2);
       }
     } else {
       if (contains2) {
-        final Coordinates c1 = getCrossing(getCoordinates1(),
-          getCoordinates2(), boundingBox);
+        final Coordinates c1 = getCrossing(getCoordinates1(), getCoordinates2(), boundingBox);
         final Coordinates c2 = getCoordinates2();
-        return new LineSegment(geometryFactory, c1, c2);
+        return new LineSegment(this.geometryFactory, c1, c2);
       } else {
-        final Coordinates c1 = getCrossing(getCoordinates1(),
-          getCoordinates2(), boundingBox);
-        final Coordinates c2 = getCrossing(getCoordinates2(),
-          getCoordinates1(), boundingBox);
-        return new LineSegment(geometryFactory, c1, c2);
+        final Coordinates c1 = getCrossing(getCoordinates1(), getCoordinates2(), boundingBox);
+        final Coordinates c2 = getCrossing(getCoordinates2(), getCoordinates1(), boundingBox);
+        return new LineSegment(this.geometryFactory, c1, c2);
       }
     }
   }
 
-  public CoordinatesList getIntersection(final Coordinates point1,
-    final Coordinates point2) {
-    final CoordinatesList intersection = LineSegmentUtil.getIntersection(
-      geometryFactory, getCoordinates1(), getCoordinates2(), point1, point2);
+  public CoordinatesList getIntersection(final Coordinates point1, final Coordinates point2) {
+    final CoordinatesList intersection = LineSegmentUtil.getIntersection(this.geometryFactory,
+      getCoordinates1(), getCoordinates2(), point1, point2);
     return intersection;
   }
 
-  public CoordinatesList getIntersection(
-    final CoordinatesPrecisionModel precisionModel,
+  public CoordinatesList getIntersection(final CoordinatesPrecisionModel precisionModel,
     final LineSegment lineSegment2) {
-    return LineSegmentUtil.getIntersection(geometryFactory, getCoordinates1(),
-      getCoordinates2(), lineSegment2.getCoordinates1(),
-      lineSegment2.getCoordinates2());
+    return LineSegmentUtil.getIntersection(this.geometryFactory, getCoordinates1(),
+      getCoordinates2(), lineSegment2.getCoordinates1(), lineSegment2.getCoordinates2());
   }
 
   public CoordinatesList getIntersection(final LineSegment lineSegment2) {
-    final CoordinatesList intersection = LineSegmentUtil.getIntersection(
-      geometryFactory, getCoordinates1(), getCoordinates2(),
-      lineSegment2.getCoordinates1(), lineSegment2.getCoordinates2());
+    final CoordinatesList intersection = LineSegmentUtil.getIntersection(this.geometryFactory,
+      getCoordinates1(), getCoordinates2(), lineSegment2.getCoordinates1(),
+      lineSegment2.getCoordinates2());
     return intersection;
   }
 
   /**
    * Computes the length of the line segment.
-   * 
+   *
    * @return the length of the line segment
    */
   public double getLength() {
@@ -339,17 +321,17 @@ public class LineSegment extends AbstractCoordinatesList implements
   }
 
   public LineString getLine() {
-    return geometryFactory.createLineString(this);
+    return this.geometryFactory.createLineString(this);
   }
 
   @Override
   public byte getNumAxis() {
-    return (byte)(points.length / 2);
+    return (byte)(this.points.length / 2);
   }
 
   public Point getPoint(final int i) {
     final Coordinates coordinates = get(i);
-    return geometryFactory.createPoint(coordinates);
+    return this.geometryFactory.createPoint(coordinates);
   }
 
   @Override
@@ -358,7 +340,7 @@ public class LineSegment extends AbstractCoordinatesList implements
     if (axisIndex >= 0 && axisIndex < numAxis) {
       if (index >= 0 && index < 2) {
         final int valueIndex = index * numAxis + axisIndex;
-        final double value = points[valueIndex];
+        final double value = this.points[valueIndex];
         return value;
       }
     }
@@ -395,8 +377,7 @@ public class LineSegment extends AbstractCoordinatesList implements
   }
 
   public boolean intersects(final Coordinates point, final double maxDistance) {
-    return LineSegmentUtil.isPointOnLine(getCoordinates1(), getCoordinates2(),
-      point, maxDistance);
+    return LineSegmentUtil.isPointOnLine(getCoordinates1(), getCoordinates2(), point, maxDistance);
   }
 
   public boolean isEmpty() {
@@ -405,30 +386,28 @@ public class LineSegment extends AbstractCoordinatesList implements
 
   /**
    * Tests whether the segment is horizontal.
-   * 
+   *
    * @return <code>true</code> if the segment is horizontal
    */
   public boolean isHorizontal() {
     return getCoordinates1().getY() == getCoordinates2().getY();
   }
 
-  public boolean isPointOnLineMiddle(final Coordinates point,
-    final double maxDistance) {
-    return LineSegmentUtil.isPointOnLineMiddle(getCoordinates1(),
-      getCoordinates2(), point, maxDistance);
+  public boolean isPointOnLineMiddle(final Coordinates point, final double maxDistance) {
+    return LineSegmentUtil.isPointOnLineMiddle(getCoordinates1(), getCoordinates2(), point,
+      maxDistance);
   }
 
   /**
    * Tests whether the segment is vertical.
-   * 
+   *
    * @return <code>true</code> if the segment is vertical
    */
   public boolean isVertical() {
     return getCoordinates1().getX() == getCoordinates2().getY();
   }
 
-  public boolean isWithinDistance(final Coordinates point,
-    final double maxDistance) {
+  public boolean isWithinDistance(final Coordinates point, final double maxDistance) {
     final double distance = distance(point);
     return distance <= maxDistance;
   }
@@ -439,10 +418,10 @@ public class LineSegment extends AbstractCoordinatesList implements
   }
 
   public int orientationIndex(final LineSegment seg) {
-    final int orient0 = CoordinatesUtil.orientationIndex(getCoordinates1(),
-      getCoordinates2(), seg.getCoordinates1());
-    final int orient1 = CoordinatesUtil.orientationIndex(getCoordinates1(),
-      getCoordinates2(), seg.getCoordinates2());
+    final int orient0 = CoordinatesUtil.orientationIndex(getCoordinates1(), getCoordinates2(),
+      seg.getCoordinates1());
+    final int orient1 = CoordinatesUtil.orientationIndex(getCoordinates1(), getCoordinates2(),
+      seg.getCoordinates2());
     // this handles the case where the points are L or collinear
     if (orient0 >= 0 && orient1 >= 0) {
       return Math.max(orient0, orient1);
@@ -467,14 +446,13 @@ public class LineSegment extends AbstractCoordinatesList implements
     final double dy = y2 - y1;
 
     // the point on the segment line
-    double x = x1 + segmentLengthFraction * (dx);
-    double y = y1 + segmentLengthFraction * (dy);
+    double x = x1 + segmentLengthFraction * dx;
+    double y = y1 + segmentLengthFraction * dy;
 
     final double len = Math.sqrt(dx * dx + dy * dy);
     if (offsetDistance != 0.0) {
       if (len <= 0.0) {
-        throw new IllegalStateException(
-          "Cannot compute offset from zero-length line segment");
+        throw new IllegalStateException("Cannot compute offset from zero-length line segment");
       }
       double ux = 0.0;
       double uy = 0.0;
@@ -494,14 +472,13 @@ public class LineSegment extends AbstractCoordinatesList implements
   }
 
   public Coordinates project(final Coordinates p) {
-    final Coordinates newPoint = LineSegmentUtil.project(getGeometryFactory(),
-      getCoordinates1(), getCoordinates2(), p);
+    final Coordinates newPoint = LineSegmentUtil.project(getGeometryFactory(), getCoordinates1(),
+      getCoordinates2(), p);
     return newPoint;
   }
 
   public double projectionFactor(final Coordinates p) {
-    return LineSegmentUtil.projectionFactor(getCoordinates1(),
-      getCoordinates2(), p);
+    return LineSegmentUtil.projectionFactor(getCoordinates1(), getCoordinates2(), p);
   }
 
   public void setCoordinates(final Coordinates s0, final Coordinates s1) {
@@ -509,8 +486,8 @@ public class LineSegment extends AbstractCoordinatesList implements
     setPoint(1, s1);
   }
 
-  public void setElevationOnPoint(
-    final CoordinatesPrecisionModel precisionModel, final Coordinates point) {
+  public void setElevationOnPoint(final CoordinatesPrecisionModel precisionModel,
+    final Coordinates point) {
     final double z = getElevation(point);
     point.setZ(z);
     precisionModel.makePrecise(point);
@@ -522,7 +499,7 @@ public class LineSegment extends AbstractCoordinatesList implements
     if (axisIndex >= 0 && axisIndex < numAxis) {
       if (index >= 0 && index < 2) {
         final int valueIndex = index * numAxis + axisIndex;
-        points[valueIndex] = value;
+        this.points[valueIndex] = value;
       }
     }
   }
@@ -534,10 +511,10 @@ public class LineSegment extends AbstractCoordinatesList implements
 
   @Override
   public String toString() {
-    if (geometryFactory == null) {
+    if (this.geometryFactory == null) {
       return super.toString();
     } else {
-      return "SRID=" + geometryFactory.getSRID() + ";" + super.toString();
+      return "SRID=" + this.geometryFactory.getSRID() + ";" + super.toString();
     }
   }
 

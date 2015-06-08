@@ -12,8 +12,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class ValidateGeometryRange extends
-  BaseInOutProcess<Record, Record> {
+public class ValidateGeometryRange extends BaseInOutProcess<Record, Record> {
   private static final Logger LOG = Logger.getLogger(ValidateGeometryRange.class);
 
   private double maxX = Double.MAX_VALUE;
@@ -32,52 +31,52 @@ public class ValidateGeometryRange extends
    * @return the maxX
    */
   public double getMaxX() {
-    return maxX;
+    return this.maxX;
   }
 
   /**
    * @return the maxY
    */
   public double getMaxY() {
-    return maxY;
+    return this.maxY;
   }
 
   /**
    * @return the maxZ
    */
   public double getMaxZ() {
-    return maxZ;
+    return this.maxZ;
   }
 
   /**
    * @return the minX
    */
   public double getMinX() {
-    return minX;
+    return this.minX;
   }
 
   /**
    * @return the minY
    */
   public double getMinY() {
-    return minY;
+    return this.minY;
   }
 
   /**
    * @return the minZ
    */
   public double getMinZ() {
-    return minZ;
+    return this.minZ;
   }
 
   private boolean isValid(final double min, final double max, final double value) {
-    return (value >= min && value <= max);
+    return value >= min && value <= max;
   }
 
   private boolean isValid(final String type, final Coordinate coordinate) {
-    if (!isValid(minX, maxY, coordinate.x)
-      || !isValid(minY, maxY, coordinate.y)
-      || !isValid(minZ, maxZ, coordinate.z)) {
+    if (!isValid(this.minX, this.maxY, coordinate.x)
+      || !isValid(this.minY, this.maxY, coordinate.y)
+      || !isValid(this.minZ, this.maxZ, coordinate.z)) {
       LOG.warn(type + " has invalid coordinate at " + coordinate);
       return false;
     } else {
@@ -86,8 +85,7 @@ public class ValidateGeometryRange extends
 
   }
 
-  private boolean isValid(final String type,
-    final CoordinateSequence coordinates) {
+  private boolean isValid(final String type, final CoordinateSequence coordinates) {
     boolean valid = true;
     for (int j = 0; j < coordinates.size(); j++) {
       final Coordinate coordinate = coordinates.getCoordinate(j);
@@ -138,8 +136,7 @@ public class ValidateGeometryRange extends
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
     // TODO Auto-generated method stub
     final Geometry geometry = object.getGeometryValue();
     isValid(object.getRecordDefinition().getPath().toString(), geometry);

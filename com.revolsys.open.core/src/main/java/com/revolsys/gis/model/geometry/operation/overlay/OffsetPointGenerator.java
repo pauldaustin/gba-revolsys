@@ -15,7 +15,7 @@ import com.revolsys.gis.model.geometry.Geometry;
  * geometry may have any orientation for its rings, but
  * {@link #setSidesToGenerate(boolean, boolean)} is only meaningful if the
  * orientation is known.
- * 
+ *
  * @author Martin Davis
  * @version 1.7
  */
@@ -33,7 +33,7 @@ public class OffsetPointGenerator {
   /**
    * Generates the two points which are offset from the midpoint of the segment
    * <tt>(p0, p1)</tt> by the <tt>offsetDistance</tt>.
-   * 
+   *
    * @param p0 the first point of the segment to offset from
    * @param p1 the second point of the segment to offset from
    */
@@ -50,20 +50,19 @@ public class OffsetPointGenerator {
     final double midX = (p1.getX() + p0.getX()) / 2;
     final double midY = (p1.getY() + p0.getY()) / 2;
 
-    if (doLeft) {
+    if (this.doLeft) {
       final Coordinates offsetLeft = new DoubleCoordinates(midX - uy, midY + ux);
       offsetPts.add(offsetLeft);
     }
 
-    if (doRight) {
-      final Coordinates offsetRight = new DoubleCoordinates(midX + uy, midY
-        - ux);
+    if (this.doRight) {
+      final Coordinates offsetRight = new DoubleCoordinates(midX + uy, midY - ux);
       offsetPts.add(offsetRight);
     }
   }
 
-  private void extractPoints(final CoordinatesList pts,
-    final double offsetDistance, final List<Coordinates> offsetPts) {
+  private void extractPoints(final CoordinatesList pts, final double offsetDistance,
+    final List<Coordinates> offsetPts) {
     for (int i = 0; i < pts.size() - 1; i++) {
       computeOffsetPoints(pts.get(i), pts.get(i + 1), offsetDistance, offsetPts);
     }
@@ -71,12 +70,12 @@ public class OffsetPointGenerator {
 
   /**
    * Gets the computed offset points.
-   * 
+   *
    * @return List<Coordinate>
    */
   public List<Coordinates> getPoints(final double offsetDistance) {
     final List<Coordinates> offsetPts = new ArrayList<Coordinates>();
-    for (final CoordinatesList points : g.getCoordinatesLists()) {
+    for (final CoordinatesList points : this.g.getCoordinatesLists()) {
       if (points.size() > 1) {
         extractPoints(points, offsetDistance, offsetPts);
       }
@@ -86,7 +85,7 @@ public class OffsetPointGenerator {
 
   /**
    * Set the sides on which to generate offset points.
-   * 
+   *
    * @param doLeft
    * @param doRight
    */

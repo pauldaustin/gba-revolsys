@@ -30,8 +30,7 @@ public class GridLayerRenderer extends AbstractLayerRenderer<GridLayer> {
   }
 
   @Override
-  public void render(final Viewport2D viewport, final Graphics2D graphics,
-    final GridLayer layer) {
+  public void render(final Viewport2D viewport, final Graphics2D graphics, final GridLayer layer) {
     try {
       final double scale = viewport.getScale();
       if (layer.isVisible(scale)) {
@@ -45,8 +44,7 @@ public class GridLayerRenderer extends AbstractLayerRenderer<GridLayer> {
           if (!intersectBoundingBox.isEmpty()) {
             final String tileName = tile.getName().toUpperCase();
 
-            final Polygon polygon = tile.getPolygon(
-              viewport.getGeometryFactory(), 50);
+            final Polygon polygon = tile.getPolygon(viewport.getGeometryFactory(), 50);
             GeometryStyleRenderer.renderOutline(viewport, graphics, polygon,
               GeometryStyle.line(Color.LIGHT_GRAY));
 
@@ -55,8 +53,7 @@ public class GridLayerRenderer extends AbstractLayerRenderer<GridLayer> {
             final double centreX = centre.getX();
             final double centreY = centre.getY();
 
-            final boolean saved = viewport.setUseModelCoordinates(false,
-              graphics);
+            final boolean saved = viewport.setUseModelCoordinates(false, graphics);
             try {
               final Font newFont = new Font(font.getName(), font.getStyle(), 12);
               graphics.setFont(newFont);
@@ -68,8 +65,7 @@ public class GridLayerRenderer extends AbstractLayerRenderer<GridLayer> {
               }, 0, coord, 0, 1);
               int x = (int)(coord[0] - metrics.stringWidth(tileName) / 2);
               int y = (int)(coord[1] + metrics.getHeight() / 2);
-              final Rectangle2D bounds = metrics.getStringBounds(tileName,
-                graphics);
+              final Rectangle2D bounds = metrics.getStringBounds(tileName, graphics);
               final double width = bounds.getWidth();
               final double height = bounds.getHeight();
 
@@ -89,8 +85,8 @@ public class GridLayerRenderer extends AbstractLayerRenderer<GridLayer> {
               }
 
               graphics.setColor(WebColors.LightGray);
-              graphics.fill(new Rectangle2D.Double(x - 2,
-                y + bounds.getY() - 1, width + 4, height + 2));
+              graphics.fill(new Rectangle2D.Double(x - 2, y + bounds.getY() - 1, width + 4,
+                height + 2));
 
               graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);

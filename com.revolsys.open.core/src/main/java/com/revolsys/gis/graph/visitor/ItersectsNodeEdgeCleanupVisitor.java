@@ -23,43 +23,40 @@ import com.revolsys.gis.model.data.equals.DataObjectEquals;
 import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 
-public class ItersectsNodeEdgeCleanupVisitor extends
-  AbstractVisitor<Edge<Record>> implements ObjectProcessor<DataObjectGraph> {
+public class ItersectsNodeEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>> implements
+  ObjectProcessor<DataObjectGraph> {
 
   private static final Logger LOG = LoggerFactory.getLogger(ItersectsNodeEdgeCleanupVisitor.class);
 
   private Statistics splitStatistics;
 
-  private final Set<String> equalExcludeAttributes = new HashSet<String>(
-    Arrays.asList(DataObjectEquals.EXCLUDE_ID,
-      DataObjectEquals.EXCLUDE_GEOMETRY));
+  private final Set<String> equalExcludeAttributes = new HashSet<String>(Arrays.asList(
+    DataObjectEquals.EXCLUDE_ID, DataObjectEquals.EXCLUDE_GEOMETRY));
 
   @PreDestroy
   public void destroy() {
-    if (splitStatistics != null) {
-      splitStatistics.disconnect();
+    if (this.splitStatistics != null) {
+      this.splitStatistics.disconnect();
     }
-    splitStatistics = null;
+    this.splitStatistics = null;
   }
 
   public Set<String> getEqualExcludeAttributes() {
-    return equalExcludeAttributes;
+    return this.equalExcludeAttributes;
   }
 
   @PostConstruct
   public void init() {
-    splitStatistics = new Statistics("Split edges");
-    splitStatistics.connect();
+    this.splitStatistics = new Statistics("Split edges");
+    this.splitStatistics.connect();
   }
 
-  private boolean moveEndUndershoots(final String typePath,
-    final Node<Record> node1, final Node<Record> node2) {
+  private boolean moveEndUndershoots(final String typePath, final Node<Record> node1,
+    final Node<Record> node2) {
     boolean matched = false;
     if (!node2.hasEdgeTo(node1)) {
-      final Set<Double> angles1 = NodeAttributes.getEdgeAnglesByType(node2,
-        typePath);
-      final Set<Double> angles2 = NodeAttributes.getEdgeAnglesByType(node1,
-        typePath);
+      final Set<Double> angles1 = NodeAttributes.getEdgeAnglesByType(node2, typePath);
+      final Set<Double> angles2 = NodeAttributes.getEdgeAnglesByType(node1, typePath);
       if (angles1.size() == 1 && angles2.size() == 1) {
 
         matched = node1.getGraph().moveNodesToMidpoint(typePath, node2, node1);
@@ -83,8 +80,7 @@ public class ItersectsNodeEdgeCleanupVisitor extends
     final List<Node<Record>> nodes = graph.findNodes(edge, 2);
     for (final Iterator<Node<Record>> nodeIter = nodes.iterator(); nodeIter.hasNext();) {
       final Node<Record> node = nodeIter.next();
-      final List<Edge<Record>> edges = NodeAttributes.getEdgesByType(node,
-        typePath);
+      final List<Edge<Record>> edges = NodeAttributes.getEdgesByType(node, typePath);
       if (edges.isEmpty()) {
         nodeIter.remove();
       }
@@ -114,7 +110,7 @@ public class ItersectsNodeEdgeCleanupVisitor extends
           moveEndUndershoots(typePath, toNode, node);
         } else {
           graph.splitEdge(edge, nodes);
-          splitStatistics.add(typePath);
+          this.splitStatistics.add(typePath);
         }
       } else {
         graph.splitEdge(edge, nodes);

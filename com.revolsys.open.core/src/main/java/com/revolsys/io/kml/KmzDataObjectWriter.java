@@ -20,13 +20,12 @@ public class KmzDataObjectWriter extends AbstractWriter<Record> {
 
   public KmzDataObjectWriter(final OutputStream out, final Charset charset) {
     try {
-      final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-        out);
-      zipOut = new ZipOutputStream(bufferedOutputStream);
+      final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(out);
+      this.zipOut = new ZipOutputStream(bufferedOutputStream);
       final ZipEntry entry = new ZipEntry("doc.kml");
-      zipOut.putNextEntry(entry);
-      final OutputStreamWriter writer = FileUtil.createUtf8Writer(zipOut);
-      kmlWriter = new KmlDataObjectWriter(writer);
+      this.zipOut.putNextEntry(entry);
+      final OutputStreamWriter writer = FileUtil.createUtf8Writer(this.zipOut);
+      this.kmlWriter = new KmlDataObjectWriter(writer);
     } catch (final Throwable e) {
       throw new RuntimeException("Unable to create KMZ file", e);
     }
@@ -36,8 +35,8 @@ public class KmzDataObjectWriter extends AbstractWriter<Record> {
   @Override
   public void close() {
     try {
-      kmlWriter.close();
-      zipOut.close();
+      this.kmlWriter.close();
+      this.zipOut.close();
     } catch (final IOException e) {
     }
   }
@@ -45,8 +44,8 @@ public class KmzDataObjectWriter extends AbstractWriter<Record> {
   @Override
   public void flush() {
     try {
-      kmlWriter.flush();
-      zipOut.flush();
+      this.kmlWriter.flush();
+      this.zipOut.flush();
     } catch (final IOException e) {
       throw new RuntimeException("Unable to flush: ", e);
     }
@@ -54,13 +53,13 @@ public class KmzDataObjectWriter extends AbstractWriter<Record> {
 
   @Override
   public void open() {
-    kmlWriter.open();
+    this.kmlWriter.open();
   }
 
   @Override
   public void setProperty(final String name, final Object value) {
     super.setProperty(name, value);
-    kmlWriter.setProperty(name, value);
+    this.kmlWriter.setProperty(name, value);
   }
 
   @Override
@@ -70,7 +69,7 @@ public class KmzDataObjectWriter extends AbstractWriter<Record> {
 
   @Override
   public void write(final Record object) {
-    kmlWriter.write(object);
+    this.kmlWriter.write(object);
   }
 
 }

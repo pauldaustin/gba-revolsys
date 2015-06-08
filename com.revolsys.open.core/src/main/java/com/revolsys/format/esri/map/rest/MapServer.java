@@ -25,8 +25,7 @@ public class MapServer extends Service {
     super("MapServer");
   }
 
-  public BoundingBox getBoundingBox(final int zoomLevel, final int tileX,
-    final int tileY) {
+  public BoundingBox getBoundingBox(final int zoomLevel, final int tileX, final int tileY) {
     final TileInfo tileInfo = getTileInfo();
 
     final double originX = tileInfo.getOriginX();
@@ -98,8 +97,7 @@ public class MapServer extends Service {
     return getList(TableDescription.class, "tables");
   }
 
-  public BufferedImage getTileImage(final int zoomLevel, final int tileX,
-    final int tileY) {
+  public BufferedImage getTileImage(final int zoomLevel, final int tileX, final int tileY) {
     final String url = getTileUrl(zoomLevel, tileX, tileY);
     try {
 
@@ -118,8 +116,7 @@ public class MapServer extends Service {
   }
 
   public String getTileUrl(final int zoomLevel, final int tileX, final int tileY) {
-    return getServiceUrl() + getPath() + "/tile/" + zoomLevel + "/" + tileY
-      + "/" + tileX;
+    return getServiceUrl() + getPath() + "/tile/" + zoomLevel + "/" + tileY + "/" + tileX;
   }
 
   public int getTileX(final int zoomLevel, final double x) {
@@ -166,10 +163,8 @@ public class MapServer extends Service {
           return levelOfDetail.getLevel();
         } else {
           final double previousLevelMetresPerPixel = previousLevel.getResolution();
-          final double range = levelMetresPerPixel
-            - previousLevelMetresPerPixel;
-          final double ratio = (metresPerPixel - previousLevelMetresPerPixel)
-            / range;
+          final double range = levelMetresPerPixel - previousLevelMetresPerPixel;
+          final double ratio = (metresPerPixel - previousLevelMetresPerPixel) / range;
           if (ratio < 0.8) {
             return previousLevel.getLevel();
           } else {

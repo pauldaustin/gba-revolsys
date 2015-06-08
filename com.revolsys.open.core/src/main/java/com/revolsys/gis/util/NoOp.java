@@ -1,7 +1,7 @@
 package com.revolsys.gis.util;
 
-import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
@@ -11,8 +11,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 public class NoOp {
-  public static boolean equals(final Coordinates coordinates1End,
-    final double... coordinates) {
+  public static boolean equals(final Coordinates coordinates1End, final double... coordinates) {
     if (coordinates1End.equals(coordinates)) {
       noOp();
       return true;
@@ -21,18 +20,7 @@ public class NoOp {
     }
   }
 
-  public static void equals(final Record object, final double x,
-    final double y) {
-    equals(object.getGeometryValue(), x, y);
-  }
-
-  public static void equals(final Record object, final Double x,
-    final Double y) {
-    equals(object.getGeometryValue(), x, y);
-  }
-
-  public static boolean equals(final Geometry geometry, final double x,
-    final double y) {
+  public static boolean equals(final Geometry geometry, final double x, final double y) {
     final CoordinatesList points = CoordinatesListUtil.get(geometry);
     final DoubleCoordinates point = new DoubleCoordinates(x, y);
     if (points.equal(0, point, 2)) {
@@ -43,11 +31,10 @@ public class NoOp {
     }
   }
 
-  public static boolean equals(final LineString line, final double x1,
-    final double y1, final double x2, final double y2) {
+  public static boolean equals(final LineString line, final double x1, final double y1,
+    final double x2, final double y2) {
     final CoordinatesList points = CoordinatesListUtil.get(line);
-    if (points.get(0).equals(x1, y1)
-      && points.get(points.size() - 1).equals(x2, y2)) {
+    if (points.get(0).equals(x1, y1) && points.get(points.size() - 1).equals(x2, y2)) {
       noOp();
       return true;
     } else {
@@ -59,6 +46,14 @@ public class NoOp {
     if (object1.equals(object2)) {
       noOp();
     }
+  }
+
+  public static void equals(final Record object, final double x, final double y) {
+    equals(object.getGeometryValue(), x, y);
+  }
+
+  public static void equals(final Record object, final Double x, final Double y) {
+    equals(object.getGeometryValue(), x, y);
   }
 
   public static void idNull(final Record object) {
@@ -100,13 +95,13 @@ public class NoOp {
   public static void noOp() {
   }
 
-  public static void typePath(final Record object, final String typePath) {
-    final String typePath2 = object.getRecordDefinition().getPath();
+  public static void typePath(final Edge<?> edge, final String typePath) {
+    final String typePath2 = edge.getTypeName();
     equals(typePath2, typePath);
   }
 
-  public static void typePath(final Edge<?> edge, final String typePath) {
-    final String typePath2 = edge.getTypeName();
+  public static void typePath(final Record object, final String typePath) {
+    final String typePath2 = object.getRecordDefinition().getPath();
     equals(typePath2, typePath);
   }
 

@@ -42,59 +42,59 @@ public class DERelationshipClass extends DETable {
   }
 
   public String getBackwardPathLabel() {
-    return backwardPathLabel;
+    return this.backwardPathLabel;
   }
 
   public RelCardinality getCardinality() {
-    return cardinality;
+    return this.cardinality;
   }
 
   public RelClassKey getClassKey() {
-    return classKey;
+    return this.classKey;
   }
 
   public List<RelationshipClassKey> getDestinationClassKeys() {
-    return destinationClassKeys;
+    return this.destinationClassKeys;
   }
 
   public List<String> getDestinationClassNames() {
-    return destinationClassNames;
+    return this.destinationClassNames;
   }
 
   public String getForwardPathLabel() {
-    return forwardPathLabel;
+    return this.forwardPathLabel;
   }
 
   public RelNotification getNotification() {
-    return notification;
+    return this.notification;
   }
 
   public List<RelationshipClassKey> getOriginClassKeys() {
-    return originClassKeys;
+    return this.originClassKeys;
   }
 
   public List<String> getOriginClassNames() {
-    return originClassNames;
+    return this.originClassNames;
   }
 
   public List<RelationshipRule> getRelationshipRules() {
-    return relationshipRules;
+    return this.relationshipRules;
   }
 
   public RelKeyType getReyType() {
-    return reyType;
+    return this.reyType;
   }
 
   public boolean isAttributed() {
-    return isAttributed;
+    return this.isAttributed;
   }
 
   public boolean isComposite() {
-    return isComposite;
+    return this.isComposite;
   }
 
   public boolean isReflexive() {
-    return isReflexive;
+    return this.isReflexive;
   }
 
   public void setAttributed(final boolean isAttributed) {
@@ -117,8 +117,7 @@ public class DERelationshipClass extends DETable {
     this.isComposite = isComposite;
   }
 
-  public void setDestinationClassKeys(
-    final List<RelationshipClassKey> destinationClassKeys) {
+  public void setDestinationClassKeys(final List<RelationshipClassKey> destinationClassKeys) {
     this.destinationClassKeys = destinationClassKeys;
   }
 
@@ -134,8 +133,7 @@ public class DERelationshipClass extends DETable {
     this.notification = notification;
   }
 
-  public void setOriginClassKeys(
-    final List<RelationshipClassKey> originClassKeys) {
+  public void setOriginClassKeys(final List<RelationshipClassKey> originClassKeys) {
     this.originClassKeys = originClassKeys;
   }
 
@@ -147,8 +145,7 @@ public class DERelationshipClass extends DETable {
     this.isReflexive = isReflexive;
   }
 
-  public void setRelationshipRules(
-    final List<RelationshipRule> relationshipRules) {
+  public void setRelationshipRules(final List<RelationshipRule> relationshipRules) {
     this.relationshipRules = relationshipRules;
   }
 

@@ -23,9 +23,8 @@ import com.revolsys.swing.map.layer.dataobject.style.panel.BaseStylePanel;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.Property;
 
-public abstract class AbstractLayerRenderer<T extends Layer> extends
-  AbstractPropertyChangeObject implements LayerRenderer<T>,
-  PropertyChangeListener, Cloneable {
+public abstract class AbstractLayerRenderer<T extends Layer> extends AbstractPropertyChangeObject
+  implements LayerRenderer<T>, PropertyChangeListener, Cloneable {
 
   private static final Icon ICON = Icons.getIcon("palette");
 
@@ -174,10 +173,10 @@ public abstract class AbstractLayerRenderer<T extends Layer> extends
 
   @Override
   public boolean isEditing() {
-    if (parent == null) {
-      return editing;
+    if (this.parent == null) {
+      return this.editing;
     } else {
-      return parent.isEditing();
+      return this.parent.isEditing();
     }
   }
 
@@ -218,7 +217,7 @@ public abstract class AbstractLayerRenderer<T extends Layer> extends
   public void setEditing(final boolean editing) {
     final boolean oldValue = this.editing;
     this.editing = editing;
-    firePropertyChange("editing", oldValue, layer);
+    firePropertyChange("editing", oldValue, this.layer);
   }
 
   public void setIcon(final Icon icon) {

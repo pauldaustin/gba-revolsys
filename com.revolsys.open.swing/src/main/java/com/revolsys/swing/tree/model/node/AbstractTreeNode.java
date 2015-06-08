@@ -137,11 +137,11 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
     } catch (final Throwable e) {
       ExceptionUtil.log(getClass(), "Error deleting tree node: " + getName(), e);
     } finally {
-      parent = null;
-      name = "";
-      type = "";
-      tree = null;
-      userObject = null;
+      this.parent = null;
+      this.name = "";
+      this.type = "";
+      this.tree = null;
+      this.userObject = null;
     }
   }
 
@@ -212,11 +212,11 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
   }
 
   public int getColumnCount() {
-    return columnCount;
+    return this.columnCount;
   }
 
   public Icon getIcon() {
-    return icon;
+    return this.icon;
   }
 
   @Override
@@ -230,22 +230,22 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @Override
   public TreeNode getParent() {
-    return parent;
+    return this.parent;
   }
 
   @SuppressWarnings("unchecked")
   public <V extends TreeNode> V getParentNode() {
-    return (V)parent;
+    return (V)this.parent;
   }
 
   @SuppressWarnings("unchecked")
   public <V extends JTree> V getTree() {
-    if (tree == null) {
+    if (this.tree == null) {
       TreeNode parent = getParent();
       while (parent != null) {
         if (parent instanceof AbstractTreeNode) {
@@ -257,7 +257,7 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
       }
       return null;
     } else {
-      return (V)tree;
+      return (V)this.tree;
     }
   }
 
@@ -272,16 +272,16 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
   }
 
   public String getType() {
-    return type;
+    return this.type;
   }
 
   @SuppressWarnings("unchecked")
   public <V> V getUserData() {
-    return (V)userObject;
+    return (V)this.userObject;
   }
 
   public Object getUserObject() {
-    return userObject;
+    return this.userObject;
   }
 
   @Override
@@ -295,12 +295,12 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
   }
 
   public boolean isAllowsChildren() {
-    return allowsChildren;
+    return this.allowsChildren;
   }
 
   @Override
   public boolean isLeaf() {
-    return (getChildCount() == 0);
+    return getChildCount() == 0;
   }
 
   @Override
@@ -384,8 +384,8 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
 
   @Override
   public String toString() {
-    if (StringUtils.hasText(name)) {
-      return name;
+    if (StringUtils.hasText(this.name)) {
+      return this.name;
     } else {
       final Object userObject = getUserObject();
       if (userObject == null) {

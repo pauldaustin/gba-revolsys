@@ -44,12 +44,12 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
     final JTableHeader tableHeader = getTableHeader();
 
     final TableColumnModel columnModel = getColumnModel();
-    tableCellEditor = new DataObjectTableCellEditor(this);
-    tableCellEditor.addCellEditorListener(model);
+    this.tableCellEditor = new DataObjectTableCellEditor(this);
+    this.tableCellEditor.addCellEditorListener(model);
     for (int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
       final TableColumn column = columnModel.getColumn(columnIndex);
       if (columnIndex >= model.getAttributesOffset()) {
-        column.setCellEditor(tableCellEditor);
+        column.setCellEditor(this.tableCellEditor);
       }
       column.setCellRenderer(cellRenderer);
     }
@@ -80,8 +80,7 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
   public ListSelectionModel getSelectionModel() {
     if (getTableModel() instanceof DataObjectLayerTableModel) {
       final DataObjectLayerTableModel layerTableModel = (DataObjectLayerTableModel)getTableModel();
-      if (layerTableModel.getAttributeFilterMode().equals(
-        DataObjectLayerTableModel.MODE_SELECTED)) {
+      if (layerTableModel.getAttributeFilterMode().equals(DataObjectLayerTableModel.MODE_SELECTED)) {
         return layerTableModel.getHighlightedModel();
       }
     }
@@ -89,7 +88,7 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
   }
 
   public DataObjectTableCellEditor getTableCellEditor() {
-    return tableCellEditor;
+    return this.tableCellEditor;
   }
 
   @Override
@@ -100,8 +99,7 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
     final int viewIndex = column.getModelIndex();
     final int attributesOffset = model.getAttributesOffset();
     if (viewIndex < attributesOffset) {
-      final String attributeName = model.getFieldName(viewIndex
-        - attributesOffset);
+      final String attributeName = model.getFieldName(viewIndex - attributesOffset);
       final FieldDefinition attribute = metaData.getField(attributeName);
       if (attribute != null) {
         Integer columnWidth = attribute.getProperty("tableColumnWidth");

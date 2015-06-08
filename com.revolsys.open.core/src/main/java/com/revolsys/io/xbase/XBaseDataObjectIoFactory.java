@@ -26,8 +26,7 @@ public class XBaseDataObjectIoFactory extends AbstractRecordIoFactory {
   public RecordReader createRecordReader(final Resource resource,
     final RecordFactory dataObjectFactory) {
     try {
-      final XbaseIterator iterator = new XbaseIterator(resource,
-        dataObjectFactory);
+      final XbaseIterator iterator = new XbaseIterator(resource, dataObjectFactory);
 
       return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
@@ -36,17 +35,14 @@ public class XBaseDataObjectIoFactory extends AbstractRecordIoFactory {
   }
 
   @Override
-  public Writer<Record> createRecordWriter(
-    final RecordDefinition metaData, final Resource resource) {
+  public Writer<Record> createRecordWriter(final RecordDefinition metaData, final Resource resource) {
     return new XbaseDataObjectWriter(metaData, resource);
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
-    return createRecordWriter(metaData, new OutputStreamResource(baseName,
-      outputStream));
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
+    return createRecordWriter(metaData, new OutputStreamResource(baseName, outputStream));
   }
 
 }

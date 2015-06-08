@@ -20,8 +20,8 @@ public class LayerInitializer extends SwingWorker<Void, Void> {
 
   public static void initialize(final Layer layer) {
     synchronized (LAYERS_TO_INITIALIZE) {
-      if (!LAYERS_CURRENTLY_INITIALIZING.contains(layer)
-        && !LAYERS_TO_INITIALIZE.contains(layer) && !layer.isInitialized()) {
+      if (!LAYERS_CURRENTLY_INITIALIZING.contains(layer) && !LAYERS_TO_INITIALIZE.contains(layer)
+        && !layer.isInitialized()) {
         LAYERS_TO_INITIALIZE.add(layer);
         if (instanceCount < MAX_WORKERS) {
           instanceCount++;
@@ -37,44 +37,44 @@ public class LayerInitializer extends SwingWorker<Void, Void> {
   private Layer layer;
 
   public LayerInitializer() {
-    dataStoreRegistry = DataObjectStoreConnectionRegistry.getForThread();
+    this.dataStoreRegistry = DataObjectStoreConnectionRegistry.getForThread();
   }
 
   @Override
   protected Void doInBackground() throws Exception {
     try {
-      DataObjectStoreConnectionRegistry.setForThread(dataStoreRegistry);
+      DataObjectStoreConnectionRegistry.setForThread(this.dataStoreRegistry);
       while (true) {
         synchronized (LAYERS_TO_INITIALIZE) {
           if (LAYERS_TO_INITIALIZE.isEmpty()) {
             instanceCount--;
             return null;
           } else {
-            layer = LAYERS_TO_INITIALIZE.removeFirst();
-            LAYERS_CURRENTLY_INITIALIZING.add(layer);
+            this.layer = LAYERS_TO_INITIALIZE.removeFirst();
+            LAYERS_CURRENTLY_INITIALIZING.add(this.layer);
           }
         }
         try {
-          layer.initialize();
+          this.layer.initialize();
         } catch (final Throwable e) {
-          ExceptionUtil.log(layer.getClass(), "Unable to iniaitlize layer: "
-            + layer.getName(), e);
+          ExceptionUtil.log(this.layer.getClass(),
+            "Unable to iniaitlize layer: " + this.layer.getName(), e);
         } finally {
-          LAYERS_CURRENTLY_INITIALIZING.remove(layer);
+          LAYERS_CURRENTLY_INITIALIZING.remove(this.layer);
         }
       }
     } finally {
       DataObjectStoreConnectionRegistry.setForThread(null);
-      layer = null;
+      this.layer = null;
     }
   }
 
   @Override
   public String toString() {
-    if (layer == null) {
+    if (this.layer == null) {
       return "Initializing layers";
     } else {
-      return "Initializing layer: " + layer.getPath();
+      return "Initializing layer: " + this.layer.getPath();
     }
   }
 }

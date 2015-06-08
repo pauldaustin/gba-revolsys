@@ -12,20 +12,18 @@ import com.revolsys.gis.model.geometry.GeometryFactory;
 import com.revolsys.gis.model.geometry.Point;
 import com.vividsolutions.jts.geom.Dimension;
 
-public class GeometryCollectionImpl extends GeometryImpl implements
-  GeometryCollection {
+public class GeometryCollectionImpl extends GeometryImpl implements GeometryCollection {
   private final List<? extends Geometry> geometries;
 
   protected GeometryCollectionImpl(final GeometryFactoryImpl geometryFactory,
-    final Class<?> geometryClass,
-    final Collection<? extends Geometry> geometries) {
+    final Class<?> geometryClass, final Collection<? extends Geometry> geometries) {
     super(geometryFactory);
     final List<Geometry> geometryList = new ArrayList<Geometry>();
     for (final Geometry geometry : geometries) {
       final Class<? extends Geometry> clazz = geometry.getClass();
       if (!geometryClass.isAssignableFrom(clazz)) {
-        throw new IllegalArgumentException("Expecting instance of class "
-          + geometryClass + " not" + clazz);
+        throw new IllegalArgumentException("Expecting instance of class " + geometryClass + " not"
+          + clazz);
       }
       geometryList.add(geometry);
     }
@@ -94,13 +92,13 @@ public class GeometryCollectionImpl extends GeometryImpl implements
   @Override
   @SuppressWarnings("unchecked")
   public <G extends Geometry> List<G> getGeometries() {
-    return (List<G>)geometries;
+    return (List<G>)this.geometries;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public <G extends Geometry> G getGeometry(final int i) {
-    return (G)geometries.get(i);
+    return (G)this.geometries.get(i);
   }
 
   @Override

@@ -32,8 +32,7 @@ import com.revolsys.parallel.process.BaseInProcess;
 import com.revolsys.parallel.tools.ScriptExecutorRunnable;
 import com.revolsys.util.JexlUtil;
 
-public class ScriptExecutorProcess extends BaseInProcess<Record> implements
-  BeanFactoryAware {
+public class ScriptExecutorProcess extends BaseInProcess<Record> implements BeanFactoryAware {
   private static final Logger LOG = LoggerFactory.getLogger(ScriptExecutorProcess.class);
 
   private final Map<String, Object> attributes = new HashMap<String, Object>();
@@ -53,10 +52,10 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements
   @Override
   protected void destroy() {
     try {
-      while (!tasks.isEmpty()) {
+      while (!this.tasks.isEmpty()) {
         synchronized (this) {
           ThreadUtil.pause(this, 1000);
-          for (final Iterator<Future<?>> taskIter = tasks.iterator(); taskIter.hasNext();) {
+          for (final Iterator<Future<?>> taskIter = this.tasks.iterator(); taskIter.hasNext();) {
             final Future<?> task = taskIter.next();
             if (task.isDone()) {
               taskIter.remove();
@@ -65,34 +64,34 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements
         }
       }
     } finally {
-      executor.shutdown();
+      this.executor.shutdown();
     }
   }
 
   private void executeScript(final Record object) {
     try {
       final JexlContext context = new HashMapContext();
-      final Map<String, Object> vars = new HashMap<String, Object>(attributes);
+      final Map<String, Object> vars = new HashMap<String, Object>(this.attributes);
       vars.putAll(new DataObjectMap(object));
       context.setVars(vars);
       final Map<String, Object> scriptParams = new HashMap<String, Object>();
-      scriptParams.putAll(attributes);
-      for (final Entry<String, Expression> param : expressions.entrySet()) {
+      scriptParams.putAll(this.attributes);
+      for (final Entry<String, Expression> param : this.expressions.entrySet()) {
         final String key = param.getKey();
         final Expression expression = param.getValue();
         final Object value = JexlUtil.evaluateExpression(context, expression);
         scriptParams.put(key, value);
       }
-      final ScriptExecutorRunnable scriptRunner = new ScriptExecutorRunnable(
-        script, scriptParams);
-      if (executor == null) {
+      final ScriptExecutorRunnable scriptRunner = new ScriptExecutorRunnable(this.script,
+        scriptParams);
+      if (this.executor == null) {
         scriptRunner.run();
       } else {
-        while (tasks.size() >= maxConcurrentScripts) {
+        while (this.tasks.size() >= this.maxConcurrentScripts) {
           try {
             synchronized (this) {
               ThreadUtil.pause(1000);
-              for (final Iterator<Future<?>> taskIter = tasks.iterator(); taskIter.hasNext();) {
+              for (final Iterator<Future<?>> taskIter = this.tasks.iterator(); taskIter.hasNext();) {
                 final Future<?> task = taskIter.next();
                 if (task.isDone()) {
                   taskIter.remove();
@@ -103,8 +102,8 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements
             throw new ClosedException(e);
           }
         }
-        final Future<?> future = executor.submit(scriptRunner);
-        tasks.add(future);
+        final Future<?> future = this.executor.submit(scriptRunner);
+        this.tasks.add(future);
       }
     } catch (final ThreadDeath e) {
       throw e;
@@ -114,26 +113,26 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements
   }
 
   public ExecutorService getExecutor() {
-    return executor;
+    return this.executor;
   }
 
   public int getMaxConcurrentScripts() {
-    return maxConcurrentScripts;
+    return this.maxConcurrentScripts;
   }
 
   public Map<String, String> getParameters() {
-    return parameters;
+    return this.parameters;
   }
 
   public String getScript() {
-    return script;
+    return this.script;
   }
 
   @Override
   protected void postRun(final Channel<Record> in) {
-    tasks.clear();
-    if (executor != null) {
-      executor.shutdownNow();
+    this.tasks.clear();
+    if (this.executor != null) {
+      this.executor.shutdownNow();
     }
   }
 
@@ -143,9 +142,8 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements
   }
 
   @Override
-  public void setBeanFactory(final BeanFactory beanFactory)
-    throws BeansException {
-    attributes.putAll(ThreadSharedAttributes.getAttributes());
+  public void setBeanFactory(final BeanFactory beanFactory) throws BeansException {
+    this.attributes.putAll(ThreadSharedAttributes.getAttributes());
   }
 
   public void setExecutor(final ExecutorService executor) {
@@ -154,10 +152,9 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements
 
   public void setMaxConcurrentScripts(final int maxConcurrentScripts) {
     this.maxConcurrentScripts = maxConcurrentScripts;
-    if (executor == null) {
-      executor = new ThreadPoolExecutor(Math.min(maxConcurrentScripts, 10),
-        maxConcurrentScripts, 10, TimeUnit.SECONDS,
-        new LinkedBlockingQueue<Runnable>());
+    if (this.executor == null) {
+      this.executor = new ThreadPoolExecutor(Math.min(maxConcurrentScripts, 10),
+        maxConcurrentScripts, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
     }
   }
 
@@ -167,12 +164,10 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements
       final String key = param.getKey();
       final String value = param.getValue();
       try {
-        final Expression expression = JexlUtil.createExpression(value,
-          "#\\{([^\\}]+)\\}");
-        expressions.put(key, expression);
+        final Expression expression = JexlUtil.createExpression(value, "#\\{([^\\}]+)\\}");
+        this.expressions.put(key, expression);
       } catch (final Exception e) {
-        throw new IllegalArgumentException("Expression not valid " + key + "="
-          + value);
+        throw new IllegalArgumentException("Expression not valid " + key + "=" + value);
       }
     }
   }

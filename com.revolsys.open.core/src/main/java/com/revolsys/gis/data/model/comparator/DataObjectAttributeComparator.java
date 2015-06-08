@@ -18,8 +18,7 @@ public class DataObjectAttributeComparator implements Comparator<Record> {
   public DataObjectAttributeComparator() {
   }
 
-  public DataObjectAttributeComparator(final boolean sortAsceding,
-    final String... attributeNames) {
+  public DataObjectAttributeComparator(final boolean sortAsceding, final String... attributeNames) {
     this(Arrays.asList(attributeNames));
     this.invert = !sortAsceding;
   }
@@ -34,7 +33,7 @@ public class DataObjectAttributeComparator implements Comparator<Record> {
 
   @Override
   public int compare(final Record object1, final Record object2) {
-    for (final String attributeName : attributeNames) {
+    for (final String attributeName : this.attributeNames) {
       final int compare = compare(object1, object2, attributeName);
       if (compare != 0) {
         return compare;
@@ -44,31 +43,28 @@ public class DataObjectAttributeComparator implements Comparator<Record> {
     return 0;
   }
 
-  public int compare(final Record object1, final Record object2,
-    final String attributeName) {
-    final Comparable<Object> value1 = DataObjectUtil.getAttributeByPath(
-      object1, attributeName);
-    final Comparable<Object> value2 = DataObjectUtil.getAttributeByPath(
-      object2, attributeName);
+  public int compare(final Record object1, final Record object2, final String attributeName) {
+    final Comparable<Object> value1 = DataObjectUtil.getAttributeByPath(object1, attributeName);
+    final Comparable<Object> value2 = DataObjectUtil.getAttributeByPath(object2, attributeName);
     if (value1 == null) {
       if (value2 == null) {
         return 0;
       } else {
-        if (nullFirst) {
+        if (this.nullFirst) {
           return -1;
         } else {
           return 1;
         }
       }
     } else if (value2 == null) {
-      if (nullFirst) {
+      if (this.nullFirst) {
         return 1;
       } else {
         return -1;
       }
     } else {
       final int compare = CompareUtil.compare(value1, value2);
-      if (invert) {
+      if (this.invert) {
         return -compare;
       } else {
         return compare;
@@ -77,15 +73,15 @@ public class DataObjectAttributeComparator implements Comparator<Record> {
   }
 
   public List<String> getAttributeNames() {
-    return attributeNames;
+    return this.attributeNames;
   }
 
   public boolean isInvert() {
-    return invert;
+    return this.invert;
   }
 
   public boolean isNullFirst() {
-    return nullFirst;
+    return this.nullFirst;
   }
 
   public void setAttributeNames(final List<String> attributeNames) {

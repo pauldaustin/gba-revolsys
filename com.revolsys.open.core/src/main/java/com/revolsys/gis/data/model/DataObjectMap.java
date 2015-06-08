@@ -27,14 +27,14 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public boolean containsKey(final Object name) {
-    return object.getRecordDefinition().hasField(name.toString());
+    return this.object.getRecordDefinition().hasField(name.toString());
   }
 
   @Override
   public boolean containsValue(final Object value) {
     if (value != null) {
       for (int i = 0; i < size(); i++) {
-        final Object objectValue = object.getValue(i);
+        final Object objectValue = this.object.getValue(i);
         if (objectValue != null) {
           if (objectValue == value || objectValue.equals(value)) {
             return true;
@@ -47,19 +47,19 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public Set<Entry<String, Object>> entrySet() {
-    if (entries == null) {
-      entries = new LinkedHashSet<Entry<String, Object>>();
+    if (this.entries == null) {
+      this.entries = new LinkedHashSet<Entry<String, Object>>();
       for (int i = 0; i < size(); i++) {
-        final DataObjectMapEntry entry = new DataObjectMapEntry(object, i);
-        entries.add(entry);
+        final DataObjectMapEntry entry = new DataObjectMapEntry(this.object, i);
+        this.entries.add(entry);
       }
     }
-    return entries;
+    return this.entries;
   }
 
   @Override
   public Object get(final Object key) {
-    return object.getValue(key.toString());
+    return this.object.getValue(key.toString());
   }
 
   @Override
@@ -69,12 +69,12 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public Set<String> keySet() {
-    return new LinkedHashSet<String>(object.getRecordDefinition().getFieldNames());
+    return new LinkedHashSet<String>(this.object.getRecordDefinition().getFieldNames());
   }
 
   @Override
   public Object put(final String key, final Object value) {
-    object.setValue(key, value);
+    this.object.setValue(key, value);
     return value;
   }
 
@@ -90,7 +90,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
   @Override
   public Object remove(final Object key) {
     final Object value = get(key);
-    object.setValue(key.toString(), null);
+    this.object.setValue(key.toString(), null);
     return value;
   }
 
@@ -100,12 +100,12 @@ public class DataObjectMap extends AbstractMap<String, Object> {
 
   @Override
   public int size() {
-    return object.getRecordDefinition().getFieldCount();
+    return this.object.getRecordDefinition().getFieldCount();
   }
 
   @Override
   public Collection<Object> values() {
-    return object.getValues();
+    return this.object.getValues();
   }
 
 }

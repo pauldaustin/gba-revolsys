@@ -31,8 +31,8 @@ import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EqualTypeAndLineEdgeCleanupVisitor extends
-  AbstractVisitor<Edge<Record>> implements ObjectProcessor<DataObjectGraph> {
+public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>> implements
+  ObjectProcessor<DataObjectGraph> {
 
   /** Flag indicating that the edge has been processed. */
   private static final String EDGE_PROCESSED = EqualTypeAndLineEdgeCleanupVisitor.class.getName()
@@ -40,20 +40,18 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
 
   private Statistics duplicateStatistics;
 
-  private Set<String> equalExcludeAttributes = new HashSet<String>(
-    Arrays.asList(DataObjectEquals.EXCLUDE_ID,
-      DataObjectEquals.EXCLUDE_GEOMETRY));
+  private Set<String> equalExcludeAttributes = new HashSet<String>(Arrays.asList(
+    DataObjectEquals.EXCLUDE_ID, DataObjectEquals.EXCLUDE_GEOMETRY));
 
   @PreDestroy
   public void destroy() {
-    if (duplicateStatistics != null) {
-      duplicateStatistics.disconnect();
+    if (this.duplicateStatistics != null) {
+      this.duplicateStatistics.disconnect();
     }
-    duplicateStatistics = null;
+    this.duplicateStatistics = null;
   }
 
-  public boolean fixMissingZValues(final LineString line1,
-    final LineString line2) {
+  public boolean fixMissingZValues(final LineString line1, final LineString line2) {
     final CoordinatesList points1 = CoordinatesListUtil.get(line1);
     final CoordinatesList points2 = CoordinatesListUtil.get(line2);
     if (points1.getNumAxis() > 2) {
@@ -100,17 +98,16 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
   }
 
   public Set<String> getEqualExcludeAttributes() {
-    return equalExcludeAttributes;
+    return this.equalExcludeAttributes;
   }
 
   @PostConstruct
   public void init() {
-    duplicateStatistics = new Statistics("Duplicate equal lines");
-    duplicateStatistics.connect();
+    this.duplicateStatistics = new Statistics("Duplicate equal lines");
+    this.duplicateStatistics.connect();
   }
 
-  public boolean isReverse(final CoordinatesList points1,
-    final CoordinatesList points2) {
+  public boolean isReverse(final CoordinatesList points1, final CoordinatesList points2) {
     final int numPoints = points1.size();
     if (points1.equal(0, points2, numPoints - 1, 2)) {
       if (points1.equal(0, points1, numPoints - 1, 2)) {
@@ -135,13 +132,12 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
     graph.visitEdges(this);
   }
 
-  private void processEqualEdge(final Edge<Record> edge1,
-    final Edge<Record> edge2) {
+  private void processEqualEdge(final Edge<Record> edge1, final Edge<Record> edge2) {
     final Record object1 = edge1.getObject();
     final Record object2 = edge2.getObject();
 
-    final boolean equalAttributes = EqualsInstance.INSTANCE.equals(object1,
-      object2, equalExcludeAttributes);
+    final boolean equalAttributes = EqualsInstance.INSTANCE.equals(object1, object2,
+      this.equalExcludeAttributes);
 
     final LineString line1 = edge1.getLine();
     int compare = 0;
@@ -152,7 +148,7 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
     if (compare == 0) {
       if (equalAttributes) {
         boolean equalExcludedAttributes = true;
-        for (final String name : equalExcludeAttributes) {
+        for (final String name : this.equalExcludeAttributes) {
           if (!DataObjectEquals.equals(object1, object2, name)) {
             equalExcludedAttributes = false;
           }
@@ -164,16 +160,14 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
           if (equalZ) {
             removeDuplicate(edge2, edge1);
           } else {
-            RecordLog.error(getClass(),
-              "Equal geometry with different coordinates or Z-values", object1);
+            RecordLog.error(getClass(), "Equal geometry with different coordinates or Z-values",
+              object1);
           }
         } else {
-          RecordLog.error(getClass(),
-            "Equal geometry with different attributes: ", object1);
+          RecordLog.error(getClass(), "Equal geometry with different attributes: ", object1);
         }
       } else {
-        RecordLog.error(getClass(),
-          "Equal geometry with different attributes: ", object1);
+        RecordLog.error(getClass(), "Equal geometry with different attributes: ", object1);
       }
     } else {
       removeDuplicate(edge2, edge1);
@@ -196,16 +190,14 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
     }
   }
 
-  protected void removeDuplicate(final Edge<Record> removeEdge,
-    final Edge<Record> keepEdge) {
+  protected void removeDuplicate(final Edge<Record> removeEdge, final Edge<Record> keepEdge) {
     removeEdge.remove();
-    if (duplicateStatistics != null) {
-      duplicateStatistics.add(removeEdge.getObject());
+    if (this.duplicateStatistics != null) {
+      this.duplicateStatistics.add(removeEdge.getObject());
     }
   }
 
-  public void setEqualExcludeAttributes(
-    final Collection<String> equalExcludeAttributes) {
+  public void setEqualExcludeAttributes(final Collection<String> equalExcludeAttributes) {
     setEqualExcludeAttributes(new HashSet<String>(equalExcludeAttributes));
   }
 
@@ -224,8 +216,7 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
 
       final AndFilter<Edge<Record>> attributeAndGeometryFilter = new AndFilter<Edge<Record>>();
 
-      attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(
-        typePath));
+      attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
 
       final Filter<Edge<Record>> filter = getFilter();
       if (filter != null) {
@@ -234,16 +225,14 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends
 
       final Filter<Record> equalLineFilter = new DataObjectGeometryFilter<LineString>(
         new LineEqualIgnoreDirectionFilter(line, 2));
-      final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(
-        equalLineFilter);
+      final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(equalLineFilter);
       attributeAndGeometryFilter.addFilter(edgeFilter);
 
       final List<Edge<Record>> equalEdges;
       if (getComparator() == null) {
         equalEdges = graph.getEdges(attributeAndGeometryFilter, line);
       } else {
-        equalEdges = graph.getEdges(attributeAndGeometryFilter,
-          getComparator(), line);
+        equalEdges = graph.getEdges(attributeAndGeometryFilter, getComparator(), line);
       }
       processEqualEdges(equalEdges);
     }

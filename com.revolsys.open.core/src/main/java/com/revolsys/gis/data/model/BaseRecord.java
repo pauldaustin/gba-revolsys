@@ -51,7 +51,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
    * @param recordDefinition The recordDefinition defining the object type.
    */
   public BaseRecord(final RecordDefinition metaData) {
-    recordDefinition = metaData;
+    this.recordDefinition = metaData;
   }
 
   /**
@@ -116,7 +116,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
   @Override
   public Set<Entry<String, Object>> entrySet() {
     final Set<Entry<String, Object>> entries = new LinkedHashSet<Entry<String, Object>>();
-    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+    for (int i = 0; i < this.recordDefinition.getFieldCount(); i++) {
       entries.add(new DataObjectEntry(this, i));
     }
     return entries;
@@ -195,18 +195,18 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
   @Override
   @SuppressWarnings("unchecked")
   public <T extends Geometry> T getGeometryValue() {
-    final int index = recordDefinition.getGeometryFieldIndex();
+    final int index = this.recordDefinition.getGeometryFieldIndex();
     return (T)getValue(index);
   }
 
   @Override
   public Integer getIdInteger() {
-    return getInteger(recordDefinition.getIdFieldName());
+    return getInteger(this.recordDefinition.getIdFieldName());
   }
 
   @Override
   public String getIdString() {
-    return getString(recordDefinition.getIdFieldName());
+    return getString(this.recordDefinition.getIdFieldName());
   }
 
   /**
@@ -217,7 +217,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
   @Override
   @SuppressWarnings("unchecked")
   public <T extends Object> T getIdValue() {
-    final int index = recordDefinition.getIdFieldIndex();
+    final int index = this.recordDefinition.getIdFieldIndex();
     return (T)getValue(index);
   }
 
@@ -251,7 +251,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
    */
   @Override
   public RecordDefinition getRecordDefinition() {
-    return recordDefinition;
+    return this.recordDefinition;
   }
 
   @Override
@@ -266,7 +266,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
 
   @Override
   public RecordState getState() {
-    return state;
+    return this.state;
   }
 
   @Override
@@ -303,11 +303,11 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
   @SuppressWarnings("unchecked")
   public <T extends Object> T getValue(final CharSequence name) {
     try {
-      final int index = recordDefinition.getFieldIndex(name);
+      final int index = this.recordDefinition.getFieldIndex(name);
       return (T)getValue(index);
     } catch (final NullPointerException e) {
       LoggerFactory.getLogger(getClass()).warn(
-        "Attribute " + recordDefinition.getPath() + "." + name + " does not exist");
+        "Attribute " + this.recordDefinition.getPath() + "." + name + " does not exist");
       return null;
     }
   }
@@ -327,7 +327,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
           if (propertyValue == null) {
             return null;
           } else if (i + 1 < propertyPath.length) {
-            final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(propertyName);
+            final CodeTable codeTable = this.recordDefinition.getCodeTableByFieldName(propertyName);
             if (codeTable != null) {
               propertyValue = codeTable.getMap(propertyValue);
             }
@@ -344,7 +344,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
         if (propertyValue == null) {
           return null;
         } else if (i + 1 < propertyPath.length) {
-          final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(propertyName);
+          final CodeTable codeTable = this.recordDefinition.getCodeTableByFieldName(propertyName);
           if (codeTable != null) {
             propertyValue = codeTable.getMap(propertyValue);
           }
@@ -376,7 +376,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
   @Override
   public List<Object> getValues() {
     final List<Object> values = new ArrayList<Object>();
-    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+    for (int i = 0; i < this.recordDefinition.getFieldCount(); i++) {
       final Object value = getValue(i);
       values.add(value);
     }
@@ -392,7 +392,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
    */
   @Override
   public boolean hasAttribute(final CharSequence name) {
-    return recordDefinition.hasField(name);
+    return this.recordDefinition.hasField(name);
   }
 
   @Override
@@ -425,7 +425,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
 
   private void readObject(final ObjectInputStream ois) throws ClassNotFoundException, IOException {
     final int metaDataInstanceId = ois.readInt();
-    recordDefinition = RecordDefinitionImpl.getMetaData(metaDataInstanceId);
+    this.recordDefinition = RecordDefinitionImpl.getMetaData(metaDataInstanceId);
     ois.defaultReadObject();
   }
 
@@ -436,7 +436,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
    */
   @Override
   public void setGeometryValue(final Geometry geometry) {
-    final int index = recordDefinition.getGeometryFieldIndex();
+    final int index = this.recordDefinition.getGeometryFieldIndex();
     setValue(index, geometry);
   }
 
@@ -448,8 +448,8 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
    */
   @Override
   public void setIdValue(final Object id) {
-    final int index = recordDefinition.getIdFieldIndex();
-    if (state == RecordState.New || state == RecordState.Initalizing) {
+    final int index = this.recordDefinition.getIdFieldIndex();
+    if (this.state == RecordState.New || this.state == RecordState.Initalizing) {
       setValue(index, id);
     } else {
       final Object oldId = getValue(index);
@@ -473,7 +473,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
    */
   @Override
   public void setValue(final CharSequence name, final Object value) {
-    final int index = recordDefinition.getFieldIndex(name);
+    final int index = this.recordDefinition.getFieldIndex(name);
     if (index >= 0) {
       setValue(index, value);
     } else {
@@ -486,11 +486,11 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
         final CharSequence subKey = name.subSequence(dotIndex + 1, name.length());
         final Object objectValue = getValue(key);
         if (objectValue == null) {
-          final DataType attributeType = recordDefinition.getFieldType(key);
+          final DataType attributeType = this.recordDefinition.getFieldType(key);
           if (attributeType != null) {
             if (attributeType.getJavaClass() == Record.class) {
               final String typePath = attributeType.getName();
-              final RecordDefinitionFactory metaDataFactory = recordDefinition.getRecordDefinitionFactory();
+              final RecordDefinitionFactory metaDataFactory = this.recordDefinition.getRecordDefinitionFactory();
               final RecordDefinition subMetaData = metaDataFactory.getRecordDefinition(typePath);
               final RecordFactory dataObjectFactory = subMetaData.getRecordFactory();
               final Record subObject = dataObjectFactory.createRecord(subMetaData);
@@ -530,11 +530,11 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
       codeTableAttributeName = name.substring(0, dotIndex);
       codeTableValueName = name.substring(dotIndex + 1);
     }
-    final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(codeTableAttributeName);
+    final CodeTable codeTable = this.recordDefinition.getCodeTableByFieldName(codeTableAttributeName);
     if (codeTable == null) {
       if (dotIndex != -1) {
         LoggerFactory.getLogger(getClass()).debug(
-          "Cannot get code table for " + recordDefinition.getPath() + "." + name);
+          "Cannot get code table for " + this.recordDefinition.getPath() + "." + name);
         return;
       }
       setValue(name, value);
@@ -581,7 +581,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
 
   @Override
   public void setValues(final Record object) {
-    for (final String name : recordDefinition.getFieldNames()) {
+    for (final String name : this.recordDefinition.getFieldNames()) {
       final Object value = JavaBeanUtil.clone(object.getValue(name));
       setValue(name, value);
     }
@@ -620,11 +620,11 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
   @Override
   public String toString() {
     final StringBuffer s = new StringBuffer();
-    s.append(recordDefinition.getPath()).append("(\n");
-    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+    s.append(this.recordDefinition.getPath()).append("(\n");
+    for (int i = 0; i < this.recordDefinition.getFieldCount(); i++) {
       final Object value = getValue(i);
       if (value != null) {
-        s.append(recordDefinition.getFieldName(i)).append('=').append(value).append('\n');
+        s.append(this.recordDefinition.getFieldName(i)).append('=').append(value).append('\n');
       }
     }
     s.append(')');
@@ -633,9 +633,9 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
 
   @SuppressWarnings("incomplete-switch")
   protected void updateState() {
-    switch (state) {
+    switch (this.state) {
       case Persisted:
-        state = RecordState.Modified;
+        this.state = RecordState.Modified;
       break;
       case Deleted:
         throw new IllegalStateException("Cannot modify an object which has been deleted");
@@ -643,7 +643,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
   }
 
   private void writeObject(final ObjectOutputStream oos) throws IOException {
-    oos.writeInt(recordDefinition.getInstanceId());
+    oos.writeInt(this.recordDefinition.getInstanceId());
     oos.defaultWriteObject();
   }
 }

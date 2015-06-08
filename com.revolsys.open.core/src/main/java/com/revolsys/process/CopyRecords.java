@@ -29,16 +29,8 @@ public class CopyRecords extends AbstractProcess {
   public CopyRecords() {
   }
 
-  public CopyRecords(final RecordStore sourceDataStore,
-    final String typePath, final RecordStore targetDataStore,
-    final boolean hasSequence) {
-    this(sourceDataStore, typePath, new HashMap<String, Boolean>(),
-      targetDataStore, hasSequence);
-  }
-
-  public CopyRecords(final RecordStore sourceDataStore,
-    final String typePath, final Map<String, Boolean> orderBy,
-    final RecordStore targetDataStore, final boolean hasSequence) {
+  public CopyRecords(final RecordStore sourceDataStore, final String typePath,
+    final Map<String, Boolean> orderBy, final RecordStore targetDataStore, final boolean hasSequence) {
     this.sourceDataStore = sourceDataStore;
     this.typePath = typePath;
     this.orderBy = orderBy;
@@ -46,47 +38,51 @@ public class CopyRecords extends AbstractProcess {
     this.hasSequence = hasSequence;
   }
 
+  public CopyRecords(final RecordStore sourceDataStore, final String typePath,
+    final RecordStore targetDataStore, final boolean hasSequence) {
+    this(sourceDataStore, typePath, new HashMap<String, Boolean>(), targetDataStore, hasSequence);
+  }
+
   public Map<String, Boolean> getOrderBy() {
-    return orderBy;
+    return this.orderBy;
   }
 
   public RecordStore getSourceDataStore() {
-    return sourceDataStore;
+    return this.sourceDataStore;
   }
 
   public RecordStore getTargetDataStore() {
-    return targetDataStore;
+    return this.targetDataStore;
   }
 
   public String getTypePath() {
-    return typePath;
+    return this.typePath;
   }
 
   public boolean isHasSequence() {
-    return hasSequence;
+    return this.hasSequence;
   }
 
   @Override
   public void run() {
     try {
-      final Query query = new Query(typePath);
-      query.setOrderBy(orderBy);
-      final Reader<Record> reader = sourceDataStore.query(query);
+      final Query query = new Query(this.typePath);
+      query.setOrderBy(this.orderBy);
+      final Reader<Record> reader = this.sourceDataStore.query(query);
       try {
-        final Writer<Record> targetWriter = targetDataStore.createWriter();
+        final Writer<Record> targetWriter = this.targetDataStore.createWriter();
         try {
-          final RecordDefinition targetMetaData = targetDataStore.getRecordDefinition(typePath);
+          final RecordDefinition targetMetaData = this.targetDataStore.getRecordDefinition(this.typePath);
           if (targetMetaData == null) {
-            LoggerFactory.getLogger(getClass()).error(
-              "Cannot find target table: " + typePath);
+            LoggerFactory.getLogger(getClass()).error("Cannot find target table: " + this.typePath);
           } else {
-            if (hasSequence) {
+            if (this.hasSequence) {
               final String idAttributeName = targetMetaData.getIdFieldName();
-              Object maxId = targetDataStore.createPrimaryIdValue(typePath);
+              Object maxId = this.targetDataStore.createPrimaryIdValue(this.typePath);
               for (final Record sourceRecord : reader) {
                 final Object sourceId = sourceRecord.getValue(idAttributeName);
                 while (CompareUtil.compare(maxId, sourceId) < 0) {
-                  maxId = targetDataStore.createPrimaryIdValue(typePath);
+                  maxId = this.targetDataStore.createPrimaryIdValue(this.typePath);
                 }
                 targetWriter.write(sourceRecord);
               }
@@ -103,7 +99,7 @@ public class CopyRecords extends AbstractProcess {
         reader.close();
       }
     } catch (final Throwable e) {
-      throw new RuntimeException("Unable to copy records for " + typePath, e);
+      throw new RuntimeException("Unable to copy records for " + this.typePath, e);
     }
   }
 
@@ -125,7 +121,7 @@ public class CopyRecords extends AbstractProcess {
 
   @Override
   public String toString() {
-    return "Copy " + typePath;
+    return "Copy " + this.typePath;
   }
 
 }

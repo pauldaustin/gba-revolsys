@@ -19,25 +19,25 @@ public class FolderConnection implements MapSerializer {
 
   private FolderConnectionRegistry registry;
 
-  public FolderConnection(final FolderConnectionRegistry registry,
-    final String name, final File file) {
+  public FolderConnection(final FolderConnectionRegistry registry, final String name,
+    final File file) {
     this.registry = registry;
     setNameAndFile(name, file);
   }
 
   public void delete() {
-    if (registry != null) {
-      registry.removeConnection(this);
+    if (this.registry != null) {
+      this.registry.removeConnection(this);
     }
-    registry = null;
+    this.registry = null;
   }
 
   @Override
   public boolean equals(final Object obj) {
     if (obj instanceof FolderConnection) {
       final FolderConnection folderConnection = (FolderConnection)obj;
-      if (registry == folderConnection.registry) {
-        if (EqualsRegistry.equal(name, folderConnection.name)) {
+      if (this.registry == folderConnection.registry) {
+        if (EqualsRegistry.equal(this.name, folderConnection.name)) {
           if (EqualsRegistry.equal(getFile(), folderConnection.getFile())) {
             return true;
           }
@@ -48,31 +48,31 @@ public class FolderConnection implements MapSerializer {
   }
 
   public File getFile() {
-    return file;
+    return this.file;
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public FolderConnectionRegistry getRegistry() {
-    return registry;
+    return this.registry;
   }
 
   @Override
   public int hashCode() {
-    if (name == null) {
+    if (this.name == null) {
       return 0;
     } else {
-      return name.hashCode();
+      return this.name.hashCode();
     }
   }
 
   public boolean isReadOnly() {
-    if (registry == null) {
+    if (this.registry == null) {
       return true;
     } else {
-      return registry.isReadOnly();
+      return this.registry.isReadOnly();
     }
   }
 
@@ -93,11 +93,11 @@ public class FolderConnection implements MapSerializer {
 
   @Override
   public Map<String, Object> toMap() {
-    return config;
+    return this.config;
   }
 
   @Override
   public String toString() {
-    return name;
+    return this.name;
   }
 }

@@ -26,16 +26,14 @@ public class Icons {
     return getCursor(imageName, delta, delta);
   }
 
-  public static Cursor getCursor(final String imageName, final int dx,
-    final int dy) {
+  public static Cursor getCursor(final String imageName, final int dx, final int dy) {
     Image image = getImage(imageName);
     if (image == null) {
       return null;
     } else {
       final Toolkit toolkit = Toolkit.getDefaultToolkit();
       if (OS.isWindows()) {
-        final BufferedImage newImage = new BufferedImage(32, 32,
-          BufferedImage.TYPE_INT_ARGB);
+        final BufferedImage newImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
         final Graphics graphics = newImage.getGraphics();
         graphics.drawImage(image, 0, 0, null);
         graphics.dispose();
@@ -59,8 +57,8 @@ public class Icons {
     if (in != null) {
       try {
         final BufferedImage image = ImageIO.read(in);
-        final BufferedImage convertedImg = new BufferedImage(image.getWidth(),
-          image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        final BufferedImage convertedImg = new BufferedImage(image.getWidth(), image.getHeight(),
+          BufferedImage.TYPE_INT_ARGB);
         final Graphics graphics = convertedImg.getGraphics();
         graphics.drawImage(image, 0, 0, null);
         graphics.dispose();
@@ -78,8 +76,8 @@ public class Icons {
     InputStream in = clazz.getResourceAsStream(resourceName);
     if (in == null) {
       in = Thread.currentThread()
-          .getContextClassLoader()
-          .getResourceAsStream("images/" + imageName + ".png");
+        .getContextClassLoader()
+        .getResourceAsStream("images/" + imageName + ".png");
     }
     return getImage(in);
   }

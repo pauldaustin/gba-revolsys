@@ -44,8 +44,7 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
           final int startRowNum = (pageNumber - 1) * pageSize + 1;
           final int endRowNum = startRowNum + pageSize - 1;
           sql = "SELECT * FROM ( SELECT  T2.*, ROWNUM TROWNUM FROM ( " + sql
-            + ") T2 ) WHERE TROWNUM BETWEEN " + startRowNum + " AND "
-            + endRowNum;
+            + ") T2 ) WHERE TROWNUM BETWEEN " + startRowNum + " AND " + endRowNum;
 
           final DataSource dataSource = getDataSource();
           Connection connection = getConnection();
@@ -60,15 +59,14 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
 
             final PreparedStatement statement = connection.prepareStatement(sql);
             try {
-              final ResultSet resultSet = JdbcQueryIterator.getResultSet(
-                metaData, statement, getQuery());
+              final ResultSet resultSet = JdbcQueryIterator.getResultSet(metaData, statement,
+                getQuery());
               try {
                 if (resultSet.next()) {
                   int i = 0;
                   do {
-                    final Record object = JdbcQueryIterator.getNextObject(
-                      dataStore, metaData, attributes, dataObjectFactory,
-                      resultSet);
+                    final Record object = JdbcQueryIterator.getNextObject(dataStore, metaData,
+                      attributes, dataObjectFactory, resultSet);
                     results.add(object);
                     i++;
                   } while (resultSet.next() && i < pageSize);
@@ -80,8 +78,7 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
               JdbcUtils.close(statement);
             }
           } catch (final SQLException e) {
-            JdbcUtils.getException(dataSource, connection, "updateResults",
-              sql, e);
+            JdbcUtils.getException(dataSource, connection, "updateResults", sql, e);
           } finally {
             if (dataSource != null) {
               JdbcUtils.release(connection, dataSource);

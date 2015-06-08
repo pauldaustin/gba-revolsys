@@ -10,11 +10,10 @@ import com.revolsys.parallel.process.InvokeMethodRunnable;
 public class InvokeMethodAfterCommit extends TransactionSynchronizationAdapter {
   private static final Logger LOG = LoggerFactory.getLogger(InvokeMethodAfterCommit.class);
 
-  public static <V> void invoke(final Object object, final String methodName,
-    final Object... args) {
+  public static <V> void invoke(final Object object, final String methodName, final Object... args) {
     if (object != null) {
-      final InvokeMethodAfterCommit synchronization = new InvokeMethodAfterCommit(
-        object, methodName, args);
+      final InvokeMethodAfterCommit synchronization = new InvokeMethodAfterCommit(object,
+        methodName, args);
       if (TransactionSynchronizationManager.isSynchronizationActive()) {
         TransactionSynchronizationManager.registerSynchronization(synchronization);
       } else {
@@ -27,25 +26,24 @@ public class InvokeMethodAfterCommit extends TransactionSynchronizationAdapter {
 
   public InvokeMethodAfterCommit(final Class<?> clazz, final String methodName,
     final Object... args) {
-    runnable = new InvokeMethodRunnable(clazz, methodName, args);
+    this.runnable = new InvokeMethodRunnable(clazz, methodName, args);
   }
 
-  public InvokeMethodAfterCommit(final Object object, final String methodName,
-    final Object... args) {
-    runnable = new InvokeMethodRunnable(object, methodName, args);
+  public InvokeMethodAfterCommit(final Object object, final String methodName, final Object... args) {
+    this.runnable = new InvokeMethodRunnable(object, methodName, args);
   }
 
   @Override
   public void afterCommit() {
     try {
-      runnable.run();
+      this.runnable.run();
     } catch (final Throwable e) {
-      LOG.error("Error invoking " + runnable, e);
+      LOG.error("Error invoking " + this.runnable, e);
     }
   }
 
   @Override
   public String toString() {
-    return runnable.toString();
+    return this.runnable.toString();
   }
 }

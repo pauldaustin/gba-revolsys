@@ -16,17 +16,16 @@ public class LineStringMitredBuffer implements LineSegmentVisitor {
    * @return the buffer
    */
   public Polygon getBuffer() {
-    return buffer;
+    return this.buffer;
   }
 
   @Override
   public boolean visit(final LineSegment segment) {
-    final Polygon segmentBuffer = JtsGeometryUtil.getMitredBuffer(segment,
-      distance);
-    if (buffer == null) {
-      buffer = segmentBuffer;
+    final Polygon segmentBuffer = JtsGeometryUtil.getMitredBuffer(segment, this.distance);
+    if (this.buffer == null) {
+      this.buffer = segmentBuffer;
     } else {
-      buffer = (Polygon)buffer.union(segmentBuffer);
+      this.buffer = (Polygon)this.buffer.union(segmentBuffer);
     }
     return true;
   }

@@ -14,8 +14,8 @@ public class LineSegmentMatch {
 
   private final List<LineSegment> segments = new ArrayList<LineSegment>();
 
-  public LineSegmentMatch(final GeometryFactory geometryFactory,
-    final Coordinates start, final Coordinates end) {
+  public LineSegmentMatch(final GeometryFactory geometryFactory, final Coordinates start,
+    final Coordinates end) {
     this(new LineSegment(geometryFactory, start, end));
   }
 
@@ -24,26 +24,26 @@ public class LineSegmentMatch {
   }
 
   public void addSegment(final LineSegment segment, final int index) {
-    while (index >= segments.size()) {
-      segments.add(null);
+    while (index >= this.segments.size()) {
+      this.segments.add(null);
     }
-    segments.set(index, segment);
+    this.segments.set(index, segment);
   }
 
   public Envelope getEnvelope() {
-    return segment.getEnvelope();
+    return this.segment.getEnvelope();
   }
 
   public LineString getLine() {
-    return segment.getLine();
+    return this.segment.getLine();
   }
 
   public int getMatchCount(final int index) {
-    if (segments.get(index) == null) {
+    if (this.segments.get(index) == null) {
       return 0;
     }
     int matchCount = 0;
-    for (final LineSegment segment : segments) {
+    for (final LineSegment segment : this.segments) {
       if (segment != null) {
         matchCount++;
       }
@@ -56,7 +56,7 @@ public class LineSegmentMatch {
    * @return the segment
    */
   public LineSegment getSegment() {
-    return segment;
+    return this.segment;
   }
 
   /**
@@ -64,32 +64,32 @@ public class LineSegmentMatch {
    * @return the segment
    */
   public LineSegment getSegment(final int index) {
-    return segments.get(index);
+    return this.segments.get(index);
   }
 
   /**
    * @return the segments
    */
   public int getSegmentCount() {
-    return segments.size();
+    return this.segments.size();
   }
 
   /**
    * @return the segments
    */
   public List<LineSegment> getSegments() {
-    return segments;
+    return this.segments;
   }
 
   public boolean hasMatches(final int index) {
-    if (index < segments.size()) {
-      final LineSegment segment = segments.get(index);
+    if (index < this.segments.size()) {
+      final LineSegment segment = this.segments.get(index);
       if (segment == null) {
         return false;
       }
-      for (int i = 0; i < segments.size(); i++) {
+      for (int i = 0; i < this.segments.size(); i++) {
         if (i != index) {
-          final LineSegment otherSegment = segments.get(i);
+          final LineSegment otherSegment = this.segments.get(i);
           if (otherSegment != null) {
             return true;
           }
@@ -100,9 +100,9 @@ public class LineSegmentMatch {
   }
 
   public boolean hasMatches(final int index1, final int index2) {
-    if (index1 < segments.size() && index2 < segments.size()) {
-      final LineSegment segment1 = segments.get(index1);
-      final LineSegment segment2 = segments.get(index2);
+    if (index1 < this.segments.size() && index2 < this.segments.size()) {
+      final LineSegment segment1 = this.segments.get(index1);
+      final LineSegment segment2 = this.segments.get(index2);
       return segment1 != null && segment2 != null;
     } else {
       return false;
@@ -110,9 +110,9 @@ public class LineSegmentMatch {
   }
 
   public boolean hasOtherSegment(final int index) {
-    for (int i = 0; i < segments.size(); i++) {
+    for (int i = 0; i < this.segments.size(); i++) {
       if (i != index) {
-        if (segments.get(i) != null) {
+        if (this.segments.get(i) != null) {
           return true;
         }
       }
@@ -121,17 +121,17 @@ public class LineSegmentMatch {
   }
 
   public boolean hasSegment(final int index) {
-    if (index < segments.size()) {
-      return segments.get(index) != null;
+    if (index < this.segments.size()) {
+      return this.segments.get(index) != null;
     } else {
       return false;
     }
   }
 
   public boolean isMatchedWithBase(final int index) {
-    if (segments.get(index) == null) {
+    if (this.segments.get(index) == null) {
       return false;
-    } else if (segments.get(0) == null) {
+    } else if (this.segments.get(0) == null) {
       return false;
     } else {
       return true;
@@ -139,11 +139,11 @@ public class LineSegmentMatch {
   }
 
   public void removeSegment(final int i) {
-    segments.set(i, null);
+    this.segments.set(i, null);
   }
 
   @Override
   public String toString() {
-    return segment.toString();
+    return this.segment.toString();
   }
 }

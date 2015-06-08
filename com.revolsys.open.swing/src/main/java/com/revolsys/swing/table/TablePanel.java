@@ -24,8 +24,7 @@ public class TablePanel extends JPanel implements MouseListener {
 
   private static Reference<JTable> eventTable = new WeakReference<JTable>(null);
 
-  private static Reference<MouseEvent> popupMouseEvent = new WeakReference<MouseEvent>(
-    null);
+  private static Reference<MouseEvent> popupMouseEvent = new WeakReference<MouseEvent>(null);
 
   private static final long serialVersionUID = 1L;
 
@@ -75,9 +74,9 @@ public class TablePanel extends JPanel implements MouseListener {
 
     add(this.toolBar, BorderLayout.NORTH);
 
-    scrollPane = new JScrollPane(table);
+    this.scrollPane = new JScrollPane(table);
     table.addMouseListener(this);
-    add(scrollPane, BorderLayout.CENTER);
+    add(this.scrollPane, BorderLayout.CENTER);
   }
 
   private void doMenu(final MouseEvent e) {
@@ -98,7 +97,7 @@ public class TablePanel extends JPanel implements MouseListener {
   }
 
   public JScrollPane getScrollPane() {
-    return scrollPane;
+    return this.scrollPane;
   }
 
   @SuppressWarnings("unchecked")
@@ -128,7 +127,7 @@ public class TablePanel extends JPanel implements MouseListener {
 
   @Override
   public void mouseClicked(final MouseEvent e) {
-    setEventRow(table, e);
+    setEventRow(this.table, e);
   }
 
   @Override

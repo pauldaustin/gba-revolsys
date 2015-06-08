@@ -41,65 +41,65 @@ public final class JsonWriter {
       final char c = string.charAt(i);
       switch (c) {
         case '"':
-          out.print("\\\"");
+          this.out.print("\\\"");
         break;
         case '\\':
-          out.print("\\\\");
+          this.out.print("\\\\");
         break;
         case '\b':
-          out.print("\\b");
+          this.out.print("\\b");
         break;
         case '\f':
-          out.print("\\f");
+          this.out.print("\\f");
         break;
         case '\n':
-          out.print("\\n");
+          this.out.print("\\n");
         break;
         case '\r':
-          out.print("\\r");
+          this.out.print("\\r");
         break;
         case '\t':
-          out.print("\\t");
+          this.out.print("\\t");
         break;
         default:
-          out.print(c);
+          this.out.print(c);
         break;
       }
     }
   }
 
   public void close() {
-    out.close();
+    this.out.close();
   }
 
   public void endAttribute() {
-    out.print(",");
+    this.out.print(",");
     newLine();
-    startAttribute = false;
+    this.startAttribute = false;
   }
 
   public void endList() {
-    depth--;
+    this.depth--;
     newLine();
     indent();
-    out.print("]");
+    this.out.print("]");
   }
 
   public void endObject() {
-    depth--;
+    this.depth--;
     newLine();
     indent();
-    out.print("}");
+    this.out.print("}");
   }
 
   public void flush() {
-    out.flush();
+    this.out.flush();
   }
 
   public void indent() {
-    if (indent) {
-      for (int i = 0; i < depth; i++) {
-        out.write("  ");
+    if (this.indent) {
+      for (int i = 0; i < this.depth; i++) {
+        this.out.write("  ");
       }
     }
   }
@@ -107,8 +107,8 @@ public final class JsonWriter {
   public void label(final String key) {
     indent();
     value(key);
-    out.print(": ");
-    startAttribute = true;
+    this.out.print(": ");
+    this.startAttribute = true;
   }
 
   public void list(final Object... values) {
@@ -116,17 +116,17 @@ public final class JsonWriter {
   }
 
   public void newLine() {
-    if (indent) {
-      out.print('\n');
+    if (this.indent) {
+      this.out.print('\n');
     }
   }
 
   public void print(final char value) {
-    out.print(value);
+    this.out.print(value);
   }
 
   public void print(final Object value) {
-    out.print(value);
+    this.out.print(value);
   }
 
   public void setIndent(final boolean indent) {
@@ -139,38 +139,38 @@ public final class JsonWriter {
   }
 
   public void startList(final boolean indent) {
-    if (indent && !startAttribute) {
+    if (indent && !this.startAttribute) {
       indent();
     }
-    out.print("[");
+    this.out.print("[");
     newLine();
-    depth++;
-    startAttribute = false;
+    this.depth++;
+    this.startAttribute = false;
   }
 
   public void startObject() {
-    if (!startAttribute) {
+    if (!this.startAttribute) {
       indent();
     }
-    out.print("{");
+    this.out.print("{");
     newLine();
-    depth++;
-    startAttribute = false;
+    this.depth++;
+    this.startAttribute = false;
   }
 
   @SuppressWarnings("unchecked")
   public void value(final Object value) {
     if (value == null) {
-      out.print("null");
+      this.out.print("null");
     } else if (value instanceof Boolean) {
-      out.print(value);
+      this.out.print(value);
     } else if (value instanceof Number) {
       final Number number = (Number)value;
       final double doubleValue = number.doubleValue();
       if (Double.isInfinite(doubleValue) || Double.isNaN(doubleValue)) {
-        out.print("null");
+        this.out.print("null");
       } else {
-        out.print(MathUtil.toString(doubleValue));
+        this.out.print(MathUtil.toString(doubleValue));
       }
     } else if (value instanceof Collection) {
       final Collection<? extends Object> list = (Collection<? extends Object>)value;
@@ -180,9 +180,9 @@ public final class JsonWriter {
       write(map);
     } else if (value instanceof CharSequence) {
       final CharSequence string = (CharSequence)value;
-      out.print('"');
+      this.out.print('"');
       charSequence(string);
-      out.print('"');
+      this.out.print('"');
     } else if (value.getClass().isArray()) {
       final List<? extends Object> list = CollectionUtil.arrayToList(value);
       write(list);

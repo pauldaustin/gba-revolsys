@@ -33,21 +33,18 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class SelectRecordsOverlay extends AbstractOverlay {
-  protected static final BasicStroke BOX_STROKE = new BasicStroke(2,
-    BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2, new float[] {
+  protected static final BasicStroke BOX_STROKE = new BasicStroke(2, BasicStroke.CAP_SQUARE,
+    BasicStroke.JOIN_MITER, 2, new float[] {
       6, 6
     }, 0f);
 
   private static final Color COLOR_BOX = WebColors.Green;
 
-  private static final Color COLOR_BOX_TRANSPARENT = ColorUtil.setAlpha(
-    COLOR_BOX, 127);
+  private static final Color COLOR_BOX_TRANSPARENT = ColorUtil.setAlpha(COLOR_BOX, 127);
 
-  private static final Cursor CURSOR_SELECT_BOX = Icons.getCursor(
-    "cursor_select_box", 9, 9);
+  private static final Cursor CURSOR_SELECT_BOX = Icons.getCursor("cursor_select_box", 9, 9);
 
-  private static final Cursor CURSOR_SELECT_BOX_ADD = Icons.getCursor(
-    "cursor_select_box_add", 9, 9);
+  private static final Cursor CURSOR_SELECT_BOX_ADD = Icons.getCursor("cursor_select_box_add", 9, 9);
 
   private static final Cursor CURSOR_SELECT_BOX_DELETE = Icons.getCursor(
     "cursor_select_box_delete", 9, 9);
@@ -83,8 +80,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
     overlay.redraw();
   }
 
-  private void addSelectedRecords(final LayerGroup group,
-    final BoundingBox boundingBox) {
+  private void addSelectedRecords(final LayerGroup group, final BoundingBox boundingBox) {
 
     final double scale = getViewport().getScale();
     final List<Layer> layers = group.getLayers();
@@ -102,8 +98,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
     }
   }
 
-  protected void doSelectRecords(final InputEvent event,
-    final BoundingBox boundingBox) {
+  protected void doSelectRecords(final InputEvent event, final BoundingBox boundingBox) {
     String methodName;
     if (SwingUtil.isShiftDown(event)) {
       methodName = "addSelectedRecords";
@@ -165,8 +160,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
       final int y = event.getY();
       final double[] location = getViewport().toModelCoordinates(x, y);
       final GeometryFactory geometryFactory = getViewportGeometryFactory();
-      BoundingBox boundingBox = new BoundingBox(geometryFactory, location[0],
-        location[1]);
+      BoundingBox boundingBox = new BoundingBox(geometryFactory, location[0], location[1]);
       final double modelUnitsPerViewUnit = getViewport().getModelUnitsPerViewUnit();
       boundingBox = boundingBox.expand(modelUnitsPerViewUnit * 5);
       doSelectRecords(event, boundingBox);
@@ -220,8 +214,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
     paintSelectBox(graphics);
   }
 
-  protected void paintHighlighted(final Graphics2D graphics2d,
-    final LayerGroup layerGroup) {
+  protected void paintHighlighted(final Graphics2D graphics2d, final LayerGroup layerGroup) {
     final Viewport2D viewport = getViewport();
     viewport.setProperty(TextStyleRenderer.DIRECT_DISPLAY, Boolean.TRUE);
     try {
@@ -236,10 +229,9 @@ public class SelectRecordsOverlay extends AbstractOverlay {
             if (record != null && dataObjectLayer.isVisible(record)) {
               final Geometry geometry = record.getGeometryValue();
               final AbstractDataObjectLayerRenderer layerRenderer = layer.getRenderer();
-              layerRenderer.renderSelectedRecord(viewport, graphics2d,
-                dataObjectLayer, record);
-              HIGHLIGHT_RENDERER.paintSelected(viewport,
-                viewportGeometryFactory, graphics2d, geometry);
+              layerRenderer.renderSelectedRecord(viewport, graphics2d, dataObjectLayer, record);
+              HIGHLIGHT_RENDERER.paintSelected(viewport, viewportGeometryFactory, graphics2d,
+                geometry);
             }
           }
         }
@@ -259,8 +251,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
     }
   }
 
-  protected void paintSelected(final Graphics2D graphics2d,
-    final LayerGroup layerGroup) {
+  protected void paintSelected(final Graphics2D graphics2d, final LayerGroup layerGroup) {
     final Viewport2D viewport = getViewport();
     viewport.setProperty(TextStyleRenderer.DIRECT_DISPLAY, Boolean.TRUE);
     try {
@@ -278,10 +269,10 @@ public class SelectRecordsOverlay extends AbstractOverlay {
                 if (!dataObjectLayer.isHighlighted(record)) {
                   if (!dataObjectLayer.isDeleted(record)) {
                     final Geometry geometry = record.getGeometryValue();
-                    layerRenderer.renderSelectedRecord(viewport, graphics2d,
-                      dataObjectLayer, record);
-                    SELECT_RENDERER.paintSelected(viewport,
-                      viewportGeometryFactory, graphics2d, geometry);
+                    layerRenderer.renderSelectedRecord(viewport, graphics2d, dataObjectLayer,
+                      record);
+                    SELECT_RENDERER.paintSelected(viewport, viewportGeometryFactory, graphics2d,
+                      geometry);
                   }
                 }
               }
@@ -322,10 +313,8 @@ public class SelectRecordsOverlay extends AbstractOverlay {
 
   public boolean selectBoxDrag(final MouseEvent event) {
     if (isOverlayAction(ACTION_SELECT_RECORDS)) {
-      final double width = Math.abs(event.getX()
-        - this.selectBoxFirstPoint.getX());
-      final double height = Math.abs(event.getY()
-        - this.selectBoxFirstPoint.getY());
+      final double width = Math.abs(event.getX() - this.selectBoxFirstPoint.getX());
+      final double height = Math.abs(event.getY() - this.selectBoxFirstPoint.getY());
       final java.awt.Point topLeft = new java.awt.Point(); // java.awt.Point
       if (this.selectBoxFirstPoint.getX() < event.getX()) {
         topLeft.setLocation(this.selectBoxFirstPoint.getX(), 0);
@@ -361,9 +350,8 @@ public class SelectRecordsOverlay extends AbstractOverlay {
         final Point bottomRight = getViewport().toModelPoint(maxX, maxY);
 
         final GeometryFactory geometryFactory = getMap().getGeometryFactory();
-        final BoundingBox boundingBox = new BoundingBox(geometryFactory,
-          topLeft.getX(), topLeft.getY(), bottomRight.getX(),
-          bottomRight.getY());
+        final BoundingBox boundingBox = new BoundingBox(geometryFactory, topLeft.getX(),
+          topLeft.getY(), bottomRight.getX(), bottomRight.getY());
 
         if (!boundingBox.isEmpty()) {
           doSelectRecords(event, boundingBox);
@@ -401,8 +389,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
     overlay.redraw();
   }
 
-  private void selectRecords(final LayerGroup group,
-    final BoundingBox boundingBox) {
+  private void selectRecords(final LayerGroup group, final BoundingBox boundingBox) {
 
     final double scale = getViewport().getScale();
     final List<Layer> layers = group.getLayers();
@@ -424,8 +411,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
 
   protected void setSelectCursor(final InputEvent event) {
     Cursor cursor = null;
-    if (SwingUtil.isControlOrMetaDown(event)
-      || isOverlayAction(ACTION_SELECT_RECORDS)) {
+    if (SwingUtil.isControlOrMetaDown(event) || isOverlayAction(ACTION_SELECT_RECORDS)) {
       if (SwingUtil.isShiftDown(event)) {
         cursor = CURSOR_SELECT_BOX_ADD;
       } else if (SwingUtil.isAltDown(event)) {
@@ -451,8 +437,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
     overlay.redraw();
   }
 
-  private void unSelectRecords(final LayerGroup group,
-    final BoundingBox boundingBox) {
+  private void unSelectRecords(final LayerGroup group, final BoundingBox boundingBox) {
 
     final double scale = getViewport().getScale();
     final List<Layer> layers = group.getLayers();

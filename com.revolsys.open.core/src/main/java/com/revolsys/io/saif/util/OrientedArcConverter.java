@@ -30,7 +30,7 @@ public class OrientedArcConverter extends ArcConverter {
     while (name != null) {
       if (name.equals("arc")) {
         final String objectName = iterator.nextObjectName();
-        final OsnConverter osnConverter = converters.getConverter(objectName);
+        final OsnConverter osnConverter = this.converters.getConverter(objectName);
         if (osnConverter == null) {
           iterator.throwParseError("No Geometry Converter for " + objectName);
         }
@@ -45,8 +45,7 @@ public class OrientedArcConverter extends ArcConverter {
   }
 
   @Override
-  public void write(final OsnSerializer serializer, final Object object)
-    throws IOException {
+  public void write(final OsnSerializer serializer, final Object object) throws IOException {
     if (object instanceof LineString) {
       final LineString lineString = (LineString)object;
       serializer.startObject(GEOMETRY_CLASS);

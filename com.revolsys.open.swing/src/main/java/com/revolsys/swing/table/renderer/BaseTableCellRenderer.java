@@ -11,7 +11,10 @@ import org.jdesktop.swingx.renderer.StringValue;
 
 public class BaseTableCellRenderer extends DefaultTableRenderer {
 
-  private int rowHeight;
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
   public BaseTableCellRenderer() {
     super();
@@ -25,13 +28,12 @@ public class BaseTableCellRenderer extends DefaultTableRenderer {
     super(converter);
   }
 
-  public BaseTableCellRenderer(final StringValue stringValue,
-    final IconValue iconValue) {
+  public BaseTableCellRenderer(final StringValue stringValue, final IconValue iconValue) {
     super(stringValue, iconValue);
   }
 
-  public BaseTableCellRenderer(final StringValue stringValue,
-    final IconValue iconValue, final int alignment) {
+  public BaseTableCellRenderer(final StringValue stringValue, final IconValue iconValue,
+    final int alignment) {
     super(stringValue, iconValue, alignment);
   }
 
@@ -40,11 +42,10 @@ public class BaseTableCellRenderer extends DefaultTableRenderer {
   }
 
   @Override
-  public Component getTableCellRendererComponent(final JTable table,
-    final Object value, final boolean isSelected, final boolean hasFocus,
-    final int row, final int columnIndex) {
-    final Component component = super.getTableCellRendererComponent(table,
-      value, isSelected, hasFocus, row, columnIndex);
+  public Component getTableCellRendererComponent(final JTable table, final Object value,
+    final boolean isSelected, final boolean hasFocus, final int row, final int columnIndex) {
+    final Component component = super.getTableCellRendererComponent(table, value, isSelected,
+      hasFocus, row, columnIndex);
     return component;
   }
 }

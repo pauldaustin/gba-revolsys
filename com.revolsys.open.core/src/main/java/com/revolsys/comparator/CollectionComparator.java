@@ -9,7 +9,7 @@ import java.util.Iterator;
  * first compare that is not 0 will cause the method to return. If all values
  * are the same then the shortest collection will be less than a longer
  * collection.
- * 
+ *
  * @param <T>
  */
 public class CollectionComparator<T extends Comparable<T>> implements

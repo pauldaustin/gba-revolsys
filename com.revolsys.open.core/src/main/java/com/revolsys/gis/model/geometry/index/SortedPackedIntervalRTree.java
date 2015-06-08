@@ -37,22 +37,20 @@ import java.util.Collections;
 import java.util.List;
 
 import com.revolsys.collection.Visitor;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.io.WKTWriter;
 
 /**
  * A static index on a set of 1-dimensional intervals,
  * using an R-Tree packed based on the order of the interval midpoints.
  * It supports range searching,
  * where the range is an interval of the real line (which may be a single point).
- * A common use is to index 1-dimensional intervals which 
+ * A common use is to index 1-dimensional intervals which
  * are the projection of 2-D objects onto an axis of the coordinate system.
  * <p>
- * This index structure is <i>static</i> 
+ * This index structure is <i>static</i>
  * - items cannot be added or removed once the first query has been made.
- * The advantage of this characteristic is that the index performance 
+ * The advantage of this characteristic is that the index performance
  * can be optimized based on a fixed set of items.
- * 
+ *
  * @author Martin Davis
  */
 public class SortedPackedIntervalRTree<V> {
@@ -68,17 +66,15 @@ public class SortedPackedIntervalRTree<V> {
 
   private void buildLevel(final List<IntervalRTreeNode<V>> src,
     final List<IntervalRTreeNode<V>> dest) {
-    level++;
+    this.level++;
     dest.clear();
     for (int i = 0; i < src.size(); i += 2) {
       final IntervalRTreeNode<V> n1 = src.get(i);
-      final IntervalRTreeNode<V> n2 = (i + 1 < src.size()) ? (IntervalRTreeNode<V>)src.get(i)
-        : null;
+      final IntervalRTreeNode<V> n2 = i + 1 < src.size() ? (IntervalRTreeNode<V>)src.get(i) : null;
       if (n2 == null) {
         dest.add(n1);
       } else {
-        final IntervalRTreeNode<V> node = new IntervalRTreeBranchNode<V>(
-          src.get(i), src.get(i + 1));
+        final IntervalRTreeNode<V> node = new IntervalRTreeBranchNode<V>(src.get(i), src.get(i + 1));
         // printNode(node);
         // System.out.println(node);
         dest.add(node);
@@ -88,10 +84,10 @@ public class SortedPackedIntervalRTree<V> {
 
   private IntervalRTreeNode<V> buildTree() {
     // sort the leaf nodes
-    Collections.sort(leaves, new NodeComparator<V>());
+    Collections.sort(this.leaves, new NodeComparator<V>());
 
     // now group nodes into blocks of two and build tree up recursively
-    List<IntervalRTreeNode<V>> src = leaves;
+    List<IntervalRTreeNode<V>> src = this.leaves;
     List<IntervalRTreeNode<V>> temp = null;
     List<IntervalRTreeNode<V>> dest = new ArrayList<>();
 
@@ -108,38 +104,32 @@ public class SortedPackedIntervalRTree<V> {
   }
 
   private void init() {
-    if (root != null) {
+    if (this.root != null) {
       return;
     }
-    root = buildTree();
+    this.root = buildTree();
   }
 
   /**
    * Adds an item to the index which is associated with the given interval
-   * 
+   *
    * @param min the lower bound of the item interval
    * @param max the upper bound of the item interval
    * @param item the item to insert
-   * 
+   *
    * @throws IllegalStateException if the index has already been queried
    */
   public void insert(final double min, final double max, final Object item) {
-    if (root != null) {
-      throw new IllegalStateException(
-        "Index cannot be added to once it has been queried");
+    if (this.root != null) {
+      throw new IllegalStateException("Index cannot be added to once it has been queried");
     }
-    leaves.add(new IntervalRTreeLeafNode(min, max, item));
-  }
-
-  private void printNode(final IntervalRTreeNode node) {
-    System.out.println(WKTWriter.toLineString(new Coordinate(node.getMin(), level),
-      new Coordinate(node.getMax(), level)));
+    this.leaves.add(new IntervalRTreeLeafNode(min, max, item));
   }
 
   /**
    * Search for intervals in the index which intersect the given closed interval
    * and apply the visitor to them.
-   * 
+   *
    * @param min the lower bound of the query interval
    * @param max the upper bound of the query interval
    * @param visitor the visitor to pass any matched items to
@@ -147,7 +137,7 @@ public class SortedPackedIntervalRTree<V> {
   public void query(final double min, final double max, final Visitor<V> visitor) {
     init();
 
-    root.query(min, max, visitor);
+    this.root.query(min, max, visitor);
   }
 
 }

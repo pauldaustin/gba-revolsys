@@ -3,12 +3,12 @@ package com.revolsys.io.moep;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.io.AbstractObjectWithProperties;
 
-public class MoepDataObjectMetaDataFactory extends AbstractObjectWithProperties
-  implements RecordDefinitionFactory {
+public class MoepDataObjectMetaDataFactory extends AbstractObjectWithProperties implements
+  RecordDefinitionFactory {
   private static final Map<String, RecordDefinition> META_DATA_CACHE = new HashMap<String, RecordDefinition>();
 
   @Override

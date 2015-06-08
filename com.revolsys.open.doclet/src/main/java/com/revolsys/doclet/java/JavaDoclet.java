@@ -25,8 +25,7 @@ import com.sun.javadoc.Tag;
 import com.sun.javadoc.Type;
 
 public class JavaDoclet {
-  public static void documentationClass(final XmlWriter writer,
-    final ClassDoc classDoc) {
+  public static void documentationClass(final XmlWriter writer, final ClassDoc classDoc) {
     writer.startTag(HtmlUtil.DIV);
     writer.attribute(HtmlUtil.ATTR_CLASS, "javaClass");
     final String name = classDoc.name();
@@ -56,8 +55,7 @@ public class JavaDoclet {
     writer.endTagLn(HtmlUtil.DIV);
   }
 
-  public static void documentationMethod(final XmlWriter writer,
-    final ExecutableMemberDoc member) {
+  public static void documentationMethod(final XmlWriter writer, final ExecutableMemberDoc member) {
     writer.startTag(HtmlUtil.DIV);
     writer.attribute(HtmlUtil.ATTR_CLASS, "javaMethod");
 
@@ -81,8 +79,7 @@ public class JavaDoclet {
     writer.endTagLn(HtmlUtil.DIV);
   }
 
-  public static void documentationPackage(final XmlWriter writer,
-    final PackageDoc packageDoc) {
+  public static void documentationPackage(final XmlWriter writer, final PackageDoc packageDoc) {
     final String name = packageDoc.name();
     writer.startTag(HtmlUtil.A);
     writer.attribute(HtmlUtil.ATTR_NAME, name);
@@ -139,8 +136,7 @@ public class JavaDoclet {
     return LanguageVersion.JAVA_1_5;
   }
 
-  public static void methodSignature(final XmlWriter writer,
-    final ExecutableMemberDoc member) {
+  public static void methodSignature(final XmlWriter writer, final ExecutableMemberDoc member) {
     writer.startTag(HtmlUtil.A);
     final String anchor = getAnchor(member);
     writer.attribute(HtmlUtil.ATTR_NAME, anchor);
@@ -181,16 +177,14 @@ public class JavaDoclet {
 
   public static int optionLength(String optionName) {
     optionName = optionName.toLowerCase();
-    if (optionName.equals("-d") || optionName.equals("-doctitle")
-      || optionName.equals("-docid") || optionName.equals("-htmlfooter")
-      || optionName.equals("-htmlheader")) {
+    if (optionName.equals("-d") || optionName.equals("-doctitle") || optionName.equals("-docid")
+      || optionName.equals("-htmlfooter") || optionName.equals("-htmlheader")) {
       return 2;
     }
     return -1;
   }
 
-  public static void parameters(final XmlWriter writer,
-    final ExecutableMemberDoc method) {
+  public static void parameters(final XmlWriter writer, final ExecutableMemberDoc method) {
     final List<Parameter> parameters = new ArrayList<Parameter>();
     for (final Parameter parameter : method.parameters()) {
       parameters.add(parameter);
@@ -256,12 +250,10 @@ public class JavaDoclet {
           file.mkdirs();
         }
         if (!file.isDirectory()) {
-          docerrorreporter.printError("Destination not a directory"
-            + file.getPath());
+          docerrorreporter.printError("Destination not a directory" + file.getPath());
           return false;
         } else if (!file.canWrite()) {
-          docerrorreporter.printError("Destination directory not writable "
-            + file.getPath());
+          docerrorreporter.printError("Destination directory not writable " + file.getPath());
           return false;
         }
       } else if (argName.equals("-htmlheader")) {
@@ -299,70 +291,65 @@ public class JavaDoclet {
   }
 
   public void bodyContent() {
-    writer.element(HtmlUtil.H1, docTitle);
-    DocletUtil.description(writer, null, root);
+    this.writer.element(HtmlUtil.H1, this.docTitle);
+    DocletUtil.description(this.writer, null, this.root);
     documentation();
   }
 
   public void documentation() {
-    writer.startTag(HtmlUtil.DIV);
-    for (final PackageDoc packageDoc : root.specifiedPackages()) {
-      documentationPackage(writer, packageDoc);
+    this.writer.startTag(HtmlUtil.DIV);
+    for (final PackageDoc packageDoc : this.root.specifiedPackages()) {
+      documentationPackage(this.writer, packageDoc);
     }
 
-    writer.endTagLn(HtmlUtil.DIV);
+    this.writer.endTagLn(HtmlUtil.DIV);
   }
 
   public void head() {
-    writer.startTag(HtmlUtil.HEAD);
-    writer.element(HtmlUtil.TITLE, docTitle);
-    HtmlUtil.serializeCss(
-      writer,
+    this.writer.startTag(HtmlUtil.HEAD);
+    this.writer.element(HtmlUtil.TITLE, this.docTitle);
+    HtmlUtil.serializeCss(this.writer,
       "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css");
-    HtmlUtil.serializeCss(
-      writer,
+    HtmlUtil.serializeCss(this.writer,
       "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css");
-    HtmlUtil.serializeCss(writer, "javadoc.css");
-    HtmlUtil.serializeScriptLink(writer,
+    HtmlUtil.serializeCss(this.writer, "javadoc.css");
+    HtmlUtil.serializeScriptLink(this.writer,
       "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js");
-    HtmlUtil.serializeScriptLink(writer,
+    HtmlUtil.serializeScriptLink(this.writer,
       "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js");
-    HtmlUtil.serializeScriptLink(
-      writer,
+    HtmlUtil.serializeScriptLink(this.writer,
       "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js");
-    HtmlUtil.serializeScriptLink(writer, "javadoc.js");
-    writer.endTagLn(HtmlUtil.HEAD);
+    HtmlUtil.serializeScriptLink(this.writer, "javadoc.js");
+    this.writer.endTagLn(HtmlUtil.HEAD);
   }
 
   private void setOptions(final String[][] options) {
     for (final String[] option : options) {
       final String optionName = option[0];
       if (optionName.equals("-d")) {
-        destDir = option[1];
+        this.destDir = option[1];
 
       } else if (optionName.equals("-doctitle")) {
-        docTitle = option[1];
+        this.docTitle = option[1];
       } else if (optionName.equals("-docid")) {
-        docId = option[1];
+        this.docId = option[1];
       } else if (optionName.equals("-htmlheader")) {
-        header = FileUtil.getFileAsString(option[1]);
+        this.header = FileUtil.getFileAsString(option[1]);
       } else if (optionName.equals("-htmlfooter")) {
-        footer = FileUtil.getFileAsString(option[1]);
+        this.footer = FileUtil.getFileAsString(option[1]);
       }
     }
     try {
-      final File dir = new File(destDir);
+      final File dir = new File(this.destDir);
       final File indexFile = new File(dir, "index.html");
       final FileWriter out = new FileWriter(indexFile);
-      writer = new XmlWriter(out, false);
-      writer.setIndent(false);
-      writer.setWriteNewLine(false);
-      FileUtil.copy(
-        getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.css"),
-        new File(destDir, "javadoc.css"));
-      FileUtil.copy(
-        getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.js"),
-        new File(destDir, "javadoc.js"));
+      this.writer = new XmlWriter(out, false);
+      this.writer.setIndent(false);
+      this.writer.setWriteNewLine(false);
+      FileUtil.copy(getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.css"), new File(
+        this.destDir, "javadoc.css"));
+      FileUtil.copy(getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.js"), new File(
+        this.destDir, "javadoc.js"));
     } catch (final IOException e) {
       throw new IllegalArgumentException(e.fillInStackTrace().getMessage(), e);
     }
@@ -370,37 +357,37 @@ public class JavaDoclet {
 
   private void start() {
     try {
-      setOptions(root.options());
+      setOptions(this.root.options());
 
-      if (header == null) {
-        writer.startDocument("UTF-8", "1.0");
-        writer.docType("html", null);
-        writer.startTag(HtmlUtil.HTML);
-        writer.attribute(HtmlUtil.ATTR_LANG, "en");
+      if (this.header == null) {
+        this.writer.startDocument("UTF-8", "1.0");
+        this.writer.docType("html", null);
+        this.writer.startTag(HtmlUtil.HTML);
+        this.writer.attribute(HtmlUtil.ATTR_LANG, "en");
 
         head();
-        writer.startTag(HtmlUtil.BODY);
+        this.writer.startTag(HtmlUtil.BODY);
       } else {
-        header = header.replaceAll("\\$\\{docTitle\\}", docTitle);
-        header = header.replaceAll("\\$\\{docId\\}", docId);
-        writer.write(header);
+        this.header = this.header.replaceAll("\\$\\{docTitle\\}", this.docTitle);
+        this.header = this.header.replaceAll("\\$\\{docId\\}", this.docId);
+        this.writer.write(this.header);
       }
 
       bodyContent();
 
-      if (footer == null) {
-        writer.endTagLn(HtmlUtil.BODY);
+      if (this.footer == null) {
+        this.writer.endTagLn(HtmlUtil.BODY);
 
-        writer.endTagLn(HtmlUtil.HTML);
+        this.writer.endTagLn(HtmlUtil.HTML);
       } else {
-        footer = footer.replaceAll("\\$\\{docTitle\\}", docTitle);
-        footer = footer.replaceAll("\\$\\{docId\\}", docId);
-        writer.write(footer);
+        this.footer = this.footer.replaceAll("\\$\\{docTitle\\}", this.docTitle);
+        this.footer = this.footer.replaceAll("\\$\\{docId\\}", this.docId);
+        this.writer.write(this.footer);
       }
-      writer.endDocument();
+      this.writer.endDocument();
     } finally {
-      if (writer != null) {
-        writer.close();
+      if (this.writer != null) {
+        this.writer.close();
       }
     }
   }

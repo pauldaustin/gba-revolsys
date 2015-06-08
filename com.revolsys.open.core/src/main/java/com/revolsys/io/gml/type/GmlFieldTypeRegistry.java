@@ -35,7 +35,7 @@ public class GmlFieldTypeRegistry {
   }
 
   public void addFieldType(final DataType dataType, final GmlFieldType fieldType) {
-    typeMapping.put(dataType, fieldType);
+    this.typeMapping.put(dataType, fieldType);
   }
 
   public void addFieldType(final GmlFieldType fieldType) {
@@ -44,6 +44,6 @@ public class GmlFieldTypeRegistry {
   }
 
   public GmlFieldType getFieldType(final DataType dataType) {
-    return typeMapping.get(dataType);
+    return this.typeMapping.get(dataType);
   }
 }

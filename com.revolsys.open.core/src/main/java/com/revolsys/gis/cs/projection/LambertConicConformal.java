@@ -42,7 +42,7 @@ public class LambertConicConformal implements CoordinatesProjection {
     this.lambda0 = Math.toRadians(centralMeridian);
     this.a = spheroid.getSemiMajorAxis();
     this.e = spheroid.getEccentricity();
-    this.ee = e * e;
+    this.ee = this.e * this.e;
 
     final double phi0 = Math.toRadians(latitudeOfProjection);
     final double phi1 = Math.toRadians(firstStandardParallel);
@@ -58,39 +58,39 @@ public class LambertConicConformal implements CoordinatesProjection {
     final double logT1 = Math.log(t1);
     final double logT2 = Math.log(t2);
     this.n = (logM1 - logM2) / (logT1 - logT2);
-    this.f = m1 / (n * Math.pow(t1, n));
-    this.rho0 = a * f * Math.pow(t0, n);
+    this.f = m1 / (this.n * Math.pow(t1, this.n));
+    this.rho0 = this.a * this.f * Math.pow(t0, this.n);
   }
 
   @Override
   public void inverse(final Coordinates from, final Coordinates to) {
-    double x = from.getX() - x0;
-    double y = from.getY() - y0;
+    double x = from.getX() - this.x0;
+    double y = from.getY() - this.y0;
 
     double rho0 = this.rho0;
-    if (n < 0) {
+    if (this.n < 0) {
       rho0 = -rho0;
       x = -x;
       y = -y;
     }
     final double theta = Math.atan(x / (rho0 - y));
     double rho = Math.sqrt(x * x + Math.pow(rho0 - y, 2));
-    if (n < 0) {
+    if (this.n < 0) {
       rho = -rho;
     }
-    final double t = Math.pow(rho / (a * f), 1 / n);
+    final double t = Math.pow(rho / (this.a * this.f), 1 / this.n);
     double phi = Angle.PI_OVER_2 - 2 * Math.atan(t);
     double delta = 10e010;
     do {
 
       final double sinPhi = Math.sin(phi);
-      final double eSinPhi = e * sinPhi;
+      final double eSinPhi = this.e * sinPhi;
       final double phi1 = Angle.PI_OVER_2 - 2
-        * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), e / 2));
+        * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.e / 2));
       delta = Math.abs(phi1 - phi);
       phi = phi1;
     } while (!Double.isNaN(phi) && delta > 1.0e-011);
-    final double lambda = theta / n + lambda0;
+    final double lambda = theta / this.n + this.lambda0;
 
     to.setValue(0, lambda);
     to.setValue(1, phi);
@@ -102,7 +102,7 @@ public class LambertConicConformal implements CoordinatesProjection {
 
   private double m(final double phi) {
     final double sinPhi = Math.sin(phi);
-    return Math.cos(phi) / Math.sqrt(1 - ee * sinPhi * sinPhi);
+    return Math.cos(phi) / Math.sqrt(1 - this.ee * sinPhi * sinPhi);
   }
 
   @Override
@@ -111,11 +111,11 @@ public class LambertConicConformal implements CoordinatesProjection {
     final double phi = from.getY();
 
     final double t = t(phi);
-    final double rho = a * f * Math.pow(t, n);
+    final double rho = this.a * this.f * Math.pow(t, this.n);
 
-    final double theta = n * (lambda - lambda0);
-    final double x = x0 + rho * Math.sin(theta);
-    final double y = y0 + rho0 - rho * Math.cos(theta);
+    final double theta = this.n * (lambda - this.lambda0);
+    final double x = this.x0 + rho * Math.sin(theta);
+    final double y = this.y0 + this.rho0 - rho * Math.cos(theta);
 
     to.setValue(0, x);
     to.setValue(1, y);
@@ -127,10 +127,10 @@ public class LambertConicConformal implements CoordinatesProjection {
 
   private double t(final double phi) {
     final double sinPhi = Math.sin(phi);
-    final double eSinPhi = e * sinPhi;
+    final double eSinPhi = this.e * sinPhi;
 
     final double t = Math.tan(Angle.PI_OVER_4 - phi / 2)
-      / Math.pow(((1 - eSinPhi) / (1 + eSinPhi)), e / 2);
+      / Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.e / 2);
     return t;
   }
 }

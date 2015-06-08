@@ -9,8 +9,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.spring.SpringUtil;
@@ -84,8 +84,7 @@ public class MapObjectFactoryRegistry {
     JsonMapIoFactory.write(properties, file, true);
   }
 
-  public static void write(final Resource resource,
-    final MapSerializer serializer) {
+  public static void write(final Resource resource, final MapSerializer serializer) {
     final Map<String, Object> properties = serializer.toMap();
     JsonMapIoFactory.write(properties, resource, true);
   }

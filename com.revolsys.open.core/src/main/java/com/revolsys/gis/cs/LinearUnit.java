@@ -9,14 +9,14 @@ import javax.measure.unit.Unit;
 
 public class LinearUnit implements Serializable {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 4000991484199279234L;
 
   /**
    * Get the linear unit representing the conversion factor from
    * {@link SI#METER}.
-   * 
+   *
    * @param conversionFactor The conversion factor.
    * @return The linear unit.
    */
@@ -27,7 +27,7 @@ public class LinearUnit implements Serializable {
   /**
    * Get the linear unit representing the conversion factor from the specified
    * base linear unit.
-   * 
+   *
    * @param baseUnit The base unit.
    * @param conversionFactor The conversion factor.
    * @return The linear unit.
@@ -35,8 +35,7 @@ public class LinearUnit implements Serializable {
   @SuppressWarnings({
     "rawtypes", "unchecked"
   })
-  public static Unit<Length> getUnit(final Unit<Length> baseUnit,
-    final double conversionFactor) {
+  public static Unit<Length> getUnit(final Unit<Length> baseUnit, final double conversionFactor) {
     Unit<Length> unit;
     if (baseUnit == null) {
       unit = SI.METRE;
@@ -73,19 +72,17 @@ public class LinearUnit implements Serializable {
 
   private Unit<Length> unit;
 
-  public LinearUnit(final String name, final double conversionFactor,
-    final Authority authority) {
+  public LinearUnit(final String name, final double conversionFactor, final Authority authority) {
     this(name, null, conversionFactor, authority, false);
   }
 
-  public LinearUnit(final String name, final LinearUnit baseUnit,
-    final double conversionFactor, final Authority authority) {
+  public LinearUnit(final String name, final LinearUnit baseUnit, final double conversionFactor,
+    final Authority authority) {
     this(name, baseUnit, conversionFactor, authority, false);
   }
 
-  public LinearUnit(final String name, final LinearUnit baseUnit,
-    final double conversionFactor, final Authority authority,
-    final boolean deprecated) {
+  public LinearUnit(final String name, final LinearUnit baseUnit, final double conversionFactor,
+    final Authority authority, final boolean deprecated) {
     this.name = name;
     this.baseUnit = baseUnit;
     this.conversionFactor = conversionFactor;
@@ -106,9 +103,9 @@ public class LinearUnit implements Serializable {
       return true;
     } else if (object instanceof LinearUnit) {
       final LinearUnit unit = (LinearUnit)object;
-      if (name == null && unit.name != null || !name.equals(unit.name)) {
+      if (this.name == null && unit.name != null || !this.name.equals(unit.name)) {
         return false;
-      } else if (Math.abs(conversionFactor - unit.conversionFactor) > 1.0e-10) {
+      } else if (Math.abs(this.conversionFactor - unit.conversionFactor) > 1.0e-10) {
         return false;
       } else {
         return true;
@@ -119,41 +116,41 @@ public class LinearUnit implements Serializable {
   }
 
   public Authority getAuthority() {
-    return authority;
+    return this.authority;
   }
 
   public LinearUnit getBaseUnit() {
-    return baseUnit;
+    return this.baseUnit;
   }
 
   public double getConversionFactor() {
-    return conversionFactor;
+    return this.conversionFactor;
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public Unit<Length> getUnit() {
-    return unit;
+    return this.unit;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + name.hashCode();
-    final long temp = Double.doubleToLongBits(conversionFactor);
-    result = prime * result + (int)(temp ^ (temp >>> 32));
+    result = prime * result + this.name.hashCode();
+    final long temp = Double.doubleToLongBits(this.conversionFactor);
+    result = prime * result + (int)(temp ^ temp >>> 32);
     return result;
   }
 
   public boolean isDeprecated() {
-    return deprecated;
+    return this.deprecated;
   }
 
   @Override
   public String toString() {
-    return name;
+    return this.name;
   }
 }

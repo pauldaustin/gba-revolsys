@@ -28,7 +28,7 @@ public class EdgeAttributeValueComparator<T> implements Comparator<Edge<T>> {
     } else if (edge2.isRemoved()) {
       return -11;
     } else {
-      for (final String attributeName : attributeNames) {
+      for (final String attributeName : this.attributeNames) {
         final Object object1 = edge1.getAttribute(attributeName);
 
         final Object object2 = edge2.getAttribute(attributeName);
@@ -45,8 +45,7 @@ public class EdgeAttributeValueComparator<T> implements Comparator<Edge<T>> {
             compare = comparable1.compareTo(object2);
           } else if (object1 instanceof Collection) {
             final Collection collection1 = (Collection)object1;
-            compare = new CollectionComparator().compare(collection1,
-              (Collection)object2);
+            compare = new CollectionComparator().compare(collection1, (Collection)object2);
 
           }
           if (compare != 0) {

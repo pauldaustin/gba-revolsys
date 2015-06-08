@@ -2,8 +2,7 @@ package com.revolsys.converter.string;
 
 import org.springframework.util.StringUtils;
 
-public class DoubleStringConverter extends
-  AbstractNumberStringConverter<Double> {
+public class DoubleStringConverter extends AbstractNumberStringConverter<Double> {
   public DoubleStringConverter() {
     super();
   }

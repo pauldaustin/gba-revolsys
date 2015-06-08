@@ -11,8 +11,7 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
-public class ListDataObjectReader extends AbstractReader<Record> implements
-  RecordReader {
+public class ListDataObjectReader extends AbstractReader<Record> implements RecordReader {
   private RecordDefinition metaData;
 
   private List<Record> objects = new ArrayList<Record>();
@@ -23,25 +22,24 @@ public class ListDataObjectReader extends AbstractReader<Record> implements
     this.objects = new ArrayList<Record>(objects);
   }
 
-  public ListDataObjectReader(final RecordDefinition metaData,
-    final Record... objects) {
+  public ListDataObjectReader(final RecordDefinition metaData, final Record... objects) {
     this(metaData, Arrays.asList(objects));
   }
 
   @Override
   public void close() {
-    metaData = null;
-    objects = null;
+    this.metaData = null;
+    this.objects = null;
   }
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return metaData;
+    return this.metaData;
   }
 
   @Override
   public Iterator<Record> iterator() {
-    return objects.iterator();
+    return this.objects.iterator();
   }
 
   @Override

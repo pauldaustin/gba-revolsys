@@ -76,8 +76,8 @@ public class StringTemplate implements Serializable {
   }
 
   public String expand(Map<String, ?> uriVariables) {
-    if (variableNames == null) {
-      return template;
+    if (this.variableNames == null) {
+      return this.template;
     } else {
       if (uriVariables == null) {
         uriVariables = Collections.emptyMap();
@@ -115,12 +115,12 @@ public class StringTemplate implements Serializable {
   }
 
   public List<String> getVariableNames() {
-    return variableNames;
+    return this.variableNames;
   }
 
   @Override
   public String toString() {
-    return template;
+    return this.template;
   }
 
 }

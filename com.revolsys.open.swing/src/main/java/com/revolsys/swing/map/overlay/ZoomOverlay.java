@@ -34,6 +34,17 @@ public class ZoomOverlay extends AbstractOverlay {
 
   private static final Color TRANS_BG = new Color(0, 0, 0, 30);
 
+  static {
+    PreferencesDialog.get().addPreference("Zoom", "com.revolsys.gis", "/com/revolsys/gis/zoom",
+      "wheelForwardsZoomIn", Boolean.class, true);
+  }
+
+  private static final Cursor CURSOR_ZOOM_BOX = Icons.getCursor("cursor_zoom_box", 9, 9);
+
+  private static final String ACTION_ZOOM_BOX = "zoomBox";
+
+  private static final String ACTION_PAN = "pan";
+
   private java.awt.Point zoomBoxFirstPoint;
 
   private java.awt.Point panFirstPoint;
@@ -44,19 +55,7 @@ public class ZoomOverlay extends AbstractOverlay {
 
   private BufferedImage panImage;
 
-  static {
-    PreferencesDialog.get().addPreference("Zoom", "com.revolsys.gis",
-      "/com/revolsys/gis/zoom", "wheelForwardsZoomIn", Boolean.class, true);
-  }
-
-  private static final Cursor CURSOR_ZOOM_BOX = Icons.getCursor(
-    "cursor_zoom_box", 9, 9);
-
   private int panModifiers;
-
-  private static final String ACTION_ZOOM_BOX = "zoomBox";
-
-  private static final String ACTION_PAN = "pan";
 
   public ZoomOverlay(final MapPanel map) {
     super(map);
@@ -69,7 +68,7 @@ public class ZoomOverlay extends AbstractOverlay {
   }
 
   protected boolean isZoomBox() {
-    return zoomBoxFirstPoint != null;
+    return this.zoomBoxFirstPoint != null;
   }
 
   @Override
@@ -110,8 +109,7 @@ public class ZoomOverlay extends AbstractOverlay {
         int numSteps = 0;
         if (SwingUtilities.isLeftMouseButton(event)) {
           numSteps = -1;
-        } else if (SwingUtilities.isRightMouseButton(event)
-          && !SwingUtil.isControlDown(event)) {
+        } else if (SwingUtilities.isRightMouseButton(event) && !SwingUtil.isControlDown(event)) {
           numSteps = 1;
         }
         if (numSteps != 0) {
@@ -148,7 +146,7 @@ public class ZoomOverlay extends AbstractOverlay {
       setMapCursor(CURSOR_ZOOM_BOX);
       event.consume();
     }
-    panning = false;
+    this.panning = false;
   }
 
   @Override
@@ -192,8 +190,8 @@ public class ZoomOverlay extends AbstractOverlay {
     if (this.zoomBox != null) {
       final Graphics2D g = (Graphics2D)graphics;
       g.setColor(Color.DARK_GRAY);
-      g.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE,
-        BasicStroke.JOIN_MITER, 2, new float[] {
+      g.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2,
+        new float[] {
           6, 6
         }, 0f));
       g.draw(this.zoomBox);
@@ -221,8 +219,8 @@ public class ZoomOverlay extends AbstractOverlay {
   }
 
   public boolean panFinish(final MouseEvent event) {
-    if (event.getModifiers() == panModifiers) {
-      if (clearOverlayAction(ACTION_PAN) && panning) {
+    if (event.getModifiers() == this.panModifiers) {
+      if (clearOverlayAction(ACTION_PAN) && this.panning) {
         final java.awt.Point point = event.getPoint();
         final Point fromPoint = getViewport().toModelPoint(this.panFirstPoint);
         final Point toPoint = getViewport().toModelPoint(point);
@@ -236,7 +234,7 @@ public class ZoomOverlay extends AbstractOverlay {
 
         this.panFirstPoint = null;
         this.panning = false;
-        panModifiers = 0;
+        this.panModifiers = 0;
         clearMapCursor(CURSOR_PAN);
         this.panImage = null;
         getParent().repaint();
@@ -249,17 +247,16 @@ public class ZoomOverlay extends AbstractOverlay {
 
   public boolean panStart(final MouseEvent event) {
     if ((SwingUtilities.isLeftMouseButton(event) || SwingUtilities.isMiddleMouseButton(event))
-      && !(SwingUtil.isModifierKeyDown(event))) {
+      && !SwingUtil.isModifierKeyDown(event)) {
       if (setOverlayAction(ACTION_PAN)) {
         setMapCursor(CURSOR_ZOOM_BOX);
-        panModifiers = event.getModifiers();
+        this.panModifiers = event.getModifiers();
 
         final int width = getViewport().getViewWidthPixels();
         final int height = getViewport().getViewHeightPixels();
         if (width > 0 && height > 0) {
           final JComponent parent = (JComponent)getParent();
-          this.panImage = new BufferedImage(width, height,
-            BufferedImage.TYPE_INT_RGB);
+          this.panImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
           final Graphics2D graphics = (Graphics2D)this.panImage.getGraphics();
           final Insets insets = parent.getInsets();
           graphics.translate(-insets.left, -insets.top);
@@ -279,9 +276,8 @@ public class ZoomOverlay extends AbstractOverlay {
   }
 
   public void setZoomBoxCursor(final InputEvent event) {
-    if (isOverlayAction(ACTION_ZOOM_BOX)
-      || (!hasOverlayAction() && SwingUtil.isShiftDown(event)
-        && !SwingUtil.isAltDown(event) && !SwingUtil.isControlOrMetaDown(event))) {
+    if (isOverlayAction(ACTION_ZOOM_BOX) || !hasOverlayAction() && SwingUtil.isShiftDown(event)
+      && !SwingUtil.isAltDown(event) && !SwingUtil.isControlOrMetaDown(event)) {
       setMapCursor(CURSOR_ZOOM_BOX);
     } else {
       clearMapCursor(CURSOR_ZOOM_BOX);
@@ -311,8 +307,7 @@ public class ZoomOverlay extends AbstractOverlay {
   }
 
   public boolean zoomBoxFinish(final MouseEvent event) {
-    if (SwingUtilities.isLeftMouseButton(event)
-      && clearOverlayAction(ACTION_ZOOM_BOX)) {
+    if (SwingUtilities.isLeftMouseButton(event) && clearOverlayAction(ACTION_ZOOM_BOX)) {
       // Convert first point to envelope top left in map coords.
       final int minX = (int)this.zoomBox.getMinX();
       final int minY = (int)this.zoomBox.getMinY();
@@ -324,8 +319,8 @@ public class ZoomOverlay extends AbstractOverlay {
       final Point bottomRight = getViewport().toModelPoint(maxX, maxY);
 
       final GeometryFactory geometryFactory = getMap().getGeometryFactory();
-      final BoundingBox boundingBox = new BoundingBox(geometryFactory,
-        topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
+      final BoundingBox boundingBox = new BoundingBox(geometryFactory, topLeft.getX(),
+        topLeft.getY(), bottomRight.getX(), bottomRight.getY());
 
       this.zoomBoxFirstPoint = null;
       this.zoomBox = null;

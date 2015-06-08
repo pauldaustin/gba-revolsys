@@ -10,8 +10,8 @@ import javax.swing.ListCellRenderer;
 import org.apache.commons.beanutils.MethodUtils;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
-public class InvokeMethodStringConverter extends ObjectToStringConverter
-  implements ListCellRenderer {
+public class InvokeMethodStringConverter extends ObjectToStringConverter implements
+  ListCellRenderer {
 
   private final DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 
@@ -21,8 +21,7 @@ public class InvokeMethodStringConverter extends ObjectToStringConverter
 
   private int horizontalAlignment = JLabel.LEFT;
 
-  public InvokeMethodStringConverter(final Object object,
-    final String methodName) {
+  public InvokeMethodStringConverter(final Object object, final String methodName) {
     if (object == null) {
       throw new IllegalArgumentException("Object cannot be null " + this);
     }
@@ -31,18 +30,16 @@ public class InvokeMethodStringConverter extends ObjectToStringConverter
   }
 
   public int getHorizontalAlignment() {
-    return horizontalAlignment;
+    return this.horizontalAlignment;
   }
 
   @Override
-  public Component getListCellRendererComponent(final JList list,
-    final Object value, final int index, final boolean isSelected,
-    final boolean cellHasFocus) {
-    this.renderer.getListCellRendererComponent(list, value, index, isSelected,
-      cellHasFocus);
+  public Component getListCellRendererComponent(final JList list, final Object value,
+    final int index, final boolean isSelected, final boolean cellHasFocus) {
+    this.renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     final String text = getPreferredStringForItem(value);
     this.renderer.setText(text);
-    this.renderer.setHorizontalAlignment(horizontalAlignment);
+    this.renderer.setHorizontalAlignment(this.horizontalAlignment);
     return this.renderer;
   }
 
@@ -54,15 +51,13 @@ public class InvokeMethodStringConverter extends ObjectToStringConverter
       try {
         if (this.object instanceof Class<?>) {
           final Class<?> clazz = (Class<?>)this.object;
-          return (String)MethodUtils.invokeStaticMethod(clazz, this.methodName,
-            new Object[] {
-              item
-            });
+          return (String)MethodUtils.invokeStaticMethod(clazz, this.methodName, new Object[] {
+            item
+          });
         } else {
-          return (String)MethodUtils.invokeMethod(this.object, this.methodName,
-            new Object[] {
-              item
-            });
+          return (String)MethodUtils.invokeMethod(this.object, this.methodName, new Object[] {
+            item
+          });
         }
       } catch (final Throwable e) {
         throw new RuntimeException("Unable to invoke " + this, e);

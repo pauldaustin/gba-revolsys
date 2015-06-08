@@ -55,14 +55,19 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
 
+  public static final String DIRECT_DISPLAY = "DIRECT_DISPLAY";
+
+  private static final AffineTransform NOOP_TRANSFORM = AffineTransform.getTranslateInstance(0, 0);
+
+  private static final Icon ICON = Icons.getIcon("style_text");
+
   public static String getLabel(final Record object, final TextStyle style) {
     if (object == null) {
       return "Text";
     } else {
       final StringBuffer label = new StringBuffer();
       final String labelPattern = style.getTextName();
-      final Matcher matcher = Pattern.compile("\\[([\\w.]+)\\]").matcher(
-        labelPattern);
+      final Matcher matcher = Pattern.compile("\\[([\\w.]+)\\]").matcher(labelPattern);
       while (matcher.find()) {
         final String propertyName = matcher.group(1);
         final Object value = object.getValueByPath(propertyName);
@@ -80,8 +85,8 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
     }
   }
 
-  public static CoordinatesWithOrientation getTextLocation(
-    final Viewport2D viewport, final Geometry geometry, final TextStyle style) {
+  public static CoordinatesWithOrientation getTextLocation(final Viewport2D viewport,
+    final Geometry geometry, final TextStyle style) {
     if (viewport == null) {
       return new CoordinatesWithOrientation(new DoubleCoordinates(0.0, 0.0), 0);
     }
@@ -93,14 +98,12 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
 
       double orientation = style.getTextOrientation();
       final String placementType = style.getTextPlacementType();
-      final Matcher matcher = Pattern.compile("point\\((.*)\\)").matcher(
-        placementType);
+      final Matcher matcher = Pattern.compile("point\\((.*)\\)").matcher(placementType);
       final CoordinatesList points = CoordinatesListUtil.get(geometry);
       final int numPoints = points.size();
       if (numPoints == 1) {
         point = points.get(0);
-        point = ProjectionFactory.convert(point, geometryFactory,
-          viewportGeometryFactory);
+        point = ProjectionFactory.convert(point, geometryFactory, viewportGeometryFactory);
 
         return new CoordinatesWithOrientation(point, 0);
       } else if (numPoints > 1) {
@@ -117,10 +120,10 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
             if (index == 0) {
               index++;
             }
-            point = ProjectionFactory.convert(points.get(index),
+            point = ProjectionFactory.convert(points.get(index), geometryFactory,
+              viewportGeometryFactory);
+            final Coordinates p2 = ProjectionFactory.convert(points.get(index - 1),
               geometryFactory, viewportGeometryFactory);
-            final Coordinates p2 = ProjectionFactory.convert(
-              points.get(index - 1), geometryFactory, viewportGeometryFactory);
             final double angle = Math.toDegrees(p2.angle2d(point));
             orientation += angle;
           } else {
@@ -128,10 +131,10 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
             if (index + 1 == numPoints) {
               index--;
             }
-            point = ProjectionFactory.convert(points.get(index),
+            point = ProjectionFactory.convert(points.get(index), geometryFactory,
+              viewportGeometryFactory);
+            final Coordinates p2 = ProjectionFactory.convert(points.get(index + 1),
               geometryFactory, viewportGeometryFactory);
-            final Coordinates p2 = ProjectionFactory.convert(
-              points.get(index + 1), geometryFactory, viewportGeometryFactory);
             final double angle = Math.toDegrees(point.angle2d(p2));
             orientation += angle;
           }
@@ -146,10 +149,8 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
               Coordinates p2 = points.get(i);
               final double segmentLength = p1.distance(p2);
               if (segmentLength + currentLength >= centreLength) {
-                p1 = ProjectionFactory.convert(p1, geometryFactory,
-                  viewportGeometryFactory);
-                p2 = ProjectionFactory.convert(p2, geometryFactory,
-                  viewportGeometryFactory);
+                p1 = ProjectionFactory.convert(p1, geometryFactory, viewportGeometryFactory);
+                p2 = ProjectionFactory.convert(p2, geometryFactory, viewportGeometryFactory);
                 point = LineSegmentUtil.project(geometryFactory, p1, p2,
                   (centreLength - currentLength) / segmentLength);
 
@@ -208,14 +209,12 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
     return null;
   }
 
-  public static final void renderText(final Viewport2D viewport,
-    final Graphics2D graphics, final Record object,
-    final Geometry geometry, final TextStyle style) {
+  public static final void renderText(final Viewport2D viewport, final Graphics2D graphics,
+    final Record object, final Geometry geometry, final TextStyle style) {
     final String label = getLabel(object, style);
     if (StringUtils.hasText(label) && geometry != null || viewport == null) {
 
-      final CoordinatesWithOrientation point = getTextLocation(viewport,
-        geometry, style);
+      final CoordinatesWithOrientation point = getTextLocation(viewport, geometry, style);
       if (point != null) {
         final double orientation = point.getOrientation();
 
@@ -257,16 +256,14 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
           double maxWidth = 0;
           final String[] lines = label.split("[\\r\\n]");
           for (final String line : lines) {
-            final Rectangle2D bounds = fontMetrics.getStringBounds(line,
-              graphics);
+            final Rectangle2D bounds = fontMetrics.getStringBounds(line, graphics);
             final double width = bounds.getWidth();
             maxWidth = Math.max(width, maxWidth);
           }
           final int descent = fontMetrics.getDescent();
           final int ascent = fontMetrics.getAscent();
           final int leading = fontMetrics.getLeading();
-          final double maxHeight = lines.length * (ascent + descent)
-            + (lines.length - 1) * leading;
+          final double maxHeight = lines.length * (ascent + descent) + (lines.length - 1) * leading;
           final String verticalAlignment = style.getTextVerticalAlignment();
           if ("top".equals(verticalAlignment)) {
           } else if ("middle".equals(verticalAlignment)) {
@@ -307,12 +304,10 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
           }
           graphics.translate(dx, dy);
 
-          for (int i = 0; i < lines.length; i++) {
-            final String line = lines[i];
+          for (final String line : lines) {
             graphics.translate(0, ascent);
             final AffineTransform lineTransform = graphics.getTransform();
-            final Rectangle2D bounds = fontMetrics.getStringBounds(line,
-              graphics);
+            final Rectangle2D bounds = fontMetrics.getStringBounds(line, graphics);
             final double width = bounds.getWidth();
             final double height = bounds.getHeight();
 
@@ -332,16 +327,16 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
             final Color textBoxColor = style.getTextBoxColor();
             if (textBoxOpacity > 0 && textBoxColor != null) {
               graphics.setColor(textBoxColor);
-              graphics.fill(new Rectangle2D.Double(bounds.getX() - 2,
-                bounds.getY() - 1, width + 4, height + 2));
+              graphics.fill(new Rectangle2D.Double(bounds.getX() - 2, bounds.getY() - 1, width + 4,
+                height + 2));
             }
 
             Boolean directDisplay = Boolean.FALSE;
             if (viewport != null) {
               directDisplay = viewport.getProperty(DIRECT_DISPLAY);
             }
-            if (!BooleanStringConverter.isTrue(directDisplay)
-              && textBoxOpacity > 0 && textBoxOpacity < 255) {
+            if (!BooleanStringConverter.isTrue(directDisplay) && textBoxOpacity > 0
+              && textBoxOpacity < 255) {
               graphics.setComposite(AlphaComposite.SrcOut);
             } else {
               graphics.setComposite(AlphaComposite.SrcOver);
@@ -355,15 +350,13 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
               graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
               final Stroke savedStroke = graphics.getStroke();
-              final Stroke outlineStroke = new BasicStroke(
-                (float)(textHaloRadius + 1), BasicStroke.CAP_BUTT,
-                BasicStroke.JOIN_BEVEL);
+              final Stroke outlineStroke = new BasicStroke((float)(textHaloRadius + 1),
+                BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
               graphics.setColor(style.getTextHaloFill());
               graphics.setStroke(outlineStroke);
               final Font font = graphics.getFont();
               final FontRenderContext fontRenderContext = graphics.getFontRenderContext();
-              final TextLayout textLayout = new TextLayout(line, font,
-                fontRenderContext);
+              final TextLayout textLayout = new TextLayout(line, font, fontRenderContext);
               final Shape outlineShape = textLayout.getOutline(NOOP_TRANSFORM);
               graphics.draw(outlineShape);
               graphics.setStroke(savedStroke);
@@ -387,22 +380,14 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
     }
   }
 
-  public static final String DIRECT_DISPLAY = "DIRECT_DISPLAY";
-
-  private static final AffineTransform NOOP_TRANSFORM = AffineTransform.getTranslateInstance(
-    0, 0);
-
-  private static final Icon ICON = Icons.getIcon("style_text");
-
   private TextStyle style;
 
-  public TextStyleRenderer(final AbstractRecordLayer layer,
-    final LayerRenderer<?> parent) {
+  public TextStyleRenderer(final AbstractRecordLayer layer, final LayerRenderer<?> parent) {
     this(layer, parent, Collections.<String, Object> emptyMap());
   }
 
-  public TextStyleRenderer(final AbstractRecordLayer layer,
-    final LayerRenderer<?> parent, final Map<String, Object> textStyle) {
+  public TextStyleRenderer(final AbstractRecordLayer layer, final LayerRenderer<?> parent,
+    final Map<String, Object> textStyle) {
     super("textStyle", "Text Style", layer, parent, textStyle);
     this.style = new TextStyle(textStyle);
     setIcon(ICON);
@@ -425,9 +410,8 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
   }
 
   @Override
-  public void renderRecord(final Viewport2D viewport,
-    final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractRecordLayer layer, final LayerDataObject object) {
+  public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject object) {
     final Geometry geometry = object.getGeometryValue();
     renderText(viewport, graphics, object, geometry, this.style);
   }

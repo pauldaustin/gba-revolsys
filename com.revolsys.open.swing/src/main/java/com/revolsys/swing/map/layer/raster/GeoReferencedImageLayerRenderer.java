@@ -11,24 +11,20 @@ import com.revolsys.raster.GeoReferencedImage;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.AbstractLayerRenderer;
 
-public class GeoReferencedImageLayerRenderer extends
-  AbstractLayerRenderer<GeoReferencedImageLayer> {
+public class GeoReferencedImageLayerRenderer extends AbstractLayerRenderer<GeoReferencedImageLayer> {
 
-  public static void render(final Viewport2D viewport,
-    final Graphics2D graphics, final GeoReferencedImage image,
-    final boolean useTransform) {
+  public static void render(final Viewport2D viewport, final Graphics2D graphics,
+    final GeoReferencedImage image, final boolean useTransform) {
     if (image != null) {
       final BoundingBox viewBoundingBox = viewport.getBoundingBox();
       final int viewWidth = viewport.getViewWidthPixels();
       final int viewHeight = viewport.getViewHeightPixels();
-      image.drawImage(graphics, viewBoundingBox, viewWidth, viewHeight,
-        useTransform);
+      image.drawImage(graphics, viewBoundingBox, viewWidth, viewHeight, useTransform);
     }
   }
 
-  public static void renderAlpha(final Graphics2D graphics,
-    final Viewport2D viewport, final GeoReferencedImage image,
-    final double alpha, final boolean useTransform) {
+  public static void renderAlpha(final Graphics2D graphics, final Viewport2D viewport,
+    final GeoReferencedImage image, final double alpha, final boolean useTransform) {
     final Composite composite = graphics.getComposite();
     try {
       AlphaComposite alphaComposite = AlphaComposite.SrcOver;

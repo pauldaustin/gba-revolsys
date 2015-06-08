@@ -14,8 +14,7 @@ import com.revolsys.gis.model.geometry.util.WktWriter;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.vividsolutions.jts.geom.IntersectionMatrix;
 
-public abstract class GeometryImpl extends AbstractObjectWithProperties
-  implements Geometry {
+public abstract class GeometryImpl extends AbstractObjectWithProperties implements Geometry {
   private final GeometryFactoryImpl geometryFactory;
 
   private BoundingBox boundingBox;
@@ -35,8 +34,7 @@ public abstract class GeometryImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public Geometry buffer(final double distance, final int quadrantSegments,
-    final int endCapStyle) {
+  public Geometry buffer(final double distance, final int quadrantSegments, final int endCapStyle) {
     return BufferOp.bufferOp(this, distance, quadrantSegments, endCapStyle);
   }
 
@@ -149,10 +147,10 @@ public abstract class GeometryImpl extends AbstractObjectWithProperties
 
   @Override
   public BoundingBox getBoundingBox() {
-    if (boundingBox == null) {
-      boundingBox = new BoundingBox(this);
+    if (this.boundingBox == null) {
+      this.boundingBox = new BoundingBox(this);
     }
-    return boundingBox;
+    return this.boundingBox;
   }
 
   protected BoundingBox getConvertedBoundingBox(final Geometry geometry) {
@@ -187,7 +185,7 @@ public abstract class GeometryImpl extends AbstractObjectWithProperties
   @SuppressWarnings("unchecked")
   @Override
   public <F extends com.revolsys.gis.model.geometry.GeometryFactory> F getGeometryFactory() {
-    return (F)geometryFactory;
+    return (F)this.geometryFactory;
   }
 
   @Override
@@ -197,12 +195,12 @@ public abstract class GeometryImpl extends AbstractObjectWithProperties
 
   @Override
   public byte getNumAxis() {
-    return geometryFactory.getNumAxis();
+    return this.geometryFactory.getNumAxis();
   }
 
   @Override
   public int getSrid() {
-    return geometryFactory.getCoordinateSystem().getId();
+    return this.geometryFactory.getCoordinateSystem().getId();
   }
 
   @Override
@@ -226,8 +224,7 @@ public abstract class GeometryImpl extends AbstractObjectWithProperties
       // checkNotGeometryCollection(this);
       // checkNotGeometryCollection(other);
       geometry = getConvertedGeometry(geometry);
-      return SnapIfNeededOverlayOp.overlayOp(this, geometry,
-        OverlayOp.INTERSECTION);
+      return SnapIfNeededOverlayOp.overlayOp(this, geometry, OverlayOp.INTERSECTION);
     }
   }
 
@@ -279,8 +276,7 @@ public abstract class GeometryImpl extends AbstractObjectWithProperties
   }
 
   @Override
-  public boolean relate(final Geometry geometry,
-    final String intersectionPattern) {
+  public boolean relate(final Geometry geometry, final String intersectionPattern) {
     return relate(geometry).matches(intersectionPattern);
   }
 

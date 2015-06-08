@@ -15,8 +15,7 @@ public class RunnableTransactionCallback implements TransactionCallback<Void> {
     this(runnable, false);
   }
 
-  public RunnableTransactionCallback(final Runnable runnable,
-    final boolean rollback) {
+  public RunnableTransactionCallback(final Runnable runnable, final boolean rollback) {
     this.runnable = runnable;
     this.rollback = rollback;
   }
@@ -24,9 +23,9 @@ public class RunnableTransactionCallback implements TransactionCallback<Void> {
   @Override
   public Void doInTransaction(final TransactionStatus transaction) {
     try {
-      runnable.run();
+      this.runnable.run();
       if (transaction != null) {
-        if (rollback) {
+        if (this.rollback) {
           transaction.setRollbackOnly();
         }
       }
@@ -41,6 +40,6 @@ public class RunnableTransactionCallback implements TransactionCallback<Void> {
 
   @Override
   public String toString() {
-    return runnable.toString();
+    return this.runnable.toString();
   }
 }

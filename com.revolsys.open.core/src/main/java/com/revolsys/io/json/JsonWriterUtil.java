@@ -12,8 +12,7 @@ import com.revolsys.io.StringPrinter;
 import com.revolsys.util.CollectionUtil;
 
 public final class JsonWriterUtil {
-  public static void charSequence(final PrintWriter out,
-    final CharSequence string) {
+  public static void charSequence(final PrintWriter out, final CharSequence string) {
     for (int i = 0; i < string.length(); i++) {
       final char c = string.charAt(i);
       switch (c) {
@@ -61,8 +60,7 @@ public final class JsonWriterUtil {
     out.print("}");
   }
 
-  public static void label(final PrintWriter out, final String key,
-    final String indent) {
+  public static void label(final PrintWriter out, final String key, final String indent) {
     writeIndent(out, indent);
     write(out, key, null);
     out.print(":");
@@ -84,8 +82,8 @@ public final class JsonWriterUtil {
     newLine(out, indent);
   }
 
-  public static void write(final PrintWriter out,
-    final Collection<? extends Object> values, final String indent) {
+  public static void write(final PrintWriter out, final Collection<? extends Object> values,
+    final String indent) {
     startList(out, indent);
     String newIndent = indent;
     if (newIndent != null) {
@@ -113,8 +111,8 @@ public final class JsonWriterUtil {
     endList(out);
   }
 
-  public static void write(final PrintWriter out,
-    final Map<String, ? extends Object> values, final String indent) {
+  public static void write(final PrintWriter out, final Map<String, ? extends Object> values,
+    final String indent) {
 
     startObject(out, indent);
     if (values != null) {
@@ -147,8 +145,7 @@ public final class JsonWriterUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static void write(final PrintWriter out, final Object value,
-    final String indent) {
+  public static void write(final PrintWriter out, final Object value, final String indent) {
     if (value == null) {
       out.print("null");
     } else if (value instanceof StringPrinter) {

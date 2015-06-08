@@ -4,25 +4,22 @@ import java.util.Enumeration;
 
 import org.jdesktop.swingx.treetable.TreeTableNode;
 
-public abstract class AbstractTreeTableNode extends AbstractTreeNode implements
-  TreeTableNode {
+public abstract class AbstractTreeTableNode extends AbstractTreeNode implements TreeTableNode {
 
   public AbstractTreeTableNode(final Object userObject) {
     super(userObject);
   }
 
-  public AbstractTreeTableNode(final Object userObject,
-    final boolean allowsChildren) {
+  public AbstractTreeTableNode(final Object userObject, final boolean allowsChildren) {
     super(userObject, allowsChildren);
   }
 
-  public AbstractTreeTableNode(final TreeTableNode parent,
-    final Object userObject) {
+  public AbstractTreeTableNode(final TreeTableNode parent, final Object userObject) {
     super(parent, userObject);
   }
 
-  public AbstractTreeTableNode(final TreeTableNode parent,
-    final Object userObject, final boolean allowsChildren) {
+  public AbstractTreeTableNode(final TreeTableNode parent, final Object userObject,
+    final boolean allowsChildren) {
     super(parent, userObject, allowsChildren);
   }
 

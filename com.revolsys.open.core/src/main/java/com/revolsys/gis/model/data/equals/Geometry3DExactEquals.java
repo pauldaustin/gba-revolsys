@@ -55,8 +55,8 @@ public class Geometry3DExactEquals implements Equals<Geometry> {
   }
 
   @SuppressWarnings("rawtypes")
-  public boolean userDataEquals(final Geometry geometry1,
-    final Geometry geometry2, Collection<String> exclude) {
+  public boolean userDataEquals(final Geometry geometry1, final Geometry geometry2,
+    Collection<String> exclude) {
     Object userData1 = geometry1.getUserData();
     Object userData2 = geometry2.getUserData();
     if (userData1 == null) {
@@ -90,7 +90,7 @@ public class Geometry3DExactEquals implements Equals<Geometry> {
       exclude = new TreeSet<String>(exclude);
       exclude.addAll(USER_DATA_EXCLUDE);
     }
-    return equalsRegistry.equals(userData1, userData2, exclude);
+    return this.equalsRegistry.equals(userData1, userData2, exclude);
   }
 
 }

@@ -24,17 +24,17 @@ public class ObjectModelTreeCellRenderer extends DefaultTreeCellRenderer {
     setOpenIcon(Icons.getIcon("folder"));
     setClosedIcon(Icons.getIcon("folder"));
     final Dimension zeroSize = new Dimension(0, 0);
-    hiddenRenderer.setMinimumSize(zeroSize);
-    hiddenRenderer.setMaximumSize(zeroSize);
-    hiddenRenderer.setPreferredSize(zeroSize);
-    hiddenRenderer.setSize(zeroSize);
+    this.hiddenRenderer.setMinimumSize(zeroSize);
+    this.hiddenRenderer.setMaximumSize(zeroSize);
+    this.hiddenRenderer.setPreferredSize(zeroSize);
+    this.hiddenRenderer.setSize(zeroSize);
   }
 
   @Override
-  public Component getTreeCellRendererComponent(final JTree tree,
-    final Object value, final boolean selected, final boolean expanded,
-    final boolean leaf, final int row, final boolean hasFocus) {
-    if (model.isVisible(value)) {
+  public Component getTreeCellRendererComponent(final JTree tree, final Object value,
+    final boolean selected, final boolean expanded, final boolean leaf, final int row,
+    final boolean hasFocus) {
+    if (this.model.isVisible(value)) {
       final TreePath path = this.model.getPath(value);
       ObjectTreeNodeModel<Object, Object> nodeModel;
       if (path == null) {
@@ -44,17 +44,17 @@ public class ObjectModelTreeCellRenderer extends DefaultTreeCellRenderer {
       }
       Object label = value;
       if (nodeModel != null) {
-        final Component renderer = nodeModel.getRenderer(value, tree, selected,
-          expanded, leaf, row, hasFocus);
+        final Component renderer = nodeModel.getRenderer(value, tree, selected, expanded, leaf,
+          row, hasFocus);
         if (renderer != null) {
           return renderer;
         }
         label = nodeModel.getLabel(value);
       }
-      return super.getTreeCellRendererComponent(tree, label, selected,
-        expanded, leaf, row, hasFocus);
+      return super.getTreeCellRendererComponent(tree, label, selected, expanded, leaf, row,
+        hasFocus);
     } else {
-      return hiddenRenderer;
+      return this.hiddenRenderer;
     }
   }
 }

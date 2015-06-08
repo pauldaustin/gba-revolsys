@@ -15,8 +15,8 @@ public interface ObjectTreeNodeModel<NODE extends Object, CHILD extends Object> 
 
   int addChild(NODE node, int index, CHILD child);
 
-  String convertValueToText(NODE node, boolean selected, boolean expanded,
-    boolean leaf, int row, boolean hasFocus);
+  String convertValueToText(NODE node, boolean selected, boolean expanded, boolean leaf, int row,
+    boolean hasFocus);
 
   CHILD getChild(final NODE node, final int index);
 
@@ -36,8 +36,8 @@ public interface ObjectTreeNodeModel<NODE extends Object, CHILD extends Object> 
 
   <T> T getParent(final NODE node);
 
-  Component getRenderer(final NODE node, JTree tree, boolean selected,
-    boolean expanded, boolean leaf, int row, boolean hasFocus);
+  Component getRenderer(final NODE node, JTree tree, boolean selected, boolean expanded,
+    boolean leaf, int row, boolean hasFocus);
 
   Set<Class<?>> getSupportedChildClasses();
 

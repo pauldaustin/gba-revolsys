@@ -5,20 +5,25 @@ import com.revolsys.jts.geom.GeometryFactory;
 
 public class IndexedLineSegment extends LineSegment {
 
-  private int[] index;
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
-  public IndexedLineSegment(LineSegment line, int... index) {
-    super(line);
-    this.index = index;
-  }
+  private final int[] index;
 
-  public IndexedLineSegment(GeometryFactory geometryFactory, LineSegment line,
-    int... index) {
+  public IndexedLineSegment(final GeometryFactory geometryFactory, final LineSegment line,
+    final int... index) {
     super(geometryFactory, line);
     this.index = index;
   }
 
+  public IndexedLineSegment(final LineSegment line, final int... index) {
+    super(line);
+    this.index = index;
+  }
+
   public int[] getIndex() {
-    return index;
+    return this.index;
   }
 }

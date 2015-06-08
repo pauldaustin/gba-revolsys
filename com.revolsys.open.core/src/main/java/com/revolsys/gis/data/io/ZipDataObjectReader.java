@@ -15,31 +15,29 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipUtil;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 
-public class ZipDataObjectReader extends DelegatingReader<Record> implements
-  RecordReader {
+public class ZipDataObjectReader extends DelegatingReader<Record> implements RecordReader {
   private RecordReader reader;
 
   private File directory;
 
-  public ZipDataObjectReader(final Resource resource,
-    final String fileExtension, final RecordFactory factory) {
+  public ZipDataObjectReader(final Resource resource, final String fileExtension,
+    final RecordFactory factory) {
     try {
       final String baseName = FileUtil.getBaseName(resource.getFilename());
       final String zipEntryName = baseName + "." + fileExtension;
-      directory = ZipUtil.unzipFile(resource);
+      this.directory = ZipUtil.unzipFile(resource);
       if (!openFile(resource, factory, zipEntryName)) {
-        final String[] files = directory.list(new ExtensionFilenameFilter(
-          fileExtension));
+        final String[] files = this.directory.list(new ExtensionFilenameFilter(fileExtension));
         if (files != null && files.length == 1) {
           openFile(resource, factory, files[0]);
         }
       }
-      if (reader == null) {
+      if (this.reader == null) {
         close();
-        throw new IllegalArgumentException("No *." + fileExtension
-          + " exists in zip file " + resource);
+        throw new IllegalArgumentException("No *." + fileExtension + " exists in zip file "
+          + resource);
       } else {
-        setReader(reader);
+        setReader(this.reader);
       }
     } catch (final IOException e) {
       throw new RuntimeException("Error reading resource " + resource, e);
@@ -48,25 +46,24 @@ public class ZipDataObjectReader extends DelegatingReader<Record> implements
 
   @Override
   protected void doClose() {
-    FileUtil.deleteDirectory(directory);
+    FileUtil.deleteDirectory(this.directory);
   }
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return reader.getRecordDefinition();
+    return this.reader.getRecordDefinition();
   }
 
-  protected boolean openFile(final Resource resource,
-    final RecordFactory factory, final String zipEntryName) {
-    final File file = new File(directory, zipEntryName);
+  protected boolean openFile(final Resource resource, final RecordFactory factory,
+    final String zipEntryName) {
+    final File file = new File(this.directory, zipEntryName);
     if (file.exists()) {
       final FileSystemResource fileResource = new FileSystemResource(file);
-      reader = AbstractRecordAndGeometryReaderFactory.dataObjectReader(
-        fileResource, factory);
-      if (reader == null) {
+      this.reader = AbstractRecordAndGeometryReaderFactory.dataObjectReader(fileResource, factory);
+      if (this.reader == null) {
         close();
-        throw new IllegalArgumentException("Cannot create reader for file "
-          + zipEntryName + " in zip file " + resource);
+        throw new IllegalArgumentException("Cannot create reader for file " + zipEntryName
+          + " in zip file " + resource);
       } else {
         return true;
       }

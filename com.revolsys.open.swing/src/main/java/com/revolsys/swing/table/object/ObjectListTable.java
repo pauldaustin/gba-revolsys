@@ -13,8 +13,7 @@ import com.revolsys.swing.table.BaseJxTable;
 public class ObjectListTable<T> extends BaseJxTable implements Iterable<T> {
   private static final long serialVersionUID = 1L;
 
-  public ObjectListTable(final List<String> columnNames,
-    final List<String> columnTitles) {
+  public ObjectListTable(final List<String> columnNames, final List<String> columnTitles) {
     this(new ObjectListTableModel<T>(columnNames, columnTitles));
   }
 

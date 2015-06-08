@@ -22,8 +22,7 @@ public interface Field {
 
   void setFieldForegroundColor(Color color);
 
-  void setFieldInvalid(String message, Color foregroundColor,
-    Color backgroundColor);
+  void setFieldInvalid(String message, Color foregroundColor, Color backgroundColor);
 
   void setFieldToolTip(String toolTip);
 

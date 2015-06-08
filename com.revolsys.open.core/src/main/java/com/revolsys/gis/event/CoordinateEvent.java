@@ -6,7 +6,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 public class CoordinateEvent extends EventObject {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -1809350055079477785L;
 
@@ -18,8 +18,6 @@ public class CoordinateEvent extends EventObject {
 
   private String action;
 
-  private Coordinate coordinate;
-
   private String notes;
 
   private String ruleName;
@@ -30,24 +28,23 @@ public class CoordinateEvent extends EventObject {
     super(coordinate);
   }
 
-  public CoordinateEvent(final Coordinate coordinate, final String ruleName,
-    final String action) {
+  public CoordinateEvent(final Coordinate coordinate, final String ruleName, final String action) {
     super(coordinate);
     this.ruleName = ruleName;
     this.action = action;
   }
 
-  public CoordinateEvent(final Coordinate coordinate, final String path,
-    final String ruleName, final String action, final String notes) {
+  public CoordinateEvent(final Coordinate coordinate, final String path, final String ruleName,
+    final String action, final String notes) {
     super(coordinate);
-    this.typePath = typePath;
+    this.typePath = this.typePath;
     this.ruleName = ruleName;
     this.action = action;
     this.notes = notes;
   }
 
   public String getAction() {
-    return action;
+    return this.action;
   }
 
   public Coordinate getCoordinate() {
@@ -55,15 +52,15 @@ public class CoordinateEvent extends EventObject {
   }
 
   public String getNotes() {
-    return notes;
+    return this.notes;
   }
 
   public String getRuleName() {
-    return ruleName;
+    return this.ruleName;
   }
 
   public String getTypeName() {
-    return typePath;
+    return this.typePath;
   }
 
 }

@@ -5,8 +5,7 @@ import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class Node<T> extends NodeBase<T> {
-  public static <V> Node<V> createExpanded(final Node<V> node,
-    final Envelope addEnv) {
+  public static <V> Node<V> createExpanded(final Node<V> node, final Envelope addEnv) {
     final Envelope expandEnv = new Envelope(addEnv);
     if (node != null) {
       expandEnv.expandToInclude(node.env);
@@ -34,9 +33,9 @@ public class Node<T> extends NodeBase<T> {
   public Node(final Envelope env, final int level) {
     this.env = env;
     this.level = level;
-    double x = (env.getMinX() + env.getMaxX()) / 2;
-    double y = (env.getMinY() + env.getMaxY()) / 2;
-    centre = new DoubleCoordinates(x, y);
+    final double x = (env.getMinX() + env.getMaxX()) / 2;
+    final double y = (env.getMinY() + env.getMaxY()) / 2;
+    this.centre = new DoubleCoordinates(x, y);
   }
 
   private Node<T> createSubnode(final int index) {
@@ -47,37 +46,37 @@ public class Node<T> extends NodeBase<T> {
 
     switch (index) {
       case 0:
-        minX = env.getMinX();
-        maxX = centre.getX();
-        minY = env.getMinY();
-        maxY = centre.getY();
+        minX = this.env.getMinX();
+        maxX = this.centre.getX();
+        minY = this.env.getMinY();
+        maxY = this.centre.getY();
       break;
       case 1:
-        minX = centre.getX();
-        maxX = env.getMaxX();
-        minY = env.getMinY();
-        maxY = centre.getY();
+        minX = this.centre.getX();
+        maxX = this.env.getMaxX();
+        minY = this.env.getMinY();
+        maxY = this.centre.getY();
       break;
       case 2:
-        minX = env.getMinX();
-        maxX = centre.getX();
-        minY = centre.getY();
-        maxY = env.getMaxY();
+        minX = this.env.getMinX();
+        maxX = this.centre.getX();
+        minY = this.centre.getY();
+        maxY = this.env.getMaxY();
       break;
       case 3:
-        minX = centre.getX();
-        maxX = env.getMaxX();
-        minY = centre.getY();
-        maxY = env.getMaxY();
+        minX = this.centre.getX();
+        maxX = this.env.getMaxX();
+        minY = this.centre.getY();
+        maxY = this.env.getMaxY();
       break;
     }
     final Envelope envelope = new Envelope(minX, maxX, minY, maxY);
-    final Node<T> node = new Node<T>(envelope, level - 1);
+    final Node<T> node = new Node<T>(envelope, this.level - 1);
     return node;
   }
 
   public NodeBase<T> find(final Envelope searchEnv) {
-    final int subnodeIndex = getSubnodeIndex(searchEnv, centre);
+    final int subnodeIndex = getSubnodeIndex(searchEnv, this.centre);
     if (subnodeIndex == -1) {
       return this;
     }
@@ -89,11 +88,11 @@ public class Node<T> extends NodeBase<T> {
   }
 
   public Envelope getEnvelope() {
-    return env;
+    return this.env;
   }
 
   public Node<T> getNode(final Envelope searchEnv) {
-    final int subnodeIndex = getSubnodeIndex(searchEnv, centre);
+    final int subnodeIndex = getSubnodeIndex(searchEnv, this.centre);
     if (subnodeIndex != -1) {
       final Node<T> node = getSubnode(subnodeIndex);
       return node.getNode(searchEnv);
@@ -110,8 +109,8 @@ public class Node<T> extends NodeBase<T> {
   }
 
   void insertNode(final Node<T> node) {
-    final int index = getSubnodeIndex(node.env, centre);
-    if (node.level == level - 1) {
+    final int index = getSubnodeIndex(node.env, this.centre);
+    if (node.level == this.level - 1) {
       setNode(index, node);
     } else {
       final Node<T> childNode = createSubnode(index);
@@ -122,7 +121,7 @@ public class Node<T> extends NodeBase<T> {
 
   @Override
   protected boolean isSearchMatch(final Envelope searchEnv) {
-    return env.intersects(searchEnv);
+    return this.env.intersects(searchEnv);
   }
 
 }

@@ -3,7 +3,7 @@ package com.revolsys.gis.model.geometry.operation.geomgraph;
 /**
  * A Position indicates the position of a Location relative to a graph component
  * (Node, Edge, or Area).
- * 
+ *
  * @version 1.7
  */
 public class Position {

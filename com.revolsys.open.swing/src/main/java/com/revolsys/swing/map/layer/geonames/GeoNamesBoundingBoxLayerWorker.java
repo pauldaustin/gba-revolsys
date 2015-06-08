@@ -21,17 +21,15 @@ import com.revolsys.swing.map.layer.dataobject.style.marker.ImageMarker;
 import com.revolsys.swing.parallel.AbstractSwingWorker;
 import com.vividsolutions.jts.geom.Point;
 
-public class GeoNamesBoundingBoxLayerWorker extends
-  AbstractSwingWorker<DataObjectQuadTree, Void> {
+public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObjectQuadTree, Void> {
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "geoname", "Geoname.org", GeoNamesBoundingBoxLayerWorker.class, "create");
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("geoname",
+    "Geoname.org", GeoNamesBoundingBoxLayerWorker.class, "create");
 
-  public static DataObjectBoundingBoxLayer create(
-    final Map<String, Object> properties) {
+  public static DataObjectBoundingBoxLayer create(final Map<String, Object> properties) {
     final GeometryFactory wgs84 = GeometryFactory.floating3(4326);
-    final DataObjectBoundingBoxLayer layer = new DataObjectBoundingBoxLayer(
-      "geoname", "Geo Names", GeoNamesBoundingBoxLayerWorker.class, wgs84);
+    final DataObjectBoundingBoxLayer layer = new DataObjectBoundingBoxLayer("geoname", "Geo Names",
+      GeoNamesBoundingBoxLayerWorker.class, wgs84);
 
     final BufferedImage image = Icons.getImage("world");
     final ImageMarker marker = new ImageMarker(image);

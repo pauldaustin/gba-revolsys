@@ -34,14 +34,14 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
   @Override
   public List<Record> getList() {
     synchronized (this) {
-      if (results == null) {
+      if (this.results == null) {
         final ArrayList<Record> results = new ArrayList<Record>();
         final int pageSize = getPageSize();
         final int pageNumber = getPageNumber();
         if (pageNumber != -1) {
           String sql = getSql();
 
-          final int startRowNum = ((pageNumber - 1) * pageSize);
+          final int startRowNum = (pageNumber - 1) * pageSize;
           sql = getSql() + " OFFSET " + startRowNum + " LIMIT " + pageSize;
 
           final DataSource dataSource = getDataSource();
@@ -58,15 +58,14 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
 
               final PreparedStatement statement = connection.prepareStatement(sql);
               try {
-                final ResultSet resultSet = JdbcQueryIterator.getResultSet(
-                  metaData, statement, getQuery());
+                final ResultSet resultSet = JdbcQueryIterator.getResultSet(metaData, statement,
+                  getQuery());
                 try {
                   if (resultSet.next()) {
                     int i = 0;
                     do {
-                      final Record object = JdbcQueryIterator.getNextObject(
-                        dataStore, metaData, attributes, dataObjectFactory,
-                        resultSet);
+                      final Record object = JdbcQueryIterator.getNextObject(dataStore, metaData,
+                        attributes, dataObjectFactory, resultSet);
                       results.add(object);
                       i++;
                     } while (resultSet.next() && i < pageSize);
@@ -79,8 +78,7 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
               }
             }
           } catch (final SQLException e) {
-            JdbcUtils.getException(dataSource, connection, "updateResults",
-              sql, e);
+            JdbcUtils.getException(dataSource, connection, "updateResults", sql, e);
           } finally {
             if (dataSource != null) {
               JdbcUtils.release(connection, dataSource);
@@ -89,19 +87,19 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
         }
         this.results = results;
       }
-      return results;
+      return this.results;
     }
   }
 
   @Override
   public int getNumResults() {
-    if (numResults == null) {
+    if (this.numResults == null) {
       final JdbcDataObjectStore dataStore = getDataStore();
       final Query query = getQuery();
-      numResults = dataStore.getRowCount(query);
+      this.numResults = dataStore.getRowCount(query);
       updateNumPages();
     }
-    return numResults;
+    return this.numResults;
   }
 
   /**
@@ -109,6 +107,6 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
    */
   @Override
   protected void updateResults() {
-    results = null;
+    this.results = null;
   }
 }

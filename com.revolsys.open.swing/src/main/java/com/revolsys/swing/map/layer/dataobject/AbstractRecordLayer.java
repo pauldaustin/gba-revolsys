@@ -354,16 +354,16 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
   protected void addHighlightedRecord(final LayerDataObject record) {
     if (isLayerRecord(record)) {
-      synchronized (highlightedRecords) {
-        if (!containsSame(highlightedRecords, record)) {
-          highlightedRecords.add(record);
+      synchronized (this.highlightedRecords) {
+        if (!containsSame(this.highlightedRecords, record)) {
+          this.highlightedRecords.add(record);
         }
       }
     }
   }
 
   public void addHighlightedRecords(final Collection<? extends LayerDataObject> records) {
-    synchronized (highlightedRecords) {
+    synchronized (this.highlightedRecords) {
       for (final LayerDataObject record : records) {
         addHighlightedRecord(record);
       }
@@ -372,9 +372,9 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected void addModifiedRecord(final LayerDataObject record) {
-    synchronized (modifiedRecords) {
-      if (!containsSame(modifiedRecords, record)) {
-        modifiedRecords.add(record);
+    synchronized (this.modifiedRecords) {
+      if (!containsSame(this.modifiedRecords, record)) {
+        this.modifiedRecords.add(record);
       }
     }
   }
@@ -398,9 +398,9 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
   protected void addSelectedRecord(final LayerDataObject record) {
     if (isLayerRecord(record)) {
-      synchronized (selectedRecords) {
-        if (!containsSame(selectedRecords, record)) {
-          selectedRecords.add(record);
+      synchronized (this.selectedRecords) {
+        if (!containsSame(this.selectedRecords, record)) {
+          this.selectedRecords.add(record);
         }
       }
     }
@@ -416,7 +416,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         }
       }
       addSelectedRecords(records);
-      if (!selectedRecords.isEmpty()) {
+      if (!this.selectedRecords.isEmpty()) {
         showRecordsTable(DataObjectLayerTableModel.MODE_SELECTED);
       }
     }
@@ -461,9 +461,9 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       final boolean eventsEnabled = setEventsEnabled(false);
       boolean cancelled = true;
       try {
-        cancelled &= internalCancelChanges(newRecords);
-        cancelled &= internalCancelChanges(deletedRecords);
-        cancelled &= internalCancelChanges(modifiedRecords);
+        cancelled &= internalCancelChanges(this.newRecords);
+        cancelled &= internalCancelChanges(this.deletedRecords);
+        cancelled &= internalCancelChanges(this.modifiedRecords);
       } finally {
         setEventsEnabled(eventsEnabled);
         fireRecordsChanged();
@@ -485,18 +485,18 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public void clearSelectedRecords() {
-    synchronized (selectedRecords) {
-      selectedRecords.clear();
+    synchronized (this.selectedRecords) {
+      this.selectedRecords.clear();
       clearSelectedRecordsIndex();
     }
-    synchronized (highlightedRecords) {
-      highlightedRecords.clear();
+    synchronized (this.highlightedRecords) {
+      this.highlightedRecords.clear();
     }
     fireSelected();
   }
 
   protected void clearSelectedRecordsIndex() {
-    selectedRecordsIndex = null;
+    this.selectedRecordsIndex = null;
   }
 
   @SuppressWarnings("unchecked")
@@ -600,8 +600,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       } finally {
         record.setState(RecordState.New);
       }
-      synchronized (newRecords) {
-        newRecords.add(record);
+      synchronized (this.newRecords) {
+        this.newRecords.add(record);
       }
       fireRecordInserted(record);
       return record;
@@ -636,13 +636,13 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   @Override
   public void delete() {
     super.delete();
-    if (forms != null) {
-      for (final Window window : formWindows.values()) {
+    if (this.forms != null) {
+      for (final Window window : this.formWindows.values()) {
         if (window != null) {
           Invoke.later(window, "dispose");
         }
       }
-      for (final Component form : forms.values()) {
+      for (final Component form : this.forms.values()) {
         if (form != null) {
           if (form instanceof DataObjectLayerForm) {
             final DataObjectLayerForm recordForm = (DataObjectLayerForm)form;
@@ -651,17 +651,17 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         }
       }
     }
-    columnNameOrder.clear();
-    deletedRecords.clear();
-    forms.clear();
-    formWindows.clear();
-    highlightedRecords.clear();
-    index.clear();
-    modifiedRecords.clear();
-    newRecords.clear();
-    selectedRecords.clear();
-    if (selectedRecordsIndex != null) {
-      selectedRecordsIndex.clear();
+    this.columnNameOrder.clear();
+    this.deletedRecords.clear();
+    this.forms.clear();
+    this.formWindows.clear();
+    this.highlightedRecords.clear();
+    this.index.clear();
+    this.modifiedRecords.clear();
+    this.newRecords.clear();
+    this.selectedRecords.clear();
+    if (this.selectedRecordsIndex != null) {
+      this.selectedRecordsIndex.clear();
     }
   }
 
@@ -675,15 +675,15 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
     if (isLayerRecord(record)) {
       unSelectRecords(record);
       clearSelectedRecordsIndex();
-      synchronized (newRecords) {
-        if (!removeSame(newRecords, record)) {
-          synchronized (modifiedRecords) {
-            removeSame(modifiedRecords, record);
+      synchronized (this.newRecords) {
+        if (!removeSame(this.newRecords, record)) {
+          synchronized (this.modifiedRecords) {
+            removeSame(this.modifiedRecords, record);
           }
           if (trackDeletions) {
-            synchronized (deletedRecords) {
-              if (!containsSame(deletedRecords, record)) {
-                deletedRecords.add(record);
+            synchronized (this.deletedRecords) {
+              if (!containsSame(this.deletedRecords, record)) {
+                this.deletedRecords.add(record);
               }
             }
           }
@@ -706,8 +706,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
     } else {
       synchronized (this.getEditSync()) {
         for (final LayerDataObject record : records) {
-          synchronized (newRecords) {
-            if (removeSame(newRecords, record)) {
+          synchronized (this.newRecords) {
+            if (removeSame(this.newRecords, record)) {
               unSelectRecords(record);
               record.setState(RecordState.Deleted);
             }
@@ -834,7 +834,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected void fireSelected() {
-    final int selectionCount = selectedRecords.size();
+    final int selectionCount = this.selectedRecords.size();
     final boolean selected = selectionCount > 0;
     firePropertyChange("hasSelectedRecords", !selected, selected);
     firePropertyChange("selectionCount", -1, selectionCount);
@@ -842,19 +842,19 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
   @Override
   public BoundingBox getBoundingBox() {
-    return boundingBox;
+    return this.boundingBox;
   }
 
   public int getChangeCount() {
     int changeCount = 0;
-    synchronized (newRecords) {
-      changeCount += newRecords.size();
+    synchronized (this.newRecords) {
+      changeCount += this.newRecords.size();
     }
-    synchronized (modifiedRecords) {
-      changeCount += modifiedRecords.size();
+    synchronized (this.modifiedRecords) {
+      changeCount += this.modifiedRecords.size();
     }
-    synchronized (deletedRecords) {
-      changeCount += deletedRecords.size();
+    synchronized (this.deletedRecords) {
+      changeCount += this.deletedRecords.size();
     }
     return changeCount;
   }
@@ -862,14 +862,14 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   public List<LayerDataObject> getChanges() {
     synchronized (this.getEditSync()) {
       final List<LayerDataObject> records = new ArrayList<LayerDataObject>();
-      synchronized (newRecords) {
-        records.addAll(newRecords);
+      synchronized (this.newRecords) {
+        records.addAll(this.newRecords);
       }
-      synchronized (modifiedRecords) {
-        records.addAll(modifiedRecords);
+      synchronized (this.modifiedRecords) {
+        records.addAll(this.modifiedRecords);
       }
-      synchronized (deletedRecords) {
-        records.addAll(deletedRecords);
+      synchronized (this.deletedRecords) {
+        records.addAll(this.deletedRecords);
       }
       return records;
     }
@@ -877,8 +877,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
   public List<String> getColumnNames() {
     synchronized (this) {
-      if (columnNames == null) {
-        final Set<String> columnNames = new LinkedHashSet<String>(columnNameOrder);
+      if (this.columnNames == null) {
+        final Set<String> columnNames = new LinkedHashSet<String>(this.columnNameOrder);
         final RecordDefinition recordDefinition = getRecordDefinition();
         final List<String> attributeNames = recordDefinition.getFieldNames();
         columnNames.addAll(attributeNames);
@@ -886,7 +886,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         updateColumnNames();
       }
     }
-    return columnNames;
+    return this.columnNames;
   }
 
   public CoordinateSystem getCoordinateSystem() {
@@ -894,22 +894,22 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public int getDeletedRecordCount() {
-    synchronized (deletedRecords) {
-      return deletedRecords.size();
+    synchronized (this.deletedRecords) {
+      return this.deletedRecords.size();
     }
   }
 
   public Collection<LayerDataObject> getDeletedRecords() {
-    synchronized (deletedRecords) {
-      return new ArrayList<LayerDataObject>(deletedRecords);
+    synchronized (this.deletedRecords) {
+      return new ArrayList<LayerDataObject>(this.deletedRecords);
     }
   }
 
   public synchronized Object getEditSync() {
-    if (editSync == null) {
-      editSync = new Object();
+    if (this.editSync == null) {
+      this.editSync = new Object();
     }
-    return editSync;
+    return this.editSync;
   }
 
   public String getFieldTitle(final String fieldName) {
@@ -922,7 +922,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public String getGeometryAttributeName() {
-    if (recordDefinition == null) {
+    if (this.recordDefinition == null) {
       return "";
     } else {
       return getRecordDefinition().getGeometryFieldName();
@@ -944,12 +944,12 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public int getHighlightedCount() {
-    return highlightedRecords.size();
+    return this.highlightedRecords.size();
   }
 
   public Collection<LayerDataObject> getHighlightedRecords() {
-    synchronized (highlightedRecords) {
-      return new ArrayList<LayerDataObject>(highlightedRecords);
+    synchronized (this.highlightedRecords) {
+      return new ArrayList<LayerDataObject>(this.highlightedRecords);
     }
   }
 
@@ -958,7 +958,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public DataObjectQuadTree getIndex() {
-    return index;
+    return this.index;
   }
 
   public List<LayerDataObject> getMergeableSelectedRecords() {
@@ -1022,16 +1022,16 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public Collection<LayerDataObject> getModifiedRecords() {
-    return new ArrayList<LayerDataObject>(modifiedRecords);
+    return new ArrayList<LayerDataObject>(this.modifiedRecords);
   }
 
   public int getNewRecordCount() {
-    return newRecords.size();
+    return this.newRecords.size();
   }
 
   public List<LayerDataObject> getNewRecords() {
-    synchronized (newRecords) {
-      return new ArrayList<LayerDataObject>(newRecords);
+    synchronized (this.newRecords) {
+      return new ArrayList<LayerDataObject>(this.newRecords);
     }
   }
 
@@ -1118,10 +1118,10 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public Query getQuery() {
-    if (query == null) {
+    if (this.query == null) {
       return null;
     } else {
-      return query.clone();
+      return this.query.clone();
     }
   }
 
@@ -1134,7 +1134,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public RecordDefinition getRecordDefinition() {
-    return recordDefinition;
+    return this.recordDefinition;
   }
 
   public List<LayerDataObject> getRecords() {
@@ -1167,8 +1167,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public List<LayerDataObject> getSelectedRecords() {
-    synchronized (selectedRecords) {
-      return new ArrayList<LayerDataObject>(selectedRecords);
+    synchronized (this.selectedRecords) {
+      return new ArrayList<LayerDataObject>(this.selectedRecords);
     }
   }
 
@@ -1181,17 +1181,17 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected DataObjectQuadTree getSelectedRecordsIndex() {
-    if (selectedRecordsIndex == null) {
+    if (this.selectedRecordsIndex == null) {
       final List<LayerDataObject> selectedRecords = getSelectedRecords();
       final DataObjectQuadTree index = new DataObjectQuadTree(getProject().getGeometryFactory(),
         selectedRecords);
-      selectedRecordsIndex = index;
+      this.selectedRecordsIndex = index;
     }
-    return selectedRecordsIndex;
+    return this.selectedRecordsIndex;
   }
 
   public int getSelectionCount() {
-    return selectedRecords.size();
+    return this.selectedRecords.size();
   }
 
   public Collection<String> getSnapLayerPaths() {
@@ -1199,7 +1199,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public Collection<String> getUserReadOnlyFieldNames() {
-    return Collections.unmodifiableSet(userReadOnlyFieldNames);
+    return Collections.unmodifiableSet(this.userReadOnlyFieldNames);
   }
 
   public boolean hasGeometryAttribute() {
@@ -1207,10 +1207,10 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected boolean hasPermission(final String permission) {
-    if (recordDefinition == null) {
+    if (this.recordDefinition == null) {
       return true;
     } else {
-      final Collection<String> permissions = recordDefinition.getProperty("permissions");
+      final Collection<String> permissions = this.recordDefinition.getProperty("permissions");
       if (permissions == null) {
         return true;
       } else {
@@ -1270,7 +1270,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected boolean internalIsDeleted(final LayerDataObject record) {
-    return containsSame(deletedRecords, record);
+    return containsSame(this.deletedRecords, record);
   }
 
   /**
@@ -1300,15 +1300,15 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public boolean isCanAddRecords() {
-    return !super.isReadOnly() && isEditable() && canAddRecords && hasPermission("INSERT");
+    return !super.isReadOnly() && isEditable() && this.canAddRecords && hasPermission("INSERT");
   }
 
   public boolean isCanDeleteRecords() {
-    return !super.isReadOnly() && isEditable() && canDeleteRecords && hasPermission("DELETE");
+    return !super.isReadOnly() && isEditable() && this.canDeleteRecords && hasPermission("DELETE");
   }
 
   public boolean isCanEditRecords() {
-    return !super.isReadOnly() && isEditable() && canEditRecords && hasPermission("UPDATE");
+    return !super.isReadOnly() && isEditable() && this.canEditRecords && hasPermission("UPDATE");
   }
 
   public boolean isCanMergeRecords() {
@@ -1348,11 +1348,11 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   public boolean isHasChanges() {
     if (isEditable()) {
       synchronized (this.getEditSync()) {
-        if (!newRecords.isEmpty()) {
+        if (!this.newRecords.isEmpty()) {
           return true;
-        } else if (!modifiedRecords.isEmpty()) {
+        } else if (!this.modifiedRecords.isEmpty()) {
           return true;
-        } else if (!deletedRecords.isEmpty()) {
+        } else if (!this.deletedRecords.isEmpty()) {
           return true;
         } else {
           return false;
@@ -1383,8 +1383,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public boolean isHighlighted(final LayerDataObject record) {
-    synchronized (highlightedRecords) {
-      return containsSame(highlightedRecords, record);
+    synchronized (this.highlightedRecords) {
+      return containsSame(this.highlightedRecords, record);
     }
   }
 
@@ -1399,14 +1399,14 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public boolean isModified(final LayerDataObject record) {
-    synchronized (modifiedRecords) {
-      return containsSame(modifiedRecords, record);
+    synchronized (this.modifiedRecords) {
+      return containsSame(this.modifiedRecords, record);
     }
   }
 
   public boolean isNew(final LayerDataObject record) {
-    synchronized (newRecords) {
-      return newRecords.contains(record);
+    synchronized (this.newRecords) {
+      return this.newRecords.contains(record);
     }
   }
 
@@ -1415,11 +1415,11 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
     if (super.isReadOnly()) {
       return true;
     } else {
-      if (canAddRecords && hasPermission("INSERT")) {
+      if (this.canAddRecords && hasPermission("INSERT")) {
         return false;
-      } else if (canDeleteRecords && hasPermission("DELETE")) {
+      } else if (this.canDeleteRecords && hasPermission("DELETE")) {
         return false;
-      } else if (canEditRecords && hasPermission("UPDATE")) {
+      } else if (this.canEditRecords && hasPermission("UPDATE")) {
         return false;
       } else {
         return true;
@@ -1431,18 +1431,18 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
     if (record == null) {
       return false;
     } else {
-      synchronized (selectedRecords) {
-        return containsSame(selectedRecords, record);
+      synchronized (this.selectedRecords) {
+        return containsSame(this.selectedRecords, record);
       }
     }
   }
 
   public boolean isSnapToAllLayers() {
-    return snapToAllLayers;
+    return this.snapToAllLayers;
   }
 
   public boolean isUseFieldTitles() {
-    return useFieldTitles;
+    return this.useFieldTitles;
   }
 
   public boolean isVisible(final LayerDataObject record) {
@@ -1545,8 +1545,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
     } finally {
       setEventsEnabled(eventsEnabled);
     }
-    firePropertyChange("recordsInserted", null, newRecords);
-    addSelectedRecords(newRecords);
+    firePropertyChange("recordsInserted", null, this.newRecords);
+    addSelectedRecords(this.newRecords);
   }
 
   protected void postSaveChanges(final RecordState originalState, final LayerDataObject record) {
@@ -1557,8 +1557,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
   protected boolean postSaveDeletedRecord(final LayerDataObject record) {
     boolean deleted;
-    synchronized (deletedRecords) {
-      deleted = deletedRecords.remove(record);
+    synchronized (this.deletedRecords) {
+      deleted = this.deletedRecords.remove(record);
     }
     if (deleted) {
       unSelectRecords(record);
@@ -1570,14 +1570,14 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected boolean postSaveModifiedRecord(final LayerDataObject record) {
-    synchronized (modifiedRecords) {
-      return modifiedRecords.remove(record);
+    synchronized (this.modifiedRecords) {
+      return this.modifiedRecords.remove(record);
     }
   }
 
   protected boolean postSaveNewRecord(final LayerDataObject record) {
-    synchronized (newRecords) {
-      if (newRecords.remove(record)) {
+    synchronized (this.newRecords) {
+      if (this.newRecords.remove(record)) {
         addToIndex(record);
         if (isSelected(record)) {
           unSelectRecords(record);
@@ -1655,14 +1655,14 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   protected void removeForm(final LayerDataObject record) {
     if (record != null) {
       if (SwingUtilities.isEventDispatchThread()) {
-        final Component form = forms.remove(record);
+        final Component form = this.forms.remove(record);
         if (form != null) {
           if (form instanceof DataObjectLayerForm) {
             final DataObjectLayerForm recordForm = (DataObjectLayerForm)form;
             recordForm.destroy();
           }
         }
-        final Window window = formWindows.remove(record);
+        final Window window = this.formWindows.remove(record);
         if (window != null) {
           window.dispose();
         }
@@ -1716,8 +1716,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected void removeHighlightedRecord(final LayerDataObject record) {
-    synchronized (highlightedRecords) {
-      for (final Iterator<LayerDataObject> iterator = highlightedRecords.iterator(); iterator.hasNext();) {
+    synchronized (this.highlightedRecords) {
+      for (final Iterator<LayerDataObject> iterator = this.highlightedRecords.iterator(); iterator.hasNext();) {
         final LayerDataObject highlightedRecord = iterator.next();
         if (highlightedRecord.isSame(record)) {
           iterator.remove();
@@ -1727,8 +1727,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected void removeSelectedRecord(final LayerDataObject record) {
-    synchronized (selectedRecords) {
-      for (final Iterator<LayerDataObject> iterator = selectedRecords.iterator(); iterator.hasNext();) {
+    synchronized (this.selectedRecords) {
+      for (final Iterator<LayerDataObject> iterator = this.selectedRecords.iterator(); iterator.hasNext();) {
         final LayerDataObject selectedRecord = iterator.next();
         if (selectedRecord != null && selectedRecord.isSame(record)) {
           iterator.remove();
@@ -1743,11 +1743,11 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public void revertChanges(final LayerDataObject record) {
-    synchronized (modifiedRecords) {
+    synchronized (this.modifiedRecords) {
       if (isLayerRecord(record)) {
         postSaveModifiedRecord(record);
-        synchronized (deletedRecords) {
-          for (final Iterator<LayerDataObject> iterator = deletedRecords.iterator(); iterator.hasNext();) {
+        synchronized (this.deletedRecords) {
+          for (final Iterator<LayerDataObject> iterator = this.deletedRecords.iterator(); iterator.hasNext();) {
             final LayerDataObject deletedRecord = iterator.next();
             if (deletedRecord.isSame(deletedRecord)) {
               iterator.remove();
@@ -1856,9 +1856,9 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
           }
         }
         super.setEditable(editable);
-        setCanAddRecords(canAddRecords);
-        setCanDeleteRecords(canDeleteRecords);
-        setCanEditRecords(canEditRecords);
+        setCanAddRecords(this.canAddRecords);
+        setCanDeleteRecords(this.canDeleteRecords);
+        setCanEditRecords(this.canEditRecords);
       }
     }
   }
@@ -1866,10 +1866,10 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   @Override
   protected void setGeometryFactory(final GeometryFactory geometryFactory) {
     super.setGeometryFactory(geometryFactory);
-    if (geometryFactory != null && boundingBox.isEmpty()) {
+    if (geometryFactory != null && this.boundingBox.isEmpty()) {
       final CoordinateSystem coordinateSystem = geometryFactory.getCoordinateSystem();
       if (coordinateSystem != null) {
-        boundingBox = coordinateSystem.getAreaBoundingBox();
+        this.boundingBox = coordinateSystem.getAreaBoundingBox();
       }
     }
   }
@@ -1947,7 +1947,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         setRenderer(null);
       }
       updateColumnNames();
-      if (query == null) {
+      if (this.query == null) {
         setQuery(null);
       }
     }
@@ -1963,7 +1963,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         }
       }
       setSelectedRecords(records);
-      if (!selectedRecords.isEmpty()) {
+      if (!this.selectedRecords.isEmpty()) {
         showRecordsTable(DataObjectLayerTableModel.MODE_SELECTED);
       }
     }
@@ -1977,8 +1977,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         addSelectedRecord(record);
       }
     }
-    synchronized (highlightedRecords) {
-      highlightedRecords.retainAll(selectedRecords);
+    synchronized (this.highlightedRecords) {
+      this.highlightedRecords.retainAll(selectedRecords);
     }
     fireSelected();
   }
@@ -2047,7 +2047,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       return null;
     } else {
       if (SwingUtilities.isEventDispatchThread()) {
-        Window window = formWindows.get(record);
+        Window window = this.formWindows.get(record);
         if (window == null) {
           final Component form = createForm(record);
           final Object id = record.getIdValue();
@@ -2077,8 +2077,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
             SwingUtil.autoAdjustPosition(window);
             final int offset = Math.abs(formCount.incrementAndGet() % 10);
             window.setLocation(50 + offset * 20, 100 + offset * 20);
-            forms.put(record, form);
-            formWindows.put(record, window);
+            this.forms.put(record, form);
+            this.formWindows.put(record, window);
             window.addWindowListener(new WindowAdapter() {
 
               @Override
@@ -2202,19 +2202,19 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   public Map<String, Object> toMap() {
     final Map<String, Object> map = super.toMap();
     if (!super.isReadOnly()) {
-      MapSerializerUtil.add(map, "canAddRecords", canAddRecords);
-      MapSerializerUtil.add(map, "canDeleteRecords", canDeleteRecords);
-      MapSerializerUtil.add(map, "canEditRecords", canEditRecords);
-      MapSerializerUtil.add(map, "snapToAllLayers", snapToAllLayers);
+      MapSerializerUtil.add(map, "canAddRecords", this.canAddRecords);
+      MapSerializerUtil.add(map, "canDeleteRecords", this.canDeleteRecords);
+      MapSerializerUtil.add(map, "canEditRecords", this.canEditRecords);
+      MapSerializerUtil.add(map, "snapToAllLayers", this.snapToAllLayers);
     }
-    MapSerializerUtil.add(map, "columnNameOrder", columnNameOrder);
-    MapSerializerUtil.add(map, "useFieldTitles", useFieldTitles);
+    MapSerializerUtil.add(map, "columnNameOrder", this.columnNameOrder);
+    MapSerializerUtil.add(map, "useFieldTitles", this.useFieldTitles);
     map.remove("TableView");
     return map;
   }
 
   public void unHighlightRecords(final Collection<? extends LayerDataObject> records) {
-    synchronized (highlightedRecords) {
+    synchronized (this.highlightedRecords) {
       for (final LayerDataObject record : records) {
         removeHighlightedRecord(record);
       }
@@ -2232,7 +2232,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         }
       }
       unSelectRecords(records);
-      if (!selectedRecords.isEmpty()) {
+      if (!this.selectedRecords.isEmpty()) {
         showRecordsTable(DataObjectLayerTableModel.MODE_SELECTED);
       }
     }
@@ -2252,9 +2252,9 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   protected void updateColumnNames() {
-    if (columnNames != null && recordDefinition != null) {
-      final List<String> attributeNames = recordDefinition.getFieldNames();
-      columnNames.retainAll(attributeNames);
+    if (this.columnNames != null && this.recordDefinition != null) {
+      final List<String> attributeNames = this.recordDefinition.getFieldNames();
+      this.columnNames.retainAll(attributeNames);
     }
   }
 

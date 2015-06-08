@@ -21,8 +21,7 @@ public class ActionMainMenuItemFactory implements ComponentFactory<JMenuItem> {
     this.action = action;
   }
 
-  public ActionMainMenuItemFactory(final EnableCheck checkBoxSelectedCheck,
-    final Action action) {
+  public ActionMainMenuItemFactory(final EnableCheck checkBoxSelectedCheck, final Action action) {
     this(action);
     this.checkBoxSelectedCheck = checkBoxSelectedCheck;
   }

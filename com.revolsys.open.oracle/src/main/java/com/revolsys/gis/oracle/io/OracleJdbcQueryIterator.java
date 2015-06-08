@@ -8,8 +8,8 @@ import com.revolsys.jdbc.io.JdbcQueryIterator;
 
 public class OracleJdbcQueryIterator extends JdbcQueryIterator {
 
-  public OracleJdbcQueryIterator(final AbstractJdbcRecordStore dataStore,
-    final Query query, final Map<String, Object> properties) {
+  public OracleJdbcQueryIterator(final AbstractJdbcRecordStore dataStore, final Query query,
+    final Map<String, Object> properties) {
     super(dataStore, query, properties);
   }
 
@@ -25,8 +25,7 @@ public class OracleJdbcQueryIterator extends JdbcQueryIterator {
     if (offset < 1 && limit < 0) {
       return sql;
     }
-    sql = "SELECT * FROM (SELECT V.*,ROWNUM \"ROWN\" FROM (" + sql
-      + ") V ) WHERE ROWN ";
+    sql = "SELECT * FROM (SELECT V.*,ROWNUM \"ROWN\" FROM (" + sql + ") V ) WHERE ROWN ";
     final int startRowNum = offset + 1;
     final int endRowNum = offset + limit;
     if (offset > 0) {

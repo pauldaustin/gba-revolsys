@@ -30,8 +30,7 @@ public class DataObjectGeometryComparitor implements Comparator<Record> {
     } else {
       final Geometry geometry1 = object1.getGeometryValue();
       final Geometry geometry2 = object2.getGeometryValue();
-      int compare = CompareUtil.compare(GEOMETRYC_COMPARATOR, geometry1,
-        geometry2);
+      int compare = CompareUtil.compare(GEOMETRYC_COMPARATOR, geometry1, geometry2);
       if (compare == 0) {
         compare = geometry1.compareTo(geometry2);
         if (compare == 0) {
@@ -48,7 +47,7 @@ public class DataObjectGeometryComparitor implements Comparator<Record> {
           }
         }
       }
-      if (decending) {
+      if (this.decending) {
         return -compare;
       } else {
         return compare;
@@ -56,8 +55,8 @@ public class DataObjectGeometryComparitor implements Comparator<Record> {
     }
   }
 
-  public int compareAttributes(final Record object1,
-    final Record object2, final Set<String> attributeNames) {
+  public int compareAttributes(final Record object1, final Record object2,
+    final Set<String> attributeNames) {
     for (final String attributeName : attributeNames) {
       final Object value1 = object1.getValue(attributeName);
       final Object value2 = object2.getValue(attributeName);

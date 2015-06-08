@@ -14,8 +14,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class PointUtil {
 
-  public static Point createRandomPoint(final GeometryFactory factory,
-    final Envelope envelope) {
+  public static Point createRandomPoint(final GeometryFactory factory, final Envelope envelope) {
     final double x = envelope.getMinX() + envelope.getWidth() * Math.random();
     final double y = envelope.getMinY() + envelope.getHeight() * Math.random();
     final CoordinatesList coordinatesList = new DoubleCoordinatesList(2, x, y);
@@ -46,8 +45,8 @@ public class PointUtil {
     final Point centroid = polygon.getCentroid();
     if (centroid.within(polygon)) {
       final Coordinates coordinates = CoordinatesUtil.get(centroid);
-      final CoordinatesList coordinatesList = new DoubleCoordinatesList(2,
-        coordinates.getX(), coordinates.getY());
+      final CoordinatesList coordinatesList = new DoubleCoordinatesList(2, coordinates.getX(),
+        coordinates.getY());
       return factory.createPoint(coordinatesList);
     } else {
       final Envelope envelope = polygon.getEnvelopeInternal();
@@ -56,8 +55,7 @@ public class PointUtil {
       while (!point.within(polygon)) {
         point = createRandomPoint(factory, envelope);
         if (i++ > 1000) {
-          throw new RuntimeException(
-            "Too many iterations to create a random point in polygon");
+          throw new RuntimeException("Too many iterations to create a random point in polygon");
         }
       }
       return point;

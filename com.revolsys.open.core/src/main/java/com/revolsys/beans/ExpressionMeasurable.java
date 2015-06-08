@@ -22,8 +22,8 @@ public class ExpressionMeasurable<Q extends Quantity> extends Measure<Q> {
 
   private JexlContext context;
 
-  protected ExpressionMeasurable(final Expression expression,
-    final JexlContext context, final Unit<Q> unit) {
+  protected ExpressionMeasurable(final Expression expression, final JexlContext context,
+    final Unit<Q> unit) {
     this.expression = expression;
     this.context = context;
     this.unit = unit;
@@ -33,8 +33,7 @@ public class ExpressionMeasurable<Q extends Quantity> extends Measure<Q> {
     try {
       this.expression = JexlUtil.createExpression(expression);
     } catch (final Exception e) {
-      throw new IllegalArgumentException("Expression " + expression
-        + " is not valid", e);
+      throw new IllegalArgumentException("Expression " + expression + " is not valid", e);
     }
     this.unit = unit;
   }
@@ -58,17 +57,16 @@ public class ExpressionMeasurable<Q extends Quantity> extends Measure<Q> {
 
   @Override
   public Unit<Q> getUnit() {
-    return unit;
+    return this.unit;
   }
 
   @Override
   public Double getValue() {
-    if (expression == null) {
+    if (this.expression == null) {
       return Double.NaN;
     } else {
       try {
-        return Double.valueOf(JexlUtil.evaluateExpression(context, expression)
-          .toString());
+        return Double.valueOf(JexlUtil.evaluateExpression(this.context, this.expression).toString());
       } catch (final NullPointerException e) {
         return 0.0;
       }
@@ -86,7 +84,7 @@ public class ExpressionMeasurable<Q extends Quantity> extends Measure<Q> {
     } else {
       final UnitConverter unitConverter = this.unit.getConverterTo(unit);
       final Unit<Q> transformedUnit = this.unit.transform(unitConverter);
-      return new ExpressionMeasurable<Q>(expression, context, transformedUnit);
+      return new ExpressionMeasurable<Q>(this.expression, this.context, transformedUnit);
     }
   }
 }

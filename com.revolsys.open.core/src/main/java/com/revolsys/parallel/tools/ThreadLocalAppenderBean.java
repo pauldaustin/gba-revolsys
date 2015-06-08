@@ -28,34 +28,33 @@ public class ThreadLocalAppenderBean implements BeanFactoryPostProcessor {
   }
 
   public File getLogFile() {
-    return logFile;
+    return this.logFile;
   }
 
   @Override
-  public void postProcessBeanFactory(
-    final ConfigurableListableBeanFactory beanFactory) throws BeansException {
+  public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
+    throws BeansException {
     final ThreadLocalFileAppender localAppender = ThreadLocalFileAppender.getAppender();
-    final String logFilePath = logFile.getAbsolutePath();
-    if (localAppender != null && logFile != null) {
-      final File parentFile = logFile.getParentFile();
+    final String logFilePath = this.logFile.getAbsolutePath();
+    if (localAppender != null && this.logFile != null) {
+      final File parentFile = this.logFile.getParentFile();
       if (parentFile != null) {
         parentFile.mkdirs();
       }
       localAppender.setLocalFile(logFilePath);
-    } else if (logFile != null) {
+    } else if (this.logFile != null) {
 
       final org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
       try {
         final Layout layout = new PatternLayout("%d\t%p\t%m%n");
-        final Appender appender = new ThreadLocalFileAppender(layout,
-          logFilePath, false);
+        final Appender appender = new ThreadLocalFileAppender(layout, logFilePath, false);
         appender.setName("ThreadLocalLog");
         rootLogger.addAppender(appender);
       } catch (final IOException e) {
         final Layout layout = new PatternLayout("%p\t%m%n");
         final Appender appender = new ConsoleAppender(layout);
         rootLogger.addAppender(appender);
-        LOG.error("Cannot find log file " + logFile, e);
+        LOG.error("Cannot find log file " + this.logFile, e);
       }
     }
   }

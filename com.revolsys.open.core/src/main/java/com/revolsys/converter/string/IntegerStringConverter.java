@@ -2,8 +2,7 @@ package com.revolsys.converter.string;
 
 import org.springframework.util.StringUtils;
 
-public class IntegerStringConverter extends
-  AbstractNumberStringConverter<Integer> {
+public class IntegerStringConverter extends AbstractNumberStringConverter<Integer> {
   public IntegerStringConverter() {
     super();
   }

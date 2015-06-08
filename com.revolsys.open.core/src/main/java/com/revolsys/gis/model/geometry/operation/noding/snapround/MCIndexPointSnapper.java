@@ -28,42 +28,38 @@ public class MCIndexPointSnapper {
 
     private boolean isNodeAdded = false;
 
-    public HotPixelSnapAction(final HotPixel hotPixel,
-      final SegmentString parentEdge, final int vertexIndex) {
+    public HotPixelSnapAction(final HotPixel hotPixel, final SegmentString parentEdge,
+      final int vertexIndex) {
       this.hotPixel = hotPixel;
       this.parentEdge = parentEdge;
       this.vertexIndex = vertexIndex;
     }
 
     public boolean isNodeAdded() {
-      return isNodeAdded;
+      return this.isNodeAdded;
     }
 
     @Override
     public void select(final MonotoneChain mc, final int startIndex) {
       final NodedSegmentString ss = (NodedSegmentString)mc.getContext();
       // don't snap a vertex to itself
-      if (parentEdge != null) {
-        if (ss == parentEdge && startIndex == vertexIndex) {
+      if (this.parentEdge != null) {
+        if (ss == this.parentEdge && startIndex == this.vertexIndex) {
           return;
         }
       }
       // isNodeAdded = SimpleSnapRounder.addSnappedNode(hotPixel, ss,
       // startIndex);
-      isNodeAdded = hotPixel.addSnappedNode(ss, startIndex);
+      this.isNodeAdded = this.hotPixel.addSnappedNode(ss, startIndex);
     }
 
   }
 
   public static int nSnaps = 0;
 
-  private final Collection monoChains;
-
   private final STRtree index;
 
-  public MCIndexPointSnapper(final Collection monoChains,
-    final SpatialIndex index) {
-    this.monoChains = monoChains;
+  public MCIndexPointSnapper(final Collection monoChains, final SpatialIndex index) {
     this.index = (STRtree)index;
   }
 
@@ -82,13 +78,12 @@ public class MCIndexPointSnapper {
    * @param vertexIndex the index of the vertex, if applicable, or -1
    * @return <code>true</code> if a node was added for this pixel
    */
-  public boolean snap(final HotPixel hotPixel, final SegmentString parentEdge,
-    final int vertexIndex) {
+  public boolean snap(final HotPixel hotPixel, final SegmentString parentEdge, final int vertexIndex) {
     final BoundingBox pixelEnv = hotPixel.getSafeBoundingBox();
-    final HotPixelSnapAction hotPixelSnapAction = new HotPixelSnapAction(
-      hotPixel, parentEdge, vertexIndex);
+    final HotPixelSnapAction hotPixelSnapAction = new HotPixelSnapAction(hotPixel, parentEdge,
+      vertexIndex);
 
-    index.query(JtsGeometryUtil.getEnvelope(pixelEnv), new ItemVisitor() {
+    this.index.query(JtsGeometryUtil.getEnvelope(pixelEnv), new ItemVisitor() {
       @Override
       public void visitItem(final Object item) {
         final MonotoneChain testChain = (MonotoneChain)item;

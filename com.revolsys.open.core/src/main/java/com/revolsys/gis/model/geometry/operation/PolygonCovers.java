@@ -8,7 +8,7 @@ public class PolygonCovers extends AbstractPolygonContains {
 
   public PolygonCovers(final Polygon polygon) {
     super(polygon);
-    requireSomePointInInterior = false;
+    this.requireSomePointInInterior = false;
   }
 
   public boolean covers(final Geometry geom) {
@@ -17,7 +17,7 @@ public class PolygonCovers extends AbstractPolygonContains {
 
   @Override
   protected boolean fullTopologicalPredicate(final Geometry geometry) {
-    return RelateOp.relate(polygon, geometry).isCovers();
+    return RelateOp.relate(this.polygon, geometry).isCovers();
   }
 
 }

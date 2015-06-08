@@ -48,38 +48,37 @@ public class GpxWriter extends AbstractWriter<Record> {
   }
 
   public GpxWriter(final Writer writer) throws IOException {
-    out = new XmlWriter(new BufferedWriter(writer));
-    out.setIndent(false);
-    out.startDocument("UTF-8", "1.0");
+    this.out = new XmlWriter(new BufferedWriter(writer));
+    this.out.setIndent(false);
+    this.out.startDocument("UTF-8", "1.0");
 
-    out.startTag(GpxConstants.GPX_ELEMENT);
-    out.attribute(GpxConstants.VERSION_ATTRIBUTE, "1.1");
-    out.attribute(GpxConstants.CREATOR_ATTRIBUTE,
-      "Revolution Systems Inc. - GIS");
+    this.out.startTag(GpxConstants.GPX_ELEMENT);
+    this.out.attribute(GpxConstants.VERSION_ATTRIBUTE, "1.1");
+    this.out.attribute(GpxConstants.CREATOR_ATTRIBUTE, "Revolution Systems Inc. - GIS");
   }
 
   @Override
   public void close() {
-    out.endTag();
-    out.endDocument();
-    out.close();
+    this.out.endTag();
+    this.out.endDocument();
+    this.out.close();
   }
 
   @Override
   public void flush() {
-    out.flush();
+    this.out.flush();
   }
 
   public String getCommentAttribute() {
-    return commentAttribute;
+    return this.commentAttribute;
   }
 
   public String getDescriptionAttribute() {
-    return descriptionAttribute;
+    return this.descriptionAttribute;
   }
 
   public String getNameAttribute() {
-    return nameAttribute;
+    return this.nameAttribute;
   }
 
   public void setCommentAttribute(final String commentAttribute) {
@@ -96,7 +95,7 @@ public class GpxWriter extends AbstractWriter<Record> {
 
   @Override
   public String toString() {
-    return file.getAbsolutePath();
+    return this.file.getAbsolutePath();
   }
 
   @Override
@@ -117,74 +116,71 @@ public class GpxWriter extends AbstractWriter<Record> {
     final Object time = object.getValue("timestamp");
     if (time != null) {
       if (time instanceof Date) {
-        final DateFormat timestampFormat = new SimpleDateFormat(
-          "yyyy-MM-dd'T'HH:mm:ss.");
+        final DateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.");
         timestampFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        out.element(GpxConstants.TIME_ELEMENT, timestampFormat.format(time));
+        this.out.element(GpxConstants.TIME_ELEMENT, timestampFormat.format(time));
       } else {
-        out.element(GpxConstants.TIME_ELEMENT, time.toString());
+        this.out.element(GpxConstants.TIME_ELEMENT, time.toString());
       }
     }
-    writeElement(object, GpxConstants.NAME_ELEMENT, nameAttribute);
-    writeElement(object, GpxConstants.COMMENT_ELEMENT, commentAttribute);
-    writeElement(object, GpxConstants.DESCRIPTION_ELEMENT, descriptionAttribute);
+    writeElement(object, GpxConstants.NAME_ELEMENT, this.nameAttribute);
+    writeElement(object, GpxConstants.COMMENT_ELEMENT, this.commentAttribute);
+    writeElement(object, GpxConstants.DESCRIPTION_ELEMENT, this.descriptionAttribute);
   }
 
-  private void writeElement(final Record object, final QName tag,
-    final String attributeName) {
+  private void writeElement(final Record object, final QName tag, final String attributeName) {
     final String name = object.getValue(attributeName);
     if (name != null && name.length() > 0) {
-      out.element(tag, name);
+      this.out.element(tag, name);
     }
   }
 
   private void writeTrack(final Record object) throws IOException {
-    out.startTag(GpxConstants.TRACK_ELEMENT);
+    this.out.startTag(GpxConstants.TRACK_ELEMENT);
     final LineString line = object.getGeometryValue();
     final int srid = line.getSRID();
     final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
     final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory.getToGeographicsCoordinatesOperation(coordinateSystem);
     final CoordinatesList coordinatesList = CoordinatesListUtil.get(line);
     writeAttributes(object);
-    out.startTag(GpxConstants.TRACK_SEGMENT_ELEMENT);
-    final DoubleCoordinates geoCoordinates = new DoubleCoordinates(
-      coordinatesList.getDimension());
+    this.out.startTag(GpxConstants.TRACK_SEGMENT_ELEMENT);
+    final DoubleCoordinates geoCoordinates = new DoubleCoordinates(coordinatesList.getDimension());
 
     for (final Coordinates coordinates : new InPlaceIterator(coordinatesList)) {
       inverseCoordinatesOperation.perform(coordinates, geoCoordinates);
-      out.startTag(GpxConstants.TRACK_POINT_ELEMENT);
-      out.attribute(GpxConstants.LON_ATTRIBUTE, geoCoordinates.getX());
-      out.attribute(GpxConstants.LAT_ATTRIBUTE, geoCoordinates.getY());
+      this.out.startTag(GpxConstants.TRACK_POINT_ELEMENT);
+      this.out.attribute(GpxConstants.LON_ATTRIBUTE, geoCoordinates.getX());
+      this.out.attribute(GpxConstants.LAT_ATTRIBUTE, geoCoordinates.getY());
       if (coordinatesList.getDimension() > 2) {
         final double elevation = geoCoordinates.getValue(2);
         if (!Double.isNaN(elevation)) {
-          out.element(GpxConstants.ELEVATION_ELEMENT, String.valueOf(elevation));
+          this.out.element(GpxConstants.ELEVATION_ELEMENT, String.valueOf(elevation));
         }
       }
-      out.endTag(GpxConstants.TRACK_POINT_ELEMENT);
+      this.out.endTag(GpxConstants.TRACK_POINT_ELEMENT);
     }
-    out.endTag(GpxConstants.TRACK_SEGMENT_ELEMENT);
-    out.endTag(GpxConstants.TRACK_ELEMENT);
+    this.out.endTag(GpxConstants.TRACK_SEGMENT_ELEMENT);
+    this.out.endTag(GpxConstants.TRACK_ELEMENT);
   }
 
   private void writeWaypoint(final Record wayPoint) throws IOException {
-    out.startTag(GpxConstants.WAYPOINT_ELEMENT);
+    this.out.startTag(GpxConstants.WAYPOINT_ELEMENT);
     final Point point = wayPoint.getGeometryValue();
     final Coordinate coordinate = point.getCoordinate();
     final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(point.getSRID());
     final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory.getToGeographicsCoordinatesOperation(coordinateSystem);
-    final Coordinate geoCoordinate = CoordinateProjectionUtil.perform(
-      inverseCoordinatesOperation, coordinate);
-    out.attribute(GpxConstants.LON_ATTRIBUTE, geoCoordinate.x);
-    out.attribute(GpxConstants.LAT_ATTRIBUTE, geoCoordinate.y);
+    final Coordinate geoCoordinate = CoordinateProjectionUtil.perform(inverseCoordinatesOperation,
+      coordinate);
+    this.out.attribute(GpxConstants.LON_ATTRIBUTE, geoCoordinate.x);
+    this.out.attribute(GpxConstants.LAT_ATTRIBUTE, geoCoordinate.y);
     if (point.getCoordinateSequence().getDimension() > 2) {
       final double elevation = geoCoordinate.z;
       if (!Double.isNaN(elevation)) {
-        out.element(GpxConstants.ELEVATION_ELEMENT, String.valueOf(elevation));
+        this.out.element(GpxConstants.ELEVATION_ELEMENT, String.valueOf(elevation));
       }
     }
     writeAttributes(wayPoint);
-    out.endTag(GpxConstants.WAYPOINT_ELEMENT);
+    this.out.endTag(GpxConstants.WAYPOINT_ELEMENT);
   }
 
 }

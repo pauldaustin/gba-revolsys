@@ -17,8 +17,7 @@ public class AttributeFilter<T extends AttributedObject> implements Filter<T> {
     this.inverse = false;
   }
 
-  public AttributeFilter(final String attributeName, final Object value,
-    final boolean inverse) {
+  public AttributeFilter(final String attributeName, final Object value, final boolean inverse) {
     this.attributeName = attributeName;
     this.value = value;
     this.inverse = inverse;
@@ -26,9 +25,9 @@ public class AttributeFilter<T extends AttributedObject> implements Filter<T> {
 
   @Override
   public boolean accept(final T object) {
-    final Object value = object.getAttribute(attributeName);
+    final Object value = object.getAttribute(this.attributeName);
     final boolean equal = EqualsInstance.INSTANCE.equals(this.value, value);
-    if (inverse) {
+    if (this.inverse) {
       return !equal;
     } else {
       return equal;

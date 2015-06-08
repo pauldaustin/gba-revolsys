@@ -25,8 +25,7 @@ import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Reader;
 import com.revolsys.spring.SpringUtil;
 
-public class JsonMapIoFactory extends AbstractMapReaderFactory implements
-  MapWriterFactory {
+public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWriterFactory {
   public static Map<String, Object> toMap(final File file) {
     if (file == null) {
       return new LinkedHashMap<String, Object>();
@@ -36,8 +35,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements
     }
   }
 
-  public static Map<String, Object> toMap(final File directory,
-    final String path) {
+  public static Map<String, Object> toMap(final File directory, final String path) {
     if (directory == null || path == null) {
       return new LinkedHashMap<String, Object>();
     } else {
@@ -72,8 +70,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements
   }
 
   public static final Map<String, Object> toMap(final Resource resource) {
-    if (resource != null
-      && (!(resource instanceof FileSystemResource) || resource.exists())) {
+    if (resource != null && (!(resource instanceof FileSystemResource) || resource.exists())) {
       try {
         final InputStream in = resource.getInputStream();
         return toMap(in);
@@ -117,8 +114,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements
   public static Map<String, Object> toObjectMap(final String string) {
     if (StringUtils.hasText(string)) {
       final StringReader reader = new StringReader(string);
-      final Reader<Map<String, Object>> mapReader = new JsonMapReader(reader,
-        true);
+      final Reader<Map<String, Object>> mapReader = new JsonMapReader(reader, true);
       for (final Map<String, Object> map : mapReader) {
         return map;
       }
@@ -144,20 +140,18 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements
     return writer.toString();
   }
 
-  public static void write(final Map<String, ? extends Object> object,
-    final File file) {
+  public static void write(final Map<String, ? extends Object> object, final File file) {
     final FileSystemResource resource = new FileSystemResource(file);
     write(object, resource);
   }
 
-  public static void write(final Map<String, ? extends Object> object,
-    final File file, final boolean indent) {
+  public static void write(final Map<String, ? extends Object> object, final File file,
+    final boolean indent) {
     final FileSystemResource resource = new FileSystemResource(file);
     write(object, resource, indent);
   }
 
-  public static void write(final Map<String, ? extends Object> object,
-    final Resource resource) {
+  public static void write(final Map<String, ? extends Object> object, final Resource resource) {
     final Writer writer = SpringUtil.getWriter(resource);
     try {
       final JsonMapWriter out = new JsonMapWriter(writer);
@@ -172,8 +166,8 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements
     }
   }
 
-  public static void write(final Map<String, ? extends Object> object,
-    final Resource resource, final boolean indent) {
+  public static void write(final Map<String, ? extends Object> object, final Resource resource,
+    final boolean indent) {
     final Writer writer = SpringUtil.getWriter(resource);
     try {
       final JsonMapWriter out = new JsonMapWriter(writer, indent);

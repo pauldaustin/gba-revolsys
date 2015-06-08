@@ -48,7 +48,7 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
    * @throws IOException if the close fails
    */
   public void close() {
-    FileUtil.closeSilent(in);
+    FileUtil.closeSilent(this.in);
   }
 
   /**
@@ -58,7 +58,7 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
    */
   @Override
   public boolean hasNext() {
-    return hasNext;
+    return this.hasNext;
   }
 
   @Override
@@ -73,10 +73,10 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
    */
   @Override
   public List<String> next() {
-    if (!hasNext) {
+    if (!this.hasNext) {
       throw new NoSuchElementException("No more elements");
     } else {
-      final List<String> object = currentRecord;
+      final List<String> object = this.currentRecord;
       readNextRecord();
       return object;
     }
@@ -89,27 +89,27 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
     final List<String> fields = new ArrayList<>();
     boolean inQuotes = false;
     boolean hadQuotes = false;
-    while (readCount != -1) {
-      if (index >= readCount) {
-        index = 0;
-        readCount = in.read(buffer, 0, BUFFER_SIZE);
-        if (readCount < 0) {
+    while (this.readCount != -1) {
+      if (this.index >= this.readCount) {
+        this.index = 0;
+        this.readCount = in.read(this.buffer, 0, BUFFER_SIZE);
+        if (this.readCount < 0) {
           if (fields.isEmpty()) {
-            hasNext = false;
+            this.hasNext = false;
             return null;
           } else {
             return fields;
           }
         }
       }
-      final char c = buffer[index++];
+      final char c = this.buffer[this.index++];
       switch (c) {
         case '"':
           hadQuotes = true;
           final char nextChar = previewNextChar();
           if (inQuotes && nextChar == '"') {
             sb.append('"');
-            index++;
+            this.index++;
           } else {
             inQuotes = !inQuotes;
             if (sb.length() > 0 && nextChar != ',' && nextChar != '\n' && nextChar != 0) {
@@ -148,7 +148,7 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
         break;
         case '\n':
           if (previewNextChar() == '\r') {
-            index++;
+            this.index++;
           }
           if (inQuotes) {
             sb.append(c);
@@ -167,19 +167,19 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
         break;
       }
     }
-    hasNext = false;
+    this.hasNext = false;
     return null;
   }
 
   private char previewNextChar() throws IOException {
-    if (index >= readCount) {
-      index = 0;
-      readCount = in.read(buffer, 0, BUFFER_SIZE);
-      if (readCount < 0) {
+    if (this.index >= this.readCount) {
+      this.index = 0;
+      this.readCount = this.in.read(this.buffer, 0, BUFFER_SIZE);
+      if (this.readCount < 0) {
         return 0;
       }
     }
-    return buffer[index];
+    return this.buffer[this.index];
   }
 
   /**
@@ -190,13 +190,13 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
    * @throws IOException if bad things happen during the read
    */
   private List<String> readNextRecord() {
-    if (hasNext) {
+    if (this.hasNext) {
       try {
-        currentRecord = parseRecord();
+        this.currentRecord = parseRecord();
       } catch (final IOException e) {
         ExceptionUtil.throwUncheckedException(e);
       }
-      return currentRecord;
+      return this.currentRecord;
     } else {
       return null;
     }

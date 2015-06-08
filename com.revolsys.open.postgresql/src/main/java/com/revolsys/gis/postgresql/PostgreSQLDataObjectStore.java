@@ -47,6 +47,20 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
     this(new ArrayRecordFactory());
   }
 
+  public PostgreSQLDataObjectStore(final DataSource dataSource) {
+    super(dataSource);
+    initSettings();
+  }
+
+  public PostgreSQLDataObjectStore(final PostgreSQLDatabaseFactory databaseFactory,
+    final Map<String, ? extends Object> connectionProperties) {
+    super(databaseFactory);
+    final DataSource dataSource = databaseFactory.createDataSource(connectionProperties);
+    setDataSource(dataSource);
+    initSettings();
+    setConnectionProperties(connectionProperties);
+  }
+
   public PostgreSQLDataObjectStore(final RecordFactory dataObjectFactory) {
     super(dataObjectFactory);
     initSettings();
@@ -56,21 +70,6 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
     final DataSource dataSource) {
     this(dataObjectFactory);
     setDataSource(dataSource);
-  }
-
-  public PostgreSQLDataObjectStore(final DataSource dataSource) {
-    super(dataSource);
-    initSettings();
-  }
-
-  public PostgreSQLDataObjectStore(
-    final PostgreSQLDatabaseFactory databaseFactory,
-    final Map<String, ? extends Object> connectionProperties) {
-    super(databaseFactory);
-    final DataSource dataSource = databaseFactory.createDataSource(connectionProperties);
-    setDataSource(dataSource);
-    initSettings();
-    setConnectionProperties(connectionProperties);
   }
 
   @Override
@@ -89,11 +88,9 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
   public Object getNextPrimaryKey(final String sequenceName) {
     final String sql = "SELECT nextval(?)";
     try {
-      return JdbcUtils.selectLong(getDataSource(), getConnection(), sql,
-        sequenceName);
+      return JdbcUtils.selectLong(getDataSource(), getConnection(), sql, sequenceName);
     } catch (final SQLException e) {
-      throw new IllegalArgumentException(
-        "Cannot create ID for " + sequenceName, e);
+      throw new IllegalArgumentException("Cannot create ID for " + sequenceName, e);
     }
   }
 
@@ -137,11 +134,9 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
       }
     } else {
       final String tableName = getDatabaseTableName(typePath);
-      final String idAttributeName = metaData.getIdFieldName()
-          .toLowerCase();
+      final String idAttributeName = metaData.getIdFieldName().toLowerCase();
       if (this.useSchemaSequencePrefix) {
-        sequenceName = schema + "." + tableName + "_" + idAttributeName
-            + "_seq";
+        sequenceName = schema + "." + tableName + "_" + idAttributeName + "_seq";
       } else {
         sequenceName = tableName + "_" + idAttributeName + "_seq";
       }
@@ -154,42 +149,35 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
   @PostConstruct
   public void initialize() {
     super.initialize();
-    final JdbcFieldAdder numberAttributeAdder = new JdbcFieldAdder(
-      DataTypes.DECIMAL);
+    final JdbcFieldAdder numberAttributeAdder = new JdbcFieldAdder(DataTypes.DECIMAL);
     addAttributeAdder("numeric", numberAttributeAdder);
 
-    final JdbcFieldAdder stringAttributeAdder = new JdbcFieldAdder(
-      DataTypes.STRING);
+    final JdbcFieldAdder stringAttributeAdder = new JdbcFieldAdder(DataTypes.STRING);
     addAttributeAdder("varchar", stringAttributeAdder);
     addAttributeAdder("text", stringAttributeAdder);
     addAttributeAdder("name", stringAttributeAdder);
     addAttributeAdder("bpchar", stringAttributeAdder);
 
-    final JdbcFieldAdder longAttributeAdder = new JdbcFieldAdder(
-      DataTypes.LONG);
+    final JdbcFieldAdder longAttributeAdder = new JdbcFieldAdder(DataTypes.LONG);
     addAttributeAdder("int8", longAttributeAdder);
     addAttributeAdder("bigint", longAttributeAdder);
     addAttributeAdder("bigserial", longAttributeAdder);
     addAttributeAdder("serial8", longAttributeAdder);
 
-    final JdbcFieldAdder intAttributeAdder = new JdbcFieldAdder(
-      DataTypes.INT);
+    final JdbcFieldAdder intAttributeAdder = new JdbcFieldAdder(DataTypes.INT);
     addAttributeAdder("int4", intAttributeAdder);
     addAttributeAdder("integer", intAttributeAdder);
     addAttributeAdder("serial", intAttributeAdder);
     addAttributeAdder("serial4", intAttributeAdder);
 
-    final JdbcFieldAdder shortAttributeAdder = new JdbcFieldAdder(
-      DataTypes.SHORT);
+    final JdbcFieldAdder shortAttributeAdder = new JdbcFieldAdder(DataTypes.SHORT);
     addAttributeAdder("int2", shortAttributeAdder);
     addAttributeAdder("smallint", shortAttributeAdder);
 
-    final JdbcFieldAdder floatAttributeAdder = new JdbcFieldAdder(
-      DataTypes.FLOAT);
+    final JdbcFieldAdder floatAttributeAdder = new JdbcFieldAdder(DataTypes.FLOAT);
     addAttributeAdder("float4", floatAttributeAdder);
 
-    final JdbcFieldAdder doubleAttributeAdder = new JdbcFieldAdder(
-      DataTypes.DOUBLE);
+    final JdbcFieldAdder doubleAttributeAdder = new JdbcFieldAdder(DataTypes.DOUBLE);
     addAttributeAdder("float8", doubleAttributeAdder);
     addAttributeAdder("double precision", doubleAttributeAdder);
 
@@ -197,25 +185,25 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
 
     addAttributeAdder("bool", new JdbcFieldAdder(DataTypes.BOOLEAN));
 
-    final JdbcFieldAdder geometryAttributeAdder = new PostgreSQLGeometryAttributeAdder(
-      this, getDataSource());
+    final JdbcFieldAdder geometryAttributeAdder = new PostgreSQLGeometryAttributeAdder(this,
+      getDataSource());
     addAttributeAdder("geometry", geometryAttributeAdder);
     setPrimaryKeySql("select p.table_name,c.column_name from information_schema.table_constraints p join information_schema.key_column_usage c using (constraint_catalog, constraint_schema, constraint_name) where p.constraint_type = 'PRIMARY KEY' and p.table_schema = ?");
     setSchemaPermissionsSql("select distinct t.table_schema as \"SCHEMA_NAME\" "
-        + "from information_schema.role_table_grants t  "
-        + "where (t.grantee  in (current_user, 'PUBLIC') or "
-        + "t.grantee in (select role_name from information_schema.applicable_roles r where r.grantee = current_user)) and "
-        + "privilege_type IN ('SELECT', 'INSERT','UPDATE','DELETE') ");
+      + "from information_schema.role_table_grants t  "
+      + "where (t.grantee  in (current_user, 'PUBLIC') or "
+      + "t.grantee in (select role_name from information_schema.applicable_roles r where r.grantee = current_user)) and "
+      + "privilege_type IN ('SELECT', 'INSERT','UPDATE','DELETE') ");
     setTablePermissionsSql("select distinct t.table_schema as \"SCHEMA_NAME\", t.table_name, t.privilege_type as \"PRIVILEGE\", d.description as \"REMARKS\" from information_schema.role_table_grants t join pg_namespace n on t.table_schema = n.nspname join pg_class c on (n.oid = c.relnamespace AND t.table_name = c.relname) left join pg_description d on d.objoid = c.oid "
-        + "where t.table_schema = ? and "
-        + "(t.grantee  in (current_user, 'PUBLIC') or t.grantee in (select role_name from information_schema.applicable_roles r where r.grantee = current_user)) AND "
-        + "privilege_type IN ('SELECT', 'INSERT','UPDATE','DELETE') "
-        + "order by t.table_schema, t.table_name, t.privilege_type");
+      + "where t.table_schema = ? and "
+      + "(t.grantee  in (current_user, 'PUBLIC') or t.grantee in (select role_name from information_schema.applicable_roles r where r.grantee = current_user)) AND "
+      + "privilege_type IN ('SELECT', 'INSERT','UPDATE','DELETE') "
+      + "order by t.table_schema, t.table_name, t.privilege_type");
   }
 
   protected void initSettings() {
-    setIteratorFactory(new DataStoreIteratorFactory(
-      PostgreSQLDataObjectStore.class, "createPostgreSQLIterator"));
+    setIteratorFactory(new DataStoreIteratorFactory(PostgreSQLDataObjectStore.class,
+      "createPostgreSQLIterator"));
   }
 
   @Override

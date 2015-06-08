@@ -22,8 +22,8 @@ import org.springframework.util.StringUtils;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
-import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.filter.Filter;
@@ -52,13 +52,12 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class DataObjectStoreLayer extends AbstractRecordLayer {
 
-  public static AbstractRecordLayer create(
-    final Map<String, Object> properties) {
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("dataStore",
+    "Data Store", DataObjectStoreLayer.class, "create");
+
+  public static AbstractRecordLayer create(final Map<String, Object> properties) {
     return new DataObjectStoreLayer(properties);
   }
-
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "dataStore", "Data Store", DataObjectStoreLayer.class, "create");
 
   private BoundingBox boundingBox = new BoundingBox();
 
@@ -78,8 +77,13 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
 
   private final Set<String> formRecordIds = new LinkedHashSet<String>();
 
-  public DataObjectStoreLayer(final RecordStore dataStore,
-    final String typePath, final boolean exists) {
+  public DataObjectStoreLayer(final Map<String, ? extends Object> properties) {
+    super(properties);
+    setType("dataStore");
+  }
+
+  public DataObjectStoreLayer(final RecordStore dataStore, final String typePath,
+    final boolean exists) {
     this.recordStore = dataStore;
     setExists(exists);
     setType("dataStore");
@@ -88,14 +92,9 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     setRecordDefinition(dataStore.getRecordDefinition(typePath));
   }
 
-  public DataObjectStoreLayer(final Map<String, ? extends Object> properties) {
-    super(properties);
-    setType("dataStore");
-  }
-
   @SuppressWarnings("unchecked")
-  protected <V extends LayerDataObject> boolean addCachedRecord(
-    final List<V> records, final V record) {
+  protected <V extends LayerDataObject> boolean addCachedRecord(final List<V> records,
+    final V record) {
     final String id = getId(record);
     if (id == null) {
       records.add(record);
@@ -118,8 +117,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     return true;
   }
 
-  protected void addIds(final Set<String> ids,
-    final Collection<? extends Record> records) {
+  protected void addIds(final Set<String> ids, final Collection<? extends Record> records) {
     for (final Record record : records) {
       final String id = getId((LayerDataObject)record);
       if (id != null) {
@@ -295,8 +293,8 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties == null) {
         LoggerFactory.getLogger(getClass())
-        .error(
-          "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
+          .error(
+            "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
               + getPath());
         return false;
       } else {
@@ -312,8 +310,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
           try {
             dataStore.initialize();
           } catch (final Throwable e) {
-            throw new RuntimeException(
-              "Unable to iniaitlize data store for layer " + getPath(), e);
+            throw new RuntimeException("Unable to iniaitlize data store for layer " + getPath(), e);
           }
 
           setDataStore(dataStore);
@@ -362,8 +359,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     "unchecked", "rawtypes"
   })
   @Override
-  public List<LayerDataObject> doQuery(final Geometry geometry,
-    final double distance) {
+  public List<LayerDataObject> doQuery(final Geometry geometry, final double distance) {
     final boolean enabled = setEventsEnabled(false);
     try {
       final GeometryFactory geometryFactory = getGeometryFactory();
@@ -372,8 +368,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
       boundingBox = boundingBox.expand(distance);
       final String typePath = getTypePath();
       final RecordStore dataStore = getRecordStore();
-      final Reader reader = dataStore.query(this, typePath, queryGeometry,
-        distance);
+      final Reader reader = dataStore.query(this, typePath, queryGeometry, distance);
       try {
         final List<LayerDataObject> results = reader.read();
         final List<LayerDataObject> records = getCachedRecords(results);
@@ -424,15 +419,14 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     "rawtypes", "unchecked"
   })
   @Override
-  protected List<LayerDataObject> doQueryBackground(
-    final BoundingBox boundingBox) {
+  protected List<LayerDataObject> doQueryBackground(final BoundingBox boundingBox) {
     if (boundingBox == null || boundingBox.isEmpty()) {
       return Collections.emptyList();
     } else {
       synchronized (this.sync) {
         final BoundingBox loadBoundingBox = boundingBox.expandPercent(0.2);
         if (!this.boundingBox.contains(boundingBox)
-            && !this.loadingBoundingBox.contains(boundingBox)) {
+          && !this.loadingBoundingBox.contains(boundingBox)) {
           if (this.loadingWorker != null) {
             this.loadingWorker.cancel(true);
           }
@@ -467,8 +461,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     final boolean deleted = isDeleted(record);
     final PlatformTransactionManager transactionManager = getRecordStore().getTransactionManager();
     try (
-        Transaction transaction = new Transaction(transactionManager,
-          Propagation.REQUIRES_NEW)) {
+      Transaction transaction = new Transaction(transactionManager, Propagation.REQUIRES_NEW)) {
       try {
 
         if (isExists()) {
@@ -478,8 +471,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
             try {
               final String idAttributeName = getRecordDefinition().getIdFieldName();
               final String idString = record.getIdString();
-              if (this.deletedRecordIds.contains(idString)
-                  || super.isDeleted(record)) {
+              if (this.deletedRecordIds.contains(idString) || super.isDeleted(record)) {
                 record.setState(RecordState.Deleted);
                 writer.write(record);
               } else if (super.isModified(record)) {
@@ -543,8 +535,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     }
   }
 
-  private LayerDataObject getCacheRecord(final String id,
-    final LayerDataObject record) {
+  private LayerDataObject getCacheRecord(final String id, final LayerDataObject record) {
     if (StringUtils.hasText(id) && record != null && isLayerRecord(record)) {
       if (record.getState() == RecordState.New) {
         return record;
@@ -567,11 +558,6 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     } else {
       return record;
     }
-  }
-
-  @Override
-  public RecordStore getRecordStore() {
-    return this.recordStore;
   }
 
   protected String getId(final LayerDataObject record) {
@@ -602,8 +588,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     final RecordDefinition metaData = getRecordDefinition();
     final String idAttributeName = metaData.getIdFieldName();
     if (idAttributeName == null) {
-      LoggerFactory.getLogger(getClass()).error(
-        this.typePath + " does not have a primary key");
+      LoggerFactory.getLogger(getClass()).error(this.typePath + " does not have a primary key");
       return null;
     } else {
       final String idString = StringConverterRegistry.toString(id);
@@ -660,8 +645,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   @SuppressWarnings({
     "rawtypes", "unchecked"
   })
-  protected List<LayerDataObject> getRecordsFromDataStore(
-    final BoundingBox boundingBox) {
+  protected List<LayerDataObject> getRecordsFromDataStore(final BoundingBox boundingBox) {
     if (isExists()) {
       final RecordStore dataStore = getRecordStore();
       if (dataStore != null) {
@@ -677,6 +661,11 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
       }
     }
     return Collections.emptyList();
+  }
+
+  @Override
+  public RecordStore getRecordStore() {
+    return this.recordStore;
   }
 
   @Override
@@ -717,8 +706,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   }
 
   @Override
-  protected void postSaveChanges(final RecordState originalState,
-    final LayerDataObject record) {
+  protected void postSaveChanges(final RecordState originalState, final LayerDataObject record) {
     super.postSaveChanges(originalState, record);
     if (originalState == RecordState.New) {
       getCacheRecord(record);
@@ -762,8 +750,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     fireRecordsChanged();
   }
 
-  private LayerDataObject removeCacheRecord(final String id,
-    final LayerDataObject record) {
+  private LayerDataObject removeCacheRecord(final String id, final LayerDataObject record) {
     if (StringUtils.hasText(id) && record != null && isLayerRecord(record)) {
       if (record.getState() == RecordState.New) {
         return record;
@@ -815,8 +802,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
     this.recordStore = dataStore;
   }
 
-  protected void setIndex(final BoundingBox loadedBoundingBox,
-    final DataObjectQuadTree index) {
+  protected void setIndex(final BoundingBox loadedBoundingBox, final DataObjectQuadTree index) {
     if (this.sync != null) {
       synchronized (this.sync) {
         if (loadedBoundingBox == this.loadingBoundingBox) {
@@ -916,8 +902,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   }
 
   @Override
-  public void unSelectRecords(
-    final Collection<? extends LayerDataObject> records) {
+  public void unSelectRecords(final Collection<? extends LayerDataObject> records) {
     super.unSelectRecords(records);
     cleanCachedRecords();
   }

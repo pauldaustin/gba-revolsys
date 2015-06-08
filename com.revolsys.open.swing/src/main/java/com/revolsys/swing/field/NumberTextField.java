@@ -23,13 +23,17 @@ import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
 
-public class NumberTextField extends JXTextField implements Field,
-  DocumentListener, FocusListener {
+public class NumberTextField extends JXTextField implements Field, DocumentListener, FocusListener {
 
   private static final long serialVersionUID = 1L;
 
-  public static Number createMaximumValue(final DataType dataType,
-    final int length, final int scale) {
+  public static final Color DEFAULT_SELECTED_FOREGROUND = new JTextField().getSelectedTextColor();
+
+  public static final Color DEFAULT_BACKGROUND = new JTextField().getBackground();
+
+  public static final Color DEFAULT_FOREGROUND = new JTextField().getForeground();
+
+  public static Number createMaximumValue(final DataType dataType, final int length, final int scale) {
     final Class<?> javaClass = dataType.getJavaClass();
     final StringBuffer text = new StringBuffer(length);
     for (int i = length - scale + 1; i > 1; i--) {
@@ -98,8 +102,8 @@ public class NumberTextField extends JXTextField implements Field,
     }
   }
 
-  private static int getLength(final DataType dataType, int length,
-    final int scale, final BigDecimal minimumValue) {
+  private static int getLength(final DataType dataType, int length, final int scale,
+    final BigDecimal minimumValue) {
     if (length == 0) {
       final Class<?> javaClass = dataType.getJavaClass();
       if (javaClass == Byte.class) {
@@ -143,12 +147,6 @@ public class NumberTextField extends JXTextField implements Field,
 
   private final String fieldName;
 
-  public static final Color DEFAULT_SELECTED_FOREGROUND = new JTextField().getSelectedTextColor();
-
-  public static final Color DEFAULT_BACKGROUND = new JTextField().getBackground();
-
-  public static final Color DEFAULT_FOREGROUND = new JTextField().getForeground();
-
   private String errorMessage;
 
   private String originalToolTip;
@@ -161,26 +159,22 @@ public class NumberTextField extends JXTextField implements Field,
     this(dataType, length, 0);
   }
 
-  public NumberTextField(final DataType dataType, final int length,
-    final int scale) {
-    this(dataType, length, scale, null, createMaximumValue(dataType, length,
-      scale));
+  public NumberTextField(final DataType dataType, final int length, final int scale) {
+    this(dataType, length, scale, null, createMaximumValue(dataType, length, scale));
   }
 
-  public NumberTextField(final DataType dataType, final int length,
-    final int scale, final Number minimumValue, final Number maximumValue) {
+  public NumberTextField(final DataType dataType, final int length, final int scale,
+    final Number minimumValue, final Number maximumValue) {
     this(null, dataType, length, scale, minimumValue, maximumValue);
   }
 
-  public NumberTextField(final String fieldName, final DataType dataType,
-    final int length, final int scale) {
-    this(fieldName, dataType, length, scale, null, createMaximumValue(dataType,
-      length, scale));
+  public NumberTextField(final String fieldName, final DataType dataType, final int length,
+    final int scale) {
+    this(fieldName, dataType, length, scale, null, createMaximumValue(dataType, length, scale));
   }
 
-  public NumberTextField(final String fieldName, final DataType dataType,
-    final int length, final int scale, final Number minimumValue,
-    final Number maximumValue) {
+  public NumberTextField(final String fieldName, final DataType dataType, final int length,
+    final int scale, final Number minimumValue, final Number maximumValue) {
     if (StringUtils.hasText(fieldName)) {
       this.fieldName = fieldName;
     } else {
@@ -206,8 +200,8 @@ public class NumberTextField extends JXTextField implements Field,
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -235,7 +229,7 @@ public class NumberTextField extends JXTextField implements Field,
   @SuppressWarnings("unchecked")
   @Override
   public <V> V getFieldValue() {
-    return (V)fieldValue;
+    return (V)this.fieldValue;
   }
 
   public int getLength() {
@@ -299,8 +293,8 @@ public class NumberTextField extends JXTextField implements Field,
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setSelectedTextColor(foregroundColor);
     setBackground(backgroundColor);
@@ -336,8 +330,8 @@ public class NumberTextField extends JXTextField implements Field,
           newText = "";
         } else if (newValue instanceof Number) {
           BigDecimal decimal = new BigDecimal(newText);
-          if (decimal.scale() < scale) {
-            decimal = decimal.setScale(scale, RoundingMode.HALF_UP);
+          if (decimal.scale() < this.scale) {
+            decimal = decimal.setScale(this.scale, RoundingMode.HALF_UP);
           }
           newText = decimal.toPlainString();
         } else {
@@ -350,8 +344,8 @@ public class NumberTextField extends JXTextField implements Field,
         this.fieldValue = newValue;
         validateField();
         firePropertyChange(this.fieldName, oldValue, this.fieldValue);
-        SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this,
-          oldValue, this.fieldValue);
+        SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue,
+          this.fieldValue);
       }
     } else {
       Invoke.later(this, "setFieldValue", value);
@@ -409,15 +403,12 @@ public class NumberTextField extends JXTextField implements Field,
           number = number.setScale(this.scale);
         }
         if (number.scale() > this.scale) {
-          this.fieldValidationMessage = "Number of decimal places must be < "
-            + this.scale;
+          this.fieldValidationMessage = "Number of decimal places must be < " + this.scale;
           valid = false;
-        } else if (this.minimumValue != null
-          && this.minimumValue.compareTo(number) > 0) {
+        } else if (this.minimumValue != null && this.minimumValue.compareTo(number) > 0) {
           this.fieldValidationMessage = "Value must be >= " + this.minimumValue;
           valid = false;
-        } else if (this.maximumValue != null
-          && this.maximumValue.compareTo(number) < 0) {
+        } else if (this.maximumValue != null && this.maximumValue.compareTo(number) < 0) {
           this.fieldValidationMessage = "Value must be <= " + this.maximumValue;
           valid = false;
         } else {

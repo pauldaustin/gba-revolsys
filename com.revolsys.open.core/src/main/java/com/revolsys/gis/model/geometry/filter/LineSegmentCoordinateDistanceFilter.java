@@ -10,8 +10,7 @@ public class LineSegmentCoordinateDistanceFilter implements Filter<LineSegment> 
 
   private final Coordinates point;
 
-  public LineSegmentCoordinateDistanceFilter(final Coordinates point,
-    final double maxDistance) {
+  public LineSegmentCoordinateDistanceFilter(final Coordinates point, final double maxDistance) {
     this.point = point;
     this.maxDistance = maxDistance;
   }

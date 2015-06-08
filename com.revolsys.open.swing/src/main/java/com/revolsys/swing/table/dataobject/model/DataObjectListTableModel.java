@@ -23,8 +23,7 @@ import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
 import com.revolsys.util.Reorderable;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DataObjectListTableModel extends DataObjectRowTableModel implements
-  Reorderable {
+public class DataObjectListTableModel extends DataObjectRowTableModel implements Reorderable {
   private static final long serialVersionUID = 1L;
 
   public static TablePanel createPanel(final AbstractRecordLayer layer) {
@@ -38,10 +37,9 @@ public class DataObjectListTableModel extends DataObjectRowTableModel implements
   }
 
   public static TablePanel createPanel(final RecordDefinition metaData,
-    final Collection<LayerDataObject> objects,
-    final Collection<String> attributeNames) {
-    final DataObjectListTableModel model = new DataObjectListTableModel(
-      metaData, objects, attributeNames);
+    final Collection<LayerDataObject> objects, final Collection<String> attributeNames) {
+    final DataObjectListTableModel model = new DataObjectListTableModel(metaData, objects,
+      attributeNames);
     final JTable table = new DataObjectRowTable(model);
     return new TablePanel(table);
   }
@@ -54,8 +52,7 @@ public class DataObjectListTableModel extends DataObjectRowTableModel implements
   private final List<LayerDataObject> records = new ArrayList<LayerDataObject>();
 
   public DataObjectListTableModel(final RecordDefinition metaData,
-    final Collection<LayerDataObject> objects,
-    final Collection<String> columnNames) {
+    final Collection<LayerDataObject> objects, final Collection<String> columnNames) {
     super(metaData, columnNames);
     if (objects != null) {
       this.records.addAll(objects);
@@ -195,15 +192,13 @@ public class DataObjectListTableModel extends DataObjectRowTableModel implements
   }
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
     final Record object = getRecord(rowIndex);
     if (object != null) {
       final String name = getColumnName(columnIndex);
       final Object oldValue = object.getValueByPath(name);
       object.setValue(name, value);
-      final PropertyChangeEvent event = new PropertyChangeEvent(object, name,
-        oldValue, value);
+      final PropertyChangeEvent event = new PropertyChangeEvent(object, name, oldValue, value);
       getPropertyChangeSupport().firePropertyChange(event);
     }
   }

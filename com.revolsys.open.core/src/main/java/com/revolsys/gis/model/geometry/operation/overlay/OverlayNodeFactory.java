@@ -12,7 +12,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.PlanarGraph;
 /**
  * Creates nodes for use in the {@link PlanarGraph}s constructed during overlay
  * operations.
- * 
+ *
  * @version 1.7
  */
 public class OverlayNodeFactory extends NodeFactory {

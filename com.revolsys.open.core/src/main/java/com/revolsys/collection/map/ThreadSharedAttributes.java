@@ -120,8 +120,7 @@ public class ThreadSharedAttributes {
     }
   }
 
-  public static void setDefaultAttributes(
-    final Map<? extends Object, Object> values) {
+  public static void setDefaultAttributes(final Map<? extends Object, Object> values) {
     synchronized (defaultAttributes) {
       defaultAttributes.putAll(values);
     }

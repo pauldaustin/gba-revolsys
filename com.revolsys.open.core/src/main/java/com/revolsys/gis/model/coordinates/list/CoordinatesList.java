@@ -8,15 +8,13 @@ import com.revolsys.gis.model.coordinates.CoordinatesPrecisionModel;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 
-public interface CoordinatesList extends CoordinateSequence,
-  Iterable<Coordinates>, Serializable {
+public interface CoordinatesList extends CoordinateSequence, Iterable<Coordinates>, Serializable {
   @Override
   CoordinatesList clone();
 
   boolean contains(Coordinates point);
 
-  void copy(int sourceIndex, CoordinatesList target, int targetIndex,
-    int numAxis, int count);
+  void copy(int sourceIndex, CoordinatesList target, int targetIndex, int numAxis, int count);
 
   double distance(int index, Coordinates point);
 
@@ -89,6 +87,5 @@ public interface CoordinatesList extends CoordinateSequence,
 
   CoordinatesList subList(int length, int index, int count);
 
-  CoordinatesList subList(int length, int sourceIndex, int targetIndex,
-    int count);
+  CoordinatesList subList(int length, int sourceIndex, int targetIndex, int count);
 }

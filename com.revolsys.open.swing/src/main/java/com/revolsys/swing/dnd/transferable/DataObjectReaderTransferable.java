@@ -14,22 +14,22 @@ import com.revolsys.format.csv.Csv;
 
 public class DataObjectReaderTransferable implements Transferable {
 
-  public static final DataFlavor DATA_OBJECT_READER_FLAVOR = new DataFlavor(
-    RecordReader.class, "Data Object List");
-
-  private final RecordReader reader;
+  public static final DataFlavor DATA_OBJECT_READER_FLAVOR = new DataFlavor(RecordReader.class,
+    "Data Object List");
 
   private static final DataFlavor[] DATA_FLAVORS = {
     DATA_OBJECT_READER_FLAVOR, DataFlavor.stringFlavor
   };
+
+  private final RecordReader reader;
 
   public DataObjectReaderTransferable(final RecordReader reader) {
     this.reader = reader;
   }
 
   @Override
-  public Object getTransferData(final DataFlavor flavor)
-    throws UnsupportedFlavorException, IOException {
+  public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException,
+    IOException {
     if (this.reader == null) {
       return null;
     } else if (DATA_OBJECT_READER_FLAVOR.equals(flavor)
@@ -37,8 +37,7 @@ public class DataObjectReaderTransferable implements Transferable {
       return this.reader;
     } else if (DataFlavor.stringFlavor.equals(flavor)) {
       final StringWriter out = new StringWriter();
-      final Collection<String> attributeNames = this.reader.getRecordDefinition()
-        .getFieldNames();
+      final Collection<String> attributeNames = this.reader.getRecordDefinition().getFieldNames();
       Csv.writeColumns(out, attributeNames, '\t', '\n');
       for (final Record object : this.reader) {
         if (object != null) {

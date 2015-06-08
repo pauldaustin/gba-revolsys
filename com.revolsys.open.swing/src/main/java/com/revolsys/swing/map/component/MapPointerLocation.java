@@ -62,8 +62,7 @@ public class MapPointerLocation extends JLabel implements MouseMotionListener,
   @Override
   public void mouseMoved(final MouseEvent e) {
     final java.awt.Point point = e.getPoint();
-    final Point mapPoint = this.viewport.toModelPointRounded(
-      this.geometryFactory, point);
+    final Point mapPoint = this.viewport.toModelPointRounded(this.geometryFactory, point);
     if (!mapPoint.isEmpty()) {
       final double projectedX = mapPoint.getX();
       final double projectedY = mapPoint.getY();
@@ -99,8 +98,7 @@ public class MapPointerLocation extends JLabel implements MouseMotionListener,
       scaleFactor = 1000;
     }
     final int srid = coordinateSystem.getId();
-    this.geometryFactory = GeometryFactory.getFactory(srid, 2, scaleFactor,
-      scaleFactor);
+    this.geometryFactory = GeometryFactory.getFactory(srid, 2, scaleFactor, scaleFactor);
     this.setToolTipText(coordinateSystem.getName());
     this.title = String.valueOf(srid);
 

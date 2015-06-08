@@ -19,15 +19,15 @@ import com.revolsys.swing.undo.UndoManager;
 public class TextField extends JXTextField implements Field, FocusListener {
   private static final long serialVersionUID = 1L;
 
-  private final String fieldName;
-
-  private String fieldValue;
-
   public static final Color DEFAULT_SELECTED_FOREGROUND = new JTextField().getSelectedTextColor();
 
   public static final Color DEFAULT_BACKGROUND = new JTextField().getBackground();
 
   public static final Color DEFAULT_FOREGROUND = new JTextField().getForeground();
+
+  private final String fieldName;
+
+  private String fieldValue;
 
   private String errorMessage;
 
@@ -63,15 +63,14 @@ public class TextField extends JXTextField implements Field, FocusListener {
     PopupMenu.getPopupMenuFactory(this);
   }
 
-  public TextField(final String fieldName, final Object fieldValue,
-    final int columns) {
+  public TextField(final String fieldName, final Object fieldValue, final int columns) {
     this(fieldName, fieldValue);
     setColumns(columns);
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -127,8 +126,8 @@ public class TextField extends JXTextField implements Field, FocusListener {
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setSelectedTextColor(foregroundColor);
     setBackground(backgroundColor);
@@ -169,8 +168,7 @@ public class TextField extends JXTextField implements Field, FocusListener {
     if (!EqualsRegistry.equal(oldValue, newText)) {
       this.fieldValue = newText;
       firePropertyChange(this.fieldName, oldValue, newText);
-      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this,
-        oldValue, newText);
+      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, newText);
     }
   }
 

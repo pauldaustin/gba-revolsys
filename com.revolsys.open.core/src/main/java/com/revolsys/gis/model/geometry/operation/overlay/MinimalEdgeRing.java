@@ -15,8 +15,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.EdgeRing;
  */
 public class MinimalEdgeRing extends EdgeRing {
 
-  public MinimalEdgeRing(final DirectedEdge start,
-    final GeometryFactory geometryFactory) {
+  public MinimalEdgeRing(final DirectedEdge start, final GeometryFactory geometryFactory) {
     super(start, geometryFactory);
   }
 

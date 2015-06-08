@@ -61,8 +61,7 @@ public abstract class AbstractObjectTreeNodeModel<NODE extends Object, CHILD ext
     return -1;
   }
 
-  protected void addObjectTreeNodeModels(
-    final ObjectTreeNodeModel<?, ?>... objectTreeNodeModels) {
+  protected void addObjectTreeNodeModels(final ObjectTreeNodeModel<?, ?>... objectTreeNodeModels) {
     this.objectTreeNodeModels.addAll(Arrays.asList(objectTreeNodeModels));
     if (this.objectTreeModel != null) {
       for (final ObjectTreeNodeModel<?, ?> nodeModel : objectTreeNodeModels) {
@@ -72,9 +71,8 @@ public abstract class AbstractObjectTreeNodeModel<NODE extends Object, CHILD ext
   }
 
   @Override
-  public String convertValueToText(final NODE node, final boolean selected,
-    final boolean expanded, final boolean leaf, final int row,
-    final boolean hasFocus) {
+  public String convertValueToText(final NODE node, final boolean selected, final boolean expanded,
+    final boolean leaf, final int row, final boolean hasFocus) {
     if (node == null) {
       return "";
     } else {
@@ -163,13 +161,12 @@ public abstract class AbstractObjectTreeNodeModel<NODE extends Object, CHILD ext
   }
 
   @Override
-  public Component getRenderer(final NODE node, final JTree tree,
-    final boolean selected, final boolean expanded, final boolean leaf,
-    final int row, final boolean hasFocus) {
+  public Component getRenderer(final NODE node, final JTree tree, final boolean selected,
+    final boolean expanded, final boolean leaf, final int row, final boolean hasFocus) {
     final Object label = getLabel(node);
 
-    return this.renderer.getTreeCellRendererComponent(tree, label, selected,
-      expanded, leaf, row, hasFocus);
+    return this.renderer.getTreeCellRendererComponent(tree, label, selected, expanded, leaf, row,
+      hasFocus);
   }
 
   @Override
@@ -223,13 +220,11 @@ public abstract class AbstractObjectTreeNodeModel<NODE extends Object, CHILD ext
     }
   }
 
-  protected void setObjectTreeNodeModels(
-    final List<ObjectTreeNodeModel<?, ?>> objectTreeNodeModels) {
+  protected void setObjectTreeNodeModels(final List<ObjectTreeNodeModel<?, ?>> objectTreeNodeModels) {
     this.objectTreeNodeModels = objectTreeNodeModels;
   }
 
-  protected void setObjectTreeNodeModels(
-    final ObjectTreeNodeModel<?, ?>... objectTreeNodeModels) {
+  protected void setObjectTreeNodeModels(final ObjectTreeNodeModel<?, ?>... objectTreeNodeModels) {
     setObjectTreeNodeModels(Arrays.asList(objectTreeNodeModels));
   }
 
@@ -237,14 +232,12 @@ public abstract class AbstractObjectTreeNodeModel<NODE extends Object, CHILD ext
     this.renderer = renderer;
   }
 
-  protected void setSupportedChildClasses(
-    final Class<?>... supportedChildClasses) {
+  protected void setSupportedChildClasses(final Class<?>... supportedChildClasses) {
     final List<Class<?>> list = Arrays.asList(supportedChildClasses);
     this.supportedChildClasses.addAll(list);
   }
 
-  protected void setSupportedChildClasses(
-    final Set<Class<?>> supportedChildClasses) {
+  protected void setSupportedChildClasses(final Set<Class<?>> supportedChildClasses) {
     this.supportedChildClasses = supportedChildClasses;
   }
 

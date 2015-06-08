@@ -18,8 +18,8 @@ import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 import com.revolsys.util.Reorderable;
 
-public class ObjectListTableModel<T> extends AbstractTableModel implements
-  Reorderable, PropertyChangeListener {
+public class ObjectListTableModel<T> extends AbstractTableModel implements Reorderable,
+  PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -31,8 +31,7 @@ public class ObjectListTableModel<T> extends AbstractTableModel implements
 
   private PropertyChangeArrayList<T> objects;
 
-  public ObjectListTableModel(final Collection<? extends T> objects,
-    final List<String> columnNames) {
+  public ObjectListTableModel(final Collection<? extends T> objects, final List<String> columnNames) {
     this(objects, columnNames, columnNames);
   }
 
@@ -63,8 +62,7 @@ public class ObjectListTableModel<T> extends AbstractTableModel implements
     setEditable(true);
   }
 
-  public ObjectListTableModel(final List<String> columnNames,
-    final List<String> columnTitles) {
+  public ObjectListTableModel(final List<String> columnNames, final List<String> columnTitles) {
     this(Collections.<T> emptyList(), columnNames, columnTitles);
   }
 
@@ -95,10 +93,9 @@ public class ObjectListTableModel<T> extends AbstractTableModel implements
     this.objects = null;
   }
 
-  private void firePropertyChange(final Object object, final String name,
-    final Object oldValue, final Object newValue) {
-    final PropertyChangeEvent event = new PropertyChangeEvent(object, name,
-      oldValue, newValue);
+  private void firePropertyChange(final Object object, final String name, final Object oldValue,
+    final Object newValue) {
+    final PropertyChangeEvent event = new PropertyChangeEvent(object, name, oldValue, newValue);
     this.objects.getPropertyChangeSupport().firePropertyChange(event);
   }
 
@@ -122,7 +119,7 @@ public class ObjectListTableModel<T> extends AbstractTableModel implements
   }
 
   public T getObject(final int index) {
-    if (objects != null) {
+    if (this.objects != null) {
       if (index < this.objects.size()) {
         return this.objects.get(index);
       }
@@ -179,7 +176,7 @@ public class ObjectListTableModel<T> extends AbstractTableModel implements
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
-    if (event.getSource() == objects) {
+    if (event.getSource() == this.objects) {
       if (event instanceof IndexedPropertyChangeEvent) {
         final IndexedPropertyChangeEvent indexedEvent = (IndexedPropertyChangeEvent)event;
         final int index = indexedEvent.getIndex();
@@ -235,8 +232,7 @@ public class ObjectListTableModel<T> extends AbstractTableModel implements
   }
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
     final Object object = getObject(rowIndex);
     if (object != null) {
       final String name = getColumnName(columnIndex);

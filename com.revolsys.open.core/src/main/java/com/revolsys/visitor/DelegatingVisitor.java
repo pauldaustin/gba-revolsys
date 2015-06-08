@@ -15,8 +15,7 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
     super(comparator);
   }
 
-  public DelegatingVisitor(final Comparator<T> comparator,
-    final Visitor<T> visitor) {
+  public DelegatingVisitor(final Comparator<T> comparator, final Visitor<T> visitor) {
     super(comparator);
     this.visitor = visitor;
   }
@@ -25,13 +24,12 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
     super(filter);
   }
 
-  public DelegatingVisitor(final Filter<T> filter,
-    final Comparator<T> comparator) {
+  public DelegatingVisitor(final Filter<T> filter, final Comparator<T> comparator) {
     super(filter, comparator);
   }
 
-  public DelegatingVisitor(final Filter<T> filter,
-    final Comparator<T> comparator, final Visitor<T> visitor) {
+  public DelegatingVisitor(final Filter<T> filter, final Comparator<T> comparator,
+    final Visitor<T> visitor) {
     super(filter, comparator);
     this.visitor = visitor;
   }
@@ -46,7 +44,7 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
   }
 
   public Visitor<T> getVisitor() {
-    return visitor;
+    return this.visitor;
   }
 
   public void setVisitor(final Visitor<T> visitor) {
@@ -55,14 +53,14 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
 
   @Override
   public String toString() {
-    return visitor.toString();
+    return this.visitor.toString();
   }
 
   @Override
   public boolean visit(final T item) {
     final Filter<T> filter = getFilter();
     if (filter == null || filter.accept(item)) {
-      return visitor.visit(item);
+      return this.visitor.visit(item);
     } else {
       return true;
     }

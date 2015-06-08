@@ -15,15 +15,13 @@ public class BinaryCondition extends Condition {
 
   private QueryValue right;
 
-  public BinaryCondition(final QueryValue left, final String operator,
-    final QueryValue right) {
+  public BinaryCondition(final QueryValue left, final String operator, final QueryValue right) {
     this.left = left;
     this.operator = operator;
     this.right = right;
   }
 
-  public BinaryCondition(final String name, final String operator,
-    final Object value) {
+  public BinaryCondition(final String name, final String operator, final Object value) {
     this(new Column(name), operator, new Value(value));
   }
 
@@ -99,7 +97,7 @@ public class BinaryCondition extends Condition {
 
   @Override
   public String toString() {
-    return StringConverterRegistry.toString(this.left) + " " + this.operator
-      + " " + StringConverterRegistry.toString(this.right);
+    return StringConverterRegistry.toString(this.left) + " " + this.operator + " "
+      + StringConverterRegistry.toString(this.right);
   }
 }

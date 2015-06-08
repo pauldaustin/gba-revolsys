@@ -7,30 +7,27 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 public class GeometryFilter {
-  public static boolean acceptEnvelopeIntersects(final Envelope envelope,
-    final Geometry geometry) {
+  public static boolean acceptEnvelopeIntersects(final Envelope envelope, final Geometry geometry) {
     final Envelope geometryEnvelope = geometry.getEnvelopeInternal();
     return envelope.intersects(geometryEnvelope);
   }
 
-  public static <T extends Geometry> Filter<T> intersects(
-    final Envelope envelope) {
-    return new InvokeMethodFilter<T>(GeometryFilter.class,
-      "acceptEnvelopeIntersects", envelope);
+  public static <T extends Geometry> Filter<T> intersects(final Envelope envelope) {
+    return new InvokeMethodFilter<T>(GeometryFilter.class, "acceptEnvelopeIntersects", envelope);
   }
 
-  public static Filter<LineString> lineContainedWithinTolerance(
-    final LineString line, final double maxDistance) {
+  public static Filter<LineString> lineContainedWithinTolerance(final LineString line,
+    final double maxDistance) {
     return new LineContainsWithinToleranceFilter(line, maxDistance, true);
   }
 
-  public static Filter<LineString> lineContainsWithinTolerance(
-    final LineString line, final double maxDistance) {
+  public static Filter<LineString> lineContainsWithinTolerance(final LineString line,
+    final double maxDistance) {
     return new LineContainsWithinToleranceFilter(line, maxDistance);
   }
 
-  public static Filter<LineString> lineEqualWithinTolerance(
-    final LineString line, final double maxDistance) {
+  public static Filter<LineString> lineEqualWithinTolerance(final LineString line,
+    final double maxDistance) {
     return new LineEqualWithinToleranceFilter(line, maxDistance);
   }
 

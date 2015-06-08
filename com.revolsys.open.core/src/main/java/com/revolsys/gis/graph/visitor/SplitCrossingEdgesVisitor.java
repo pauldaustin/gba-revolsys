@@ -16,8 +16,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 
-public class SplitCrossingEdgesVisitor<T> extends
-  AbstractEdgeListenerVisitor<T> {
+public class SplitCrossingEdgesVisitor<T> extends AbstractEdgeListenerVisitor<T> {
 
   public static final String CROSSING_EDGES = "Crossing edges";
 
@@ -27,25 +26,24 @@ public class SplitCrossingEdgesVisitor<T> extends
 
   public SplitCrossingEdgesVisitor(final Graph<T> graph) {
     this.graph = graph;
-    splitEdgesCloseToNodeVisitor = new SplitEdgesCloseToNodeVisitor<T>(graph,
-      CROSSING_EDGES, 1);
+    this.splitEdgesCloseToNodeVisitor = new SplitEdgesCloseToNodeVisitor<T>(graph, CROSSING_EDGES,
+      1);
   }
 
   @Override
   public void addNodeListener(final NodeEventListener<T> listener) {
-    splitEdgesCloseToNodeVisitor.addNodeListener(listener);
+    this.splitEdgesCloseToNodeVisitor.addNodeListener(listener);
   }
 
   public Collection<Edge<T>> getNewEdges() {
-    return splitEdgesCloseToNodeVisitor.getNewEdges();
+    return this.splitEdgesCloseToNodeVisitor.getNewEdges();
   }
 
   public Collection<T> getSplitObjects() {
-    return splitEdgesCloseToNodeVisitor.getSplitObjects();
+    return this.splitEdgesCloseToNodeVisitor.getSplitObjects();
   }
 
-  public List<Edge<T>> queryCrosses(final IdObjectIndex<Edge<T>> edgeIndex,
-    final LineString line) {
+  public List<Edge<T>> queryCrosses(final IdObjectIndex<Edge<T>> edgeIndex, final LineString line) {
     final PreparedGeometry preparedLine = PreparedGeometryFactory.prepare(line);
     final Envelope envelope = line.getEnvelopeInternal();
     final List<Edge<T>> edges = edgeIndex.query(envelope);
@@ -61,16 +59,16 @@ public class SplitCrossingEdgesVisitor<T> extends
   }
 
   public void setNewEdges(final Collection<Edge<T>> newEdges) {
-    splitEdgesCloseToNodeVisitor.setNewEdges(newEdges);
+    this.splitEdgesCloseToNodeVisitor.setNewEdges(newEdges);
   }
 
   public void setSplitObjects(final Collection<T> splitObjects) {
-    splitEdgesCloseToNodeVisitor.setSplitObjects(splitObjects);
+    this.splitEdgesCloseToNodeVisitor.setSplitObjects(splitObjects);
   }
 
   @Override
   public boolean visit(final Edge<T> edge) {
-    final IdObjectIndex<Edge<T>> edgeIndex = graph.getEdgeIndex();
+    final IdObjectIndex<Edge<T>> edgeIndex = this.graph.getEdgeIndex();
     final LineString line = edge.getLine();
     final List<Edge<T>> crossings = queryCrosses(edgeIndex, line);
     crossings.remove(edge);
@@ -78,12 +76,11 @@ public class SplitCrossingEdgesVisitor<T> extends
     for (final Edge<T> crossEdge : crossings) {
       if (!crossEdge.isRemoved()) {
         final LineString crossLine = crossEdge.getLine();
-        final Coordinates intersection = LineStringUtil.getCrossingIntersection(
-          line, crossLine);
+        final Coordinates intersection = LineStringUtil.getCrossingIntersection(line, crossLine);
         if (intersection != null) {
-          graph.getPrecisionModel().makePrecise(intersection);
-          final Node<T> node = graph.getNode(intersection);
-          splitEdgesCloseToNodeVisitor.visit(node);
+          this.graph.getPrecisionModel().makePrecise(intersection);
+          final Node<T> node = this.graph.getNode(intersection);
+          this.splitEdgesCloseToNodeVisitor.visit(node);
         }
       }
     }

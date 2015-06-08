@@ -15,37 +15,36 @@ public class SimplePreferencesPanel extends AbstractPreferencesPanel {
   }
 
   public void addPreference(final String applicationName, final String path,
-    final String propertyName, final Class<?> valueClass,
-    final Object defaultValue) {
-    final Preference preference = new Preference(applicationName, path,
-      propertyName, valueClass, defaultValue);
-    if (!preferences.contains(preference)) {
-      preferences.add(preference);
+    final String propertyName, final Class<?> valueClass, final Object defaultValue) {
+    final Preference preference = new Preference(applicationName, path, propertyName, valueClass,
+      defaultValue);
+    if (!this.preferences.contains(preference)) {
+      this.preferences.add(preference);
       addField(preference.getField());
     }
   }
 
   public void addPreference(final String applicationName, final String path,
-    final String propertyName, final Class<?> valueClass,
-    final Object defaultValue, final Field field) {
-    final Preference preference = new Preference(applicationName, path,
-      propertyName, valueClass, defaultValue, field);
-    if (!preferences.contains(preference)) {
-      preferences.add(preference);
+    final String propertyName, final Class<?> valueClass, final Object defaultValue,
+    final Field field) {
+    final Preference preference = new Preference(applicationName, path, propertyName, valueClass,
+      defaultValue, field);
+    if (!this.preferences.contains(preference)) {
+      this.preferences.add(preference);
       addField(preference.getField());
     }
   }
 
   @Override
   public void cancelChanges() {
-    for (final Preference preference : preferences) {
+    for (final Preference preference : this.preferences) {
       preference.cancelChanges();
     }
   }
 
   @Override
   protected void doSavePreferences() {
-    for (final Preference preference : preferences) {
+    for (final Preference preference : this.preferences) {
       preference.saveChanges();
     }
   }

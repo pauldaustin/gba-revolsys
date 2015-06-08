@@ -48,8 +48,7 @@ public class SwingWorkerTableModel extends AbstractTableModel {
     return table;
   }
 
-  private final List<String> columnTitles = Arrays.asList("Description",
-    "Status");
+  private final List<String> columnTitles = Arrays.asList("Description", "Status");
 
   private final InvokeMethodListener listener;
 
@@ -103,7 +102,6 @@ public class SwingWorkerTableModel extends AbstractTableModel {
   }
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
   }
 }

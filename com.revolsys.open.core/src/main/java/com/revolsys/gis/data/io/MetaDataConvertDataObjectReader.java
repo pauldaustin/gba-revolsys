@@ -13,8 +13,8 @@ import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.Reader;
 
-public class MetaDataConvertDataObjectReader extends AbstractReader<Record>
-  implements RecordReader, Iterator<Record> {
+public class MetaDataConvertDataObjectReader extends AbstractReader<Record> implements
+  RecordReader, Iterator<Record> {
 
   private final RecordDefinition metaData;
 
@@ -32,20 +32,20 @@ public class MetaDataConvertDataObjectReader extends AbstractReader<Record>
 
   @Override
   public void close() {
-    reader.close();
+    this.reader.close();
   }
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return metaData;
+    return this.metaData;
   }
 
   @Override
   public boolean hasNext() {
-    if (!open) {
+    if (!this.open) {
       open();
     }
-    return iterator.hasNext();
+    return this.iterator.hasNext();
   }
 
   @Override
@@ -56,15 +56,14 @@ public class MetaDataConvertDataObjectReader extends AbstractReader<Record>
   @Override
   public Record next() {
     if (hasNext()) {
-      final Record source = iterator.next();
-      final Record target = new ArrayRecord(metaData);
-      for (final FieldDefinition attribute : metaData.getFields()) {
+      final Record source = this.iterator.next();
+      final Record target = new ArrayRecord(this.metaData);
+      for (final FieldDefinition attribute : this.metaData.getFields()) {
         final String name = attribute.getName();
         final Object value = source.getValue(name);
         if (value != null) {
-          final DataType dataType = metaData.getFieldType(name);
-          final Object convertedValue = StringConverterRegistry.toObject(
-            dataType, value);
+          final DataType dataType = this.metaData.getFieldType(name);
+          final Object convertedValue = StringConverterRegistry.toObject(dataType, value);
           target.setValue(name, convertedValue);
         }
       }
@@ -76,12 +75,12 @@ public class MetaDataConvertDataObjectReader extends AbstractReader<Record>
 
   @Override
   public void open() {
-    open = true;
-    this.iterator = reader.iterator();
+    this.open = true;
+    this.iterator = this.reader.iterator();
   }
 
   @Override
   public void remove() {
-    iterator.remove();
+    this.iterator.remove();
   }
 }

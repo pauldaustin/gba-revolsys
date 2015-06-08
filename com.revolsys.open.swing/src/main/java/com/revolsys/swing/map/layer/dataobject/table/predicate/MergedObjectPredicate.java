@@ -21,9 +21,8 @@ public class MergedObjectPredicate implements HighlightPredicate {
   public static void add(final DataObjectRowTable table) {
     final MergedRecordsTableModel model = table.getTableModel();
     final MergedObjectPredicate predicate = new MergedObjectPredicate(model);
-    final Highlighter colors = new ColorHighlighter(predicate,
-      ColorUtil.setAlpha(WebColors.Green, 64), WebColors.Black,
-      WebColors.Green, WebColors.White);
+    final Highlighter colors = new ColorHighlighter(predicate, ColorUtil.setAlpha(WebColors.Green,
+      64), WebColors.Black, WebColors.Green, WebColors.White);
     table.addHighlighter(colors);
     table.addHighlighter(new BorderHighlighter(predicate,
       BorderFactory.createLineBorder(WebColors.Green)));
@@ -36,12 +35,11 @@ public class MergedObjectPredicate implements HighlightPredicate {
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToModel(adapter.row);
       final Record object = this.model.getRecord(rowIndex);
-      if (object == model.getMergedObject()) {
+      if (object == this.model.getMergedObject()) {
         return true;
       } else {
         return false;

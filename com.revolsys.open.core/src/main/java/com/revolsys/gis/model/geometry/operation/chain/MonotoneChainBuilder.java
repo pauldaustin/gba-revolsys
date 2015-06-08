@@ -9,7 +9,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.Quadrant;
 
 /**
  * Constructs {@link MonotoneChain}s for sequences of {@link Coordinates}s.
- * 
+ *
  * @version 1.7
  */
 public class MonotoneChainBuilder {
@@ -18,7 +18,7 @@ public class MonotoneChainBuilder {
    * Finds the index of the last point in a monotone chain starting at a given
    * point. Any repeated points (0-length segments) will be included in the
    * monotone chain returned.
-   * 
+   *
    * @return the index of the last point in the monotone chain starting at
    *         <code>start</code>.
    */
@@ -26,8 +26,7 @@ public class MonotoneChainBuilder {
     int safeStart = start;
     // skip any zero-length segments at the start of the sequence
     // (since they cannot be used to establish a quadrant)
-    while (safeStart < pts.size() - 1
-      && pts.equal(safeStart, pts, safeStart + 1, 2)) {
+    while (safeStart < pts.size() - 1 && pts.equal(safeStart, pts, safeStart + 1, 2)) {
       safeStart++;
     }
     // check if there are NO non-zero-length segments
@@ -35,8 +34,7 @@ public class MonotoneChainBuilder {
       return pts.size() - 1;
     }
     // determine overall quadrant for chain (which is the starting quadrant)
-    final int chainQuad = Quadrant.quadrant(pts.get(safeStart),
-      pts.get(safeStart + 1));
+    final int chainQuad = Quadrant.quadrant(pts.get(safeStart), pts.get(safeStart + 1));
     int last = start + 1;
     while (last < pts.size()) {
       // skip zero-length segments, but include them in the chain
@@ -60,13 +58,11 @@ public class MonotoneChainBuilder {
    * Return a list of the {@link MonotoneChain}s for the given list of
    * coordinates.
    */
-  public static List<MonotoneChain> getChains(final CoordinatesList pts,
-    final Object context) {
+  public static List<MonotoneChain> getChains(final CoordinatesList pts, final Object context) {
     final List<MonotoneChain> mcList = new ArrayList<MonotoneChain>();
     final int[] startIndex = getChainStartIndices(pts);
     for (int i = 0; i < startIndex.length - 1; i++) {
-      final MonotoneChain mc = new MonotoneChain(pts, startIndex[i],
-        startIndex[i + 1], context);
+      final MonotoneChain mc = new MonotoneChain(pts, startIndex[i], startIndex[i + 1], context);
       mcList.add(mc);
     }
     return mcList;

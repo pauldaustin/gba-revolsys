@@ -18,15 +18,13 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class GeometryFactoryTest {
-  private static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.getFactory(
-    3857, 2, 1, 1);
+  private static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.getFactory(3857, 2, 1, 1);
 
   public static void assertCoordinatesListEqual(final Geometry geometry,
     final CoordinatesList... pointsList) {
     System.out.println(geometry);
     final List<CoordinatesList> geometryPointsList = CoordinatesListUtil.getAll(geometry);
-    Assert.assertEquals("Number of coordinates Lists", pointsList.length,
-      geometryPointsList.size());
+    Assert.assertEquals("Number of coordinates Lists", pointsList.length, geometryPointsList.size());
     for (int i = 0; i < pointsList.length; i++) {
       final CoordinatesList points = pointsList[i];
       final CoordinatesList geometryPoints = geometryPointsList.get(i);
@@ -43,8 +41,7 @@ public class GeometryFactoryTest {
     Assert.assertEquals("Geometry", geometry, copy);
     assertCoordinatesListEqual(copy, pointsList);
 
-    final Geometry copy2 = GEOMETRY_FACTORY.createGeometry(geometryClass,
-      geometry);
+    final Geometry copy2 = GEOMETRY_FACTORY.createGeometry(geometryClass, geometry);
     Assert.assertEquals("Geometry class", geometryClass, copy2.getClass());
     Assert.assertEquals("Geometry", geometry, copy2);
     assertCoordinatesListEqual(copy2, pointsList);
@@ -58,8 +55,7 @@ public class GeometryFactoryTest {
         final Geometry part = geometry.getGeometryN(0);
         final Class<? extends Geometry> geometryClass = geometry.getClass();
 
-        final Geometry copy2 = GEOMETRY_FACTORY.createGeometry(geometryClass,
-          part);
+        final Geometry copy2 = GEOMETRY_FACTORY.createGeometry(geometryClass, part);
         Assert.assertEquals("Geometry class", geometryClass, copy2.getClass());
         Assert.assertEquals("Geometry", geometry, copy2);
         assertCoordinatesListEqual(copy2, pointsList);
@@ -72,8 +68,7 @@ public class GeometryFactoryTest {
       Assert.assertEquals("Geometry", geometry, copy);
       assertCoordinatesListEqual(collection, pointsList);
 
-      final Geometry copy2 = GEOMETRY_FACTORY.createGeometry(geometryClass,
-        collection);
+      final Geometry copy2 = GEOMETRY_FACTORY.createGeometry(geometryClass, collection);
       Assert.assertEquals("Geometry class", geometryClass, copy2.getClass());
       Assert.assertEquals("Geometry", geometry, copy2);
       assertCoordinatesListEqual(copy2, pointsList);
@@ -86,16 +81,14 @@ public class GeometryFactoryTest {
   }
 
   private static void testCreateGeometry() {
-    final CoordinatesList pointPoints = GEOMETRY_FACTORY.createCoordinatesList(
-      0, 0);
-    final CoordinatesList point2Points = GEOMETRY_FACTORY.createCoordinatesList(
-      20, 20);
-    final CoordinatesList ringPoints = GEOMETRY_FACTORY.createCoordinatesList(
-      0, 0, 0, 100, 100, 100, 100, 0, 0, 0);
-    final CoordinatesList ring2Points = GEOMETRY_FACTORY.createCoordinatesList(
-      20, 20, 20, 80, 80, 80, 80, 20, 20, 20);
-    final CoordinatesList ring3Points = GEOMETRY_FACTORY.createCoordinatesList(
-      120, 120, 120, 180, 180, 180, 180, 120, 120, 120);
+    final CoordinatesList pointPoints = GEOMETRY_FACTORY.createCoordinatesList(0, 0);
+    final CoordinatesList point2Points = GEOMETRY_FACTORY.createCoordinatesList(20, 20);
+    final CoordinatesList ringPoints = GEOMETRY_FACTORY.createCoordinatesList(0, 0, 0, 100, 100,
+      100, 100, 0, 0, 0);
+    final CoordinatesList ring2Points = GEOMETRY_FACTORY.createCoordinatesList(20, 20, 20, 80, 80,
+      80, 80, 20, 20, 20);
+    final CoordinatesList ring3Points = GEOMETRY_FACTORY.createCoordinatesList(120, 120, 120, 180,
+      180, 180, 180, 120, 120, 120);
 
     final Point point = GEOMETRY_FACTORY.createPoint(pointPoints);
     assertCopyGeometry(point, pointPoints);
@@ -109,29 +102,26 @@ public class GeometryFactoryTest {
     final Polygon polygon = GEOMETRY_FACTORY.createPolygon(ringPoints);
     assertCopyGeometry(polygon, ringPoints);
 
-    final Polygon polygon2 = GEOMETRY_FACTORY.createPolygon(ringPoints,
-      ring2Points);
+    final Polygon polygon2 = GEOMETRY_FACTORY.createPolygon(ringPoints, ring2Points);
     assertCopyGeometry(polygon2, ringPoints, ring2Points);
 
     final MultiPoint multiPoint = GEOMETRY_FACTORY.createMultiPoint(pointPoints);
     assertCopyGeometry(multiPoint, pointPoints);
 
-    final MultiPoint multiPoint2 = GEOMETRY_FACTORY.createMultiPoint(
-      pointPoints, point2Points);
+    final MultiPoint multiPoint2 = GEOMETRY_FACTORY.createMultiPoint(pointPoints, point2Points);
     assertCopyGeometry(multiPoint2, pointPoints, point2Points);
 
     final MultiLineString multiLineString = GEOMETRY_FACTORY.createMultiLineString(ringPoints);
     assertCopyGeometry(multiLineString, ringPoints);
 
-    final MultiLineString multiLineString2 = GEOMETRY_FACTORY.createMultiLineString(
-      ringPoints, ring2Points);
+    final MultiLineString multiLineString2 = GEOMETRY_FACTORY.createMultiLineString(ringPoints,
+      ring2Points);
     assertCopyGeometry(multiLineString2, ringPoints, ring2Points);
 
     final MultiPolygon multiPolygon = GEOMETRY_FACTORY.createMultiPolygon(ringPoints);
     assertCopyGeometry(multiPolygon, ringPoints);
 
-    final MultiPolygon multiPolygon2 = GEOMETRY_FACTORY.createMultiPolygon(
-      ringPoints, ring3Points);
+    final MultiPolygon multiPolygon2 = GEOMETRY_FACTORY.createMultiPolygon(ringPoints, ring3Points);
     assertCopyGeometry(multiPolygon2, ringPoints, ring3Points);
 
   }

@@ -22,6 +22,10 @@ import com.revolsys.swing.undo.UndoManager;
 public class TextPane extends JEditorPane implements Field, FocusListener {
   private static final long serialVersionUID = 1L;
 
+  static {
+    DefaultSyntaxKit.initKit();
+  }
+
   private final String fieldName;
 
   private String fieldValue;
@@ -29,10 +33,6 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
   private String errorMessage;
 
   private String originalToolTip;
-
-  static {
-    DefaultSyntaxKit.initKit();
-  }
 
   private final CascadingUndoManager undoManager = new CascadingUndoManager();
 
@@ -65,8 +65,8 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -132,8 +132,8 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setSelectedTextColor(foregroundColor);
     setBackground(backgroundColor);
@@ -165,8 +165,7 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
     if (!EqualsRegistry.equal(oldValue, value)) {
       this.fieldValue = (String)value;
       firePropertyChange(this.fieldName, oldValue, value);
-      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this,
-        oldValue, value);
+      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, value);
     }
   }
 

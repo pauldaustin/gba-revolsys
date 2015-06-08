@@ -8,36 +8,35 @@ import com.revolsys.gis.graph.event.NodeEventListener;
 import com.revolsys.gis.graph.event.NodeEventListenerList;
 import com.revolsys.visitor.AbstractVisitor;
 
-public abstract class AbstractEdgeListenerVisitor<T> extends
-  AbstractVisitor<Edge<T>> {
+public abstract class AbstractEdgeListenerVisitor<T> extends AbstractVisitor<Edge<T>> {
 
   private final EdgeEventListenerList<T> edgeListeners = new EdgeEventListenerList<T>();
 
   private final NodeEventListenerList<T> nodeListeners = new NodeEventListenerList<T>();
 
   public void addEdgeListener(final EdgeEventListener<T> listener) {
-    edgeListeners.add(listener);
+    this.edgeListeners.add(listener);
   }
 
   public void addNodeListener(final NodeEventListener<T> listener) {
-    nodeListeners.add(listener);
+    this.nodeListeners.add(listener);
   }
 
-  public void edgeEvent(final Edge<T> edge, final String ruleName,
-    final String action, final String notes) {
-    edgeListeners.edgeEvent(edge, ruleName, action, notes);
+  public void edgeEvent(final Edge<T> edge, final String ruleName, final String action,
+    final String notes) {
+    this.edgeListeners.edgeEvent(edge, ruleName, action, notes);
   }
 
   public EdgeEventListenerList<T> getEdgeListeners() {
-    return edgeListeners;
+    return this.edgeListeners;
   }
 
   public NodeEventListenerList<T> getNodeListeners() {
-    return nodeListeners;
+    return this.nodeListeners;
   }
 
-  public void nodeEvent(final Node<T> node, final String typePath,
-    final String ruleName, final String action, final String notes) {
-    nodeListeners.nodeEvent(node, typePath, ruleName, action, notes);
+  public void nodeEvent(final Node<T> node, final String typePath, final String ruleName,
+    final String action, final String notes) {
+    this.nodeListeners.nodeEvent(node, typePath, ruleName, action, notes);
   }
 }

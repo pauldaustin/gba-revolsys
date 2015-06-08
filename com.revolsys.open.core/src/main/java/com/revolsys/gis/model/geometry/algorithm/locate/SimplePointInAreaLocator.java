@@ -50,13 +50,12 @@ import com.revolsys.gis.model.geometry.impl.BoundingBox;
  * <p>
  * The algorithm used is only guaranteed to return correct results for points
  * which are <b>not</b> on the boundary of the Geometry.
- * 
+ *
  * @version 1.7
  */
 public class SimplePointInAreaLocator implements PointOnGeometryLocator {
 
-  private static boolean containsPoint(final Coordinates point,
-    final Geometry geometry) {
+  private static boolean containsPoint(final Coordinates point, final Geometry geometry) {
     if (geometry instanceof Polygon) {
       return containsPointInPolygon(point, (Polygon)geometry);
     } else if (geometry instanceof GeometryCollection) {
@@ -71,8 +70,7 @@ public class SimplePointInAreaLocator implements PointOnGeometryLocator {
     return false;
   }
 
-  public static boolean containsPointInPolygon(final Coordinates p,
-    final Polygon polygon) {
+  public static boolean containsPointInPolygon(final Coordinates p, final Polygon polygon) {
     if (polygon.isEmpty()) {
       return false;
     } else {
@@ -92,13 +90,12 @@ public class SimplePointInAreaLocator implements PointOnGeometryLocator {
   /**
    * Determines whether a point lies in a LinearRing, using the ring envelope to
    * short-circuit if possible.
-   * 
+   *
    * @param point the point to test
    * @param ring a linear ring
    * @return true if the point lies inside the ring
    */
-  private static boolean isPointInRing(final Coordinates point,
-    final LinearRing ring) {
+  private static boolean isPointInRing(final Coordinates point, final LinearRing ring) {
     final BoundingBox boundingBox = ring.getBoundingBox();
     if (boundingBox.intersects(point)) {
       return RayCrossingCounter.locatePointInRing(point, ring) != Location.EXTERIOR;
@@ -110,7 +107,7 @@ public class SimplePointInAreaLocator implements PointOnGeometryLocator {
   /**
    * Determines the {@link Location} of a point in an areal {@link Geometry}.
    * Currently this will never return a value of BOUNDARY.
-   * 
+   *
    * @param point the point to test
    * @param geometry the areal geometry to test
    * @return the Location of the point in the geometry
@@ -133,7 +130,7 @@ public class SimplePointInAreaLocator implements PointOnGeometryLocator {
 
   @Override
   public Location locate(final Coordinates point) {
-    return SimplePointInAreaLocator.locate(point, geometry);
+    return SimplePointInAreaLocator.locate(point, this.geometry);
   }
 
   @Override

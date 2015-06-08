@@ -15,8 +15,7 @@ public class DataObjectGeometryAreaComparitor implements Comparator<Record> {
   public DataObjectGeometryAreaComparitor() {
   }
 
-  public DataObjectGeometryAreaComparitor(final boolean decending,
-    final boolean clockwise) {
+  public DataObjectGeometryAreaComparitor(final boolean decending, final boolean clockwise) {
     this.decending = decending;
     this.clockwise = clockwise;
   }
@@ -35,15 +34,13 @@ public class DataObjectGeometryAreaComparitor implements Comparator<Record> {
     if (compare == 0) {
       compare = geometry1.compareTo(geometry2);
       if (compare == 0) {
-        final boolean clockwise1 = !CGAlgorithms.isCCW(geometry1.getExteriorRing()
-          .getCoordinates());
-        final boolean clockwise2 = !CGAlgorithms.isCCW(geometry2.getExteriorRing()
-          .getCoordinates());
+        final boolean clockwise1 = !CGAlgorithms.isCCW(geometry1.getExteriorRing().getCoordinates());
+        final boolean clockwise2 = !CGAlgorithms.isCCW(geometry2.getExteriorRing().getCoordinates());
         if (clockwise1) {
           if (clockwise2) {
             return 0;
           } else {
-            if (clockwise) {
+            if (this.clockwise) {
               compare = -1;
             } else {
               compare = 1;
@@ -51,7 +48,7 @@ public class DataObjectGeometryAreaComparitor implements Comparator<Record> {
           }
         } else {
           if (clockwise2) {
-            if (clockwise) {
+            if (this.clockwise) {
               compare = 1;
             } else {
               compare = -1;
@@ -62,7 +59,7 @@ public class DataObjectGeometryAreaComparitor implements Comparator<Record> {
         }
       }
     }
-    if (decending) {
+    if (this.decending) {
       return -compare;
     } else {
       return compare;

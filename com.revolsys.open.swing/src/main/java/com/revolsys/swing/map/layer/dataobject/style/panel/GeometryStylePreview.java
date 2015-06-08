@@ -49,8 +49,7 @@ public class GeometryStylePreview extends JPanel {
 
   private final DataType geometryDataType;
 
-  public GeometryStylePreview(final GeometryStyle geometryStyle,
-    final DataType geometryDataType) {
+  public GeometryStylePreview(final GeometryStyle geometryStyle, final DataType geometryDataType) {
     final Dimension size = new Dimension(100, 100);
     setPreferredSize(size);
     setMinimumSize(size);
@@ -73,8 +72,7 @@ public class GeometryStylePreview extends JPanel {
     final Paint paint = graphics.getPaint();
     final Stroke stroke = graphics.getStroke();
     try {
-      graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON);
+      graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
       if (DataTypes.POLYGON.equals(this.geometryDataType)) {
         this.geometryStyle.setFillStyle(null, graphics);

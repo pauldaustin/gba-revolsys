@@ -47,19 +47,19 @@ public class CsvMapWriter extends AbstractMapWriter {
    */
   @Override
   public void close() {
-    FileUtil.closeSilent(out);
+    FileUtil.closeSilent(this.out);
   }
 
   @Override
   public void flush() {
     try {
-      out.flush();
+      this.out.flush();
     } catch (final IOException e) {
     }
   }
 
   public List<String> getFieldNames() {
-    return fieldNames;
+    return this.fieldNames;
   }
 
   public void setFieldNames(final Collection<String> fieldNames) {
@@ -75,10 +75,10 @@ public class CsvMapWriter extends AbstractMapWriter {
   @Override
   public void write(final Map<String, ? extends Object> values) {
     final List<Object> fieldValues = new ArrayList<Object>();
-    if (fieldNames == null) {
+    if (this.fieldNames == null) {
       setFieldNames(values.keySet());
     }
-    for (final String fieldName : fieldNames) {
+    for (final String fieldName : this.fieldNames) {
       final Object value = values.get(fieldName);
       fieldValues.add(value);
     }
@@ -89,27 +89,27 @@ public class CsvMapWriter extends AbstractMapWriter {
     try {
       for (int i = 0; i < values.length; i++) {
         if (i > 0) {
-          out.write(fieldSeparator);
+          this.out.write(this.fieldSeparator);
         }
         final Object value = values[i];
         if (value != null) {
           final String string = StringConverterRegistry.toString(value);
-          if (useQuotes) {
-            out.write('"');
+          if (this.useQuotes) {
+            this.out.write('"');
             for (int j = 0; j < string.length(); j++) {
               final char c = string.charAt(j);
               if (c == '"') {
-                out.write('"');
+                this.out.write('"');
               }
-              out.write(c);
+              this.out.write(c);
             }
-            out.write('"');
+            this.out.write('"');
           } else {
-            out.write(string, 0, string.length());
+            this.out.write(string, 0, string.length());
           }
         }
       }
-      out.write('\n');
+      this.out.write('\n');
     } catch (final IOException e) {
       throw new WrappedException(e);
     }

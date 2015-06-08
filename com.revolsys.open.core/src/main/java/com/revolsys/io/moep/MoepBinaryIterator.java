@@ -30,8 +30,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
-public class MoepBinaryIterator extends AbstractObjectWithProperties implements
-  Iterator<Record> {
+public class MoepBinaryIterator extends AbstractObjectWithProperties implements Iterator<Record> {
   private static final int COMPLEX_LINE = 3;
 
   private static final int CONSTRUCTION_COMPLEX_LINE = 5;
@@ -59,18 +58,18 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
       final double orientation = getAngle(angle.doubleValue());
       JtsGeometryUtil.setGeometryProperty(geometry, "orientation", orientation);
     }
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(),
-      MoepConstants.TEXT_GROUP, object.getValue(MoepConstants.TEXT_GROUP));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(),
-      MoepConstants.TEXT_INDEX, object.getValue(MoepConstants.TEXT_INDEX));
+    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), MoepConstants.TEXT_GROUP,
+      object.getValue(MoepConstants.TEXT_GROUP));
+    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), MoepConstants.TEXT_INDEX,
+      object.getValue(MoepConstants.TEXT_INDEX));
     JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "text",
       object.getValue(MoepConstants.TEXT));
     JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "textType",
       SaifConstants.TEXT_LINE);
     JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "fontName",
       object.getValue(MoepConstants.FONT_NAME));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(),
-      "characterHeight", object.getValue(MoepConstants.FONT_SIZE));
+    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "characterHeight",
+      object.getValue(MoepConstants.FONT_SIZE));
     JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "other",
       object.getValue(MoepConstants.FONT_WEIGHT));
   }
@@ -103,39 +102,36 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   private String originalFileType;
 
-  private long position = 0;
-
   private final String mapsheet;
 
-  public MoepBinaryIterator(final MoepDirectoryReader directoryReader,
-    final String fileName, final InputStream in,
-    final RecordFactory dataObjectFactory) {
+  public MoepBinaryIterator(final MoepDirectoryReader directoryReader, final String fileName,
+    final InputStream in, final RecordFactory dataObjectFactory) {
     this.directoryReader = directoryReader;
     this.dataObjectFactory = dataObjectFactory;
     switch (fileName.charAt(fileName.length() - 5)) {
       case 'd':
-        originalFileType = "dem";
+        this.originalFileType = "dem";
       break;
       case 'm':
-        originalFileType = "contours";
+        this.originalFileType = "contours";
       break;
       case 'n':
-        originalFileType = "nonPositional";
+        this.originalFileType = "nonPositional";
       break;
       case 'p':
-        originalFileType = "planimetric";
+        this.originalFileType = "planimetric";
       break;
       case 'g':
-        originalFileType = "toponymy";
+        this.originalFileType = "toponymy";
       break;
       case 'w':
-        originalFileType = "woodedArea";
+        this.originalFileType = "woodedArea";
       break;
       case 's':
-        originalFileType = "supplimentary";
+        this.originalFileType = "supplimentary";
       break;
       default:
-        originalFileType = "unknown";
+        this.originalFileType = "unknown";
       break;
     }
     this.in = new BufferedInputStream(in, 10000);
@@ -149,7 +145,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   @Override
   public void close() {
-    FileUtil.closeSilent(in);
+    FileUtil.closeSilent(this.in);
   }
 
   private String getMapsheetFromFileName(final String fileName) {
@@ -166,9 +162,9 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   @Override
   public boolean hasNext() {
-    if (!hasNext) {
+    if (!this.hasNext) {
       return false;
-    } else if (loadNextObject) {
+    } else if (this.loadNextObject) {
       return loadNextRecord() != null;
     } else {
       return true;
@@ -179,15 +175,14 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
     final int featureKey = read();
     if (featureKey != 255) {
 
-      final boolean hasFeatureCode = (featureKey / 100) != 0;
+      final boolean hasFeatureCode = featureKey / 100 != 0;
       if (hasFeatureCode) {
         final String featureCode = readString(10);
         if (!featureCode.startsWith("HA9000")) {
-          actionName = featureCode.charAt(6);
-          this.featureCode = featureCode.substring(0, 6) + "0"
-            + featureCode.substring(7);
+          this.actionName = featureCode.charAt(6);
+          this.featureCode = featureCode.substring(0, 6) + "0" + featureCode.substring(7);
         } else {
-          actionName = 'W';
+          this.actionName = 'W';
           this.featureCode = featureCode;
         }
       }
@@ -195,10 +190,10 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
       final int extraParams = featureKey % 100 / 10;
       final int featureType = featureKey % 10;
       final byte numBytes = (byte)read();
-      final Record object = dataObjectFactory.createRecord(MoepConstants.META_DATA);
-      object.setValue(MoepConstants.MAPSHEET_NAME, mapsheet);
-      object.setValue(MoepConstants.FEATURE_CODE, featureCode);
-      object.setValue(MoepConstants.ORIGINAL_FILE_TYPE, originalFileType);
+      final Record object = this.dataObjectFactory.createRecord(MoepConstants.META_DATA);
+      object.setValue(MoepConstants.MAPSHEET_NAME, this.mapsheet);
+      object.setValue(MoepConstants.FEATURE_CODE, this.featureCode);
+      object.setValue(MoepConstants.ORIGINAL_FILE_TYPE, this.originalFileType);
       String attribute = null;
       if (numBytes > 0) {
         attribute = readString(numBytes);
@@ -206,10 +201,10 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
       switch (featureType) {
         case POINT:
           object.setValue(MoepConstants.DISPLAY_TYPE, "primary");
-          final Point point = readPoint(in);
+          final Point point = readPoint(this.in);
           object.setGeometryValue(point);
           if (extraParams == 1 || extraParams == 3) {
-            final int angleInt = readLEInt(in);
+            final int angleInt = readLEInt(this.in);
             final int angle = angleInt / 10000;
             object.setValue(MoepConstants.ANGLE, angle);
           }
@@ -226,14 +221,14 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
         break;
         case TEXT:
           object.setValue(MoepConstants.DISPLAY_TYPE, "primary");
-          final Point textPoint = readPoint(in);
+          final Point textPoint = readPoint(this.in);
           object.setGeometryValue(textPoint);
           if (extraParams == 1) {
-            final int angleInt = readLEInt(in);
+            final int angleInt = readLEInt(this.in);
             final int angle = angleInt / 10000;
             object.setValue(MoepConstants.ANGLE, angle);
           }
-          final int fontSize = readLEShort(in);
+          final int fontSize = readLEShort(this.in);
           final int numChars = read();
           final String text = readString(numChars);
           if (attribute == null) {
@@ -250,8 +245,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
               object.setValue(MoepConstants.FONT_WEIGHT, "0");
             }
             if (attribute.length() > 5) {
-              final String textGroup = new String(attribute.substring(4, 9)
-                .trim());
+              final String textGroup = new String(attribute.substring(4, 9).trim());
               object.setValue(MoepConstants.TEXT_GROUP, textGroup);
             }
           }
@@ -262,40 +256,40 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
         break;
       }
 
-      switch (actionName) {
+      switch (this.actionName) {
         case 'W':
-          setAdmissionHistory(object, actionName);
+          setAdmissionHistory(object, this.actionName);
         break;
         case 'Z':
-          setAdmissionHistory(object, actionName);
+          setAdmissionHistory(object, this.actionName);
         break;
         case 'X':
-          setRetirementHistory(object, actionName);
+          setRetirementHistory(object, this.actionName);
         break;
         case 'Y':
-          setRetirementHistory(object, actionName);
+          setRetirementHistory(object, this.actionName);
         break;
         default:
           setAdmissionHistory(object, 'W');
         break;
       }
-      currentDataObject = object;
-      loadNextObject = false;
-      return currentDataObject;
+      this.currentDataObject = object;
+      this.loadNextObject = false;
+      return this.currentDataObject;
     } else {
       close();
-      hasNext = false;
+      this.hasNext = false;
       return null;
     }
   }
 
   private void loadHeader() throws IOException {
-    fileType = (byte)read();
-    if ((fileType / 100) == 0) {
-      coordinateBytes = 2;
+    this.fileType = (byte)read();
+    if (this.fileType / 100 == 0) {
+      this.coordinateBytes = 2;
     } else {
-      fileType %= 100;
-      coordinateBytes = 4;
+      this.fileType %= 100;
+      this.coordinateBytes = 4;
     }
     String mapsheet = readString(11);
     mapsheet = mapsheet.replaceAll("\\.", "").toLowerCase();
@@ -308,11 +302,11 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
     final String submissionDateString = readString(6);
 
-    final double centreX = readLEInt(in);
-    final double centreY = readLEInt(in);
-    center = new DoubleCoordinates(centreX, centreY);
-    factory = GeometryFactory.getFactory(coordinateSystem.getId(), 1.0, 1.0);
-    setProperty(IoConstants.GEOMETRY_FACTORY, factory);
+    final double centreX = readLEInt(this.in);
+    final double centreY = readLEInt(this.in);
+    this.center = new DoubleCoordinates(centreX, centreY);
+    this.factory = GeometryFactory.getFactory(coordinateSystem.getId(), 1.0, 1.0);
+    setProperty(IoConstants.GEOMETRY_FACTORY, this.factory);
   }
 
   protected Record loadNextRecord() {
@@ -325,43 +319,42 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   /**
    * Get the next data object read by this reader.
-   * 
+   *
    * @return The next DataObject.
    * @exception NoSuchElementException If the reader has no more data objects.
    */
   @Override
   public Record next() {
     if (hasNext()) {
-      loadNextObject = true;
-      return currentDataObject;
+      this.loadNextObject = true;
+      return this.currentDataObject;
     } else {
       throw new NoSuchElementException();
     }
   }
 
   private int read() throws IOException {
-    position++;
-    return in.read();
+    return this.in.read();
   }
 
   private LineString readContourLine(final int numCoords) throws IOException {
     final CoordinatesList coords = new DoubleCoordinatesList(numCoords, 2);
     for (int i = 0; i < numCoords; i++) {
-      readCoordinate(in, coords, i);
+      readCoordinate(this.in, coords, i);
     }
-    return factory.createLineString(coords);
+    return this.factory.createLineString(coords);
   }
 
-  private void readCoordinate(final InputStream in,
-    final CoordinatesList coords, final int index) throws IOException {
+  private void readCoordinate(final InputStream in, final CoordinatesList coords, final int index)
+    throws IOException {
     for (int i = 0; i < 2; i++) {
       int coordinate;
-      if (coordinateBytes == 2) {
+      if (this.coordinateBytes == 2) {
         coordinate = readLEShort(in);
       } else {
         coordinate = readLEInt(in);
       }
-      coords.setValue(index, i, center.getValue(i) + coordinate);
+      coords.setValue(index, i, this.center.getValue(i) + coordinate);
     }
     if (coords.getNumAxis() > 2) {
       final int z = readLEShort(in);
@@ -374,18 +367,16 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
     final int ch2 = in.read();
     final int ch3 = in.read();
     final int ch4 = in.read();
-    position += 4;
     if ((ch1 | ch2 | ch3 | ch4) < 0) {
       throw new EOFException();
     }
-    return ((ch1 << 0) + (ch2 << 8) + (ch3 << 16) + (ch4 << 24));
+    return (ch1 << 0) + (ch2 << 8) + (ch3 << 16) + (ch4 << 24);
 
   }
 
   private short readLEShort(final InputStream in) throws IOException {
     final int ch1 = in.read();
     final int ch2 = in.read();
-    position += 2;
     if ((ch1 | ch2) < 0) {
       throw new EOFException();
     }
@@ -393,17 +384,16 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
 
   }
 
-  private void readLineString(final int extraParams, final Record object)
-    throws IOException {
+  private void readLineString(final int extraParams, final Record object) throws IOException {
     int numCoords = 0;
     if (extraParams == 2 || extraParams == 4) {
-      numCoords = readLEShort(in);
+      numCoords = readLEShort(this.in);
 
     } else {
       numCoords = read();
     }
     if (extraParams == 3 || extraParams == 4) {
-      final int z = readLEShort(in);
+      final int z = readLEShort(this.in);
       final LineString line = readContourLine(numCoords);
       object.setGeometryValue(line);
       object.setValue(MoepConstants.ELEVATION, new Integer(z));
@@ -417,22 +407,21 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
   private Point readPoint(final InputStream in) throws IOException {
     final CoordinatesList coords = new DoubleCoordinatesList(1, 3);
     readCoordinate(in, coords, 0);
-    return factory.createPoint(coords);
+    return this.factory.createPoint(coords);
   }
 
   private LineString readSimpleLine(final int numCoords) throws IOException {
     final CoordinatesList coords = new DoubleCoordinatesList(numCoords, 3);
     for (int i = 0; i < numCoords; i++) {
-      readCoordinate(in, coords, i);
+      readCoordinate(this.in, coords, i);
     }
-    return factory.createLineString(coords);
+    return this.factory.createLineString(coords);
   }
 
   private String readString(final int length) throws IOException {
-    final int read = in.read(buffer, 0, length);
+    final int read = this.in.read(this.buffer, 0, length);
     if (read > -1) {
-      position += read;
-      return new String(buffer, 0, read).trim();
+      return new String(this.buffer, 0, read).trim();
     } else {
       return null;
     }
@@ -442,35 +431,27 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements
   public void remove() {
   }
 
-  private void setAdmissionHistory(final Record object,
-    final char reasonForChange) {
-    if (directoryReader != null) {
-      object.setValue(MoepConstants.ADMIT_SOURCE_DATE,
-        directoryReader.getSubmissionDate());
+  private void setAdmissionHistory(final Record object, final char reasonForChange) {
+    if (this.directoryReader != null) {
+      object.setValue(MoepConstants.ADMIT_SOURCE_DATE, this.directoryReader.getSubmissionDate());
       object.setValue(MoepConstants.ADMIT_INTEGRATION_DATE,
-        directoryReader.getIntegrationDate());
-      object.setValue(MoepConstants.ADMIT_REVISION_KEY,
-        directoryReader.getRevisionKey());
+        this.directoryReader.getIntegrationDate());
+      object.setValue(MoepConstants.ADMIT_REVISION_KEY, this.directoryReader.getRevisionKey());
       object.setValue(MoepConstants.ADMIT_SPECIFICATIONS_RELEASE,
-        directoryReader.getSpecificationsRelease());
+        this.directoryReader.getSpecificationsRelease());
     }
-    object.setValue(MoepConstants.ADMIT_REASON_FOR_CHANGE,
-      String.valueOf(reasonForChange));
+    object.setValue(MoepConstants.ADMIT_REASON_FOR_CHANGE, String.valueOf(reasonForChange));
   }
 
-  private void setRetirementHistory(final Record object,
-    final char reasonForChange) {
-    if (directoryReader != null) {
-      object.setValue(MoepConstants.RETIRE_SOURCE_DATE,
-        directoryReader.getSubmissionDate());
+  private void setRetirementHistory(final Record object, final char reasonForChange) {
+    if (this.directoryReader != null) {
+      object.setValue(MoepConstants.RETIRE_SOURCE_DATE, this.directoryReader.getSubmissionDate());
       object.setValue(MoepConstants.RETIRE_INTEGRATION_DATE,
-        directoryReader.getIntegrationDate());
-      object.setValue(MoepConstants.RETIRE_REVISION_KEY,
-        directoryReader.getRevisionKey());
+        this.directoryReader.getIntegrationDate());
+      object.setValue(MoepConstants.RETIRE_REVISION_KEY, this.directoryReader.getRevisionKey());
       object.setValue(MoepConstants.RETIRE_SPECIFICATIONS_RELEASE,
-        directoryReader.getSpecificationsRelease());
+        this.directoryReader.getSpecificationsRelease());
     }
-    object.setValue(MoepConstants.RETIRE_REASON_FOR_CHANGE,
-      String.valueOf(reasonForChange));
+    object.setValue(MoepConstants.RETIRE_REASON_FOR_CHANGE, String.valueOf(reasonForChange));
   }
 }

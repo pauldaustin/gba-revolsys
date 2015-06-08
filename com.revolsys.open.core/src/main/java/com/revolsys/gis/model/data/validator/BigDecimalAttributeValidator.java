@@ -5,13 +5,13 @@
  * $Revision$
 
  * Copyright 2004-2005 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,8 +34,8 @@ public class BigDecimalAttributeValidator implements AttributeValueValidator {
   public BigDecimalAttributeValidator() {
   }
 
-  public BigDecimalAttributeValidator(final BigDecimal minValue,
-    final BigDecimal maxValue, final boolean decimal) {
+  public BigDecimalAttributeValidator(final BigDecimal minValue, final BigDecimal maxValue,
+    final boolean decimal) {
     this.minValue = new BigDecimal(String.valueOf(minValue));
     this.maxValue = new BigDecimal(String.valueOf(maxValue));
     this.decimal = decimal;
@@ -45,28 +45,27 @@ public class BigDecimalAttributeValidator implements AttributeValueValidator {
     this.decimal = decimal;
   }
 
-  public BigDecimalAttributeValidator(final double minValue,
-    final double maxValue) {
+  public BigDecimalAttributeValidator(final double minValue, final double maxValue) {
     this.minValue = new BigDecimal(String.valueOf(minValue));
     this.maxValue = new BigDecimal(String.valueOf(maxValue));
-    decimal = true;
+    this.decimal = true;
   }
 
   public BigDecimalAttributeValidator(final long minValue, final long maxValue) {
     this.minValue = new BigDecimal(String.valueOf(minValue));
     this.maxValue = new BigDecimal(String.valueOf(maxValue));
-    decimal = false;
+    this.decimal = false;
   }
 
   @Override
   public boolean isValid(final FieldDefinition attributeDefinition, final Object value) {
     if (value instanceof BigDecimal) {
       final BigDecimal number = (BigDecimal)value;
-      if (!decimal && number.scale() > 0) {
+      if (!this.decimal && number.scale() > 0) {
         return false;
-      } else if (minValue != null && number.compareTo(minValue) < 0) {
+      } else if (this.minValue != null && number.compareTo(this.minValue) < 0) {
         return false;
-      } else if (maxValue != null && number.compareTo(maxValue) > 0) {
+      } else if (this.maxValue != null && number.compareTo(this.maxValue) > 0) {
         return false;
       } else {
         return true;

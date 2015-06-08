@@ -6,8 +6,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectTypeNameComparator implements Comparator<Record> {
-  public static int compareTypeNames(final Record object1,
-    final Record object2) {
+  public static int compareTypeNames(final Record object1, final Record object2) {
     final RecordDefinition metaData1 = object1.getRecordDefinition();
     final String typePath1 = metaData1.getPath();
     final String name1 = typePath1.toString();

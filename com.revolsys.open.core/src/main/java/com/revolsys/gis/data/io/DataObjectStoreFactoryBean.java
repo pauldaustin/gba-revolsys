@@ -9,8 +9,7 @@ import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.util.Property;
 
-public class DataObjectStoreFactoryBean extends
-  AbstractFactoryBean<RecordStore> {
+public class DataObjectStoreFactoryBean extends AbstractFactoryBean<RecordStore> {
 
   private Map<String, Object> config = new LinkedHashMap<String, Object>();
 
@@ -18,22 +17,21 @@ public class DataObjectStoreFactoryBean extends
 
   @Override
   protected RecordStore createInstance() throws Exception {
-    final RecordStore dataObjectStore = RecordStoreFactoryRegistry.createDataObjectStore(config);
-    Property.set(dataObjectStore, properties);
+    final RecordStore dataObjectStore = RecordStoreFactoryRegistry.createDataObjectStore(this.config);
+    Property.set(dataObjectStore, this.properties);
     dataObjectStore.initialize();
     return dataObjectStore;
   }
 
   @Override
-  protected void destroyInstance(final RecordStore dataObjectStore)
-    throws Exception {
+  protected void destroyInstance(final RecordStore dataObjectStore) throws Exception {
     dataObjectStore.close();
-    properties = null;
-    config = null;
+    this.properties = null;
+    this.config = null;
   }
 
   public Map<String, Object> getConfig() {
-    return config;
+    return this.config;
   }
 
   @Override
@@ -42,7 +40,7 @@ public class DataObjectStoreFactoryBean extends
   }
 
   public Map<String, Object> getProperties() {
-    return properties;
+    return this.properties;
   }
 
   public void setConfig(final Map<String, Object> config) {
@@ -54,6 +52,6 @@ public class DataObjectStoreFactoryBean extends
   }
 
   public void setUrl(final String url) {
-    config.put("url", url);
+    this.config.put("url", url);
   }
 }

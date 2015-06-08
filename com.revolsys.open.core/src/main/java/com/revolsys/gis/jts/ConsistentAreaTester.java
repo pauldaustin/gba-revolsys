@@ -61,7 +61,7 @@ public class ConsistentAreaTester {
   }
 
   public List<Coordinates> getInvalidPoints() {
-    return invalidPoints;
+    return this.invalidPoints;
   }
 
   /**
@@ -81,7 +81,7 @@ public class ConsistentAreaTester {
    */
   public boolean hasDuplicateRings() {
     boolean hasDuplicate = false;
-    for (final Iterator nodeIt = nodeGraph.getNodeIterator(); nodeIt.hasNext();) {
+    for (final Iterator nodeIt = this.nodeGraph.getNodeIterator(); nodeIt.hasNext();) {
       final RelateNode node = (RelateNode)nodeIt.next();
       for (final Iterator i = node.getEdges().iterator(); i.hasNext();) {
         final EdgeEndBundle eeb = (EdgeEndBundle)i.next();
@@ -89,7 +89,7 @@ public class ConsistentAreaTester {
           final Edge edge = eeb.getEdge();
           final Coordinates point1 = CoordinatesUtil.get(edge.getCoordinate(0));
           final Coordinates point2 = CoordinatesUtil.get(edge.getCoordinate(1));
-          invalidLineSegments.add(new LineSegment(point1, point2));
+          this.invalidLineSegments.add(new LineSegment(point1, point2));
           hasDuplicate = true;
         }
       }
@@ -108,15 +108,15 @@ public class ConsistentAreaTester {
      * To fully check validity, it is necessary to
      * compute ALL intersections, including self-intersections within a single edge.
      */
-    final SegmentIntersector intersector = IsSimpleOp.computeIntersections(
-      geomGraph, li, false);
+    final SegmentIntersector intersector = IsSimpleOp.computeIntersections(this.geomGraph, this.li,
+      false);
     final List<Coordinates> properIntersections = intersector.getProperIntersections();
     if (properIntersections.isEmpty()) {
-      nodeGraph.build(geomGraph);
+      this.nodeGraph.build(this.geomGraph);
 
       return isNodeEdgeAreaLabelsConsistent();
     } else {
-      invalidPoints.addAll(properIntersections);
+      this.invalidPoints.addAll(properIntersections);
       return false;
     }
 
@@ -130,10 +130,10 @@ public class ConsistentAreaTester {
    */
   private boolean isNodeEdgeAreaLabelsConsistent() {
     boolean consistent = true;
-    for (final Iterator nodeIt = nodeGraph.getNodeIterator(); nodeIt.hasNext();) {
+    for (final Iterator nodeIt = this.nodeGraph.getNodeIterator(); nodeIt.hasNext();) {
       final RelateNode node = (RelateNode)nodeIt.next();
-      if (!node.getEdges().isAreaLabelsConsistent(geomGraph)) {
-        invalidPoints.add(CoordinatesUtil.get(node.getCoordinate()));
+      if (!node.getEdges().isAreaLabelsConsistent(this.geomGraph)) {
+        this.invalidPoints.add(CoordinatesUtil.get(node.getCoordinate()));
         consistent = false;
       }
     }

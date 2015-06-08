@@ -17,23 +17,26 @@ public class FontChooserField extends ComboBox {
   private static final long serialVersionUID = 1L;
 
   private static final ListCellRenderer RENDERER = new DefaultListCellRenderer() {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     @Override
-    public Component getListCellRendererComponent(final JList list,
-      final Object value, final int index, final boolean isSelected,
-      final boolean cellHasFocus) {
+    public Component getListCellRendererComponent(final JList list, final Object value,
+      final int index, final boolean isSelected, final boolean cellHasFocus) {
       final String fontName = StringConverterRegistry.toString(value);
       final Font font = new Font(fontName, Font.PLAIN, 16);
 
-      final Component renderer = super.getListCellRendererComponent(list,
-        value, index, isSelected, cellHasFocus);
+      final Component renderer = super.getListCellRendererComponent(list, value, index, isSelected,
+        cellHasFocus);
       renderer.setFont(font);
       return renderer;
     }
   };
 
   public static String[] getFontNames() {
-    return GraphicsEnvironment.getLocalGraphicsEnvironment()
-      .getAvailableFontFamilyNames();
+    return GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   }
 
   public FontChooserField(final String fieldName, final String fontName) {

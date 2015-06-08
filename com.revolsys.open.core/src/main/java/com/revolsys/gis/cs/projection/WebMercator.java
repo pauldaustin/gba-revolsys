@@ -13,11 +13,10 @@ public class WebMercator implements CoordinatesProjection {
     final double x = from.getX();
     final double y = from.getY();
 
-    final double lon = (x / 20037508.34) * 180;
-    double lat = (y / 20037508.34) * 180;
+    final double lon = x / 20037508.34 * 180;
+    double lat = y / 20037508.34 * 180;
 
-    lat = 180 / Math.PI
-      * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+    lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
 
     to.setValue(0, Math.toRadians(lon));
     to.setValue(1, Math.toRadians(lat));

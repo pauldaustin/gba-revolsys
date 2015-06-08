@@ -12,8 +12,8 @@ import org.springframework.context.ApplicationContextAware;
 
 import com.revolsys.util.Property;
 
-public class JdbcDataObjectStoreFactoryBean extends
-  AbstractFactoryBean<JdbcDataObjectStore> implements ApplicationContextAware {
+public class JdbcDataObjectStoreFactoryBean extends AbstractFactoryBean<JdbcDataObjectStore>
+  implements ApplicationContextAware {
 
   private Map<String, Object> config = new LinkedHashMap<String, Object>();
 
@@ -26,35 +26,34 @@ public class JdbcDataObjectStoreFactoryBean extends
   @Override
   protected JdbcDataObjectStore createInstance() throws Exception {
     JdbcDataObjectStore dataObjectStore;
-    final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry.getFactory(applicationContext);
-    if (dataSource == null) {
-      final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(config);
-      dataObjectStore = databaseFactory.createRecordStore(config);
+    final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry.getFactory(this.applicationContext);
+    if (this.dataSource == null) {
+      final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(this.config);
+      dataObjectStore = databaseFactory.createRecordStore(this.config);
     } else {
-      final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(dataSource);
-      dataObjectStore = databaseFactory.createDataObjectStore(dataSource);
+      final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(this.dataSource);
+      dataObjectStore = databaseFactory.createDataObjectStore(this.dataSource);
     }
-    Property.set(dataObjectStore, properties);
+    Property.set(dataObjectStore, this.properties);
     dataObjectStore.initialize();
     return dataObjectStore;
   }
 
   @Override
-  protected void destroyInstance(final JdbcDataObjectStore dataObjectStore)
-    throws Exception {
+  protected void destroyInstance(final JdbcDataObjectStore dataObjectStore) throws Exception {
     dataObjectStore.close();
-    config = null;
-    dataSource = null;
-    properties = null;
-    applicationContext = null;
+    this.config = null;
+    this.dataSource = null;
+    this.properties = null;
+    this.applicationContext = null;
   }
 
   public Map<String, Object> getConfig() {
-    return config;
+    return this.config;
   }
 
   public DataSource getDataSource() {
-    return dataSource;
+    return this.dataSource;
   }
 
   @Override
@@ -63,7 +62,7 @@ public class JdbcDataObjectStoreFactoryBean extends
   }
 
   public Map<String, Object> getProperties() {
-    return properties;
+    return this.properties;
   }
 
   @Override

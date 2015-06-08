@@ -10,17 +10,17 @@ import com.revolsys.swing.undo.UndoManager;
 public class SetFieldValueUndoableEdit extends AbstractUndoableEdit {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
-  public static SetFieldValueUndoableEdit create(final UndoManager undoManager,
-    final Field field, final Object oldValue, final Object newValue) {
+  public static SetFieldValueUndoableEdit create(final UndoManager undoManager, final Field field,
+    final Object oldValue, final Object newValue) {
     if (undoManager == null) {
       return null;
     } else {
-      final SetFieldValueUndoableEdit edit = new SetFieldValueUndoableEdit(
-        field, oldValue, newValue);
+      final SetFieldValueUndoableEdit edit = new SetFieldValueUndoableEdit(field, oldValue,
+        newValue);
       undoManager.addEdit(edit);
       return edit;
     }
@@ -32,8 +32,7 @@ public class SetFieldValueUndoableEdit extends AbstractUndoableEdit {
 
   private final Object newValue;
 
-  public SetFieldValueUndoableEdit(final Field field, final Object oldValue,
-    final Object newValue) {
+  public SetFieldValueUndoableEdit(final Field field, final Object oldValue, final Object newValue) {
     this.field = field;
     this.oldValue = oldValue;
     this.newValue = newValue;
@@ -76,7 +75,6 @@ public class SetFieldValueUndoableEdit extends AbstractUndoableEdit {
 
   @Override
   public String toString() {
-    return this.field.getFieldName() + " old=" + this.oldValue + ", new="
-      + this.newValue;
+    return this.field.getFieldName() + " old=" + this.oldValue + ", new=" + this.newValue;
   }
 }

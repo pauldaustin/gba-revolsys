@@ -26,10 +26,8 @@ public class TreeItemScaleMenu implements ComponentFactory<JMenu> {
   }
 
   protected void addScaleMenuItem(final long layerScale, final Object object,
-    final String methodName, final JMenu menu, final long scale,
-    final String label) {
-    final InvokeMethodAction action = new InvokeMethodAction(label, object,
-      methodName, scale);
+    final String methodName, final JMenu menu, final long scale, final String label) {
+    final InvokeMethodAction action = new InvokeMethodAction(label, object, methodName, scale);
     final JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(action);
     final boolean selected = scale == layerScale;
     menuItem.setSelected(selected);
@@ -79,7 +77,7 @@ public class TreeItemScaleMenu implements ComponentFactory<JMenu> {
       }
     }
     String methodName;
-    if (min) {
+    if (this.min) {
       methodName = "setMinimumScale";
     } else {
       methodName = "setMaximumScale";

@@ -59,27 +59,27 @@ public abstract class AbstractRecordWriterFactory extends AbstractIoFactory impl
 
   @Override
   public Set<CoordinateSystem> getCoordinateSystems() {
-    return coordinateSystems;
+    return this.coordinateSystems;
   }
 
   @Override
   public boolean isCoordinateSystemSupported(final CoordinateSystem coordinateSystem) {
-    return coordinateSystems.contains(coordinateSystem);
+    return this.coordinateSystems.contains(coordinateSystem);
   }
 
   @Override
   public boolean isCustomAttributionSupported() {
-    return customAttributionSupported;
+    return this.customAttributionSupported;
   }
 
   @Override
   public boolean isGeometrySupported() {
-    return geometrySupported;
+    return this.geometrySupported;
   }
 
   @Override
   public boolean isSingleFile() {
-    return singleFile;
+    return this.singleFile;
   }
 
   protected void setCoordinateSystems(final CoordinateSystem... coordinateSystems) {

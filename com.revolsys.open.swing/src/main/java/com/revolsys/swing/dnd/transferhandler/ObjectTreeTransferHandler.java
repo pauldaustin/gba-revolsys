@@ -75,8 +75,7 @@ public class ObjectTreeTransferHandler extends TransferHandler {
     if (c instanceof JTree) {
       final JTree tree = (JTree)c;
       final TreePath[] selectedPaths = tree.getSelectionPaths();
-      final TreePathListTransferable transferable = new TreePathListTransferable(
-        selectedPaths);
+      final TreePathListTransferable transferable = new TreePathListTransferable(selectedPaths);
       return transferable;
     } else {
       return null;
@@ -84,8 +83,7 @@ public class ObjectTreeTransferHandler extends TransferHandler {
   }
 
   @Override
-  protected void exportDone(final JComponent c,
-    final Transferable transferable, final int action) {
+  protected void exportDone(final JComponent c, final Transferable transferable, final int action) {
     if ((action & MOVE) == MOVE) {
       try {
         final Object data = transferable.getTransferData(TreePathListTransferable.FLAVOR);
@@ -96,7 +94,7 @@ public class ObjectTreeTransferHandler extends TransferHandler {
             final TreePath parentPath = treePath.getParentPath();
             final Object parent = parentPath.getLastPathComponent();
             if (pathTransferable.isSameParent(treePath)) {
-              model.fireTreeNodesChanged(treePath);
+              this.model.fireTreeNodesChanged(treePath);
             } else {
               final ObjectTreeNodeModel<Object, Object> nodeModel = this.model.getNodeModel(parentPath);
               if (nodeModel != null) {
@@ -185,8 +183,7 @@ public class ObjectTreeTransferHandler extends TransferHandler {
     return false;
   }
 
-  private boolean isDropSupported(final TreePath treePath,
-    final Set<Class<?>> supportedClasses) {
+  private boolean isDropSupported(final TreePath treePath, final Set<Class<?>> supportedClasses) {
     final Object value = treePath.getLastPathComponent();
     final Class<?> valueClass = value.getClass();
     for (final Class<?> supportedClass : supportedClasses) {

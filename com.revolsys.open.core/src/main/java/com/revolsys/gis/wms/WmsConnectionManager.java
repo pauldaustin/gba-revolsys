@@ -30,13 +30,12 @@ public class WmsConnectionManager {
 
   public WmsConnectionManager() {
     this(Preferences.userRoot(), "com/revolsys/gis/wms/connections");
-    final Preferences node = wmsConnectionsPrefereneces.node("BC Government Maps");
+    final Preferences node = this.wmsConnectionsPrefereneces.node("BC Government Maps");
     node.put("connectionUrl", "http://openmaps.gov.bc.ca/mapserver/base2");
   }
 
-  public WmsConnectionManager(final Preferences root,
-    final String preferencesPath) {
-    wmsConnectionsPrefereneces = root.node(preferencesPath);
+  public WmsConnectionManager(final Preferences root, final String preferencesPath) {
+    this.wmsConnectionsPrefereneces = root.node(preferencesPath);
   }
 
   public WmsConnectionManager(final String preferencesPath) {
@@ -45,7 +44,7 @@ public class WmsConnectionManager {
 
   public List<String> getConnectionNames() {
     try {
-      final String[] names = wmsConnectionsPrefereneces.childrenNames();
+      final String[] names = this.wmsConnectionsPrefereneces.childrenNames();
       return Arrays.asList(names);
     } catch (final BackingStoreException e) {
       throw new RuntimeException(e);
@@ -65,11 +64,11 @@ public class WmsConnectionManager {
   }
 
   private Preferences getPreferences(final String connectionName) {
-    return wmsConnectionsPrefereneces.node(connectionName);
+    return this.wmsConnectionsPrefereneces.node(connectionName);
   }
 
   private WmsClient getWmsConnection(final String connectionName) {
-    WmsClient wmsConnection = wmsConnections.get(connectionName);
+    WmsClient wmsConnection = this.wmsConnections.get(connectionName);
     if (wmsConnection == null) {
       final Preferences preferences = getPreferences(connectionName);
       final Map<String, Object> config = CollectionUtil.toMap(preferences);
@@ -79,7 +78,7 @@ public class WmsConnectionManager {
       } catch (final MalformedURLException e) {
         LOG.error("Unable to get connection " + connectionUrl, e);
       }
-      wmsConnections.put(connectionName, wmsConnection);
+      this.wmsConnections.put(connectionName, wmsConnection);
     }
     return wmsConnection;
   }

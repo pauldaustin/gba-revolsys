@@ -54,8 +54,8 @@ public class SimpleCodeTable extends AbstractCodeTable {
 
   @Override
   protected Object loadId(final List<Object> values, final boolean createId) {
-    index++;
-    return index;
+    this.index++;
+    return this.index;
   }
 
   @Override

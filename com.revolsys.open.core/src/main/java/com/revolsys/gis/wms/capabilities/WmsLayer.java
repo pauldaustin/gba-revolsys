@@ -57,46 +57,46 @@ public class WmsLayer {
   private WmsLayer parent;
 
   public void addAuthorityUrl(final AuthorityUrl authorityUrl) {
-    authorityUrls.add(authorityUrl);
+    this.authorityUrls.add(authorityUrl);
 
   }
 
   public void addBoundingBox(final BoundingBox boundingBox) {
-    boundingBoxes.add(boundingBox);
+    this.boundingBoxes.add(boundingBox);
   }
 
   public void addDataUrl(final FormatUrl dataUrl) {
-    dataUrls.add(dataUrl);
+    this.dataUrls.add(dataUrl);
 
   }
 
   public void addDimension(final Dimension dimension) {
-    dimensions.add(dimension);
+    this.dimensions.add(dimension);
 
   }
 
   public void addExtent(final Extent extent) {
-    extents.add(extent);
+    this.extents.add(extent);
 
   }
 
   public void addFeatureListUrl(final FormatUrl featureListUrl) {
-    featureListUrls.add(featureListUrl);
+    this.featureListUrls.add(featureListUrl);
 
   }
 
   public void addIdentifier(final Identifier identifier) {
-    identifiers.add(identifier);
+    this.identifiers.add(identifier);
   }
 
   public void addLayer(final WmsLayer layer) {
-    layers.add(layer);
+    this.layers.add(layer);
     layer.setParent(this);
 
   }
 
   public void addMetaDataUrl(final MetadataUrl metaDataUrl) {
-    metaDataUrls.add(metaDataUrl);
+    this.metaDataUrls.add(metaDataUrl);
 
   }
 
@@ -105,107 +105,107 @@ public class WmsLayer {
   }
 
   public void addStyle(final Style style) {
-    styles.add(style);
+    this.styles.add(style);
   }
 
   public String getAbstractDescription() {
-    return abstractDescription;
+    return this.abstractDescription;
   }
 
   public Attribution getAttribution() {
-    return attribution;
+    return this.attribution;
   }
 
   public List<AuthorityUrl> getAuthorityUrls() {
-    return authorityUrls;
+    return this.authorityUrls;
   }
 
   public List<BoundingBox> getBoundingBoxes() {
-    return boundingBoxes;
+    return this.boundingBoxes;
   }
 
   public int getCascaded() {
-    return cascaded;
+    return this.cascaded;
   }
 
   public List<FormatUrl> getDataUrls() {
-    return dataUrls;
+    return this.dataUrls;
   }
 
   public List<Dimension> getDimensions() {
-    return dimensions;
+    return this.dimensions;
   }
 
   public List<Extent> getExtents() {
-    return extents;
+    return this.extents;
   }
 
   public List<FormatUrl> getFeatureListUrls() {
-    return featureListUrls;
+    return this.featureListUrls;
   }
 
   public int getFixedHeight() {
-    return fixedHeight;
+    return this.fixedHeight;
   }
 
   public int getFixedWidth() {
-    return fixedWidth;
+    return this.fixedWidth;
   }
 
   public List<Identifier> getIdentifiers() {
-    return identifiers;
+    return this.identifiers;
   }
 
   public List<String> getKeywords() {
-    return keywords;
+    return this.keywords;
   }
 
   public Envelope getLatLonBoundingBox() {
-    return latLonBoundingBox;
+    return this.latLonBoundingBox;
   }
 
   public List<WmsLayer> getLayers() {
-    return layers;
+    return this.layers;
   }
 
   public List<MetadataUrl> getMetaDataUrls() {
-    return metaDataUrls;
+    return this.metaDataUrls;
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public WmsLayer getParent() {
-    return parent;
+    return this.parent;
   }
 
   public ScaleHint getScaleHint() {
-    return scaleHint;
+    return this.scaleHint;
   }
 
   public List<String> getSrs() {
-    return srs;
+    return this.srs;
   }
 
   public List<Style> getStyles() {
-    return styles;
+    return this.styles;
   }
 
   public String getTitle() {
-    return title;
+    return this.title;
   }
 
   public boolean isNoSubsets() {
-    return noSubsets;
+    return this.noSubsets;
   }
 
   public boolean isOpaque() {
-    return opaque;
+    return this.opaque;
   }
 
   public boolean isQueryable() {
-    return queryable;
+    return this.queryable;
   }
 
   public void setAbstractDescription(final String abstractDescription) {
@@ -306,10 +306,10 @@ public class WmsLayer {
 
   @Override
   public String toString() {
-    if (title != null) {
-      return title;
+    if (this.title != null) {
+      return this.title;
     } else {
-      return name;
+      return this.name;
     }
   }
 }

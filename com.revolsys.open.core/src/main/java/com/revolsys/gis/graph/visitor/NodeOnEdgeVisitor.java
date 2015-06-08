@@ -16,15 +16,15 @@ import com.revolsys.visitor.DelegatingVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
 public class NodeOnEdgeVisitor<T> extends DelegatingVisitor<Edge<T>> {
-  public static <T> List<Edge<T>> getEdges(final Graph<T> graph,
-    final Node<T> node, final double maxDistance) {
+  public static <T> List<Edge<T>> getEdges(final Graph<T> graph, final Node<T> node,
+    final double maxDistance) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
     final Coordinates point = node;
     BoundingBox boundingBox = new BoundingBox(point);
     boundingBox = boundingBox.expand(maxDistance);
     final IdObjectIndex<Edge<T>> index = graph.getEdgeIndex();
-    final NodeOnEdgeVisitor<T> visitor = new NodeOnEdgeVisitor<T>(node,
-      boundingBox, maxDistance, results);
+    final NodeOnEdgeVisitor<T> visitor = new NodeOnEdgeVisitor<T>(node, boundingBox, maxDistance,
+      results);
     index.visit(boundingBox, visitor);
     final List<Edge<T>> edges = results.getList();
     Collections.sort(edges);
@@ -51,10 +51,10 @@ public class NodeOnEdgeVisitor<T> extends DelegatingVisitor<Edge<T>> {
 
   @Override
   public boolean visit(final Edge<T> edge) {
-    if (!edge.hasNode(node)) {
+    if (!edge.hasNode(this.node)) {
       final LineString line = edge.getLine();
-      if (line.getEnvelopeInternal().intersects(boundingBox)) {
-        if (LineStringUtil.isPointOnLine(line, point, maxDistance)) {
+      if (line.getEnvelopeInternal().intersects(this.boundingBox)) {
+        if (LineStringUtil.isPointOnLine(line, this.point, this.maxDistance)) {
           super.visit(edge);
         }
       }

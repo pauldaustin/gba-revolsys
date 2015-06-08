@@ -54,7 +54,7 @@ import com.vividsolutions.jts.util.Assert;
  * Forms {@link Polygon}s out of a graph of {@link DirectedEdge}s. The edges to
  * use are marked as being in the result Area.
  * <p>
- * 
+ *
  * @version 1.7
  */
 public class PolygonBuilder {
@@ -77,10 +77,9 @@ public class PolygonBuilder {
     PlanarGraph.linkResultDirectedEdges(nodes);
     final List maxEdgeRings = buildMaximalEdgeRings(dirEdges);
     final List freeHoleList = new ArrayList();
-    final List edgeRings = buildMinimalEdgeRings(maxEdgeRings, shellList,
-      freeHoleList);
-    sortShellsAndHoles(edgeRings, shellList, freeHoleList);
-    placeFreeHoles(shellList, freeHoleList);
+    final List edgeRings = buildMinimalEdgeRings(maxEdgeRings, this.shellList, freeHoleList);
+    sortShellsAndHoles(edgeRings, this.shellList, freeHoleList);
+    placeFreeHoles(this.shellList, freeHoleList);
     // Assert: every hole on freeHoleList has a shell assigned to it
   }
 
@@ -102,7 +101,7 @@ public class PolygonBuilder {
       if (de.isInResult() && de.getLabel().isArea()) {
         // if this edge has not yet been processed
         if (de.getEdgeRing() == null) {
-          final MaximalEdgeRing er = new MaximalEdgeRing(de, geometryFactory);
+          final MaximalEdgeRing er = new MaximalEdgeRing(de, this.geometryFactory);
           maxEdgeRings.add(er);
           er.setInResult();
           // System.out.println("max node degree = " + er.getMaxDegree());
@@ -112,8 +111,8 @@ public class PolygonBuilder {
     return maxEdgeRings;
   }
 
-  private List buildMinimalEdgeRings(final List maxEdgeRings,
-    final List shellList, final List freeHoleList) {
+  private List buildMinimalEdgeRings(final List maxEdgeRings, final List shellList,
+    final List freeHoleList) {
     final List edgeRings = new ArrayList();
     for (final Iterator it = maxEdgeRings.iterator(); it.hasNext();) {
       final MaximalEdgeRing er = (MaximalEdgeRing)it.next();
@@ -141,7 +140,7 @@ public class PolygonBuilder {
     // add Polygons for all shells
     for (final Iterator it = shellList.iterator(); it.hasNext();) {
       final EdgeRing er = (EdgeRing)it.next();
-      final Polygon poly = er.toPolygon(geometryFactory);
+      final Polygon poly = er.toPolygon(this.geometryFactory);
       resultPolyList.add(poly);
     }
     return resultPolyList;
@@ -152,7 +151,7 @@ public class PolygonBuilder {
    * any of them contain the point.
    */
   public boolean containsPoint(final Coordinates p) {
-    for (final Iterator it = shellList.iterator(); it.hasNext();) {
+    for (final Iterator it = this.shellList.iterator(); it.hasNext();) {
       final EdgeRing er = (EdgeRing)it.next();
       if (er.containsPoint(p)) {
         return true;
@@ -169,12 +168,11 @@ public class PolygonBuilder {
    * This routine is only safe to use if the chosen point of the hole is known
    * to be properly contained in a shell (which is guaranteed to be the case if
    * the hole does not touch its shell)
-   * 
+   *
    * @return containing EdgeRing, if there is one
    * @return null if no containing EdgeRing is found
    */
-  private EdgeRing findEdgeRingContaining(final EdgeRing testEr,
-    final List shellList) {
+  private EdgeRing findEdgeRingContaining(final EdgeRing testEr, final List shellList) {
     final LinearRing testRing = testEr.getLinearRing();
     final BoundingBox testEnv = testRing.getBoundingBox();
     final Coordinates testPt = testRing.get(0);
@@ -210,7 +208,7 @@ public class PolygonBuilder {
    * there is a single shell in the list. In this case the shell is returned.
    * The other possibility is that they are a series of connected holes, in
    * which case no shell is returned.
-   * 
+   *
    * @return the shell EdgeRing, if there is one
    * @return null, if all the rings are holes
    */
@@ -229,7 +227,7 @@ public class PolygonBuilder {
   }
 
   public List<Polygon> getPolygons() {
-    final List<Polygon> resultPolyList = computePolygons(shellList);
+    final List<Polygon> resultPolyList = computePolygons(this.shellList);
     return resultPolyList;
   }
 
@@ -241,7 +239,7 @@ public class PolygonBuilder {
    * holes which are NOT properly contained (i.e. are connected to their parent
    * shell) would have formed part of a MaximalEdgeRing and been handled in a
    * previous step).
-   * 
+   *
    * @throws TopologyException if a hole cannot be assigned to a shell
    */
   private void placeFreeHoles(final List shellList, final List freeHoleList) {
@@ -251,8 +249,7 @@ public class PolygonBuilder {
       if (hole.getShell() == null) {
         final EdgeRing shell = findEdgeRingContaining(hole, shellList);
         if (shell == null) {
-          throw new TopologyException("unable to assign hole to a shell",
-            hole.getCoordinate(0));
+          throw new TopologyException("unable to assign hole to a shell", hole.getCoordinate(0));
         }
         // Assert.isTrue(shell != null, "unable to assign hole to a shell");
         hole.setShell(shell);

@@ -42,15 +42,14 @@ public class WktWriter {
     return out.toString();
   }
 
-  public static void write(final PrintWriter out,
-    final Coordinates coordinates, final int numAxis) {
+  public static void write(final PrintWriter out, final Coordinates coordinates, final int numAxis) {
     out.print('(');
     writeCoordinate(out, coordinates, numAxis);
     out.print(')');
   }
 
-  public static void write(final PrintWriter out,
-    final CoordinatesList coordinates, final int numAxis) {
+  public static void write(final PrintWriter out, final CoordinatesList coordinates,
+    final int numAxis) {
     out.print('(');
     for (int i = 0; i < coordinates.size(); i++) {
       if (i > 0) {
@@ -61,8 +60,8 @@ public class WktWriter {
     out.print(')');
   }
 
-  private static void write(final PrintWriter out,
-    final CoordinatesList coordinates, final int index, final int numAxis) {
+  private static void write(final PrintWriter out, final CoordinatesList coordinates,
+    final int index, final int numAxis) {
     writeCoordinate(out, coordinates, index, 0);
     for (int j = 1; j < numAxis; j++) {
       out.print(' ');
@@ -77,8 +76,7 @@ public class WktWriter {
     }
   }
 
-  public static void write(final PrintWriter out, final Geometry geometry,
-    final int numAxis) {
+  public static void write(final PrintWriter out, final Geometry geometry, final int numAxis) {
     if (geometry != null) {
       if (geometry instanceof Point) {
         final Point point = (Point)geometry;
@@ -102,20 +100,18 @@ public class WktWriter {
         final GeometryCollection geometryCollection = (GeometryCollection)geometry;
         write(out, geometryCollection, numAxis);
       } else {
-        throw new IllegalArgumentException("Unknown geometry type"
-          + geometry.getClass());
+        throw new IllegalArgumentException("Unknown geometry type" + geometry.getClass());
       }
     }
   }
 
-  public static void write(final PrintWriter out,
-    final GeometryCollection multiGeometry) {
+  public static void write(final PrintWriter out, final GeometryCollection multiGeometry) {
     final int numAxis = Math.min(multiGeometry.getGeometryCount(), 4);
     write(out, multiGeometry, numAxis);
   }
 
-  private static void write(final PrintWriter out,
-    final GeometryCollection multiGeometry, final int numAxis) {
+  private static void write(final PrintWriter out, final GeometryCollection multiGeometry,
+    final int numAxis) {
     writeGeometryType(out, "MULTIGEOMETRY", numAxis);
     if (multiGeometry.isEmpty()) {
       out.print(" EMPTY");
@@ -137,8 +133,7 @@ public class WktWriter {
     write(out, line, numAxis);
   }
 
-  private static void write(final PrintWriter out, final LineString line,
-    final int numAxis) {
+  private static void write(final PrintWriter out, final LineString line, final int numAxis) {
     writeGeometryType(out, "LINESTRING", numAxis);
     if (line.isEmpty()) {
       out.print(" EMPTY");
@@ -148,14 +143,13 @@ public class WktWriter {
     }
   }
 
-  public static void write(final PrintWriter out,
-    final MultiLineString multiLineString) {
+  public static void write(final PrintWriter out, final MultiLineString multiLineString) {
     final int numAxis = Math.min(multiLineString.getNumAxis(), 4);
     write(out, multiLineString, numAxis);
   }
 
-  private static void write(final PrintWriter out,
-    final MultiLineString multiLineString, final int numAxis) {
+  private static void write(final PrintWriter out, final MultiLineString multiLineString,
+    final int numAxis) {
     writeGeometryType(out, "MULTILINESTRING", numAxis);
     if (multiLineString.isEmpty()) {
       out.print(" EMPTY");
@@ -177,8 +171,7 @@ public class WktWriter {
     write(out, multiPoint, numAxis);
   }
 
-  private static void write(final PrintWriter out, final MultiPoint multiPoint,
-    final int numAxis) {
+  private static void write(final PrintWriter out, final MultiPoint multiPoint, final int numAxis) {
     writeGeometryType(out, "MULTIPOINT", numAxis);
     if (multiPoint.isEmpty()) {
       out.print(" EMPTY");
@@ -197,14 +190,13 @@ public class WktWriter {
     }
   }
 
-  public static void write(final PrintWriter out,
-    final MultiPolygon multiPolygon) {
+  public static void write(final PrintWriter out, final MultiPolygon multiPolygon) {
     final int numAxis = Math.min(multiPolygon.getNumAxis(), 4);
     write(out, multiPolygon, numAxis);
   }
 
-  private static void write(final PrintWriter out,
-    final MultiPolygon multiPolygon, final int numAxis) {
+  private static void write(final PrintWriter out, final MultiPolygon multiPolygon,
+    final int numAxis) {
     writeGeometryType(out, "MULTIPOLYGON", numAxis);
     if (multiPolygon.isEmpty()) {
       out.print(" EMPTY");
@@ -227,8 +219,7 @@ public class WktWriter {
     write(out, point, numAxis);
   }
 
-  private static void write(final PrintWriter out, final Point point,
-    final int numAxis) {
+  private static void write(final PrintWriter out, final Point point, final int numAxis) {
     writeGeometryType(out, "POINT", numAxis);
     if (point.isEmpty()) {
       out.print(" EMPTY");
@@ -245,8 +236,7 @@ public class WktWriter {
     write(out, polygon, numAxis);
   }
 
-  private static void write(final PrintWriter out, final Polygon polygon,
-    final int numAxis) {
+  private static void write(final PrintWriter out, final Polygon polygon, final int numAxis) {
     writeGeometryType(out, "POLYGON", numAxis);
     if (polygon.isEmpty()) {
       out.print(" EMPTY");
@@ -263,8 +253,8 @@ public class WktWriter {
     }
   }
 
-  private static void writeCoordinate(final PrintWriter out,
-    final Coordinates coordinates, final int axisIndex) {
+  private static void writeCoordinate(final PrintWriter out, final Coordinates coordinates,
+    final int axisIndex) {
     if (axisIndex > coordinates.getNumAxis()) {
       out.print(0);
     } else {
@@ -277,8 +267,8 @@ public class WktWriter {
     }
   }
 
-  private static void writeCoordinate(final PrintWriter out,
-    final CoordinatesList coordinates, final int index, final int axisIndex) {
+  private static void writeCoordinate(final PrintWriter out, final CoordinatesList coordinates,
+    final int index, final int axisIndex) {
     if (axisIndex > coordinates.getNumAxis()) {
       out.print(0);
     } else {
@@ -291,14 +281,13 @@ public class WktWriter {
     }
   }
 
-  private static void writeGeometryType(final PrintWriter out,
-    final String geometryType, final int numAxis) {
+  private static void writeGeometryType(final PrintWriter out, final String geometryType,
+    final int numAxis) {
     out.print(geometryType);
     writeAxis(out, numAxis);
   }
 
-  private static void writePolygon(final PrintWriter out,
-    final Polygon polygon, final int numAxis) {
+  private static void writePolygon(final PrintWriter out, final Polygon polygon, final int numAxis) {
     final MultiLinearRing rings = polygon.getRings();
     out.print('(');
     for (int i = 0; i < rings.getGeometryCount(); i++) {

@@ -1,6 +1,5 @@
 package com.revolsys.io.geojson;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -16,32 +15,29 @@ import com.revolsys.gis.geometry.io.GeometryReaderFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
-public class GeoJsonIoFactory extends
-  AbstractRecordAndGeometryWriterFactory implements GeometryReaderFactory {
+public class GeoJsonIoFactory extends AbstractRecordAndGeometryWriterFactory implements
+  GeometryReaderFactory {
 
   public GeoJsonIoFactory() {
     super(GeoJsonConstants.DESCRIPTION, true, true);
-    addMediaTypeAndFileExtension(GeoJsonConstants.MEDIA_TYPE,
-      GeoJsonConstants.FILE_EXTENSION);
-  }
-
-  @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
-    final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new GeoJsonDataObjectWriter(writer);
+    addMediaTypeAndFileExtension(GeoJsonConstants.MEDIA_TYPE, GeoJsonConstants.FILE_EXTENSION);
   }
 
   @Override
   public GeometryReader createGeometryReader(final Resource resource) {
     try {
-      final GeoJsonGeometryIterator iterator = new GeoJsonGeometryIterator(
-        resource);
+      final GeoJsonGeometryIterator iterator = new GeoJsonGeometryIterator(resource);
       return new GeometryReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
     }
+  }
+
+  @Override
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
+    final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
+    return new GeoJsonDataObjectWriter(writer);
   }
 
   @Override

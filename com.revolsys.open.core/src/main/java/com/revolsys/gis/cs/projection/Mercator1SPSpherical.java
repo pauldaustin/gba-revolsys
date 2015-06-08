@@ -33,13 +33,12 @@ public class Mercator1SPSpherical implements CoordinatesProjection {
 
   @Override
   public void inverse(final Coordinates from, final Coordinates to) {
-    final double x = (from.getX() - x0);
-    final double y = (from.getY() - y0);
+    final double x = from.getX() - this.x0;
+    final double y = from.getY() - this.y0;
 
-    final double lambda = x / r + lambda0;
+    final double lambda = x / this.r + this.lambda0;
 
-    final double phi = Angle.PI_OVER_2 - 2
-      * Math.atan(Math.pow(Math.E, -y / r));
+    final double phi = Angle.PI_OVER_2 - 2 * Math.atan(Math.pow(Math.E, -y / this.r));
 
     to.setValue(0, lambda);
     to.setValue(1, phi);
@@ -54,12 +53,12 @@ public class Mercator1SPSpherical implements CoordinatesProjection {
     final double lambda = from.getX();
     final double phi = from.getY();
 
-    final double x = r * (lambda - lambda0);
+    final double x = this.r * (lambda - this.lambda0);
 
-    final double y = r * Math.log(Math.tan(Angle.PI_OVER_4 + phi / 2));
+    final double y = this.r * Math.log(Math.tan(Angle.PI_OVER_4 + phi / 2));
 
-    to.setValue(0, x0 + x);
-    to.setValue(1, y0 + y);
+    to.setValue(0, this.x0 + x);
+    to.setValue(1, this.y0 + y);
 
     for (int i = 2; i < from.getNumAxis() && i < to.getNumAxis(); i++) {
       final double ordinate = from.getValue(i);

@@ -17,7 +17,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 public class ProjectedCoordinateSystem implements CoordinateSystem {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1902383026085071877L;
 
@@ -44,9 +44,8 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
   private final Projection projection;
 
   public ProjectedCoordinateSystem(final int id, final String name,
-    final GeographicCoordinateSystem geographicCoordinateSystem,
-    final Area area, final Projection projection,
-    final Map<String, Object> parameters, final LinearUnit linearUnit,
+    final GeographicCoordinateSystem geographicCoordinateSystem, final Area area,
+    final Projection projection, final Map<String, Object> parameters, final LinearUnit linearUnit,
     final List<Axis> axis, final Authority authority, final boolean deprecated) {
     this.id = id;
     this.name = name;
@@ -64,9 +63,8 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
   }
 
   public ProjectedCoordinateSystem(final int id, final String name,
-    final GeographicCoordinateSystem geographicCoordinateSystem,
-    final Projection projection, final Map<String, Object> parameters,
-    final LinearUnit linearUnit, final List<Axis> axis,
+    final GeographicCoordinateSystem geographicCoordinateSystem, final Projection projection,
+    final Map<String, Object> parameters, final LinearUnit linearUnit, final List<Axis> axis,
     final Authority authority) {
     this.id = id;
     this.name = name;
@@ -98,15 +96,13 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
       return true;
     } else if (object instanceof ProjectedCoordinateSystem) {
       final ProjectedCoordinateSystem cs = (ProjectedCoordinateSystem)object;
-      if (!EqualsRegistry.equal(geographicCoordinateSystem,
-        cs.geographicCoordinateSystem)) {
+      if (!EqualsRegistry.equal(this.geographicCoordinateSystem, cs.geographicCoordinateSystem)) {
         return false;
-      } else if (!EqualsRegistry.equal(projection, cs.projection)) {
+      } else if (!EqualsRegistry.equal(this.projection, cs.projection)) {
         return false;
-      } else if (!EqualsRegistry.equal(normalizedParameters,
-        cs.normalizedParameters)) {
+      } else if (!EqualsRegistry.equal(this.normalizedParameters, cs.normalizedParameters)) {
         return false;
-      } else if (!EqualsRegistry.equal(linearUnit, cs.linearUnit)) {
+      } else if (!EqualsRegistry.equal(this.linearUnit, cs.linearUnit)) {
         return false;
       } else {
         return true;
@@ -123,23 +119,23 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
       return true;
     } else if (object instanceof ProjectedCoordinateSystem) {
       final ProjectedCoordinateSystem cs = (ProjectedCoordinateSystem)object;
-      if (!area.equals(cs.area)) {
+      if (!this.area.equals(cs.area)) {
         return false;
-      } else if (!authority.equals(cs.authority)) {
+      } else if (!this.authority.equals(cs.authority)) {
         return false;
-      } else if (!EqualsRegistry.equal(axis, cs.axis)) {
+      } else if (!EqualsRegistry.equal(this.axis, cs.axis)) {
         return false;
-      } else if (!geographicCoordinateSystem.equals(cs.geographicCoordinateSystem)) {
+      } else if (!this.geographicCoordinateSystem.equals(cs.geographicCoordinateSystem)) {
         return false;
-      } else if (id != cs.id) {
+      } else if (this.id != cs.id) {
         return false;
-      } else if (!EqualsRegistry.equal(linearUnit, cs.linearUnit)) {
+      } else if (!EqualsRegistry.equal(this.linearUnit, cs.linearUnit)) {
         return false;
-      } else if (!EqualsRegistry.equal(name, cs.name)) {
+      } else if (!EqualsRegistry.equal(this.name, cs.name)) {
         return false;
-      } else if (!EqualsRegistry.equal(parameters, cs.parameters)) {
+      } else if (!EqualsRegistry.equal(this.parameters, cs.parameters)) {
         return false;
-      } else if (!EqualsRegistry.equal(projection, cs.projection)) {
+      } else if (!EqualsRegistry.equal(this.projection, cs.projection)) {
         return false;
       } else {
         return true;
@@ -151,18 +147,17 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
 
   @Override
   public Area getArea() {
-    return area;
+    return this.area;
   }
 
   @Override
   public BoundingBox getAreaBoundingBox() {
     BoundingBox boundingBox;
-    final GeometryFactory geographicGeometryFactory = geographicCoordinateSystem.getGeometryFactory();
-    if (area == null) {
-      boundingBox = new BoundingBox(geographicGeometryFactory, -180, -90, 180,
-        90);
+    final GeometryFactory geographicGeometryFactory = this.geographicCoordinateSystem.getGeometryFactory();
+    if (this.area == null) {
+      boundingBox = new BoundingBox(geographicGeometryFactory, -180, -90, 180, 90);
     } else {
-      final Envelope latLonBounds = area.getLatLonBounds();
+      final Envelope latLonBounds = this.area.getLatLonBounds();
       boundingBox = new BoundingBox(geographicGeometryFactory, latLonBounds);
     }
     final BoundingBox projectedBoundingBox = boundingBox.convert(getGeometryFactory());
@@ -171,12 +166,12 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
 
   @Override
   public Authority getAuthority() {
-    return authority;
+    return this.authority;
   }
 
   @Override
   public List<Axis> getAxis() {
-    return axis;
+    return this.axis;
   }
 
   public double getDoubleParameter(final String key) {
@@ -189,7 +184,7 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
   }
 
   public GeographicCoordinateSystem getGeographicCoordinateSystem() {
-    return geographicCoordinateSystem;
+    return this.geographicCoordinateSystem;
   }
 
   public GeometryFactory getGeometryFactory() {
@@ -198,66 +193,66 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
 
   @Override
   public int getId() {
-    return id;
+    return this.id;
   }
 
   @Override
   public Unit<Length> getLengthUnit() {
-    return linearUnit.getUnit();
+    return this.linearUnit.getUnit();
   }
 
   public LinearUnit getLinearUnit() {
-    return linearUnit;
+    return this.linearUnit;
   }
 
   @Override
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @SuppressWarnings("unchecked")
   public <V> V getParameter(final String key) {
-    return (V)normalizedParameters.get(key);
+    return (V)this.normalizedParameters.get(key);
   }
 
   public Map<String, Object> getParameters() {
-    return parameters;
+    return this.parameters;
   }
 
   public Projection getProjection() {
-    return projection;
+    return this.projection;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public Unit<Length> getUnit() {
-    return linearUnit.getUnit();
+    return this.linearUnit.getUnit();
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    if (geographicCoordinateSystem != null) {
-      result = prime * result + geographicCoordinateSystem.hashCode();
+    if (this.geographicCoordinateSystem != null) {
+      result = prime * result + this.geographicCoordinateSystem.hashCode();
     }
-    if (projection != null) {
-      result = prime * result + projection.hashCode();
+    if (this.projection != null) {
+      result = prime * result + this.projection.hashCode();
     }
-    for (final Entry<String, Object> entry : normalizedParameters.entrySet()) {
+    for (final Entry<String, Object> entry : this.normalizedParameters.entrySet()) {
       final String key = entry.getKey();
       result = prime * result + key.hashCode();
       result = prime * result + entry.getValue().hashCode();
     }
-    if (linearUnit != null) {
-      result = prime * result + linearUnit.hashCode();
+    if (this.linearUnit != null) {
+      result = prime * result + this.linearUnit.hashCode();
     }
     return result;
   }
 
   @Override
   public boolean isDeprecated() {
-    return deprecated;
+    return this.deprecated;
   }
 
   public void setId(final int id) {
@@ -272,12 +267,12 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
       this.parameters.put(name, value);
 
       final String normalizedName = ProjectionParameterNames.getParameterName(name);
-      normalizedParameters.put(normalizedName, value);
+      this.normalizedParameters.put(normalizedName, value);
     }
   }
 
   @Override
   public String toString() {
-    return name;
+    return this.name;
   }
 }

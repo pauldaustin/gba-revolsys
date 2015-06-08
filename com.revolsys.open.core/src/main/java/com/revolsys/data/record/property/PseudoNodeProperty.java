@@ -15,14 +15,12 @@ import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
 import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
 public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
-  protected static final List<String> DEFAULT_EXCLUDE = Arrays.asList(
-    DataObjectEquals.EXCLUDE_ID, DataObjectEquals.EXCLUDE_GEOMETRY);
+  protected static final List<String> DEFAULT_EXCLUDE = Arrays.asList(DataObjectEquals.EXCLUDE_ID,
+    DataObjectEquals.EXCLUDE_GEOMETRY);
 
-  public static final String PROPERTY_NAME = PseudoNodeProperty.class.getName()
-    + ".propertyName";
+  public static final String PROPERTY_NAME = PseudoNodeProperty.class.getName() + ".propertyName";
 
-  public static AbstractRecordDefinitionProperty getProperty(
-    final Record object) {
+  public static AbstractRecordDefinitionProperty getProperty(final Record object) {
     final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);
   }
@@ -36,14 +34,13 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
     return property;
   }
 
-  private Set<String> equalExcludeAttributes = new HashSet<String>(
-    DEFAULT_EXCLUDE);
+  private Set<String> equalExcludeAttributes = new HashSet<String>(DEFAULT_EXCLUDE);
 
   public PseudoNodeProperty() {
   }
 
   public PseudoNodeAttribute createAttribute(final Node<Record> node) {
-    return new PseudoNodeAttribute(node, getTypePath(), equalExcludeAttributes);
+    return new PseudoNodeAttribute(node, getTypePath(), this.equalExcludeAttributes);
   }
 
   public PseudoNodeAttribute getAttribute(final Node<Record> node) {
@@ -58,7 +55,7 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
   }
 
   public Collection<String> getEqualExcludeAttributes() {
-    return equalExcludeAttributes;
+    return this.equalExcludeAttributes;
   }
 
   @Override
@@ -66,8 +63,7 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
     return PROPERTY_NAME;
   }
 
-  public void setEqualExcludeAttributes(
-    final Collection<String> equalExcludeAttributes) {
+  public void setEqualExcludeAttributes(final Collection<String> equalExcludeAttributes) {
     if (equalExcludeAttributes == null) {
       this.equalExcludeAttributes.clear();
     } else {

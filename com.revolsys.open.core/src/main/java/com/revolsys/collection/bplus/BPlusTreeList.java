@@ -19,11 +19,9 @@ public class BPlusTreeList<T> extends AbstractList<T> {
 
   int size = 0;
 
-  public BPlusTreeList(final PageManager pageManager,
-    final PageValueManager<T> valueSerializer) {
+  public BPlusTreeList(final PageManager pageManager, final PageValueManager<T> valueSerializer) {
     final ComparableComparator<Integer> comparator = new ComparableComparator<Integer>();
-    tree = BPlusTreeMap.create(pageManager, comparator, PageValueManager.INT,
-      valueSerializer);
+    this.tree = BPlusTreeMap.create(pageManager, comparator, PageValueManager.INT, valueSerializer);
   }
 
   @Override
@@ -31,18 +29,17 @@ public class BPlusTreeList<T> extends AbstractList<T> {
     if (index < 0) {
       throw new IndexOutOfBoundsException("Index must be > 0 not " + index);
     } else if (index > size()) {
-      throw new IndexOutOfBoundsException("Index must be <= " + size()
-        + " not " + index);
+      throw new IndexOutOfBoundsException("Index must be <= " + size() + " not " + index);
     } else {
-      if (index < size) {
-        for (int i = size; size > index; i--) {
+      if (index < this.size) {
+        for (int i = this.size; this.size > index; i--) {
           final T oldValue = get(i - 1);
-          tree.put(i, oldValue);
+          this.tree.put(i, oldValue);
         }
       }
-      tree.put(index, value);
+      this.tree.put(index, value);
     }
-    size++;
+    this.size++;
   }
 
   @Override
@@ -50,10 +47,9 @@ public class BPlusTreeList<T> extends AbstractList<T> {
     if (index < 0) {
       throw new IndexOutOfBoundsException("Index must be > 0 not " + index);
     } else if (index >= size()) {
-      throw new IndexOutOfBoundsException("Index must be < " + size() + " not "
-        + index);
+      throw new IndexOutOfBoundsException("Index must be < " + size() + " not " + index);
     } else {
-      return tree.get(index);
+      return this.tree.get(index);
     }
   }
 
@@ -62,18 +58,17 @@ public class BPlusTreeList<T> extends AbstractList<T> {
     if (index < 0) {
       throw new IndexOutOfBoundsException("Index must be > 0 not " + index);
     } else if (index >= size()) {
-      throw new IndexOutOfBoundsException("Index must be < " + size() + " not "
-        + index);
+      throw new IndexOutOfBoundsException("Index must be < " + size() + " not " + index);
     } else {
-      final T oldValue = tree.get(index);
-      tree.put(index, value);
+      final T oldValue = this.tree.get(index);
+      this.tree.put(index, value);
       return oldValue;
     }
   }
 
   @Override
   public int size() {
-    return size;
+    return this.size;
   }
 
 }

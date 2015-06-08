@@ -26,15 +26,13 @@ public class DataStoreIteratorFactory {
     this.methodName = methodName;
   }
 
-  public AbstractIterator<Record> createIterator(
-    final RecordStore dataStore, final Query query,
+  public AbstractIterator<Record> createIterator(final RecordStore dataStore, final Query query,
     final Map<String, Object> properties) {
     final Object factory = this.factory.get();
-    if (factory != null && StringUtils.hasText(methodName)) {
-      return Property.invoke(factory, methodName, dataStore, query, properties);
+    if (factory != null && StringUtils.hasText(this.methodName)) {
+      return Property.invoke(factory, this.methodName, dataStore, query, properties);
     } else {
-      throw new UnsupportedOperationException(
-        "Creating query iterators not supported");
+      throw new UnsupportedOperationException("Creating query iterators not supported");
     }
   }
 

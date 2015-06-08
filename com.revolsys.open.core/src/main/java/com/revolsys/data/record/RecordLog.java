@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.map.ThreadSharedAttributes;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.Path;
@@ -28,8 +28,7 @@ public class RecordLog {
     return dataObjectLog;
   }
 
-  public static void error(final Class<?> logCategory, final String message,
-    final Record object) {
+  public static void error(final Class<?> logCategory, final String message, final Record object) {
     final RecordLog dataObjectLog = getForThread();
     if (object == null) {
       final Logger log = LoggerFactory.getLogger(logCategory);
@@ -48,8 +47,7 @@ public class RecordLog {
     return dataObjectLog;
   }
 
-  public static void info(final Class<?> logCategory, final String message,
-    final Record object) {
+  public static void info(final Class<?> logCategory, final String message, final Record object) {
     final RecordLog dataObjectLog = getForThread();
     if (object == null) {
       final Logger log = LoggerFactory.getLogger(logCategory);
@@ -63,8 +61,7 @@ public class RecordLog {
     }
   }
 
-  public static void warn(final Class<?> logCategory, final String message,
-    final Record object) {
+  public static void warn(final Class<?> logCategory, final String message, final Record object) {
     final RecordLog dataObjectLog = getForThread();
     if (object == null) {
       final Logger log = LoggerFactory.getLogger(logCategory);
@@ -100,7 +97,7 @@ public class RecordLog {
   }
 
   private RecordDefinition getLogMetaData(final RecordDefinition metaData) {
-    RecordDefinitionImpl logMetaData = logMetaDataMap.get(metaData);
+    RecordDefinitionImpl logMetaData = this.logMetaDataMap.get(metaData);
     if (logMetaData == null) {
       final String path = metaData.getPath();
       final String parentPath = Path.getPath(path);
@@ -120,28 +117,27 @@ public class RecordLog {
         logMetaData.addField(logAttribute);
 
       }
-      logMetaDataMap.put(metaData, logMetaData);
+      this.logMetaDataMap.put(metaData, logMetaData);
     }
     return logMetaData;
   }
 
   public Writer<Record> getWriter() {
-    return writer;
+    return this.writer;
   }
 
   public synchronized void info(final Object message, final Record object) {
     log("INFO", message, object);
   }
 
-  private void log(final String logLevel, final Object message,
-    final Record object) {
-    if (writer != null) {
+  private void log(final String logLevel, final Object message, final Record object) {
+    if (this.writer != null) {
       final RecordDefinition logMetaData = getLogMetaData(object);
       final Record logObject = new ArrayRecord(logMetaData, object);
       logObject.setValue("LOGMESSAGE", message);
       logObject.setValue("LOGLEVEL", logLevel);
-      synchronized (writer) {
-        writer.write(logObject);
+      synchronized (this.writer) {
+        this.writer.write(logObject);
       }
     }
   }

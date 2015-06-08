@@ -81,8 +81,7 @@ public class LayerTreeCellRenderer extends DefaultTreeCellRenderer {
     }
   }
 
-  private static Icon merge(final Component component, final List<Icon> icons,
-    final int space) {
+  private static Icon merge(final Component component, final List<Icon> icons, final int space) {
 
     final MediaTracker tracker = new MediaTracker(component);
 
@@ -138,8 +137,8 @@ public class LayerTreeCellRenderer extends DefaultTreeCellRenderer {
 
   @Override
   public Component getTreeCellRendererComponent(final JTree tree, Object value,
-    final boolean selected, final boolean expanded, final boolean leaf,
-    final int row, final boolean hasFocus) {
+    final boolean selected, final boolean expanded, final boolean leaf, final int row,
+    final boolean hasFocus) {
     Icon icon = null;
     boolean exists = false;
     boolean initialized = false;
@@ -153,8 +152,8 @@ public class LayerTreeCellRenderer extends DefaultTreeCellRenderer {
       icon = NOT_EXISTS_ICON;
     }
 
-    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree,
-      value, selected, expanded, leaf, row, hasFocus);
+    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree, value, selected,
+      expanded, leaf, row, hasFocus);
     setIcon(icon);
     if (!initialized) {
       label.setEnabled(false);

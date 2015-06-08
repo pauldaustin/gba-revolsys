@@ -13,6 +13,11 @@ import com.revolsys.awt.WebColors;
 
 public class TitledBorder extends AbstractBorder {
 
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
   private final String title;
 
   public TitledBorder(final String title) {
@@ -34,8 +39,8 @@ public class TitledBorder extends AbstractBorder {
   }
 
   @Override
-  public void paintBorder(final Component c, final Graphics g, final int x,
-    final int y, final int width, final int height) {
+  public void paintBorder(final Component c, final Graphics g, final int x, final int y,
+    final int width, final int height) {
     final Graphics2D graphics = (Graphics2D)g;
     final int boxX = x + 2;
     final int boxY = y + 2;
@@ -62,6 +67,6 @@ public class TitledBorder extends AbstractBorder {
     final Font font = new Font("Arial", Font.BOLD, 12);
     graphics.setFont(font);
     graphics.setColor(new Color(0, 112, 163));
-    graphics.drawString(title, 8, 14);
+    graphics.drawString(this.title, 8, 14);
   }
 }

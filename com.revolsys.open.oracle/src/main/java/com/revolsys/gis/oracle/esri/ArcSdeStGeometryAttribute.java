@@ -31,15 +31,14 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
 
   private final GeometryFactory geometryFactory;
 
-  public ArcSdeStGeometryAttribute(final String name, final DataType type,
-    final boolean required, final String description,
-    final Map<String, Object> properties,
+  public ArcSdeStGeometryAttribute(final String name, final DataType type, final boolean required,
+    final String description, final Map<String, Object> properties,
     final ArcSdeSpatialReference spatialReference, final int dimension) {
     super(name, type, -1, 0, 0, required, description, properties);
     this.spatialReference = spatialReference;
     final GeometryFactory factory = spatialReference.getGeometryFactory();
-    this.geometryFactory = GeometryFactory.getFactory(factory.getSRID(),
-      dimension, factory.getScaleXY(), factory.getScaleZ());
+    this.geometryFactory = GeometryFactory.getFactory(factory.getSRID(), dimension,
+      factory.getScaleXY(), factory.getScaleZ());
     this.dimension = dimension;
     setProperty(FieldProperties.GEOMETRY_FACTORY, this.geometryFactory);
   }
@@ -61,19 +60,18 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
 
   @Override
   public ArcSdeStGeometryAttribute clone() {
-    return new ArcSdeStGeometryAttribute(getName(), getType(), isRequired(),
-      getDescription(), getProperties(), this.spatialReference, this.dimension);
+    return new ArcSdeStGeometryAttribute(getName(), getType(), isRequired(), getDescription(),
+      getProperties(), this.spatialReference, this.dimension);
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final Record object) throws SQLException {
+  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record object) throws SQLException {
     final int geometryType = resultSet.getInt(columnIndex);
     if (!resultSet.wasNull()) {
       final int numPoints = resultSet.getInt(columnIndex + 1);
       final Blob blob = resultSet.getBlob(columnIndex + 2);
-      final InputStream pointsIn = new BufferedInputStream(
-        blob.getBinaryStream(), 32000);
+      final InputStream pointsIn = new BufferedInputStream(blob.getBinaryStream(), 32000);
 
       final Double xOffset = this.spatialReference.getXOffset();
       final Double yOffset = this.spatialReference.getYOffset();
@@ -84,17 +82,16 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
       final Double mOffset = this.spatialReference.getMOffset();
 
       final GeometryFactory geometryFactory = this.spatialReference.getGeometryFactory();
-      final Geometry geometry = PackedCoordinateUtil.getGeometry(pointsIn,
-        geometryFactory, geometryType, numPoints, xOffset, yOffset, xyScale,
-        zOffset, zScale, mOffset, mScale);
+      final Geometry geometry = PackedCoordinateUtil.getGeometry(pointsIn, geometryFactory,
+        geometryType, numPoints, xOffset, yOffset, xyScale, zOffset, zScale, mOffset, mScale);
       object.setValue(getIndex(), geometry);
     }
     return columnIndex + 3;
   }
 
   @Override
-  public int setPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, Object value) throws SQLException {
+  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
+    Object value) throws SQLException {
     int index = parameterIndex;
 
     if (value instanceof Coordinates) {
@@ -103,8 +100,7 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
     }
     if (value instanceof Geometry) {
       Geometry geometry = (Geometry)value;
-      geometry = GeometryProjectionUtil.performCopy(geometry,
-        this.geometryFactory);
+      geometry = GeometryProjectionUtil.performCopy(geometry, this.geometryFactory);
 
       final int sdeSrid = this.spatialReference.getEsriSrid();
       final Double xOffset = this.spatialReference.getXOffset();
@@ -123,10 +119,8 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
       final double area = geometry.getArea();
       final double length = geometry.getLength();
 
-      final boolean hasZ = this.dimension > 2 && zOffset != null
-        && zScale != null;
-      final boolean hasM = this.dimension > 3 && mOffset != null
-        && mScale != null;
+      final boolean hasZ = this.dimension > 2 && zOffset != null && zScale != null;
+      final boolean hasM = this.dimension > 3 && mOffset != null && mScale != null;
 
       int numPoints = 0;
       byte[] data;
@@ -134,8 +128,8 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
       final List<List<CoordinatesList>> parts = CoordinatesListUtil.getParts(geometry);
       final int entityType = ArcSdeConstants.getStGeometryType(geometry);
       numPoints = PackedCoordinateUtil.getNumPoints(parts);
-      data = PackedCoordinateUtil.getPackedBytes(xOffset, yOffset, xyScale,
-        hasZ, zOffset, zScale, hasM, mScale, mOffset, parts);
+      data = PackedCoordinateUtil.getPackedBytes(xOffset, yOffset, xyScale, hasZ, zOffset, zScale,
+        hasM, mScale, mOffset, parts);
 
       statement.setInt(index++, entityType);
       statement.setInt(index++, numPoints);

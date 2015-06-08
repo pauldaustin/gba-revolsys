@@ -19,8 +19,7 @@ public abstract class AbstractMultiCondition extends Condition {
     this.values = new ArrayList<QueryValue>(values);
   }
 
-  public AbstractMultiCondition(final String operator,
-    final Collection<? extends QueryValue> values) {
+  public AbstractMultiCondition(final String operator, final Collection<? extends QueryValue> values) {
     this.operator = operator;
     this.values = new ArrayList<QueryValue>(values);
   }
@@ -110,8 +109,6 @@ public abstract class AbstractMultiCondition extends Condition {
 
   @Override
   public String toString() {
-    return "("
-        + CollectionUtil.toString(") " + this.operator + " (", getQueryValues())
-      + ")";
+    return "(" + CollectionUtil.toString(") " + this.operator + " (", getQueryValues()) + ")";
   }
 }

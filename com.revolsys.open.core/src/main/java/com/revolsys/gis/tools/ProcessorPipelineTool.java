@@ -5,13 +5,13 @@
  * $Revision$
 
  * Copyright 2004-2005 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,8 +72,7 @@ public class ProcessorPipelineTool {
 
   private static Throwable getBeanExceptionCause(final BeanCreationException e) {
     Throwable cause = e.getCause();
-    while (cause instanceof BeanCreationException
-      || cause instanceof MethodInvocationException
+    while (cause instanceof BeanCreationException || cause instanceof MethodInvocationException
       || cause instanceof PropertyAccessException) {
       final Throwable newCause = cause.getCause();
       if (newCause != null) {
@@ -119,50 +118,46 @@ public class ProcessorPipelineTool {
     final Option script = new Option(SCRIPT_OPTION, SCRIPT, true,
       "the script file that defines the processor pipeline");
     script.setRequired(true);
-    options.addOption(script);
+    this.options.addOption(script);
 
-    final Option sourceDirectory = new Option(SOURCE_DIRECTORY_OPTION,
-      SOURCE_DIRECTORY, true, "the location of the source files to process");
+    final Option sourceDirectory = new Option(SOURCE_DIRECTORY_OPTION, SOURCE_DIRECTORY, true,
+      "the location of the source files to process");
     sourceDirectory.setRequired(false);
-    options.addOption(sourceDirectory);
+    this.options.addOption(sourceDirectory);
 
     final Option sourceFileExtension = new Option(SOURCE_FILE_EXTENSION_OPTION,
-      SOURCE_FLE_EXTENSION, true,
-      "the file extension of the source files (e.g. .saf)");
+      SOURCE_FLE_EXTENSION, true, "the file extension of the source files (e.g. .saf)");
     sourceFileExtension.setRequired(false);
-    options.addOption(sourceFileExtension);
+    this.options.addOption(sourceFileExtension);
 
-    final Option outputDirectory = new Option(OUTPUT_DIRECTORY_OPTION,
-      OUTPUT_DIRECTORY, true, "the directory to write processed files to");
+    final Option outputDirectory = new Option(OUTPUT_DIRECTORY_OPTION, OUTPUT_DIRECTORY, true,
+      "the directory to write processed files to");
     outputDirectory.setRequired(false);
-    options.addOption(outputDirectory);
+    this.options.addOption(outputDirectory);
 
-    final Option logDirectory = new Option(LOG_DIRECTORY_OPTION, LOG_DIRECTORY,
-      true, "the directory to write log files to");
+    final Option logDirectory = new Option(LOG_DIRECTORY_OPTION, LOG_DIRECTORY, true,
+      "the directory to write log files to");
     logDirectory.setRequired(false);
-    options.addOption(logDirectory);
+    this.options.addOption(logDirectory);
 
-    final Option excludePattern = new Option(EXCLUDE_PATTERN_OPTION,
-      EXCLUDE_PATTERN, true,
+    final Option excludePattern = new Option(EXCLUDE_PATTERN_OPTION, EXCLUDE_PATTERN, true,
       "exclude files matching a regular expression (e.g. '.*_back.zip");
     excludePattern.setRequired(false);
-    options.addOption(excludePattern);
+    this.options.addOption(excludePattern);
 
-    final Option property = new Option("D", "property=value", true,
-      "use value for given property");
+    final Option property = new Option("D", "property=value", true, "use value for given property");
     property.setValueSeparator('=');
-    options.addOption(property);
+    this.options.addOption(property);
   }
 
   @SuppressWarnings("unchecked")
   public boolean processArguments(final String[] args) {
     try {
       final CommandLineParser parser = new PosixParser();
-      commandLine = parser.parse(options, args);
-      final List<String> arguments = commandLine.getArgList();
-      final Option[] options = commandLine.getOptions();
-      for (int i = 0; i < options.length; i++) {
-        final Option option = options[i];
+      this.commandLine = parser.parse(this.options, args);
+      final List<String> arguments = this.commandLine.getArgList();
+      final Option[] options = this.commandLine.getOptions();
+      for (final Option option : options) {
         final String shortOpt = option.getOpt();
         if (shortOpt != null && shortOpt.equals("D")) {
           final String argument = arguments.remove(0);
@@ -171,62 +166,57 @@ public class ProcessorPipelineTool {
         }
 
       }
-      if (commandLine.hasOption(SOURCE_DIRECTORY_OPTION)) {
-        sourceDirectory = new File(
-          commandLine.getOptionValue(SOURCE_DIRECTORY_OPTION));
-        if (!sourceDirectory.isDirectory()) {
-          System.err.println("Source directory '"
-            + sourceDirectory.getAbsolutePath()
+      if (this.commandLine.hasOption(SOURCE_DIRECTORY_OPTION)) {
+        this.sourceDirectory = new File(this.commandLine.getOptionValue(SOURCE_DIRECTORY_OPTION));
+        if (!this.sourceDirectory.isDirectory()) {
+          System.err.println("Source directory '" + this.sourceDirectory.getAbsolutePath()
             + "' does not exist or is not a directory");
           return false;
         }
       }
-      if (commandLine.hasOption(SOURCE_FILE_EXTENSION_OPTION)) {
-        sourceFileExtension = commandLine.getOptionValue(SOURCE_FILE_EXTENSION_OPTION);
+      if (this.commandLine.hasOption(SOURCE_FILE_EXTENSION_OPTION)) {
+        this.sourceFileExtension = this.commandLine.getOptionValue(SOURCE_FILE_EXTENSION_OPTION);
       }
-      if (commandLine.hasOption(OUTPUT_DIRECTORY_OPTION)) {
-        targetDirectory = new File(
-          commandLine.getOptionValue(OUTPUT_DIRECTORY_OPTION));
-        if (!targetDirectory.isDirectory()) {
-          System.err.println("Target directory '"
-            + targetDirectory.getAbsolutePath()
+      if (this.commandLine.hasOption(OUTPUT_DIRECTORY_OPTION)) {
+        this.targetDirectory = new File(this.commandLine.getOptionValue(OUTPUT_DIRECTORY_OPTION));
+        if (!this.targetDirectory.isDirectory()) {
+          System.err.println("Target directory '" + this.targetDirectory.getAbsolutePath()
             + "' does not exist or is not a directory");
           return false;
         }
       }
-      if (commandLine.hasOption(LOG_DIRECTORY_OPTION)) {
-        logDirectory = new File(
-          commandLine.getOptionValue(LOG_DIRECTORY_OPTION));
-        if (!logDirectory.isDirectory()) {
-          System.err.println("Log directory '" + logDirectory.getAbsolutePath()
+      if (this.commandLine.hasOption(LOG_DIRECTORY_OPTION)) {
+        this.logDirectory = new File(this.commandLine.getOptionValue(LOG_DIRECTORY_OPTION));
+        if (!this.logDirectory.isDirectory()) {
+          System.err.println("Log directory '" + this.logDirectory.getAbsolutePath()
             + "' does not exist or is not a directory");
           return false;
         }
       }
-      scriptFile = new File(commandLine.getOptionValue(SCRIPT_OPTION));
-      if (!scriptFile.exists()) {
-        System.err.println("The script '" + scriptFile + "' does not exist");
+      this.scriptFile = new File(this.commandLine.getOptionValue(SCRIPT_OPTION));
+      if (!this.scriptFile.exists()) {
+        System.err.println("The script '" + this.scriptFile + "' does not exist");
         return false;
       }
-      excludePattern = commandLine.getOptionValue(EXCLUDE_PATTERN_OPTION);
-      if (sourceDirectory != null) {
-        if (targetDirectory == null) {
-          System.err.println("A " + OUTPUT_DIRECTORY + " must be specified if "
+      this.excludePattern = this.commandLine.getOptionValue(EXCLUDE_PATTERN_OPTION);
+      if (this.sourceDirectory != null) {
+        if (this.targetDirectory == null) {
+          System.err.println("A " + OUTPUT_DIRECTORY + " must be specified if " + SOURCE_DIRECTORY
+            + " is specified");
+          return false;
+        }
+        if (this.sourceFileExtension == null) {
+          System.err.println("A " + SOURCE_FLE_EXTENSION + " must be specified if "
             + SOURCE_DIRECTORY + " is specified");
           return false;
         }
-        if (sourceFileExtension == null) {
-          System.err.println("A " + SOURCE_FLE_EXTENSION
-            + " must be specified if " + SOURCE_DIRECTORY + " is specified");
-          return false;
-        }
       } else {
-        sourceFile = new File(arguments.get(0));
-        if (!sourceFile.exists()) {
-          System.err.println("The file '" + sourceFile + "' does not exist");
+        this.sourceFile = new File(arguments.get(0));
+        if (!this.sourceFile.exists()) {
+          System.err.println("The file '" + this.sourceFile + "' does not exist");
           return false;
         }
-        targetFile = new File(arguments.get(1));
+        this.targetFile = new File(arguments.get(1));
         // if (targetFile.isDirectory()) {
         // targetFile = new File(targetFile, sourceFile.getName());
         // }
@@ -236,37 +226,32 @@ public class ProcessorPipelineTool {
       System.err.println("Missing " + e.getMessage() + " argument");
       return false;
     } catch (final ParseException e) {
-      System.err.println("Unable to process command line arguments: "
-        + e.getMessage());
+      System.err.println("Unable to process command line arguments: " + e.getMessage());
       return false;
     }
   }
 
-  private void processDirectory(final File sourceDirectory,
-    final File targetDirectory, final File logDirectory,
-    final String sourceFileExtension) {
-    System.out.println("Processing directory '"
-      + sourceDirectory.getAbsolutePath() + "'");
+  private void processDirectory(final File sourceDirectory, final File targetDirectory,
+    final File logDirectory, final String sourceFileExtension) {
+    System.out.println("Processing directory '" + sourceDirectory.getAbsolutePath() + "'");
     final File[] files = sourceDirectory.listFiles();
-    for (int i = 0; i < files.length; i++) {
-      final File file = files[i];
+    for (final File file : files) {
       final String fileName = FileUtil.getFileName(file);
       if (file.isDirectory()) {
-        processDirectory(file, new File(targetDirectory, fileName), new File(
-          logDirectory, fileName), sourceFileExtension);
+        processDirectory(file, new File(targetDirectory, fileName),
+          new File(logDirectory, fileName), sourceFileExtension);
       } else if (fileName.endsWith(sourceFileExtension)) {
-        processFile(file, new File(targetDirectory, fileName), new File(
-          logDirectory, fileName + ".log"));
+        processFile(file, new File(targetDirectory, fileName), new File(logDirectory, fileName
+          + ".log"));
       }
     }
   }
 
-  private void processFile(final File sourceFile, final File targetFile,
-    final File logFile) {
+  private void processFile(final File sourceFile, final File targetFile, final File logFile) {
     final long startTime = System.currentTimeMillis();
-    if (excludePattern != null) {
+    if (this.excludePattern != null) {
       try {
-        if (sourceFile.getCanonicalPath().matches(excludePattern)) {
+        if (sourceFile.getCanonicalPath().matches(this.excludePattern)) {
           return;
         }
       } catch (final IOException e) {
@@ -283,13 +268,12 @@ public class ProcessorPipelineTool {
       localAppender.setLocalFile(logFile.getAbsolutePath());
     }
     log.info("Processing file '" + sourceFile + "' to '" + targetFile + "'");
-    System.out.println("Processing file '" + sourceFile + "' to '" + targetFile
-      + "'");
+    System.out.println("Processing file '" + sourceFile + "' to '" + targetFile + "'");
 
     System.setProperty("sourceFile", sourceFile.getAbsolutePath());
     System.setProperty("targetFile", targetFile.getAbsolutePath());
     final BeanFactory beans = new FileSystemXmlApplicationContext("file:"
-      + scriptFile.getAbsolutePath());
+      + this.scriptFile.getAbsolutePath());
     try {
       final File parentFile = targetFile.getParentFile();
       if (parentFile != null) {
@@ -313,23 +297,23 @@ public class ProcessorPipelineTool {
   }
 
   private void run() {
-    if (sourceFile != null) {
-      final String baseName = FileUtil.getFileNamePrefix(targetFile);
-      if (logDirectory == null) {
-        final File parentDirectory = targetFile.getParentFile();
+    if (this.sourceFile != null) {
+      final String baseName = FileUtil.getFileNamePrefix(this.targetFile);
+      if (this.logDirectory == null) {
+        final File parentDirectory = this.targetFile.getParentFile();
         if (parentDirectory == null) {
-          logDirectory = new File(baseName);
+          this.logDirectory = new File(baseName);
         } else {
-          logDirectory = new File(parentDirectory, baseName);
+          this.logDirectory = new File(parentDirectory, baseName);
         }
       }
-      logDirectory.mkdirs();
-      final File logFile = new File(logDirectory, baseName + ".log");
+      this.logDirectory.mkdirs();
+      final File logFile = new File(this.logDirectory, baseName + ".log");
 
-      processFile(sourceFile, targetFile, logFile);
+      processFile(this.sourceFile, this.targetFile, logFile);
     } else {
-      processDirectory(sourceDirectory, targetDirectory, logDirectory,
-        sourceFileExtension);
+      processDirectory(this.sourceDirectory, this.targetDirectory, this.logDirectory,
+        this.sourceFileExtension);
     }
   }
 
@@ -338,7 +322,7 @@ public class ProcessorPipelineTool {
       run();
     } else {
       final HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp("processorPipeline", options);
+      formatter.printHelp("processorPipeline", this.options);
     }
 
   }

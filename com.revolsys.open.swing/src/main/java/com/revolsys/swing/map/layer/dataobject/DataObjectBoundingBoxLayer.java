@@ -53,22 +53,19 @@ public class DataObjectBoundingBoxLayer extends AbstractRecordLayer {
             this.loading = false;
           }
         }
-        if (this.boundingBox == null || !boundingBox.equals(this.boundingBox)
-          && !this.loading) {
+        if (this.boundingBox == null || !boundingBox.equals(this.boundingBox) && !this.loading) {
           this.loading = true;
           this.boundingBox = boundingBox;
           firePropertyChange("visible", super.isVisible(), false);
           try {
             final Constructor<?> constructor = this.workerClass.getConstructor(
               DataObjectBoundingBoxLayer.class, BoundingBox.class);
-            this.worker = (SwingWorker)constructor.newInstance(this,
-              boundingBox);
+            this.worker = (SwingWorker)constructor.newInstance(this, boundingBox);
             Invoke.worker(this.worker);
           } catch (final NoSuchMethodException e) {
             LOG.error("Worker Constructor not found", e);
           } catch (final InvocationTargetException e) {
-            LOG.error("Unable to construct loader class",
-              e.getTargetException());
+            LOG.error("Unable to construct loader class", e.getTargetException());
           } catch (final Throwable e) {
             LOG.error("Unable to construct loader class", e);
           }
@@ -77,8 +74,7 @@ public class DataObjectBoundingBoxLayer extends AbstractRecordLayer {
       Polygon polygon = boundingBox.toPolygon();
       final GeometryFactory geometryFactory = getGeometryFactory();
       final GeometryFactory bboxGeometryFactory = boundingBox.getGeometryFactory();
-      if (geometryFactory != null
-        && !geometryFactory.equals(bboxGeometryFactory)) {
+      if (geometryFactory != null && !geometryFactory.equals(bboxGeometryFactory)) {
         final GeometryOperation operation = ProjectionFactory.getGeometryOperation(
           bboxGeometryFactory, geometryFactory);
         if (operation != null) {
@@ -104,8 +100,7 @@ public class DataObjectBoundingBoxLayer extends AbstractRecordLayer {
     return !this.loading && super.isVisible();
   }
 
-  public void setIndex(final BoundingBox boundingBox,
-    final DataObjectQuadTree index) {
+  public void setIndex(final BoundingBox boundingBox, final DataObjectQuadTree index) {
     synchronized (this.sync) {
       if (EqualsRegistry.equal(this.boundingBox, boundingBox)) {
         setIndex(index);

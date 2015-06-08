@@ -17,13 +17,12 @@ public class TreeItemPropertyEnableCheck extends AbstractEnableCheck {
     this(propertyName, true);
   }
 
-  public TreeItemPropertyEnableCheck(final String propertyName,
-    final Object value) {
+  public TreeItemPropertyEnableCheck(final String propertyName, final Object value) {
     this(propertyName, value, false);
   }
 
-  public TreeItemPropertyEnableCheck(final String propertyName,
-    final Object value, final boolean inverse) {
+  public TreeItemPropertyEnableCheck(final String propertyName, final Object value,
+    final boolean inverse) {
     this.propertyName = propertyName;
     this.value = value;
     this.inverse = inverse;
@@ -37,7 +36,7 @@ public class TreeItemPropertyEnableCheck extends AbstractEnableCheck {
     } else {
       try {
         final Object value = Property.get(object, this.propertyName);
-        if (inverse != EqualsRegistry.equal(value, this.value)) {
+        if (this.inverse != EqualsRegistry.equal(value, this.value)) {
           return enabled();
         } else {
           return disabled();

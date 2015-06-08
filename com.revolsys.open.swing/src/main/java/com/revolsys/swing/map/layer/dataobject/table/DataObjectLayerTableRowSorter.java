@@ -12,8 +12,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
 
-public class DataObjectLayerTableRowSorter extends
-  TableSortController<DataObjectLayerTableModel> {
+public class DataObjectLayerTableRowSorter extends TableSortController<DataObjectLayerTableModel> {
 
   private final AbstractRecordLayer layer;
 
@@ -27,7 +26,7 @@ public class DataObjectLayerTableRowSorter extends
   public Comparator<?> getComparator(final int columnIndex) {
     final DataObjectLayerTableModel model = getModel();
     final String attributeName = model.getFieldName(columnIndex);
-    final RecordDefinition metaData = layer.getRecordDefinition();
+    final RecordDefinition metaData = this.layer.getRecordDefinition();
     final CodeTable codeTable = metaData.getCodeTableByFieldName(attributeName);
     if (codeTable == null) {
       final Class<?> columnClass = model.getColumnClass(columnIndex);

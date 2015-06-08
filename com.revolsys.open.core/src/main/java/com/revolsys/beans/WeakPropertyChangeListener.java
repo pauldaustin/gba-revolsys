@@ -14,7 +14,7 @@ public class WeakPropertyChangeListener implements PropertyChangeListener {
   }
 
   public PropertyChangeListener getListener() {
-    return listenerReference.get();
+    return this.listenerReference.get();
   }
 
   @Override

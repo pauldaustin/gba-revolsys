@@ -54,27 +54,21 @@ import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
-public class AbstractOverlay extends JComponent implements
-  PropertyChangeListener, MouseListener, MouseMotionListener,
-  MouseWheelListener, KeyListener {
-  public static final Cursor CURSOR_LINE_ADD_NODE = Icons.getCursor(
-    "cursor_line_node_add", 8, 6);
+public class AbstractOverlay extends JComponent implements PropertyChangeListener, MouseListener,
+  MouseMotionListener, MouseWheelListener, KeyListener {
+  public static final Cursor CURSOR_LINE_ADD_NODE = Icons.getCursor("cursor_line_node_add", 8, 6);
 
-  public static final Cursor CURSOR_LINE_SNAP = Icons.getCursor(
-    "cursor_line_snap", 8, 4);
+  public static final Cursor CURSOR_LINE_SNAP = Icons.getCursor("cursor_line_snap", 8, 4);
 
-  public static final Cursor CURSOR_NODE_EDIT = Icons.getCursor(
-    "cursor_node_edit", 8, 7);
+  public static final Cursor CURSOR_NODE_EDIT = Icons.getCursor("cursor_node_edit", 8, 7);
 
-  public static final Cursor CURSOR_NODE_SNAP = Icons.getCursor(
-    "cursor_node_snap", 8, 7);
+  public static final Cursor CURSOR_NODE_SNAP = Icons.getCursor("cursor_node_snap", 8, 7);
 
   private static final IntArrayComparator INT_ARRAY_COMPARATOR = new IntArrayComparator();
 
   private static final long serialVersionUID = 1L;
 
-  public static final GeometryStyle XOR_LINE_STYLE = GeometryStyle.line(
-    new Color(0, 0, 255), 2);
+  public static final GeometryStyle XOR_LINE_STYLE = GeometryStyle.line(new Color(0, 0, 255), 2);
 
   private GeometryFactory geometryFactory;
 
@@ -178,16 +172,15 @@ public class AbstractOverlay extends JComponent implements
     getMap().getUndoManager().discardAllEdits();
   }
 
-  protected void createPropertyUndo(final Object object,
-    final String propertyName, final Object oldValue, final Object newValue) {
-    final SetObjectProperty edit = new SetObjectProperty(object, propertyName,
-      oldValue, newValue);
+  protected void createPropertyUndo(final Object object, final String propertyName,
+    final Object oldValue, final Object newValue) {
+    final SetObjectProperty edit = new SetObjectProperty(object, propertyName, oldValue, newValue);
     addUndo(edit);
   }
 
   public void destroy() {
     this.map = null;
-    mouseOverLocations.clear();
+    this.mouseOverLocations.clear();
     this.project = null;
     this.snapEventPoint = null;
     this.snapPoint = null;
@@ -215,8 +208,7 @@ public class AbstractOverlay extends JComponent implements
           graphics.setPaint(new Color(0, 0, 255));
           graphics.fill(shape);
         } else {
-          GeometryStyleRenderer.renderGeometry(this.viewport, graphics,
-            geometry, XOR_LINE_STYLE);
+          GeometryStyleRenderer.renderGeometry(this.viewport, graphics, geometry, XOR_LINE_STYLE);
         }
       } finally {
         graphics.setPaint(paint);
@@ -224,14 +216,11 @@ public class AbstractOverlay extends JComponent implements
     }
   }
 
-  protected CloseLocation findCloseLocation(
-    final AbstractRecordLayer layer, final LayerDataObject object,
-    final Geometry geometry, final BoundingBox boundingBox) {
-    CloseLocation closeLocation = findCloseVertexLocation(layer, object,
-      geometry, boundingBox);
+  protected CloseLocation findCloseLocation(final AbstractRecordLayer layer,
+    final LayerDataObject object, final Geometry geometry, final BoundingBox boundingBox) {
+    CloseLocation closeLocation = findCloseVertexLocation(layer, object, geometry, boundingBox);
     if (closeLocation == null) {
-      closeLocation = findCloseSegmentLocation(layer, object, geometry,
-        boundingBox);
+      closeLocation = findCloseSegmentLocation(layer, object, geometry, boundingBox);
     }
     return closeLocation;
   }
@@ -247,9 +236,8 @@ public class AbstractOverlay extends JComponent implements
     return null;
   }
 
-  private CloseLocation findCloseSegmentLocation(
-    final AbstractRecordLayer layer, final LayerDataObject object,
-    final Geometry geometry, final BoundingBox boundingBox) {
+  private CloseLocation findCloseSegmentLocation(final AbstractRecordLayer layer,
+    final LayerDataObject object, final Geometry geometry, final BoundingBox boundingBox) {
 
     final GeometryFactory viewportGeometryFactory = getViewport().getGeometryFactory();
     final Geometry convertedGeometry = viewportGeometryFactory.copy(geometry);
@@ -261,8 +249,8 @@ public class AbstractOverlay extends JComponent implements
       final Coordinates coordinates = CoordinatesUtil.get(point);
 
       double closestDistance = Double.MAX_VALUE;
-      final List<IndexedLineSegment> segments = lineSegments.query(boundingBox,
-        "isWithinDistance", point, maxDistance);
+      final List<IndexedLineSegment> segments = lineSegments.query(boundingBox, "isWithinDistance",
+        point, maxDistance);
       IndexedLineSegment closestSegment = null;
       for (final IndexedLineSegment segment : segments) {
         final double distance = segment.distance(coordinates);
@@ -274,19 +262,17 @@ public class AbstractOverlay extends JComponent implements
       if (closestSegment != null) {
         Coordinates pointOnLine = closestSegment.project(coordinates);
         final GeometryFactory geometryFactory = layer.getGeometryFactory();
-        pointOnLine = ProjectionFactory.convert(pointOnLine,
-          viewportGeometryFactory, geometryFactory);
+        pointOnLine = ProjectionFactory.convert(pointOnLine, viewportGeometryFactory,
+          geometryFactory);
         final Point closePoint = geometryFactory.createPoint(pointOnLine);
-        return new CloseLocation(layer, object, geometry, null, closestSegment,
-          closePoint);
+        return new CloseLocation(layer, object, geometry, null, closestSegment, closePoint);
       }
     }
     return null;
   }
 
-  protected CloseLocation findCloseVertexLocation(
-    final AbstractRecordLayer layer, final LayerDataObject object,
-    final Geometry geometry, final BoundingBox boundingBox) {
+  protected CloseLocation findCloseVertexLocation(final AbstractRecordLayer layer,
+    final LayerDataObject object, final Geometry geometry, final BoundingBox boundingBox) {
     final PointQuadTree<int[]> index = GeometryEditUtil.getPointQuadTree(geometry);
     if (index != null) {
       final GeometryFactory geometryFactory = boundingBox.getGeometryFactory();
@@ -298,8 +284,7 @@ public class AbstractOverlay extends JComponent implements
       Collections.sort(closeVertices, INT_ARRAY_COMPARATOR);
       double minDistance = Double.MAX_VALUE;
       for (final int[] vertexIndex : closeVertices) {
-        final Point vertex = GeometryEditUtil.getVertexPoint(geometry,
-          vertexIndex);
+        final Point vertex = GeometryEditUtil.getVertexPoint(geometry, vertexIndex);
         if (vertex != null) {
           final double distance = geometryFactory.copy(vertex).distance(centre);
           if (distance < minDistance) {
@@ -310,8 +295,7 @@ public class AbstractOverlay extends JComponent implements
         }
       }
       if (closestVertexIndex != null) {
-        return new CloseLocation(layer, object, geometry, closestVertexIndex,
-          null, closeVertex);
+        return new CloseLocation(layer, object, geometry, closestVertexIndex, null, closeVertex);
       }
     }
     return null;
@@ -322,8 +306,8 @@ public class AbstractOverlay extends JComponent implements
     final int y = event.getY();
     final GeometryFactory geometryFactory = getGeometryFactory();
     final Point p1 = geometryFactory.project(this.viewport.toModelPoint(x, y));
-    final Point p2 = geometryFactory.project(this.viewport.toModelPoint(x
-      + getHotspotPixels(), y + getHotspotPixels()));
+    final Point p2 = geometryFactory.project(this.viewport.toModelPoint(x + getHotspotPixels(), y
+      + getHotspotPixels()));
 
     return p1.distance(p2);
   }
@@ -346,8 +330,7 @@ public class AbstractOverlay extends JComponent implements
     final BoundingBox boundingBox;
     if (geometryFactory != null) {
       final int hotspotPixels = getHotspotPixels();
-      boundingBox = viewport.getBoundingBox(geometryFactory, event,
-        hotspotPixels);
+      boundingBox = viewport.getBoundingBox(geometryFactory, event, hotspotPixels);
     } else {
       boundingBox = new BoundingBox();
     }
@@ -375,7 +358,7 @@ public class AbstractOverlay extends JComponent implements
   }
 
   public List<CloseLocation> getMouseOverLocations() {
-    return mouseOverLocations;
+    return this.mouseOverLocations;
   }
 
   protected Point getMousePoint() {
@@ -389,8 +372,7 @@ public class AbstractOverlay extends JComponent implements
       return null;
     } else {
       final GeometryFactory geometryFactory = getGeometryFactory();
-      final Point point = this.viewport.toModelPointRounded(geometryFactory,
-        eventPoint);
+      final Point point = this.viewport.toModelPointRounded(geometryFactory, eventPoint);
       return point;
     }
   }
@@ -409,15 +391,15 @@ public class AbstractOverlay extends JComponent implements
   }
 
   protected List<AbstractRecordLayer> getSnapLayers() {
-    return AbstractRecordLayer.getVisibleLayers(project);
+    return AbstractRecordLayer.getVisibleLayers(this.project);
   }
 
   public Point getSnapPoint() {
-    return snapPoint;
+    return this.snapPoint;
   }
 
   public Map<Point, Set<CloseLocation>> getSnapPointLocationMap() {
-    return snapPointLocationMap;
+    return this.snapPointLocationMap;
   }
 
   public Viewport2D getViewport() {
@@ -458,11 +440,10 @@ public class AbstractOverlay extends JComponent implements
     }
   }
 
-  protected boolean hasSnapPoint(final MouseEvent event,
-    final BoundingBox boundingBox) {
+  protected boolean hasSnapPoint(final MouseEvent event, final BoundingBox boundingBox) {
 
     final java.awt.Point eventPoint = event.getPoint();
-    snapEventPoint = eventPoint;
+    this.snapEventPoint = eventPoint;
     new TreeMap<Coordinates, List<CloseLocation>>();
     final Point point = boundingBox.getCentrePoint();
     final List<AbstractRecordLayer> layers = getSnapLayers();
@@ -473,8 +454,7 @@ public class AbstractOverlay extends JComponent implements
       final List<LayerDataObject> objects = layer.queryBackground(boundingBox);
       for (final LayerDataObject object : objects) {
         if (layer.isVisible(object)) {
-          final CloseLocation closeLocation = findCloseLocation(object,
-            boundingBox);
+          final CloseLocation closeLocation = findCloseLocation(object, boundingBox);
           if (closeLocation != null) {
             boolean found = false;
             final Point closePoint = closeLocation.getPoint();
@@ -494,7 +474,7 @@ public class AbstractOverlay extends JComponent implements
         }
       }
     }
-    snapPointIndex = 0;
+    this.snapPointIndex = 0;
     return setSnapLocations(snapLocations);
 
   }
@@ -597,8 +577,7 @@ public class AbstractOverlay extends JComponent implements
     }
   }
 
-  protected boolean setSnapLocations(
-    final Map<Point, Set<CloseLocation>> snapLocations) {
+  protected boolean setSnapLocations(final Map<Point, Set<CloseLocation>> snapLocations) {
     this.snapPointLocationMap = snapLocations;
     if (this.snapPointLocationMap.isEmpty()) {
       this.snapPoint = null;
@@ -607,12 +586,10 @@ public class AbstractOverlay extends JComponent implements
       }
       return false;
     } else {
-      this.snapPoint = CollectionUtil.get(snapLocations.keySet(),
-        snapPointIndex);
+      this.snapPoint = CollectionUtil.get(snapLocations.keySet(), this.snapPointIndex);
 
       boolean nodeSnap = false;
-      final StringBuffer text = new StringBuffer(
-        "<html><ol style=\"margin: 2px 2px 2px 15px\">");
+      final StringBuffer text = new StringBuffer("<html><ol style=\"margin: 2px 2px 2px 15px\">");
       int i = 0;
       for (final Entry<Point, Set<CloseLocation>> entry : this.snapPointLocationMap.entrySet()) {
         final Point snapPoint = entry.getKey();
@@ -633,9 +610,8 @@ public class AbstractOverlay extends JComponent implements
           if ("Point".equals(locationType) || "End-Vertex".equals(locationType)) {
             nodeSnap = true;
           }
-          CollectionUtil.addToSet(typeLocationsMap, typePath
-            + " (<b style=\"color:red\">" + locationType + "</b>)",
-            snapLocation);
+          CollectionUtil.addToSet(typeLocationsMap, typePath + " (<b style=\"color:red\">"
+            + locationType + "</b>)", snapLocation);
         }
 
         for (final Entry<String, Set<CloseLocation>> typeLocations : typeLocationsMap.entrySet()) {
@@ -648,7 +624,7 @@ public class AbstractOverlay extends JComponent implements
         text.append("</ul></li>");
       }
       text.append("</ol></html>");
-      getMap().setToolTipText(snapEventPoint, text);
+      getMap().setToolTipText(this.snapEventPoint, text);
 
       if (BooleanStringConverter.getBoolean(nodeSnap)) {
         setMapCursor(CURSOR_NODE_SNAP);

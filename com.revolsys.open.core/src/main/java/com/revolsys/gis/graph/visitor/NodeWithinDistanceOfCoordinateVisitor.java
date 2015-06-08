@@ -6,8 +6,7 @@ import com.revolsys.gis.model.coordinates.CoordinateCoordinates;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class NodeWithinDistanceOfCoordinateVisitor<T> implements
-  Visitor<Node<T>> {
+public class NodeWithinDistanceOfCoordinateVisitor<T> implements Visitor<Node<T>> {
   private final Coordinates coordinates;
 
   private final Visitor<Node<T>> matchVisitor;
@@ -32,8 +31,8 @@ public class NodeWithinDistanceOfCoordinateVisitor<T> implements
   public boolean visit(final Node<T> node) {
     final Coordinates coordinate = node;
     final double distance = this.coordinates.distance(coordinate);
-    if (distance <= maxDistance) {
-      matchVisitor.visit(node);
+    if (distance <= this.maxDistance) {
+      this.matchVisitor.visit(node);
     }
     return true;
   }

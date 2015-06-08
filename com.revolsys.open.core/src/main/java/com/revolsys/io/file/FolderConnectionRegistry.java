@@ -13,8 +13,7 @@ import com.revolsys.io.connection.AbstractConnectionRegistry;
 import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.util.CollectionUtil;
 
-public class FolderConnectionRegistry extends
-  AbstractConnectionRegistry<FolderConnection> {
+public class FolderConnectionRegistry extends AbstractConnectionRegistry<FolderConnection> {
 
   private static final ThreadLocal<FolderConnectionRegistry> threadRegistry = new ThreadLocal<FolderConnectionRegistry>();
 
@@ -22,22 +21,19 @@ public class FolderConnectionRegistry extends
     return FolderConnectionRegistry.threadRegistry.get();
   }
 
-  public static FolderConnectionRegistry setForThread(
-    final FolderConnectionRegistry registry) {
+  public static FolderConnectionRegistry setForThread(final FolderConnectionRegistry registry) {
     final FolderConnectionRegistry oldValue = getForThread();
     FolderConnectionRegistry.threadRegistry.set(registry);
     return oldValue;
   }
 
-  public FolderConnectionRegistry(
-    final FolderConnectionManager connectionManager, final String name) {
+  public FolderConnectionRegistry(final FolderConnectionManager connectionManager, final String name) {
     super(connectionManager, name);
     init();
   }
 
-  public FolderConnectionRegistry(
-    final FolderConnectionManager connectionManager, final String name,
-    final boolean visible, final FolderConnection... connections) {
+  public FolderConnectionRegistry(final FolderConnectionManager connectionManager,
+    final String name, final boolean visible, final FolderConnection... connections) {
     super(connectionManager, name);
     setReadOnly(!visible);
     setVisible(visible);
@@ -47,9 +43,8 @@ public class FolderConnectionRegistry extends
     }
   }
 
-  public FolderConnectionRegistry(
-    final FolderConnectionManager connectionManager, final String name,
-    final Resource resource, final boolean readOnly) {
+  public FolderConnectionRegistry(final FolderConnectionManager connectionManager,
+    final String name, final Resource resource, final boolean readOnly) {
     super(connectionManager, name);
     setReadOnly(readOnly);
     setDirectory(resource);
@@ -60,8 +55,7 @@ public class FolderConnectionRegistry extends
     this(null, name, true);
   }
 
-  public FolderConnectionRegistry(final String name, final Resource resource,
-    final boolean readOnly) {
+  public FolderConnectionRegistry(final String name, final Resource resource, final boolean readOnly) {
     this(null, name, resource, readOnly);
   }
 

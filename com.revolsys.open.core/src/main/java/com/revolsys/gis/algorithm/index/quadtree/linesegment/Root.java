@@ -25,12 +25,9 @@ public class Root extends NodeBase {
     }
   }
 
-  private void insertContained(final Node tree, final Envelope envelope,
-    final int[] item) {
-    final boolean isZeroX = IntervalSize.isZeroWidth(envelope.getMinX(),
-      envelope.getMaxX());
-    final boolean isZeroY = IntervalSize.isZeroWidth(envelope.getMinY(),
-      envelope.getMaxY());
+  private void insertContained(final Node tree, final Envelope envelope, final int[] item) {
+    final boolean isZeroX = IntervalSize.isZeroWidth(envelope.getMinX(), envelope.getMaxX());
+    final boolean isZeroY = IntervalSize.isZeroWidth(envelope.getMinY(), envelope.getMaxY());
     NodeBase node;
     if (isZeroX || isZeroY) {
       node = tree.find(envelope);

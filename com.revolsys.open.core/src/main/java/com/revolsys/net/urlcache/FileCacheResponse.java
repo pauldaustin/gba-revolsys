@@ -14,20 +14,19 @@ public class FileCacheResponse extends CacheResponse {
 
   private final Map<String, List<String>> headers;
 
-  public FileCacheResponse(final File file,
-    final Map<String, List<String>> headers) {
+  public FileCacheResponse(final File file, final Map<String, List<String>> headers) {
     this.file = file;
     this.headers = headers;
   }
 
   @Override
   public InputStream getBody() throws IOException {
-    return new FileInputStream(file);
+    return new FileInputStream(this.file);
   }
 
   @Override
   public Map<String, List<String>> getHeaders() throws IOException {
-    return headers;
+    return this.headers;
   }
 
 }

@@ -11,8 +11,7 @@ public class WriterProcess extends BaseInProcess<Record> {
   public WriterProcess() {
   }
 
-  public WriterProcess(final Channel<Record> in,
-    final Writer<Record> writer) {
+  public WriterProcess(final Channel<Record> in, final Writer<Record> writer) {
     super(in);
     this.writer = writer;
   }
@@ -30,17 +29,17 @@ public class WriterProcess extends BaseInProcess<Record> {
    * @return the writer
    */
   public Writer<Record> getWriter() {
-    return writer;
+    return this.writer;
   }
 
   @Override
   protected void postRun(final Channel<Record> in) {
-    writer.close();
+    this.writer.close();
   }
 
   @Override
   protected void process(final Channel<Record> in, final Record object) {
-    writer.write(object);
+    this.writer.write(object);
   }
 
   public void setWriter(final Writer<Record> writer) {

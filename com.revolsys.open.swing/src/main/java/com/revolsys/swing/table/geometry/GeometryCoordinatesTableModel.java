@@ -27,7 +27,7 @@ public class GeometryCoordinatesTableModel extends AbstractTableModel {
 
   public static int[] getEventRowObject(final TablePanel panel) {
     final GeometryCoordinatesTableModel model = panel.getTableModel();
-    final int row = panel.getEventRow();
+    final int row = TablePanel.getEventRow();
     final int[] object = model.getVertexIndex(row);
     return object;
   }

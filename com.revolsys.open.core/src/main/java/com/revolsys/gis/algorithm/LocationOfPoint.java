@@ -13,14 +13,12 @@ import com.vividsolutions.jts.util.Assert;
  */
 public class LocationOfPoint {
 
-  public static LineStringLocation locate(final LineString line,
-    final Coordinate inputPt) {
+  public static LineStringLocation locate(final LineString line, final Coordinate inputPt) {
     final LocationOfPoint locater = new LocationOfPoint(line);
     return locater.locate(inputPt);
   }
 
-  public static double segmentFraction(final LineSegment seg,
-    final Coordinate inputPt) {
+  public static double segmentFraction(final LineSegment seg, final Coordinate inputPt) {
     double segFrac = seg.projectionFactor(inputPt);
     if (segFrac < 0.0) {
       segFrac = 0.0;
@@ -39,27 +37,26 @@ public class LocationOfPoint {
   /**
    * Tests whether a location given by a <index, segmentFraction> pair is
    * located after a {@link LineStringLocation}.
-   * 
+   *
    * @param i the segment index
    * @param segFrac the fraction along the segment
    * @param loc a location
    * @return <code>true</code> if the first location is greater than the second
    */
-  private boolean isGreater(final int i, final double segFrac,
-    final LineStringLocation loc) {
-    return LineStringLocation.compareLocationValues(i, segFrac,
-      loc.getSegmentIndex(), loc.getSegmentFraction()) > 0;
+  private boolean isGreater(final int i, final double segFrac, final LineStringLocation loc) {
+    return LineStringLocation.compareLocationValues(i, segFrac, loc.getSegmentIndex(),
+      loc.getSegmentFraction()) > 0;
   }
 
   /**
    * Find the nearest location along a {@link LineString} to a given point.
-   * 
+   *
    * @param inputPt the coordinate to locate
    * @return the location of the nearest point
    */
   public LineStringLocation locate(final Coordinate inputPt) {
     // return locateAfter(inputPt, null);
-    final Coordinate[] pts = line.getCoordinates();
+    final Coordinate[] pts = this.line.getCoordinates();
 
     double minDistance = Double.MAX_VALUE;
     int minIndex = 0;
@@ -81,7 +78,7 @@ public class LocationOfPoint {
         minDistance = segDistance;
       }
     }
-    return new LineStringLocation(line, minIndex, minFrac);
+    return new LineStringLocation(this.line, minIndex, minFrac);
   }
 
   /**
@@ -91,7 +88,7 @@ public class LocationOfPoint {
    * this is not possible, the value returned will equal
    * <code>minLocation</code>. (An example where this is not possible is when
    * minLocation = [end of line] ).
-   * 
+   *
    * @param inputPt the coordinate to locate
    * @param minLocation the minimum location for the point location
    * @return the location of the nearest point
@@ -102,11 +99,11 @@ public class LocationOfPoint {
       return locate(inputPt);
     }
 
-    final Coordinate[] pts = line.getCoordinates();
+    final Coordinate[] pts = this.line.getCoordinates();
 
     // sanity check for minLocation at or past end of line
-    if (minLocation.getSegmentIndex() >= line.getNumPoints()) {
-      return new LineStringLocation(line, pts.length - 1, 1.0);
+    if (minLocation.getSegmentIndex() >= this.line.getNumPoints()) {
+      return new LineStringLocation(this.line, pts.length - 1, 1.0);
     }
 
     double minDistance = Double.MAX_VALUE;
@@ -124,7 +121,7 @@ public class LocationOfPoint {
       final double segFrac = segmentFraction(seg, inputPt);
 
       if (segDistance < minDistance && isGreater(i, segFrac, minLocation)) {
-        nextClosestLocation = new LineStringLocation(line, i, segFrac);
+        nextClosestLocation = new LineStringLocation(this.line, i, segFrac);
         minDistance = segDistance;
       }
     }

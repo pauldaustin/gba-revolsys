@@ -20,10 +20,9 @@ import com.revolsys.swing.map.layer.dataobject.renderer.AbstractDataObjectLayerR
 import com.revolsys.swing.map.layer.dataobject.renderer.AbstractMultipleRenderer;
 import com.revolsys.swing.tree.model.node.AbstractObjectTreeNodeModel;
 
-public class MultipleLayerRendererTreeNodeModel
-  extends
-  AbstractObjectTreeNodeModel<AbstractMultipleRenderer, AbstractDataObjectLayerRenderer>
-  implements MouseListener {
+public class MultipleLayerRendererTreeNodeModel extends
+  AbstractObjectTreeNodeModel<AbstractMultipleRenderer, AbstractDataObjectLayerRenderer> implements
+  MouseListener {
 
   private final Set<Class<?>> SUPPORTED_CHILD_CLASSES = Collections.<Class<?>> singleton(AbstractDataObjectLayerRenderer.class);
 
@@ -48,8 +47,7 @@ public class MultipleLayerRendererTreeNodeModel
   }
 
   @Override
-  protected List<AbstractDataObjectLayerRenderer> getChildren(
-    final AbstractMultipleRenderer node) {
+  protected List<AbstractDataObjectLayerRenderer> getChildren(final AbstractMultipleRenderer node) {
     return node.getRenderers();
   }
 
@@ -69,11 +67,11 @@ public class MultipleLayerRendererTreeNodeModel
   }
 
   @Override
-  public Component getRenderer(final AbstractMultipleRenderer node,
-    final JTree tree, final boolean selected, final boolean expanded,
-    final boolean leaf, final int row, final boolean hasFocus) {
-    final Component renderer = super.getRenderer(node, tree, selected,
-      expanded, leaf, row, hasFocus);
+  public Component getRenderer(final AbstractMultipleRenderer node, final JTree tree,
+    final boolean selected, final boolean expanded, final boolean leaf, final int row,
+    final boolean hasFocus) {
+    final Component renderer = super.getRenderer(node, tree, selected, expanded, leaf, row,
+      hasFocus);
     if (renderer instanceof JLabel) {
       final JLabel label = (JLabel)renderer;
       final Icon icon = node.getIcon();

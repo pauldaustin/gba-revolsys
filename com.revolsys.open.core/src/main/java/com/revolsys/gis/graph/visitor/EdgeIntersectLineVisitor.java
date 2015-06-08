@@ -14,8 +14,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 public class EdgeIntersectLineVisitor<T> implements Visitor<Edge<T>> {
 
-  public static <T> List<Edge<T>> getEdges(final Graph<T> graph,
-    final LineString line) {
+  public static <T> List<Edge<T>> getEdges(final Graph<T> graph, final LineString line) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
     final Envelope env = line.getEnvelopeInternal();
     final IdObjectIndex<Edge<T>> index = graph.getEdgeIndex();
@@ -28,8 +27,7 @@ public class EdgeIntersectLineVisitor<T> implements Visitor<Edge<T>> {
 
   private final Visitor<Edge<T>> matchVisitor;
 
-  public EdgeIntersectLineVisitor(final LineString line,
-    final Visitor<Edge<T>> matchVisitor) {
+  public EdgeIntersectLineVisitor(final LineString line, final Visitor<Edge<T>> matchVisitor) {
     this.line = line;
     this.matchVisitor = matchVisitor;
   }
@@ -39,7 +37,7 @@ public class EdgeIntersectLineVisitor<T> implements Visitor<Edge<T>> {
     final LineString line = edge.getLine();
     final IntersectionMatrix relate = this.line.relate(line);
     if (relate.get(0, 0) == Dimension.L) {
-      matchVisitor.visit(edge);
+      this.matchVisitor.visit(edge);
     }
     return true;
   }

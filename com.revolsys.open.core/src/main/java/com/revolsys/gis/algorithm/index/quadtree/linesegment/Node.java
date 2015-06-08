@@ -7,17 +7,14 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.DoubleBits;
 
 public class Node extends NodeBase {
-  public static Envelope computeKey(final Coordinate point, final int level,
-    final Envelope itemEnv) {
+  public static Envelope computeKey(final Coordinate point, final int level, final Envelope itemEnv) {
     final double quadSize = DoubleBits.powerOf2(level);
     point.x = Math.floor(itemEnv.getMinX() / quadSize) * quadSize;
     point.y = Math.floor(itemEnv.getMinY() / quadSize) * quadSize;
-    return new Envelope(point.x, point.x + quadSize, point.y, point.y
-      + quadSize);
+    return new Envelope(point.x, point.x + quadSize, point.y, point.y + quadSize);
   }
 
-  public static Envelope computeKey(final int level, final Coordinate point,
-    final Envelope itemEnv) {
+  public static Envelope computeKey(final int level, final Coordinate point, final Envelope itemEnv) {
     final double quadSize = DoubleBits.powerOf2(level);
     final double x = Math.floor(itemEnv.getMinX() / quadSize) * quadSize;
     final double y = Math.floor(itemEnv.getMinY() / quadSize) * quadSize;
@@ -72,7 +69,7 @@ public class Node extends NodeBase {
     this.level = level;
     final double x = (env.getMinX() + env.getMaxX()) / 2;
     final double y = (env.getMinY() + env.getMaxY()) / 2;
-    centre = new DoubleCoordinates(x, y);
+    this.centre = new DoubleCoordinates(x, y);
   }
 
   private Node createSubnode(final int index) {
@@ -83,37 +80,37 @@ public class Node extends NodeBase {
 
     switch (index) {
       case 0:
-        minX = env.getMinX();
-        maxX = centre.getX();
-        minY = env.getMinY();
-        maxY = centre.getY();
+        minX = this.env.getMinX();
+        maxX = this.centre.getX();
+        minY = this.env.getMinY();
+        maxY = this.centre.getY();
       break;
       case 1:
-        minX = centre.getX();
-        maxX = env.getMaxX();
-        minY = env.getMinY();
-        maxY = centre.getY();
+        minX = this.centre.getX();
+        maxX = this.env.getMaxX();
+        minY = this.env.getMinY();
+        maxY = this.centre.getY();
       break;
       case 2:
-        minX = env.getMinX();
-        maxX = centre.getX();
-        minY = centre.getY();
-        maxY = env.getMaxY();
+        minX = this.env.getMinX();
+        maxX = this.centre.getX();
+        minY = this.centre.getY();
+        maxY = this.env.getMaxY();
       break;
       case 3:
-        minX = centre.getX();
-        maxX = env.getMaxX();
-        minY = centre.getY();
-        maxY = env.getMaxY();
+        minX = this.centre.getX();
+        maxX = this.env.getMaxX();
+        minY = this.centre.getY();
+        maxY = this.env.getMaxY();
       break;
     }
     final Envelope envelope = new Envelope(minX, maxX, minY, maxY);
-    final Node node = new Node(envelope, level - 1);
+    final Node node = new Node(envelope, this.level - 1);
     return node;
   }
 
   public NodeBase find(final Envelope searchEnv) {
-    final int subnodeIndex = getSubnodeIndex(searchEnv, centre);
+    final int subnodeIndex = getSubnodeIndex(searchEnv, this.centre);
     if (subnodeIndex == -1) {
       return this;
     }
@@ -125,11 +122,11 @@ public class Node extends NodeBase {
   }
 
   public Envelope getEnvelope() {
-    return env;
+    return this.env;
   }
 
   public Node getNode(final Envelope searchEnv) {
-    final int subnodeIndex = getSubnodeIndex(searchEnv, centre);
+    final int subnodeIndex = getSubnodeIndex(searchEnv, this.centre);
     if (subnodeIndex != -1) {
       final Node node = getSubnode(subnodeIndex);
       return node.getNode(searchEnv);
@@ -146,8 +143,8 @@ public class Node extends NodeBase {
   }
 
   void insertNode(final Node node) {
-    final int index = getSubnodeIndex(node.env, centre);
-    if (node.level == level - 1) {
+    final int index = getSubnodeIndex(node.env, this.centre);
+    if (node.level == this.level - 1) {
       setNode(index, node);
     } else {
       final Node childNode = createSubnode(index);
@@ -158,7 +155,7 @@ public class Node extends NodeBase {
 
   @Override
   protected boolean isSearchMatch(final Envelope searchEnv) {
-    return env.intersects(searchEnv);
+    return this.env.intersects(searchEnv);
   }
 
 }

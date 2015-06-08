@@ -31,7 +31,7 @@ public class ContourConverter extends ArcConverter {
     while (attributeName != null) {
       if (attributeName.equals("arc")) {
         final String objectName = iterator.nextObjectName();
-        final OsnConverter osnConverter = converters.getConverter(objectName);
+        final OsnConverter osnConverter = this.converters.getConverter(objectName);
         if (osnConverter == null) {
           iterator.throwParseError("No Geometry Converter for " + objectName);
         }
@@ -53,8 +53,7 @@ public class ContourConverter extends ArcConverter {
   }
 
   @Override
-  public void write(final OsnSerializer serializer, final Object object)
-    throws IOException {
+  public void write(final OsnSerializer serializer, final Object object) throws IOException {
     if (object instanceof LineString) {
       final LineString lineString = (LineString)object;
       serializer.startObject(GEOMETRY_CLASS);

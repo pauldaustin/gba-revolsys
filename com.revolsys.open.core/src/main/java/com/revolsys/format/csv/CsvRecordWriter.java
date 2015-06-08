@@ -59,13 +59,13 @@ public class CsvRecordWriter extends AbstractRecordWriter {
    */
   @Override
   public void close() {
-    FileUtil.closeSilent(out);
+    FileUtil.closeSilent(this.out);
   }
 
   @Override
   public void flush() {
     try {
-      out.flush();
+      this.out.flush();
     } catch (final IOException e) {
       throw new WrappedException(e);
     }
@@ -75,7 +75,7 @@ public class CsvRecordWriter extends AbstractRecordWriter {
   private void string(final Object value) throws IOException {
     final Writer out = this.out;
     final String string = value.toString();
-    if (useQuotes) {
+    if (this.useQuotes) {
       out.write('"');
       for (int i = 0; i < string.length(); i++) {
         final char c = string.charAt(i);
@@ -104,7 +104,7 @@ public class CsvRecordWriter extends AbstractRecordWriter {
         final Object value = object.getValue(i);
         if (value instanceof Geometry) {
           final Geometry geometry = (Geometry)value;
-          final String text = EWktWriter.toString(geometry, ewkt);
+          final String text = EWktWriter.toString(geometry, this.ewkt);
           string(text);
         } else if (value != null) {
           final String name = recordDefinition.getFieldName(i);

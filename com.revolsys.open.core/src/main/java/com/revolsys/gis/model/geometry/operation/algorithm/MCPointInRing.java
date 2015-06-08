@@ -20,7 +20,7 @@ import com.vividsolutions.jts.index.bintree.Interval;
 /**
  * Implements {@link PointInRing} using {@link MonotoneChain}s and a
  * {@link Bintree} index to increase performance.
- * 
+ *
  * @version 1.7
  * @see IndexedPointInAreaLocator for more general functionality
  */
@@ -35,7 +35,7 @@ public class MCPointInRing implements PointInRing {
 
     @Override
     public void select(final LineSegment ls) {
-      testLineSegment(p, ls);
+      testLineSegment(this.p, ls);
     }
   }
 
@@ -54,31 +54,31 @@ public class MCPointInRing implements PointInRing {
 
   private void buildIndex() {
     // Envelope env = ring.getEnvelopeInternal();
-    tree = new Bintree();
+    this.tree = new Bintree();
 
-    final CoordinatesList pts = CoordinatesListUtil.removeRepeatedPoints(ring);
+    final CoordinatesList pts = CoordinatesListUtil.removeRepeatedPoints(this.ring);
     final List mcList = MonotoneChainBuilder.getChains(pts);
 
     for (int i = 0; i < mcList.size(); i++) {
       final MonotoneChain mc = (MonotoneChain)mcList.get(i);
       final BoundingBox mcEnv = mc.getBoundingBox();
-      interval.min = mcEnv.getMinY();
-      interval.max = mcEnv.getMaxY();
-      tree.insert(interval, mc);
+      this.interval.min = mcEnv.getMinY();
+      this.interval.max = mcEnv.getMaxY();
+      this.tree.insert(this.interval, mc);
     }
   }
 
   @Override
   public boolean isInside(final Coordinates pt) {
-    crossings = 0;
+    this.crossings = 0;
 
     // test all segments intersected by ray from pt in positive x direction
-    final BoundingBox rayEnv = new BoundingBox(null, Double.NEGATIVE_INFINITY,
-      pt.getY(), Double.POSITIVE_INFINITY, pt.getY());
+    final BoundingBox rayEnv = new BoundingBox(null, Double.NEGATIVE_INFINITY, pt.getY(),
+      Double.POSITIVE_INFINITY, pt.getY());
 
-    interval.min = pt.getY();
-    interval.max = pt.getY();
-    final List segs = tree.query(interval);
+    this.interval.min = pt.getY();
+    this.interval.max = pt.getY();
+    final List segs = this.tree.query(this.interval);
     // System.out.println("query size = " + segs.size());
 
     final MCSelecter mcSelecter = new MCSelecter(pt);
@@ -90,7 +90,7 @@ public class MCPointInRing implements PointInRing {
     /*
      * p is inside if number of crossings is odd.
      */
-    if ((crossings % 2) == 1) {
+    if (this.crossings % 2 == 1) {
       return true;
     }
     return false;
@@ -113,7 +113,7 @@ public class MCPointInRing implements PointInRing {
     x2 = p2.getX() - p.getX();
     y2 = p2.getY() - p.getY();
 
-    if (((y1 > 0) && (y2 <= 0)) || ((y2 > 0) && (y1 <= 0))) {
+    if (y1 > 0 && y2 <= 0 || y2 > 0 && y1 <= 0) {
       /*
        * segment straddles x axis, so compute intersection.
        */
@@ -123,13 +123,13 @@ public class MCPointInRing implements PointInRing {
        * crosses ray if strictly positive intersection.
        */
       if (0.0 < xInt) {
-        crossings++;
+        this.crossings++;
       }
     }
   }
 
-  private void testMonotoneChain(final BoundingBox rayEnv,
-    final MCSelecter mcSelecter, final MonotoneChain mc) {
+  private void testMonotoneChain(final BoundingBox rayEnv, final MCSelecter mcSelecter,
+    final MonotoneChain mc) {
     mc.select(rayEnv, mcSelecter);
   }
 

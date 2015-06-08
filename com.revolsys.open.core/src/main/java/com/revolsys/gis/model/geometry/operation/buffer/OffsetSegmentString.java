@@ -44,12 +44,10 @@ import com.revolsys.gis.model.geometry.impl.GeometryFactoryImpl;
 /**
  * A dynamic list of the vertices in a constructed offset curve. Automatically
  * removes adjacent vertices which are closer than a given tolerance.
- * 
+ *
  * @author Martin Davis
  */
 class OffsetSegmentString {
-  private static final Coordinates[] COORDINATE_ARRAY_TYPE = new Coordinates[0];
-
   private final ListCoordinatesList points = new ListCoordinatesList(3);
 
   private CoordinatesPrecisionModel precisionModel = null;
@@ -66,12 +64,12 @@ class OffsetSegmentString {
 
   public void addPt(final Coordinates pt) {
     final Coordinates bufPt = new DoubleCoordinates(pt);
-    precisionModel.makePrecise(bufPt);
+    this.precisionModel.makePrecise(bufPt);
     // don't add duplicate (or near-duplicate) points
     if (isRedundant(bufPt)) {
       return;
     }
-    points.add(bufPt);
+    this.points.add(bufPt);
     // System.out.println(bufPt);
   }
 
@@ -88,39 +86,39 @@ class OffsetSegmentString {
   }
 
   public void closeRing() {
-    if (points.size() < 1) {
+    if (this.points.size() < 1) {
       return;
     }
-    final Coordinates startPt = new DoubleCoordinates(points.get(0));
-    final Coordinates lastPt = points.get(points.size() - 1);
+    final Coordinates startPt = new DoubleCoordinates(this.points.get(0));
+    final Coordinates lastPt = this.points.get(this.points.size() - 1);
     Coordinates last2Pt = null;
-    if (points.size() >= 2) {
-      last2Pt = points.get(points.size() - 2);
+    if (this.points.size() >= 2) {
+      last2Pt = this.points.get(this.points.size() - 2);
     }
     if (startPt.equals(lastPt)) {
       return;
     }
-    points.add(startPt);
+    this.points.add(startPt);
   }
 
   public CoordinatesList getCoordinates() {
-    return points;
+    return this.points;
   }
 
   /**
    * Tests whether the given point is redundant relative to the previous point
    * in the list (up to tolerance).
-   * 
+   *
    * @param pt
    * @return true if the point is redundant
    */
   private boolean isRedundant(final Coordinates pt) {
-    if (points.size() < 1) {
+    if (this.points.size() < 1) {
       return false;
     }
-    final Coordinates lastPt = points.get(points.size() - 1);
+    final Coordinates lastPt = this.points.get(this.points.size() - 1);
     final double ptDist = pt.distance(lastPt);
-    if (ptDist < minimimVertexDistance) {
+    if (ptDist < this.minimimVertexDistance) {
       return true;
     }
     return false;

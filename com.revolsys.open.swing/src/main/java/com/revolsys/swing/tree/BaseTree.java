@@ -21,11 +21,9 @@ import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.swing.tree.model.node.AbstractTreeNode;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
-public class BaseTree extends JTree implements MouseListener,
-  TreeWillExpandListener, TreeExpansionListener {
+public class BaseTree extends JTree implements MouseListener, TreeWillExpandListener,
+  TreeExpansionListener {
   private static final long serialVersionUID = 1L;
-
-  private boolean menuEnabled = true;
 
   static Object mouseClickItem = null;
 
@@ -34,8 +32,8 @@ public class BaseTree extends JTree implements MouseListener,
     return (V)mouseClickItem;
   }
 
-  public static void showMenu(final MenuFactory menuFactory,
-    final Object object, final Component component, final int x, final int y) {
+  public static void showMenu(final MenuFactory menuFactory, final Object object,
+    final Component component, final int x, final int y) {
     if (menuFactory != null) {
       mouseClickItem = object;
       final JPopupMenu menu = menuFactory.createJPopupMenu();
@@ -57,13 +55,15 @@ public class BaseTree extends JTree implements MouseListener,
     }
   }
 
-  public static void showMenu(final Object object, final Component component,
-    final int x, final int y) {
+  public static void showMenu(final Object object, final Component component, final int x,
+    final int y) {
     if (object != null) {
       final MenuFactory menu = ObjectTreeModel.findMenu(object);
       showMenu(menu, object, component, x, y);
     }
   }
+
+  private boolean menuEnabled = true;
 
   public BaseTree() {
     this(getDefaultTreeModel());
@@ -104,7 +104,7 @@ public class BaseTree extends JTree implements MouseListener,
   }
 
   public boolean isMenuEnabled() {
-    return menuEnabled;
+    return this.menuEnabled;
   }
 
   @Override
@@ -143,8 +143,7 @@ public class BaseTree extends JTree implements MouseListener,
       if (path != null) {
 
         TreePath[] selectionPaths = getSelectionPaths();
-        if (selectionPaths == null
-          || !Arrays.asList(selectionPaths).contains(path)) {
+        if (selectionPaths == null || !Arrays.asList(selectionPaths).contains(path)) {
           selectionPaths = new TreePath[] {
             path
           };
@@ -171,13 +170,11 @@ public class BaseTree extends JTree implements MouseListener,
   }
 
   @Override
-  public void treeWillCollapse(final TreeExpansionEvent event)
-    throws ExpandVetoException {
+  public void treeWillCollapse(final TreeExpansionEvent event) throws ExpandVetoException {
   }
 
   @Override
-  public void treeWillExpand(final TreeExpansionEvent event)
-    throws ExpandVetoException {
+  public void treeWillExpand(final TreeExpansionEvent event) throws ExpandVetoException {
     final TreePath path = event.getPath();
     final Object node = path.getLastPathComponent();
     if (node instanceof LazyLoadTreeNode) {

@@ -25,8 +25,8 @@ public class ManifestUtil {
 
   }
 
-  public static String getMainAttributeByImplementationTitle(
-    final String implementationTitle, final String name) {
+  public static String getMainAttributeByImplementationTitle(final String implementationTitle,
+    final String name) {
     final Manifest manifest = getManifestByImplementationTitle(implementationTitle);
     if (manifest != null) {
       return manifest.getMainAttributes().getValue(name);
@@ -36,8 +36,7 @@ public class ManifestUtil {
 
   }
 
-  public static Manifest getManifestByImplementationTitle(
-    final String implementationTitle) {
+  public static Manifest getManifestByImplementationTitle(final String implementationTitle) {
     try {
       final Enumeration resources = Thread.currentThread()
         .getContextClassLoader()

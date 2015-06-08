@@ -8,8 +8,7 @@ import com.revolsys.parallel.process.InvokeMethodRunnable;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.Property;
 
-public class InvokeMethodPropertyChangeListener implements
-  PropertyChangeListener, NonWeakListener {
+public class InvokeMethodPropertyChangeListener implements PropertyChangeListener, NonWeakListener {
 
   private final boolean invokeLater;
 
@@ -19,16 +18,16 @@ public class InvokeMethodPropertyChangeListener implements
 
   private final Object[] parameters;
 
-  public InvokeMethodPropertyChangeListener(final boolean invokeLater,
-    final Object object, final String methodName, final Object... parameters) {
+  public InvokeMethodPropertyChangeListener(final boolean invokeLater, final Object object,
+    final String methodName, final Object... parameters) {
     this.object = object;
     this.methodName = methodName;
     this.parameters = parameters;
     this.invokeLater = invokeLater;
   }
 
-  public InvokeMethodPropertyChangeListener(final Object object,
-    final String methodName, final Object... parameters) {
+  public InvokeMethodPropertyChangeListener(final Object object, final String methodName,
+    final Object... parameters) {
     this(true, object, methodName, parameters);
   }
 
@@ -45,8 +44,7 @@ public class InvokeMethodPropertyChangeListener implements
       }
       parameters[i] = parameter;
     }
-    final Runnable runnable = new InvokeMethodRunnable(this.object,
-      this.methodName, parameters);
+    final Runnable runnable = new InvokeMethodRunnable(this.object, this.methodName, parameters);
     if (this.invokeLater) {
       Invoke.later(runnable);
     } else {
@@ -56,6 +54,6 @@ public class InvokeMethodPropertyChangeListener implements
 
   @Override
   public String toString() {
-    return Property.toString(object, methodName, parameters);
+    return Property.toString(this.object, this.methodName, this.parameters);
   }
 }

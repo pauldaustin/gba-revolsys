@@ -1,5 +1,6 @@
 package com.revolsys.gdal;
 
+import java.awt.Transparency;
 import java.awt.color.ColorSpace;
 import java.awt.image.BandedSampleModel;
 import java.awt.image.BufferedImage;
@@ -22,7 +23,6 @@ import org.gdal.gdal.ColorTable;
 import org.gdal.gdal.Dataset;
 import org.gdal.gdal.Driver;
 import org.gdal.gdal.gdal;
-import org.gdal.gdalconst.gdalconst;
 import org.gdal.gdalconst.gdalconstConstants;
 import org.gdal.ogr.ogr;
 import org.gdal.osr.SpatialReference;
@@ -75,8 +75,7 @@ public class Gdal {
     }
   }
 
-  private static void addGeoreferencedImageFactory(
-    final GdalImageFactory georeferencedImageFactory) {
+  private static void addGeoreferencedImageFactory(final GdalImageFactory georeferencedImageFactory) {
     if (georeferencedImageFactory.isAvailable()) {
 
       final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
@@ -86,8 +85,8 @@ public class Gdal {
 
   private static void addGeoreferencedImageFactory(final String driverName,
     final String formatName, final String fileExtension, final String mimeType) {
-    final GdalImageFactory readerSpi = new GdalImageFactory(driverName,
-      formatName, fileExtension, mimeType);
+    final GdalImageFactory readerSpi = new GdalImageFactory(driverName, formatName, fileExtension,
+      mimeType);
     addGeoreferencedImageFactory(readerSpi);
   }
 
@@ -111,7 +110,7 @@ public class Gdal {
    * {@link BufferedImage} . The result image will be the dimensions of the
    * overview raster.
    * </p>
-   * 
+   *
    * @param dataset
    *            The image dataset.
    * @param overviewIndex
@@ -119,8 +118,7 @@ public class Gdal {
    *            image.
    * @return The buffered image
    */
-  public static BufferedImage getBufferedImage(final Dataset dataset,
-    final int overviewIndex) {
+  public static BufferedImage getBufferedImage(final Dataset dataset, final int overviewIndex) {
     return getBufferedImage(dataset, overviewIndex, 0, 0, -1, -1, -1, -1);
   }
 
@@ -133,7 +131,7 @@ public class Gdal {
    * image. The result image will be the dimensions of sourceWidth,
    * sourceHeight.
    * </p>
-   * 
+   *
    * @param dataset
    *            The image dataset.
    * @param overviewIndex
@@ -149,11 +147,10 @@ public class Gdal {
    *            The height of the clip rectangle. Use -1 to auto calculate.
    * @return The buffered image.
    */
-  public static BufferedImage getBufferedImage(final Dataset dataset,
-    final int overviewIndex, final int sourceOffsetX, final int sourceOffsetY,
-    final int sourceWidth, final int sourceHeight) {
-    return getBufferedImage(dataset, overviewIndex, sourceOffsetX,
-      sourceOffsetY, sourceWidth, sourceHeight, -1, -1);
+  public static BufferedImage getBufferedImage(final Dataset dataset, final int overviewIndex,
+    final int sourceOffsetX, final int sourceOffsetY, final int sourceWidth, final int sourceHeight) {
+    return getBufferedImage(dataset, overviewIndex, sourceOffsetX, sourceOffsetY, sourceWidth,
+      sourceHeight, -1, -1);
   }
 
   /**
@@ -165,7 +162,7 @@ public class Gdal {
    * image. The result image will scaled to the the dimensions of targetWidth,
    * targetHeight.
    * </p>
-   * 
+   *
    * @param dataset
    *            The image dataset.
    * @param overviewIndex
@@ -185,9 +182,9 @@ public class Gdal {
    *            The height of the result image. Use -1 to auto calculate.
    * @return The buffered image.
    */
-  public static BufferedImage getBufferedImage(final Dataset dataset,
-    final int overviewIndex, int sourceOffsetX, int sourceOffsetY,
-    int sourceWidth, int sourceHeight, int targetWidth, int targetHeight) {
+  public static BufferedImage getBufferedImage(final Dataset dataset, final int overviewIndex,
+    int sourceOffsetX, int sourceOffsetY, int sourceWidth, int sourceHeight, int targetWidth,
+    int targetHeight) {
     synchronized (dataset) {
 
       final int bandCount = dataset.getRasterCount();
@@ -222,8 +219,7 @@ public class Gdal {
               if (sourceOffsetY < 0) {
                 sourceOffsetY = 0;
               }
-              if (sourceOffsetX >= overviewWidth
-                || sourceOffsetY >= overviewHeight) {
+              if (sourceOffsetX >= overviewWidth || sourceOffsetY >= overviewHeight) {
                 return new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
               }
 
@@ -250,15 +246,13 @@ public class Gdal {
               pixels = targetWidth * targetHeight;
             }
             if (pixels > 0 && sourceHeight > 0 && sourceWidth > 0) {
-              final int bufferSize = pixels
-                * gdal.GetDataTypeSize(bandDataType) / 8;
+              final int bufferSize = pixels * gdal.GetDataTypeSize(bandDataType) / 8;
 
               final ByteBuffer data = ByteBuffer.allocateDirect(bufferSize);
               data.order(ByteOrder.nativeOrder());
 
-              final int result = overviewBand.ReadRaster_Direct(sourceOffsetX,
-                sourceOffsetY, sourceWidth, sourceHeight, targetWidth,
-                targetHeight, bandDataType, data);
+              final int result = overviewBand.ReadRaster_Direct(sourceOffsetX, sourceOffsetY,
+                sourceWidth, sourceHeight, targetWidth, targetHeight, bandDataType, data);
               if (result == gdalconstConstants.CE_None) {
                 bandData[bandIndex] = data;
               } else {
@@ -290,9 +284,9 @@ public class Gdal {
         }
         imageBuffer = new DataBufferByte(bytes, pixels);
         dataBufferType = DataBuffer.TYPE_BYTE;
-        sampleModel = new BandedSampleModel(dataBufferType, targetWidth,
-          targetHeight, targetWidth, banks, offsets);
-        dataType = (rasterColorInterpretation == gdalconstConstants.GCI_PaletteIndex) ? BufferedImage.TYPE_BYTE_INDEXED
+        sampleModel = new BandedSampleModel(dataBufferType, targetWidth, targetHeight, targetWidth,
+          banks, offsets);
+        dataType = rasterColorInterpretation == gdalconstConstants.GCI_PaletteIndex ? BufferedImage.TYPE_BYTE_INDEXED
           : BufferedImage.TYPE_BYTE_GRAY;
       } else if (bandDataType == gdalconstConstants.GDT_Int16) {
         final short[][] shorts = new short[bandCount][];
@@ -302,8 +296,8 @@ public class Gdal {
         }
         imageBuffer = new DataBufferShort(shorts, pixels);
         dataBufferType = DataBuffer.TYPE_USHORT;
-        sampleModel = new BandedSampleModel(dataBufferType, targetWidth,
-          targetHeight, targetWidth, banks, offsets);
+        sampleModel = new BandedSampleModel(dataBufferType, targetWidth, targetHeight, targetWidth,
+          banks, offsets);
         dataType = BufferedImage.TYPE_USHORT_GRAY;
       } else if (bandDataType == gdalconstConstants.GDT_Int32) {
         final int[][] ints = new int[bandCount][];
@@ -313,13 +307,12 @@ public class Gdal {
         }
         imageBuffer = new DataBufferInt(ints, pixels);
         dataBufferType = DataBuffer.TYPE_INT;
-        sampleModel = new BandedSampleModel(dataBufferType, targetWidth,
-          targetHeight, targetWidth, banks, offsets);
+        sampleModel = new BandedSampleModel(dataBufferType, targetWidth, targetHeight, targetWidth,
+          banks, offsets);
         dataType = BufferedImage.TYPE_CUSTOM;
       }
 
-      final WritableRaster raster = Raster.createWritableRaster(sampleModel,
-        imageBuffer, null);
+      final WritableRaster raster = Raster.createWritableRaster(sampleModel, imageBuffer, null);
       BufferedImage image = null;
       ColorModel colorModel = null;
 
@@ -331,8 +324,8 @@ public class Gdal {
         ColorSpace colorSpace = null;
         if (bandCount > 2) {
           colorSpace = ColorSpace.getInstance(ColorSpace.CS_sRGB);
-          colorModel = new ComponentColorModel(colorSpace, false, false,
-            ColorModel.OPAQUE, dataBufferType);
+          colorModel = new ComponentColorModel(colorSpace, false, false, Transparency.OPAQUE,
+            dataBufferType);
           image = new BufferedImage(colorModel, raster, true, null);
         } else {
           image = new BufferedImage(targetWidth, targetHeight, dataType);
@@ -354,7 +347,7 @@ public class Gdal {
   }
 
   public static Dataset getDataset(final File file) {
-    final int mode = gdalconst.GA_ReadOnly;
+    final int mode = gdalconstConstants.GA_ReadOnly;
     return getDataset(file, mode);
   }
 
@@ -395,8 +388,7 @@ public class Gdal {
     }
   }
 
-  public static SpatialReference getSpatialReference(
-    CoordinateSystem coordinateSystem) {
+  public static SpatialReference getSpatialReference(CoordinateSystem coordinateSystem) {
     if (coordinateSystem == null) {
       return null;
     } else {
@@ -444,7 +436,7 @@ public class Gdal {
    * It is worth to point out that a successful loading of the native library
    * is not sufficient to grant the support for a specific format. We should
    * also check if the proper driver is available.
-   * 
+   *
    * @return <code>true</code> if a driver for the specific format is
    *         available. <code>false</code> otherwise.<BR>
    */
@@ -458,8 +450,7 @@ public class Gdal {
           return true;
         }
       } catch (final UnsatisfiedLinkError e) {
-        LoggerFactory.getLogger(Gdal.class).debug(
-          "Error loading driver: " + driverName, e);
+        LoggerFactory.getLogger(Gdal.class).debug("Error loading driver: " + driverName, e);
         return false;
       }
     } else {
@@ -502,8 +493,7 @@ public class Gdal {
     }
   }
 
-  private static void setGdalProperty(final String name,
-    final String defaultValue) {
+  private static void setGdalProperty(final String name, final String defaultValue) {
     String value = System.getProperty(name);
     if (!StringUtils.hasText(value)) {
       value = System.getenv(name);
@@ -516,10 +506,8 @@ public class Gdal {
     }
   }
 
-  public static void setProjectionFromPrjFile(final Dataset dataset,
-    final Resource resource) {
-    final Resource projectionFile = SpringUtil.getResourceWithExtension(
-      resource, "prj");
+  public static void setProjectionFromPrjFile(final Dataset dataset, final Resource resource) {
+    final Resource projectionFile = SpringUtil.getResourceWithExtension(resource, "prj");
     if (projectionFile.exists()) {
       final CoordinateSystem coordinateSystem = EsriCoordinateSystems.getCoordinateSystem(projectionFile);
       setSpatialReference(dataset, coordinateSystem);

@@ -39,14 +39,13 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * Allows comparing {@link Coordinates} arrays in an orientation-independent
  * way.
- * 
+ *
  * @author Martin Davis
  * @version 1.7
  */
 public class OrientedCoordinateArray implements Comparable {
-  private static int compareOriented(final CoordinatesList pts1,
-    final boolean orientation1, final CoordinatesList pts2,
-    final boolean orientation2) {
+  private static int compareOriented(final CoordinatesList pts1, final boolean orientation1,
+    final CoordinatesList pts2, final boolean orientation2) {
     final int dir1 = orientation1 ? 1 : -1;
     final int dir2 = orientation2 ? 1 : -1;
     final int limit1 = orientation1 ? pts1.size() : -1;
@@ -78,7 +77,7 @@ public class OrientedCoordinateArray implements Comparable {
 
   /**
    * Computes the canonical orientation for a coordinate array.
-   * 
+   *
    * @param pts the array to test
    * @return <code>true</code> if the points are oriented forwards
    * @return <code>false</code if the points are oriented in reverse
@@ -94,17 +93,17 @@ public class OrientedCoordinateArray implements Comparable {
   /**
    * Creates a new {@link OrientedCoordinateArray} for the given
    * {@link Coordinate} array.
-   * 
+   *
    * @param pts the coordinates to orient
    */
   public OrientedCoordinateArray(final CoordinatesList pts) {
     this.pts = pts;
-    orientation = orientation(pts);
+    this.orientation = orientation(pts);
   }
 
   /**
    * Compares two {@link OrientedCoordinateArray}s for their relative order
-   * 
+   *
    * @return -1 this one is smaller
    * @return 0 the two objects are equal
    * @return 1 this one is greater
@@ -113,7 +112,7 @@ public class OrientedCoordinateArray implements Comparable {
   @Override
   public int compareTo(final Object o1) {
     final OrientedCoordinateArray oca = (OrientedCoordinateArray)o1;
-    final int comp = compareOriented(pts, orientation, oca.pts, oca.orientation);
+    final int comp = compareOriented(this.pts, this.orientation, oca.pts, oca.orientation);
     /*
      * // MD - testing only int oldComp =
      * SegmentStringDissolver.ptsComp.compare(pts, oca.pts); if ((oldComp == 0

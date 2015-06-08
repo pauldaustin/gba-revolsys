@@ -12,19 +12,18 @@ import com.revolsys.swing.table.BaseJxTable;
 public class DataObjectMetaDataTableModel extends AbstractTableModel {
   private static final long serialVersionUID = 1L;
 
-  private static final List<String> COLUMN_NAMES = Arrays.asList("#", "Field",
-    "Type", "Length", "Scale", "Min", "Max", "Required", "Description");
+  private static final List<String> COLUMN_NAMES = Arrays.asList("#", "Field", "Type", "Length",
+    "Scale", "Min", "Max", "Required", "Description");
 
-  private static final List<Class<?>> COLUMN_CLASSES = Arrays.<Class<?>> asList(
-    Integer.class, String.class, String.class, Integer.class, Integer.class,
-    Object.class, Object.class, Boolean.class, String.class);
+  private static final List<Class<?>> COLUMN_CLASSES = Arrays.<Class<?>> asList(Integer.class,
+    String.class, String.class, Integer.class, Integer.class, Object.class, Object.class,
+    Boolean.class, String.class);
 
   public static BaseJxTable createTable(final RecordDefinition metaData) {
     if (metaData == null) {
       return null;
     } else {
-      final DataObjectMetaDataTableModel model = new DataObjectMetaDataTableModel(
-        metaData);
+      final DataObjectMetaDataTableModel model = new DataObjectMetaDataTableModel(metaData);
       final BaseJxTable table = new BaseJxTable(model);
       table.resizeColumnsToContent();
       return table;

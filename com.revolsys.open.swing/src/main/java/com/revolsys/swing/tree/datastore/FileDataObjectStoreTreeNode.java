@@ -30,14 +30,13 @@ import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.file.FileTreeNode;
 
-public class FileDataObjectStoreTreeNode extends FileTreeNode implements
-  DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
+public class FileDataObjectStoreTreeNode extends FileTreeNode implements DataObjectStoreProxy,
+  DataObjectStoreConnectionMapProxy {
   private static final MenuFactory MENU = new MenuFactory();
 
   static {
-    MENU.addMenuItemTitleIcon("default", "Add Data Store Connection",
-      "link_add", null, FileDataObjectStoreTreeNode.class,
-      "addDataStoreConnection");
+    MENU.addMenuItemTitleIcon("default", "Add Data Store Connection", "link_add", null,
+      FileDataObjectStoreTreeNode.class, "addDataStoreConnection");
   }
 
   public static void addDataStoreConnection() {
@@ -61,8 +60,8 @@ public class FileDataObjectStoreTreeNode extends FileTreeNode implements
     SwingUtil.addLabel(panel, "Folder Connections");
     final List<DataObjectStoreConnectionRegistry> registries = DataObjectStoreConnectionManager.get()
       .getVisibleConnectionRegistries();
-    final JComboBox registryField = new JComboBox(
-      new Vector<DataObjectStoreConnectionRegistry>(registries));
+    final JComboBox registryField = new JComboBox(new Vector<DataObjectStoreConnectionRegistry>(
+      registries));
 
     panel.add(registryField);
 
@@ -103,8 +102,8 @@ public class FileDataObjectStoreTreeNode extends FileTreeNode implements
     for (final RecordStoreSchema schema : dataStore.getSchemas()) {
       final String schemaPath = schema.getPath();
 
-      final DataObjectStoreSchemaTreeNode schemaNode = new DataObjectStoreSchemaTreeNode(
-        this, schemaPath);
+      final DataObjectStoreSchemaTreeNode schemaNode = new DataObjectStoreSchemaTreeNode(this,
+        schemaPath);
       children.add(schemaNode);
     }
     return children;

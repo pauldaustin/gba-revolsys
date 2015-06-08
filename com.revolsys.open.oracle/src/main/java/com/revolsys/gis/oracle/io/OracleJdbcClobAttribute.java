@@ -20,23 +20,23 @@ import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.spring.SpringUtil;
 
 public class OracleJdbcClobAttribute extends JdbcFieldDefinition {
-  public OracleJdbcClobAttribute(final String name, final int sqlType,
-    final int length, final boolean required, final String description) {
+  public OracleJdbcClobAttribute(final String name, final int sqlType, final int length,
+    final boolean required, final String description) {
     super(name, DataTypes.STRING, sqlType, length, 0, required, description,
       Collections.<String, Object> emptyMap());
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final Record object) throws SQLException {
+  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record object) throws SQLException {
     final Clob value = resultSet.getClob(columnIndex);
     object.setValue(getIndex(), value);
     return columnIndex + 1;
   }
 
   @Override
-  public int setPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final Object value) throws SQLException {
+  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
+    final Object value) throws SQLException {
     if (value == null) {
       final int sqlType = getSqlType();
       statement.setNull(parameterIndex, sqlType);

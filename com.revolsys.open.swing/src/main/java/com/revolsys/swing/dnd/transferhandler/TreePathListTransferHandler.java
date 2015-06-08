@@ -16,7 +16,7 @@ import com.revolsys.swing.dnd.transferable.TreePathListTransferable;
 @SuppressWarnings("serial")
 public class TreePathListTransferHandler extends TransferHandler {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -68,8 +68,7 @@ public class TreePathListTransferHandler extends TransferHandler {
   }
 
   @Override
-  protected void exportDone(final JComponent c,
-    final Transferable transferable, final int action) {
+  protected void exportDone(final JComponent c, final Transferable transferable, final int action) {
     try {
       final Object data = transferable.getTransferData(ObjectTransferable.FLAVOR);
       if (data instanceof ObjectTransferable) {

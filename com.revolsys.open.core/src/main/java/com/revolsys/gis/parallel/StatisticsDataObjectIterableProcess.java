@@ -4,8 +4,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.parallel.channel.Channel;
 
-public class StatisticsDataObjectIterableProcess extends
-  IterableProcess<Record> {
+public class StatisticsDataObjectIterableProcess extends IterableProcess<Record> {
 
   private Statistics statistics;
 
@@ -15,14 +14,14 @@ public class StatisticsDataObjectIterableProcess extends
   @Override
   protected void destroy() {
     super.destroy();
-    if (statistics != null) {
-      statistics.disconnect();
-      statistics = null;
+    if (this.statistics != null) {
+      this.statistics.disconnect();
+      this.statistics = null;
     }
   }
 
   public Statistics getStatistics() {
-    return statistics;
+    return this.statistics;
   }
 
   public void setStatistics(final Statistics statistics) {
@@ -35,7 +34,7 @@ public class StatisticsDataObjectIterableProcess extends
   @Override
   protected void write(final Channel<Record> out, final Record record) {
     if (record != null) {
-      statistics.add(record);
+      this.statistics.add(record);
       out.write(record);
     }
   }

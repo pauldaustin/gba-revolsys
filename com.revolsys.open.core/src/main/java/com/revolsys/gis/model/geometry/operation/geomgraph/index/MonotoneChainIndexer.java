@@ -23,7 +23,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.Quadrant;
  * be used to find the intersection points of two monotone chains. For many
  * types of real-world data, these properties eliminate a large number of
  * segment comparisons, producing substantial speed gains.
- * 
+ *
  * @version 1.7
  */
 public class MonotoneChainIndexer {

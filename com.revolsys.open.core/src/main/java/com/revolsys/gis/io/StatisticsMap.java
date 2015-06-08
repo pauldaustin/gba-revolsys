@@ -33,8 +33,7 @@ public class StatisticsMap {
 
   }
 
-  public void add(final String statisticName, final Record object,
-    final long count) {
+  public void add(final String statisticName, final Record object, final long count) {
     final Statistics statistics = getStatistics(statisticName);
     statistics.add(object, count);
   }
@@ -44,14 +43,13 @@ public class StatisticsMap {
     statistics.add(type);
   }
 
-  public void add(final String statisticName, final RecordDefinition type,
-    final long count) {
+  public void add(final String statisticName, final RecordDefinition type, final long count) {
     final Statistics statistics = getStatistics(statisticName);
     statistics.add(type, count);
   }
 
   public synchronized void add(final String name, final Statistics statistics) {
-    statisticsMap.put(name, statistics);
+    this.statisticsMap.put(name, statistics);
     statistics.connect();
   }
 
@@ -60,32 +58,31 @@ public class StatisticsMap {
     statistics.add(name);
   }
 
-  public void add(final String statisticName, final String path,
-    final long count) {
+  public void add(final String statisticName, final String path, final long count) {
     final Statistics statistics = getStatistics(statisticName);
     statistics.add(path, count);
   }
 
   public synchronized void addCountsText(final StringBuffer sb) {
-    for (final Statistics stats : statisticsMap.values()) {
+    for (final Statistics stats : this.statisticsMap.values()) {
       stats.addCountsText(sb);
     }
   }
 
   public void clear() {
-    statisticsMap.clear();
+    this.statisticsMap.clear();
   }
 
   @PostConstruct
   public synchronized void connect() {
-    providerCount++;
+    this.providerCount++;
   }
 
   @PreDestroy
   public synchronized void disconnect() {
-    providerCount--;
-    if (providerCount <= 0) {
-      for (final Statistics statistics : statisticsMap.values()) {
+    this.providerCount--;
+    if (this.providerCount <= 0) {
+      for (final Statistics statistics : this.statisticsMap.values()) {
         statistics.disconnect();
       }
     }
@@ -98,31 +95,31 @@ public class StatisticsMap {
   }
 
   public String getPrefix() {
-    return prefix;
+    return this.prefix;
   }
 
   public synchronized Statistics getStatistics(final String statisticName) {
     if (statisticName == null) {
       return null;
     } else {
-      final String name = CollectionUtil.toString(" ", prefix, statisticName);
-      Statistics statistics = statisticsMap.get(name);
+      final String name = CollectionUtil.toString(" ", this.prefix, statisticName);
+      Statistics statistics = this.statisticsMap.get(name);
       if (statistics == null) {
         statistics = new Statistics(name);
-        statistics.setLogCounts(logCounts);
-        statisticsMap.put(name, statistics);
+        statistics.setLogCounts(this.logCounts);
+        this.statisticsMap.put(name, statistics);
       }
       return statistics;
     }
   }
 
   public synchronized Set<String> getStatisticsNames() {
-    return statisticsMap.keySet();
+    return this.statisticsMap.keySet();
   }
 
   public synchronized void setLogCounts(final boolean logCounts) {
     this.logCounts = logCounts;
-    for (final Statistics statistics : statisticsMap.values()) {
+    for (final Statistics statistics : this.statisticsMap.values()) {
       statistics.setLogCounts(logCounts);
     }
   }

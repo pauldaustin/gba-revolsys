@@ -29,14 +29,12 @@ public class AddDataStoreConnectionPanel extends ValueField {
 
   private final String name;
 
-  public AddDataStoreConnectionPanel(
-    final ConnectionRegistry<DataObjectStoreConnection> registry) {
+  public AddDataStoreConnectionPanel(final ConnectionRegistry<DataObjectStoreConnection> registry) {
     this(registry, null);
 
   }
 
-  public AddDataStoreConnectionPanel(
-    final ConnectionRegistry<DataObjectStoreConnection> registry,
+  public AddDataStoreConnectionPanel(final ConnectionRegistry<DataObjectStoreConnection> registry,
     final String name) {
     this.registry = registry;
     this.name = name;

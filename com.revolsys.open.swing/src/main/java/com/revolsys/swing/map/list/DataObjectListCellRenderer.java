@@ -11,7 +11,7 @@ import com.revolsys.data.record.Record;
 @SuppressWarnings("serial")
 public class DataObjectListCellRenderer extends DefaultListCellRenderer {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -22,11 +22,9 @@ public class DataObjectListCellRenderer extends DefaultListCellRenderer {
   }
 
   @Override
-  public Component getListCellRendererComponent(final JList list,
-    final Object cellValue, final int index, final boolean isSelected,
-    final boolean cellHasFocus) {
-    super.getListCellRendererComponent(list, cellValue, index, isSelected,
-      cellHasFocus);
+  public Component getListCellRendererComponent(final JList list, final Object cellValue,
+    final int index, final boolean isSelected, final boolean cellHasFocus) {
+    super.getListCellRendererComponent(list, cellValue, index, isSelected, cellHasFocus);
     if (cellValue instanceof Record) {
       final Record object = (Record)cellValue;
       final Object value = object.getValue(this.attributeName);

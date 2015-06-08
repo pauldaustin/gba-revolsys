@@ -28,12 +28,11 @@ public class JndiObjectFactory extends AbstractFactoryBean<Object> {
       initialEnvironment.put(Context.INITIAL_CONTEXT_FACTORY, initialFactory);
     }
     Object savedObject;
-    if (initialFactory == null
-      && !NamingManager.hasInitialContextFactoryBuilder()) {
+    if (initialFactory == null && !NamingManager.hasInitialContextFactoryBuilder()) {
       final SimpleNamingContextBuilder builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
-      synchronized (beanName.intern()) {
-        savedObject = beanFactory.getBean(beanName);
-        builder.bind(jndiUrl, savedObject);
+      synchronized (this.beanName.intern()) {
+        savedObject = beanFactory.getBean(this.beanName);
+        builder.bind(this.jndiUrl, savedObject);
       }
     } else {
       Context context;
@@ -44,20 +43,20 @@ public class JndiObjectFactory extends AbstractFactoryBean<Object> {
         context = new InitialContext();
       }
       try {
-        savedObject = context.lookup(jndiUrl);
+        savedObject = context.lookup(this.jndiUrl);
       } catch (final NameNotFoundException e) {
-        synchronized (beanName.intern()) {
-          savedObject = beanFactory.getBean(beanName);
+        synchronized (this.beanName.intern()) {
+          savedObject = beanFactory.getBean(this.beanName);
           try {
-            context.bind(jndiUrl, savedObject);
+            context.bind(this.jndiUrl, savedObject);
           } catch (final NameNotFoundException e2) {
           }
         }
       }
       if (savedObject == null) {
-        synchronized (beanName.intern()) {
-          LOG.error("JNDI data source was null " + jndiUrl);
-          savedObject = beanFactory.getBean(beanName);
+        synchronized (this.beanName.intern()) {
+          LOG.error("JNDI data source was null " + this.jndiUrl);
+          savedObject = beanFactory.getBean(this.beanName);
         }
       }
     }
@@ -65,11 +64,11 @@ public class JndiObjectFactory extends AbstractFactoryBean<Object> {
   }
 
   public String getBeanName() {
-    return beanName;
+    return this.beanName;
   }
 
   public String getJndiUrl() {
-    return jndiUrl;
+    return this.jndiUrl;
   }
 
   @Override

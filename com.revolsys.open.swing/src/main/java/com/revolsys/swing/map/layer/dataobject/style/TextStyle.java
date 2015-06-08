@@ -69,8 +69,8 @@ public class TextStyle implements MapSerializer, Cloneable {
     // addProperty("text-wrap-width", Double.class);
   }
 
-  private static final void addProperty(final String name,
-    final Class<?> dataClass, final Object defaultValue) {
+  private static final void addProperty(final String name, final Class<?> dataClass,
+    final Object defaultValue) {
     PROPERTIES.put(name, dataClass);
     DEFAULT_VALUES.put(name, defaultValue);
   }
@@ -137,8 +137,8 @@ public class TextStyle implements MapSerializer, Cloneable {
         try {
           JavaBeanUtil.setProperty(this, propertyName, propertyValue);
         } catch (final Throwable e) {
-          ExceptionUtil.log(getClass(), "Unable to set style " + propertyName
-            + "=" + propertyValue, e);
+          ExceptionUtil.log(getClass(),
+            "Unable to set style " + propertyName + "=" + propertyValue, e);
         }
       }
     }
@@ -229,12 +229,10 @@ public class TextStyle implements MapSerializer, Cloneable {
 
   public void setTextBoxOpacity(final int textBoxOpacity) {
     if (textBoxOpacity < 0 || textBoxOpacity > 255) {
-      throw new IllegalArgumentException(
-        "Text box opacity must be between 0 - 255");
+      throw new IllegalArgumentException("Text box opacity must be between 0 - 255");
     } else {
       this.textBoxOpacity = textBoxOpacity;
-      this.textBoxColor = WebColors.getColorWithOpacity(this.textBoxColor,
-        this.textBoxOpacity);
+      this.textBoxColor = WebColors.getColorWithOpacity(this.textBoxColor, this.textBoxOpacity);
     }
   }
 
@@ -292,10 +290,8 @@ public class TextStyle implements MapSerializer, Cloneable {
       throw new IllegalArgumentException("Text opacity must be between 0 - 255");
     } else {
       this.textOpacity = textOpacity;
-      this.textFill = WebColors.getColorWithOpacity(this.textFill,
-        this.textOpacity);
-      this.textHaloFill = WebColors.getColorWithOpacity(this.textHaloFill,
-        this.textOpacity);
+      this.textFill = WebColors.getColorWithOpacity(this.textFill, this.textOpacity);
+      this.textHaloFill = WebColors.getColorWithOpacity(this.textHaloFill, this.textOpacity);
     }
   }
 
@@ -316,15 +312,12 @@ public class TextStyle implements MapSerializer, Cloneable {
   }
 
   public void setTextSize(final Measure<Length> textSize) {
-    this.textSizeMeasure = MarkerStyle.getWithDefault(textSize,
-      MarkerStyle.TEN_PIXELS);
+    this.textSizeMeasure = MarkerStyle.getWithDefault(textSize, MarkerStyle.TEN_PIXELS);
   }
 
-  public synchronized void setTextStyle(final Viewport2D viewport,
-    final Graphics2D graphics) {
+  public synchronized void setTextStyle(final Viewport2D viewport, final Graphics2D graphics) {
     if (viewport == null) {
-      final Font font = new Font(this.textFaceName, 0,
-        textSizeMeasure.getValue().intValue());
+      final Font font = new Font(this.textFaceName, 0, this.textSizeMeasure.getValue().intValue());
       graphics.setFont(font);
     } else {
       final long scale = (long)viewport.getScale();
@@ -337,8 +330,7 @@ public class TextStyle implements MapSerializer, Cloneable {
         // if (textStyle.getFontStyle() == FontStyle.ITALIC) {
         // style += Font.ITALIC;
         // }
-        final double fontSize = Viewport2D.toDisplayValue(viewport,
-          this.textSizeMeasure);
+        final double fontSize = Viewport2D.toDisplayValue(viewport, this.textSizeMeasure);
         this.font = new Font(this.textFaceName, style, (int)Math.ceil(fontSize));
       }
       graphics.setFont(this.font);

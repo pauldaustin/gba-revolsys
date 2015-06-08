@@ -65,7 +65,7 @@ public class SegmentIntersectionDetector implements SegmentIntersector {
   private Coordinates[] intSegments = null;
 
   /**
-   * Creates an intersection finder 
+   * Creates an intersection finder
    *
    * @param li the LineIntersector to use
    */
@@ -76,47 +76,47 @@ public class SegmentIntersectionDetector implements SegmentIntersector {
   /**
    * Gets the computed location of the intersection.
    * Due to round-off, the location may not be exact.
-   * 
+   *
    * @return the coordinate for the intersection location
    */
   public Coordinates getIntersection() {
-    return intPt;
+    return this.intPt;
   }
 
   /**
    * Gets the endpoints of the intersecting segments.
-   * 
+   *
    * @return an array of the segment endpoints (p00, p01, p10, p11)
    */
   public Coordinates[] getIntersectionSegments() {
-    return intSegments;
+    return this.intSegments;
   }
 
   /**
    * Tests whether an intersection was found.
-   * 
+   *
    * @return true if an intersection was found
    */
   public boolean hasIntersection() {
-    return hasIntersection;
+    return this.hasIntersection;
   }
 
   /**
    * Tests whether a non-proper intersection was found.
-   * 
+   *
    * @return true if a non-proper intersection was found
    */
   public boolean hasNonProperIntersection() {
-    return hasNonProperIntersection;
+    return this.hasNonProperIntersection;
   }
 
   /**
    * Tests whether a proper intersection was found.
-   * 
+   *
    * @return true if a proper intersection was found
    */
   public boolean hasProperIntersection() {
-    return hasProperIntersection;
+    return this.hasProperIntersection;
   }
 
   @Override
@@ -125,17 +125,17 @@ public class SegmentIntersectionDetector implements SegmentIntersector {
      * If finding all types, we can stop
      * when both possible types have been found.
      */
-    if (findAllTypes) {
-      return hasProperIntersection && hasNonProperIntersection;
+    if (this.findAllTypes) {
+      return this.hasProperIntersection && this.hasNonProperIntersection;
     }
 
     /**
      * If searching for a proper intersection, only stop if one is found
      */
-    if (findProper) {
-      return hasProperIntersection;
+    if (this.findProper) {
+      return this.hasProperIntersection;
     }
-    return hasIntersection;
+    return this.hasIntersection;
   }
 
   /**
@@ -159,21 +159,21 @@ public class SegmentIntersectionDetector implements SegmentIntersector {
     final Coordinates p10 = e1.getCoordinate(segIndex1);
     final Coordinates p11 = e1.getCoordinate(segIndex1 + 1);
 
-    li.computeIntersection(p00, p01, p10, p11);
+    this.li.computeIntersection(p00, p01, p10, p11);
     // if (li.hasIntersection() && li.isProper()) Debug.println(li);
 
-    if (li.hasIntersection()) {
+    if (this.li.hasIntersection()) {
       // System.out.println(li);
 
       // record intersection info
-      hasIntersection = true;
+      this.hasIntersection = true;
 
-      final boolean isProper = li.isProper();
+      final boolean isProper = this.li.isProper();
       if (isProper) {
-        hasProperIntersection = true;
+        this.hasProperIntersection = true;
       }
       if (!isProper) {
-        hasNonProperIntersection = true;
+        this.hasNonProperIntersection = true;
       }
 
       /**
@@ -182,21 +182,21 @@ public class SegmentIntersectionDetector implements SegmentIntersector {
        * save the location data
        */
       boolean saveLocation = true;
-      if (findProper && !isProper) {
+      if (this.findProper && !isProper) {
         saveLocation = false;
       }
 
-      if (intPt == null || saveLocation) {
+      if (this.intPt == null || saveLocation) {
 
         // record intersection location (approximate)
-        intPt = li.getIntersection(0);
+        this.intPt = this.li.getIntersection(0);
 
         // record intersecting segments
-        intSegments = new Coordinates[4];
-        intSegments[0] = p00;
-        intSegments[1] = p01;
-        intSegments[2] = p10;
-        intSegments[3] = p11;
+        this.intSegments = new Coordinates[4];
+        this.intSegments[0] = p00;
+        this.intSegments[1] = p01;
+        this.intSegments[2] = p10;
+        this.intSegments[3] = p11;
       }
     }
   }

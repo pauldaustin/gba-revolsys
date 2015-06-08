@@ -19,28 +19,26 @@ public class Sort extends BaseInOutProcess<Record, Record> {
   private String attributeName;
 
   public String getAttributeName() {
-    return attributeName;
+    return this.attributeName;
   }
 
   public Comparator<Record> getComparator() {
-    return comparator;
+    return this.comparator;
   }
 
   @Override
-  protected void postRun(final Channel<Record> in,
-    final Channel<Record> out) {
-    if (comparator != null) {
-      Collections.sort(objects, comparator);
+  protected void postRun(final Channel<Record> in, final Channel<Record> out) {
+    if (this.comparator != null) {
+      Collections.sort(this.objects, this.comparator);
     }
-    for (final Record object : objects) {
+    for (final Record object : this.objects) {
       out.write(object);
     }
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
-    objects.add(object);
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
+    this.objects.add(object);
   }
 
   public void setAttributeName(final String attributeName) {

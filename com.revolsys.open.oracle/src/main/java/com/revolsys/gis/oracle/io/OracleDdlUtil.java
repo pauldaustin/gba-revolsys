@@ -10,8 +10,7 @@ import com.revolsys.jdbc.JdbcUtils;
 
 public class OracleDdlUtil {
 
-  public static void createTable(final PrintWriter out,
-    final RecordDefinition metaData) {
+  public static void createTable(final PrintWriter out, final RecordDefinition metaData) {
     final String typePath = metaData.getPath();
     out.println();
     out.print("CREATE TABLE ");

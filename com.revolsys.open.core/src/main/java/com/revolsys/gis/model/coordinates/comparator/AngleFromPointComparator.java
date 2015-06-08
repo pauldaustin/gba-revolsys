@@ -14,8 +14,8 @@ public class AngleFromPointComparator implements Comparator<Coordinates> {
 
   @Override
   public int compare(final Coordinates c1, final Coordinates c2) {
-    final double angleC1 = point.angle2d(c1);
-    final double angleC2 = point.angle2d(c2);
+    final double angleC1 = this.point.angle2d(c1);
+    final double angleC2 = this.point.angle2d(c2);
     if (angleC1 < angleC2) {
       return 1;
     } else if (angleC1 > angleC2) {

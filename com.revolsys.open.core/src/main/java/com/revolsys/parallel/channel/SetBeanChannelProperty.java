@@ -5,8 +5,7 @@ import org.springframework.beans.factory.BeanNameAware;
 import com.revolsys.parallel.channel.store.Buffer;
 import com.revolsys.spring.config.SetBeanProperties;
 
-public class SetBeanChannelProperty<T> extends SetBeanProperties implements
-  BeanNameAware {
+public class SetBeanChannelProperty<T> extends SetBeanProperties implements BeanNameAware {
   private int bufferSize;
 
   private String inBeanName;
@@ -17,24 +16,24 @@ public class SetBeanChannelProperty<T> extends SetBeanProperties implements
 
   @Override
   public void afterPropertiesSet() throws Exception {
-    if (outBeanName != null) {
-      addBeanPropertyName(outBeanName, "out");
+    if (this.outBeanName != null) {
+      addBeanPropertyName(this.outBeanName, "out");
     }
-    if (inBeanName != null) {
-      addBeanPropertyName(inBeanName, "in");
+    if (this.inBeanName != null) {
+      addBeanPropertyName(this.inBeanName, "in");
     }
     final String ref = getRef();
     if (ref == null) {
       final Object value = getValue();
       if (value == null) {
-        if (name == null) {
-          name = getBeanPropertyNames().toString();
+        if (this.name == null) {
+          this.name = getBeanPropertyNames().toString();
         }
         final Channel<T> channel;
-        if (bufferSize > 0) {
-          channel = new Channel<T>(name, new Buffer<T>(bufferSize));
+        if (this.bufferSize > 0) {
+          channel = new Channel<T>(this.name, new Buffer<T>(this.bufferSize));
         } else {
-          channel = new Channel<T>(name);
+          channel = new Channel<T>(this.name);
         }
         setValue(channel);
       }
@@ -43,7 +42,7 @@ public class SetBeanChannelProperty<T> extends SetBeanProperties implements
   }
 
   public int getBufferSize() {
-    return bufferSize;
+    return this.bufferSize;
   }
 
   public Channel<T> getChannel() {
@@ -51,11 +50,11 @@ public class SetBeanChannelProperty<T> extends SetBeanProperties implements
   }
 
   public String getInBeanName() {
-    return inBeanName;
+    return this.inBeanName;
   }
 
   public String getOutBeanName() {
-    return outBeanName;
+    return this.outBeanName;
   }
 
   @Override

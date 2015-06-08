@@ -19,11 +19,11 @@ public abstract class IntervalRTreeNode<V> {
   }
 
   public double getMax() {
-    return max;
+    return this.max;
   }
 
   public double getMin() {
-    return min;
+    return this.min;
   }
 
   protected boolean intersects(final double queryMin, final double queryMax) {
@@ -33,8 +33,7 @@ public abstract class IntervalRTreeNode<V> {
     return true;
   }
 
-  public abstract void query(double queryMin, double queryMax,
-    Visitor<V> visitor);
+  public abstract void query(double queryMin, double queryMax, Visitor<V> visitor);
 
   protected void setMax(final double max) {
     this.max = max;
@@ -46,7 +45,6 @@ public abstract class IntervalRTreeNode<V> {
 
   @Override
   public String toString() {
-    return WKTWriter.toLineString(new Coordinate(getMin(), 0), new Coordinate(
-      getMax(), 0));
+    return WKTWriter.toLineString(new Coordinate(getMin(), 0), new Coordinate(getMax(), 0));
   }
 }

@@ -10,24 +10,21 @@ import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.dataobject.editor.DataObjectTableCellEditor;
 import com.revolsys.swing.table.dataobject.renderer.SingleDataObjectTableCellRenderer;
 
-public abstract class AbstractSingleDataObjectTableModel extends
-  AbstractDataObjectTableModel {
+public abstract class AbstractSingleDataObjectTableModel extends AbstractDataObjectTableModel {
   private static final long serialVersionUID = 1L;
 
   private static final String[] COLUMN_NAMES = {
     "#", "Name", "Value"
   };
 
-  public static BaseJxTable createTable(
-    final AbstractSingleDataObjectTableModel model) {
+  public static BaseJxTable createTable(final AbstractSingleDataObjectTableModel model) {
     final BaseJxTable table = new BaseJxTable(model);
     table.setModel(model);
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     table.setAutoCreateColumnsFromModel(false);
     table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     final SingleDataObjectTableCellRenderer cellRenderer = new SingleDataObjectTableCellRenderer();
-    final DataObjectTableCellEditor cellEditor = new DataObjectTableCellEditor(
-      table);
+    final DataObjectTableCellEditor cellEditor = new DataObjectTableCellEditor(table);
 
     final RecordDefinition metaData = model.getMetaData();
 
@@ -70,8 +67,7 @@ public abstract class AbstractSingleDataObjectTableModel extends
     return table;
   }
 
-  public AbstractSingleDataObjectTableModel(final RecordDefinition metaData,
-    final boolean editable) {
+  public AbstractSingleDataObjectTableModel(final RecordDefinition metaData, final boolean editable) {
     super(metaData);
     setEditable(editable);
   }
@@ -141,13 +137,11 @@ public abstract class AbstractSingleDataObjectTableModel extends
   }
 
   @Override
-  public boolean isSelected(final boolean selected, final int rowIndex,
-    final int columnIndex) {
+  public boolean isSelected(final boolean selected, final int rowIndex, final int columnIndex) {
     return selected;
   }
 
-  protected Object setDisplayValue(final int attributeIndex,
-    final Object displayValue) {
+  protected Object setDisplayValue(final int attributeIndex, final Object displayValue) {
     final Object objectValue = toObjectValue(attributeIndex, displayValue);
     return setObjectValue(attributeIndex, objectValue);
   }
@@ -157,12 +151,10 @@ public abstract class AbstractSingleDataObjectTableModel extends
     super.setMetaData(metaData);
   }
 
-  protected abstract Object setObjectValue(final int attributeIndex,
-    final Object value);
+  protected abstract Object setObjectValue(final int attributeIndex, final Object value);
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
     if (isCellEditable(rowIndex, columnIndex)) {
 
       final Object oldValue = setDisplayValue(rowIndex, value);

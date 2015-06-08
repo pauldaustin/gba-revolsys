@@ -6,7 +6,7 @@ import com.revolsys.gis.model.geometry.impl.BoundingBox;
 /**
  * The action for the internal iterator for performing envelope select queries
  * on a MonotoneChain
- * 
+ *
  * @version 1.7
  */
 public class MonotoneChainSelectAction {
@@ -18,7 +18,7 @@ public class MonotoneChainSelectAction {
   /**
    * This is a convenience function which can be overridden to obtain the actual
    * line segment which is selected.
-   * 
+   *
    * @param seg
    */
   public void select(final LineSegment seg) {
@@ -28,7 +28,7 @@ public class MonotoneChainSelectAction {
    * This function can be overridden if the original chain is needed.
    */
   public void select(final MonotoneChain mc, final int start) {
-    mc.getLineSegment(start, selectedSegment);
-    select(selectedSegment);
+    mc.getLineSegment(start, this.selectedSegment);
+    select(this.selectedSegment);
   }
 }

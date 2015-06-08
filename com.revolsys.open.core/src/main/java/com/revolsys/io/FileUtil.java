@@ -412,8 +412,8 @@ public final class FileUtil {
     boolean deleted = true;
     final File[] files = directory.listFiles();
     if (files != null) {
-      for (int i = 0; i < files.length; i++) {
-        final File file = files[i];
+      for (final File file2 : files) {
+        final File file = file2;
         if (file.exists()) {
           if (file.isDirectory()) {
             if (!deleteDirectory(file, true)) {
@@ -440,8 +440,8 @@ public final class FileUtil {
   public static void deleteDirectory(final File directory, final FilenameFilter filter) {
     final File[] files = directory.listFiles();
     if (files != null) {
-      for (int i = 0; i < files.length; i++) {
-        final File file = files[i];
+      for (final File file2 : files) {
+        final File file = file2;
         if (file.exists() && filter.accept(directory, getFileName(file))) {
           if (file.isDirectory()) {
             deleteDirectory(file, true);
@@ -498,8 +498,7 @@ public final class FileUtil {
    */
   public static void deleteFiles(final File directory, final String pattern) {
     final File[] files = directory.listFiles(new PatternFilenameFilter(pattern));
-    for (int i = 0; i < files.length; i++) {
-      final File file = files[i];
+    for (final File file : files) {
       file.delete();
     }
   }

@@ -86,8 +86,7 @@ public class ResourceEndianOutput implements EndianOutput {
   }
 
   @Override
-  public void write(final byte[] bytes, final int offset, final int length)
-      throws IOException {
+  public void write(final byte[] bytes, final int offset, final int length) throws IOException {
     this.out.write(bytes, offset, length);
   }
 

@@ -18,18 +18,16 @@ import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.MapReaderFactory;
 import com.revolsys.io.Reader;
 
-public abstract class AbstractRecordAndGeometryReaderFactory extends
-  AbstractGeometryReaderFactory implements RecordReaderFactory,
-  MapReaderFactory {
+public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeometryReaderFactory
+  implements RecordReaderFactory, MapReaderFactory {
 
-  public static RecordReader dataObjectReader(
-    final FileSystemResource resource, final RecordFactory factory) {
+  public static RecordReader dataObjectReader(final FileSystemResource resource,
+    final RecordFactory factory) {
     final RecordReaderFactory readerFactory = getDataObjectReaderFactory(resource);
     if (readerFactory == null) {
       return null;
     } else {
-      final RecordReader reader = readerFactory.createRecordReader(
-        resource, factory);
+      final RecordReader reader = readerFactory.createRecordReader(resource, factory);
       return reader;
     }
   }
@@ -44,8 +42,7 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends
     }
   }
 
-  public static RecordReaderFactory getDataObjectReaderFactory(
-    final Resource resource) {
+  public static RecordReaderFactory getDataObjectReaderFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     final RecordReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
       RecordReaderFactory.class, resource);
@@ -58,27 +55,13 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends
 
   private boolean customAttributionSupported = true;
 
-  public AbstractRecordAndGeometryReaderFactory(final String name,
-    final boolean binary) {
+  public AbstractRecordAndGeometryReaderFactory(final String name, final boolean binary) {
     super(name, binary);
   }
 
   /**
-   * Create a reader for the resource using the ({@link ArrayRecordFactory}
-   * ).
-   * 
-   * @param file The file to read.
-   * @return The reader for the file.
-   */
-  @Override
-  public RecordReader createRecordReader(final Resource resource) {
-    return createRecordReader(resource, dataObjectFactory);
-
-  }
-
-  /**
    * Create a directory reader using the ({@link ArrayRecordFactory}).
-   * 
+   *
    * @return The reader.
    */
   @Override
@@ -91,26 +74,26 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends
   /**
    * Create a reader for the directory using the ({@link ArrayRecordFactory}
    * ).
-   * 
+   *
    * @param directory The directory to read.
    * @return The reader for the file.
    */
   @Override
   public Reader<Record> createDirectoryRecordReader(final File directory) {
-    return createDirectoryRecordReader(directory, dataObjectFactory);
+    return createDirectoryRecordReader(directory, this.dataObjectFactory);
   }
 
   /**
    * Create a reader for the directory using the specified data object
    * dataObjectFactory.
-   * 
+   *
    * @param directory directory file to read.
    * @param dataObjectFactory The dataObjectFactory used to create data objects.
    * @return The reader for the file.
    */
   @Override
-  public Reader<Record> createDirectoryRecordReader(
-    final File directory, final RecordFactory dataObjectFactory) {
+  public Reader<Record> createDirectoryRecordReader(final File directory,
+    final RecordFactory dataObjectFactory) {
     final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
     directoryReader.setDirectory(directory);
@@ -121,8 +104,7 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends
   public GeometryReader createGeometryReader(final Resource resource) {
     final Reader<Record> dataObjectReader = createRecordReader(resource);
     final Iterator<Record> dataObjectIterator = dataObjectReader.iterator();
-    final DataObjectGeometryIterator iterator = new DataObjectGeometryIterator(
-      dataObjectIterator);
+    final DataObjectGeometryIterator iterator = new DataObjectGeometryIterator(dataObjectIterator);
     final GeometryReader geometryReader = new GeometryReader(iterator);
     return geometryReader;
   }
@@ -136,18 +118,30 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends
     return reader;
   }
 
+  /**
+   * Create a reader for the resource using the ({@link ArrayRecordFactory}
+   * ).
+   *
+   * @param file The file to read.
+   * @return The reader for the file.
+   */
+  @Override
+  public RecordReader createRecordReader(final Resource resource) {
+    return createRecordReader(resource, this.dataObjectFactory);
+
+  }
+
   @Override
   public boolean isCustomAttributionSupported() {
-    return customAttributionSupported;
+    return this.customAttributionSupported;
   }
 
   @Override
   public boolean isSingleFile() {
-    return singleFile;
+    return this.singleFile;
   }
 
-  protected void setCustomAttributionSupported(
-    final boolean customAttributionSupported) {
+  protected void setCustomAttributionSupported(final boolean customAttributionSupported) {
     this.customAttributionSupported = customAttributionSupported;
   }
 

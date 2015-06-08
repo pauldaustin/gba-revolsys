@@ -25,8 +25,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
-  GmlConstants {
+public class GmlGeometryIterator extends AbstractIterator<Geometry> implements GmlConstants {
 
   private GeometryFactory geometryFactory;
 
@@ -42,22 +41,21 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
 
   @Override
   protected void doClose() {
-    StaxUtils.closeSilent(in);
-    geometryFactory = null;
-    in = null;
+    StaxUtils.closeSilent(this.in);
+    this.geometryFactory = null;
+    this.in = null;
   }
 
   @Override
   protected void doInit() {
-    geometryFactory = getProperty(IoConstants.GEOMETRY_FACTORY);
-    if (geometryFactory == null) {
-      geometryFactory = GeometryFactory.getFactory();
+    this.geometryFactory = getProperty(IoConstants.GEOMETRY_FACTORY);
+    if (this.geometryFactory == null) {
+      this.geometryFactory = GeometryFactory.getFactory();
     }
   }
 
-  private GeometryFactory getGeometryFactory(
-    final GeometryFactory geometryFactory) {
-    final String srsName = in.getAttributeValue(SRS_NAME.getNamespaceURI(),
+  private GeometryFactory getGeometryFactory(final GeometryFactory geometryFactory) {
+    final String srsName = this.in.getAttributeValue(SRS_NAME.getNamespaceURI(),
       SRS_NAME.getLocalPart());
     if (srsName == null) {
       return geometryFactory;
@@ -79,12 +77,12 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
   @Override
   protected Geometry getNext() {
     try {
-      while (StaxUtils.skipToStartElements(in, ENVELOPE_AND_GEOMETRY_TYPE_NAMES)) {
-        if (in.getName().equals(ENVELOPE)) {
-          geometryFactory = getGeometryFactory(geometryFactory);
-          StaxUtils.skipToEndElement(in, ENVELOPE);
+      while (StaxUtils.skipToStartElements(this.in, ENVELOPE_AND_GEOMETRY_TYPE_NAMES)) {
+        if (this.in.getName().equals(ENVELOPE)) {
+          this.geometryFactory = getGeometryFactory(this.geometryFactory);
+          StaxUtils.skipToEndElement(this.in, ENVELOPE);
         } else {
-          return readGeometry(geometryFactory);
+          return readGeometry(this.geometryFactory);
         }
       }
       throw new NoSuchElementException();
@@ -95,29 +93,28 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
   }
 
   private CoordinatesList readCoordinates() throws XMLStreamException {
-    String decimal = in.getAttributeValue(null, "decimal");
+    String decimal = this.in.getAttributeValue(null, "decimal");
     if (decimal == null) {
       decimal = ".";
     }
-    String coordSeperator = in.getAttributeValue(null, "coordSeperator");
+    String coordSeperator = this.in.getAttributeValue(null, "coordSeperator");
     if (coordSeperator == null) {
       coordSeperator = ",";
     }
-    String toupleSeperator = in.getAttributeValue(null, "toupleSeperator");
+    String toupleSeperator = this.in.getAttributeValue(null, "toupleSeperator");
     if (toupleSeperator == null) {
       toupleSeperator = " ";
     }
-    final String value = in.getElementText();
+    final String value = this.in.getElementText();
 
-    final CoordinatesList points = CoordinatesListUtil.parse(value, decimal,
-      coordSeperator, toupleSeperator);
-    StaxUtils.skipToEndElement(in);
+    final CoordinatesList points = CoordinatesListUtil.parse(value, decimal, coordSeperator,
+      toupleSeperator);
+    StaxUtils.skipToEndElement(this.in);
     return points;
   }
 
-  private Geometry readGeometry(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
-    final QName typeName = in.getName();
+  private Geometry readGeometry(final GeometryFactory geometryFactory) throws XMLStreamException {
+    final QName typeName = this.in.getName();
     if (typeName.equals(POINT)) {
       return readPoint(geometryFactory);
     } else if (typeName.equals(LINE_STRING)) {
@@ -141,16 +138,16 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
     throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     CoordinatesList points = null;
-    if (StaxUtils.skipToChildStartElements(in, POS_LIST, COORDINATES)) {
-      final QName elementName = in.getName();
+    if (StaxUtils.skipToChildStartElements(this.in, POS_LIST, COORDINATES)) {
+      final QName elementName = this.in.getName();
       if (elementName.equals(POS_LIST)) {
         points = readPosList();
       } else if (elementName.equals(COORDINATES)) {
         points = readCoordinates();
       }
-      StaxUtils.skipToEndElement(in, LINEAR_RING);
+      StaxUtils.skipToEndElement(this.in, LINEAR_RING);
     } else {
-      StaxUtils.skipToEndElement(in, LINEAR_RING);
+      StaxUtils.skipToEndElement(this.in, LINEAR_RING);
     }
     return factory.createLinearRing(points);
   }
@@ -159,14 +156,14 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
     throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     CoordinatesList points = null;
-    if (StaxUtils.skipToChildStartElements(in, POS_LIST)) {
+    if (StaxUtils.skipToChildStartElements(this.in, POS_LIST)) {
       points = readPosList();
-      StaxUtils.skipToEndElement(in, LINE_STRING);
-    } else if (StaxUtils.skipToChildStartElements(in, COORDINATES)) {
+      StaxUtils.skipToEndElement(this.in, LINE_STRING);
+    } else if (StaxUtils.skipToChildStartElements(this.in, COORDINATES)) {
       points = readCoordinates();
-      StaxUtils.skipToEndElement(in, LINE_STRING);
+      StaxUtils.skipToEndElement(this.in, LINE_STRING);
     } else {
-      StaxUtils.skipToEndElement(in, LINE_STRING);
+      StaxUtils.skipToEndElement(this.in, LINE_STRING);
     }
     return factory.createLineString(points);
   }
@@ -175,21 +172,21 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
     throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     final List<Geometry> geometries = new ArrayList<Geometry>();
-    StaxUtils.skipSubTree(in);
+    StaxUtils.skipSubTree(this.in);
     return factory.createGeometry(geometries);
   }
 
-  private MultiLineString readMultiLineString(
-    final GeometryFactory geometryFactory) throws XMLStreamException {
+  private MultiLineString readMultiLineString(final GeometryFactory geometryFactory)
+    throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     final List<LineString> lines = new ArrayList<LineString>();
-    while (StaxUtils.skipToChildStartElements(in, LINE_STRING)) {
+    while (StaxUtils.skipToChildStartElements(this.in, LINE_STRING)) {
       final LineString line = readLineString(factory);
       if (line != null) {
         lines.add(line);
       }
     }
-    StaxUtils.skipToEndElement(in, MULTI_LINE_STRING);
+    StaxUtils.skipToEndElement(this.in, MULTI_LINE_STRING);
     return factory.createMultiLineString(lines);
   }
 
@@ -197,13 +194,13 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
     throws XMLStreamException {
     final List<Point> points = new ArrayList<Point>();
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
-    while (StaxUtils.skipToChildStartElements(in, POINT)) {
+    while (StaxUtils.skipToChildStartElements(this.in, POINT)) {
       final Point point = readPoint(factory);
       if (point != null) {
         points.add(point);
       }
     }
-    StaxUtils.skipToEndElement(in, MULTI_POINT);
+    StaxUtils.skipToEndElement(this.in, MULTI_POINT);
     return factory.createMultiPoint(points);
   }
 
@@ -211,64 +208,61 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements
     throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     final List<Polygon> polygons = new ArrayList<Polygon>();
-    while (StaxUtils.skipToChildStartElements(in, POLYGON)) {
+    while (StaxUtils.skipToChildStartElements(this.in, POLYGON)) {
       final Polygon polygon = readPolygon(factory);
       if (polygon != null) {
         polygons.add(polygon);
       }
     }
-    StaxUtils.skipToEndElement(in, MULTI_POLYGON);
+    StaxUtils.skipToEndElement(this.in, MULTI_POLYGON);
     return factory.createMultiPolygon(polygons);
   }
 
-  private Point readPoint(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+  private Point readPoint(final GeometryFactory geometryFactory) throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     CoordinatesList points = null;
-    if (StaxUtils.skipToChildStartElements(in, POS)) {
+    if (StaxUtils.skipToChildStartElements(this.in, POS)) {
       points = readPosList();
-      StaxUtils.skipToEndElement(in, POINT);
-    } else if (StaxUtils.skipToChildStartElements(in, COORDINATES)) {
+      StaxUtils.skipToEndElement(this.in, POINT);
+    } else if (StaxUtils.skipToChildStartElements(this.in, COORDINATES)) {
       points = readCoordinates();
-      StaxUtils.skipToEndElement(in, POINT);
+      StaxUtils.skipToEndElement(this.in, POINT);
     } else {
-      StaxUtils.skipToEndElement(in, POINT);
+      StaxUtils.skipToEndElement(this.in, POINT);
     }
     return factory.createPoint(points);
   }
 
-  private Polygon readPolygon(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+  private Polygon readPolygon(final GeometryFactory geometryFactory) throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     final List<LinearRing> rings = new ArrayList<LinearRing>();
-    if (StaxUtils.skipToChildStartElements(in, OUTER_BOUNDARY_IS)) {
+    if (StaxUtils.skipToChildStartElements(this.in, OUTER_BOUNDARY_IS)) {
       final LinearRing exteriorRing = readLinearRing(factory);
       rings.add(exteriorRing);
-      StaxUtils.skipToEndElement(in, OUTER_BOUNDARY_IS);
-      while (StaxUtils.skipToChildStartElements(in, INNER_BOUNDARY_IS)) {
+      StaxUtils.skipToEndElement(this.in, OUTER_BOUNDARY_IS);
+      while (StaxUtils.skipToChildStartElements(this.in, INNER_BOUNDARY_IS)) {
         final LinearRing interiorRing = readLinearRing(factory);
         rings.add(interiorRing);
-        StaxUtils.skipToEndElement(in, INNER_BOUNDARY_IS);
+        StaxUtils.skipToEndElement(this.in, INNER_BOUNDARY_IS);
       }
-      StaxUtils.skipToEndElement(in, POLYGON);
+      StaxUtils.skipToEndElement(this.in, POLYGON);
     } else {
-      StaxUtils.skipSubTree(in);
+      StaxUtils.skipSubTree(this.in);
     }
     final Polygon polygon = factory.createPolygon(rings);
     return polygon;
   }
 
   private CoordinatesList readPosList() throws XMLStreamException {
-    final String dimension = in.getAttributeValue(null, "dimension");
+    final String dimension = this.in.getAttributeValue(null, "dimension");
     if (dimension == null) {
-      StaxUtils.skipSubTree(in);
+      StaxUtils.skipSubTree(this.in);
       return null;
     } else {
       final int numAxis = Integer.parseInt(dimension);
-      final String value = in.getElementText();
-      final CoordinatesList points = CoordinatesListUtil.parse(value, "\\s+",
-        numAxis);
-      StaxUtils.skipToEndElement(in);
+      final String value = this.in.getElementText();
+      final CoordinatesList points = CoordinatesListUtil.parse(value, "\\s+", numAxis);
+      StaxUtils.skipToEndElement(this.in);
       return points;
     }
   }

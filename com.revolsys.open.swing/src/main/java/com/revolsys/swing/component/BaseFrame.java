@@ -11,12 +11,16 @@ import com.revolsys.swing.WindowManager;
 @SuppressWarnings("serial")
 public class BaseFrame extends JFrame implements WindowListener {
 
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
   public BaseFrame(final String title) throws HeadlessException {
     this(title, true);
   }
 
-  public BaseFrame(final String title, final boolean initialize)
-      throws HeadlessException {
+  public BaseFrame(final String title, final boolean initialize) throws HeadlessException {
     super(title);
     if (initialize) {
       init();

@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * The MapGridGeometrySheetFilter will compare the centroid of the Geometry for
  * a data object to check that it is within the specified map sheet.
- * 
+ *
  * @author Paul Austin
  */
 public class MapGridGeometrySheetFilter implements Filter<Record> {
@@ -24,16 +24,14 @@ public class MapGridGeometrySheetFilter implements Filter<Record> {
 
   @Override
   public boolean accept(final Record object) {
-    if (sheet != null && grid != null) {
+    if (this.sheet != null && this.grid != null) {
       final Geometry geometry = object.getGeometryValue();
       if (geometry != null) {
-        final Geometry geographicsGeometry = GeometryProjectionUtil.perform(
-          geometry, 4326);
-        final Coordinate centroid = geographicsGeometry.getCentroid()
-          .getCoordinate();
-        final String geometrySheet = grid.getMapTileName(centroid.x, centroid.y);
+        final Geometry geographicsGeometry = GeometryProjectionUtil.perform(geometry, 4326);
+        final Coordinate centroid = geographicsGeometry.getCentroid().getCoordinate();
+        final String geometrySheet = this.grid.getMapTileName(centroid.x, centroid.y);
         if (geometrySheet != null) {
-          if (sheet.equals(geometrySheet) == !inverse) {
+          if (this.sheet.equals(geometrySheet) == !this.inverse) {
             return true;
           }
         }
@@ -46,21 +44,21 @@ public class MapGridGeometrySheetFilter implements Filter<Record> {
    * @return the grid
    */
   public RectangularMapGrid getGrid() {
-    return grid;
+    return this.grid;
   }
 
   /**
    * @return the sheet
    */
   public String getSheet() {
-    return sheet;
+    return this.sheet;
   }
 
   /**
    * @return the inverse
    */
   public boolean isInverse() {
-    return inverse;
+    return this.inverse;
   }
 
   /**
@@ -86,10 +84,10 @@ public class MapGridGeometrySheetFilter implements Filter<Record> {
 
   @Override
   public String toString() {
-    if (inverse) {
-      return "map sheet != " + sheet;
+    if (this.inverse) {
+      return "map sheet != " + this.sheet;
     } else {
-      return "map sheet != " + sheet;
+      return "map sheet != " + this.sheet;
     }
   }
 

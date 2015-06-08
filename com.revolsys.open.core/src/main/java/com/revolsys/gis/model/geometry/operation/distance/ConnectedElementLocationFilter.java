@@ -13,7 +13,7 @@ import com.revolsys.gis.model.geometry.Polygon;
  * element in a Geometry (e.g. a polygon, linestring or point) and returns them
  * in a list. The elements of the list are
  * {@link com.vividsolutions.jts.operation.distance.GeometryLocation}s.
- * 
+ *
  * @version 1.7
  */
 public class ConnectedElementLocationFilter {
@@ -27,8 +27,7 @@ public class ConnectedElementLocationFilter {
    */
   public static List<GeometryLocation> getLocations(final Geometry geom) {
     final List<GeometryLocation> locations = new ArrayList<GeometryLocation>();
-    final ConnectedElementLocationFilter filter = new ConnectedElementLocationFilter(
-      locations);
+    final ConnectedElementLocationFilter filter = new ConnectedElementLocationFilter(locations);
     for (final Geometry geometry : geom.getGeometries()) {
       filter.filter(geometry);
     }
@@ -42,9 +41,8 @@ public class ConnectedElementLocationFilter {
   }
 
   public void filter(final Geometry geom) {
-    if (geom instanceof Point || geom instanceof LineString
-      || geom instanceof Polygon) {
-      locations.add(new GeometryLocation(geom, 0, geom.getFirstPoint()));
+    if (geom instanceof Point || geom instanceof LineString || geom instanceof Polygon) {
+      this.locations.add(new GeometryLocation(geom, 0, geom.getFirstPoint()));
     }
   }
 

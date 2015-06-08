@@ -23,11 +23,11 @@ public class LayerGroupTreeCellRenderer extends DefaultTreeCellRenderer {
   }
 
   @Override
-  public Component getTreeCellRendererComponent(final JTree tree,
-    final Object value, final boolean selected, final boolean expanded,
-    final boolean leaf, final int row, final boolean hasFocus) {
-    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree,
-      value, selected, expanded, leaf, row, hasFocus);
+  public Component getTreeCellRendererComponent(final JTree tree, final Object value,
+    final boolean selected, final boolean expanded, final boolean leaf, final int row,
+    final boolean hasFocus) {
+    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree, value, selected,
+      expanded, leaf, row, hasFocus);
     if (value instanceof LayerGroup) {
       final LayerGroup layer = (LayerGroup)value;
       label.setText(layer.getName());

@@ -23,12 +23,11 @@ import com.revolsys.util.ObjectProcessor;
 /**
  * Find and remove nodes that have exactly two edges for each feature type with
  * the same attribution and have the same geometry across all feature types.
- * 
+ *
  * @author Paul Austin
  */
-public class DataObjectPseudoNodeRemovalVisitor extends
-  AbstractNodeListenerVisitor<Record> implements
-  FilterProxy<Node<Record>>, ObjectProcessor<DataObjectGraph> {
+public class DataObjectPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<Record>
+  implements FilterProxy<Node<Record>>, ObjectProcessor<DataObjectGraph> {
 
   private Filter<Node<Record>> filter;
 
@@ -39,39 +38,38 @@ public class DataObjectPseudoNodeRemovalVisitor extends
 
   @PreDestroy
   public void destroy() {
-    if (mergedStatistics != null) {
-      mergedStatistics.disconnect();
+    if (this.mergedStatistics != null) {
+      this.mergedStatistics.disconnect();
     }
-    mergedStatistics = null;
+    this.mergedStatistics = null;
   }
 
   @Override
   public Filter<Node<Record>> getFilter() {
-    return filter;
+    return this.filter;
   }
 
   @PostConstruct
   public void init() {
-    mergedStatistics = new Statistics("Merged at psuedo node");
-    mergedStatistics.connect();
+    this.mergedStatistics = new Statistics("Merged at psuedo node");
+    this.mergedStatistics.connect();
   }
 
-  private void mergeEdgePairs(final Node<Record> node,
-    final List<EdgePair<Record>> edgePairs) {
+  private void mergeEdgePairs(final Node<Record> node, final List<EdgePair<Record>> edgePairs) {
     if (edgePairs != null) {
       for (final EdgePair<Record> edgePair : edgePairs) {
         final Edge<Record> edge1 = edgePair.getEdge1();
         final Edge<Record> edge2 = edgePair.getEdge2();
         final Record object = edge1.getObject();
         if (mergeEdges(node, edge1, edge2) != null) {
-          mergedStatistics.add(object);
+          this.mergedStatistics.add(object);
         }
       }
     }
   }
 
-  protected Edge<Record> mergeEdges(final Node<Record> node,
-    final Edge<Record> edge1, final Edge<Record> edge2) {
+  protected Edge<Record> mergeEdges(final Node<Record> node, final Edge<Record> edge1,
+    final Edge<Record> edge2) {
     final Record object1 = edge1.getObject();
 
     final Record object2 = edge2.getObject();
@@ -86,8 +84,7 @@ public class DataObjectPseudoNodeRemovalVisitor extends
     return newEdge;
   }
 
-  protected Record mergeObjects(final Node<Record> node,
-    final Record object1, final Record object2) {
+  protected Record mergeObjects(final Node<Record> node, final Record object1, final Record object2) {
     return DirectionalAttributes.merge(node, object1, object2);
   }
 

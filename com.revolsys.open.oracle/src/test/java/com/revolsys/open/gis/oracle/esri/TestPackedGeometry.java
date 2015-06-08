@@ -13,8 +13,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class TestPackedGeometry {
-  public static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.getFactory(
-    3005, 3, 1, 1);
+  public static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.getFactory(3005, 3, 1, 1);
 
   public static void checkGeometry(final Geometry geometry) {
     final GeometryFactory geometryFactory = GeometryFactory.getFactory(geometry);
@@ -32,16 +31,14 @@ public class TestPackedGeometry {
 
     final int numPoints = PackedCoordinateUtil.getNumPoints(parts);
 
-    final byte[] data = PackedCoordinateUtil.getPackedBytes(xOffset, yOffset,
-      xyScale, hasZ, zOffset, zScale, hasM, mScale, mOffset, parts);
+    final byte[] data = PackedCoordinateUtil.getPackedBytes(xOffset, yOffset, xyScale, hasZ,
+      zOffset, zScale, hasM, mScale, mOffset, parts);
 
     final int geometryType = ArcSdeConstants.getStGeometryType(geometry);
-    final Geometry geometry2 = PackedCoordinateUtil.getGeometry(data,
-      geometryFactory, geometryType, numPoints, xOffset, yOffset, xyScale,
-      zOffset, zScale, mOffset, mScale);
+    final Geometry geometry2 = PackedCoordinateUtil.getGeometry(data, geometryFactory,
+      geometryType, numPoints, xOffset, yOffset, xyScale, zOffset, zScale, mOffset, mScale);
     System.out.println(WktWriter.toString(geometry));
-    if (!new Geometry3DExactEquals().equals(geometry, geometry2,
-      Collections.<String> emptyList())) {
+    if (!new Geometry3DExactEquals().equals(geometry, geometry2, Collections.<String> emptyList())) {
       System.err.println(WktWriter.toString(geometry2));
       throw new RuntimeException("Geometry not equal");
     }

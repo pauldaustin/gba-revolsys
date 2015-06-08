@@ -18,8 +18,8 @@ public class MergedValuePredicate implements HighlightPredicate {
   public static void add(final DataObjectRowTable table) {
     final MergedRecordsTableModel model = table.getTableModel();
     final MergedValuePredicate predicate = new MergedValuePredicate(model);
-    table.addHighlighter(new ColorHighlighter(predicate, WebColors.Salmon,
-      WebColors.Black, WebColors.Red, WebColors.Yellow));
+    table.addHighlighter(new ColorHighlighter(predicate, WebColors.Salmon, WebColors.Black,
+      WebColors.Red, WebColors.Yellow));
   }
 
   private final MergedRecordsTableModel model;
@@ -29,13 +29,12 @@ public class MergedValuePredicate implements HighlightPredicate {
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToView(adapter.row);
       final int columnIndex = adapter.convertColumnIndexToView(adapter.column);
-      final Record object = model.getRecord(rowIndex);
-      final Record mergedObject = model.getMergedObject();
+      final Record object = this.model.getRecord(rowIndex);
+      final Record mergedObject = this.model.getMergedObject();
 
       if (object == mergedObject) {
         return false;

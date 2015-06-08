@@ -102,9 +102,8 @@ import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class DataObjectLayerForm extends JPanel implements
-  PropertyChangeListener, CellEditorListener, FocusListener,
-  PropertyChangeSupportProxy, WindowListener {
+public class DataObjectLayerForm extends JPanel implements PropertyChangeListener,
+  CellEditorListener, FocusListener, PropertyChangeSupportProxy, WindowListener {
 
   public static final String FLIP_FIELDS_ICON = "flip_fields";
 
@@ -156,8 +155,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   private LayerDataObject object;
 
-  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-    this);
+  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private Set<String> readOnlyFieldNames = new HashSet<String>();
 
@@ -203,8 +201,7 @@ public class DataObjectLayerForm extends JPanel implements
     this.undoManager.addKeyMap(this);
   }
 
-  public DataObjectLayerForm(final AbstractRecordLayer layer,
-    final LayerDataObject object) {
+  public DataObjectLayerForm(final AbstractRecordLayer layer, final LayerDataObject object) {
     this(layer);
     setObject(object);
   }
@@ -239,11 +236,11 @@ public class DataObjectLayerForm extends JPanel implements
     return field;
   }
 
-  protected void addDoubleField(final String fieldName, final int length,
-    final int scale, final Double minimumValie, final Double maximumValue) {
+  protected void addDoubleField(final String fieldName, final int length, final int scale,
+    final Double minimumValie, final Double maximumValue) {
     final DataType dataType = DataTypes.DOUBLE;
-    final NumberTextField field = new NumberTextField(fieldName, dataType,
-      length, scale, minimumValie, maximumValue);
+    final NumberTextField field = new NumberTextField(fieldName, dataType, length, scale,
+      minimumValie, maximumValue);
     addField(fieldName, field);
   }
 
@@ -277,9 +274,7 @@ public class DataObjectLayerForm extends JPanel implements
     field.setUndoManager(this.undoManager);
     if (field instanceof ComboBox) {
       final ComboBox comboBox = (ComboBox)field;
-      comboBox.getEditor()
-        .getEditorComponent()
-        .addFocusListener(new WeakFocusListener(this));
+      comboBox.getEditor().getEditorComponent().addFocusListener(new WeakFocusListener(this));
     } else {
       ((JComponent)field).addFocusListener(new WeakFocusListener(this));
     }
@@ -306,23 +301,20 @@ public class DataObjectLayerForm extends JPanel implements
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T addLabelledField(final Container container,
-    final String fieldName) {
+  public <T> T addLabelledField(final Container container, final String fieldName) {
     final Field field = getField(fieldName);
     addLabelledField(container, field);
     return (T)field;
   }
 
-  protected void addNumberField(final String fieldName,
-    final DataType dataType, final int length, final Number minimumValue,
-    final Number maximumValue) {
-    final NumberTextField field = new NumberTextField(fieldName, dataType,
-      length, 0, minimumValue, maximumValue);
+  protected void addNumberField(final String fieldName, final DataType dataType, final int length,
+    final Number minimumValue, final Number maximumValue) {
+    final NumberTextField field = new NumberTextField(fieldName, dataType, length, 0, minimumValue,
+      maximumValue);
     addField(fieldName, field);
   }
 
-  protected void addPanel(final JPanel container, final String title,
-    final List<String> fieldNames) {
+  protected void addPanel(final JPanel container, final String title, final List<String> fieldNames) {
     final JPanel panel = createPanel(container, title);
 
     for (final String fieldName : fieldNames) {
@@ -364,8 +356,7 @@ public class DataObjectLayerForm extends JPanel implements
     return panel;
   }
 
-  public JScrollPane addTab(final int index, final String name,
-    final Component component) {
+  public JScrollPane addTab(final int index, final String name, final Component component) {
     boolean init = false;
     final Container parent = this.tabs.getParent();
     if (parent != this) {
@@ -417,8 +408,7 @@ public class DataObjectLayerForm extends JPanel implements
 
       maxHeight = Math.min(bounds.height, maxHeight);
     }
-    final int preferredHeight = Math.min(maxHeight,
-      (this.allAttributes.getRowCount() + 1) * 20);
+    final int preferredHeight = Math.min(maxHeight, (this.allAttributes.getRowCount() + 1) * 20);
     scrollPane.setMinimumSize(new Dimension(100, preferredHeight));
     scrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, maxHeight));
     scrollPane.setPreferredSize(new Dimension(800, preferredHeight));
@@ -427,8 +417,7 @@ public class DataObjectLayerForm extends JPanel implements
   protected void addTabGeometry() {
     final String geometryAttributeName = this.metaData.getGeometryFieldName();
     if (this.geometryCoordinatesPanel == null && geometryAttributeName != null) {
-      this.geometryCoordinatesPanel = new GeometryCoordinatesPanel(this,
-        geometryAttributeName);
+      this.geometryCoordinatesPanel = new GeometryCoordinatesPanel(this, geometryAttributeName);
       addField(geometryAttributeName, this.geometryCoordinatesPanel);
       final JPanel panel = new JPanel(new GridLayout(1, 1));
 
@@ -450,52 +439,46 @@ public class DataObjectLayerForm extends JPanel implements
     if (layer != null) {
       final MenuFactory menuFactory = ObjectTreeModel.findMenu(layer);
       if (menuFactory != null) {
-        this.toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu",
-          ObjectTree.class, "showMenu", menuFactory, layer, this, 10, 10);
+        this.toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu", ObjectTree.class, "showMenu",
+          menuFactory, layer, this, 10, 10);
       }
     }
-    final EnableCheck deletableEnableCheck = new ObjectPropertyEnableCheck(
-      this, "deletable");
-    this.toolBar.addButton("record", "Delete Record", "table_row_delete",
-      deletableEnableCheck, this, "deleteRecord");
+    final EnableCheck deletableEnableCheck = new ObjectPropertyEnableCheck(this, "deletable");
+    this.toolBar.addButton("record", "Delete Record", "table_row_delete", deletableEnableCheck,
+      this, "deleteRecord");
 
     // Cut, Copy Paste
 
-    this.toolBar.addButton("dnd", "Copy Record", "page_copy",
-      (EnableCheck)null, this, "dataTransferCopy");
+    this.toolBar.addButton("dnd", "Copy Record", "page_copy", (EnableCheck)null, this,
+      "dataTransferCopy");
 
-    this.toolBar.addButton("dnd", "Paste Record", "paste_plain", editable,
-      this, "dataTransferPaste");
+    this.toolBar.addButton("dnd", "Paste Record", "paste_plain", editable, this,
+      "dataTransferPaste");
 
     if (hasGeometry) {
-      this.toolBar.addButton("dnd", "Paste Geometry", "geometry_paste",
-        editable, this, "pasteGeometry");
+      this.toolBar.addButton("dnd", "Paste Geometry", "geometry_paste", editable, this,
+        "pasteGeometry");
 
     }
-    final EnableCheck canUndo = new ObjectPropertyEnableCheck(this.undoManager,
-      "canUndo");
-    final EnableCheck canRedo = new ObjectPropertyEnableCheck(this.undoManager,
-      "canRedo");
+    final EnableCheck canUndo = new ObjectPropertyEnableCheck(this.undoManager, "canUndo");
+    final EnableCheck canRedo = new ObjectPropertyEnableCheck(this.undoManager, "canRedo");
 
-    final EnableCheck modifiedOrDeleted = new ObjectPropertyEnableCheck(this,
-      "modifiedOrDeleted");
+    final EnableCheck modifiedOrDeleted = new ObjectPropertyEnableCheck(this, "modifiedOrDeleted");
 
-    this.toolBar.addButton("changes", "Revert Record", "arrow_revert",
-      modifiedOrDeleted, this, "revertChanges");
+    this.toolBar.addButton("changes", "Revert Record", "arrow_revert", modifiedOrDeleted, this,
+      "revertChanges");
 
-    this.toolBar.addButton("changes", "Revert Empty Fields",
-      "field_empty_revert", modifiedOrDeleted, this, "revertEmptyFields");
+    this.toolBar.addButton("changes", "Revert Empty Fields", "field_empty_revert",
+      modifiedOrDeleted, this, "revertEmptyFields");
 
-    this.toolBar.addButton("changes", "Undo", "arrow_undo", canUndo,
-      this.undoManager, "undo");
-    this.toolBar.addButton("changes", "Redo", "arrow_redo", canRedo,
-      this.undoManager, "redo");
+    this.toolBar.addButton("changes", "Undo", "arrow_undo", canUndo, this.undoManager, "undo");
+    this.toolBar.addButton("changes", "Redo", "arrow_redo", canRedo, this.undoManager, "redo");
 
     // Zoom
 
     if (hasGeometry) {
-      this.toolBar.addButtonTitleIcon("zoom", "Zoom to Object", "magnifier",
-        this, "actionZoomToObject");
+      this.toolBar.addButtonTitleIcon("zoom", "Zoom to Object", "magnifier", this,
+        "actionZoomToObject");
     }
 
     // Geometry manipulation
@@ -503,17 +486,16 @@ public class DataObjectLayerForm extends JPanel implements
       final DataType geometryDataType = geometryAttribute.getType();
       if (geometryDataType == DataTypes.LINE_STRING
         || geometryDataType == DataTypes.MULTI_LINE_STRING) {
-        if (DirectionalAttributes.getProperty(metaData)
-          .hasDirectionalAttributes()) {
-          this.toolBar.addButton("geometry", FLIP_RECORD_NAME,
-            FLIP_RECORD_ICON, editable, this, "flipRecordOrientation");
+        if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
+          this.toolBar.addButton("geometry", FLIP_RECORD_NAME, FLIP_RECORD_ICON, editable, this,
+            "flipRecordOrientation");
           this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME,
             FLIP_LINE_ORIENTATION_ICON, editable, this, "flipLineOrientation");
-          this.toolBar.addButton("geometry", FLIP_FIELDS_NAME,
-            FLIP_FIELDS_ICON, editable, this, "flipFields");
+          this.toolBar.addButton("geometry", FLIP_FIELDS_NAME, FLIP_FIELDS_ICON, editable, this,
+            "flipFields");
         } else {
-          this.toolBar.addButton("geometry", "Flip Line Orientation",
-            "flip_line", editable, this, "flipLineOrientation");
+          this.toolBar.addButton("geometry", "Flip Line Orientation", "flip_line", editable, this,
+            "flipLineOrientation");
         }
       }
     }
@@ -885,8 +867,7 @@ public class DataObjectLayerForm extends JPanel implements
   protected void invokeAction(final String actionName) {
     final Action action = getActionMap().get(actionName);
     if (action != null) {
-      final ActionEvent event = new ActionEvent(this,
-        ActionEvent.ACTION_PERFORMED, null);
+      final ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null);
       action.actionPerformed(event);
     }
   }
@@ -957,8 +938,7 @@ public class DataObjectLayerForm extends JPanel implements
   public void pasteValues(final Map<String, Object> map) {
     final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
-      final Map<String, Object> newValues = new LinkedHashMap<String, Object>(
-        map);
+      final Map<String, Object> newValues = new LinkedHashMap<String, Object>(map);
       final Collection<String> ignorePasteFields = layer.getProperty("ignorePasteFields");
       if (ignorePasteFields != null) {
         newValues.keySet().removeAll(ignorePasteFields);
@@ -1014,11 +994,10 @@ public class DataObjectLayerForm extends JPanel implements
               setFieldValue(propertyName, value, isFieldValidationEnabled());
             }
             final boolean modifiedOrDeleted = isModifiedOrDeleted();
-            this.propertyChangeSupport.firePropertyChange("modifiedOrDeleted",
-              !modifiedOrDeleted, modifiedOrDeleted);
+            this.propertyChangeSupport.firePropertyChange("modifiedOrDeleted", !modifiedOrDeleted,
+              modifiedOrDeleted);
             final boolean deletable = isDeletable();
-            this.propertyChangeSupport.firePropertyChange("deletable",
-              !deletable, deletable);
+            this.propertyChangeSupport.firePropertyChange("deletable", !deletable, deletable);
             repaint();
           }
         }
@@ -1093,8 +1072,7 @@ public class DataObjectLayerForm extends JPanel implements
     }
   }
 
-  public void setFieldInvalidToolTip(final String fieldName,
-    final JComponent field) {
+  public void setFieldInvalidToolTip(final String fieldName, final JComponent field) {
     final String message = this.fieldInValidMessage.get(fieldName);
     if (StringUtils.hasText(message)) {
       field.setToolTipText(message);
@@ -1122,8 +1100,7 @@ public class DataObjectLayerForm extends JPanel implements
         this.fieldValidMap.put(fieldName, true);
         this.fieldInValidMessage.remove(fieldName);
         final int tabIndex = getTabIndex(fieldName);
-        CollectionUtil.removeFromSet(this.tabInvalidFieldMap, tabIndex,
-          fieldName);
+        CollectionUtil.removeFromSet(this.tabInvalidFieldMap, tabIndex, fieldName);
         updateTabValid(tabIndex);
         return true;
       } else {
@@ -1134,8 +1111,7 @@ public class DataObjectLayerForm extends JPanel implements
     return false;
   }
 
-  protected boolean setFieldValidationEnabled(
-    final boolean fieldValidationEnabled) {
+  protected boolean setFieldValidationEnabled(final boolean fieldValidationEnabled) {
     final boolean oldValue = isFieldValidationEnabled();
     if (fieldValidationEnabled) {
       this.fieldsToValidate.remove();
@@ -1146,8 +1122,7 @@ public class DataObjectLayerForm extends JPanel implements
     return oldValue;
   }
 
-  public void setFieldValue(final String fieldName, Object value,
-    final boolean validate) {
+  public void setFieldValue(final String fieldName, Object value, final boolean validate) {
     boolean changed = false;
     final Object oldValue = getFieldValue(fieldName);
     final RecordDefinition metaData = getMetaData();
@@ -1160,8 +1135,7 @@ public class DataObjectLayerForm extends JPanel implements
     }
     this.fieldValues.put(fieldName, value);
     final JComponent field = (JComponent)getField(fieldName);
-    if (oldValue == null & value != null
-      || !EqualsRegistry.equal(value, oldValue)) {
+    if (oldValue == null & value != null || !EqualsRegistry.equal(value, oldValue)) {
       changed = true;
     }
     final Object objectValue = this.object.getValue(fieldName);
@@ -1268,8 +1242,7 @@ public class DataObjectLayerForm extends JPanel implements
   public LayerDataObject showAddDialog() {
     final String title = "Add New " + getName();
     final Window window = SwingUtil.getActiveWindow();
-    final JDialog dialog = new JDialog(window, title,
-      ModalityType.APPLICATION_MODAL);
+    final JDialog dialog = new JDialog(window, title, ModalityType.APPLICATION_MODAL);
     dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     dialog.setLayout(new BorderLayout());
 
@@ -1277,11 +1250,10 @@ public class DataObjectLayerForm extends JPanel implements
 
     final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     dialog.add(buttons, BorderLayout.SOUTH);
-    final JButton addCancelButton = InvokeMethodAction.createButton("Cancel",
-      this, "actionAddCancel");
+    final JButton addCancelButton = InvokeMethodAction.createButton("Cancel", this,
+      "actionAddCancel");
     buttons.add(addCancelButton);
-    this.addOkButton = InvokeMethodAction.createButton("OK", this,
-      "actionAddOk");
+    this.addOkButton = InvokeMethodAction.createButton("OK", this, "actionAddOk");
     buttons.add(this.addOkButton);
 
     dialog.pack();
@@ -1330,8 +1302,7 @@ public class DataObjectLayerForm extends JPanel implements
 
   public boolean validateField(final String fieldName) {
     if (SwingUtilities.isEventDispatchThread()) {
-      Invoke.background("Validate Field " + fieldName, this, "validateField",
-        fieldName);
+      Invoke.background("Validate Field " + fieldName, this, "validateField", fieldName);
       return false;
     } else {
       return validateFieldInternal(fieldName);

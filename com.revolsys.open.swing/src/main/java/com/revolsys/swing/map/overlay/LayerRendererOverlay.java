@@ -23,8 +23,7 @@ import com.revolsys.util.Property;
 /**
  * <p>A lightweight component that users the {@link Layer}'s {@link LayerRenderer} to render the layer.</p>
  */
-public class LayerRendererOverlay extends JComponent implements
-  PropertyChangeListener {
+public class LayerRendererOverlay extends JComponent implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private Layer layer;
@@ -75,19 +74,18 @@ public class LayerRendererOverlay extends JComponent implements
 
   @Override
   public void paintComponent(final Graphics g) {
-    if (!(layer instanceof NullLayer)) {
+    if (!(this.layer instanceof NullLayer)) {
       GeoReferencedImage image;
       synchronized (this.loadSync) {
         image = this.image;
 
-        if ((image == null || this.loadImage) && imageWorker == null) {
+        if ((image == null || this.loadImage) && this.imageWorker == null) {
           final BoundingBox boundingBox = this.viewport.getBoundingBox();
           final int viewWidthPixels = this.viewport.getViewWidthPixels();
           final int viewHeightPixels = this.viewport.getViewHeightPixels();
-          final GeoReferencedImage loadImage = new BufferedGeoReferencedImage(
-            boundingBox, viewWidthPixels, viewHeightPixels);
-          this.imageWorker = new LayerRendererOverlaySwingWorker(this,
-            loadImage);
+          final GeoReferencedImage loadImage = new BufferedGeoReferencedImage(boundingBox,
+            viewWidthPixels, viewHeightPixels);
+          this.imageWorker = new LayerRendererOverlaySwingWorker(this, loadImage);
           Invoke.worker(this.imageWorker);
         }
       }
@@ -101,8 +99,7 @@ public class LayerRendererOverlay extends JComponent implements
   public void propertyChange(final PropertyChangeEvent e) {
     if (!(e.getSource() instanceof MapPanel)) {
       final String propertyName = e.getPropertyName();
-      if (!propertyName.equals("selectionCount")
-        && !propertyName.equals("hasHighlightedRecords")
+      if (!propertyName.equals("selectionCount") && !propertyName.equals("hasHighlightedRecords")
         && !propertyName.equals("highlightedCount")) {
         redraw();
       }
@@ -110,7 +107,7 @@ public class LayerRendererOverlay extends JComponent implements
   }
 
   public void redraw() {
-    if (isValid() && layer.isExists() && layer.isVisible()) {
+    if (isValid() && this.layer.isExists() && this.layer.isVisible()) {
       synchronized (this.loadSync) {
         this.loadImage = true;
         if (this.imageWorker != null) {
@@ -123,13 +120,13 @@ public class LayerRendererOverlay extends JComponent implements
   }
 
   public void refresh() {
-    if (layer != null) {
-      layer.refresh();
+    if (this.layer != null) {
+      this.layer.refresh();
     }
   }
 
   private void render(final Graphics2D graphics) {
-    GeoReferencedImageLayerRenderer.render(viewport, graphics, image, false);
+    GeoReferencedImageLayerRenderer.render(this.viewport, graphics, this.image, false);
   }
 
   public void setImage(final LayerRendererOverlaySwingWorker imageWorker) {

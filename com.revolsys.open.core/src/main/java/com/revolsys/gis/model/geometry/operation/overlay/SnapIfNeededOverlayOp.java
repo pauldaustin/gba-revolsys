@@ -9,7 +9,7 @@ import com.revolsys.gis.model.geometry.util.TopologyException;
  * error is detected when running the standard JTS overlay code. Errors detected
  * include thrown exceptions (in particular, {@link TopologyException}) and
  * invalid overlay computations.
- * 
+ *
  * @author Martin Davis
  * @version 1.7
  */
@@ -22,8 +22,8 @@ public class SnapIfNeededOverlayOp {
     return overlayOp(g0, g1, OverlayOp.INTERSECTION);
   }
 
-  public static Geometry overlayOp(final Geometry geometry1,
-    final Geometry geometry2, final int opCode) {
+  public static Geometry overlayOp(final Geometry geometry1, final Geometry geometry2,
+    final int opCode) {
     Geometry result = null;
     boolean isSuccess = false;
     RuntimeException savedException = null;

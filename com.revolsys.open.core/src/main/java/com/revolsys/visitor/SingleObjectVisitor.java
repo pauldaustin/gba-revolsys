@@ -18,8 +18,7 @@ public class SingleObjectVisitor<T> extends BaseVisitor<T> {
     super(filter);
   }
 
-  public SingleObjectVisitor(final Filter<T> filter,
-    final Comparator<T> comparator) {
+  public SingleObjectVisitor(final Filter<T> filter, final Comparator<T> comparator) {
     super(filter, comparator);
   }
 
@@ -32,7 +31,7 @@ public class SingleObjectVisitor<T> extends BaseVisitor<T> {
   }
 
   public T getObject() {
-    return object;
+    return this.object;
   }
 
   public void reset() {

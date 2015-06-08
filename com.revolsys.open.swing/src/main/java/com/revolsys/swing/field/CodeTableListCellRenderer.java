@@ -12,7 +12,7 @@ import com.revolsys.util.CollectionUtil;
 @SuppressWarnings("serial")
 public class CodeTableListCellRenderer extends DefaultListCellRenderer {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -23,8 +23,8 @@ public class CodeTableListCellRenderer extends DefaultListCellRenderer {
   }
 
   @Override
-  public Component getListCellRendererComponent(final JList list, Object value,
-    final int index, final boolean isSelected, final boolean cellHasFocus) {
+  public Component getListCellRendererComponent(final JList list, Object value, final int index,
+    final boolean isSelected, final boolean cellHasFocus) {
     if (value == null || value == CodeTableComboBoxModel.NULL) {
       value = "-";
     } else if (index >= 0) {
@@ -35,7 +35,6 @@ public class CodeTableListCellRenderer extends DefaultListCellRenderer {
         value = CollectionUtil.toString(":", values);
       }
     }
-    return super.getListCellRendererComponent(list, value, index, isSelected,
-      cellHasFocus);
+    return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
   }
 }

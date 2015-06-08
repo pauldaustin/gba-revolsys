@@ -14,8 +14,8 @@ import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.Reader;
 
-public class MapReaderDataObjectReader extends AbstractReader<Record>
-  implements RecordReader, Iterator<Record> {
+public class MapReaderDataObjectReader extends AbstractReader<Record> implements RecordReader,
+  Iterator<Record> {
 
   private final RecordDefinition metaData;
 
@@ -33,20 +33,20 @@ public class MapReaderDataObjectReader extends AbstractReader<Record>
 
   @Override
   public void close() {
-    mapReader.close();
+    this.mapReader.close();
   }
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return metaData;
+    return this.metaData;
   }
 
   @Override
   public boolean hasNext() {
-    if (!open) {
+    if (!this.open) {
       open();
     }
-    return mapIterator.hasNext();
+    return this.mapIterator.hasNext();
   }
 
   @Override
@@ -57,15 +57,14 @@ public class MapReaderDataObjectReader extends AbstractReader<Record>
   @Override
   public Record next() {
     if (hasNext()) {
-      final Map<String, Object> source = mapIterator.next();
-      final Record target = new ArrayRecord(metaData);
-      for (final FieldDefinition attribute : metaData.getFields()) {
+      final Map<String, Object> source = this.mapIterator.next();
+      final Record target = new ArrayRecord(this.metaData);
+      for (final FieldDefinition attribute : this.metaData.getFields()) {
         final String name = attribute.getName();
         final Object value = source.get(name);
         if (value != null) {
-          final DataType dataType = metaData.getFieldType(name);
-          final Object convertedValue = StringConverterRegistry.toObject(
-            dataType, value);
+          final DataType dataType = this.metaData.getFieldType(name);
+          final Object convertedValue = StringConverterRegistry.toObject(dataType, value);
           target.setValue(name, convertedValue);
         }
       }
@@ -77,12 +76,12 @@ public class MapReaderDataObjectReader extends AbstractReader<Record>
 
   @Override
   public void open() {
-    open = true;
-    this.mapIterator = mapReader.iterator();
+    this.open = true;
+    this.mapIterator = this.mapReader.iterator();
   }
 
   @Override
   public void remove() {
-    mapIterator.remove();
+    this.mapIterator.remove();
   }
 }

@@ -43,11 +43,10 @@ public class DataObjectListLayer extends AbstractRecordLayer {
     setEditable(true);
   }
 
-  public DataObjectListLayer(final String name,
-    final GeometryFactory geometryFactory, final DataType geometryType) {
+  public DataObjectListLayer(final String name, final GeometryFactory geometryFactory,
+    final DataType geometryType) {
     super(name);
-    final RecordDefinitionImpl metaData = createMetaData(name, geometryFactory,
-      geometryType);
+    final RecordDefinitionImpl metaData = createMetaData(name, geometryFactory, geometryType);
     setRecordDefinition(metaData);
   }
 
@@ -111,8 +110,7 @@ public class DataObjectListLayer extends AbstractRecordLayer {
     } else {
       final GeometryFactory geometryFactory = getGeometryFactory();
       final BoundingBox convertedBoundingBox = boundingBox.convert(geometryFactory);
-      final List<LayerDataObject> records = (List)getIndex().queryIntersects(
-        convertedBoundingBox);
+      final List<LayerDataObject> records = (List)getIndex().queryIntersects(convertedBoundingBox);
       return records;
     }
   }
@@ -133,8 +131,7 @@ public class DataObjectListLayer extends AbstractRecordLayer {
       return new ArrayList<LayerDataObject>(this.records);
     } else {
       final List<LayerDataObject> records = new ArrayList<LayerDataObject>();
-      for (final LayerDataObject record : new ArrayList<LayerDataObject>(
-        this.records)) {
+      for (final LayerDataObject record : new ArrayList<LayerDataObject>(this.records)) {
         if (whereCondition.accept(record)) {
           records.add(record);
         }
@@ -191,8 +188,7 @@ public class DataObjectListLayer extends AbstractRecordLayer {
   @Override
   public List<LayerDataObject> getRecords() {
     synchronized (this.records) {
-      final ArrayList<LayerDataObject> records = new ArrayList<LayerDataObject>(
-        this.records);
+      final ArrayList<LayerDataObject> records = new ArrayList<LayerDataObject>(this.records);
       records.addAll(getNewRecords());
       return records;
     }

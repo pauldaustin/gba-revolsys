@@ -24,17 +24,17 @@ public class FolderConnectionsTreeNode extends AbstractTreeNode {
 
   @Override
   public List<TreeNode> getChildren() {
-    return children;
+    return this.children;
   }
 
   protected void init() {
-    children = new ArrayList<TreeNode>();
+    this.children = new ArrayList<TreeNode>();
     final List<FolderConnectionRegistry> registries = FolderConnectionManager.get()
       .getVisibleConnectionRegistries();
     for (final FolderConnectionRegistry childRegistry : registries) {
-      final FolderConnectionRegistryTreeNode child = new FolderConnectionRegistryTreeNode(
-        this, childRegistry);
-      children.add(child);
+      final FolderConnectionRegistryTreeNode child = new FolderConnectionRegistryTreeNode(this,
+        childRegistry);
+      this.children.add(child);
     }
   }
 }

@@ -46,7 +46,7 @@ public class NodeQuadTree<T> extends AbstractIdObjectPointQuadTree<Node<T>> {
 
   @Override
   public List<Node<T>> getObjects(final List<Integer> ids) {
-    return graph.getNodes(ids);
+    return this.graph.getNodes(ids);
   }
 
   @Override

@@ -28,10 +28,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
-public class Node<T> extends AbstractCoordinates implements AttributedObject,
-  Externalizable {
-  public static List<Coordinates> getCoordinates(
-    final Collection<Node<Record>> nodes) {
+public class Node<T> extends AbstractCoordinates implements AttributedObject, Externalizable {
+  public static List<Coordinates> getCoordinates(final Collection<Node<Record>> nodes) {
     final List<Coordinates> points = new ArrayList<Coordinates>(nodes.size());
     for (final Node<Record> node : nodes) {
       final Coordinates point = node.cloneCoordinates();
@@ -40,13 +38,11 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
     return points;
   }
 
-  public static <V> int getEdgeIndex(final List<Edge<V>> edges,
-    final Edge<V> edge) {
+  public static <V> int getEdgeIndex(final List<Edge<V>> edges, final Edge<V> edge) {
     return edges.indexOf(edge);
   }
 
-  public static <T> Set<Edge<T>> getEdgesBetween(final Node<T> node0,
-    final Node<T> node1) {
+  public static <T> Set<Edge<T>> getEdgesBetween(final Node<T> node0, final Node<T> node1) {
     final Set<Edge<T>> commonEdges = new HashSet<Edge<T>>();
     if (node1 == null) {
       return commonEdges;
@@ -65,8 +61,8 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
     return commonEdges;
   }
 
-  public static <T> Collection<Edge<T>> getEdgesBetween(final String typePath,
-    final Node<T> node0, final Node<T> node1) {
+  public static <T> Collection<Edge<T>> getEdgesBetween(final String typePath, final Node<T> node0,
+    final Node<T> node1) {
     final Collection<Edge<T>> edges = getEdgesBetween(node0, node1);
     for (final Iterator<Edge<T>> edgeIter = edges.iterator(); edgeIter.hasNext();) {
       final Edge<T> edge = edgeIter.next();
@@ -77,15 +73,14 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
     return edges;
   }
 
-  public static <V> Edge<V> getNextEdge(final List<Edge<V>> edges,
-    final Edge<V> edge) {
+  public static <V> Edge<V> getNextEdge(final List<Edge<V>> edges, final Edge<V> edge) {
     final int index = getEdgeIndex(edges, edge);
     final int nextIndex = (index + 1) % edges.size();
     return edges.get(nextIndex);
   }
 
-  public static <T> boolean hasEdgesBetween(final String typePath,
-    final Node<T> node0, final Node<T> node1) {
+  public static <T> boolean hasEdgesBetween(final String typePath, final Node<T> node0,
+    final Node<T> node1) {
     if (node1 == null) {
       return false;
     }
@@ -148,18 +143,18 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
   }
 
   protected void addInEdge(final Edge<T> edge) {
-    inEdgeIds = addEdge(inEdgeIds, edge);
+    this.inEdgeIds = addEdge(this.inEdgeIds, edge);
     updateAttributes();
   }
 
   protected void addOutEdge(final Edge<T> edge) {
-    outEdgeIds = addEdge(outEdgeIds, edge);
+    this.outEdgeIds = addEdge(this.outEdgeIds, edge);
     updateAttributes();
   }
 
   @Override
   public Coordinates cloneCoordinates() {
-    return new DoubleCoordinates(x, y);
+    return new DoubleCoordinates(this.x, this.y);
   }
 
   public int compareTo(final Node<T> node) {
@@ -172,8 +167,8 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
 
   @Override
   protected void finalize() throws Throwable {
-    if (graph != null) {
-      graph.evict(this);
+    if (this.graph != null) {
+      this.graph.evict(this);
     }
     super.finalize();
   }
@@ -212,21 +207,21 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
   @Override
   @SuppressWarnings("unchecked")
   public <V> V getAttribute(final String name) {
-    return (V)graph.getNodeAttribute(id, name);
+    return (V)this.graph.getNodeAttribute(this.id, name);
   }
 
   @Override
   public Map<String, Object> getAttributes() {
-    return graph.getNodeAttributes(id);
+    return this.graph.getNodeAttributes(this.id);
   }
 
   public int getDegree() {
-    return inEdgeIds.length + outEdgeIds.length;
+    return this.inEdgeIds.length + this.outEdgeIds.length;
   }
 
   /**
    * Get the distance between this node and the geometry.
-   * 
+   *
    * @param geometry The geometry.
    * @return The distance.
    */
@@ -304,7 +299,7 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
   /**
    * Get all the edges from a node which do not have an attribute with the
    * specified name.
-   * 
+   *
    * @param node The node to get the edges for.
    * @param attributeName The attribute name.
    * @return The list of edges without the attribute.
@@ -320,11 +315,11 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
   }
 
   public Graph<T> getGraph() {
-    return graph;
+    return this.graph;
   }
 
   public int getId() {
-    return id;
+    return this.id;
   }
 
   public int getInEdgeIndex(final Edge<T> edge) {
@@ -333,7 +328,7 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
 
   public List<Edge<T>> getInEdges() {
     final Graph<T> graph = getGraph();
-    return graph.getEdges(inEdgeIds);
+    return graph.getEdges(this.inEdgeIds);
   }
 
   public Edge<T> getNextEdge(final Edge<T> edge) {
@@ -343,16 +338,16 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
 
   public Edge<T> getNextInEdge(final Edge<T> edge) {
     final int index = getInEdgeIndex(edge);
-    final int nextIndex = (index + 1) % inEdgeIds.length;
+    final int nextIndex = (index + 1) % this.inEdgeIds.length;
     final Graph<T> graph = getGraph();
-    return graph.getEdge(inEdgeIds[nextIndex]);
+    return graph.getEdge(this.inEdgeIds[nextIndex]);
   }
 
   public Edge<T> getNextOutEdge(final Edge<T> edge) {
     final int index = getOutEdgeIndex(edge);
-    final int nextIndex = (index + 1) % outEdgeIds.length;
+    final int nextIndex = (index + 1) % this.outEdgeIds.length;
     final Graph<T> graph = getGraph();
-    return graph.getEdge(outEdgeIds[nextIndex]);
+    return graph.getEdge(this.outEdgeIds[nextIndex]);
   }
 
   public int getOutEdgeIndex(final Edge<T> edge) {
@@ -361,7 +356,7 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
 
   public List<Edge<T>> getOutEdges() {
     final Graph<T> graph = getGraph();
-    return graph.getEdges(outEdgeIds);
+    return graph.getEdges(this.outEdgeIds);
   }
 
   public List<Edge<T>> getOutEdgesTo(final Node<T> node) {
@@ -384,9 +379,9 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
   public double getValue(final int index) {
     switch (index) {
       case 0:
-        return x;
+        return this.x;
       case 1:
-        return y;
+        return this.y;
 
       default:
         return Double.NaN;
@@ -400,14 +395,12 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
   public boolean hasEdge(final Edge<T> edge) {
     if (edge.getGraph() == getGraph()) {
       final int edgeId = edge.getId();
-      for (int i = 0; i < inEdgeIds.length; i++) {
-        final int inEdgeId = inEdgeIds[i];
+      for (final int inEdgeId : this.inEdgeIds) {
         if (inEdgeId == edgeId) {
           return true;
         }
       }
-      for (int i = 0; i < outEdgeIds.length; i++) {
-        final int inEdgeId = outEdgeIds[i];
+      for (final int inEdgeId : this.outEdgeIds) {
         if (inEdgeId == edgeId) {
           return true;
         }
@@ -439,22 +432,22 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
 
   @Override
   public int hashCode() {
-    return id;
+    return this.id;
   }
 
   public boolean isRemoved() {
-    return graph == null;
+    return this.graph == null;
   }
 
   public boolean move(final Coordinates newCoordinates) {
     if (isRemoved()) {
       return false;
     } else {
-      final Node<T> newNode = graph.getNode(newCoordinates);
+      final Node<T> newNode = this.graph.getNode(newCoordinates);
       if (equals(newNode)) {
         return false;
       } else {
-        graph.nodeMoved(this, newNode);
+        this.graph.nodeMoved(this, newNode);
         final int numEdges = getDegree();
         final Set<Edge<T>> edges = new HashSet<Edge<T>>(getInEdges());
         edges.addAll(getOutEdges());
@@ -463,13 +456,13 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
             final LineString line = edge.getLine();
             LineString newLine;
             if (edge.isForwards(this)) {
-              newLine = LineStringUtil.subLineString(line, newNode, 1,
-                line.getNumPoints() - 1, null);
+              newLine = LineStringUtil.subLineString(line, newNode, 1, line.getNumPoints() - 1,
+                null);
             } else {
-              newLine = LineStringUtil.subLineString(line, null, 0,
-                line.getNumPoints() - 1, newNode);
+              newLine = LineStringUtil.subLineString(line, null, 0, line.getNumPoints() - 1,
+                newNode);
             }
-            graph.replaceEdge(edge, newLine);
+            this.graph.replaceEdge(edge, newLine);
             if (!edge.isRemoved()) {
               throw new RuntimeException("Not node Removed");
             }
@@ -487,29 +480,28 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
   }
 
   @Override
-  public void readExternal(final ObjectInput in) throws IOException,
-    ClassNotFoundException {
+  public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
     final int graphId = in.readInt();
-    graph = Graph.getGraph(graphId);
-    id = in.readInt();
-    inEdgeIds = (int[])in.readObject();
-    outEdgeIds = (int[])in.readObject();
-    x = in.readDouble();
-    y = in.readDouble();
+    this.graph = Graph.getGraph(graphId);
+    this.id = in.readInt();
+    this.inEdgeIds = (int[])in.readObject();
+    this.outEdgeIds = (int[])in.readObject();
+    this.x = in.readDouble();
+    this.y = in.readDouble();
   }
 
   void remove() {
-    graph = null;
-    inEdgeIds = null;
-    outEdgeIds = null;
+    this.graph = null;
+    this.inEdgeIds = null;
+    this.outEdgeIds = null;
   }
 
   public void remove(final Edge<T> edge) {
     if (!isRemoved()) {
-      outEdgeIds = removeEdge(outEdgeIds, edge);
-      inEdgeIds = removeEdge(inEdgeIds, edge);
-      if (inEdgeIds.length == 0 && outEdgeIds.length == 0) {
-        graph.remove(this);
+      this.outEdgeIds = removeEdge(this.outEdgeIds, edge);
+      this.inEdgeIds = removeEdge(this.inEdgeIds, edge);
+      if (this.inEdgeIds.length == 0 && this.outEdgeIds.length == 0) {
+        this.graph.remove(this);
       } else {
         updateAttributes();
       }
@@ -525,21 +517,21 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
 
   @Override
   public void setAttribute(final String name, final Object value) {
-    graph.setNodeAttribute(id, name, value);
+    this.graph.setNodeAttribute(this.id, name, value);
   }
 
   public void setAttributes(final Map<String, Object> attributes) {
-    graph.setNodeAttributes(id, attributes);
+    this.graph.setNodeAttributes(this.id, attributes);
   }
 
   @Override
   public void setValue(final int index, final double value) {
     switch (index) {
       case 0:
-        x = value;
+        this.x = value;
       break;
       case 1:
-        y = value;
+        this.y = value;
       break;
     }
   }
@@ -551,11 +543,11 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
     if (isRemoved()) {
       sb.insert(0, "Removed");
     } else {
-      sb.append(id);
+      sb.append(this.id);
       sb.append('{');
-      sb.append(Arrays.toString(inEdgeIds));
+      sb.append(Arrays.toString(this.inEdgeIds));
       sb.append(',');
-      sb.append(Arrays.toString(outEdgeIds));
+      sb.append(Arrays.toString(this.outEdgeIds));
       sb.append("}\tPOINT(");
       sb.append(getX());
       sb.append(" ");
@@ -578,12 +570,12 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject,
 
   @Override
   public void writeExternal(final ObjectOutput out) throws IOException {
-    final int graphId = graph.getId();
+    final int graphId = this.graph.getId();
     out.writeInt(graphId);
-    out.writeInt(id);
-    out.writeObject(inEdgeIds);
-    out.writeObject(outEdgeIds);
-    out.writeDouble(x);
-    out.writeDouble(y);
+    out.writeInt(this.id);
+    out.writeObject(this.inEdgeIds);
+    out.writeObject(this.outEdgeIds);
+    out.writeDouble(this.x);
+    out.writeDouble(this.y);
   }
 }

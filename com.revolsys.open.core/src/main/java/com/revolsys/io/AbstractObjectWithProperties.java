@@ -15,8 +15,7 @@ public class AbstractObjectWithProperties implements ObjectWithProperties {
   public AbstractObjectWithProperties() {
   }
 
-  public AbstractObjectWithProperties(
-    final Map<String, ? extends Object> properties) {
+  public AbstractObjectWithProperties(final Map<String, ? extends Object> properties) {
     setProperties(properties);
   }
 
@@ -30,12 +29,12 @@ public class AbstractObjectWithProperties implements ObjectWithProperties {
 
   @PreDestroy
   public void close() {
-    properties = null;
+    this.properties = null;
   }
 
   @Override
   public Map<String, Object> getProperties() {
-    return properties;
+    return this.properties;
   }
 
   @Override

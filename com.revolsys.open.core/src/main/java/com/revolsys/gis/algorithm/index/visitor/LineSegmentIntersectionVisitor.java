@@ -18,16 +18,16 @@ public class LineSegmentIntersectionVisitor implements ItemVisitor {
   }
 
   public Set<CoordinatesList> getIntersections() {
-    return intersections;
+    return this.intersections;
   }
 
   @Override
   public void visitItem(final Object item) {
     final LineSegment segment = (LineSegment)item;
-    if (segment.getEnvelope().intersects(querySeg.getEnvelope())) {
-      final CoordinatesList intersection = querySeg.getIntersection(segment);
+    if (segment.getEnvelope().intersects(this.querySeg.getEnvelope())) {
+      final CoordinatesList intersection = this.querySeg.getIntersection(segment);
       if (intersection != null && intersection.size() > 0) {
-        intersections.add(intersection);
+        this.intersections.add(intersection);
       }
     }
 

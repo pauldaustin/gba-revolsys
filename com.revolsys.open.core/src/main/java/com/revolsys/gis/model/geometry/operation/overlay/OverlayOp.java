@@ -28,7 +28,7 @@ import com.vividsolutions.jts.util.Assert;
 /**
  * Computes the overlay of two {@link Geometry}s. The overlay can be used to
  * determine any boolean combination of the geometries.
- * 
+ *
  * @version 1.7
  */
 public class OverlayOp extends GeometryGraphOperation {
@@ -46,7 +46,7 @@ public class OverlayOp extends GeometryGraphOperation {
 
   /**
    * This method will handle arguments of Location.NONE correctly
-   * 
+   *
    * @return true if the locations correspond to the opCode
    */
   public static boolean isResultOfOp(int loc0, int loc1, final int opCode) {
@@ -64,8 +64,8 @@ public class OverlayOp extends GeometryGraphOperation {
       case DIFFERENCE:
         return loc0 == Location.INTERIOR && loc1 != Location.INTERIOR;
       case SYMDIFFERENCE:
-        return (loc0 == Location.INTERIOR && loc1 != Location.INTERIOR)
-          || (loc0 != Location.INTERIOR && loc1 == Location.INTERIOR);
+        return loc0 == Location.INTERIOR && loc1 != Location.INTERIOR || loc0 != Location.INTERIOR
+          && loc1 == Location.INTERIOR;
     }
     return false;
   }
@@ -76,8 +76,7 @@ public class OverlayOp extends GeometryGraphOperation {
     return isResultOfOp(loc0, loc1, opCode);
   }
 
-  public static Geometry overlayOp(final Geometry geom0, final Geometry geom1,
-    final int opCode) {
+  public static Geometry overlayOp(final Geometry geom0, final Geometry geom1, final int opCode) {
     final OverlayOp gov = new OverlayOp(geom0, geom1);
     final Geometry geomOv = gov.getResultGeometry(opCode);
     return geomOv;
@@ -101,13 +100,13 @@ public class OverlayOp extends GeometryGraphOperation {
 
   public OverlayOp(final Geometry g0, final Geometry g1) {
     super(g0, g1);
-    graph = new PlanarGraph(new OverlayNodeFactory());
+    this.graph = new PlanarGraph(new OverlayNodeFactory());
     /**
      * Use factory of primary geometry. Note that this does NOT handle
      * mixed-precision arguments where the second arg has greater precision than
      * the first.
      */
-    geomFact = g0.getGeometryFactory();
+    this.geomFact = g0.getGeometryFactory();
   }
 
   /**
@@ -117,8 +116,8 @@ public class OverlayOp extends GeometryGraphOperation {
   private void cancelDuplicateResultEdges() {
     // remove any dirEdges whose sym is also included
     // (they "cancel each other out")
-    for (final Iterator it = graph.getEdgeEnds().iterator(); it.hasNext();) {
-      final DirectedEdge de = (DirectedEdge)it.next();
+    for (final Object element : this.graph.getEdgeEnds()) {
+      final DirectedEdge de = (DirectedEdge)element;
       final DirectedEdge sym = de.getSym();
       if (de.isInResult() && sym.isInResult()) {
         de.setInResult(false);
@@ -129,15 +128,14 @@ public class OverlayOp extends GeometryGraphOperation {
   }
 
   private Geometry computeGeometry(final List<Point> resultPointList,
-    final List<LineString> resultLineList, final List<Polygon> resultPolyList,
-    final int opcode) {
+    final List<LineString> resultLineList, final List<Polygon> resultPolyList, final int opcode) {
     final List<Geometry> geometries = new ArrayList<Geometry>();
     // element geometries of the result are always in the order P,L,A
     geometries.addAll(resultPointList);
     geometries.addAll(resultLineList);
     geometries.addAll(resultPolyList);
 
-    return geomFact.createGeometry(geometries);
+    return this.geomFact.createGeometry(geometries);
   }
 
   /**
@@ -147,11 +145,11 @@ public class OverlayOp extends GeometryGraphOperation {
    * both Geometries
    */
   private void computeLabelling() {
-    for (final Iterator nodeit = graph.getNodes().iterator(); nodeit.hasNext();) {
-      final Node node = (Node)nodeit.next();
+    for (final Object element : this.graph.getNodes()) {
+      final Node node = (Node)element;
       // if (node.getCoordinates().equals(new Coordinates(222, 100)) )
       // Debug.addWatch(node.getEdges());
-      node.getEdges().computeLabelling(arg);
+      node.getEdges().computeLabelling(this.arg);
     }
     mergeSymLabels();
     updateNodeLabelling();
@@ -181,7 +179,7 @@ public class OverlayOp extends GeometryGraphOperation {
    * corresponds to INTERIOR)
    */
   private void computeLabelsFromDepths() {
-    for (final Iterator it = edgeList.iterator(); it.hasNext();) {
+    for (final Iterator it = this.edgeList.iterator(); it.hasNext();) {
       final Edge e = (Edge)it.next();
       final Label lbl = e.getLabel();
       final Depth depth = e.getDepth();
@@ -210,12 +208,10 @@ public class OverlayOp extends GeometryGraphOperation {
                */
               Assert.isTrue(!depth.isNull(i, Position.LEFT),
                 "depth of LEFT side has not been initialized");
-              lbl.setLocation(i, Position.LEFT,
-                depth.getLocation(i, Position.LEFT));
+              lbl.setLocation(i, Position.LEFT, depth.getLocation(i, Position.LEFT));
               Assert.isTrue(!depth.isNull(i, Position.RIGHT),
                 "depth of RIGHT side has not been initialized");
-              lbl.setLocation(i, Position.RIGHT,
-                depth.getLocation(i, Position.RIGHT));
+              lbl.setLocation(i, Position.RIGHT, depth.getLocation(i, Position.RIGHT));
             }
           }
         }
@@ -231,15 +227,15 @@ public class OverlayOp extends GeometryGraphOperation {
     copyPoints(1);
 
     // node the input Geometries
-    arg[0].computeSelfNodes(li, false);
-    arg[1].computeSelfNodes(li, false);
+    this.arg[0].computeSelfNodes(this.li, false);
+    this.arg[1].computeSelfNodes(this.li, false);
 
     // compute intersections between edges of the two input geometries
-    arg[0].computeEdgeIntersections(arg[1], li, true);
+    this.arg[0].computeEdgeIntersections(this.arg[1], this.li, true);
 
     final List baseSplitEdges = new ArrayList();
-    arg[0].computeSplitEdges(baseSplitEdges);
-    arg[1].computeSplitEdges(baseSplitEdges);
+    this.arg[0].computeSplitEdges(baseSplitEdges);
+    this.arg[1].computeSplitEdges(baseSplitEdges);
     final List splitEdges = baseSplitEdges;
     // add the noded edges to this result graph
     insertUniqueEdges(baseSplitEdges);
@@ -256,9 +252,9 @@ public class OverlayOp extends GeometryGraphOperation {
      * performed, which will hopefully avoid the problem. In the future
      * hopefully a faster check can be developed.
      */
-    EdgeNodingValidator.checkValid(edgeList.getEdges());
+    EdgeNodingValidator.checkValid(this.edgeList.getEdges());
 
-    graph.addEdges(edgeList.getEdges());
+    this.graph.addEdges(this.edgeList.getEdges());
     computeLabelling();
     // Debug.printWatch();
     labelIncompleteNodes();
@@ -274,21 +270,20 @@ public class OverlayOp extends GeometryGraphOperation {
     findResultAreaEdges(opCode);
     cancelDuplicateResultEdges();
 
-    final PolygonBuilder polyBuilder = new PolygonBuilder(geomFact);
-    polyBuilder.add(graph);
-    resultPolyList = polyBuilder.getPolygons();
+    final PolygonBuilder polyBuilder = new PolygonBuilder(this.geomFact);
+    polyBuilder.add(this.graph);
+    this.resultPolyList = polyBuilder.getPolygons();
 
-    final LineBuilder lineBuilder = new LineBuilder(this, geomFact);
-    resultLineList = lineBuilder.build(opCode);
+    final LineBuilder lineBuilder = new LineBuilder(this, this.geomFact);
+    this.resultLineList = lineBuilder.build(opCode);
 
-    final PointBuilder pointBuilder = new PointBuilder(this, geomFact,
-      ptLocator);
-    resultPointList = pointBuilder.build(opCode);
+    final PointBuilder pointBuilder = new PointBuilder(this, this.geomFact, this.ptLocator);
+    this.resultPointList = pointBuilder.build(opCode);
 
     // gather the results from all calculations into a single Geometry for the
     // result set
-    resultGeom = computeGeometry(resultPointList, resultLineList,
-      resultPolyList, opCode);
+    this.resultGeom = computeGeometry(this.resultPointList, this.resultLineList,
+      this.resultPolyList, opCode);
   }
 
   /**
@@ -299,30 +294,11 @@ public class OverlayOp extends GeometryGraphOperation {
    * interior due to the Boundary Determination Rule)
    */
   private void copyPoints(final int argIndex) {
-    for (final Iterator i = arg[argIndex].getNodeIterator(); i.hasNext();) {
+    for (final Iterator i = this.arg[argIndex].getNodeIterator(); i.hasNext();) {
       final Node graphNode = (Node)i.next();
-      final Node newNode = graph.addNode(graphNode.getCoordinate());
+      final Node newNode = this.graph.addNode(graphNode.getCoordinate());
       newNode.setLabel(argIndex, graphNode.getLabel().getLocation(argIndex));
     }
-  }
-
-  private Geometry createEmptyResult(final int opCode) {
-    Geometry result = null;
-    switch (resultDimension(opCode, arg[0].getGeometry(), arg[1].getGeometry())) {
-      case -1:
-        result = geomFact.createGeometryCollection();
-      break;
-      case 0:
-        result = geomFact.createPoint();
-      break;
-      case 1:
-        result = geomFact.createLineString();
-      break;
-      case 2:
-        result = geomFact.createPolygon(null, null);
-      break;
-    }
-    return result;
   }
 
   /**
@@ -333,14 +309,14 @@ public class OverlayOp extends GeometryGraphOperation {
    * dimensional collapses. They do not form part of the result area boundary.
    */
   private void findResultAreaEdges(final int opCode) {
-    for (final Iterator it = graph.getEdgeEnds().iterator(); it.hasNext();) {
-      final DirectedEdge de = (DirectedEdge)it.next();
+    for (final Object element : this.graph.getEdgeEnds()) {
+      final DirectedEdge de = (DirectedEdge)element;
       // mark all dirEdges with the appropriate label
       final Label label = de.getLabel();
       if (label.isArea()
         && !de.isInteriorAreaEdge()
-        && isResultOfOp(label.getLocation(0, Position.RIGHT),
-          label.getLocation(1, Position.RIGHT), opCode)) {
+        && isResultOfOp(label.getLocation(0, Position.RIGHT), label.getLocation(1, Position.RIGHT),
+          opCode)) {
         de.setInResult(true);
         // Debug.print("in result "); Debug.println(de);
       }
@@ -348,12 +324,12 @@ public class OverlayOp extends GeometryGraphOperation {
   }
 
   public PlanarGraph getGraph() {
-    return graph;
+    return this.graph;
   }
 
   public Geometry getResultGeometry(final int funcCode) {
     computeOverlay(funcCode);
-    return resultGeom;
+    return this.resultGeom;
   }
 
   /**
@@ -364,7 +340,7 @@ public class OverlayOp extends GeometryGraphOperation {
   protected void insertUniqueEdge(final Edge e) {
     // <FIX> MD 8 Oct 03 speed up identical edge lookup
     // fast lookup
-    final Edge existingEdge = edgeList.findEqualEdge(e);
+    final Edge existingEdge = this.edgeList.findEqualEdge(e);
 
     // If an identical edge already exists, simply update its label
     if (existingEdge != null) {
@@ -394,7 +370,7 @@ public class OverlayOp extends GeometryGraphOperation {
       // add this new edge to the list of edges in this graph
       // e.setName(name + edges.size());
       // e.getDepth().add(e.getLabel());
-      edgeList.add(e);
+      this.edgeList.add(e);
     }
   }
 
@@ -412,7 +388,7 @@ public class OverlayOp extends GeometryGraphOperation {
   private boolean isCovered(final Coordinates coord, final List geomList) {
     for (final Iterator it = geomList.iterator(); it.hasNext();) {
       final Geometry geom = (Geometry)it.next();
-      final int loc = ptLocator.locate(coord, geom);
+      final int loc = this.ptLocator.locate(coord, geom);
       if (loc != Location.EXTERIOR) {
         return true;
       }
@@ -423,11 +399,11 @@ public class OverlayOp extends GeometryGraphOperation {
   /**
    * This method is used to decide if an L edge should be included in the result
    * or not.
-   * 
+   *
    * @return true if the coord point is covered by a result Area geometry
    */
   public boolean isCoveredByA(final Coordinates coord) {
-    if (isCovered(coord, resultPolyList)) {
+    if (isCovered(coord, this.resultPolyList)) {
       return true;
     }
     return false;
@@ -436,15 +412,15 @@ public class OverlayOp extends GeometryGraphOperation {
   /**
    * This method is used to decide if a point node should be included in the
    * result or not.
-   * 
+   *
    * @return true if the coord point is covered by a result Line or Area
    *         geometry
    */
   public boolean isCoveredByLA(final Coordinates coord) {
-    if (isCovered(coord, resultLineList)) {
+    if (isCovered(coord, this.resultLineList)) {
       return true;
     }
-    if (isCovered(coord, resultPolyList)) {
+    if (isCovered(coord, this.resultPolyList)) {
       return true;
     }
     return false;
@@ -454,8 +430,7 @@ public class OverlayOp extends GeometryGraphOperation {
    * Label an isolated node with its relationship to the target geometry.
    */
   private void labelIncompleteNode(final Node n, final int targetIndex) {
-    final int loc = ptLocator.locate(n.getCoordinate(),
-      arg[targetIndex].getGeometry());
+    final int loc = this.ptLocator.locate(n.getCoordinate(), this.arg[targetIndex].getGeometry());
 
     // MD - 2008-10-24 - experimental for now
     // int loc = arg[targetIndex].locate(n.getCoordinates());
@@ -476,8 +451,8 @@ public class OverlayOp extends GeometryGraphOperation {
    */
   private void labelIncompleteNodes() {
     int nodeCount = 0;
-    for (final Iterator ni = graph.getNodes().iterator(); ni.hasNext();) {
-      final Node n = (Node)ni.next();
+    for (final Object element : this.graph.getNodes()) {
+      final Node n = (Node)element;
       final Label label = n.getLabel();
       if (n.isIsolated()) {
         nodeCount++;
@@ -506,8 +481,8 @@ public class OverlayOp extends GeometryGraphOperation {
    * Geometry, so merge the two labels.
    */
   private void mergeSymLabels() {
-    for (final Iterator nodeit = graph.getNodes().iterator(); nodeit.hasNext();) {
-      final Node node = (Node)nodeit.next();
+    for (final Object element : this.graph.getNodes()) {
+      final Node node = (Node)element;
       ((DirectedEdgeStar)node.getEdges()).mergeSymLabels();
       // node.print(System.out);
     }
@@ -519,7 +494,7 @@ public class OverlayOp extends GeometryGraphOperation {
    */
   private void replaceCollapsedEdges() {
     final List newEdges = new ArrayList();
-    for (final Iterator it = edgeList.iterator(); it.hasNext();) {
+    for (final Iterator it = this.edgeList.iterator(); it.hasNext();) {
       final Edge e = (Edge)it.next();
       if (e.isCollapsed()) {
         // Debug.print(e);
@@ -527,11 +502,10 @@ public class OverlayOp extends GeometryGraphOperation {
         newEdges.add(e.getCollapsedEdge());
       }
     }
-    edgeList.addAll(newEdges);
+    this.edgeList.addAll(newEdges);
   }
 
-  private int resultDimension(final int opCode, final Geometry g0,
-    final Geometry g1) {
+  private int resultDimension(final int opCode, final Geometry g0, final Geometry g1) {
     final int dim0 = g0.getDimension();
     final int dim1 = g1.getDimension();
 
@@ -558,8 +532,8 @@ public class OverlayOp extends GeometryGraphOperation {
     // The label for a node is updated from the edges incident on it
     // (Note that a node may have already been labelled
     // because it is a point in one of the input geometries)
-    for (final Iterator nodeit = graph.getNodes().iterator(); nodeit.hasNext();) {
-      final Node node = (Node)nodeit.next();
+    for (final Object element : this.graph.getNodes()) {
+      final Node node = (Node)element;
       final Label lbl = ((DirectedEdgeStar)node.getEdges()).getLabel();
       node.getLabel().merge(lbl);
     }

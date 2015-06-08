@@ -11,23 +11,20 @@ import com.revolsys.collection.map.LruMap;
 import com.revolsys.swing.list.ResultPagerListCellRenderer;
 
 @SuppressWarnings("serial")
-public class ResultPagerComboBoxModel<T> extends AbstractListModel implements
-  ComboBoxModel {
+public class ResultPagerComboBoxModel<T> extends AbstractListModel implements ComboBoxModel {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
   public static final Object NULL = new Object();
 
-  public static <T> ComboBox create(final ResultPager<T> codeTable,
-    final boolean allowNull, final String... attributeNames) {
-    final ResultPagerComboBoxModel<T> model = new ResultPagerComboBoxModel<T>(
-      codeTable, allowNull);
+  public static <T> ComboBox create(final ResultPager<T> codeTable, final boolean allowNull,
+    final String... attributeNames) {
+    final ResultPagerComboBoxModel<T> model = new ResultPagerComboBoxModel<T>(codeTable, allowNull);
     final ComboBox comboBox = new ComboBox(model);
-    final ResultPagerListCellRenderer renderer = new ResultPagerListCellRenderer(
-      attributeNames);
+    final ResultPagerListCellRenderer renderer = new ResultPagerListCellRenderer(attributeNames);
     comboBox.setRenderer(renderer);
     comboBox.setEditable(false);
     return comboBox;
@@ -49,8 +46,7 @@ public class ResultPagerComboBoxModel<T> extends AbstractListModel implements
     this(pager, true);
   }
 
-  public ResultPagerComboBoxModel(final ResultPager<T> pager,
-    final boolean allowNull) {
+  public ResultPagerComboBoxModel(final ResultPager<T> pager, final boolean allowNull) {
     setPager(pager);
     this.allowNull = allowNull;
   }
@@ -122,8 +118,8 @@ public class ResultPagerComboBoxModel<T> extends AbstractListModel implements
 
   @Override
   public void setSelectedItem(final Object item) {
-    if (this.selectedItem != null && !this.selectedItem.equals(item)
-      || this.selectedItem == null && item != null) {
+    if (this.selectedItem != null && !this.selectedItem.equals(item) || this.selectedItem == null
+      && item != null) {
       this.selectedItem = item;
     }
   }

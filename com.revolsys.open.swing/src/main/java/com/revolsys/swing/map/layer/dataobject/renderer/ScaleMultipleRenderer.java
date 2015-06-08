@@ -8,13 +8,13 @@ import java.util.Map;
 import javax.swing.Icon;
 
 import com.revolsys.jts.geom.BoundingBox;
-import com.vividsolutions.jts.geom.TopologyException;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
 import com.revolsys.util.ExceptionUtil;
+import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * Use the first renderer which is visible at the current scale, ignore all
@@ -28,13 +28,12 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
 
   private transient AbstractDataObjectLayerRenderer renderer;
 
-  public ScaleMultipleRenderer(final AbstractRecordLayer layer,
-    final LayerRenderer<?> parent) {
+  public ScaleMultipleRenderer(final AbstractRecordLayer layer, final LayerRenderer<?> parent) {
     this(layer, parent, Collections.<String, Object> emptyMap());
   }
 
-  public ScaleMultipleRenderer(final AbstractRecordLayer layer,
-    final LayerRenderer<?> parent, final Map<String, Object> style) {
+  public ScaleMultipleRenderer(final AbstractRecordLayer layer, final LayerRenderer<?> parent,
+    final Map<String, Object> style) {
     super("scaleStyle", layer, parent, style);
     setIcon(ICON);
   }
@@ -82,9 +81,8 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
 
   // NOTE: Needed for filter styles
   @Override
-  public void renderRecord(final Viewport2D viewport,
-    final Graphics2D graphics, final BoundingBox visibleArea,
-    final AbstractRecordLayer layer, final LayerDataObject object) {
+  public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject object) {
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {
       if (isVisible(object)) {
@@ -92,8 +90,8 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
           renderer.renderRecord(viewport, graphics, visibleArea, layer, object);
         } catch (final TopologyException e) {
         } catch (final Throwable e) {
-          ExceptionUtil.log(getClass(), "Unabled to render " + layer.getName()
-            + " #" + object.getIdString(), e);
+          ExceptionUtil.log(getClass(),
+            "Unabled to render " + layer.getName() + " #" + object.getIdString(), e);
         }
       }
     }
@@ -101,17 +99,15 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   // NOTE: Needed for multiple styles
-  protected void renderRecords(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractRecordLayer layer,
-    final List<LayerDataObject> objects) {
+  protected void renderRecords(final Viewport2D viewport, final Graphics2D graphics,
+    final AbstractRecordLayer layer, final List<LayerDataObject> objects) {
     final BoundingBox visibleArea = viewport.getBoundingBox();
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {
       for (final LayerDataObject object : objects) {
         if (isVisible(object)) {
           try {
-            renderer.renderRecord(viewport, graphics, visibleArea, layer,
-              object);
+            renderer.renderRecord(viewport, graphics, visibleArea, layer, object);
           } catch (final TopologyException e) {
           }
         }
@@ -120,17 +116,16 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
   }
 
   @Override
-  public void renderSelectedRecord(final Viewport2D viewport,
-    final Graphics2D graphics, final AbstractRecordLayer layer,
-    final LayerDataObject object) {
+  public void renderSelectedRecord(final Viewport2D viewport, final Graphics2D graphics,
+    final AbstractRecordLayer layer, final LayerDataObject object) {
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {
       if (isVisible(object)) {
         try {
           renderer.renderSelectedRecord(viewport, graphics, layer, object);
         } catch (final Throwable e) {
-          ExceptionUtil.log(getClass(), "Unabled to render " + layer.getName()
-            + " #" + object.getIdString(), e);
+          ExceptionUtil.log(getClass(),
+            "Unabled to render " + layer.getName() + " #" + object.getIdString(), e);
         }
       }
     }

@@ -20,7 +20,7 @@ import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentFactory;
 
 public class MenuFactory extends AbstractObjectWithProperties implements
-ComponentFactory<JMenuItem> {
+  ComponentFactory<JMenuItem> {
 
   private final Map<String, List<ComponentFactory<?>>> groups = new HashMap<String, List<ComponentFactory<?>>>();
 
@@ -37,8 +37,7 @@ ComponentFactory<JMenuItem> {
 
   public void addCheckboxMenuItem(final String groupName, final Action action,
     final EnableCheck itemChecked) {
-    final ActionMainMenuItemFactory factory = new ActionMainMenuItemFactory(
-      itemChecked, action);
+    final ActionMainMenuItemFactory factory = new ActionMainMenuItemFactory(itemChecked, action);
     addComponentFactory(groupName, factory);
 
   }
@@ -51,8 +50,7 @@ ComponentFactory<JMenuItem> {
     addComponentFactory(groupName, new ComponentComponentFactory(component));
   }
 
-  public void addComponentFactory(final String groupName,
-    final ComponentFactory<?> factory) {
+  public void addComponentFactory(final String groupName, final ComponentFactory<?> factory) {
     final List<ComponentFactory<?>> factories = getGroup(groupName);
     factories.add(factory);
   }
@@ -93,52 +91,47 @@ ComponentFactory<JMenuItem> {
     if (action == this) {
       throw new RuntimeException("Cannot recursively add");
     }
-    final ActionMainMenuItemFactory factory = new ActionMainMenuItemFactory(
-      action);
+    final ActionMainMenuItemFactory factory = new ActionMainMenuItemFactory(action);
     addComponentFactory(groupName, factory);
   }
 
-  public void addMenuItem(final String groupName, final int index,
-    final Action action) {
+  public void addMenuItem(final String groupName, final int index, final Action action) {
     if (action == this) {
       throw new RuntimeException("Cannot recursively add");
     }
-    final ActionMainMenuItemFactory factory = new ActionMainMenuItemFactory(
-      action);
+    final ActionMainMenuItemFactory factory = new ActionMainMenuItemFactory(action);
     addComponentFactory(groupName, index, factory);
   }
 
-  public void addMenuItem(final String groupName, final int index,
-    final String title, final String iconName, final EnableCheck enableCheck,
-    final Object object, final String methodName, final Object... parameters) {
-    final ImageIcon icon = Icons.getIcon(iconName);
-    final InvokeMethodAction menuItem = createMenuItem(title, title, icon,
-      enableCheck, object, methodName, parameters);
-    addComponentFactory(groupName, index, menuItem);
-  }
-
-  public void addMenuItem(final String groupName, final int index,
-    final String title, final String iconName, final Object object,
+  public void addMenuItem(final String groupName, final int index, final String title,
+    final String iconName, final EnableCheck enableCheck, final Object object,
     final String methodName, final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
-    final InvokeMethodAction menuItem = createMenuItem(title, title, icon,
-      null, object, methodName, parameters);
+    final InvokeMethodAction menuItem = createMenuItem(title, title, icon, enableCheck, object,
+      methodName, parameters);
     addComponentFactory(groupName, index, menuItem);
   }
 
-  public void addMenuItem(final String groupName, final String name,
-    final String title, final Icon icon, final EnableCheck enableCheck,
-    final Object object, final String methodName, final Object... parameters) {
-    final InvokeMethodAction action = createMenuItem(name, title, icon,
-      enableCheck, object, methodName, parameters);
+  public void addMenuItem(final String groupName, final int index, final String title,
+    final String iconName, final Object object, final String methodName, final Object... parameters) {
+    final ImageIcon icon = Icons.getIcon(iconName);
+    final InvokeMethodAction menuItem = createMenuItem(title, title, icon, null, object,
+      methodName, parameters);
+    addComponentFactory(groupName, index, menuItem);
+  }
+
+  public void addMenuItem(final String groupName, final String name, final String title,
+    final Icon icon, final EnableCheck enableCheck, final Object object, final String methodName,
+    final Object... parameters) {
+    final InvokeMethodAction action = createMenuItem(name, title, icon, enableCheck, object,
+      methodName, parameters);
     addComponentFactory(groupName, action);
   }
 
-  public void addMenuItem(final String groupName, final String name,
-    final String title, final Icon icon, final Object object,
-    final String methodName, final Object... parameters) {
-    final InvokeMethodAction action = new InvokeMethodAction(name, title, icon,
-      object, methodName, parameters);
+  public void addMenuItem(final String groupName, final String name, final String title,
+    final Icon icon, final Object object, final String methodName, final Object... parameters) {
+    final InvokeMethodAction action = new InvokeMethodAction(name, title, icon, object, methodName,
+      parameters);
 
     addComponentFactory(groupName, action);
   }
@@ -147,16 +140,14 @@ ComponentFactory<JMenuItem> {
     final String iconName, final EnableCheck enableCheck, final Object object,
     final String methodName, final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
-    addMenuItem(groupName, title, title, icon, enableCheck, object, methodName,
-      parameters);
+    addMenuItem(groupName, title, title, icon, enableCheck, object, methodName, parameters);
   }
 
   public void addMenuItemTitleIcon(final String groupName, final String title,
-    final String iconName, final Object object, final String methodName,
-    final Object... parameters) {
+    final String iconName, final Object object, final String methodName, final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
-    final InvokeMethodAction menuItem = createMenuItem(title, title, icon,
-      null, object, methodName, parameters);
+    final InvokeMethodAction menuItem = createMenuItem(title, title, icon, null, object,
+      methodName, parameters);
     addComponentFactory(groupName, menuItem);
   }
 
@@ -233,11 +224,11 @@ ComponentFactory<JMenuItem> {
     return menu;
   }
 
-  public InvokeMethodAction createMenuItem(final String name,
-    final String title, final Icon icon, final EnableCheck enableCheck,
-    final Object object, final String methodName, final Object... parameters) {
-    final InvokeMethodAction action = new InvokeMethodAction(name, title, icon,
-      object, methodName, parameters);
+  public InvokeMethodAction createMenuItem(final String name, final String title, final Icon icon,
+    final EnableCheck enableCheck, final Object object, final String methodName,
+    final Object... parameters) {
+    final InvokeMethodAction action = new InvokeMethodAction(name, title, icon, object, methodName,
+      parameters);
     action.setEnableCheck(enableCheck);
     return action;
   }

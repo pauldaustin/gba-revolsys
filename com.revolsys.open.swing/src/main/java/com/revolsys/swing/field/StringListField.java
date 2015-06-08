@@ -45,8 +45,7 @@ public class StringListField extends ValueField {
 
   private final ToolBar toolBar = new ToolBar();
 
-  public StringListField(final Comparator<String> comparator,
-    final String fieldName) {
+  public StringListField(final Comparator<String> comparator, final String fieldName) {
     super(fieldName, "");
     setOpaque(false);
     this.comparator = comparator;
@@ -64,13 +63,12 @@ public class StringListField extends ValueField {
     this.valueEntry.setPreferredSize(new Dimension(600, 25));
     fieldPanel.add(this.valueEntry);
 
-    this.addButton = this.toolBar.addButtonTitleIcon("add", "Add", "add", this,
-      "addValue");
+    this.addButton = this.toolBar.addButtonTitleIcon("add", "Add", "add", this, "addValue");
 
     this.valueEntry.addActionListener(this.addButton.getAction());
 
-    this.toolBar.addButtonTitleIcon(SELECTED, "Remove Selected", "delete",
-      this, "removeSelectedValues");
+    this.toolBar.addButtonTitleIcon(SELECTED, "Remove Selected", "delete", this,
+      "removeSelectedValues");
 
     this.valuesField = new JXList(this.values);
     this.valuesField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -84,8 +82,7 @@ public class StringListField extends ValueField {
     this.valueEntry.getDocument().addDocumentListener(
       new InvokeMethodListener(this, "updateFields"));
 
-    this.valuesField.addListSelectionListener(new InvokeMethodListener(this,
-      "updateFields"));
+    this.valuesField.addListSelectionListener(new InvokeMethodListener(this, "updateFields"));
 
   }
 

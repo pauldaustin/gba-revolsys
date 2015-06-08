@@ -39,10 +39,10 @@ public class ThreadLocalMap<K, V> implements Map<K, V> {
   }
 
   public Map<K, V> getMap() {
-    Map<K, V> localMap = map.get();
+    Map<K, V> localMap = this.map.get();
     if (localMap == null) {
       localMap = new HashMap<K, V>();
-      map.set(localMap);
+      this.map.set(localMap);
     }
     return localMap;
   }

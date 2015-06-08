@@ -46,32 +46,28 @@ public final class Property {
     }
   }
 
-  public static void addListener(final Object source,
-    final String propertyName, final Object listener) {
+  public static void addListener(final Object source, final String propertyName,
+    final Object listener) {
     final PropertyChangeListener propertyChangeListener = getPropertyChangeListener(listener);
     if (propertyChangeListener != null) {
       final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
       if (propertyChangeSupport == null) {
         if (source instanceof JComponent) {
           final JComponent component = (JComponent)source;
-          component.addPropertyChangeListener(propertyName,
-            propertyChangeListener);
+          component.addPropertyChangeListener(propertyName, propertyChangeListener);
         }
       } else {
-        propertyChangeSupport.addPropertyChangeListener(propertyName,
-          propertyChangeListener);
+        propertyChangeSupport.addPropertyChangeListener(propertyName, propertyChangeListener);
       }
     }
   }
 
-  public static PropertyDescriptor descriptor(final Class<?> beanClass,
-    final String name) {
+  public static PropertyDescriptor descriptor(final Class<?> beanClass, final String name) {
     if (beanClass != null && StringUtils.hasText(name)) {
       try {
         final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
         final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < props.length; i++) {
-          final PropertyDescriptor property = props[i];
+        for (final PropertyDescriptor property : props) {
           if (property.getName().equals(name)) {
             return property;
           }
@@ -83,26 +79,23 @@ public final class Property {
     return null;
   }
 
-  public static void firePropertyChange(final Object source,
-    final PropertyChangeEvent event) {
+  public static void firePropertyChange(final Object source, final PropertyChangeEvent event) {
     final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
     if (propertyChangeSupport != null) {
       propertyChangeSupport.firePropertyChange(event);
     }
   }
 
-  public static void firePropertyChange(final Object source,
-    final String propertyName, final int index, final Object oldValue,
-    final Object newValue) {
+  public static void firePropertyChange(final Object source, final String propertyName,
+    final int index, final Object oldValue, final Object newValue) {
     final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
     if (propertyChangeSupport != null) {
-      propertyChangeSupport.fireIndexedPropertyChange(propertyName, index,
-        oldValue, newValue);
+      propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
     }
   }
 
-  public static void firePropertyChange(final Object source,
-    final String propertyName, final Object oldValue, final Object newValue) {
+  public static void firePropertyChange(final Object source, final String propertyName,
+    final Object oldValue, final Object newValue) {
     final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
     if (propertyChangeSupport != null) {
       propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
@@ -155,8 +148,7 @@ public final class Property {
     }
   }
 
-  public static Double getDouble(final ObjectWithProperties object,
-    final String key) {
+  public static Double getDouble(final ObjectWithProperties object, final String key) {
     if (object == null) {
       return null;
     } else {
@@ -165,8 +157,8 @@ public final class Property {
     }
   }
 
-  public static double getDouble(final ObjectWithProperties object,
-    final String key, final double defaultValue) {
+  public static double getDouble(final ObjectWithProperties object, final String key,
+    final double defaultValue) {
     if (object == null) {
       return defaultValue;
     } else {
@@ -179,8 +171,7 @@ public final class Property {
     }
   }
 
-  public static Integer getInteger(final ObjectWithProperties object,
-    final String key) {
+  public static Integer getInteger(final ObjectWithProperties object, final String key) {
     if (object == null) {
       return null;
     } else {
@@ -189,8 +180,8 @@ public final class Property {
     }
   }
 
-  public static int getInteger(final ObjectWithProperties object,
-    final String key, final int defaultValue) {
+  public static int getInteger(final ObjectWithProperties object, final String key,
+    final int defaultValue) {
     if (object == null) {
       return defaultValue;
     } else {
@@ -203,8 +194,7 @@ public final class Property {
     }
   }
 
-  public static PropertyChangeListener getPropertyChangeListener(
-    final Object listener) {
+  public static PropertyChangeListener getPropertyChangeListener(final Object listener) {
     if (listener instanceof PropertyChangeListener) {
       final PropertyChangeListener propertyChangeListener = (PropertyChangeListener)listener;
       if (propertyChangeListener instanceof NonWeakListener) {
@@ -240,8 +230,7 @@ public final class Property {
     }
   }
 
-  public static String getString(final ObjectWithProperties object,
-    final String key) {
+  public static String getString(final ObjectWithProperties object, final String key) {
     if (object == null) {
       return null;
     } else {
@@ -250,8 +239,8 @@ public final class Property {
     }
   }
 
-  public static String getString(final ObjectWithProperties object,
-    final String key, final String defaultValue) {
+  public static String getString(final ObjectWithProperties object, final String key,
+    final String defaultValue) {
     if (object == null) {
       return defaultValue;
     } else {
@@ -300,16 +289,15 @@ public final class Property {
     try {
       if (object instanceof Class<?>) {
         final Class<?> clazz = (Class<?>)object;
-        return (V)MethodUtils.invokeStaticMethod(clazz, methodName,
-          parameterArray);
+        return (V)MethodUtils.invokeStaticMethod(clazz, methodName, parameterArray);
       } else {
         return (V)MethodUtils.invokeMethod(object, methodName, parameterArray);
       }
     } catch (final InvocationTargetException e) {
       return (V)ExceptionUtil.throwCauseException(e);
     } catch (final Throwable e) {
-      throw new RuntimeException("Unable to invoke "
-        + toString(object, methodName, parameterArray), e);
+      throw new RuntimeException(
+        "Unable to invoke " + toString(object, methodName, parameterArray), e);
     }
   }
 
@@ -372,8 +360,7 @@ public final class Property {
         if (listener instanceof PropertyChangeListenerProxy) {
           final PropertyChangeListenerProxy listenerProxy = (PropertyChangeListenerProxy)listener;
           final String propertyName = listenerProxy.getPropertyName();
-          propertyChangeSupport.removePropertyChangeListener(propertyName,
-            listener);
+          propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
         }
         propertyChangeSupport.removePropertyChangeListener(listener);
       }
@@ -381,14 +368,12 @@ public final class Property {
 
   }
 
-  public static void removeAllListeners(
-    final PropertyChangeSupport propertyChangeSupport) {
+  public static void removeAllListeners(final PropertyChangeSupport propertyChangeSupport) {
     for (final PropertyChangeListener listener : propertyChangeSupport.getPropertyChangeListeners()) {
       if (listener instanceof PropertyChangeListenerProxy) {
         final PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy)listener;
         final String propertyName = proxy.getPropertyName();
-        propertyChangeSupport.removePropertyChangeListener(propertyName,
-          listener);
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
       }
       propertyChangeSupport.removePropertyChangeListener(listener);
     }
@@ -405,8 +390,7 @@ public final class Property {
           } else if (otherListener instanceof WeakPropertyChangeListener) {
             final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)otherListener;
             final PropertyChangeListener listenerReference = weakListener.getListener();
-            if (listenerReference == null
-              || listenerReference == propertyChangeListener) {
+            if (listenerReference == null || listenerReference == propertyChangeListener) {
               propertyChangeSupport.removePropertyChangeListener(propertyChangeListener);
             }
           }
@@ -420,8 +404,7 @@ public final class Property {
           } else if (otherListener instanceof WeakPropertyChangeListener) {
             final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)otherListener;
             final PropertyChangeListener listenerReference = weakListener.getListener();
-            if (listenerReference == null
-              || listenerReference == propertyChangeListener) {
+            if (listenerReference == null || listenerReference == propertyChangeListener) {
               component.removePropertyChangeListener(propertyChangeListener);
             }
           }
@@ -430,21 +413,19 @@ public final class Property {
     }
   }
 
-  public static void removeListener(final Object source,
-    final String propertyName, final Object listener) {
+  public static void removeListener(final Object source, final String propertyName,
+    final Object listener) {
     if (listener instanceof PropertyChangeListener) {
       final PropertyChangeListener propertyChangeListener = (PropertyChangeListener)listener;
       final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
       if (propertyChangeSupport != null) {
         for (final PropertyChangeListener otherListener : propertyChangeSupport.getPropertyChangeListeners()) {
           if (otherListener == propertyChangeListener) {
-            propertyChangeSupport.removePropertyChangeListener(propertyName,
-              propertyChangeListener);
+            propertyChangeSupport.removePropertyChangeListener(propertyName, propertyChangeListener);
           } else if (otherListener instanceof WeakPropertyChangeListener) {
             final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)otherListener;
             final PropertyChangeListener listenerReference = weakListener.getListener();
-            if (listenerReference == null
-              || listenerReference == propertyChangeListener) {
+            if (listenerReference == null || listenerReference == propertyChangeListener) {
               propertyChangeSupport.removePropertyChangeListener(propertyName,
                 propertyChangeListener);
             }
@@ -455,15 +436,12 @@ public final class Property {
         final Component component = (Component)source;
         for (final PropertyChangeListener otherListener : component.getPropertyChangeListeners()) {
           if (otherListener == propertyChangeListener) {
-            component.removePropertyChangeListener(propertyName,
-              propertyChangeListener);
+            component.removePropertyChangeListener(propertyName, propertyChangeListener);
           } else if (otherListener instanceof WeakPropertyChangeListener) {
             final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)otherListener;
             final PropertyChangeListener listenerReference = weakListener.getListener();
-            if (listenerReference == null
-              || listenerReference == propertyChangeListener) {
-              component.removePropertyChangeListener(propertyName,
-                propertyChangeListener);
+            if (listenerReference == null || listenerReference == propertyChangeListener) {
+              component.removePropertyChangeListener(propertyName, propertyChangeListener);
             }
           }
         }
@@ -471,8 +449,7 @@ public final class Property {
     }
   }
 
-  public static void set(final Object object,
-    final Map<String, ? extends Object> properties) {
+  public static void set(final Object object, final Map<String, ? extends Object> properties) {
     if (properties != null) {
       for (final Entry<String, ? extends Object> property : properties.entrySet()) {
         final String propertyName = property.getKey();
@@ -480,15 +457,13 @@ public final class Property {
         try {
           set(object, propertyName, value);
         } catch (final Throwable e) {
-          ExceptionUtil.log(Property.class, "Unable to set property "
-            + propertyName, e);
+          ExceptionUtil.log(Property.class, "Unable to set property " + propertyName, e);
         }
       }
     }
   }
 
-  public static void set(final Object object, final String propertyName,
-    final Object value) {
+  public static void set(final Object object, final String propertyName, final Object value) {
     if (object != null) {
       if (object instanceof Record) {
         final Record dataObject = (Record)object;

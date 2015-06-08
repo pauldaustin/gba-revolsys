@@ -27,17 +27,16 @@ import com.vividsolutions.jts.geom.Geometry;
 public class TiePointsPanel extends TablePanel {
   private static final long serialVersionUID = 1L;
 
-  private static final List<String> COLUMN_NAMES = Arrays.asList(
-    "sourcePixel.x", "sourcePixel.y", "targetPoint.x", "targetPoint.y");
+  private static final List<String> COLUMN_NAMES = Arrays.asList("sourcePixel.x", "sourcePixel.y",
+    "targetPoint.x", "targetPoint.y");
 
-  private static final List<String> TITLES = Arrays.asList("Source Pixel X",
-    "Source Pixel Y", "Target Point X", "Target Point Y");
+  private static final List<String> TITLES = Arrays.asList("Source Pixel X", "Source Pixel Y",
+    "Target Point X", "Target Point Y");
 
   private final GeoReferencedImageLayer layer;
 
   public TiePointsPanel(final GeoReferencedImageLayer layer) {
-    super(new ObjectListTable(layer.getImage().getTiePoints(), COLUMN_NAMES,
-      TITLES));
+    super(new ObjectListTable(layer.getImage().getTiePoints(), COLUMN_NAMES, TITLES));
 
     this.layer = layer;
 
@@ -48,12 +47,11 @@ public class TiePointsPanel extends TablePanel {
       column.setCellRenderer(new NumberTableCellRenderer("#,###.000"));
     }
 
-    final EnableCheck editableEnableCheck = new ObjectPropertyEnableCheck(
-      layer, "editable");
+    final EnableCheck editableEnableCheck = new ObjectPropertyEnableCheck(layer, "editable");
 
     final MenuFactory menu = getMenu();
-    menu.addMenuItemTitleIcon("zoom", "Zoom to Tie Point",
-      "magnifier_zoom_selected", this, "zoomToTiePoint");
+    menu.addMenuItemTitleIcon("zoom", "Zoom to Tie Point", "magnifier_zoom_selected", this,
+      "zoomToTiePoint");
 
     menu.addMenuItemTitleIcon("record", "Delete Tie Point", "table_row_delete",
       editableEnableCheck, this, "deleteTiePoint");
@@ -62,19 +60,17 @@ public class TiePointsPanel extends TablePanel {
 
     final MenuFactory menuFactory = ObjectTreeModel.findMenu(layer);
     if (menuFactory != null) {
-      toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu",
-        ObjectTree.class, "showMenu", menuFactory, layer, this, 10, 10);
+      toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu", ObjectTree.class, "showMenu",
+        menuFactory, layer, this, 10, 10);
     }
 
-    menu.addMenuItem(
-      "zoom",
+    menu.addMenuItem("zoom",
       TreeItemRunnable.createAction("Zoom to Layer", "magnifier", "zoomToLayer"));
 
-    toolBar.addButton("zoom", "Zoom to Layer", "magnifier", (EnableCheck)null,
-      layer, "zoomToLayer");
+    toolBar.addButton("zoom", "Zoom to Layer", "magnifier", (EnableCheck)null, layer, "zoomToLayer");
 
-    toolBar.addButton("edit", "Fit to Screen", "arrow_out",
-      editableEnableCheck, layer, "fitToViewport");
+    toolBar.addButton("edit", "Fit to Screen", "arrow_out", editableEnableCheck, layer,
+      "fitToViewport");
 
   }
 
@@ -95,7 +91,7 @@ public class TiePointsPanel extends TablePanel {
   }
 
   public GeoReferencedImageLayer getLayer() {
-    return layer;
+    return this.layer;
   }
 
   public List<MappedLocation> getTiePoints() {
@@ -104,9 +100,9 @@ public class TiePointsPanel extends TablePanel {
 
   public void zoomToTiePoint() {
     final MappedLocation object = getEventRowObject();
-    final GeoReferencedImage image = layer.getImage();
-    final Geometry geometry = object.getSourceToTargetLine(image,
-      layer.getBoundingBox(), !layer.isShowOriginalImage());
+    final GeoReferencedImage image = this.layer.getImage();
+    final Geometry geometry = object.getSourceToTargetLine(image, this.layer.getBoundingBox(),
+      !this.layer.isShowOriginalImage());
     if (geometry != null) {
       final Project project = Project.get();
       final GeometryFactory geometryFactory = project.getGeometryFactory();

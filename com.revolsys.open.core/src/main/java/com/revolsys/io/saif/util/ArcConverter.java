@@ -24,8 +24,7 @@ public class ArcConverter implements OsnConverter {
     this.geometryFactory = geometryFactory;
   }
 
-  public ArcConverter(final GeometryFactory geometryFactory,
-    final String geometryType) {
+  public ArcConverter(final GeometryFactory geometryFactory, final String geometryType) {
     this.geometryFactory = geometryFactory;
     this.geometryType = geometryType;
   }
@@ -33,7 +32,7 @@ public class ArcConverter implements OsnConverter {
   @Override
   public Object read(final OsnIterator iterator) {
     final Map<String, Object> values = new TreeMap<String, Object>();
-    values.put(SaifConstants.TYPE, geometryType);
+    values.put(SaifConstants.TYPE, this.geometryType);
 
     String attributeName = iterator.nextAttributeName();
     LineString geometry = null;
@@ -65,7 +64,7 @@ public class ArcConverter implements OsnConverter {
           iterator.nextEndObject();
           iterator.nextEndObject();
         }
-        geometry = geometryFactory.createLineString(coordinates);
+        geometry = this.geometryFactory.createLineString(coordinates);
       } else {
         readAttribute(iterator, attributeName, values);
       }
@@ -78,15 +77,14 @@ public class ArcConverter implements OsnConverter {
     return geometry;
   }
 
-  protected void readAttribute(final OsnIterator iterator,
-    final String attributeName, final Map<String, Object> values) {
+  protected void readAttribute(final OsnIterator iterator, final String attributeName,
+    final Map<String, Object> values) {
     final Object value = iterator.nextValue();
     values.put(attributeName, value);
   }
 
   @Override
-  public void write(final OsnSerializer serializer, final Object object)
-    throws IOException {
+  public void write(final OsnSerializer serializer, final Object object) throws IOException {
     final boolean writeAttributes = true;
     write(serializer, object, writeAttributes);
   }
@@ -95,7 +93,7 @@ public class ArcConverter implements OsnConverter {
     final boolean writeAttributes) throws IOException {
     if (object instanceof LineString) {
       final LineString line = (LineString)object;
-      serializer.startObject(geometryType);
+      serializer.startObject(this.geometryType);
 
       serializer.attributeName("pointList");
       serializer.startCollection("List");
@@ -134,8 +132,8 @@ public class ArcConverter implements OsnConverter {
     }
   }
 
-  protected void writeAttribute(final OsnSerializer serializer,
-    final Map<String, Object> values, final String name) throws IOException {
+  protected void writeAttribute(final OsnSerializer serializer, final Map<String, Object> values,
+    final String name) throws IOException {
     final Object value = values.get(name);
     if (value != null) {
       serializer.endLine();
@@ -143,8 +141,8 @@ public class ArcConverter implements OsnConverter {
     }
   }
 
-  protected void writeAttributes(final OsnSerializer serializer,
-    final Map<String, Object> values) throws IOException {
+  protected void writeAttributes(final OsnSerializer serializer, final Map<String, Object> values)
+    throws IOException {
     writeEnumAttribute(serializer, values, "qualifier");
   }
 

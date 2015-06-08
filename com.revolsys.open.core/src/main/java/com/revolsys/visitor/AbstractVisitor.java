@@ -8,8 +8,7 @@ import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterProxy;
 
-public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>,
-  ComparatorProxy<T> {
+public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, ComparatorProxy<T> {
   private Filter<T> filter;
 
   private Comparator<T> comparator;
@@ -32,12 +31,12 @@ public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>,
 
   @Override
   public Comparator<T> getComparator() {
-    return comparator;
+    return this.comparator;
   }
 
   @Override
   public Filter<T> getFilter() {
-    return filter;
+    return this.filter;
   }
 
   public void setComparator(final Comparator<T> comparator) {

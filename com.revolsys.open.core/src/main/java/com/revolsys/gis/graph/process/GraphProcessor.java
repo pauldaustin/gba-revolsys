@@ -26,28 +26,27 @@ public class GraphProcessor extends BaseInOutProcess<Record, Record> {
   private List<ObjectProcessor<DataObjectGraph>> processors = new ArrayList<ObjectProcessor<DataObjectGraph>>();
 
   public CoordinatesPrecisionModel getPrecisionModel() {
-    return precisionModel;
+    return this.precisionModel;
   }
 
   public List<ObjectProcessor<DataObjectGraph>> getProcessors() {
-    return processors;
+    return this.processors;
   }
 
   @Override
   protected void init() {
     super.init();
-    graph = new DataObjectGraph();
-    if (precisionModel != null) {
-      graph.setPrecisionModel(precisionModel);
+    this.graph = new DataObjectGraph();
+    if (this.precisionModel != null) {
+      this.graph.setPrecisionModel(this.precisionModel);
     }
   }
 
   @Override
-  protected void postRun(final Channel<Record> in,
-    final Channel<Record> out) {
+  protected void postRun(final Channel<Record> in, final Channel<Record> out) {
     if (out != null) {
       processGraph();
-      for (final Edge<Record> edge : graph.getEdges()) {
+      for (final Edge<Record> edge : this.graph.getEdges()) {
         final Record object = edge.getObject();
         out.write(object);
       }
@@ -55,12 +54,11 @@ public class GraphProcessor extends BaseInOutProcess<Record, Record> {
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
     final Geometry geometry = object.getGeometryValue();
     if (geometry instanceof LineString) {
       final LineString line = (LineString)geometry;
-      graph.addEdge(object, line);
+      this.graph.addEdge(object, line);
     } else {
       if (out != null) {
         out.write(object);
@@ -69,10 +67,10 @@ public class GraphProcessor extends BaseInOutProcess<Record, Record> {
   }
 
   private void processGraph() {
-    if (graph != null) {
-      for (final ObjectProcessor<DataObjectGraph> processor : processors) {
+    if (this.graph != null) {
+      for (final ObjectProcessor<DataObjectGraph> processor : this.processors) {
         LOG.info(processor.getClass().getName());
-        processor.process(graph);
+        processor.process(this.graph);
       }
     }
   }
@@ -81,8 +79,7 @@ public class GraphProcessor extends BaseInOutProcess<Record, Record> {
     this.precisionModel = precisionModel;
   }
 
-  public void setProcessors(
-    final List<ObjectProcessor<DataObjectGraph>> processors) {
+  public void setProcessors(final List<ObjectProcessor<DataObjectGraph>> processors) {
     this.processors = processors;
   }
 }

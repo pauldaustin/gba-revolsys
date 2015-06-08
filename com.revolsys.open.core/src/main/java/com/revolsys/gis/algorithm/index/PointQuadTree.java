@@ -26,18 +26,18 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
   }
 
   public boolean contains(final Coordinates point) {
-    if (root == null) {
+    if (this.root == null) {
       return false;
     } else {
-      return root.contains(point);
+      return this.root.contains(point);
     }
   }
 
-  public List<Entry<Coordinates, T>> findEntriesWithinDistance(
-    final Coordinates from, final Coordinates to, final double maxDistance) {
-    final BoundingBox boundingBox = new BoundingBox(geometryFactory, from, to);
+  public List<Entry<Coordinates, T>> findEntriesWithinDistance(final Coordinates from,
+    final Coordinates to, final double maxDistance) {
+    final BoundingBox boundingBox = new BoundingBox(this.geometryFactory, from, to);
     final List<Entry<Coordinates, T>> entries = new ArrayList<Entry<Coordinates, T>>();
-    root.findEntriesWithin(entries, boundingBox);
+    this.root.findEntriesWithin(entries, boundingBox);
     for (final Iterator<Entry<Coordinates, T>> iterator = entries.iterator(); iterator.hasNext();) {
       final Entry<Coordinates, T> entry = iterator.next();
       final Coordinates coordinates = entry.getKey();
@@ -50,24 +50,23 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
   }
 
   public List<T> findWithin(BoundingBox boundingBox) {
-    if (geometryFactory != null) {
-      boundingBox = boundingBox.convert(geometryFactory);
+    if (this.geometryFactory != null) {
+      boundingBox = boundingBox.convert(this.geometryFactory);
     }
     return findWithin((Envelope)boundingBox);
   }
 
   public List<T> findWithin(final Envelope envelope) {
     final List<T> results = new ArrayList<T>();
-    if (root != null) {
-      root.findWithin(results, envelope);
+    if (this.root != null) {
+      this.root.findWithin(results, envelope);
     }
     return results;
   }
 
-  public List<T> findWithinDistance(final Coordinates from,
-    final Coordinates to, final double maxDistance) {
-    final List<Entry<Coordinates, T>> entries = findEntriesWithinDistance(from,
-      to, maxDistance);
+  public List<T> findWithinDistance(final Coordinates from, final Coordinates to,
+    final double maxDistance) {
+    final List<Entry<Coordinates, T>> entries = findEntriesWithinDistance(from, to, maxDistance);
     final List<T> results = new ArrayList<T>();
     for (final Entry<Coordinates, T> entry : entries) {
       final T value = entry.getValue();
@@ -76,15 +75,14 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
     return results;
   }
 
-  public List<T> findWithinDistance(final Coordinates point,
-    final double maxDistance) {
+  public List<T> findWithinDistance(final Coordinates point, final double maxDistance) {
     final double x = point.getX();
     final double y = point.getY();
     BoundingBox envelope = new BoundingBox(x, y);
     envelope = envelope.expand(maxDistance);
     final List<T> results = new ArrayList<T>();
-    if (root != null) {
-      root.findWithin(results, x, y, maxDistance, envelope);
+    if (this.root != null) {
+      this.root.findWithin(results, x, y, maxDistance, envelope);
     }
     return results;
   }
@@ -98,10 +96,10 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
 
   public void put(final double x, final double y, final T value) {
     final PointQuadTreeNode<T> node = new PointQuadTreeNode<T>(value, x, y);
-    if (root == null) {
-      root = node;
+    if (this.root == null) {
+      this.root = node;
     } else {
-      root.put(x, y, node);
+      this.root.put(x, y, node);
     }
   }
 
@@ -113,10 +111,10 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
   }
 
   public boolean remove(final double x, final double y, final T value) {
-    if (root == null) {
+    if (this.root == null) {
       return false;
     } else {
-      root = root.remove(x, y, value);
+      this.root = this.root.remove(x, y, value);
       // TODO change so it returns if the item was removed
       return true;
     }
@@ -124,15 +122,15 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
 
   @Override
   public void visit(final Envelope envelope, final Visitor<T> visitor) {
-    if (root != null) {
-      root.visit(envelope, visitor);
+    if (this.root != null) {
+      this.root.visit(envelope, visitor);
     }
   }
 
   @Override
   public void visit(final Visitor<T> visitor) {
-    if (root != null) {
-      root.visit(visitor);
+    if (this.root != null) {
+      this.root.visit(visitor);
     }
   }
 }

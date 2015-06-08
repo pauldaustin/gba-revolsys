@@ -8,7 +8,7 @@ import com.revolsys.filter.Filter;
 
 /**
  * A visitor implementation which adds all the visited items to a List.
- * 
+ *
  * @author Paul Austin
  * @param <T> The type of item to visit.
  */
@@ -26,18 +26,17 @@ public class CreateListVisitor<T> extends BaseVisitor<T> {
     super(filter);
   }
 
-  public CreateListVisitor(final Filter<T> filter,
-    final Comparator<T> comparator) {
+  public CreateListVisitor(final Filter<T> filter, final Comparator<T> comparator) {
     super(filter, comparator);
   }
 
   @Override
   public boolean doVisit(final T item) {
-    list.add(item);
+    this.list.add(item);
     return true;
   }
 
   public List<T> getList() {
-    return list;
+    return this.list;
   }
 }

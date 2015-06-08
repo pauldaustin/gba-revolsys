@@ -14,11 +14,11 @@ public class DataObjectStoreRegistry {
   }
 
   public RecordStore getDataObjectStore(final String name) {
-    return dataStores.get(name);
+    return this.dataStores.get(name);
   }
 
   public Map<String, RecordStore> getDataStores() {
-    return Collections.unmodifiableMap(dataStores);
+    return Collections.unmodifiableMap(this.dataStores);
   }
 
   public void setDataStores(final Map<String, RecordStore> dataStores) {

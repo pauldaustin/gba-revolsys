@@ -28,8 +28,6 @@ public class DETable extends DEDataset {
 
   private String modelName = "";
 
-  private boolean hasGlobalID;
-
   private String globalIDFieldName = "";
 
   private String rasterFieldName = "";
@@ -53,15 +51,13 @@ public class DETable extends DEDataset {
   }
 
   public void addField(final Field field) {
-    fields.add(field);
+    this.fields.add(field);
     if (field.getType() == FieldType.esriFieldTypeGlobalID) {
-      hasGlobalID = true;
-      globalIDFieldName = field.getName();
+      this.globalIDFieldName = field.getName();
     }
   }
 
-  public void addIndex(final Field field, final boolean unique,
-    final String indexName) {
+  public void addIndex(final Field field, final boolean unique, final String indexName) {
     final Index index = new Index();
     index.setName(indexName);
     index.setIsUnique(unique);
@@ -74,71 +70,70 @@ public class DETable extends DEDataset {
   }
 
   public String getAliasName() {
-    return aliasName;
+    return this.aliasName;
   }
 
   public String getCLSID() {
-    return clsid;
+    return this.clsid;
   }
 
   public List<ControllerMembership> getControllerMemberships() {
-    return controllerMemberships;
+    return this.controllerMemberships;
   }
 
   public String getDefaultSubtypeCode() {
-    return defaultSubtypeCode;
+    return this.defaultSubtypeCode;
   }
 
   public String getEXTCLSID() {
-    return extclsid;
+    return this.extclsid;
   }
 
   public List<PropertySetProperty> getExtensionProperties() {
-    return extensionProperties;
+    return this.extensionProperties;
   }
 
   public List<Field> getFields() {
-    return fields;
+    return this.fields;
   }
 
   public String getGlobalIDFieldName() {
-    if (!StringUtils.hasText(globalIDFieldName)) {
+    if (!StringUtils.hasText(this.globalIDFieldName)) {
       for (final Field field : getFields()) {
         if (field.getType() == FieldType.esriFieldTypeGlobalID) {
-          hasGlobalID = true;
-          globalIDFieldName = field.getName();
+          this.globalIDFieldName = field.getName();
         }
       }
     }
-    return globalIDFieldName;
+    return this.globalIDFieldName;
   }
 
   public List<Index> getIndexes() {
-    return indexes;
+    return this.indexes;
   }
 
   public String getModelName() {
-    return modelName;
+    return this.modelName;
   }
 
   public String getOIDFieldName() {
-    return oidFieldName;
+    return this.oidFieldName;
   }
 
   public String getRasterFieldName() {
-    return rasterFieldName;
+    return this.rasterFieldName;
   }
 
   public List<String> getRelationshipClassNames() {
-    return relationshipClassNames;
+    return this.relationshipClassNames;
   }
 
   public String getSubtypeFieldName() {
-    return subtypeFieldName;
+    return this.subtypeFieldName;
   }
 
   public List<Subtype> getSubtypes() {
-    return subtypes;
+    return this.subtypes;
   }
 
   public boolean isHasGlobalID() {
@@ -146,7 +141,7 @@ public class DETable extends DEDataset {
   }
 
   public boolean isHasOID() {
-    return hasOID;
+    return this.hasOID;
   }
 
   public void setAliasName(final String aliasName) {
@@ -157,8 +152,7 @@ public class DETable extends DEDataset {
     this.clsid = clsid;
   }
 
-  public void setControllerMemberships(
-    final List<ControllerMembership> controllerMemberships) {
+  public void setControllerMemberships(final List<ControllerMembership> controllerMemberships) {
     this.controllerMemberships = controllerMemberships;
   }
 
@@ -170,8 +164,7 @@ public class DETable extends DEDataset {
     this.extclsid = extclsid;
   }
 
-  public void setExtensionProperties(
-    final List<PropertySetProperty> extensionProperties) {
+  public void setExtensionProperties(final List<PropertySetProperty> extensionProperties) {
     this.extensionProperties = extensionProperties;
   }
 
@@ -179,8 +172,7 @@ public class DETable extends DEDataset {
     this.fields = fields;
     for (final Field field : fields) {
       if (field.getType() == FieldType.esriFieldTypeGlobalID) {
-        hasGlobalID = true;
-        globalIDFieldName = field.getName();
+        this.globalIDFieldName = field.getName();
       }
     }
   }
@@ -190,7 +182,6 @@ public class DETable extends DEDataset {
   }
 
   public void setHasGlobalID(final boolean hasGlobalID) {
-    this.hasGlobalID = hasGlobalID;
   }
 
   public void setHasOID(final boolean hasOID) {
@@ -213,8 +204,7 @@ public class DETable extends DEDataset {
     this.rasterFieldName = rasterFieldName;
   }
 
-  public void setRelationshipClassNames(
-    final List<String> relationshipClassNames) {
+  public void setRelationshipClassNames(final List<String> relationshipClassNames) {
     this.relationshipClassNames = relationshipClassNames;
   }
 

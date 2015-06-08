@@ -14,14 +14,12 @@ import com.revolsys.swing.table.TablePanel;
 import com.revolsys.swing.table.dataobject.model.DataObjectListTableModel;
 import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
 
-public class MergedRecordsTableModel extends DataObjectListTableModel implements
-  SortableTableModel {
+public class MergedRecordsTableModel extends DataObjectListTableModel implements SortableTableModel {
   private static final long serialVersionUID = 1L;
 
-  public static TablePanel createPanel(final AbstractRecordLayer layer,
-    final Record mergedObject, final Collection<LayerDataObject> objects) {
-    final MergedRecordsTableModel model = new MergedRecordsTableModel(layer,
-      mergedObject, objects);
+  public static TablePanel createPanel(final AbstractRecordLayer layer, final Record mergedObject,
+    final Collection<LayerDataObject> objects) {
+    final MergedRecordsTableModel model = new MergedRecordsTableModel(layer, mergedObject, objects);
     final DataObjectRowTable table = new DataObjectRowTable(model);
     table.setVisibleRowCount(objects.size() + 2);
     MergedValuePredicate.add(table);
@@ -38,8 +36,8 @@ public class MergedRecordsTableModel extends DataObjectListTableModel implements
     this(layer, null, null);
   }
 
-  public MergedRecordsTableModel(final AbstractRecordLayer layer,
-    final Record mergedObject, final Collection<LayerDataObject> objects) {
+  public MergedRecordsTableModel(final AbstractRecordLayer layer, final Record mergedObject,
+    final Collection<LayerDataObject> objects) {
     super(layer.getRecordDefinition(), objects, layer.getColumnNames());
     setAttributesOffset(1);
     this.mergedObject = mergedObject;
@@ -57,14 +55,14 @@ public class MergedRecordsTableModel extends DataObjectListTableModel implements
   }
 
   public Record getMergedObject() {
-    return mergedObject;
+    return this.mergedObject;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public <V extends Record> V getRecord(final int index) {
     if (index == super.getRowCount()) {
-      return (V)mergedObject;
+      return (V)this.mergedObject;
     } else {
       return (V)super.getRecord(index);
     }
@@ -100,8 +98,7 @@ public class MergedRecordsTableModel extends DataObjectListTableModel implements
   }
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
     final Map<String, Object> object = getRecord(rowIndex);
     if (object != null) {
       final String name = getColumnName(columnIndex);

@@ -25,11 +25,9 @@ public class NodingValidator {
     this.segStrings = segStrings;
   }
 
-  private void checkCollapse(final Coordinates p0, final Coordinates p1,
-    final Coordinates p2) {
+  private void checkCollapse(final Coordinates p0, final Coordinates p1, final Coordinates p2) {
     if (p0.equals(p2)) {
-      throw new RuntimeException("found non-noded collapse at " + p0 + " " + p1
-        + " " + p2);
+      throw new RuntimeException("found non-noded collapse at " + p0 + " " + p1 + " " + p2);
     }
   }
 
@@ -37,7 +35,7 @@ public class NodingValidator {
    * Checks if a segment string contains a segment pattern a-b-a (which implies a self-intersection)
    */
   private void checkCollapses() {
-    for (final Iterator i = segStrings.iterator(); i.hasNext();) {
+    for (final Iterator i = this.segStrings.iterator(); i.hasNext();) {
       final SegmentString ss = (SegmentString)i.next();
       checkCollapses(ss);
     }
@@ -55,24 +53,22 @@ public class NodingValidator {
    * and an interior vertex of another segment string
    */
   private void checkEndPtVertexIntersections() {
-    for (final Iterator i = segStrings.iterator(); i.hasNext();) {
+    for (final Iterator i = this.segStrings.iterator(); i.hasNext();) {
       final SegmentString ss = (SegmentString)i.next();
       final CoordinatesList pts = ss.getCoordinates();
-      checkEndPtVertexIntersections(pts.get(0), segStrings);
-      checkEndPtVertexIntersections(pts.get(pts.size() - 1), segStrings);
+      checkEndPtVertexIntersections(pts.get(0), this.segStrings);
+      checkEndPtVertexIntersections(pts.get(pts.size() - 1), this.segStrings);
     }
   }
 
-  private void checkEndPtVertexIntersections(final Coordinates testPt,
-    final Collection segStrings) {
+  private void checkEndPtVertexIntersections(final Coordinates testPt, final Collection segStrings) {
     for (final Iterator i = segStrings.iterator(); i.hasNext();) {
       final SegmentString ss = (SegmentString)i.next();
       final CoordinatesList pts = ss.getCoordinates();
       for (int j = 1; j < pts.size() - 1; j++) {
         if (pts.get(j).equals(testPt)) {
-          throw new RuntimeException(
-            "found endpt/interior pt intersection at index " + j + " :pt "
-              + testPt);
+          throw new RuntimeException("found endpt/interior pt intersection at index " + j + " :pt "
+            + testPt);
         }
       }
     }
@@ -82,9 +78,9 @@ public class NodingValidator {
    * Checks all pairs of segments for intersections at an interior point of a segment
    */
   private void checkInteriorIntersections() {
-    for (final Iterator i = segStrings.iterator(); i.hasNext();) {
+    for (final Iterator i = this.segStrings.iterator(); i.hasNext();) {
       final SegmentString ss0 = (SegmentString)i.next();
-      for (final Iterator j = segStrings.iterator(); j.hasNext();) {
+      for (final Iterator j = this.segStrings.iterator(); j.hasNext();) {
         final SegmentString ss1 = (SegmentString)j.next();
 
         checkInteriorIntersections(ss0, ss1);
@@ -92,8 +88,8 @@ public class NodingValidator {
     }
   }
 
-  private void checkInteriorIntersections(final SegmentString e0,
-    final int segIndex0, final SegmentString e1, final int segIndex1) {
+  private void checkInteriorIntersections(final SegmentString e0, final int segIndex0,
+    final SegmentString e1, final int segIndex1) {
     if (e0 == e1 && segIndex0 == segIndex1) {
       return;
     }
@@ -103,19 +99,18 @@ public class NodingValidator {
     final Coordinates p10 = e1.getCoordinate(segIndex1);
     final Coordinates p11 = e1.getCoordinate(segIndex1 + 1);
 
-    li.computeIntersection(p00, p01, p10, p11);
-    if (li.hasIntersection()) {
+    this.li.computeIntersection(p00, p01, p10, p11);
+    if (this.li.hasIntersection()) {
 
-      if (li.isProper() || hasInteriorIntersection(li, p00, p01)
-        || hasInteriorIntersection(li, p10, p11)) {
-        throw new RuntimeException("found non-noded intersection at " + p00
-          + "-" + p01 + " and " + p10 + "-" + p11);
+      if (this.li.isProper() || hasInteriorIntersection(this.li, p00, p01)
+        || hasInteriorIntersection(this.li, p10, p11)) {
+        throw new RuntimeException("found non-noded intersection at " + p00 + "-" + p01 + " and "
+          + p10 + "-" + p11);
       }
     }
   }
 
-  private void checkInteriorIntersections(final SegmentString ss0,
-    final SegmentString ss1) {
+  private void checkInteriorIntersections(final SegmentString ss0, final SegmentString ss1) {
     final CoordinatesList pts0 = ss0.getCoordinates();
     final CoordinatesList pts1 = ss1.getCoordinates();
     for (int i0 = 0; i0 < pts0.size() - 1; i0++) {
@@ -136,8 +131,8 @@ public class NodingValidator {
   /**
    *@return true if there is an intersection point which is not an endpoint of the segment p0-p1
    */
-  private boolean hasInteriorIntersection(final LineIntersector li,
-    final Coordinates p0, final Coordinates p1) {
+  private boolean hasInteriorIntersection(final LineIntersector li, final Coordinates p0,
+    final Coordinates p1) {
     for (int i = 0; i < li.getIntersectionNum(); i++) {
       final Coordinates intPt = li.getIntersection(i);
       if (!(intPt.equals(p0) || intPt.equals(p1))) {

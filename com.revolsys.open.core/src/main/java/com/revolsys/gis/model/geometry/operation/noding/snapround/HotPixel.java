@@ -14,12 +14,14 @@ import com.vividsolutions.jts.util.Assert;
  * <p>
  * The hot pixel operations are all computed in the integer domain to avoid
  * rounding problems.
- * 
+ *
  * @version 1.7
  */
 public class HotPixel {
   // testing only
   // public static int nTests = 0;
+
+  private static final double SAFE_ENV_EXPANSION_FACTOR = 0.75;
 
   private final LineIntersector li;
 
@@ -48,27 +50,24 @@ public class HotPixel {
 
   private BoundingBox safeEnv = null;
 
-  private static final double SAFE_ENV_EXPANSION_FACTOR = 0.75;
-
   /**
    * Creates a new hot pixel.
-   * 
+   *
    * @param pt the coordinate at the centre of the pixel
    * @param scaleFactor the scaleFactor determining the pixel size
    * @param li the intersector to use for testing intersection with line
    *          segments
    */
-  public HotPixel(final Coordinates pt, final double scaleFactor,
-    final LineIntersector li) {
-    originalPt = pt;
+  public HotPixel(final Coordinates pt, final double scaleFactor, final LineIntersector li) {
+    this.originalPt = pt;
     this.pt = pt;
     this.scaleFactor = scaleFactor;
     this.li = li;
     // tolerance = 0.5;
     if (scaleFactor != 1.0) {
       this.pt = new DoubleCoordinates(scale(pt.getX()), scale(pt.getY()));
-      p0Scaled = new DoubleCoordinates();
-      p1Scaled = new DoubleCoordinates();
+      this.p0Scaled = new DoubleCoordinates();
+      this.p1Scaled = new DoubleCoordinates();
     }
     initCorners(this.pt);
   }
@@ -76,13 +75,12 @@ public class HotPixel {
   /**
    * Adds a new node (equal to the snap pt) to the specified segment if the
    * segment passes through the hot pixel
-   * 
+   *
    * @param segStr
    * @param segIndex
    * @return true if a node was added to the segment
    */
-  public boolean addSnappedNode(final NodedSegmentString segStr,
-    final int segIndex) {
+  public boolean addSnappedNode(final NodedSegmentString segStr, final int segIndex) {
     final Coordinates p0 = segStr.getCoordinate(segIndex);
     final Coordinates p1 = segStr.getCoordinate(segIndex + 1);
 
@@ -104,57 +102,57 @@ public class HotPixel {
 
   /**
    * Gets the coordinate this hot pixel is based at.
-   * 
+   *
    * @return the coordinate of the pixel
    */
   public Coordinates getCoordinates() {
-    return originalPt;
+    return this.originalPt;
   }
 
   /**
    * Returns a "safe" envelope that is guaranteed to contain the hot pixel. The
    * envelope returned will be larger than the exact envelope of the pixel.
-   * 
+   *
    * @return an envelope which contains the hot pixel
    */
   public BoundingBox getSafeBoundingBox() {
-    if (safeEnv == null) {
-      final double safeTolerance = SAFE_ENV_EXPANSION_FACTOR / scaleFactor;
-      safeEnv = new BoundingBox(null, originalPt.getX() - safeTolerance,
-        originalPt.getY() - safeTolerance, originalPt.getX() + safeTolerance,
-        originalPt.getY() + safeTolerance);
+    if (this.safeEnv == null) {
+      final double safeTolerance = SAFE_ENV_EXPANSION_FACTOR / this.scaleFactor;
+      this.safeEnv = new BoundingBox(null, this.originalPt.getX() - safeTolerance,
+        this.originalPt.getY() - safeTolerance, this.originalPt.getX() + safeTolerance,
+        this.originalPt.getY() + safeTolerance);
     }
-    return safeEnv;
+    return this.safeEnv;
   }
 
   private void initCorners(final Coordinates pt) {
     final double tolerance = 0.5;
-    minx = pt.getX() - tolerance;
-    maxx = pt.getX() + tolerance;
-    miny = pt.getY() - tolerance;
-    maxy = pt.getY() + tolerance;
+    this.minx = pt.getX() - tolerance;
+    this.maxx = pt.getX() + tolerance;
+    this.miny = pt.getY() - tolerance;
+    this.maxy = pt.getY() + tolerance;
 
-    corner[0] = new DoubleCoordinates(maxx, maxy);
-    corner[1] = new DoubleCoordinates(minx, maxy);
-    corner[2] = new DoubleCoordinates(minx, miny);
-    corner[3] = new DoubleCoordinates(maxx, miny);
+    this.corner[0] = new DoubleCoordinates(this.maxx, this.maxy);
+    this.corner[1] = new DoubleCoordinates(this.minx, this.maxy);
+    this.corner[2] = new DoubleCoordinates(this.minx, this.miny);
+    this.corner[3] = new DoubleCoordinates(this.maxx, this.miny);
   }
 
   /**
    * Tests whether the line segment (p0-p1) intersects this hot pixel.
-   * 
+   *
    * @param p0 the first coordinate of the line segment to test
    * @param p1 the second coordinate of the line segment to test
    * @return true if the line segment intersects this hot pixel
    */
   public boolean intersects(final Coordinates p0, final Coordinates p1) {
-    if (scaleFactor == 1.0) {
+    if (this.scaleFactor == 1.0) {
       return intersectsScaled(p0, p1);
     }
 
-    copyScaled(p0, p0Scaled);
-    copyScaled(p1, p1Scaled);
-    return intersectsScaled(p0Scaled, p1Scaled);
+    copyScaled(p0, this.p0Scaled);
+    copyScaled(p1, this.p1Scaled);
+    return intersectsScaled(this.p0Scaled, this.p1Scaled);
   }
 
   private boolean intersectsScaled(final Coordinates p0, final Coordinates p1) {
@@ -163,8 +161,8 @@ public class HotPixel {
     final double segMiny = Math.min(p0.getY(), p1.getY());
     final double segMaxy = Math.max(p0.getY(), p1.getY());
 
-    final boolean isOutsidePixelEnv = maxx < segMinx || minx > segMaxx
-      || maxy < segMiny || miny > segMaxy;
+    final boolean isOutsidePixelEnv = this.maxx < segMinx || this.minx > segMaxx
+      || this.maxy < segMiny || this.miny > segMaxy;
     if (isOutsidePixelEnv) {
       return false;
     }
@@ -206,39 +204,38 @@ public class HotPixel {
    * <li>an intersection between the segment and both the left and bottom edges
    * <li>an intersection between a segment endpoint and the hot pixel coordinate
    * </ul>
-   * 
+   *
    * @param p0
    * @param p1
    * @return
    */
-  private boolean intersectsToleranceSquare(final Coordinates p0,
-    final Coordinates p1) {
+  private boolean intersectsToleranceSquare(final Coordinates p0, final Coordinates p1) {
     boolean intersectsLeft = false;
     boolean intersectsBottom = false;
 
-    li.computeIntersection(p0, p1, corner[0], corner[1]);
-    if (li.isProper()) {
+    this.li.computeIntersection(p0, p1, this.corner[0], this.corner[1]);
+    if (this.li.isProper()) {
       return true;
     }
 
-    li.computeIntersection(p0, p1, corner[1], corner[2]);
-    if (li.isProper()) {
+    this.li.computeIntersection(p0, p1, this.corner[1], this.corner[2]);
+    if (this.li.isProper()) {
       return true;
     }
-    if (li.hasIntersection()) {
+    if (this.li.hasIntersection()) {
       intersectsLeft = true;
     }
 
-    li.computeIntersection(p0, p1, corner[2], corner[3]);
-    if (li.isProper()) {
+    this.li.computeIntersection(p0, p1, this.corner[2], this.corner[3]);
+    if (this.li.isProper()) {
       return true;
     }
-    if (li.hasIntersection()) {
+    if (this.li.hasIntersection()) {
       intersectsBottom = true;
     }
 
-    li.computeIntersection(p0, p1, corner[3], corner[0]);
-    if (li.isProper()) {
+    this.li.computeIntersection(p0, p1, this.corner[3], this.corner[0]);
+    if (this.li.isProper()) {
       return true;
     }
 
@@ -246,10 +243,10 @@ public class HotPixel {
       return true;
     }
 
-    if (p0.equals(pt)) {
+    if (p0.equals(this.pt)) {
       return true;
     }
-    if (p1.equals(pt)) {
+    if (p1.equals(this.pt)) {
       return true;
     }
 
@@ -257,7 +254,7 @@ public class HotPixel {
   }
 
   private double scale(final double val) {
-    return Math.round(val * scaleFactor);
+    return Math.round(val * this.scaleFactor);
   }
 
 }

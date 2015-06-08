@@ -19,14 +19,13 @@ import com.revolsys.swing.map.layer.MapTile;
 import com.revolsys.swing.parallel.RunnableSwingWorkerManager;
 import com.revolsys.util.Property;
 
-public class TiledImageLayerRenderer extends
-  AbstractLayerRenderer<AbstractTiledImageLayer> implements
-  PropertyChangeListener {
-
-  private final Map<MapTile, MapTile> cachedTiles = new HashMap<MapTile, MapTile>();
+public class TiledImageLayerRenderer extends AbstractLayerRenderer<AbstractTiledImageLayer>
+  implements PropertyChangeListener {
 
   private static RunnableSwingWorkerManager tileLoaderManager = new RunnableSwingWorkerManager(
     "Load Map Tiles");
+
+  private final Map<MapTile, MapTile> cachedTiles = new HashMap<MapTile, MapTile>();
 
   private GeometryFactory geometryFactory;
 
@@ -45,8 +44,7 @@ public class TiledImageLayerRenderer extends
     if (newValue instanceof BoundingBox) {
       final BoundingBox newBoundingBox = (BoundingBox)newValue;
       synchronized (this.cachedTiles) {
-        final List<MapTile> mapTiles = new ArrayList<MapTile>(
-          this.cachedTiles.keySet());
+        final List<MapTile> mapTiles = new ArrayList<MapTile>(this.cachedTiles.keySet());
         final GeometryFactory newGeometryFactory = newBoundingBox.getGeometryFactory();
         for (final MapTile mapTile : mapTiles) {
           final BoundingBox boundingBox = mapTile.getBoundingBox();
@@ -73,13 +71,12 @@ public class TiledImageLayerRenderer extends
     final GeometryFactory geometryFactory = viewport.getGeometryFactory();
     final double resolution = layer.getResolution(viewport);
     synchronized (this.cachedTiles) {
-      if (resolution != this.resolution
-        || geometryFactory != this.geometryFactory) {
+      if (resolution != this.resolution || geometryFactory != this.geometryFactory) {
         this.resolution = resolution;
         this.geometryFactory = geometryFactory;
         this.cachedTiles.clear();
-        tileLoaderManager.removeTasks(loadingTasks);
-        loadingTasks.clear();
+        tileLoaderManager.removeTasks(this.loadingTasks);
+        this.loadingTasks.clear();
       }
     }
     final List<Runnable> tasks = new ArrayList<Runnable>();
@@ -92,8 +89,7 @@ public class TiledImageLayerRenderer extends
           if (cachedTile == null) {
             cachedTile = mapTile;
             this.cachedTiles.put(cachedTile, cachedTile);
-            final Runnable task = new TileLoadTask(this, geometryFactory,
-              cachedTile);
+            final Runnable task = new TileLoadTask(this, geometryFactory, cachedTile);
             tasks.add(task);
           }
         }
@@ -102,14 +98,14 @@ public class TiledImageLayerRenderer extends
         GeoReferencedImageLayerRenderer.render(viewport, graphics, image, false);
       }
     }
-    synchronized (loadingTasks) {
-      loadingTasks.addAll(tasks);
+    synchronized (this.loadingTasks) {
+      this.loadingTasks.addAll(tasks);
       tileLoaderManager.addTasks(tasks);
     }
   }
 
   public void setLoaded(final TileLoadTask tileLoadTask) {
-    loadingTasks.remove(tileLoadTask);
+    this.loadingTasks.remove(tileLoadTask);
     getLayer().firePropertyChange("loading", false, true);
   }
 

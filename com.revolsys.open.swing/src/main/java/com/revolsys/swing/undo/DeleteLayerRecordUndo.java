@@ -24,10 +24,10 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
   @Override
   public boolean canRedo() {
     if (super.canRedo()) {
-      if (record != null) {
-        final AbstractRecordLayer layer = record.getLayer();
+      if (this.record != null) {
+        final AbstractRecordLayer layer = this.record.getLayer();
         if (layer != null) {
-          return !layer.isDeleted(record);
+          return !layer.isDeleted(this.record);
         }
       }
     }
@@ -37,10 +37,10 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
   @Override
   public boolean canUndo() {
     if (super.canUndo()) {
-      if (record != null) {
-        final AbstractRecordLayer layer = record.getLayer();
+      if (this.record != null) {
+        final AbstractRecordLayer layer = this.record.getLayer();
         if (layer != null) {
-          return layer.isDeleted(record);
+          return layer.isDeleted(this.record);
         }
       }
     }
@@ -49,20 +49,20 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
 
   @Override
   protected void doRedo() {
-    if (record != null) {
-      final AbstractRecordLayer layer = record.getLayer();
+    if (this.record != null) {
+      final AbstractRecordLayer layer = this.record.getLayer();
       if (layer != null) {
-        layer.deleteRecords(record);
-        layer.unSelectRecords(record);
+        layer.deleteRecords(this.record);
+        layer.unSelectRecords(this.record);
       }
     }
   }
 
   @Override
   protected void doUndo() {
-    if (record != null) {
-      final LayerDataObject sourceRecord = record.revertChanges();
-      sourceRecord.setValues(values);
+    if (this.record != null) {
+      final LayerDataObject sourceRecord = this.record.revertChanges();
+      sourceRecord.setValues(this.values);
       final AbstractRecordLayer layer = sourceRecord.getLayer();
       layer.addSelectedRecords(sourceRecord);
     }

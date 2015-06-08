@@ -19,9 +19,9 @@ import com.esri.sde.sdk.client.SeShape;
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
@@ -44,8 +44,8 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class ArcSdeBinaryGeometryDataStoreUtil {
 
-  private final DataStoreIteratorFactory iteratorFactory = new DataStoreIteratorFactory(
-    this, "createIterator");
+  private final DataStoreIteratorFactory iteratorFactory = new DataStoreIteratorFactory(this,
+    "createIterator");
 
   private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 
@@ -81,26 +81,25 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
   }
 
   public void createGeometryColumn(final AbstractJdbcRecordStore dataStore,
-    final RecordStoreSchema schema, final RecordDefinition metaData,
-    final String typePath, final String columnName,
-    final Map<String, Object> columnProperties) {
+    final RecordStoreSchema schema, final RecordDefinition metaData, final String typePath,
+    final String columnName, final Map<String, Object> columnProperties) {
     final FieldDefinition attribute = metaData.getField(columnName);
 
-    DataType dataType = JdbcFieldAdder.getColumnProperty(schema, typePath,
-      columnName, JdbcFieldAdder.GEOMETRY_TYPE);
+    DataType dataType = JdbcFieldAdder.getColumnProperty(schema, typePath, columnName,
+      JdbcFieldAdder.GEOMETRY_TYPE);
     if (dataType == null) {
       dataType = DataTypes.GEOMETRY;
     }
 
-    GeometryFactory geometryFactory = JdbcFieldAdder.getColumnProperty(
-      schema, typePath, columnName, JdbcFieldAdder.GEOMETRY_FACTORY);
+    GeometryFactory geometryFactory = JdbcFieldAdder.getColumnProperty(schema, typePath,
+      columnName, JdbcFieldAdder.GEOMETRY_FACTORY);
     if (geometryFactory == null) {
       geometryFactory = schema.getGeometryFactory();
     }
 
-    final ArcSdeBinaryGeometryAttribute sdeAttribute = new ArcSdeBinaryGeometryAttribute(
-      this, columnName, dataType, attribute.isRequired(),
-      "The GEOMETRY reference", attribute.getProperties(), geometryFactory);
+    final ArcSdeBinaryGeometryAttribute sdeAttribute = new ArcSdeBinaryGeometryAttribute(this,
+      columnName, dataType, attribute.isRequired(), "The GEOMETRY reference",
+      attribute.getProperties(), geometryFactory);
     ((RecordDefinitionImpl)metaData).replaceAttribute(attribute, sdeAttribute);
     sdeAttribute.setMetaData(metaData);
 
@@ -109,15 +108,13 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     ((RecordDefinitionImpl)metaData).setGeometryFieldName(columnName);
   }
 
-  public AbstractIterator<Record> createIterator(
-    final OracleDataObjectStore dataStore, final Query query,
-    final Map<String, Object> properties) {
+  public AbstractIterator<Record> createIterator(final OracleDataObjectStore dataStore,
+    final Query query, final Map<String, Object> properties) {
     final BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox == null) {
       return null;
     } else {
-      return new ArcSdeBinaryGeometryQueryIterator(this, dataStore, query,
-        properties);
+      return new ArcSdeBinaryGeometryQueryIterator(this, dataStore, query, properties);
     }
   }
 
@@ -147,19 +144,15 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     }
   }
 
-  public CoordinatesList getCoordinates(final SeShape shape,
-    final double[][][] allCoordinates, final int partIndex,
-    final int ringIndex, final int numAxis) {
+  public CoordinatesList getCoordinates(final SeShape shape, final double[][][] allCoordinates,
+    final int partIndex, final int ringIndex, final int numAxis) {
     try {
       final int numCoords = shape.getNumPoints(partIndex + 1, ringIndex + 1);
-      final CoordinatesList coordinates = new DoubleCoordinatesList(numCoords,
-        numAxis);
+      final CoordinatesList coordinates = new DoubleCoordinatesList(numCoords, numAxis);
       for (int coordinateIndex = 0; coordinateIndex < numCoords; coordinateIndex++) {
 
-        final double x = allCoordinates[partIndex][ringIndex][coordinateIndex
-          * numAxis];
-        final double y = allCoordinates[partIndex][ringIndex][coordinateIndex
-          * numAxis + 1];
+        final double x = allCoordinates[partIndex][ringIndex][coordinateIndex * numAxis];
+        final double y = allCoordinates[partIndex][ringIndex][coordinateIndex * numAxis + 1];
         coordinates.setX(coordinateIndex, x);
         coordinates.setY(coordinateIndex, y);
       }
@@ -174,8 +167,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     return this.dataStore.getDatabaseQualifiedTableName(typePath);
   }
 
-  public void setValueFromRow(final Record object, final SeRow row,
-    final int columnIndex) {
+  public void setValueFromRow(final Record object, final SeRow row, final int columnIndex) {
     if (object != null && row != null) {
       try {
         final SeColumnDefinition columnDefinition = row.getColumnDef(columnIndex);
@@ -240,17 +232,14 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
             break;
 
             default:
-              LoggerFactory.getLogger(ArcSdeBinaryGeometryDataStoreUtil.class)
-                .error(
-                  "Unsupported column type: " + object.getRecordDefinition() + "."
-                    + name);
+              LoggerFactory.getLogger(ArcSdeBinaryGeometryDataStoreUtil.class).error(
+                "Unsupported column type: " + object.getRecordDefinition() + "." + name);
             break;
           }
           object.setValue(name, value);
         }
       } catch (final SeException e) {
-        throw new RuntimeException("Unable to get value " + columnIndex
-          + " from result set", e);
+        throw new RuntimeException("Unable to get value " + columnIndex + " from result set", e);
       }
     }
   }
@@ -269,8 +258,8 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
       if (shape.isMeasured()) {
         numAxis = 4;
       }
-      final GeometryFactory geometryFactory = GeometryFactory.getFactory(srid,
-        numAxis, scaleXy, scaleZ);
+      final GeometryFactory geometryFactory = GeometryFactory.getFactory(srid, numAxis, scaleXy,
+        scaleZ);
 
       final int numParts = shape.getNumParts();
       final double[][][] allCoordinates = shape.getAllCoords();
@@ -284,8 +273,8 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
           for (int partIndex = 0; partIndex < numParts; partIndex++) {
             final int numRings = shape.getNumSubParts(partIndex + 1);
             for (int ringIndex = 0; ringIndex < numRings; ringIndex++) {
-              final CoordinatesList coordinates = getCoordinates(shape,
-                allCoordinates, partIndex, ringIndex, numAxis);
+              final CoordinatesList coordinates = getCoordinates(shape, allCoordinates, partIndex,
+                ringIndex, numAxis);
               final Point point = geometryFactory.createPoint(coordinates);
               if (!point.isEmpty()) {
                 points.add(point);
@@ -303,8 +292,8 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
           for (int partIndex = 0; partIndex < numParts; partIndex++) {
             final int numRings = shape.getNumSubParts(partIndex + 1);
             for (int ringIndex = 0; ringIndex < numRings; ringIndex++) {
-              final CoordinatesList coordinates = getCoordinates(shape,
-                allCoordinates, partIndex, ringIndex, numAxis);
+              final CoordinatesList coordinates = getCoordinates(shape, allCoordinates, partIndex,
+                ringIndex, numAxis);
               final LineString line = geometryFactory.createLineString(coordinates);
               if (!line.isEmpty()) {
                 lines.add(line);
@@ -323,8 +312,8 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
             final int numRings = shape.getNumSubParts(partIndex + 1);
             final List<CoordinatesList> rings = new ArrayList<CoordinatesList>();
             for (int ringIndex = 0; ringIndex < numRings; ringIndex++) {
-              final CoordinatesList coordinates = getCoordinates(shape,
-                allCoordinates, partIndex, ringIndex, numAxis);
+              final CoordinatesList coordinates = getCoordinates(shape, allCoordinates, partIndex,
+                ringIndex, numAxis);
               rings.add(coordinates);
             }
             if (!rings.isEmpty()) {
@@ -339,8 +328,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
           }
 
         default:
-          throw new IllegalArgumentException("Shape not supported:"
-            + shape.asText(1000));
+          throw new IllegalArgumentException("Shape not supported:" + shape.asText(1000));
       }
 
     } catch (final SeException e) {

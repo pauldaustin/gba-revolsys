@@ -56,8 +56,8 @@ import com.vividsolutions.jts.operation.buffer.BufferParameters;
  * the Minkowski sum (or difference) of the geometry
  * with a circle of radius equal to the absolute value of the buffer distance.
  * In the CAD/CAM world buffers are known as </i>offset curves</i>.
- * In morphological analysis the 
- * operation of postive and negative buffering 
+ * In morphological analysis the
+ * operation of postive and negative buffering
  * is referred to as <i>erosion</i> and <i>dilation</i>
  * <p>
  * The buffer operation always returns a polygonal result.
@@ -111,7 +111,7 @@ public class BufferOp {
   /**
    * A number of digits of precision which leaves some computational "headroom"
    * for floating point operations.
-   * 
+   *
    * This value should be less than the decimal precision of double-precision values (16).
    */
   private static int MAX_PRECISION_DIGITS = 12;
@@ -200,8 +200,8 @@ public class BufferOp {
    *
    * @return a scale factor for the buffer computation
    */
-  private static double precisionScaleFactor(final Geometry g,
-    final double distance, final int maxPrecisionDigits) {
+  private static double precisionScaleFactor(final Geometry g, final double distance,
+    final int maxPrecisionDigits) {
     final BoundingBox env = g.getBoundingBox();
     final double envSize = Math.max(env.getHeight(), env.getWidth());
     final double expandByDistance = distance > 0.0 ? distance : 0.0;
@@ -231,7 +231,7 @@ public class BufferOp {
    * @param g the geometry to buffer
    */
   public BufferOp(final Geometry g) {
-    argGeom = g;
+    this.argGeom = g;
   }
 
   /**
@@ -242,28 +242,28 @@ public class BufferOp {
    * @param bufParams the buffer parameters to use
    */
   public BufferOp(final Geometry g, final BufferParameters bufParams) {
-    argGeom = g;
+    this.argGeom = g;
     this.bufParams = bufParams;
   }
 
   private void bufferFixedPrecision(final CoordinatesPrecisionModel fixedPM) {
-    final Noder noder = new ScaledNoder(new MCIndexSnapRounder(
-      new SimpleCoordinatesPrecisionModel(1.0)), fixedPM.getScaleXY());
+    final Noder noder = new ScaledNoder(new MCIndexSnapRounder(new SimpleCoordinatesPrecisionModel(
+      1.0)), fixedPM.getScaleXY());
 
-    final BufferBuilder bufBuilder = new BufferBuilder(bufParams);
+    final BufferBuilder bufBuilder = new BufferBuilder(this.bufParams);
     bufBuilder.setWorkingPrecisionModel(fixedPM);
     bufBuilder.setNoder(noder);
     // this may throw an exception, if robustness errors are encountered
-    resultGeometry = bufBuilder.buffer(argGeom, distance);
+    this.resultGeometry = bufBuilder.buffer(this.argGeom, this.distance);
   }
 
   private void bufferOriginalPrecision() {
     try {
       // use fast noding by default
-      final BufferBuilder bufBuilder = new BufferBuilder(bufParams);
-      resultGeometry = bufBuilder.buffer(argGeom, distance);
+      final BufferBuilder bufBuilder = new BufferBuilder(this.bufParams);
+      this.resultGeometry = bufBuilder.buffer(this.argGeom, this.distance);
     } catch (final RuntimeException ex) {
-      saveException = ex;
+      this.saveException = ex;
       // don't propagate the exception - it will be detected by fact that
       // resultGeometry is null
 
@@ -279,21 +279,21 @@ public class BufferOp {
         bufferReducedPrecision(precDigits);
       } catch (final TopologyException ex) {
         // update the saved exception to reflect the new input geometry
-        saveException = ex;
+        this.saveException = ex;
         // don't propagate the exception - it will be detected by fact that
         // resultGeometry is null
       }
-      if (resultGeometry != null) {
+      if (this.resultGeometry != null) {
         return;
       }
     }
 
     // tried everything - have to bail
-    throw saveException;
+    throw this.saveException;
   }
 
   private void bufferReducedPrecision(final int precisionDigits) {
-    final double sizeBasedScaleFactor = precisionScaleFactor(argGeom, distance,
+    final double sizeBasedScaleFactor = precisionScaleFactor(this.argGeom, this.distance,
       precisionDigits);
     // System.out.println("recomputing with precision scale factor = " +
     // sizeBasedScaleFactor);
@@ -305,11 +305,11 @@ public class BufferOp {
 
   private void computeGeometry() {
     bufferOriginalPrecision();
-    if (resultGeometry != null) {
+    if (this.resultGeometry != null) {
       return;
     }
 
-    final GeometryFactory geometryFactory = argGeom.getGeometryFactory();
+    final GeometryFactory geometryFactory = this.argGeom.getGeometryFactory();
     if (geometryFactory.getScaleXY() > 0) {
       bufferFixedPrecision(geometryFactory);
     } else {
@@ -326,7 +326,7 @@ public class BufferOp {
   public Geometry getResultGeometry(final double distance) {
     this.distance = distance;
     computeGeometry();
-    return resultGeometry;
+    return this.resultGeometry;
   }
 
   /**
@@ -337,7 +337,7 @@ public class BufferOp {
    * @param endCapStyle the end cap style to specify
    */
   public void setEndCapStyle(final int endCapStyle) {
-    bufParams.setEndCapStyle(endCapStyle);
+    this.bufParams.setEndCapStyle(endCapStyle);
   }
 
   /**
@@ -346,6 +346,6 @@ public class BufferOp {
    * @param quadrantSegments the number of segments in a fillet for a quadrant
    */
   public void setQuadrantSegments(final int quadrantSegments) {
-    bufParams.setQuadrantSegments(quadrantSegments);
+    this.bufParams.setQuadrantSegments(quadrantSegments);
   }
 }

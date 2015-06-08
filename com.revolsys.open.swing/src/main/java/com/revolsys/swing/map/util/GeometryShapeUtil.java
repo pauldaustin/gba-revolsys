@@ -14,8 +14,8 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 public final class GeometryShapeUtil {
-  public static void addCoordinateSequence(final Viewport2D viewport,
-    final GeneralPath path, final CoordinateSequence sequence) {
+  public static void addCoordinateSequence(final Viewport2D viewport, final GeneralPath path,
+    final CoordinateSequence sequence) {
     double x = sequence.getOrdinate(0, 0);
     double y = sequence.getOrdinate(0, 1);
     double[] screenCoords = viewport.toViewCoordinates(x, y);
@@ -32,14 +32,13 @@ public final class GeometryShapeUtil {
     }
   }
 
-  public static void addLineString(final Viewport2D viewport,
-    final GeneralPath path, final LineString line) {
+  public static void addLineString(final Viewport2D viewport, final GeneralPath path,
+    final LineString line) {
     final CoordinateSequence sequence = line.getCoordinateSequence();
     addCoordinateSequence(viewport, path, sequence);
   }
 
-  public static Shape toShape(final Viewport2D viewport,
-    final BoundingBox boundingBox) {
+  public static Shape toShape(final Viewport2D viewport, final BoundingBox boundingBox) {
     final double x = boundingBox.getMinX();
     final double y = boundingBox.getMinY();
     final double width = boundingBox.getWidth();

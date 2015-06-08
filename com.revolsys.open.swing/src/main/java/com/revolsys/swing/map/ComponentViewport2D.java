@@ -21,8 +21,7 @@ import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.Property;
 
-public class ComponentViewport2D extends Viewport2D implements
-  PropertyChangeListener {
+public class ComponentViewport2D extends Viewport2D implements PropertyChangeListener {
 
   private final JComponent component;
 
@@ -48,14 +47,13 @@ public class ComponentViewport2D extends Viewport2D implements
   /**
    * Get the bounding box for the dimensions of the viewport at the specified
    * scale, centred at the x, y model coordinates.
-   * 
+   *
    * @param x The model x coordinate.
    * @param y The model y coordinate.
    * @param scale The scale.
    * @return The bounding box.
    */
-  public BoundingBox getBoundingBox(final double x, final double y,
-    final double scale) {
+  public BoundingBox getBoundingBox(final double x, final double y, final double scale) {
     final double width = getModelWidth(scale);
     final double height = getModelHeight(scale);
 
@@ -63,27 +61,26 @@ public class ComponentViewport2D extends Viewport2D implements
     final double y1 = y - height / 2;
     final double x2 = x1 + width;
     final double y2 = y1 + height;
-    final BoundingBox boundingBox = new BoundingBox(getGeometryFactory(), x1,
-      y1, x2, y2);
+    final BoundingBox boundingBox = new BoundingBox(getGeometryFactory(), x1, y1, x2, y2);
     return boundingBox;
   }
 
   /**
    * Get the bounding box in model units for the pair of coordinates in view
    * units. The bounding box will be clipped to the model's bounding box.
-   * 
+   *
    * @param x1 The first x value.
    * @param y1 The first y value.
    * @param x2 The second x value.
    * @param y2 The second y value.
    * @return The bounding box.
    */
-  public BoundingBox getBoundingBox(final double x1, final double y1,
-    final double x2, final double y2) {
+  public BoundingBox getBoundingBox(final double x1, final double y1, final double x2,
+    final double y2) {
     final double[] c1 = toModelCoordinates(x1, y1);
     final double[] c2 = toModelCoordinates(x2, y2);
-    final BoundingBox boundingBox = new BoundingBox(getGeometryFactory(),
-      c1[0], c1[1], c2[0], c2[1]);
+    final BoundingBox boundingBox = new BoundingBox(getGeometryFactory(), c1[0], c1[1], c2[0],
+      c2[1]);
 
     // Clip the bounding box with the map's visible area
     BoundingBox intersection = boundingBox.intersection(boundingBox);
@@ -97,7 +94,7 @@ public class ComponentViewport2D extends Viewport2D implements
   /**
    * Get the bounding box for the dimensions of the viewport at the specified
    * scale, centred at the x, y view coordinates.
-   * 
+   *
    * @param x The view x coordinate.
    * @param y The view y coordinate.
    * @param scale The scale.
@@ -133,8 +130,7 @@ public class ComponentViewport2D extends Viewport2D implements
     return height;
   }
 
-  public <Q extends Quantity> Unit<Q> getModelToScreenUnit(
-    final Unit<Q> modelUnit) {
+  public <Q extends Quantity> Unit<Q> getModelToScreenUnit(final Unit<Q> modelUnit) {
     final double viewWidth = getViewWidthPixels();
     final double modelWidth = getModelWidth();
     return modelUnit.times(viewWidth).divide(modelWidth);
@@ -151,15 +147,14 @@ public class ComponentViewport2D extends Viewport2D implements
   /**
    * Get the rectangle in view units for the pair of coordinates in view units.
    * The bounding box will be clipped to the view's dimensions.
-   * 
+   *
    * @param x1 The first x value.
    * @param y1 The first y value.
    * @param x2 The second x value.
    * @param y2 The second y value.
    * @return The rectangle.
    */
-  public Rectangle getRectangle(final int x1, final int y1, final int x2,
-    final int y2) {
+  public Rectangle getRectangle(final int x1, final int y1, final int x2, final int y2) {
     final int x3 = Math.min(getViewWidthPixels() - 1, Math.max(0, x2));
     final int y3 = Math.min(getViewHeightPixels() - 1, Math.max(0, y2));
 
@@ -171,14 +166,12 @@ public class ComponentViewport2D extends Viewport2D implements
   }
 
   public Unit<Length> getScaleUnit(final double scale) {
-    final Unit<Length> lengthUnit = getGeometryFactory().getCoordinateSystem()
-      .getLengthUnit();
+    final Unit<Length> lengthUnit = getGeometryFactory().getCoordinateSystem().getLengthUnit();
     final Unit<Length> scaleUnit = lengthUnit.divide(scale);
     return scaleUnit;
   }
 
-  public <Q extends Quantity> Unit<Q> getScreenToModelUnit(
-    final Unit<Q> modelUnit) {
+  public <Q extends Quantity> Unit<Q> getScreenToModelUnit(final Unit<Q> modelUnit) {
     final double viewWidth = getViewWidthPixels();
     final double modelWidth = getModelWidth();
     return modelUnit.times(modelWidth).divide(viewWidth);
@@ -195,8 +188,8 @@ public class ComponentViewport2D extends Viewport2D implements
      * units.
      */
     if (modelWidth == 0 && modelHeight == 0) {
-      validBoundingBox = validBoundingBox.expand(
-        getModelUnitsPerViewUnit() * 50, getModelUnitsPerViewUnit() * 50);
+      validBoundingBox = validBoundingBox.expand(getModelUnitsPerViewUnit() * 50,
+        getModelUnitsPerViewUnit() * 50);
       modelWidth = validBoundingBox.getWidth();
       modelHeight = validBoundingBox.getHeight();
     }
@@ -212,10 +205,9 @@ public class ComponentViewport2D extends Viewport2D implements
       validBoundingBox = new BoundingBox(validBoundingBox);
       modelUnitsPerViewUnit = 2 * Math.pow(10, -this.maxDecimalDigits);
       final double minModelWidth = getViewWidthPixels() * modelUnitsPerViewUnit;
-      final double minModelHeight = getViewHeightPixels()
-        * modelUnitsPerViewUnit;
-      validBoundingBox = validBoundingBox.expand(
-        (minModelWidth - modelWidth) / 2, (minModelHeight - modelHeight) / 2);
+      final double minModelHeight = getViewHeightPixels() * modelUnitsPerViewUnit;
+      validBoundingBox = validBoundingBox.expand((minModelWidth - modelWidth) / 2,
+        (minModelHeight - modelHeight) / 2);
     }
     return validBoundingBox;
   }
@@ -242,7 +234,7 @@ public class ComponentViewport2D extends Viewport2D implements
 
   /**
    * Set the coordinate system the map is displayed in.
-   * 
+   *
    * @param coordinateSystem The coordinate system the map is displayed in.
    */
   @Override
@@ -264,8 +256,8 @@ public class ComponentViewport2D extends Viewport2D implements
         Math.max(logMaxX, logMaxY)));
       this.maxIntegerDigits = (int)Math.floor(maxLog + 1);
       this.maxDecimalDigits = 15 - this.maxIntegerDigits;
-      getPropertyChangeSupport().firePropertyChange("geometryFactory",
-        oldGeometryFactory, geometryFactory);
+      getPropertyChangeSupport().firePropertyChange("geometryFactory", oldGeometryFactory,
+        geometryFactory);
       final BoundingBox boundingBox = getBoundingBox();
       if (boundingBox != null) {
         final BoundingBox newBoundingBox = boundingBox.convert(geometryFactory);
@@ -289,9 +281,8 @@ public class ComponentViewport2D extends Viewport2D implements
 
   public void translate(final double dx, final double dy) {
     final BoundingBox boundingBox = getBoundingBox();
-    final BoundingBox newBoundingBox = new BoundingBox(
-      boundingBox.getGeometryFactory(), boundingBox.getMinX() + dx,
-      boundingBox.getMinY() + dy, boundingBox.getMaxX() + dx,
+    final BoundingBox newBoundingBox = new BoundingBox(boundingBox.getGeometryFactory(),
+      boundingBox.getMinX() + dx, boundingBox.getMinY() + dy, boundingBox.getMaxX() + dx,
       boundingBox.getMaxY() + dy);
     setBoundingBox(newBoundingBox);
 
@@ -311,10 +302,8 @@ public class ComponentViewport2D extends Viewport2D implements
       }
       final Insets insets = this.component.getInsets();
 
-      final int viewWidth = this.component.getWidth() - insets.left
-        - insets.right;
-      final int viewHeight = this.component.getHeight() - insets.top
-        - insets.bottom;
+      final int viewWidth = this.component.getWidth() - insets.left - insets.right;
+      final int viewHeight = this.component.getHeight() - insets.top - insets.bottom;
 
       setViewWidth(viewWidth);
       setViewHeight(viewHeight);

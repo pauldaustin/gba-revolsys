@@ -21,8 +21,8 @@ import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LinearIntersectionNotEqualEdgeLogVisitor extends
-  AbstractVisitor<Edge<Record>> implements ObjectProcessor<DataObjectGraph> {
+public class LinearIntersectionNotEqualEdgeLogVisitor extends AbstractVisitor<Edge<Record>>
+  implements ObjectProcessor<DataObjectGraph> {
   private static final String PROCESSED = LinearIntersectionNotEqualLineEdgeCleanupVisitor.class.getName()
     + ".PROCESSED";
   static {
@@ -46,8 +46,7 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends
 
       final AndFilter<Edge<Record>> attributeAndGeometryFilter = new AndFilter<Edge<Record>>();
 
-      attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(
-        typePath));
+      attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
 
       final Filter<Edge<Record>> filter = getFilter();
       if (filter != null) {
@@ -55,17 +54,15 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends
       }
 
       final Filter<Record> notEqualLineFilter = new NotFilter<Record>(
-        new DataObjectGeometryFilter<LineString>(new EqualFilter<LineString>(
-          line)));
+        new DataObjectGeometryFilter<LineString>(new EqualFilter<LineString>(line)));
 
       final DataObjectGeometryFilter<LineString> linearIntersectionFilter = new DataObjectGeometryFilter<LineString>(
         new LinearIntersectionFilter(line));
 
-      attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(
-        new AndFilter<Record>(notEqualLineFilter, linearIntersectionFilter)));
+      attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(new AndFilter<Record>(
+        notEqualLineFilter, linearIntersectionFilter)));
 
-      final List<Edge<Record>> intersectingEdges = graph.getEdges(
-        attributeAndGeometryFilter, line);
+      final List<Edge<Record>> intersectingEdges = graph.getEdges(attributeAndGeometryFilter, line);
 
       if (!intersectingEdges.isEmpty()) {
         RecordLog.error(getClass(), "Overlapping edge", object);
@@ -74,8 +71,7 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends
           final Record intersectingObject = intersectingEdge.getObject();
           final LineString intersectingLine = intersectingObject.getGeometryValue();
           if (JtsGeometryUtil.getGeometryProperty(intersectingLine, PROCESSED) != Boolean.TRUE) {
-            JtsGeometryUtil.setGeometryProperty(intersectingLine, PROCESSED,
-              Boolean.TRUE);
+            JtsGeometryUtil.setGeometryProperty(intersectingLine, PROCESSED, Boolean.TRUE);
           }
         }
       }

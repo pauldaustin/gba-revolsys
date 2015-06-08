@@ -19,36 +19,35 @@ public class DataObjectWriterGeometryWriter extends AbstractWriter<Geometry> {
 
   @Override
   public void close() {
-    writer.close();
+    this.writer.close();
   }
 
   @Override
   public void flush() {
-    writer.flush();
+    this.writer.flush();
   }
 
   @Override
   public Map<String, Object> getProperties() {
-    return writer.getProperties();
+    return this.writer.getProperties();
   }
 
   @Override
   public <V> V getProperty(final String name) {
-    return (V)writer.getProperty(name);
+    return (V)this.writer.getProperty(name);
   }
 
   @Override
   public void setProperty(final String name, final Object value) {
-    writer.setProperty(name, value);
+    this.writer.setProperty(name, value);
   }
 
   @Override
   public void write(final Geometry geometry) {
-    RecordDefinition metaData = DataObjectUtil.createGeometryMetaData();
-    final Record object = new ArrayRecord(
-      metaData);
+    final RecordDefinition metaData = DataObjectUtil.createGeometryMetaData();
+    final Record object = new ArrayRecord(metaData);
     object.setGeometryValue(geometry);
-    writer.write(object);
+    this.writer.write(object);
   }
 
 }

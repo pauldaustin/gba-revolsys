@@ -34,8 +34,7 @@ public class SpringUtil {
 
   private static final ThreadLocal<Resource> BASE_RESOURCE = new ThreadLocal<Resource>();
 
-  public static Resource addExtension(final Resource resource,
-    final String extension) {
+  public static Resource addExtension(final Resource resource, final String extension) {
     final String fileName = resource.getFilename();
     final String newFileName = fileName + "." + extension;
     try {
@@ -45,8 +44,7 @@ public class SpringUtil {
     }
   }
 
-  public static void close(
-    final ConfigurableApplicationContext applicationContext) {
+  public static void close(final ConfigurableApplicationContext applicationContext) {
     if (applicationContext != null) {
       if (applicationContext.isActive()) {
         applicationContext.close();
@@ -91,19 +89,17 @@ public class SpringUtil {
     return false;
   }
 
-  public static GenericApplicationContext getApplicationContext(
-    final ClassLoader classLoader, final Resource... resources) {
+  public static GenericApplicationContext getApplicationContext(final ClassLoader classLoader,
+    final Resource... resources) {
     final GenericApplicationContext applicationContext = new GenericApplicationContext();
     applicationContext.setClassLoader(classLoader);
 
-    AnnotationConfigUtils.registerAnnotationConfigProcessors(
-      applicationContext, null);
+    AnnotationConfigUtils.registerAnnotationConfigProcessors(applicationContext, null);
     final AttributesBeanConfigurer attributesConfig = new AttributesBeanConfigurer(
       applicationContext);
     applicationContext.addBeanFactoryPostProcessor(attributesConfig);
 
-    final XmlBeanDefinitionReader beanReader = new XmlBeanDefinitionReader(
-      applicationContext);
+    final XmlBeanDefinitionReader beanReader = new XmlBeanDefinitionReader(applicationContext);
     beanReader.setBeanClassLoader(classLoader);
     beanReader.loadBeanDefinitions(resources);
     applicationContext.refresh();
@@ -153,8 +149,7 @@ public class SpringUtil {
     try {
       return resource.getFile();
     } catch (final IOException e) {
-      throw new IllegalArgumentException("Cannot get File for resource "
-        + resource, e);
+      throw new IllegalArgumentException("Cannot get File for resource " + resource, e);
     }
   }
 
@@ -177,8 +172,8 @@ public class SpringUtil {
     }
   }
 
-  public static OutputStream getFileOutputStream(final Resource resource)
-    throws IOException, FileNotFoundException {
+  public static OutputStream getFileOutputStream(final Resource resource) throws IOException,
+    FileNotFoundException {
     final File file = resource.getFile();
     return new BufferedOutputStream(new FileOutputStream(file));
   }
@@ -188,8 +183,7 @@ public class SpringUtil {
       final InputStream in = resource.getInputStream();
       return in;
     } catch (final IOException e) {
-      throw new RuntimeException("Unable to open stream to resource "
-        + resource, e);
+      throw new RuntimeException("Unable to open stream to resource " + resource, e);
     }
   }
 
@@ -212,8 +206,7 @@ public class SpringUtil {
         FileUtil.copy(getInputStream(resource), file);
         return file;
       } else {
-        throw new IllegalArgumentException("Cannot get File for resource "
-          + resource, e);
+        throw new IllegalArgumentException("Cannot get File for resource " + resource, e);
       }
     }
   }
@@ -271,8 +264,7 @@ public class SpringUtil {
     return new FileSystemResource(file);
   }
 
-  public static Resource getResource(final Resource resource,
-    final CharSequence childPath) {
+  public static Resource getResource(final Resource resource, final CharSequence childPath) {
     try {
       if (resource instanceof FileSystemResource) {
         final FileSystemResource fileResource = (FileSystemResource)resource;
@@ -283,8 +275,7 @@ public class SpringUtil {
         return resource.createRelative(childPath.toString());
       }
     } catch (final IOException e) {
-      throw new IllegalArgumentException("Cannot create resource " + resource
-        + childPath, e);
+      throw new IllegalArgumentException("Cannot create resource " + resource + childPath, e);
     }
   }
 
@@ -296,8 +287,7 @@ public class SpringUtil {
     }
   }
 
-  public static Resource getResourceWithExtension(final Resource resource,
-    final String extension) {
+  public static Resource getResourceWithExtension(final Resource resource, final String extension) {
     final String baseName = getBaseName(resource);
     final String newFileName = baseName + "." + extension;
     try {
@@ -316,8 +306,7 @@ public class SpringUtil {
     try {
       return resource.getURL();
     } catch (final IOException e) {
-      throw new IllegalArgumentException("Cannot get URL for resource "
-        + resource, e);
+      throw new IllegalArgumentException("Cannot get URL for resource " + resource, e);
     }
   }
 

@@ -20,23 +20,23 @@ public class SchemaMapper {
 
   /**
    * Add a forward and reverse mapping from one DataObjectMetaData to another.
-   * 
+   *
    * @param from The type.
    * @param to The mapped type.
    */
   public void addAttributeMapping(final FieldDefinition from, final FieldDefinition to) {
-    attributeMapping.put(from, to);
-    attributeMapping.put(to, from);
+    this.attributeMapping.put(from, to);
+    this.attributeMapping.put(to, from);
   }
 
   /**
    * Add a forward and reverse mapping from one Attribute to another.
-   * 
+   *
    * @param from The attribute.
    * @param to The mapped type.
    */
-  public void addAttributeMapping(final RecordDefinition fromClass,
-    final String fromName, final RecordDefinition toClass, final String toName) {
+  public void addAttributeMapping(final RecordDefinition fromClass, final String fromName,
+    final RecordDefinition toClass, final String toName) {
     final FieldDefinition fromAttribute = fromClass.getField(fromName);
     final FieldDefinition toAttribute = toClass.getField(toName);
     addAttributeMapping(fromAttribute, toAttribute);
@@ -44,25 +44,23 @@ public class SchemaMapper {
 
   /**
    * Add an object converter for the specified type.
-   * 
+   *
    * @param from The type.
    * @param converter The converter.
    */
-  public void addTypeConverter(final RecordDefinition type,
-    final ObjectConverter converter) {
-    typeConverter.put(type, converter);
+  public void addTypeConverter(final RecordDefinition type, final ObjectConverter converter) {
+    this.typeConverter.put(type, converter);
   }
 
   /**
    * Add a forward and reverse mapping from one DataObjectMetaData to another.
-   * 
+   *
    * @param from The type.
    * @param to The mapped type.
    */
-  public void addTypeMapping(final RecordDefinition from,
-    final RecordDefinition to) {
-    typeMapping.put(from, to);
-    typeMapping.put(to, from);
+  public void addTypeMapping(final RecordDefinition from, final RecordDefinition to) {
+    this.typeMapping.put(from, to);
+    this.typeMapping.put(to, from);
   }
 
   public Record convert(final Record object) {
@@ -87,51 +85,51 @@ public class SchemaMapper {
 
   /**
    * Get the Attribute that the specified attribute maps to.
-   * 
+   *
    * @param attribute The attribute to map.
    * @return The mapped attribute.
    */
   public FieldDefinition getAttributeMapping(final FieldDefinition attribute) {
-    return attributeMapping.get(attribute);
+    return this.attributeMapping.get(attribute);
   }
 
   /**
    * Get the DataObjectMetaData that the specified class maps to.
-   * 
+   *
    * @param type The class to map.
    * @return The mapped class.
    */
   public RecordDefinition getClassMapping(final RecordDefinition type) {
-    return typeMapping.get(type);
+    return this.typeMapping.get(type);
   }
 
   /**
    * Get the converter that can convert objects of the specified type.
-   * 
+   *
    * @param type The type to convert.
    * @return The converter
    */
   public ObjectConverter getTypeConverter(final RecordDefinition type) {
-    return typeConverter.get(type);
+    return this.typeConverter.get(type);
   }
 
   /**
    * Get the DataObjectMetaData that the specified type maps to.
-   * 
+   *
    * @param type The type to map.
    * @return The mapped type.
    */
   public RecordDefinition getTypeMapping(final RecordDefinition type) {
-    return typeMapping.get(type);
+    return this.typeMapping.get(type);
   }
 
   /**
    * Check there is a converter for the type.
-   * 
+   *
    * @param type The type to convert.
    * @return The converter
    */
   public boolean hasTypeConverter(final RecordDefinition type) {
-    return typeConverter.containsKey(type);
+    return this.typeConverter.containsKey(type);
   }
 }

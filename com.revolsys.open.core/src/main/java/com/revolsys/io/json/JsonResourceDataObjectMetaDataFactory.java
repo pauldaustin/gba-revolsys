@@ -11,14 +11,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 
-public class JsonResourceDataObjectMetaDataFactory extends
-  AbstractObjectWithProperties implements ApplicationContextAware,
-  RecordDefinitionFactory {
+public class JsonResourceDataObjectMetaDataFactory extends AbstractObjectWithProperties implements
+  ApplicationContextAware, RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> metaDataMap = new HashMap<String, RecordDefinition>();
 
@@ -27,25 +26,24 @@ public class JsonResourceDataObjectMetaDataFactory extends
   private ApplicationContext applicationContext;
 
   public String getLocationPattern() {
-    return locationPattern;
+    return this.locationPattern;
   }
 
   @Override
   public RecordDefinition getRecordDefinition(final String typePath) {
-    return metaDataMap.get(typePath);
+    return this.metaDataMap.get(typePath);
   }
 
   @PostConstruct
   public void init() {
     try {
-      for (final Resource resource : applicationContext.getResources(locationPattern)) {
+      for (final Resource resource : this.applicationContext.getResources(this.locationPattern)) {
         final RecordDefinition metaData = MapObjectFactoryRegistry.toObject(resource);
         final String name = metaData.getPath();
-        metaDataMap.put(name, metaData);
+        this.metaDataMap.put(name, metaData);
       }
     } catch (final IOException e) {
-      throw new IllegalArgumentException("Unable to get resources for "
-        + locationPattern);
+      throw new IllegalArgumentException("Unable to get resources for " + this.locationPattern);
     }
   }
 

@@ -31,12 +31,12 @@ public class CsvWriter implements AutoCloseable {
   @Override
   public void close() {
     flush();
-    FileUtil.closeSilent(out);
+    FileUtil.closeSilent(this.out);
   }
 
   public void flush() {
     try {
-      out.flush();
+      this.out.flush();
     } catch (final IOException e) {
     }
   }
@@ -51,21 +51,21 @@ public class CsvWriter implements AutoCloseable {
         final Object value = values[i];
         if (value != null) {
           final String string = value.toString();
-          out.write('"');
+          this.out.write('"');
           for (int j = 0; j < string.length(); j++) {
             final char c = string.charAt(j);
             if (c == '"') {
-              out.write('"');
+              this.out.write('"');
             }
-            out.write(c);
+            this.out.write(c);
           }
-          out.write('"');
+          this.out.write('"');
         }
         if (i < values.length - 1) {
-          out.write(',');
+          this.out.write(',');
         }
       }
-      out.write('\n');
+      this.out.write('\n');
     } catch (final IOException e) {
       throw new WrappedException(e);
     }

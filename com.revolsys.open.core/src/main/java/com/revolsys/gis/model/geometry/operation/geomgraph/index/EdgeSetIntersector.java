@@ -25,8 +25,7 @@ public abstract class EdgeSetIntersector {
   /**
    * Computes all mutual intersections between two sets of edges.
    */
-  abstract public void computeIntersections(List edges0, List edges1,
-    SegmentIntersector si);
+  abstract public void computeIntersections(List edges0, List edges1, SegmentIntersector si);
 
   /**
    * Computes all self-intersections between edges in a set of edges,

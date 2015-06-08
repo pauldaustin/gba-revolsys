@@ -46,8 +46,7 @@ public class ObjectTreePanel extends JPanel {
       this.propertyChangeSupport = propertyChangeSupportProxy.getPropertyChangeSupport();
 
       this.listeners.add(model);
-      final InvokeMethodListener repaintListener = new InvokeMethodListener(
-        this.tree, "repaint");
+      final InvokeMethodListener repaintListener = new InvokeMethodListener(this.tree, "repaint");
       this.listeners.add(repaintListener);
 
       for (final PropertyChangeListener listener : this.listeners) {
@@ -62,15 +61,15 @@ public class ObjectTreePanel extends JPanel {
   }
 
   public void destroy() {
-    if (propertyChangeSupport != null) {
-      Property.removeAllListeners(propertyChangeSupport);
+    if (this.propertyChangeSupport != null) {
+      Property.removeAllListeners(this.propertyChangeSupport);
       for (final PropertyChangeListener listener : this.listeners) {
         Property.removeListener(this.propertyChangeSupport, listener);
       }
-      propertyChangeSupport = null;
+      this.propertyChangeSupport = null;
     }
-    listeners.clear();
-    tree.setRoot(null);
+    this.listeners.clear();
+    this.tree.setRoot(null);
   }
 
   @Override

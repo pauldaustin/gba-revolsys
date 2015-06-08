@@ -9,7 +9,7 @@ import com.revolsys.util.JavaBeanUtil;
 
 public class ObjectTableModel<T> extends AbstractTableModel {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -1243907349293763360L;
 
@@ -76,8 +76,7 @@ public class ObjectTableModel<T> extends AbstractTableModel {
   }
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
     final Object row = this.rows.get(rowIndex);
     final String propertyName = this.propertyNames[columnIndex];
     JavaBeanUtil.setProperty(row, propertyName, value);

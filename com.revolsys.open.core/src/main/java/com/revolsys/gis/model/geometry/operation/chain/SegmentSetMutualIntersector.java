@@ -56,7 +56,7 @@ public abstract class SegmentSetMutualIntersector {
   public abstract void process(Collection<SegmentString> segStrings);
 
   /**
-   * 
+   *
    * @param segStrings0 a collection of {@link SegmentString}s to node
    */
   public abstract void setBaseSegments(Collection<SegmentString> segStrings);

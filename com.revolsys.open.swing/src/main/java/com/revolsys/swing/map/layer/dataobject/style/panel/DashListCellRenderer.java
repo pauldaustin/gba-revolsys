@@ -20,11 +20,9 @@ public class DashListCellRenderer extends DefaultListCellRenderer {
 
   @SuppressWarnings("unchecked")
   @Override
-  public Component getListCellRendererComponent(final JList<?> list,
-    final Object value, final int index, final boolean isSelected,
-    final boolean cellHasFocus) {
-    super.getListCellRendererComponent(list, value, index, isSelected,
-      cellHasFocus);
+  public Component getListCellRendererComponent(final JList<?> list, final Object value,
+    final int index, final boolean isSelected, final boolean cellHasFocus) {
+    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
     setText(null);
     this.dash = (List<Measure<Length>>)value;
     setPreferredSize(new Dimension(100, 10));

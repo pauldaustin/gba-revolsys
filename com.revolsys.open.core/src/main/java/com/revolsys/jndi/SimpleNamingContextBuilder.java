@@ -20,8 +20,7 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
 
   private static boolean initialized = false;
 
-  public static SimpleNamingContextBuilder emptyActivatedContextBuilder()
-    throws NamingException {
+  public static SimpleNamingContextBuilder emptyActivatedContextBuilder() throws NamingException {
     if (activated != null) {
       activated.clear();
     } else {
@@ -43,7 +42,7 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
   }
 
   public void activate() throws IllegalStateException, NamingException {
-    log.info("Activating simple JNDI environment");
+    this.log.info("Activating simple JNDI environment");
     synchronized (initializationLock) {
       if (!initialized) {
         if (NamingManager.hasInitialContextFactoryBuilder()) {
@@ -58,23 +57,22 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
   }
 
   public void bind(final String name, final Object obj) {
-    if (log.isInfoEnabled()) {
-      log.info((new StringBuilder("Static JNDI binding: [")).append(name)
+    if (this.log.isInfoEnabled()) {
+      this.log.info(new StringBuilder("Static JNDI binding: [").append(name)
         .append("] = [")
         .append(obj)
         .append("]")
         .toString());
     }
-    boundObjects.put(name, obj);
+    this.boundObjects.put(name, obj);
   }
 
   public void clear() {
-    boundObjects.clear();
+    this.boundObjects.clear();
   }
 
   @Override
-  public InitialContextFactory createInitialContextFactory(
-    final Hashtable environment) {
+  public InitialContextFactory createInitialContextFactory(final Hashtable environment) {
     if (activated == null && environment != null) {
       final Object icf = environment.get("java.naming.factory.initial");
       if (icf != null) {
@@ -82,19 +80,15 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
         if (icf instanceof Class<?>) {
           icfClass = (Class<?>)icf;
         } else if (icf instanceof String) {
-          icfClass = ClassUtils.resolveClassName((String)icf,
-            getClass().getClassLoader());
+          icfClass = ClassUtils.resolveClassName((String)icf, getClass().getClassLoader());
         } else {
-          throw new IllegalArgumentException(
-            (new StringBuilder(
-              "Invalid value type for environment key [java.naming.factory.initial]: ")).append(
-              icf.getClass().getName())
-              .toString());
+          throw new IllegalArgumentException(new StringBuilder(
+            "Invalid value type for environment key [java.naming.factory.initial]: ").append(
+            icf.getClass().getName()).toString());
         }
         if (!InitialContextFactory.class.isAssignableFrom(icfClass)) {
-          throw new IllegalArgumentException((new StringBuilder(
-            "Specified class does not implement [")).append(
-            InitialContextFactory.class.getName())
+          throw new IllegalArgumentException(new StringBuilder(
+            "Specified class does not implement [").append(InitialContextFactory.class.getName())
             .append("]: ")
             .append(icf)
             .toString());
@@ -102,10 +96,8 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
         try {
           return (InitialContextFactory)icfClass.newInstance();
         } catch (final Throwable ex) {
-          final IllegalStateException ise = new IllegalStateException(
-            (new StringBuilder(
-              "Cannot instantiate specified InitialContextFactory: ")).append(
-              icf).toString());
+          final IllegalStateException ise = new IllegalStateException(new StringBuilder(
+            "Cannot instantiate specified InitialContextFactory: ").append(icf).toString());
           ise.initCause(ex);
           throw ise;
         }
@@ -115,13 +107,14 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
 
       @Override
       public Context getInitialContext(final Hashtable environment) {
-        return new SimpleNamingContext("", boundObjects, environment);
+        return new SimpleNamingContext("", SimpleNamingContextBuilder.this.boundObjects,
+          environment);
       }
     };
   }
 
   public void deactivate() {
-    log.info("Deactivating simple JNDI environment");
+    this.log.info("Deactivating simple JNDI environment");
     activated = null;
   }
 

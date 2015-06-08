@@ -9,22 +9,20 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
 public class JdbcIntegerFieldDefinition extends JdbcFieldDefinition {
-  public JdbcIntegerFieldDefinition(final String name, final int sqlType,
-    final int length, final boolean required, final String description,
-    final Map<String, Object> properties) {
-    super(name, DataTypes.INT, sqlType, length, 0, required, description,
-      properties);
+  public JdbcIntegerFieldDefinition(final String name, final int sqlType, final int length,
+    final boolean required, final String description, final Map<String, Object> properties) {
+    super(name, DataTypes.INT, sqlType, length, 0, required, description, properties);
   }
 
   @Override
   public JdbcIntegerFieldDefinition clone() {
-    return new JdbcIntegerFieldDefinition(getName(), getSqlType(), getLength(),
-      isRequired(), getDescription(), getProperties());
+    return new JdbcIntegerFieldDefinition(getName(), getSqlType(), getLength(), isRequired(),
+      getDescription(), getProperties());
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final Record object) throws SQLException {
+  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record object) throws SQLException {
     final int value = resultSet.getInt(columnIndex);
     if (!resultSet.wasNull()) {
       object.setValue(getIndex(), Integer.valueOf(value));
@@ -33,8 +31,8 @@ public class JdbcIntegerFieldDefinition extends JdbcFieldDefinition {
   }
 
   @Override
-  public int setPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final Object value) throws SQLException {
+  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
+    final Object value) throws SQLException {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {

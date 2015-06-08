@@ -32,13 +32,13 @@ public interface JdbcDataObjectStore extends RecordStore {
   @Override
   String getLabel();
 
-  RecordDefinition getMetaData(String tableName,
-    ResultSetMetaData resultSetMetaData);
+  RecordDefinition getMetaData(String tableName, ResultSetMetaData resultSetMetaData);
 
   Object getNextPrimaryKey(RecordDefinition metaData);
 
   Object getNextPrimaryKey(String typePath);
 
+  @Override
   Statistics getStatistics(String name);
 
   @Override

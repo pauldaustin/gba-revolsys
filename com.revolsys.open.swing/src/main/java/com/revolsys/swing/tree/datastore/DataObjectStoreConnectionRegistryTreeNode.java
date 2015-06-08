@@ -14,11 +14,10 @@ import com.revolsys.swing.tree.file.FileTreeNode;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 import com.revolsys.util.Property;
 
-public class DataObjectStoreConnectionRegistryTreeNode extends LazyLoadTreeNode
-  implements PropertyChangeListener {
+public class DataObjectStoreConnectionRegistryTreeNode extends LazyLoadTreeNode implements
+  PropertyChangeListener {
 
-  public DataObjectStoreConnectionRegistryTreeNode(
-    final DataObjectStoreConnectionsTreeNode parent,
+  public DataObjectStoreConnectionRegistryTreeNode(final DataObjectStoreConnectionsTreeNode parent,
     final DataObjectStoreConnectionRegistry registry) {
     super(parent, registry);
     setType("DataObjectStore Connections");
@@ -41,8 +40,8 @@ public class DataObjectStoreConnectionRegistryTreeNode extends LazyLoadTreeNode
     final DataObjectStoreConnectionRegistry registry = getRegistry();
     final List<DataObjectStoreConnection> conections = registry.getConections();
     for (final DataObjectStoreConnection connection : conections) {
-      final DataObjectStoreConnectionTreeNode child = new DataObjectStoreConnectionTreeNode(
-        this, connection);
+      final DataObjectStoreConnectionTreeNode child = new DataObjectStoreConnectionTreeNode(this,
+        connection);
       children.add(child);
     }
     return children;

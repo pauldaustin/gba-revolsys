@@ -16,7 +16,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.Edge;
  * in the worst case, this algorithm drastically improves the average-case time.
  * The use of MonotoneChains as the items in the index seems to offer an
  * improvement in performance over a sweep-line alone.
- * 
+ *
  * @version 1.7
  */
 public class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
@@ -38,10 +38,9 @@ public class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
     final int[] startIndex = mce.getStartIndexes();
     for (int i = 0; i < startIndex.length - 1; i++) {
       final MonotoneChain mc = new MonotoneChain(mce, i);
-      final SweepLineEvent insertEvent = new SweepLineEvent(edgeSet,
-        mce.getMinX(i), null, mc);
-      events.add(insertEvent);
-      events.add(new SweepLineEvent(edgeSet, mce.getMaxX(i), insertEvent, mc));
+      final SweepLineEvent insertEvent = new SweepLineEvent(edgeSet, mce.getMinX(i), null, mc);
+      this.events.add(insertEvent);
+      this.events.add(new SweepLineEvent(edgeSet, mce.getMaxX(i), insertEvent, mc));
     }
   }
 
@@ -61,16 +60,15 @@ public class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
   }
 
   @Override
-  public void computeIntersections(final List edges0, final List edges1,
-    final SegmentIntersector si) {
+  public void computeIntersections(final List edges0, final List edges1, final SegmentIntersector si) {
     add(edges0, edges0);
     add(edges1, edges1);
     computeIntersections(si);
   }
 
   @Override
-  public void computeIntersections(final List edges,
-    final SegmentIntersector si, final boolean testAllSegments) {
+  public void computeIntersections(final List edges, final SegmentIntersector si,
+    final boolean testAllSegments) {
     if (testAllSegments) {
       add(edges, null);
     } else {
@@ -80,11 +78,11 @@ public class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
   }
 
   private void computeIntersections(final SegmentIntersector si) {
-    nOverlaps = 0;
+    this.nOverlaps = 0;
     prepareEvents();
 
-    for (int i = 0; i < events.size(); i++) {
-      final SweepLineEvent ev = (SweepLineEvent)events.get(i);
+    for (int i = 0; i < this.events.size(); i++) {
+      final SweepLineEvent ev = (SweepLineEvent)this.events.get(i);
       if (ev.isInsert()) {
         processOverlaps(i, ev.getDeleteEventIndex(), ev, si);
       }
@@ -97,17 +95,17 @@ public class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
    * to a given Insert event object.
    */
   private void prepareEvents() {
-    Collections.sort(events);
-    for (int i = 0; i < events.size(); i++) {
-      final SweepLineEvent ev = (SweepLineEvent)events.get(i);
+    Collections.sort(this.events);
+    for (int i = 0; i < this.events.size(); i++) {
+      final SweepLineEvent ev = (SweepLineEvent)this.events.get(i);
       if (ev.isDelete()) {
         ev.getInsertEvent().setDeleteEventIndex(i);
       }
     }
   }
 
-  private void processOverlaps(final int start, final int end,
-    final SweepLineEvent ev0, final SegmentIntersector si) {
+  private void processOverlaps(final int start, final int end, final SweepLineEvent ev0,
+    final SegmentIntersector si) {
     final MonotoneChain mc0 = (MonotoneChain)ev0.getObject();
     /**
      * Since we might need to test for self-intersections, include current
@@ -115,14 +113,14 @@ public class SimpleMCSweepLineIntersector extends EdgeSetIntersector {
      * skipped, because it must be a Delete event.
      */
     for (int i = start; i < end; i++) {
-      final SweepLineEvent ev1 = (SweepLineEvent)events.get(i);
+      final SweepLineEvent ev1 = (SweepLineEvent)this.events.get(i);
       if (ev1.isInsert()) {
         final MonotoneChain mc1 = (MonotoneChain)ev1.getObject();
         // don't compare edges in same group
         // null group indicates that edges should be compared
-        if (ev0.edgeSet == null || (ev0.edgeSet != ev1.edgeSet)) {
+        if (ev0.edgeSet == null || ev0.edgeSet != ev1.edgeSet) {
           mc0.computeIntersections(mc1, si);
-          nOverlaps++;
+          this.nOverlaps++;
         }
       }
     }

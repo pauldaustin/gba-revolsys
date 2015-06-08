@@ -52,10 +52,9 @@ import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
 
-public class DataStoreSearchTextField extends JXSearchField implements
-  DocumentListener, KeyListener, MouseListener, FocusListener,
-  ListDataListener, ItemSelectable, Field, ListSelectionListener,
-  HighlightPredicate {
+public class DataStoreSearchTextField extends JXSearchField implements DocumentListener,
+  KeyListener, MouseListener, FocusListener, ListDataListener, ItemSelectable, Field,
+  ListSelectionListener, HighlightPredicate {
   private static final long serialVersionUID = 1L;
 
   private final String displayAttributeName;
@@ -74,15 +73,14 @@ public class DataStoreSearchTextField extends JXSearchField implements
 
   private final CascadingUndoManager undoManager = new CascadingUndoManager();
 
-  public DataStoreSearchTextField(final RecordDefinition metaData,
-    final String displayAttributeName) {
-    this(metaData.getRecordStore(), displayAttributeName, new Query(metaData,
-      new Equal(F.upper(displayAttributeName), new Value(null))), new Query(
-      metaData, Q.iLike(displayAttributeName, "")));
+  public DataStoreSearchTextField(final RecordDefinition metaData, final String displayAttributeName) {
+    this(metaData.getRecordStore(), displayAttributeName, new Query(metaData, new Equal(
+      F.upper(displayAttributeName), new Value(null))), new Query(metaData, Q.iLike(
+      displayAttributeName, "")));
   }
 
-  public DataStoreSearchTextField(final RecordStore dataStore,
-    final String displayAttributeName, final List<Query> queries) {
+  public DataStoreSearchTextField(final RecordStore dataStore, final String displayAttributeName,
+    final List<Query> queries) {
     this.displayAttributeName = displayAttributeName;
 
     final Document document = getDocument();
@@ -91,24 +89,20 @@ public class DataStoreSearchTextField extends JXSearchField implements
     addKeyListener(this);
     addMouseListener(this);
 
-    this.listModel = new DataStoreQueryListModel(dataStore,
-      displayAttributeName, queries);
+    this.listModel = new DataStoreQueryListModel(dataStore, displayAttributeName, queries);
     this.list = new JXList(this.listModel);
-    this.list.setCellRenderer(new DataObjectListCellRenderer(
-      displayAttributeName));
+    this.list.setCellRenderer(new DataObjectListCellRenderer(displayAttributeName));
     this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.list.setHighlighters(HighlighterFactory.createSimpleStriping(Color.LIGHT_GRAY));
     this.list.addMouseListener(this);
     this.listModel.addListDataListener(this);
     this.list.addListSelectionListener(this);
-    this.list.addHighlighter(new ColorHighlighter(this, WebColors.Blue,
-      WebColors.White));
+    this.list.addHighlighter(new ColorHighlighter(this, WebColors.Blue, WebColors.White));
     this.menu.add(this.list);
     this.menu.setFocusable(false);
     this.menu.setBorderPainted(true);
     this.menu.setBorder(BorderFactory.createCompoundBorder(
-      BorderFactory.createLineBorder(Color.DARK_GRAY),
-      BorderFactory.createEmptyBorder(1, 2, 1, 2)));
+      BorderFactory.createLineBorder(Color.DARK_GRAY), BorderFactory.createEmptyBorder(1, 2, 1, 2)));
 
     setEditable(true);
     setSearchMode(SearchMode.REGULAR);
@@ -116,17 +110,17 @@ public class DataStoreSearchTextField extends JXSearchField implements
     this.undoManager.addKeyMap(this);
   }
 
-  public DataStoreSearchTextField(final RecordStore dataStore,
-    final String displayAttributeName, final Query... queries) {
+  public DataStoreSearchTextField(final RecordStore dataStore, final String displayAttributeName,
+    final Query... queries) {
     this(dataStore, displayAttributeName, Arrays.asList(queries));
 
   }
 
-  public DataStoreSearchTextField(final RecordStore dataStore,
-    final String typeName, final String displayAttributeName) {
+  public DataStoreSearchTextField(final RecordStore dataStore, final String typeName,
+    final String displayAttributeName) {
     this(dataStore, displayAttributeName, new Query(typeName, new Equal(
-      F.upper(displayAttributeName), new Value(null))), new Query(typeName,
-      Q.iLike(displayAttributeName, "")));
+      F.upper(displayAttributeName), new Value(null))), new Query(typeName, Q.iLike(
+      displayAttributeName, "")));
   }
 
   @Override
@@ -154,8 +148,8 @@ public class DataStoreSearchTextField extends JXSearchField implements
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -167,7 +161,7 @@ public class DataStoreSearchTextField extends JXSearchField implements
   @Override
   public void focusLost(final FocusEvent e) {
     final Component oppositeComponent = e.getOppositeComponent();
-    if (oppositeComponent != list) {
+    if (oppositeComponent != this.list) {
       this.menu.setVisible(false);
     }
   }
@@ -232,11 +226,10 @@ public class DataStoreSearchTextField extends JXSearchField implements
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     final Record object = this.listModel.getElementAt(adapter.row);
     final String text = getText();
-    final String value = object.getString(displayAttributeName);
+    final String value = object.getString(this.displayAttributeName);
     if (StringEqualsIgnoreCase.equal(text, value)) {
       return true;
     } else {
@@ -363,8 +356,8 @@ public class DataStoreSearchTextField extends JXSearchField implements
     if (this.selectedItem != null) {
       final Record oldValue = this.selectedItem;
       this.selectedItem = null;
-      fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED,
-        oldValue, ItemEvent.DESELECTED));
+      fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, oldValue,
+        ItemEvent.DESELECTED));
     }
     final String text = getText();
     this.listModel.setSearchText(text);
@@ -372,8 +365,8 @@ public class DataStoreSearchTextField extends JXSearchField implements
 
     this.selectedItem = this.listModel.getSelectedItem();
     if (this.selectedItem != null) {
-      fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED,
-        this.selectedItem, ItemEvent.SELECTED));
+      fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this.selectedItem,
+        ItemEvent.SELECTED));
     }
   }
 
@@ -394,8 +387,8 @@ public class DataStoreSearchTextField extends JXSearchField implements
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setSelectedTextColor(foregroundColor);
     setBackground(backgroundColor);
@@ -476,7 +469,7 @@ public class DataStoreSearchTextField extends JXSearchField implements
           setText(label);
         }
       }
-      menu.setVisible(false);
+      this.menu.setVisible(false);
       requestFocus();
     }
 

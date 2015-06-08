@@ -79,52 +79,43 @@ public class SelectedRecordsRenderer {
   {
   }
 
-  public SelectedRecordsRenderer(final Color outlineColor,
-    final Color selectColor) {
+  public SelectedRecordsRenderer(final Color outlineColor, final Color selectColor) {
 
     final Color selectColorTransparent = ColorUtil.setAlpha(selectColor, 127);
     final Color outlineColorTransparent = ColorUtil.setAlpha(outlineColor, 127);
 
-    erroStyle = MarkerStyle.marker("ellipse", 7, WebColors.Yellow, 1,
-      WebColors.Red);
+    this.erroStyle = MarkerStyle.marker("ellipse", 7, WebColors.Yellow, 1, WebColors.Red);
 
-    highlightStyle = GeometryStyle.polygon(selectColor, 3,
+    this.highlightStyle = GeometryStyle.polygon(selectColor, 3, selectColorTransparent);
+    MarkerStyle.setMarker(this.highlightStyle, "ellipse", 6, outlineColorTransparent, 1,
       selectColorTransparent);
-    MarkerStyle.setMarker(highlightStyle, "ellipse", 6,
-      outlineColorTransparent, 1, selectColorTransparent);
 
-    outlineStyle = GeometryStyle.line(outlineColor);
-    MarkerStyle.setMarker(outlineStyle, "ellipse", 6, outlineColorTransparent,
-      1, selectColorTransparent);
+    this.outlineStyle = GeometryStyle.line(outlineColor);
+    MarkerStyle.setMarker(this.outlineStyle, "ellipse", 6, outlineColorTransparent, 1,
+      selectColorTransparent);
 
-    vertexStyle = MarkerStyle.marker(vertexShape(), 9, outlineColor, 1,
-      selectColor);
-    vertexStyle.setMarkerOrientationType("auto");
+    this.vertexStyle = MarkerStyle.marker(vertexShape(), 9, outlineColor, 1, selectColor);
+    this.vertexStyle.setMarkerOrientationType("auto");
 
-    firstVertexStyle = MarkerStyle.marker(firstVertexShape(), 9, outlineColor,
-      1, selectColor);
-    firstVertexStyle.setMarkerOrientationType("auto");
-    firstVertexStyle.setMarkerPlacement("point(0)");
-    firstVertexStyle.setMarkerHorizontalAlignment("center");
+    this.firstVertexStyle = MarkerStyle.marker(firstVertexShape(), 9, outlineColor, 1, selectColor);
+    this.firstVertexStyle.setMarkerOrientationType("auto");
+    this.firstVertexStyle.setMarkerPlacement("point(0)");
+    this.firstVertexStyle.setMarkerHorizontalAlignment("center");
 
-    lastVertexStyle = MarkerStyle.marker(lastVertexShape(), 9, outlineColor, 1,
-      selectColor);
-    lastVertexStyle.setMarkerOrientationType("auto");
-    lastVertexStyle.setMarkerPlacement("point(n)");
-    lastVertexStyle.setMarkerHorizontalAlignment("right");
+    this.lastVertexStyle = MarkerStyle.marker(lastVertexShape(), 9, outlineColor, 1, selectColor);
+    this.lastVertexStyle.setMarkerOrientationType("auto");
+    this.lastVertexStyle.setMarkerPlacement("point(n)");
+    this.lastVertexStyle.setMarkerHorizontalAlignment("right");
 
   }
 
   public void paintSelected(final Viewport2D viewport,
-    final GeometryFactory viewportGeometryFactory, final Graphics2D graphics,
-    Geometry geometry) {
+    final GeometryFactory viewportGeometryFactory, final Graphics2D graphics, Geometry geometry) {
     if (geometry != null && !geometry.isEmpty()) {
       geometry = viewport.getGeometry(geometry);
 
-      GeometryStyleRenderer.renderGeometry(viewport, graphics, geometry,
-        highlightStyle);
-      GeometryStyleRenderer.renderOutline(viewport, graphics, geometry,
-        outlineStyle);
+      GeometryStyleRenderer.renderGeometry(viewport, graphics, geometry, this.highlightStyle);
+      GeometryStyleRenderer.renderOutline(viewport, graphics, geometry, this.outlineStyle);
 
       if (!geometry.isEmpty()) {
         for (int i = 0; i < geometry.getNumGeometries(); i++) {
@@ -132,14 +123,14 @@ public class SelectedRecordsRenderer {
           if (part instanceof LineString) {
             final LineString lineString = (LineString)part;
             final CoordinatesList points = CoordinatesListUtil.get(lineString);
-            MarkerStyleRenderer.renderMarkers(viewport, graphics, points,
-              firstVertexStyle, lastVertexStyle, vertexStyle);
+            MarkerStyleRenderer.renderMarkers(viewport, graphics, points, this.firstVertexStyle,
+              this.lastVertexStyle, this.vertexStyle);
           } else if (part instanceof Polygon) {
             final Polygon polygon = (Polygon)part;
             final List<CoordinatesList> pointsList = CoordinatesListUtil.getAll(polygon);
             for (final CoordinatesList points : pointsList) {
-              MarkerStyleRenderer.renderMarkers(viewport, graphics, points,
-                firstVertexStyle, lastVertexStyle, vertexStyle);
+              MarkerStyleRenderer.renderMarkers(viewport, graphics, points, this.firstVertexStyle,
+                this.lastVertexStyle, this.vertexStyle);
             }
           }
         }
@@ -151,14 +142,13 @@ public class SelectedRecordsRenderer {
         if (!simpleOp.isSimple()) {
           for (final Coordinates coordinates : simpleOp.getNonSimplePoints()) {
             final Point point = viewportGeometryFactory.createPoint(coordinates);
-            MarkerStyleRenderer.renderMarker(viewport, graphics, point,
-              erroStyle);
+            MarkerStyleRenderer.renderMarker(viewport, graphics, point, this.erroStyle);
           }
         }
       } else {
         for (final TopologyValidationError error : validOp.getErrors()) {
           final Point point = viewportGeometryFactory.createPoint(error.getCoordinate());
-          MarkerStyleRenderer.renderMarker(viewport, graphics, point, erroStyle);
+          MarkerStyleRenderer.renderMarker(viewport, graphics, point, this.erroStyle);
         }
       }
     }

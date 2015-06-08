@@ -15,8 +15,8 @@ public class InvokeMethodMapObjectFactory extends AbstractMapObjectFactory {
 
   private final String methodName;
 
-  public InvokeMethodMapObjectFactory(final String typeName,
-    final String description, final Object object, final String methodName) {
+  public InvokeMethodMapObjectFactory(final String typeName, final String description,
+    final Object object, final String methodName) {
     super(typeName, description);
     this.object = new WeakReference<Object>(object);
     this.methodName = methodName;
@@ -29,8 +29,7 @@ public class InvokeMethodMapObjectFactory extends AbstractMapObjectFactory {
       final Object object = this.object.get();
       if (object instanceof Class<?>) {
         final Class<?> clazz = (Class<?>)object;
-        return (V)MethodUtils.invokeStaticMethod(clazz, this.methodName,
-          properties);
+        return (V)MethodUtils.invokeStaticMethod(clazz, this.methodName, properties);
       } else if (object != null) {
         return (V)MethodUtils.invokeMethod(object, this.methodName, properties);
       } else {

@@ -70,6 +70,11 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
     return GeometryFactory.getFactory(srid, numAxis, scaleXY, scaleZ);
   }
 
+  public static GeometryFactory fixed(final CoordinateSystem coordinateSystem, final int numAxis,
+    final double scaleXY, final double scaleZ) {
+    return new GeometryFactory(coordinateSystem, numAxis, scaleXY, scaleZ);
+  }
+
   /**
    * <p>
    * Get a GeometryFactory with the coordinate system, number of axis and a
@@ -93,6 +98,22 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   public static GeometryFactory fixed(final int srid, final int numAxis, final double scaleXY,
     final double scaleZ) {
     return getFactory(srid, numAxis, scaleXY, scaleZ);
+  }
+
+  /**
+   * <p>
+   * Get a GeometryFactory with the coordinate system, number of axis and a
+   * floating precision model.
+   * </p>
+   *
+   * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
+   *          coordinate system id</a>.
+   * @param numAxis The number of coordinate axis. 2 for 2D x &amp; y
+   *          coordinates. 3 for 3D x, y &amp; z coordinates.
+   * @return The geometry factory.
+   */
+  public static GeometryFactory floating(final int srid, final int numAxis) {
+    return getFactory(srid, numAxis, 0, 0);
   }
 
   public static GeometryFactory floating3() {
@@ -143,11 +164,6 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   public static GeometryFactory getFactory(final CoordinateSystem coordinateSystem) {
     final int srid = getId(coordinateSystem);
     return getFactory(srid, 3, 0, 0);
-  }
-
-  public static GeometryFactory fixed(final CoordinateSystem coordinateSystem,
-    final int numAxis, final double scaleXY, final double scaleZ) {
-    return new GeometryFactory(coordinateSystem, numAxis, scaleXY, scaleZ);
   }
 
   /**
@@ -227,22 +243,6 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
     return getFactory(srid, 3, scaleXY, scaleZ);
   }
 
-  /**
-   * <p>
-   * Get a GeometryFactory with the coordinate system, number of axis and a
-   * floating precision model.
-   * </p>
-   *
-   * @param srid The <a href="http://spatialreference.org/ref/epsg/">EPSG
-   *          coordinate system id</a>.
-   * @param numAxis The number of coordinate axis. 2 for 2D x &amp; y
-   *          coordinates. 3 for 3D x, y &amp; z coordinates.
-   * @return The geometry factory.
-   */
-  public static GeometryFactory floating(final int srid, final int numAxis) {
-    return getFactory(srid, numAxis, 0, 0);
-  }
-
   public static GeometryFactory getFactory(final int srid, final int numAxis, final double scaleXY,
     final double scaleZ) {
     synchronized (factories) {
@@ -312,15 +312,15 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
     super(PrecisionModelUtil.getPrecisionModel(scaleXY), coordinateSystem.getId(),
       new DoubleCoordinatesListFactory());
     this.coordinateSystem = coordinateSystem;
-    coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
+    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
     this.numAxis = Math.max(numAxis, 2);
   }
 
   protected GeometryFactory(final int srid, final int numAxis, final double scaleXY,
     final double scaleZ) {
     super(PrecisionModelUtil.getPrecisionModel(scaleXY), srid, new DoubleCoordinatesListFactory());
-    coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
-    coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
+    this.coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
+    this.coordinatesPrecisionModel = new SimpleCoordinatesPrecisionModel(scaleXY, scaleZ);
     this.numAxis = Math.max(numAxis, 2);
   }
 
@@ -346,13 +346,13 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   }
 
   public Coordinates createCoordinates(final Coordinates point) {
-    final Coordinates newPoint = new DoubleCoordinates(point, numAxis);
+    final Coordinates newPoint = new DoubleCoordinates(point, this.numAxis);
     makePrecise(newPoint);
     return newPoint;
   }
 
   public Coordinates createCoordinates(final double... coordinates) {
-    final Coordinates newPoint = new DoubleCoordinates(numAxis, coordinates);
+    final Coordinates newPoint = new DoubleCoordinates(this.numAxis, coordinates);
     makePrecise(newPoint);
     return newPoint;
   }
@@ -403,7 +403,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   public CoordinatesList createCoordinatesList(final Coordinates... points) {
     final DoubleCoordinatesList coordinatesList = new DoubleCoordinatesList(getNumAxis(), points);
-    coordinatesList.makePrecise(coordinatesPrecisionModel);
+    coordinatesList.makePrecise(this.coordinatesPrecisionModel);
     return coordinatesList;
   }
 
@@ -412,7 +412,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
       return null;
     } else {
       final int size = points.size();
-      final CoordinatesList newPoints = new DoubleCoordinatesList(size, numAxis);
+      final CoordinatesList newPoints = new DoubleCoordinatesList(size, this.numAxis);
       final int numAxis2 = points.getDimension();
       final int numAxis = Math.min(this.numAxis, numAxis2);
       for (int i = 0; i < size; i++) {
@@ -437,13 +437,13 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   }
 
   public CoordinatesList createCoordinatesList(final double... coordinates) {
-    final CoordinatesList newPoints = new DoubleCoordinatesList(numAxis, coordinates);
+    final CoordinatesList newPoints = new DoubleCoordinatesList(this.numAxis, coordinates);
     makePrecise(newPoints);
     return newPoints;
   }
 
   public CoordinatesList createCoordinatesList(final int size) {
-    final CoordinatesList points = new DoubleCoordinatesList(size, numAxis);
+    final CoordinatesList points = new DoubleCoordinatesList(size, this.numAxis);
     return points;
   }
 
@@ -560,8 +560,8 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
       final int srid = getSRID();
       final int geometrySrid = geometry.getSRID();
       if (srid == 0 && geometrySrid != 0) {
-        final GeometryFactory geometryFactory = GeometryFactory.getFactory(geometrySrid, numAxis,
-          getScaleXY(), getScaleZ());
+        final GeometryFactory geometryFactory = GeometryFactory.getFactory(geometrySrid,
+          this.numAxis, getScaleXY(), getScaleZ());
         return geometryFactory.createGeometry(geometry);
       } else if (srid != 0 && geometrySrid != 0 && geometrySrid != srid) {
         if (geometry instanceof GeometryCollection) {
@@ -621,7 +621,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
       } else if (classes.equals(Collections.singleton(Polygon.class))) {
         return (V)createMultiPolygon(geometryList);
       } else {
-        final Geometry[] geometryArray = GeometryFactory.toGeometryArray(geometryList);
+        final Geometry[] geometryArray = com.vividsolutions.jts.geom.GeometryFactory.toGeometryArray(geometryList);
         return (V)super.createGeometryCollection(geometryArray);
       }
     }
@@ -793,7 +793,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   public Polygon createPolygon(final List<?> rings) {
     if (rings.size() == 0) {
-      final DoubleCoordinatesList nullPoints = new DoubleCoordinatesList(0, numAxis);
+      final DoubleCoordinatesList nullPoints = new DoubleCoordinatesList(0, this.numAxis);
       final LinearRing ring = createLinearRing(nullPoints);
       return createPolygon(ring, null);
     } else {
@@ -834,18 +834,18 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   }
 
   public CoordinatesPrecisionModel getCoordinatesPrecisionModel() {
-    return coordinatesPrecisionModel;
+    return this.coordinatesPrecisionModel;
   }
 
   public CoordinateSystem getCoordinateSystem() {
-    return coordinateSystem;
+    return this.coordinateSystem;
   }
 
   public GeometryFactory getGeographicGeometryFactory() {
-    if (coordinateSystem instanceof GeographicCoordinateSystem) {
+    if (this.coordinateSystem instanceof GeographicCoordinateSystem) {
       return this;
-    } else if (coordinateSystem instanceof ProjectedCoordinateSystem) {
-      final ProjectedCoordinateSystem projectedCs = (ProjectedCoordinateSystem)coordinateSystem;
+    } else if (this.coordinateSystem instanceof ProjectedCoordinateSystem) {
+      final ProjectedCoordinateSystem projectedCs = (ProjectedCoordinateSystem)this.coordinateSystem;
       final GeographicCoordinateSystem geographicCs = projectedCs.getGeographicCoordinateSystem();
       final int srid = geographicCs.getId();
       return getFactory(srid, getNumAxis(), 0, 0);
@@ -911,7 +911,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   }
 
   public int getNumAxis() {
-    return numAxis;
+    return this.numAxis;
   }
 
   public Point[] getPointArray(final Collection<?> pointsList) {
@@ -950,7 +950,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   @Override
   public Coordinates getPreciseCoordinates(final Coordinates point) {
-    return coordinatesPrecisionModel.getPreciseCoordinates(point);
+    return this.coordinatesPrecisionModel.getPreciseCoordinates(point);
   }
 
   @Override
@@ -970,25 +970,25 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   }
 
   public boolean hasM() {
-    return numAxis > 3;
+    return this.numAxis > 3;
   }
 
   public boolean hasZ() {
-    return numAxis > 2;
+    return this.numAxis > 2;
   }
 
   @Override
   public boolean isFloating() {
-    return coordinatesPrecisionModel.isFloating();
+    return this.coordinatesPrecisionModel.isFloating();
   }
 
   @Override
   public void makePrecise(final Coordinates point) {
-    coordinatesPrecisionModel.makePrecise(point);
+    this.coordinatesPrecisionModel.makePrecise(point);
   }
 
   public void makePrecise(final CoordinatesList points) {
-    points.makePrecise(coordinatesPrecisionModel);
+    points.makePrecise(this.coordinatesPrecisionModel);
   }
 
   public double makePrecise(final double value) {
@@ -997,16 +997,16 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   @Override
   public double makeXyPrecise(final double value) {
-    return coordinatesPrecisionModel.makeXyPrecise(value);
+    return this.coordinatesPrecisionModel.makeXyPrecise(value);
   }
 
   @Override
   public double makeZPrecise(final double value) {
-    return coordinatesPrecisionModel.makeZPrecise(value);
+    return this.coordinatesPrecisionModel.makeZPrecise(value);
   }
 
   public Point point(final double... coordinates) {
-    final DoubleCoordinates coords = new DoubleCoordinates(numAxis, coordinates);
+    final DoubleCoordinates coords = new DoubleCoordinates(this.numAxis, coordinates);
     makePrecise(coords);
     return createPoint(coords);
   }
@@ -1032,7 +1032,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
     if (scaleXY > 0) {
       map.put("scaleXy", scaleXY);
     }
-    if (numAxis > 2) {
+    if (this.numAxis > 2) {
       final double scaleZ = getScaleZ();
       if (scaleZ > 0) {
         map.put("scaleZ", scaleZ);
@@ -1043,16 +1043,16 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   @Override
   public String toString() {
-    if (coordinateSystem == null) {
+    if (this.coordinateSystem == null) {
       return "Unknown coordinate system";
     } else {
-      final StringBuffer string = new StringBuffer(coordinateSystem.getName());
-      final int srid = coordinateSystem.getId();
+      final StringBuffer string = new StringBuffer(this.coordinateSystem.getName());
+      final int srid = this.coordinateSystem.getId();
       string.append(", srid=");
       string.append(srid);
       string.append(", numAxis=");
-      string.append(numAxis);
-      final double scaleXY = coordinatesPrecisionModel.getScaleXY();
+      string.append(this.numAxis);
+      final double scaleXY = this.coordinatesPrecisionModel.getScaleXY();
       string.append(", scaleXy=");
       if (scaleXY <= 0) {
         string.append("floating");
@@ -1060,7 +1060,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
         string.append(scaleXY);
       }
       if (hasZ()) {
-        final double scaleZ = coordinatesPrecisionModel.getScaleZ();
+        final double scaleZ = this.coordinatesPrecisionModel.getScaleZ();
         string.append(", scaleZ=");
         if (scaleZ <= 0) {
           string.append("floating");

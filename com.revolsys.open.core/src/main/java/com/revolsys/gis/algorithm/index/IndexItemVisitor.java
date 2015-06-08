@@ -8,7 +8,7 @@ import com.vividsolutions.jts.index.ItemVisitor;
 /**
  * A {@link ItemVisitor} implementation which uses a {@link Visitor} to visit
  * each item.
- * 
+ *
  * @author Paul Austin
  * @param <T> The type of item to visit.
  */
@@ -17,8 +17,7 @@ public class IndexItemVisitor implements ItemVisitor {
 
   private final Envelope envelope;
 
-  public IndexItemVisitor(final Envelope envelope,
-    final Visitor<Record> visitor) {
+  public IndexItemVisitor(final Envelope envelope, final Visitor<Record> visitor) {
     this.envelope = envelope;
     this.visitor = visitor;
   }
@@ -28,7 +27,7 @@ public class IndexItemVisitor implements ItemVisitor {
     final Record object = (Record)item;
     final Envelope envelope = object.getGeometryValue().getEnvelopeInternal();
     if (envelope.intersects(this.envelope)) {
-      visitor.visit(object);
+      this.visitor.visit(object);
     }
   }
 }

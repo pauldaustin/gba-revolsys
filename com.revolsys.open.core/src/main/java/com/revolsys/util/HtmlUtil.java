@@ -1,12 +1,12 @@
 /*
  * Copyright 2004-2005 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -97,8 +97,7 @@ public final class HtmlUtil {
 
   public static final QName B = new QName(HTML_NS_URI, "b", HTML_NS_PREFIX);
 
-  public static final QName BODY = new QName(HTML_NS_URI, "body",
-    HTML_NS_PREFIX);
+  public static final QName BODY = new QName(HTML_NS_URI, "body", HTML_NS_PREFIX);
 
   public static final QName BR = new QName(HTML_NS_URI, "br", HTML_NS_PREFIX);
 
@@ -110,8 +109,7 @@ public final class HtmlUtil {
 
   public static final QName DT = new QName(HTML_NS_URI, "dt", HTML_NS_PREFIX);
 
-  public static final QName FORM = new QName(HTML_NS_URI, "form",
-    HTML_NS_PREFIX);
+  public static final QName FORM = new QName(HTML_NS_URI, "form", HTML_NS_PREFIX);
 
   public static final QName H1 = new QName(HTML_NS_URI, "h1", HTML_NS_PREFIX);
 
@@ -125,69 +123,53 @@ public final class HtmlUtil {
 
   public static final QName H6 = new QName(HTML_NS_URI, "h6", HTML_NS_PREFIX);
 
-  public static final QName HEAD = new QName(HTML_NS_URI, "head",
-    HTML_NS_PREFIX);
+  public static final QName HEAD = new QName(HTML_NS_URI, "head", HTML_NS_PREFIX);
 
-  public static final QName HTML = new QName(HTML_NS_URI, "html",
-    HTML_NS_PREFIX);
+  public static final QName HTML = new QName(HTML_NS_URI, "html", HTML_NS_PREFIX);
 
   public static final QName I = new QName(HTML_NS_URI, "i", HTML_NS_PREFIX);
 
   public static final QName IMG = new QName(HTML_NS_URI, "img", HTML_NS_PREFIX);
 
-  public static final QName INPUT = new QName(HTML_NS_URI, "input",
-    HTML_NS_PREFIX);
+  public static final QName INPUT = new QName(HTML_NS_URI, "input", HTML_NS_PREFIX);
 
-  public static final QName LABEL = new QName(HTML_NS_URI, "label",
-    HTML_NS_PREFIX);
+  public static final QName LABEL = new QName(HTML_NS_URI, "label", HTML_NS_PREFIX);
 
   public static final QName LI = new QName(HTML_NS_URI, "li", HTML_NS_PREFIX);
 
-  public static final QName LINK = new QName(HTML_NS_URI, "link",
-    HTML_NS_PREFIX);
+  public static final QName LINK = new QName(HTML_NS_URI, "link", HTML_NS_PREFIX);
 
   public static final QName OL = new QName(HTML_NS_URI, "ol", HTML_NS_PREFIX);
 
-  public static final QName OPTION = new QName(HTML_NS_URI, "option",
-    HTML_NS_PREFIX);
+  public static final QName OPTION = new QName(HTML_NS_URI, "option", HTML_NS_PREFIX);
 
   public static final QName P = new QName(HTML_NS_URI, "p", HTML_NS_PREFIX);
 
   public static final QName PRE = new QName(HTML_NS_URI, "pre", HTML_NS_PREFIX);
 
-  public static final QName SCRIPT = new QName(HTML_NS_URI, "script",
-    HTML_NS_PREFIX);
+  public static final QName SCRIPT = new QName(HTML_NS_URI, "script", HTML_NS_PREFIX);
 
-  public static final QName SELECT = new QName(HTML_NS_URI, "select",
-    HTML_NS_PREFIX);
+  public static final QName SELECT = new QName(HTML_NS_URI, "select", HTML_NS_PREFIX);
 
-  public static final QName SPAN = new QName(HTML_NS_URI, "span",
-    HTML_NS_PREFIX);
+  public static final QName SPAN = new QName(HTML_NS_URI, "span", HTML_NS_PREFIX);
 
-  public static final QName STYLE = new QName(HTML_NS_URI, "style",
-    HTML_NS_PREFIX);
+  public static final QName STYLE = new QName(HTML_NS_URI, "style", HTML_NS_PREFIX);
 
-  public static final QName TABLE = new QName(HTML_NS_URI, "table",
-    HTML_NS_PREFIX);
+  public static final QName TABLE = new QName(HTML_NS_URI, "table", HTML_NS_PREFIX);
 
-  public static final QName TBODY = new QName(HTML_NS_URI, "tbody",
-    HTML_NS_PREFIX);
+  public static final QName TBODY = new QName(HTML_NS_URI, "tbody", HTML_NS_PREFIX);
 
   public static final QName TD = new QName(HTML_NS_URI, "td", HTML_NS_PREFIX);
 
-  public static final QName TEXT_AREA = new QName(HTML_NS_URI, "textarea",
-    HTML_NS_PREFIX);
+  public static final QName TEXT_AREA = new QName(HTML_NS_URI, "textarea", HTML_NS_PREFIX);
 
-  public static final QName TFOOT = new QName(HTML_NS_URI, "tfoot",
-    HTML_NS_PREFIX);
+  public static final QName TFOOT = new QName(HTML_NS_URI, "tfoot", HTML_NS_PREFIX);
 
   public static final QName TH = new QName(HTML_NS_URI, "th", HTML_NS_PREFIX);
 
-  public static final QName THEAD = new QName(HTML_NS_URI, "thead",
-    HTML_NS_PREFIX);
+  public static final QName THEAD = new QName(HTML_NS_URI, "thead", HTML_NS_PREFIX);
 
-  public static final QName TITLE = new QName(HTML_NS_URI, "title",
-    HTML_NS_PREFIX);
+  public static final QName TITLE = new QName(HTML_NS_URI, "title", HTML_NS_PREFIX);
 
   public static final QName TR = new QName(HTML_NS_URI, "tr", HTML_NS_PREFIX);
 
@@ -197,26 +179,24 @@ public final class HtmlUtil {
 
   public static final QName HR = new QName(HTML_NS_URI, "hr", HTML_NS_PREFIX);
 
-  public static final QName CODE = new QName(HTML_NS_URI, "code",
-    HTML_NS_PREFIX);
+  public static final QName CODE = new QName(HTML_NS_URI, "code", HTML_NS_PREFIX);
 
-  public static final QName META = new QName(HTML_NS_URI, "meta",
-    HTML_NS_PREFIX);
+  public static final QName META = new QName(HTML_NS_URI, "meta", HTML_NS_PREFIX);
 
   public static final QName ATTR_HTTP_EQUIV = new QName("http-equiv");
 
   public static final QName ATTR_CONTENT = new QName("content");
 
-  public static void elementWithId(final XmlWriter writer, final QName tag,
-    final String id, final Object content) {
+  public static void elementWithId(final XmlWriter writer, final QName tag, final String id,
+    final Object content) {
     writer.startTag(tag);
     writer.attribute(ATTR_ID, id.replaceAll("[^A-Za-z0-9\\-:.]", "_"));
     writer.text(content);
     writer.endTag(tag);
   }
 
-  public static void serializeA(final XmlWriter out, final String cssClass,
-    final Object url, final Object content) {
+  public static void serializeA(final XmlWriter out, final String cssClass, final Object url,
+    final Object content) {
     if (url != null) {
       out.startTag(A);
       if (cssClass != null) {
@@ -236,8 +216,8 @@ public final class HtmlUtil {
     out.endTag(B);
   }
 
-  public static void serializeButtonInput(final XmlWriter out,
-    final String value, final String onClick) {
+  public static void serializeButtonInput(final XmlWriter out, final String value,
+    final String onClick) {
     out.startTag(INPUT);
     out.attribute(ATTR_TYPE, "button");
     out.attribute(ATTR_VALUE, value);
@@ -247,8 +227,8 @@ public final class HtmlUtil {
 
   }
 
-  public static void serializeCheckBox(final XmlWriter out, final String name,
-    final String value, final boolean selected, final String onClick) {
+  public static void serializeCheckBox(final XmlWriter out, final String name, final String value,
+    final boolean selected, final String onClick) {
     out.startTag(INPUT);
     out.attribute(ATTR_ID, name);
     out.attribute(ATTR_NAME, name);
@@ -273,8 +253,7 @@ public final class HtmlUtil {
     out.endTag(LINK);
   }
 
-  public static void serializeDiv(final XmlWriter out, final String cssClass,
-    final Object content) {
+  public static void serializeDiv(final XmlWriter out, final String cssClass, final Object content) {
     if (content != null) {
       final String text = content.toString().trim();
       if (text.length() > 0) {
@@ -296,8 +275,7 @@ public final class HtmlUtil {
     out.endTag(INPUT);
   }
 
-  public static void serializeFileInput(final XmlWriter out, final String name,
-    final Object value) {
+  public static void serializeFileInput(final XmlWriter out, final String name, final Object value) {
     out.startTag(INPUT);
     out.attribute(ATTR_NAME, name);
     out.attribute(ATTR_TYPE, "file");
@@ -310,8 +288,7 @@ public final class HtmlUtil {
 
   }
 
-  public static void serializeHiddenInput(final XmlWriter out,
-    final String name, final Object value) {
+  public static void serializeHiddenInput(final XmlWriter out, final String name, final Object value) {
 
     String stringValue = null;
     if (value != null) {
@@ -320,8 +297,7 @@ public final class HtmlUtil {
     serializeHiddenInput(out, name, stringValue);
   }
 
-  public static void serializeHiddenInput(final XmlWriter out,
-    final String name, final String value) {
+  public static void serializeHiddenInput(final XmlWriter out, final String name, final String value) {
     out.startTag(INPUT);
     out.attribute(ATTR_NAME, name);
     out.attribute(ATTR_TYPE, "hidden");
@@ -353,8 +329,7 @@ public final class HtmlUtil {
   }
 
   public static void serializeSelect(final XmlWriter out, final String name,
-    final Object selectedValue, final boolean optional,
-    final List<? extends Object> values) {
+    final Object selectedValue, final boolean optional, final List<? extends Object> values) {
     out.startTag(SELECT);
     out.attribute(ATTR_NAME, name);
     if (optional) {
@@ -414,8 +389,7 @@ public final class HtmlUtil {
 
   }
 
-  public static void serializeSpan(final XmlWriter out, final String cssClass,
-    final Object content) {
+  public static void serializeSpan(final XmlWriter out, final String cssClass, final Object content) {
     if (content != null) {
       final String text = content.toString().trim();
       if (text.length() > 0) {
@@ -429,8 +403,7 @@ public final class HtmlUtil {
     }
   }
 
-  public static void serializeSubmitInput(final XmlWriter out,
-    final String name, final Object value) {
+  public static void serializeSubmitInput(final XmlWriter out, final String name, final Object value) {
     out.startTag(INPUT);
     out.attribute(ATTR_NAME, name);
     out.attribute(ATTR_TYPE, "submit");
@@ -442,15 +415,14 @@ public final class HtmlUtil {
 
   }
 
-  public static void serializeTag(final XmlWriter out, final QName tag,
-    final String content) {
+  public static void serializeTag(final XmlWriter out, final QName tag, final String content) {
     out.startTag(tag);
     out.text(content);
     out.endTag(tag);
   }
 
-  public static void serializeTextInput(final XmlWriter out, final String name,
-    final Object value, final int size, final int maxLength) {
+  public static void serializeTextInput(final XmlWriter out, final String name, final Object value,
+    final int size, final int maxLength) {
     out.startTag(INPUT);
     out.attribute(ATTR_NAME, name);
     out.attribute(ATTR_TYPE, "text");

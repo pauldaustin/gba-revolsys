@@ -28,47 +28,50 @@ import com.revolsys.util.Property;
 
 public class TextNameField extends ValueField {
 
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
   private final TextArea textNameField;
 
   private final ComboBox fieldNamesField;
 
-  public TextNameField(final AbstractRecordLayer layer,
-    final String fieldName, final Object fieldValue) {
+  public TextNameField(final AbstractRecordLayer layer, final String fieldName,
+    final Object fieldValue) {
     super(new BorderLayout());
-    textNameField = new TextArea(fieldName, fieldValue, 3, 30);
-    add(new JScrollPane(textNameField), BorderLayout.NORTH);
+    this.textNameField = new TextArea(fieldName, fieldValue, 3, 30);
+    add(new JScrollPane(this.textNameField), BorderLayout.NORTH);
 
-    final ArrayList<String> fieldNames = new ArrayList<String>(
-      layer.getColumnNames());
+    final ArrayList<String> fieldNames = new ArrayList<String>(layer.getColumnNames());
     final RecordDefinition metaData = layer.getRecordDefinition();
     fieldNames.remove(metaData.getGeometryFieldName());
-    final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(
-      layer);
+    final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(layer);
     this.fieldNamesField = new ComboBox(converter, false, fieldNames.toArray());
     this.fieldNamesField.setRenderer(converter);
 
-    final JButton addButton = InvokeMethodAction.createButton(null,
-      "Add field name", Icons.getIcon("add"), this, "addFieldName");
+    final JButton addButton = InvokeMethodAction.createButton(null, "Add field name",
+      Icons.getIcon("add"), this, "addFieldName");
     addButton.setIcon(Icons.getIcon("add"));
     addButton.setToolTipText("Add field Name");
 
-    final BasePanel fieldNamesPanel = new BasePanel(new FlowLayout(
-      FlowLayout.LEFT), this.fieldNamesField, addButton);
+    final BasePanel fieldNamesPanel = new BasePanel(new FlowLayout(FlowLayout.LEFT),
+      this.fieldNamesField, addButton);
     GroupLayoutUtil.makeColumns(fieldNamesPanel, 2, false);
     add(fieldNamesPanel, BorderLayout.SOUTH);
 
   }
 
   public void addFieldName() {
-    final String selectedFieldName = (String)fieldNamesField.getSelectedItem();
+    final String selectedFieldName = (String)this.fieldNamesField.getSelectedItem();
     if (StringUtils.hasText(selectedFieldName)) {
-      final int position = textNameField.getCaretPosition();
-      final Document document = textNameField.getDocument();
+      final int position = this.textNameField.getCaretPosition();
+      final Document document = this.textNameField.getDocument();
       try {
         document.insertString(position, "[" + selectedFieldName + "]", null);
       } catch (final BadLocationException e) {
       }
-      ((JComponent)textNameField).requestFocusInWindow();
+      ((JComponent)this.textNameField).requestFocusInWindow();
     }
   }
 
@@ -76,62 +79,62 @@ public class TextNameField extends ValueField {
   public void addPropertyChangeListener(final String propertyName,
     final PropertyChangeListener listener) {
     super.addPropertyChangeListener(propertyName, listener);
-    Property.addListener(textNameField, propertyName, listener);
+    Property.addListener(this.textNameField, propertyName, listener);
   }
 
   @Override
   public String getFieldValidationMessage() {
-    return textNameField.getFieldValidationMessage();
+    return this.textNameField.getFieldValidationMessage();
   }
 
   @Override
   public <T> T getFieldValue() {
-    return textNameField.getFieldValue();
+    return this.textNameField.getFieldValue();
   }
 
   @Override
   public boolean isFieldValid() {
-    return textNameField.isFieldValid();
+    return this.textNameField.isFieldValid();
   }
 
   @Override
   public void setFieldBackgroundColor(final Color color) {
-    textNameField.setFieldBackgroundColor(color);
+    this.textNameField.setFieldBackgroundColor(color);
   }
 
   @Override
   public void setFieldForegroundColor(final Color color) {
-    textNameField.setFieldForegroundColor(color);
+    this.textNameField.setFieldForegroundColor(color);
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
-    textNameField.setFieldInvalid(message, foregroundColor, backgroundColor);
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
+    this.textNameField.setFieldInvalid(message, foregroundColor, backgroundColor);
   }
 
   @Override
   public void setFieldToolTip(final String toolTip) {
-    textNameField.setFieldToolTip(toolTip);
+    this.textNameField.setFieldToolTip(toolTip);
   }
 
   @Override
   public void setFieldValid() {
-    textNameField.setFieldValid();
+    this.textNameField.setFieldValid();
   }
 
   @Override
   public void setFieldValue(final Object value) {
-    textNameField.setFieldValue(value);
+    this.textNameField.setFieldValue(value);
   }
 
   @Override
   public void setToolTipText(final String text) {
-    textNameField.setToolTipText(text);
+    this.textNameField.setToolTipText(text);
   }
 
   @Override
   public void updateFieldValue() {
-    textNameField.updateFieldValue();
+    this.textNameField.updateFieldValue();
   }
 }

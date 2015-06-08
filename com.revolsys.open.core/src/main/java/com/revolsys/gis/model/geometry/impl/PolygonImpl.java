@@ -17,13 +17,11 @@ import com.revolsys.gis.model.geometry.operation.chain.SegmentStringUtil;
 import com.revolsys.gis.model.geometry.operation.geomgraph.index.FastSegmentSetIntersectionFinder;
 import com.revolsys.gis.model.geometry.util.PolygonUtil;
 
-public class PolygonImpl extends GeometryImpl implements Polygon,
-  Iterable<LinearRing> {
+public class PolygonImpl extends GeometryImpl implements Polygon, Iterable<LinearRing> {
 
   private final MultiLinearRing rings;
 
-  protected PolygonImpl(final GeometryFactoryImpl geometryFactory,
-    final List<LinearRing> rings) {
+  protected PolygonImpl(final GeometryFactoryImpl geometryFactory, final List<LinearRing> rings) {
     super(geometryFactory);
     this.rings = geometryFactory.createMultiLinearRing(rings);
   }
@@ -50,8 +48,7 @@ public class PolygonImpl extends GeometryImpl implements Polygon,
      * quick positive result. If a point of any test components lie in target,
      * result is true
      */
-    final boolean isInPrepGeomArea = PolygonUtil.isAnyTestComponentInTarget(
-      this, geometry);
+    final boolean isInPrepGeomArea = PolygonUtil.isAnyTestComponentInTarget(this, geometry);
     if (isInPrepGeomArea) {
       return true;
     } else {
@@ -59,8 +56,8 @@ public class PolygonImpl extends GeometryImpl implements Polygon,
        * If any segments intersect, result is true
        */
       final List<SegmentString> lineSegStr = SegmentStringUtil.extractSegmentStrings(geometry);
-      final boolean segsIntersect = FastSegmentSetIntersectionFinder.get(this)
-        .intersects(lineSegStr);
+      final boolean segsIntersect = FastSegmentSetIntersectionFinder.get(this).intersects(
+        lineSegStr);
       if (segsIntersect) {
         return true;
       } else {
@@ -71,8 +68,8 @@ public class PolygonImpl extends GeometryImpl implements Polygon,
          */
         if (geometry.getDimension() == 2) {
           // TODO: generalize this to handle GeometryCollections
-          final boolean isPrepGeomInArea = PolygonUtil.isAnyTargetComponentInAreaTest(
-            geometry, getCoordinatesLists());
+          final boolean isPrepGeomInArea = PolygonUtil.isAnyTargetComponentInAreaTest(geometry,
+            getCoordinatesLists());
           if (isPrepGeomInArea) {
             return true;
           }
@@ -102,7 +99,7 @@ public class PolygonImpl extends GeometryImpl implements Polygon,
 
   @Override
   public List<CoordinatesList> getCoordinatesLists() {
-    return rings.getCoordinatesLists();
+    return this.rings.getCoordinatesLists();
   }
 
   @Override
@@ -117,7 +114,7 @@ public class PolygonImpl extends GeometryImpl implements Polygon,
 
   @Override
   public Point getFirstPoint() {
-    return rings.getFirstPoint();
+    return this.rings.getFirstPoint();
   }
 
   @Override
@@ -136,22 +133,22 @@ public class PolygonImpl extends GeometryImpl implements Polygon,
 
   @Override
   public int getRingCount() {
-    return rings.getGeometryCount();
+    return this.rings.getGeometryCount();
   }
 
   @Override
   public MultiLinearRing getRings() {
-    return rings;
+    return this.rings;
   }
 
   @Override
   public boolean isEmpty() {
-    return rings.isEmpty();
+    return this.rings.isEmpty();
   }
 
   @Override
   public Iterator<LinearRing> iterator() {
-    final List<LinearRing> geometries = rings.getGeometries();
+    final List<LinearRing> geometries = this.rings.getGeometries();
     return geometries.iterator();
   }
 }

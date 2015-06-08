@@ -8,7 +8,7 @@ import com.revolsys.gis.model.geometry.Geometry;
 
 /**
  * Utility methods for processing {@link SegmentString}s.
- * 
+ *
  * @author Martin Davis
  */
 public class SegmentStringUtil {
@@ -16,7 +16,7 @@ public class SegmentStringUtil {
    * Extracts all linear components from a given {@link Geometry} to
    * {@link SegmentString}s. The SegmentString data item is set to be the source
    * Geometry.
-   * 
+   *
    * @param geom the geometry to extract from
    * @return a List of SegmentStrings
    */

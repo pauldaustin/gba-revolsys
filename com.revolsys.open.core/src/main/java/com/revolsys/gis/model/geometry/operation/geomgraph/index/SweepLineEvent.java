@@ -20,14 +20,14 @@ public class SweepLineEvent implements Comparable {
 
   private final Object obj;
 
-  public SweepLineEvent(final Object edgeSet, final double x,
-    final SweepLineEvent insertEvent, final Object obj) {
+  public SweepLineEvent(final Object edgeSet, final double x, final SweepLineEvent insertEvent,
+    final Object obj) {
     this.edgeSet = edgeSet;
-    xValue = x;
+    this.xValue = x;
     this.insertEvent = insertEvent;
     this.eventType = INSERT;
     if (insertEvent != null) {
-      eventType = DELETE;
+      this.eventType = DELETE;
     }
     this.obj = obj;
   }
@@ -41,39 +41,39 @@ public class SweepLineEvent implements Comparable {
   @Override
   public int compareTo(final Object o) {
     final SweepLineEvent pe = (SweepLineEvent)o;
-    if (xValue < pe.xValue) {
+    if (this.xValue < pe.xValue) {
       return -1;
     }
-    if (xValue > pe.xValue) {
+    if (this.xValue > pe.xValue) {
       return 1;
     }
-    if (eventType < pe.eventType) {
+    if (this.eventType < pe.eventType) {
       return -1;
     }
-    if (eventType > pe.eventType) {
+    if (this.eventType > pe.eventType) {
       return 1;
     }
     return 0;
   }
 
   public int getDeleteEventIndex() {
-    return deleteEventIndex;
+    return this.deleteEventIndex;
   }
 
   public SweepLineEvent getInsertEvent() {
-    return insertEvent;
+    return this.insertEvent;
   }
 
   public Object getObject() {
-    return obj;
+    return this.obj;
   }
 
   public boolean isDelete() {
-    return insertEvent != null;
+    return this.insertEvent != null;
   }
 
   public boolean isInsert() {
-    return insertEvent == null;
+    return this.insertEvent == null;
   }
 
   public void setDeleteEventIndex(final int deleteEventIndex) {

@@ -23,7 +23,7 @@ import com.revolsys.swing.map.layer.LayerRenderer;
 
 public class LayerRendererTreeCellRenderer extends DefaultTreeCellRenderer {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -7481451746832997079L;
 
@@ -33,8 +33,7 @@ public class LayerRendererTreeCellRenderer extends DefaultTreeCellRenderer {
 
   private static final Map<List<Icon>, Icon> ICON_CACHE = new HashMap<List<Icon>, Icon>();
 
-  private static Icon getIcon(final Component component,
-    final LayerRenderer<?> renderer) {
+  private static Icon getIcon(final Component component, final LayerRenderer<?> renderer) {
     final List<Icon> icons = new ArrayList<Icon>();
     if (renderer.isVisible()) {
       icons.add(VISIBLE_ICON);
@@ -56,8 +55,7 @@ public class LayerRendererTreeCellRenderer extends DefaultTreeCellRenderer {
     }
   }
 
-  private static Icon merge(final Component component, final List<Icon> icons,
-    final int space) {
+  private static Icon merge(final Component component, final List<Icon> icons, final int space) {
 
     final MediaTracker tracker = new MediaTracker(component);
 
@@ -112,17 +110,17 @@ public class LayerRendererTreeCellRenderer extends DefaultTreeCellRenderer {
   }
 
   @Override
-  public Component getTreeCellRendererComponent(final JTree tree,
-    final Object value, final boolean selected, final boolean expanded,
-    final boolean leaf, final int row, final boolean hasFocus) {
+  public Component getTreeCellRendererComponent(final JTree tree, final Object value,
+    final boolean selected, final boolean expanded, final boolean leaf, final int row,
+    final boolean hasFocus) {
     if (value instanceof LayerRenderer) {
       final LayerRenderer<?> renderer = (LayerRenderer<?>)value;
       final Icon icon = getIcon(this, renderer);
       setIcon(icon);
       setText(renderer.getName());
     }
-    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree,
-      value, selected, expanded, leaf, row, hasFocus);
+    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree, value, selected,
+      expanded, leaf, row, hasFocus);
     if (value instanceof LayerRenderer) {
       final LayerRenderer<?> renderer = (LayerRenderer<?>)value;
       final Icon icon = getIcon(this, renderer);

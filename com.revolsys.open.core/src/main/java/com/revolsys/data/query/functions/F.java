@@ -9,13 +9,13 @@ public class F {
     return new Lower(value);
   }
 
-  public static RegexpReplace regexpReplace(final QueryValue value,
-    final String pattern, final String replace) {
+  public static RegexpReplace regexpReplace(final QueryValue value, final String pattern,
+    final String replace) {
     return new RegexpReplace(value, pattern, replace);
   }
 
-  public static RegexpReplace regexpReplace(final QueryValue value,
-    final String pattern, final String replace, final String flags) {
+  public static RegexpReplace regexpReplace(final QueryValue value, final String pattern,
+    final String replace, final String flags) {
     return new RegexpReplace(value, pattern, replace, flags);
   }
 

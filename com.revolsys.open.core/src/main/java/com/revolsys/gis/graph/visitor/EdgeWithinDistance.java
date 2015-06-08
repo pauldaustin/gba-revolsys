@@ -15,8 +15,7 @@ import com.revolsys.visitor.DelegatingVisitor;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EdgeWithinDistance<T> extends DelegatingVisitor<Edge<T>> implements
-  Filter<Edge<T>> {
+public class EdgeWithinDistance<T> extends DelegatingVisitor<Edge<T>> implements Filter<Edge<T>> {
   public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph,
     final Coordinates point, final double maxDistance) {
     final GeometryFactory geometryFactory = GeometryFactory.getFactory();
@@ -30,13 +29,12 @@ public class EdgeWithinDistance<T> extends DelegatingVisitor<Edge<T>> implements
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
     BoundingBox env = BoundingBox.getBoundingBox(geometry);
     env = env.expand(maxDistance);
-    graph.getEdgeIndex().visit(env,
-      new EdgeWithinDistance<T>(geometry, maxDistance, results));
+    graph.getEdgeIndex().visit(env, new EdgeWithinDistance<T>(geometry, maxDistance, results));
     return results.getList();
   }
 
-  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph,
-    final Node<T> node, final double maxDistance) {
+  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph, final Node<T> node,
+    final double maxDistance) {
     final GeometryFactory geometryFactory = GeometryFactory.getFactory();
     final Coordinates coordinate = node;
     final Geometry geometry = geometryFactory.createPoint(coordinate);
@@ -63,8 +61,8 @@ public class EdgeWithinDistance<T> extends DelegatingVisitor<Edge<T>> implements
   @Override
   public boolean accept(final Edge<T> edge) {
     final LineString line = edge.getLine();
-    final double distance = line.distance(geometry);
-    if (distance <= maxDistance) {
+    final double distance = line.distance(this.geometry);
+    if (distance <= this.maxDistance) {
       return true;
     } else {
       return false;

@@ -10,8 +10,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public class ExcludeGeometryRowFilter extends RowFilter<TableModel, Integer> {
 
   @Override
-  public boolean include(
-    final Entry<? extends TableModel, ? extends Integer> entry) {
+  public boolean include(final Entry<? extends TableModel, ? extends Integer> entry) {
     final TableModel model = entry.getModel();
     if (model instanceof AbstractDataObjectTableModel) {
       final AbstractDataObjectTableModel dataObjectModel = (AbstractDataObjectTableModel)entry.getModel();

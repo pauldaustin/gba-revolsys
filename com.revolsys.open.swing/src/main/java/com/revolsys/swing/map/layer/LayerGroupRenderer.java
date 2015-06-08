@@ -16,8 +16,7 @@ public class LayerGroupRenderer extends AbstractLayerRenderer<LayerGroup> {
   }
 
   @Override
-  public void render(final Viewport2D viewport, final Graphics2D graphics,
-    final LayerGroup layer) {
+  public void render(final Viewport2D viewport, final Graphics2D graphics, final LayerGroup layer) {
     if (layer.isVisible(viewport.getScale())) {
       final boolean saved = viewport.setUseModelCoordinates(false, graphics);
       try {
@@ -33,8 +32,7 @@ public class LayerGroupRenderer extends AbstractLayerRenderer<LayerGroup> {
                 renderer.render(viewport, graphics);
               }
             } catch (final Throwable e) {
-              LoggerFactory.getLogger(getClass()).error(
-                "Error rendering layer: " + childLayer, e);
+              LoggerFactory.getLogger(getClass()).error("Error rendering layer: " + childLayer, e);
             }
           }
         }

@@ -32,8 +32,7 @@ public class DataObjectToStringConverter extends ObjectToStringConverter {
       final Record object = (Record)value;
       final List<String> values = new ArrayList<String>();
       for (final String attributeName : this.attributeNames) {
-        final String text = StringConverterRegistry.toString(Property.get(
-          object, attributeName));
+        final String text = StringConverterRegistry.toString(Property.get(object, attributeName));
         values.add(text);
       }
       return CollectionUtil.toString(values);

@@ -174,9 +174,9 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
   @Override
   public void initialize(final RecordStoreSchema schema) {
     try {
-      final Connection connection = JdbcUtils.getConnection(dataSource);
+      final Connection connection = JdbcUtils.getConnection(this.dataSource);
       try {
-        final String schemaName = dataStore.getDatabaseSchemaName(schema);
+        final String schemaName = this.dataStore.getDatabaseSchemaName(schema);
         final String sridSql = "select M.TABLE_NAME, M.COLUMN_NAME, M.SRID, M.DIMINFO, C.GEOMETRY_TYPE "
           + "from ALL_SDO_GEOM_METADATA M "
           + "LEFT OUTER JOIN ALL_GEOMETRY_COLUMNS C ON (M.OWNER = C.F_TABLE_SCHEMA AND M.TABLE_NAME = C.F_TABLE_NAME AND M.COLUMN_NAME = C.F_GEOMETRY_COLUMN) "
@@ -229,10 +229,10 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
           JdbcUtils.close(statement);
         }
       } finally {
-        JdbcUtils.release(connection, dataSource);
+        JdbcUtils.release(connection, this.dataSource);
       }
     } catch (final SQLException e) {
-      LOG.error("Unable to initialize", e);
+      this.LOG.error("Unable to initialize", e);
     }
   }
 

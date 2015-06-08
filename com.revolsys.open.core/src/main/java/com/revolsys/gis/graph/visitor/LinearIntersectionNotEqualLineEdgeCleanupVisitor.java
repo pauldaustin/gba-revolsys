@@ -35,14 +35,13 @@ import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
-  AbstractVisitor<Edge<Record>> implements ObjectProcessor<DataObjectGraph> {
+public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>>
+  implements ObjectProcessor<DataObjectGraph> {
 
   private static final Logger LOG = LoggerFactory.getLogger(EqualTypeAndLineEdgeCleanupVisitor.class);
 
-  private Set<String> equalExcludeAttributes = new HashSet<String>(
-    Arrays.asList(DataObjectEquals.EXCLUDE_ID,
-      DataObjectEquals.EXCLUDE_GEOMETRY));
+  private Set<String> equalExcludeAttributes = new HashSet<String>(Arrays.asList(
+    DataObjectEquals.EXCLUDE_ID, DataObjectEquals.EXCLUDE_GEOMETRY));
 
   private Statistics duplicateStatistics;
 
@@ -54,24 +53,24 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
 
   @PreDestroy
   public void destroy() {
-    if (duplicateStatistics != null) {
-      duplicateStatistics.disconnect();
+    if (this.duplicateStatistics != null) {
+      this.duplicateStatistics.disconnect();
     }
-    duplicateStatistics = null;
+    this.duplicateStatistics = null;
   }
 
   public Set<String> getEqualExcludeAttributes() {
-    return equalExcludeAttributes;
+    return this.equalExcludeAttributes;
   }
 
   public Comparator<Record> getNewerComparator() {
-    return newerComparator;
+    return this.newerComparator;
   }
 
   @PostConstruct
   public void init() {
-    duplicateStatistics = new Statistics("Duplicate intersecting lines");
-    duplicateStatistics.connect();
+    this.duplicateStatistics = new Statistics("Duplicate intersecting lines");
+    this.duplicateStatistics.connect();
   }
 
   private boolean middleCoordinatesEqual(final CoordinatesList points1,
@@ -99,8 +98,7 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
     throw new IllegalArgumentException("Cannot override comparator");
   }
 
-  public void setEqualExcludeAttributes(
-    final Collection<String> equalExcludeAttributes) {
+  public void setEqualExcludeAttributes(final Collection<String> equalExcludeAttributes) {
     setEqualExcludeAttributes(new HashSet<String>(equalExcludeAttributes));
   }
 
@@ -124,8 +122,7 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
 
     final AndFilter<Edge<Record>> attributeAndGeometryFilter = new AndFilter<Edge<Record>>();
 
-    attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(
-      typePath));
+    attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
 
     final Filter<Edge<Record>> filter = getFilter();
     if (filter != null) {
@@ -133,17 +130,15 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
     }
 
     final Filter<Record> notEqualLineFilter = new NotFilter<Record>(
-      new DataObjectGeometryFilter<LineString>(
-        new EqualFilter<LineString>(line)));
+      new DataObjectGeometryFilter<LineString>(new EqualFilter<LineString>(line)));
 
     final DataObjectGeometryFilter<LineString> linearIntersectionFilter = new DataObjectGeometryFilter<LineString>(
       new LinearIntersectionFilter(line));
 
-    attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(
-      new AndFilter<Record>(notEqualLineFilter, linearIntersectionFilter)));
+    attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(new AndFilter<Record>(
+      notEqualLineFilter, linearIntersectionFilter)));
 
-    final List<Edge<Record>> intersectingEdges = graph.getEdges(
-      attributeAndGeometryFilter, line);
+    final List<Edge<Record>> intersectingEdges = graph.getEdges(attributeAndGeometryFilter, line);
 
     if (!intersectingEdges.isEmpty()) {
       if (intersectingEdges.size() == 1 && line.getLength() > 10) {
@@ -163,8 +158,7 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends
                 return true;
               }
             }
-            final boolean lastEqual = points.equal(points.size() - 1, points2,
-              points.size() - 1, 2);
+            final boolean lastEqual = points.equal(points.size() - 1, points2, points.size() - 1, 2);
             if (!lastEqual) {
               final Node<Record> toNode1 = edge.getToNode();
               final Node<Record> toNode2 = edge2.getToNode();

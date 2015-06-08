@@ -62,7 +62,7 @@ public class RelateOp extends GeometryGraphOperation {
    */
   public RelateOp(final Geometry g0, final Geometry g1) {
     super(g0, g1);
-    relate = new RelateComputer(arg);
+    this.relate = new RelateComputer(this.arg);
   }
 
   /**
@@ -72,10 +72,9 @@ public class RelateOp extends GeometryGraphOperation {
    * @param g1 another Geometry to relate
    * @param boundaryNodeRule the Boundary Node Rule to use
    */
-  public RelateOp(final Geometry g0, final Geometry g1,
-    final BoundaryNodeRule boundaryNodeRule) {
+  public RelateOp(final Geometry g0, final Geometry g1, final BoundaryNodeRule boundaryNodeRule) {
     super(g0, g1, boundaryNodeRule);
-    relate = new RelateComputer(arg);
+    this.relate = new RelateComputer(this.arg);
   }
 
   /**
@@ -85,7 +84,7 @@ public class RelateOp extends GeometryGraphOperation {
    * @return the IntersectonMatrix for the spatial relationship between the input geometries
    */
   public IntersectionMatrix getIntersectionMatrix() {
-    return relate.computeIM();
+    return this.relate.computeIM();
   }
 
 }

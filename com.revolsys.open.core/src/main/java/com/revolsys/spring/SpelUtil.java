@@ -8,17 +8,15 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 public class SpelUtil {
-  public static final SpelParserConfiguration CONFIGURATION = new SpelParserConfiguration(
-    true, true);
+  public static final SpelParserConfiguration CONFIGURATION = new SpelParserConfiguration(true,
+    true);
 
-  public static final SpelExpressionParser PARSER = new SpelExpressionParser(
-    CONFIGURATION);
+  public static final SpelExpressionParser PARSER = new SpelExpressionParser(CONFIGURATION);
 
   @SuppressWarnings("unchecked")
-  public static <V> V getValue(final Expression expression,
-    final Object object, final Map<String, Object> parameters) {
-    final StandardEvaluationContext context = new StandardEvaluationContext(
-      object);
+  public static <V> V getValue(final Expression expression, final Object object,
+    final Map<String, Object> parameters) {
+    final StandardEvaluationContext context = new StandardEvaluationContext(object);
     if (object instanceof Map) {
       @SuppressWarnings("rawtypes")
       final Map map = (Map)object;
@@ -31,14 +29,13 @@ public class SpelUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <V> V getValue(final String expressionString,
-    final Object object) {
+  public static <V> V getValue(final String expressionString, final Object object) {
     return (V)getValue(expressionString, object, null);
   }
 
   @SuppressWarnings("unchecked")
-  public static <V> V getValue(final String expressionString,
-    final Object object, final Map<String, Object> parameters) {
+  public static <V> V getValue(final String expressionString, final Object object,
+    final Map<String, Object> parameters) {
     final Expression expression = parse(expressionString);
     return (V)getValue(expression, object, parameters);
   }

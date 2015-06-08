@@ -28,7 +28,7 @@ public class DataStoreQueryTask extends AbstractProcess {
   }
 
   public void cancel() {
-    objects = null;
+    this.objects = null;
   }
 
   @Override
@@ -38,14 +38,14 @@ public class DataStoreQueryTask extends AbstractProcess {
 
   @Override
   public void run() {
-    objects = new ArrayList<Record>();
-    final Query query = new Query(path);
-    query.setBoundingBox(boundingBox);
-    final Reader<Record> reader = dataStore.query(query);
+    this.objects = new ArrayList<Record>();
+    final Query query = new Query(this.path);
+    query.setBoundingBox(this.boundingBox);
+    final Reader<Record> reader = this.dataStore.query(query);
     try {
       for (final Record object : reader) {
         try {
-          objects.add(object);
+          this.objects.add(object);
         } catch (final NullPointerException e) {
           return;
         }

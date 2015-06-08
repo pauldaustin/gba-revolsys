@@ -80,8 +80,7 @@ public final class ArcSdeConstants {
     try {
       ST_GEOMETRY_SQL_NAME = new SQLName("SDE", "ST_GEOMETRY", null);
     } catch (final SQLException e) {
-      throw new RuntimeException(
-        "Unable to create SQL name for SDE.ST_GEOMETRY");
+      throw new RuntimeException("Unable to create SQL name for SDE.ST_GEOMETRY");
     }
     DATA_TYPE_MAP.put(POINT, DataTypes.POINT);
     DATA_TYPE_MAP.put(LINESTRING, DataTypes.LINE_STRING);
@@ -93,8 +92,7 @@ public final class ArcSdeConstants {
     GEOMETRY_CLASS_ST_TYPE.put(Point.class, ST_GEOMETRY_POINT);
     GEOMETRY_CLASS_ST_TYPE.put(MultiPoint.class, ST_GEOMETRY_MULTI_POINT);
     GEOMETRY_CLASS_ST_TYPE.put(LineString.class, ST_GEOMETRY_LINESTRING);
-    GEOMETRY_CLASS_ST_TYPE.put(MultiLineString.class,
-      ST_GEOMETRY_MULTI_LINESTRING);
+    GEOMETRY_CLASS_ST_TYPE.put(MultiLineString.class, ST_GEOMETRY_MULTI_LINESTRING);
     GEOMETRY_CLASS_ST_TYPE.put(Polygon.class, ST_GEOMETRY_POLYGON);
     GEOMETRY_CLASS_ST_TYPE.put(MultiPolygon.class, ST_GEOMETRY_MULTI_POLYGON);
   }
@@ -112,8 +110,7 @@ public final class ArcSdeConstants {
     final Class<? extends Geometry> geometryClass = geometry.getClass();
     final Integer type = GEOMETRY_CLASS_ST_TYPE.get(geometryClass);
     if (type == null) {
-      throw new IllegalArgumentException("Unsupported geometry type "
-        + geometryClass);
+      throw new IllegalArgumentException("Unsupported geometry type " + geometryClass);
     } else {
       return type;
     }

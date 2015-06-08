@@ -7,7 +7,7 @@ import com.vividsolutions.jts.util.Assert;
 /**
  * A GraphComponent is the parent class for the objects' that form a graph. Each
  * GraphComponent can carry a Label.
- * 
+ *
  * @version 1.7
  */
 abstract public class GraphComponent {
@@ -44,32 +44,32 @@ abstract public class GraphComponent {
   abstract public Coordinates getCoordinate();
 
   public Label getLabel() {
-    return label;
+    return this.label;
   }
 
   public boolean isCovered() {
-    return isCovered;
+    return this.isCovered;
   }
 
   public boolean isCoveredSet() {
-    return isCoveredSet;
+    return this.isCoveredSet;
   }
 
   public boolean isInResult() {
-    return isInResult;
+    return this.isInResult;
   }
 
   /**
    * An isolated component is one that does not intersect or touch any other
    * component. This is the case if the label has valid locations for only a
    * single Geometry.
-   * 
+   *
    * @return true if this component is isolated
    */
   abstract public boolean isIsolated();
 
   public boolean isVisited() {
-    return isVisited;
+    return this.isVisited;
   }
 
   public void setCovered(final boolean isCovered) {
@@ -94,7 +94,7 @@ abstract public class GraphComponent {
    * contributes if it has a labelling for both parent geometries
    */
   public void updateIM(final IntersectionMatrix im) {
-    Assert.isTrue(label.getGeometryCount() >= 2, "found partial label");
+    Assert.isTrue(this.label.getGeometryCount() >= 2, "found partial label");
     computeIM(im);
   }
 

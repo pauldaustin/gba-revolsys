@@ -7,8 +7,7 @@ import com.revolsys.data.record.schema.RecordStoreSchema;
 
 public interface DataObjectStoreExtension {
 
-  public abstract void initialize(RecordStore dataStore,
-    Map<String, Object> connectionProperties);
+  public abstract void initialize(RecordStore dataStore, Map<String, Object> connectionProperties);
 
   boolean isEnabled(RecordStore dataStore);
 

@@ -30,9 +30,8 @@ public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
 
   private boolean valid;
 
-  public ArcSdeBinaryGeometryAttribute(
-    final ArcSdeBinaryGeometryDataStoreUtil sdeUtil, final String name,
-    final DataType type, final boolean required, final String description,
+  public ArcSdeBinaryGeometryAttribute(final ArcSdeBinaryGeometryDataStoreUtil sdeUtil,
+    final String name, final DataType type, final boolean required, final String description,
     final Map<String, Object> properties, final GeometryFactory geometryFactory) {
     super(name, type, -1, 0, 0, required, description, properties);
     this.sdeUtil = sdeUtil;
@@ -45,30 +44,28 @@ public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final Record object) throws SQLException {
-    if (valid) {
+  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record object) throws SQLException {
+    if (this.valid) {
       final int geometryId = resultSet.getInt(columnIndex);
       if (!resultSet.wasNull()) {
         try {
-          final SeConnection connection = sdeUtil.createSeConnection();
+          final SeConnection connection = this.sdeUtil.createSeConnection();
           try {
             final String where = "\"" + getName() + "\" = " + geometryId;
-            final SeSqlConstruct sqlConstruct = new SeSqlConstruct(tableName,
-              where);
-            final SeQuery query = new SeQuery(connection, geometryColumns,
-              sqlConstruct);
+            final SeSqlConstruct sqlConstruct = new SeSqlConstruct(this.tableName, where);
+            final SeQuery query = new SeQuery(connection, this.geometryColumns, sqlConstruct);
             try {
               query.prepareQuery();
               query.execute();
               final SeRow row = query.fetch();
-              sdeUtil.setValueFromRow(object, row, 0);
+              this.sdeUtil.setValueFromRow(object, row, 0);
             } finally {
               query.close();
             }
 
           } finally {
-            sdeUtil.close(connection);
+            this.sdeUtil.close(connection);
           }
         } catch (final SeException e) {
           ExceptionUtil.log(getClass(), "Unable to read geometry", e);
@@ -81,17 +78,16 @@ public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
 
   @Override
   protected void setMetaData(final RecordDefinition metaData) {
-    tableName = sdeUtil.getTableName(metaData);
-    geometryColumns = new String[] {
+    this.tableName = this.sdeUtil.getTableName(metaData);
+    this.geometryColumns = new String[] {
       getName()
     };
-    valid = true;
+    this.valid = true;
   }
 
   @Override
-  public int setPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final Object value) throws SQLException {
-    throw new UnsupportedOperationException(
-      "Editing ArcSDE binary geometries is not supported");
+  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
+    final Object value) throws SQLException {
+    throw new UnsupportedOperationException("Editing ArcSDE binary geometries is not supported");
   }
 }

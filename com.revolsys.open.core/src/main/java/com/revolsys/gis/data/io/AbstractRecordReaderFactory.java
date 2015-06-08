@@ -8,11 +8,9 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.io.AbstractMapReaderFactory;
-import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
 
 public abstract class AbstractRecordReaderFactory extends AbstractMapReaderFactory implements
@@ -47,7 +45,7 @@ public abstract class AbstractRecordReaderFactory extends AbstractMapReaderFacto
    */
   @Override
   public Reader<Record> createDirectoryRecordReader(final File directory) {
-    return createDirectoryRecordReader(directory, recordFactory);
+    return createDirectoryRecordReader(directory, this.recordFactory);
 
   }
 
@@ -86,12 +84,12 @@ public abstract class AbstractRecordReaderFactory extends AbstractMapReaderFacto
    */
   @Override
   public RecordReader createRecordReader(final Resource resource) {
-    return createRecordReader(resource, recordFactory);
+    return createRecordReader(resource, this.recordFactory);
 
   }
 
   @Override
   public boolean isBinary() {
-    return binary;
+    return this.binary;
   }
 }

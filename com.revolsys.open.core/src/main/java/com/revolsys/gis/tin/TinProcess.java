@@ -38,70 +38,70 @@ public class TinProcess extends BaseInOutProcess<Record, Record> {
   private File tinCache;
 
   public BoundingBox getBoundingBox() {
-    return boundingBox;
+    return this.boundingBox;
   }
 
   public File getTinCache() {
-    return tinCache;
+    return this.tinCache;
   }
 
   public Channel<Record> getTinIn() {
-    return tinIn;
+    return this.tinIn;
   }
 
   public Reader<Record> getTinReader() {
-    return tinReader;
+    return this.tinReader;
   }
 
   public Map<String, Object> getUpdatedAttributeValues() {
-    return updatedAttributeValues;
+    return this.updatedAttributeValues;
   }
 
   @Override
   protected void init() {
     super.init();
-    if (tinIn != null) {
-      tinIn.readConnect();
+    if (this.tinIn != null) {
+      this.tinIn.readConnect();
     }
   }
 
   protected void loadTin() {
-    if (tinCache != null && tinCache.exists()) {
-      final File tinFile = new File(tinCache, boundingBox.getId() + ".tin");
+    if (this.tinCache != null && this.tinCache.exists()) {
+      final File tinFile = new File(this.tinCache, this.boundingBox.getId() + ".tin");
       if (tinFile.exists()) {
         LOG.info("Loading tin from file " + tinFile);
         final FileSystemResource resource = new FileSystemResource(tinFile);
         try {
-          tin = TinReader.read(boundingBox, resource);
+          this.tin = TinReader.read(this.boundingBox, resource);
         } catch (final Exception e) {
           LOG.error("Unable to read tin file " + resource, e);
         }
       }
     }
-    if (tin == null) {
+    if (this.tin == null) {
       LOG.info("Loading tin from database");
-      tin = new TriangulatedIrregularNetwork(boundingBox);
+      this.tin = new TriangulatedIrregularNetwork(this.boundingBox);
       List<CoordinatesList> lines = new ArrayList<CoordinatesList>();
-      if (tinIn != null) {
-        readTinFeatures(tin, lines, tinIn);
+      if (this.tinIn != null) {
+        readTinFeatures(this.tin, lines, this.tinIn);
       }
-      if (tinReader != null) {
-        readTinFeatures(tin, lines, tinReader);
-      }
-      for (final CoordinatesList line : lines) {
-        tin.insertNodes(line);
+      if (this.tinReader != null) {
+        readTinFeatures(this.tin, lines, this.tinReader);
       }
       for (final CoordinatesList line : lines) {
-        tin.insertEdge(line);
+        this.tin.insertNodes(line);
+      }
+      for (final CoordinatesList line : lines) {
+        this.tin.insertEdge(line);
       }
       lines = null;
-      tin.finishEditing();
-      if (tinCache != null) {
-        final File tinFile = new File(tinCache, boundingBox.getId() + ".tin");
+      this.tin.finishEditing();
+      if (this.tinCache != null) {
+        final File tinFile = new File(this.tinCache, this.boundingBox.getId() + ".tin");
         try {
-          tinCache.mkdirs();
+          this.tinCache.mkdirs();
           final FileSystemResource resource = new FileSystemResource(tinFile);
-          TinWriter.write(resource, tin);
+          TinWriter.write(resource, this.tin);
         } catch (final Exception e) {
           LOG.error("Unable to cache tin to file " + tinFile);
         }
@@ -110,38 +110,36 @@ public class TinProcess extends BaseInOutProcess<Record, Record> {
   }
 
   @Override
-  protected void postRun(final Channel<Record> in,
-    final Channel<Record> out) {
-    if (tin == null) {
+  protected void postRun(final Channel<Record> in, final Channel<Record> out) {
+    if (this.tin == null) {
       LOG.info("Tin not created as there were no features");
     }
     this.tin = null;
-    if (tinIn != null) {
-      tinIn.readDisconnect();
+    if (this.tinIn != null) {
+      this.tinIn.readDisconnect();
     }
-    if (tinReader != null) {
-      tinReader.close();
+    if (this.tinReader != null) {
+      this.tinReader.close();
     }
     this.boundingBox = null;
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
-    if (tin == null) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
+    if (this.tin == null) {
       loadTin();
     }
     final LineString geometry = object.getGeometryValue();
     if (geometry instanceof LineString) {
       final LineString line = geometry;
       final Envelope envelope = line.getEnvelopeInternal();
-      if (envelope.intersects(boundingBox)) {
-        final LineString newLine = tin.getElevation(line);
+      if (envelope.intersects(this.boundingBox)) {
+        final LineString newLine = this.tin.getElevation(line);
         if (line != newLine) {
           object.setGeometryValue(newLine);
         }
-        if (updatedAttributeValues != null) {
-          for (final Entry<String, Object> entry : updatedAttributeValues.entrySet()) {
+        if (this.updatedAttributeValues != null) {
+          for (final Entry<String, Object> entry : this.updatedAttributeValues.entrySet()) {
             final String key = entry.getKey();
             final Object value = entry.getValue();
             if (object.getValueByPath(key) == null) {
@@ -185,8 +183,7 @@ public class TinProcess extends BaseInOutProcess<Record, Record> {
     this.tinReader = tinReader;
   }
 
-  public void setUpdatedAttributeValues(
-    final Map<String, Object> updatedAttributeValues) {
+  public void setUpdatedAttributeValues(final Map<String, Object> updatedAttributeValues) {
     this.updatedAttributeValues = updatedAttributeValues;
   }
 }

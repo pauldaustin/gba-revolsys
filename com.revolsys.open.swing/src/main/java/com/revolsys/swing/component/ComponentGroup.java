@@ -35,8 +35,8 @@ public class ComponentGroup {
     updateComponents(container);
   }
 
-  public void addComponent(final JComponent container, final String groupName,
-    final int index, final Component component) {
+  public void addComponent(final JComponent container, final String groupName, final int index,
+    final Component component) {
     final List<Component> components = getGroup(groupName);
     if (index < 0) {
       components.add(component);
@@ -51,9 +51,9 @@ public class ComponentGroup {
   }
 
   public void clear() {
-    buttonGroups.clear();
-    groupNames.clear();
-    groups.clear();
+    this.buttonGroups.clear();
+    this.groupNames.clear();
+    this.groups.clear();
   }
 
   public ButtonGroup getButtonGroup(final String groupName) {
@@ -75,8 +75,7 @@ public class ComponentGroup {
     return components;
   }
 
-  public void removeComponent(final JComponent container,
-    final String groupName, final int index) {
+  public void removeComponent(final JComponent container, final String groupName, final int index) {
     final List<Component> components = getGroup(groupName);
     if (index < components.size()) {
       components.remove(index);

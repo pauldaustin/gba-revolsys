@@ -9,8 +9,7 @@ import com.revolsys.gis.model.coordinates.CoordinatesPrecisionModel;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 
 public interface GeometryFactory extends CoordinatesPrecisionModel {
-  <G extends Geometry> G createGeometry(
-    Collection<? extends Geometry> geometries);
+  <G extends Geometry> G createGeometry(Collection<? extends Geometry> geometries);
 
   <G extends Geometry> G createGeometry(Geometry geometry);
 
@@ -54,7 +53,7 @@ public interface GeometryFactory extends CoordinatesPrecisionModel {
    * factory then the geometry will be returned, otherwise a new geometry will
    * be created. If the coordinate system is different the coordinates will be
    * converted to the correct coordinate system.
-   * 
+   *
    * @param geometry
    * @return
    */

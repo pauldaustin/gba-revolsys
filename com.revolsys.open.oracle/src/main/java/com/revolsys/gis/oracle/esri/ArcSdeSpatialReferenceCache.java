@@ -18,8 +18,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 
 public class ArcSdeSpatialReferenceCache {
 
-  public static ArcSdeSpatialReferenceCache get(
-    final AbstractJdbcRecordStore dataStore) {
+  public static ArcSdeSpatialReferenceCache get(final AbstractJdbcRecordStore dataStore) {
     ArcSdeSpatialReferenceCache spatialReferences = dataStore.getProperty("esriSpatialReferences");
     if (spatialReferences == null) {
       spatialReferences = new ArcSdeSpatialReferenceCache(dataStore);
@@ -28,15 +27,14 @@ public class ArcSdeSpatialReferenceCache {
     return spatialReferences;
   }
 
-  public static ArcSdeSpatialReferenceCache get(
-    final RecordStoreSchema schema) {
+  public static ArcSdeSpatialReferenceCache get(final RecordStoreSchema schema) {
     final AbstractJdbcRecordStore dataStore = (AbstractJdbcRecordStore)schema.getDataStore();
     return get(dataStore);
 
   }
 
-  public static ArcSdeSpatialReference getSpatialReference(
-    final RecordStoreSchema schema, final int esriSrid) {
+  public static ArcSdeSpatialReference getSpatialReference(final RecordStoreSchema schema,
+    final int esriSrid) {
     return get(schema).getSpatialReference(esriSrid);
   }
 
@@ -51,8 +49,7 @@ public class ArcSdeSpatialReferenceCache {
     this.dataStore = dataStore;
   }
 
-  public synchronized ArcSdeSpatialReference getSpatialReference(
-    final int esriSrid) {
+  public synchronized ArcSdeSpatialReference getSpatialReference(final int esriSrid) {
     ArcSdeSpatialReference spatialReference = this.spatialReferences.get(esriSrid);
     if (spatialReference == null) {
       spatialReference = getSpatialReference(
@@ -67,8 +64,7 @@ public class ArcSdeSpatialReferenceCache {
     return spatialReference;
   }
 
-  protected ArcSdeSpatialReference getSpatialReference(final String sql,
-    final int esriSrid) {
+  protected ArcSdeSpatialReference getSpatialReference(final String sql, final int esriSrid) {
     try {
       final Connection connection = this.dataStore.getSqlConnection();
       try {
@@ -96,15 +92,15 @@ public class ArcSdeSpatialReferenceCache {
               final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
               srid = esriCoordinateSystem.getId();
               if (srid <= 0) {
-                geometryFactory = GeometryFactory.fixed(coordinateSystem,
-                  3, scale.doubleValue(), zScale.doubleValue());
+                geometryFactory = GeometryFactory.fixed(coordinateSystem, 3, scale.doubleValue(),
+                  zScale.doubleValue());
               } else {
-                geometryFactory = GeometryFactory.getFactory(srid, 3,
-                  scale.doubleValue(), zScale.doubleValue());
+                geometryFactory = GeometryFactory.getFactory(srid, 3, scale.doubleValue(),
+                  zScale.doubleValue());
               }
             } else {
-              geometryFactory = GeometryFactory.getFactory(srid, 3,
-                scale.doubleValue(), zScale.doubleValue());
+              geometryFactory = GeometryFactory.getFactory(srid, 3, scale.doubleValue(),
+                zScale.doubleValue());
             }
 
             final ArcSdeSpatialReference spatialReference = new ArcSdeSpatialReference(

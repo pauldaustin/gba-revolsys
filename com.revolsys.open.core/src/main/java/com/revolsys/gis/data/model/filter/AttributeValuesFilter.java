@@ -11,7 +11,7 @@ import com.revolsys.gis.model.data.equals.EqualsInstance;
 
 /**
  * Filter DataObjects by the value of the attributeName.
- * 
+ *
  * @author Paul Austin
  */
 public class AttributeValuesFilter implements Filter<Record> {
@@ -31,12 +31,12 @@ public class AttributeValuesFilter implements Filter<Record> {
 
   /**
    * Construct a new AttributeValuesFilter.
-   * 
+   *
    * @param attributeName The attribute name.
    * @param values The list of values.
    */
-  public AttributeValuesFilter(final String attributeName,
-    final boolean allowNulls, final List<Object> values) {
+  public AttributeValuesFilter(final String attributeName, final boolean allowNulls,
+    final List<Object> values) {
     this.attributeName = attributeName;
     this.values = values;
     this.allowNulls = allowNulls;
@@ -44,45 +44,43 @@ public class AttributeValuesFilter implements Filter<Record> {
 
   /**
    * Construct a new AttributeValuesFilter.
-   * 
+   *
    * @param attributeName The attribute name.
    * @param values The array of values.
    */
-  public AttributeValuesFilter(final String attributeName,
-    final boolean allowNulls, final Object... values) {
+  public AttributeValuesFilter(final String attributeName, final boolean allowNulls,
+    final Object... values) {
     this(attributeName, allowNulls, Arrays.asList(values));
   }
 
   /**
    * Construct a new AttributeValuesFilter.
-   * 
+   *
    * @param attributeName The attribute name.
    * @param values The list of values.
    */
-  public AttributeValuesFilter(final String attributeName,
-    final List<Object> values) {
+  public AttributeValuesFilter(final String attributeName, final List<Object> values) {
     this.attributeName = attributeName;
     this.values = values;
   }
 
   /**
    * Match the attributeName on the data object with the required value.
-   * 
+   *
    * @param object The object.
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
   public boolean accept(final Record object) {
-    final Object propertyValue = DataObjectUtil.getAttributeByPath(object,
-      attributeName);
+    final Object propertyValue = DataObjectUtil.getAttributeByPath(object, this.attributeName);
     if (propertyValue == null) {
-      if (allowNulls) {
+      if (this.allowNulls) {
         return true;
       } else {
         return false;
       }
     } else {
-      for (final Object value : values) {
+      for (final Object value : this.values) {
         if (EqualsInstance.INSTANCE.equals(value, propertyValue)) {
           return true;
         }
@@ -93,22 +91,22 @@ public class AttributeValuesFilter implements Filter<Record> {
 
   /**
    * Get the attributeName name, or path to match.
-   * 
+   *
    * @return The attributeName name, or path to match.
    */
   public String getAttributeName() {
-    return attributeName;
+    return this.attributeName;
   }
 
   /**
    * @return the values
    */
   public List<Object> getValues() {
-    return values;
+    return this.values;
   }
 
   public boolean isAllowNulls() {
-    return allowNulls;
+    return this.allowNulls;
   }
 
   public void setAllowNulls(final boolean allowNulls) {
@@ -117,7 +115,7 @@ public class AttributeValuesFilter implements Filter<Record> {
 
   /**
    * Set the attributeName name, or path to match.
-   * 
+   *
    * @param attributeName The attributeName name, or path to match.
    */
   public void setAttributeName(final String attributeName) {
@@ -136,7 +134,7 @@ public class AttributeValuesFilter implements Filter<Record> {
    */
   @Override
   public String toString() {
-    return attributeName + " in " + values;
+    return this.attributeName + " in " + this.values;
   }
 
 }

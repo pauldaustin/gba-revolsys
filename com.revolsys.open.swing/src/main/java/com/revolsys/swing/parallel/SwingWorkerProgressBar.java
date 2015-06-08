@@ -11,25 +11,23 @@ import javax.swing.JProgressBar;
 
 import com.revolsys.swing.SwingUtil;
 
-public class SwingWorkerProgressBar extends JPanel implements
-  PropertyChangeListener {
+public class SwingWorkerProgressBar extends JPanel implements PropertyChangeListener {
   private static final long serialVersionUID = -5112492385171847107L;
 
   private final JProgressBar progressBar = new JProgressBar();
 
   public SwingWorkerProgressBar() {
     super(new BorderLayout());
-    Invoke.getPropertyChangeSupport()
-      .addPropertyChangeListener("workers", this);
-    progressBar.setIndeterminate(true);
-    add(progressBar, BorderLayout.WEST);
-    progressBar.setPreferredSize(new Dimension(48, 16));
+    Invoke.getPropertyChangeSupport().addPropertyChangeListener("workers", this);
+    this.progressBar.setIndeterminate(true);
+    add(this.progressBar, BorderLayout.WEST);
+    this.progressBar.setPreferredSize(new Dimension(48, 16));
   }
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
     final List<?> workers = (List<?>)event.getNewValue();
-    SwingUtil.setVisible(progressBar, true);
+    SwingUtil.setVisible(this.progressBar, true);
     if (workers == null || workers.isEmpty()) {
       SwingUtil.setVisible(this, false);
     } else {
@@ -40,7 +38,6 @@ public class SwingWorkerProgressBar extends JPanel implements
   @Override
   public void removeNotify() {
     super.removeNotify();
-    Invoke.getPropertyChangeSupport().removePropertyChangeListener("workers",
-      this);
+    Invoke.getPropertyChangeSupport().removePropertyChangeListener("workers", this);
   }
 }

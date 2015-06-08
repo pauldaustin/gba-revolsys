@@ -52,8 +52,8 @@ public class IsValidOp {
     final EdgeIntersectionList eiList = searchEdge.getEdgeIntersectionList();
     // somewhat inefficient - is there a better way? (Use a node map, for
     // instance?)
-    for (int i = 0; i < testCoords.length; i++) {
-      final Coordinate pt = testCoords[i];
+    for (final Coordinate testCoord : testCoords) {
+      final Coordinate pt = testCoord;
       if (!eiList.isIntersection(pt)) {
         return pt;
       }
@@ -150,8 +150,7 @@ public class IsValidOp {
     if (cit.isInteriorsConnected()) {
       return true;
     } else {
-      return addError(TopologyValidationError.DISCONNECTED_INTERIOR,
-        cit.getCoordinate());
+      return addError(TopologyValidationError.DISCONNECTED_INTERIOR, cit.getCoordinate());
     }
   }
 
@@ -203,8 +202,7 @@ public class IsValidOp {
     for (int i = 0; i < p.getNumInteriorRing(); i++) {
 
       final LinearRing hole = (LinearRing)p.getInteriorRingN(i);
-      final Coordinate holePt = findPtNotNode(hole.getCoordinates(), shell,
-        graph);
+      final Coordinate holePt = findPtNotNode(hole.getCoordinates(), shell, graph);
       /**
        * If no non-node hole vertex can be found, the hole must
        * split the polygon into disconnected interiors.
@@ -235,8 +233,7 @@ public class IsValidOp {
    * </ul>
    */
   private boolean checkHolesNotNested(final Polygon p, final GeometryGraph graph) {
-    final IndexedNestedRingTester nestedTester = new IndexedNestedRingTester(
-      graph);
+    final IndexedNestedRingTester nestedTester = new IndexedNestedRingTester(graph);
     // SimpleNestedRingTester nestedTester = new SimpleNestedRingTester(arg[0]);
     // SweeplineNestedRingTester nestedTester = new
     // SweeplineNestedRingTester(arg[0]);
@@ -249,8 +246,7 @@ public class IsValidOp {
     if (isNonNested) {
       return true;
     } else {
-      return addError(TopologyValidationError.NESTED_HOLES,
-        nestedTester.getNestedPoint());
+      return addError(TopologyValidationError.NESTED_HOLES, nestedTester.getNestedPoint());
     }
   }
 
@@ -265,11 +261,9 @@ public class IsValidOp {
   }
 
   private boolean checkInvalidCoordinates(final Polygon poly) {
-    boolean valid = checkInvalidCoordinates(poly.getExteriorRing()
-      .getCoordinates());
+    boolean valid = checkInvalidCoordinates(poly.getExteriorRing().getCoordinates());
     for (int i = 0; i < poly.getNumInteriorRing(); i++) {
-      valid &= checkInvalidCoordinates(poly.getInteriorRingN(i)
-        .getCoordinates());
+      valid &= checkInvalidCoordinates(poly.getInteriorRingN(i).getCoordinates());
     }
     return valid;
   }
@@ -290,8 +284,7 @@ public class IsValidOp {
         continue;
       }
       if (nodeSet.contains(ei.coord)) {
-        valid = addError(TopologyValidationError.RING_SELF_INTERSECTION,
-          ei.coord);
+        valid = addError(TopologyValidationError.RING_SELF_INTERSECTION, ei.coord);
       } else {
         nodeSet.add(ei.coord);
       }
@@ -324,8 +317,8 @@ public class IsValidOp {
    *   a Coordinate which is not inside the hole if it is not
    *
    */
-  private Coordinate checkShellInsideHole(final LinearRing shell,
-    final LinearRing hole, final GeometryGraph graph) {
+  private Coordinate checkShellInsideHole(final LinearRing shell, final LinearRing hole,
+    final GeometryGraph graph) {
     final Coordinate[] shellPts = shell.getCoordinates();
     final Coordinate[] holePts = hole.getCoordinates();
     // TODO: improve performance of this - by sorting pointlists for instance?
@@ -372,8 +365,7 @@ public class IsValidOp {
     // if no point could be found, we can assume that the shell is outside the
     // polygon
     if (shellPt != null) {
-      final boolean insidePolyShell = CGAlgorithms.isPointInRing(shellPt,
-        polyPts);
+      final boolean insidePolyShell = CGAlgorithms.isPointInRing(shellPt, polyPts);
       if (insidePolyShell) {
 
         // if no holes, this is an error!
@@ -415,8 +407,7 @@ public class IsValidOp {
    * This routine relies on the fact that while polygon shells may touch at one or
    * more vertices, they cannot touch at ALL vertices.
    */
-  private boolean checkShellsNotNested(final MultiPolygon multiPolygon,
-    final GeometryGraph graph) {
+  private boolean checkShellsNotNested(final MultiPolygon multiPolygon, final GeometryGraph graph) {
     boolean valid = true;
     for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
       final Polygon p = (Polygon)multiPolygon.getGeometryN(i);
@@ -434,15 +425,14 @@ public class IsValidOp {
 
   private boolean checkTooFewPoints(final GeometryGraph graph) {
     if (graph.hasTooFewPoints()) {
-      return addError(TopologyValidationError.TOO_FEW_POINTS,
-        graph.getInvalidPoint());
+      return addError(TopologyValidationError.TOO_FEW_POINTS, graph.getInvalidPoint());
     } else {
       return true;
     }
   }
 
   private boolean checkValid(final Geometry g) {
-    errors.clear();
+    this.errors.clear();
 
     // empty geometries are always valid!
     if (g.isEmpty()) {
@@ -485,8 +475,7 @@ public class IsValidOp {
     final GeometryGraph graph = new GeometryGraph(0, g);
     valid &= checkTooFewPoints(graph);
     final LineIntersector li = new RobustLineIntersector();
-    final SegmentIntersector segmentIntersector = IsSimpleOp.computeIntersections(
-      graph, li, true);
+    final SegmentIntersector segmentIntersector = IsSimpleOp.computeIntersections(graph, li, true);
     final List<Coordinates> properIntersections = segmentIntersector.getProperIntersections();
     if (properIntersections.isEmpty()) {
       valid &= checkNoSelfIntersectingRings(graph);
@@ -529,7 +518,7 @@ public class IsValidOp {
 
       if (checkTooFewPoints(graph)) {
         if (checkConsistentArea(graph)) {
-          if (!isSelfTouchingRingFormingHoleValid) {
+          if (!this.isSelfTouchingRingFormingHoleValid) {
             valid &= checkNoSelfIntersectingRings(graph);
           }
           for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
@@ -571,7 +560,7 @@ public class IsValidOp {
           if (checkConsistentArea(graph)) {
 
             boolean valid = true;
-            if (!isSelfTouchingRingFormingHoleValid) {
+            if (!this.isSelfTouchingRingFormingHoleValid) {
               valid &= checkNoSelfIntersectingRings(graph);
             }
             valid &= checkHolesInShell(g, graph);
@@ -587,12 +576,12 @@ public class IsValidOp {
   }
 
   public List<TopologyValidationError> getErrors() {
-    return errors;
+    return this.errors;
   }
 
   public boolean isValid() {
-    checkValid(parentGeometry);
-    return errors.isEmpty();
+    checkValid(this.parentGeometry);
+    return this.errors.isEmpty();
   }
 
   /**
@@ -620,7 +609,7 @@ public class IsValidOp {
    * @param isValid states whether geometry with this condition is valid
    */
   public void setSelfTouchingRingFormingHoleValid(final boolean isValid) {
-    isSelfTouchingRingFormingHoleValid = isValid;
+    this.isSelfTouchingRingFormingHoleValid = isValid;
   }
 
 }

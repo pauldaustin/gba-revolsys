@@ -19,12 +19,12 @@ public class JmsChannelInput<T> extends AbstractChannelInput<T> {
 
   @Override
   protected T doRead(final long timeout) {
-    jmsTemplate.setReceiveTimeout(timeout);
-    return (T)jmsTemplate.receiveAndConvert();
+    this.jmsTemplate.setReceiveTimeout(timeout);
+    return (T)this.jmsTemplate.receiveAndConvert();
   }
 
   public JmsTemplate getJmsTemplate() {
-    return jmsTemplate;
+    return this.jmsTemplate;
   }
 
   public void setJmsTemplate(final JmsTemplate jmsTemplate) {

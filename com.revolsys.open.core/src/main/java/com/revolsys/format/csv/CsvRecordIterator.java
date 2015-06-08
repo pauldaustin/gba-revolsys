@@ -73,12 +73,13 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
   }
 
   private void createRecordDefinition(final String[] fieldNames) throws IOException {
-    hasPointFields = Property.hasValue(pointXFieldName) && Property.hasValue(pointYFieldName);
-    if (hasPointFields) {
-      geometryType = DataTypes.POINT;
+    this.hasPointFields = Property.hasValue(this.pointXFieldName)
+      && Property.hasValue(this.pointYFieldName);
+    if (this.hasPointFields) {
+      this.geometryType = DataTypes.POINT;
     } else {
-      pointXFieldName = null;
-      pointYFieldName = null;
+      this.pointXFieldName = null;
+      this.pointYFieldName = null;
     }
     final List<FieldDefinition> fields = new ArrayList<>();
     FieldDefinition geometryField = null;
@@ -86,8 +87,8 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
       DataType type = DataTypes.STRING;
       boolean isGeometryField = false;
       if (fieldName != null) {
-        if (fieldName.equalsIgnoreCase(geometryColumnName)) {
-          type = geometryType;
+        if (fieldName.equalsIgnoreCase(this.geometryColumnName)) {
+          type = this.geometryType;
           isGeometryField = true;
         } else if ("GEOMETRY".equalsIgnoreCase(fieldName)) {
           type = DataTypes.GEOMETRY;
@@ -127,19 +128,19 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
       }
       fields.add(field);
     }
-    if (hasPointFields) {
+    if (this.hasPointFields) {
       if (geometryField == null) {
-        geometryField = new FieldDefinition(geometryColumnName, geometryType, true);
+        geometryField = new FieldDefinition(this.geometryColumnName, this.geometryType, true);
         fields.add(geometryField);
       }
     }
     if (geometryField != null) {
-      geometryField.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
+      geometryField.setProperty(FieldProperties.GEOMETRY_FACTORY, this.geometryFactory);
     }
     final RecordStoreSchema schema = getProperty("schema");
     String typePath = getProperty("typePath");
     if (!Property.hasValue(typePath)) {
-      typePath = "/" + FileUtil.getBaseName(resource.getFilename());
+      typePath = "/" + FileUtil.getBaseName(this.resource.getFilename());
       String schemaPath = getProperty("schemaPath");
       if (Property.hasValue(schemaPath)) {
         if (!schemaPath.startsWith("/")) {
@@ -148,7 +149,7 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
         typePath = schemaPath + typePath;
       }
     }
-    recordDefinition = new RecordDefinitionImpl(schema, typePath, getProperties(), fields);
+    this.recordDefinition = new RecordDefinitionImpl(schema, typePath, getProperties(), fields);
   }
 
   /**
@@ -156,42 +157,42 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
    */
   @Override
   protected void doClose() {
-    FileUtil.closeSilent(in);
-    recordFactory = null;
-    geometryFactory = null;
-    in = null;
-    resource = null;
+    FileUtil.closeSilent(this.in);
+    this.recordFactory = null;
+    this.geometryFactory = null;
+    this.in = null;
+    this.resource = null;
   }
 
   @Override
   protected void doInit() {
     try {
-      pointXFieldName = getProperty("pointXFieldName");
-      pointYFieldName = getProperty("pointYFieldName");
-      geometryColumnName = getProperty("geometryColumnName", "GEOMETRY");
+      this.pointXFieldName = getProperty("pointXFieldName");
+      this.pointYFieldName = getProperty("pointYFieldName");
+      this.geometryColumnName = getProperty("geometryColumnName", "GEOMETRY");
 
-      geometryFactory = GeometryFactory.get(getProperty("geometryFactory"));
-      if (geometryFactory == null) {
+      this.geometryFactory = GeometryFactory.get(getProperty("geometryFactory"));
+      if (this.geometryFactory == null) {
         final Integer geometrySrid = Property.getInteger(this, "geometrySrid");
         if (geometrySrid == null) {
-          geometryFactory = EsriCoordinateSystems.getGeometryFactory(resource);
+          this.geometryFactory = EsriCoordinateSystems.getGeometryFactory(this.resource);
         } else {
-          geometryFactory = GeometryFactory.floating3(geometrySrid);
+          this.geometryFactory = GeometryFactory.floating3(geometrySrid);
         }
       }
-      if (geometryFactory == null) {
-        geometryFactory = GeometryFactory.floating3();
+      if (this.geometryFactory == null) {
+        this.geometryFactory = GeometryFactory.floating3();
       }
       final DataType geometryType = DataTypes.getType((String)getProperty("geometryType"));
       if (Geometry.class.isAssignableFrom(geometryType.getJavaClass())) {
         this.geometryType = geometryType;
       }
 
-      in = new BufferedReader(FileUtil.createUtf8Reader(resource.getInputStream()));
+      this.in = new BufferedReader(FileUtil.createUtf8Reader(this.resource.getInputStream()));
       final String[] line = readNextRecord();
       createRecordDefinition(line);
     } catch (final IOException e) {
-      ExceptionUtil.log(getClass(), "Unable to open " + resource, e);
+      ExceptionUtil.log(getClass(), "Unable to open " + this.resource, e);
     } catch (final NoSuchElementException e) {
     }
   }
@@ -231,7 +232,7 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return recordDefinition;
+    return this.recordDefinition;
   }
 
   /**
@@ -269,12 +270,12 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
               i++;
             } else {
               inQuotes = !inQuotes;
-              if (i > 2 && line.charAt(i - 1) != fieldSeparator && line.length() > i + 1
-                && line.charAt(i + 1) != fieldSeparator) {
+              if (i > 2 && line.charAt(i - 1) != this.fieldSeparator && line.length() > i + 1
+                && line.charAt(i + 1) != this.fieldSeparator) {
                 sb.append(c);
               }
             }
-          } else if (c == fieldSeparator && !inQuotes) {
+          } else if (c == this.fieldSeparator && !inQuotes) {
             hadQuotes = false;
             if (hadQuotes || sb.length() > 0) {
               fields.add(sb.toString());
@@ -306,23 +307,23 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
    * @return The Record.
    */
   private Record parseRecord(final String[] record) {
-    final Record object = recordFactory.createRecord(recordDefinition);
-    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+    final Record object = this.recordFactory.createRecord(this.recordDefinition);
+    for (int i = 0; i < this.recordDefinition.getFieldCount(); i++) {
       String value = null;
       if (i < record.length) {
         value = record[i];
         if (value != null) {
-          final DataType dataType = recordDefinition.getFieldType(i);
+          final DataType dataType = this.recordDefinition.getFieldType(i);
           final Object convertedValue = StringConverterRegistry.toObject(dataType, value);
           object.setValue(i, convertedValue);
         }
       }
     }
-    if (hasPointFields) {
-      final Double x = Maps.getDouble(object, pointXFieldName);
-      final Double y = Maps.getDouble(object, pointYFieldName);
+    if (this.hasPointFields) {
+      final Double x = Maps.getDouble(object, this.pointXFieldName);
+      final Double y = Maps.getDouble(object, this.pointYFieldName);
       if (x != null && y != null) {
-        final Geometry geometry = geometryFactory.point(x, y);
+        final Geometry geometry = this.geometryFactory.point(x, y);
         object.setGeometryValue(geometry);
       }
     }

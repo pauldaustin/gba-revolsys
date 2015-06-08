@@ -55,11 +55,11 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
     final int sqlType, final int length, final int scale, final boolean required,
     final String description) {
     final String typePath = metaData.getPath();
-    String owner = dataStore.getDatabaseSchemaName(Path.getPath(typePath));
+    String owner = this.dataStore.getDatabaseSchemaName(Path.getPath(typePath));
     if (!StringUtils.hasText(owner)) {
       owner = "public";
     }
-    final String tableName = dataStore.getDatabaseTableName(typePath);
+    final String tableName = this.dataStore.getDatabaseTableName(typePath);
     final String columnName = name.toLowerCase();
     try {
       int srid = 0;
@@ -67,8 +67,8 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
       int numAxis = 3;
       try {
         final String sql = "select SRID, TYPE, COORD_DIMENSION from GEOMETRY_COLUMNS where UPPER(F_TABLE_SCHEMA) = UPPER(?) AND UPPER(F_TABLE_NAME) = UPPER(?) AND UPPER(F_GEOMETRY_COLUMN) = UPPER(?)";
-        final Map<String, Object> values = JdbcUtils.selectMap(dataSource, sql, owner, tableName,
-          columnName);
+        final Map<String, Object> values = JdbcUtils.selectMap(this.dataSource, sql, owner,
+          tableName, columnName);
         srid = (Integer)values.get("srid");
         type = (String)values.get("type");
         numAxis = (Integer)values.get("coord_dimension");
@@ -77,7 +77,7 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
       }
 
       final DataType dataType = DATA_TYPE_MAP.get(type);
-      final GeometryFactory storeGeometryFactory = dataStore.getGeometryFactory();
+      final GeometryFactory storeGeometryFactory = this.dataStore.getGeometryFactory();
       final GeometryFactory geometryFactory;
       if (storeGeometryFactory == null) {
         geometryFactory = GeometryFactory.getFactory(srid, numAxis, 0, 0);

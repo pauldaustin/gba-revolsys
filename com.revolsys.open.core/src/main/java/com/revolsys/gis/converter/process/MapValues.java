@@ -8,8 +8,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.DataObjectUtil;
 
-public class MapValues extends
-  AbstractSourceToTargetProcess<Record, Record> {
+public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
   private String sourceAttributeName;
 
   private String targetAttributeName;
@@ -19,49 +18,47 @@ public class MapValues extends
   public MapValues() {
   }
 
-  public MapValues(final String sourceAttributeName,
-    final String targetAttributeName) {
+  public MapValues(final String sourceAttributeName, final String targetAttributeName) {
     this.sourceAttributeName = sourceAttributeName;
     this.targetAttributeName = targetAttributeName;
   }
 
-  public MapValues(final String sourceAttributeName,
-    final String targetAttributeName, final Map<Object, Object> valueMap) {
+  public MapValues(final String sourceAttributeName, final String targetAttributeName,
+    final Map<Object, Object> valueMap) {
     this.sourceAttributeName = sourceAttributeName;
     this.targetAttributeName = targetAttributeName;
     this.valueMap = valueMap;
   }
 
   public void addValueMap(final Object sourceValue, final Object targetValue) {
-    valueMap.put(sourceValue, targetValue);
+    this.valueMap.put(sourceValue, targetValue);
   }
 
   public String getSourceAttributeName() {
-    return sourceAttributeName;
+    return this.sourceAttributeName;
   }
 
   public String getTargetAttributeName() {
-    return targetAttributeName;
+    return this.targetAttributeName;
   }
 
   public Map<Object, Object> getValueMap() {
-    return valueMap;
+    return this.valueMap;
   }
 
   @Override
   public void process(final Record source, final Record target) {
-    final Object sourceValue = DataObjectUtil.getAttributeByPath(source,
-      sourceAttributeName);
+    final Object sourceValue = DataObjectUtil.getAttributeByPath(source, this.sourceAttributeName);
     if (sourceValue != null) {
-      final Object targetValue = valueMap.get(sourceValue);
+      final Object targetValue = this.valueMap.get(sourceValue);
       if (targetValue != null) {
         final RecordDefinition targetMetaData = target.getRecordDefinition();
-        final CodeTable codeTable = targetMetaData.getCodeTableByFieldName(targetAttributeName);
+        final CodeTable codeTable = targetMetaData.getCodeTableByFieldName(this.targetAttributeName);
         if (codeTable == null) {
-          target.setValue(targetAttributeName, targetValue);
+          target.setValue(this.targetAttributeName, targetValue);
         } else {
           final Object codeId = codeTable.getId(targetValue);
-          target.setValue(targetAttributeName, codeId);
+          target.setValue(this.targetAttributeName, codeId);
         }
       }
     }
@@ -81,6 +78,6 @@ public class MapValues extends
 
   @Override
   public String toString() {
-    return "copy" + valueMap;
+    return "copy" + this.valueMap;
   }
 }

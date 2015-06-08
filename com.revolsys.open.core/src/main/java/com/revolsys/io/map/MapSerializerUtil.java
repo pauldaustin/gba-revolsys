@@ -18,13 +18,12 @@ public class MapSerializerUtil {
    * <p>Add the value to the map. If the value is a {@link MapSerializer} then add the result of
    * {@link MapSerializer#toMap()}. If the value is a supported type add it to the map, otherwise
    * convert the value to a string. Null values will be ignored.</p>
-   * 
+   *
    * @param map
    * @param name
    * @param value
    */
-  public static void add(final Map<String, Object> map, final String name,
-    final Object value) {
+  public static void add(final Map<String, Object> map, final String name, final Object value) {
     final Object mapValue = getValue(value);
     if (mapValue == null) {
       map.remove(mapValue);
@@ -33,8 +32,8 @@ public class MapSerializerUtil {
     }
   }
 
-  public static void add(final Map<String, Object> map, final String name,
-    final Object value, final Object defaultValue) {
+  public static void add(final Map<String, Object> map, final String name, final Object value,
+    final Object defaultValue) {
     if (EqualsRegistry.equal(value, defaultValue)) {
       map.remove(name);
     } else {

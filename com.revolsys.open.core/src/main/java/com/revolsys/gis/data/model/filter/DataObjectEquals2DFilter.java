@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * The exact match item visitor finds the first match in the archive features
  * for the update feature, excluding the attributes {@value #equalExclude}.
- * 
+ *
  * @author Paul Austin
  */
 public class DataObjectEquals2DFilter implements Filter<Record> {
@@ -25,8 +25,7 @@ public class DataObjectEquals2DFilter implements Filter<Record> {
     this(searchObject, null);
   }
 
-  public DataObjectEquals2DFilter(final Record searchObject,
-    final Collection<String> equalExclude) {
+  public DataObjectEquals2DFilter(final Record searchObject, final Collection<String> equalExclude) {
     this.searchObject = searchObject;
     if (equalExclude != null) {
       this.equalExclude.addAll(equalExclude);
@@ -35,11 +34,11 @@ public class DataObjectEquals2DFilter implements Filter<Record> {
 
   @Override
   public boolean accept(final Record object) {
-    final Geometry serachGeometry = searchObject.getGeometryValue();
+    final Geometry serachGeometry = this.searchObject.getGeometryValue();
     final Geometry geometry = object.getGeometryValue();
 
-    if (Geometry2DEquals.INSTANCE.equals(serachGeometry, geometry, equalExclude)) {
-      if (EqualsInstance.INSTANCE.equals(searchObject, object, equalExclude)) {
+    if (Geometry2DEquals.INSTANCE.equals(serachGeometry, geometry, this.equalExclude)) {
+      if (EqualsInstance.INSTANCE.equals(this.searchObject, object, this.equalExclude)) {
         return true;
       }
     }

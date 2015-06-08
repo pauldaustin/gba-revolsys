@@ -34,7 +34,7 @@ import com.vividsolutions.jts.geom.Location;
  * Creates all the raw offset curves for a buffer of a {@link Geometry}. Raw
  * curves need to be noded together and polygonized to form the final buffer
  * area.
- * 
+ *
  * @version 1.7
  */
 public class OffsetCurveSetBuilder {
@@ -94,25 +94,24 @@ public class OffsetCurveSetBuilder {
    * Left: Location.EXTERIOR <br>
    * Right: Location.INTERIOR
    */
-  private void addCurve(final CoordinatesList coord, final int leftLoc,
-    final int rightLoc) {
+  private void addCurve(final CoordinatesList coord, final int leftLoc, final int rightLoc) {
     // don't add null or trivial curves
     if (coord == null || coord.size() < 2) {
       return;
     }
     // add the edge for a coordinate list which is a raw offset curve
-    final SegmentString e = new NodedSegmentString(coord, new Label(0,
-      Location.BOUNDARY, leftLoc, rightLoc));
-    curveList.add(e);
+    final SegmentString e = new NodedSegmentString(coord, new Label(0, Location.BOUNDARY, leftLoc,
+      rightLoc));
+    this.curveList.add(e);
   }
 
   private void addLineString(final LineString line) {
     // a zero or negative width buffer of a line/point is empty
-    if (distance <= 0.0 && !curveBuilder.getBufferParameters().isSingleSided()) {
+    if (this.distance <= 0.0 && !this.curveBuilder.getBufferParameters().isSingleSided()) {
       return;
     }
     final CoordinatesList coord = CoordinatesListUtil.removeRepeatedPoints(line);
-    final CoordinatesList curve = curveBuilder.getLineCurve(coord, distance);
+    final CoordinatesList curve = this.curveBuilder.getLineCurve(coord, this.distance);
     addCurve(curve, Location.EXTERIOR, Location.INTERIOR);
   }
 
@@ -121,19 +120,19 @@ public class OffsetCurveSetBuilder {
    */
   private void addPoint(final Point p) {
     // a zero or negative width buffer of a line/point is empty
-    if (distance <= 0.0) {
+    if (this.distance <= 0.0) {
       return;
     }
     final CoordinatesList coord = new ListCoordinatesList(p.getNumAxis(), p);
-    final CoordinatesList curve = curveBuilder.getLineCurve(coord, distance);
+    final CoordinatesList curve = this.curveBuilder.getLineCurve(coord, this.distance);
     addCurve(curve, Location.EXTERIOR, Location.INTERIOR);
   }
 
   private void addPolygon(final Polygon polygon) {
-    double offsetDistance = distance;
+    double offsetDistance = this.distance;
     int offsetSide = Position.LEFT;
-    if (distance < 0.0) {
-      offsetDistance = -distance;
+    if (this.distance < 0.0) {
+      offsetDistance = -this.distance;
       offsetSide = Position.RIGHT;
     }
 
@@ -141,16 +140,15 @@ public class OffsetCurveSetBuilder {
     final CoordinatesList shellCoord = CoordinatesListUtil.removeRepeatedPoints(shell);
     // optimization - don't bother computing buffer
     // if the polygon would be completely eroded
-    if (distance < 0.0 && isErodedCompletely(shell, distance)) {
+    if (this.distance < 0.0 && isErodedCompletely(shell, this.distance)) {
       return;
     }
     // don't attemtp to buffer a polygon with too few distinct vertices
-    if (distance <= 0.0 && shellCoord.size() < 3) {
+    if (this.distance <= 0.0 && shellCoord.size() < 3) {
       return;
     }
 
-    addPolygonRing(shellCoord, offsetDistance, offsetSide, Location.EXTERIOR,
-      Location.INTERIOR);
+    addPolygonRing(shellCoord, offsetDistance, offsetSide, Location.EXTERIOR, Location.INTERIOR);
     final MultiLinearRing rings = polygon.getRings();
     for (int i = 1; i < rings.getGeometryCount(); i++) {
 
@@ -159,15 +157,15 @@ public class OffsetCurveSetBuilder {
 
       // optimization - don't bother computing buffer for this hole
       // if the hole would be completely covered
-      if (distance > 0.0 && isErodedCompletely(hole, -distance)) {
+      if (this.distance > 0.0 && isErodedCompletely(hole, -this.distance)) {
         continue;
       }
 
       // Holes are topologically labelled opposite to the shell, since
       // the interior of the polygon lies on their opposite side
       // (on the left, if the hole is oriented CCW)
-      addPolygonRing(holeCoord, offsetDistance, Position.opposite(offsetSide),
-        Location.INTERIOR, Location.EXTERIOR);
+      addPolygonRing(holeCoord, offsetDistance, Position.opposite(offsetSide), Location.INTERIOR,
+        Location.EXTERIOR);
     }
   }
 
@@ -176,16 +174,15 @@ public class OffsetCurveSetBuilder {
    * topological location arguments assume that the ring is oriented CW. If the
    * ring is in the opposite orientation, the left and right locations must be
    * interchanged and the side flipped.
-   * 
+   *
    * @param coord the coordinates of the ring (must not contain repeated points)
    * @param offsetDistance the distance at which to create the buffer
    * @param side the side of the ring on which to construct the buffer line
    * @param cwLeftLoc the location on the L side of the ring (if it is CW)
    * @param cwRightLoc the location on the R side of the ring (if it is CW)
    */
-  private void addPolygonRing(final CoordinatesList coord,
-    final double offsetDistance, int side, final int cwLeftLoc,
-    final int cwRightLoc) {
+  private void addPolygonRing(final CoordinatesList coord, final double offsetDistance, int side,
+    final int cwLeftLoc, final int cwRightLoc) {
     // don't bother adding ring if it is "flat" and will disappear in the output
     if (offsetDistance == 0.0 && coord.size() < LinearRing.MINIMUM_VALID_SIZE) {
       return;
@@ -193,39 +190,36 @@ public class OffsetCurveSetBuilder {
 
     int leftLoc = cwLeftLoc;
     int rightLoc = cwRightLoc;
-    if (coord.size() >= LinearRing.MINIMUM_VALID_SIZE
-      && CoordinatesListUtil.isCCW(coord)) {
+    if (coord.size() >= LinearRing.MINIMUM_VALID_SIZE && CoordinatesListUtil.isCCW(coord)) {
       leftLoc = cwRightLoc;
       rightLoc = cwLeftLoc;
       side = Position.opposite(side);
     }
-    final CoordinatesList curve = curveBuilder.getRingCurve(coord, side,
-      offsetDistance);
+    final CoordinatesList curve = this.curveBuilder.getRingCurve(coord, side, offsetDistance);
     addCurve(curve, leftLoc, rightLoc);
   }
 
   /**
    * Computes the set of raw offset curves for the buffer. Each offset curve has
    * an attached {@link Label} indicating its left and right location.
-   * 
+   *
    * @return a Collection of SegmentStrings representing the raw buffer curves
    */
   public List<SegmentString> getCurves() {
-    add(inputGeom);
-    return curveList;
+    add(this.inputGeom);
+    return this.curveList;
   }
 
   /**
    * The ringCoord is assumed to contain no repeated points. It may be
    * degenerate (i.e. contain only 1, 2, or 3 points). In this case it has no
    * area, and hence has a minimum diameter of 0.
-   * 
+   *
    * @param ringCoord
    * @param offsetDistance
    * @return
    */
-  private boolean isErodedCompletely(final LinearRing ring,
-    final double bufferDistance) {
+  private boolean isErodedCompletely(final LinearRing ring, final double bufferDistance) {
     final CoordinatesList ringCoord = ring;
     final double minDiam = 0.0;
     // degenerate ring has no area
@@ -274,18 +268,17 @@ public class OffsetCurveSetBuilder {
    * where the buffer distance is slightly larger than the inCentre distance. In
    * this case the triangle buffer curve "inverts" with incorrect topology,
    * producing an incorrect hole in the buffer.
-   * 
+   *
    * @param triangleCoord
    * @param bufferDistance
    * @return
    */
-  private boolean isTriangleErodedCompletely(
-    final CoordinatesList triangleCoord, final double bufferDistance) {
-    final Triangle tri = new Triangle(triangleCoord.get(0),
-      triangleCoord.get(1), triangleCoord.get(2));
+  private boolean isTriangleErodedCompletely(final CoordinatesList triangleCoord,
+    final double bufferDistance) {
+    final Triangle tri = new Triangle(triangleCoord.get(0), triangleCoord.get(1),
+      triangleCoord.get(2));
     final Coordinates inCentre = tri.getInCentre();
-    final double distToCentre = LineSegmentUtil.distance(tri.get(0),
-      tri.get(1), inCentre);
+    final double distToCentre = LineSegmentUtil.distance(tri.get(0), tri.get(1), inCentre);
     return distToCentre < Math.abs(bufferDistance);
   }
 

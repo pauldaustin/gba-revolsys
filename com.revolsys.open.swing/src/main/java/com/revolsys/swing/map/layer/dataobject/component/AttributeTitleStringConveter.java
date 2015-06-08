@@ -12,8 +12,8 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
 
-public class AttributeTitleStringConveter extends ObjectToStringConverter
-  implements ListCellRenderer {
+public class AttributeTitleStringConveter extends ObjectToStringConverter implements
+  ListCellRenderer {
   private final AbstractRecordLayer layer;
 
   private final DefaultListCellRenderer renderer = new DefaultListCellRenderer();
@@ -23,22 +23,20 @@ public class AttributeTitleStringConveter extends ObjectToStringConverter
   }
 
   @Override
-  public Component getListCellRendererComponent(final JList list,
-    final Object value, final int index, final boolean isSelected,
-    final boolean cellHasFocus) {
+  public Component getListCellRendererComponent(final JList list, final Object value,
+    final int index, final boolean isSelected, final boolean cellHasFocus) {
     final String title = getPreferredStringForItem(value);
-    return this.renderer.getListCellRendererComponent(list, title, index,
-      isSelected, cellHasFocus);
+    return this.renderer.getListCellRendererComponent(list, title, index, isSelected, cellHasFocus);
   }
 
   @Override
   public String getPreferredStringForItem(final Object item) {
     if (item instanceof FieldDefinition) {
       final FieldDefinition attribute = (FieldDefinition)item;
-      return layer.getFieldTitle(attribute.getName());
+      return this.layer.getFieldTitle(attribute.getName());
     } else if (item instanceof String) {
       final String attributeName = (String)item;
-      return layer.getFieldTitle(attributeName);
+      return this.layer.getFieldTitle(attributeName);
     }
     return StringConverterRegistry.toString(item);
   }

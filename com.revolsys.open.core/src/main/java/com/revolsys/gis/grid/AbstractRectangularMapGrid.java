@@ -22,8 +22,7 @@ public abstract class AbstractRectangularMapGrid implements RectangularMapGrid {
 
   public String getMapTileName(final Geometry geometry) {
     final CoordinateSystem coordinateSystem = getCoordinateSystem();
-    final Geometry projectedGeometry = GeometryProjectionUtil.perform(geometry,
-      coordinateSystem);
+    final Geometry projectedGeometry = GeometryProjectionUtil.perform(geometry, coordinateSystem);
     final Point centroid = projectedGeometry.getCentroid();
     final Coordinate coordinate = centroid.getCoordinate();
     final String mapsheet = getMapTileName(coordinate.x, coordinate.y);
@@ -32,22 +31,20 @@ public abstract class AbstractRectangularMapGrid implements RectangularMapGrid {
 
   @Override
   public String getName() {
-    if (name == null) {
+    if (this.name == null) {
       return getClass().getName();
     } else {
-      return name;
+      return this.name;
     }
   }
 
   @Override
-  public Polygon getPolygon(final String mapTileName,
-    final CoordinateSystem coordinateSystem) {
+  public Polygon getPolygon(final String mapTileName, final CoordinateSystem coordinateSystem) {
     return getPolygon(mapTileName, GeometryFactory.getFactory(coordinateSystem));
   }
 
   @Override
-  public Polygon getPolygon(final String mapTileName,
-    final GeometryFactory geometryFactory) {
+  public Polygon getPolygon(final String mapTileName, final GeometryFactory geometryFactory) {
     final RectangularMapTile mapTile = getTileByName(mapTileName);
     final BoundingBox boundingBox = mapTile.getBoundingBox();
     final Polygon polygon = boundingBox.toPolygon(geometryFactory);
@@ -55,8 +52,8 @@ public abstract class AbstractRectangularMapGrid implements RectangularMapGrid {
   }
 
   @Override
-  public Polygon getPolygon(final String mapTileName,
-    final GeometryFactory geometryFactory, final int numX, final int numY) {
+  public Polygon getPolygon(final String mapTileName, final GeometryFactory geometryFactory,
+    final int numX, final int numY) {
     final RectangularMapTile mapTile = getTileByName(mapTileName);
     final BoundingBox boundingBox = mapTile.getBoundingBox();
     final Polygon polygon = boundingBox.toPolygon(geometryFactory, numX, numY);

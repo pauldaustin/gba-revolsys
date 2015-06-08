@@ -15,8 +15,7 @@ public class HexConverter {
   public static String toHex(final byte[] bytes) {
     final StringBuffer hexString = new StringBuffer();
     for (final byte c : bytes) {
-      final String hexChar = Integer.toString((c & 0xff) + 0x100, 16)
-        .substring(1);
+      final String hexChar = Integer.toString((c & 0xff) + 0x100, 16).substring(1);
       hexString.append(hexChar);
     }
     return hexString.toString();

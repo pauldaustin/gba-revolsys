@@ -25,6 +25,11 @@ import com.vividsolutions.jts.geom.Point;
 
 public class Circle extends DoubleCoordinates {
 
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+
   private BoundingBox envelope;
 
   private final double radius;
@@ -35,30 +40,30 @@ public class Circle extends DoubleCoordinates {
     super(centre);
     this.radius = radius;
     this.envelope = new BoundingBox(getX(), getY());
-    envelope = envelope.expand(radius);
+    this.envelope = this.envelope.expand(radius);
   }
 
   public boolean contains(final Coordinates point) {
     final double distanceFromCentre = distance(point);
-    return distanceFromCentre < (this.radius + tolerance);
+    return distanceFromCentre < this.radius + this.tolerance;
   }
 
   public Envelope getEnvelopeInternal() {
-    return envelope;
+    return this.envelope;
   }
 
   public double getRadius() {
-    return radius;
+    return this.radius;
   }
 
   public Geometry toGeometry() {
     final GeometryFactory factory = GeometryFactory.getFactory();
     final Point point = factory.createPoint(this);
-    return point.buffer(radius);
+    return point.buffer(this.radius);
   }
 
   @Override
   public String toString() {
-    return "CIRCLE(" + getX() + " " + getY() + " " + radius + ")";
+    return "CIRCLE(" + getX() + " " + getY() + " " + this.radius + ")";
   }
 }

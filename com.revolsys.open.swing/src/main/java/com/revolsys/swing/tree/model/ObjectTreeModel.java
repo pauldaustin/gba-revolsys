@@ -29,8 +29,8 @@ import com.revolsys.swing.tree.model.node.ObjectTreeNodeModel;
 import com.revolsys.swing.tree.model.node.StringTreeNodeModel;
 import com.revolsys.util.ExceptionUtil;
 
-public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
-  TreeExpansionListener, PropertyChangeListener {
+public class ObjectTreeModel implements TreeModel, TreeWillExpandListener, TreeExpansionListener,
+  PropertyChangeListener {
 
   private static final ClassRegistry<MenuFactory> CLASS_MENUS = new ClassRegistry<MenuFactory>();
 
@@ -94,15 +94,13 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
     menu.addMenuItem(menuItem);
   }
 
-  public void addMenuItem(final Class<?> clazz, final String groupName,
-    final JMenuItem menuItem) {
+  public void addMenuItem(final Class<?> clazz, final String groupName, final JMenuItem menuItem) {
     final MenuFactory menu = getMenu(clazz);
     menu.addComponent(groupName, menuItem);
   }
 
   @SuppressWarnings("unchecked")
-  public void addNodeModel(final Class<?> clazz,
-    final ObjectTreeNodeModel<?, ?> model) {
+  public void addNodeModel(final Class<?> clazz, final ObjectTreeNodeModel<?, ?> model) {
     model.setObjectTreeModel(this);
     this.classNodeModels.put(clazz, (ObjectTreeNodeModel<Object, Object>)model);
   }
@@ -122,14 +120,13 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
   public void fireTreeNodesChanged(final TreePath path) {
     final TreeModelEvent event = new TreeModelEvent(this.root, path);
     if (SwingUtilities.isEventDispatchThread()) {
-      eventHandler.treeNodesChanged(event);
+      this.eventHandler.treeNodesChanged(event);
     } else {
-      Invoke.later(eventHandler, "treeNodesChanged", event);
+      Invoke.later(this.eventHandler, "treeNodesChanged", event);
     }
   }
 
-  public void fireTreeNodesInserted(final TreePath path, final int index,
-    final Object newValue) {
+  public void fireTreeNodesInserted(final TreePath path, final int index, final Object newValue) {
     try {
       if (newValue != null) {
         final TreeModelEvent e = new TreeModelEvent(this.root, path, new int[] {
@@ -144,8 +141,7 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
     }
   }
 
-  public void fireTreeNodesRemoved(final TreePath path, final int index,
-    final Object newValue) {
+  public void fireTreeNodesRemoved(final TreePath path, final int index, final Object newValue) {
     try {
       if (newValue != null) {
         final TreeModelEvent e = new TreeModelEvent(this.root, path, new int[] {
@@ -165,7 +161,7 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
     if (SwingUtilities.isEventDispatchThread()) {
       this.eventHandler.treeStructureChanged(treeEvent);
     } else {
-      Invoke.later(eventHandler, "treeStructureChanged", treeEvent);
+      Invoke.later(this.eventHandler, "treeStructureChanged", treeEvent);
     }
   }
 
@@ -298,8 +294,8 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
     return this.root;
   }
 
-  public void initializeNode(final TreePath path,
-    final ObjectTreeNodeModel<Object, Object> model, final Object node) {
+  public void initializeNode(final TreePath path, final ObjectTreeNodeModel<Object, Object> model,
+    final Object node) {
     if (model != null) {
       model.initialize(node);
       Invoke.later(this, "setNodeInitialized", path, node);
@@ -351,7 +347,7 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
   }
 
   public boolean isVisible(final Object object) {
-    if (BooleanStringConverter.getBoolean(hiddenObjects.get(object))) {
+    if (BooleanStringConverter.getBoolean(this.hiddenObjects.get(object))) {
       return false;
     } else {
       return true;
@@ -374,8 +370,7 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
           }
         }
         if (newValue != null) {
-          this.objectPathMap.put(newValue,
-            parentPath.pathByAddingChild(newValue));
+          this.objectPathMap.put(newValue, parentPath.pathByAddingChild(newValue));
         }
       }
     }
@@ -426,14 +421,14 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
     if (root != this.root) {
       final Object oldRoot = this.root;
       this.root = root;
-      objectPathMap.clear();
-      initialized.clear();
+      this.objectPathMap.clear();
+      this.initialized.clear();
       TreeModelEvent treeEvent;
       if (root == null && oldRoot != null) {
         treeEvent = new TreeModelEvent(this, (TreePath)null);
       } else {
         final TreePath path = new TreePath(root);
-        objectPathMap.put(root, path);
+        this.objectPathMap.put(root, path);
         treeEvent = new TreeModelEvent(root, path, null, null);
       }
       fireTreeStructureChanged(treeEvent);
@@ -441,11 +436,11 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
   }
 
   public void setVisible(final Object object, final boolean visible) {
-    final boolean oldVisible = !hiddenObjects.containsKey(object);
+    final boolean oldVisible = !this.hiddenObjects.containsKey(object);
     if (visible) {
-      hiddenObjects.remove(object);
+      this.hiddenObjects.remove(object);
     } else {
-      hiddenObjects.put(object, true);
+      this.hiddenObjects.put(object, true);
     }
     if (visible != oldVisible) {
       final TreePath path = getPath(object);
@@ -485,13 +480,11 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
   }
 
   @Override
-  public void treeWillCollapse(final TreeExpansionEvent event)
-    throws ExpandVetoException {
+  public void treeWillCollapse(final TreeExpansionEvent event) throws ExpandVetoException {
   }
 
   @Override
-  public void treeWillExpand(final TreeExpansionEvent event)
-    throws ExpandVetoException {
+  public void treeWillExpand(final TreeExpansionEvent event) throws ExpandVetoException {
     final TreePath path = event.getPath();
     final Object component = path.getLastPathComponent();
     final ObjectTreeNodeModel<Object, Object> model = getNodeModel(path);
@@ -499,8 +492,7 @@ public class ObjectTreeModel implements TreeModel, TreeWillExpandListener,
       final Boolean initialized = this.initialized.get(path);
       if (initialized == null) {
         this.initialized.put(path, false);
-        ExecutorServiceFactory.invokeMethod(this, "initializeNode", path,
-          model, component);
+        ExecutorServiceFactory.invokeMethod(this, "initializeNode", path, model, component);
       }
     }
   }

@@ -29,7 +29,7 @@ public class CsvMapIterator implements Iterator<Map<String, Object>> {
   }
 
   public void close() {
-    in.close();
+    this.in.close();
   }
 
   /**
@@ -39,7 +39,7 @@ public class CsvMapIterator implements Iterator<Map<String, Object>> {
    */
   @Override
   public boolean hasNext() {
-    return in.hasNext();
+    return this.in.hasNext();
   }
 
   /**
@@ -50,7 +50,7 @@ public class CsvMapIterator implements Iterator<Map<String, Object>> {
   @Override
   public Map<String, Object> next() {
     if (hasNext()) {
-      final List<String> record = in.next();
+      final List<String> record = this.in.next();
       return parseMap(record);
     } else {
       throw new NoSuchElementException("No more elements");
@@ -59,8 +59,8 @@ public class CsvMapIterator implements Iterator<Map<String, Object>> {
 
   private Map<String, Object> parseMap(final List<String> record) {
     final Map<String, Object> map = new LinkedHashMap<String, Object>();
-    for (int i = 0; i < fieldNames.size() && i < record.size(); i++) {
-      final String fieldName = fieldNames.get(i);
+    for (int i = 0; i < this.fieldNames.size() && i < record.size(); i++) {
+      final String fieldName = this.fieldNames.get(i);
       final String value = record.get(i);
       if (value != null) {
         map.put(fieldName, value);
@@ -76,7 +76,7 @@ public class CsvMapIterator implements Iterator<Map<String, Object>> {
    */
   private void readRecordHeader() throws IOException {
     if (hasNext()) {
-      fieldNames = in.next();
+      this.fieldNames = this.in.next();
     }
   }
 

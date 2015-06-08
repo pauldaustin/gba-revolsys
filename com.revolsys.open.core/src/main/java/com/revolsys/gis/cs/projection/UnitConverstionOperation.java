@@ -17,15 +17,14 @@ public class UnitConverstionOperation implements CoordinatesOperation {
   public UnitConverstionOperation(final Unit sourceUnit, final Unit targetUnit) {
     this.sourceUnit = sourceUnit;
     this.targetUnit = targetUnit;
-    converter = sourceUnit.getConverterTo(targetUnit);
+    this.converter = sourceUnit.getConverterTo(targetUnit);
   }
 
-  public UnitConverstionOperation(final Unit sourceUnit, final Unit targetUnit,
-    final int numAxis) {
+  public UnitConverstionOperation(final Unit sourceUnit, final Unit targetUnit, final int numAxis) {
     this.sourceUnit = sourceUnit;
     this.targetUnit = targetUnit;
     this.numAxis = numAxis;
-    converter = sourceUnit.getConverterTo(targetUnit);
+    this.converter = sourceUnit.getConverterTo(targetUnit);
   }
 
   @Override
@@ -35,7 +34,7 @@ public class UnitConverstionOperation implements CoordinatesOperation {
     for (int i = 0; i < numAxis; i++) {
       final double value = from.getValue(i);
       if (i < this.numAxis) {
-        final double convertedValue = converter.convert(value);
+        final double convertedValue = this.converter.convert(value);
         to.setValue(i, convertedValue);
       } else {
         to.setValue(i, value);
@@ -46,6 +45,6 @@ public class UnitConverstionOperation implements CoordinatesOperation {
 
   @Override
   public String toString() {
-    return sourceUnit + "->" + targetUnit;
+    return this.sourceUnit + "->" + this.targetUnit;
   }
 }

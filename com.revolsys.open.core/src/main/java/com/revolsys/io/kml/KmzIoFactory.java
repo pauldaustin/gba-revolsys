@@ -19,26 +19,24 @@ import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
-public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory
-  implements MapWriterFactory, GeometryReaderFactory {
+public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory implements
+  MapWriterFactory, GeometryReaderFactory {
 
   public KmzIoFactory() {
     super(Kml22Constants.KMZ_FORMAT_DESCRIPTION, true, true);
-    addMediaTypeAndFileExtension(Kml22Constants.KMZ_MEDIA_TYPE,
-      Kml22Constants.KMZ_FILE_EXTENSION);
-  }
-
-  @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
-    return new KmzDataObjectWriter(outputStream, charset);
+    addMediaTypeAndFileExtension(Kml22Constants.KMZ_MEDIA_TYPE, Kml22Constants.KMZ_FILE_EXTENSION);
   }
 
   @Override
   public GeometryReader createGeometryReader(final Resource resource) {
     final KmzGeometryIterator iterator = new KmzGeometryIterator(resource);
     return new GeometryReader(iterator);
+  }
+
+  @Override
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
+    return new KmzDataObjectWriter(outputStream, charset);
   }
 
   @Override
@@ -73,8 +71,7 @@ public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory
   }
 
   @Override
-  public boolean isCoordinateSystemSupported(
-    final CoordinateSystem coordinateSystem) {
+  public boolean isCoordinateSystemSupported(final CoordinateSystem coordinateSystem) {
     return EpsgCoordinateSystems.wgs84().equals(coordinateSystem);
   }
 

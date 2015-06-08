@@ -14,14 +14,13 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 
 public class BoundingBoxIntersectsEdgeVisitor<T> extends DelegatingVisitor<Edge<T>> {
-  public static <T> List<Edge<T>> getEdges(final Graph<T> graph,
-    final Edge<T> edge, final double maxDistance) {
+  public static <T> List<Edge<T>> getEdges(final Graph<T> graph, final Edge<T> edge,
+    final double maxDistance) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
 
     final LineString line = edge.getLine();
     final GeometryFactory geometryFactory = GeometryFactory.getFactory(line);
-    BoundingBox boundingBox = new BoundingBox(geometryFactory,
-      line.getEnvelopeInternal());
+    BoundingBox boundingBox = new BoundingBox(geometryFactory, line.getEnvelopeInternal());
     boundingBox = boundingBox.expand(maxDistance);
     final BoundingBoxIntersectsEdgeVisitor<T> visitor = new BoundingBoxIntersectsEdgeVisitor<T>(
       boundingBox, results);

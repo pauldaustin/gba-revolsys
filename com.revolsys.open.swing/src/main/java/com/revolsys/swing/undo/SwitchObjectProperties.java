@@ -17,9 +17,8 @@ public class SwitchObjectProperties extends AbstractUndoableEdit {
 
   private final Object value2;
 
-  public SwitchObjectProperties(final Object object,
-    final String propertyName1, final Object value1,
-    final String propertyName2, final Object value2) {
+  public SwitchObjectProperties(final Object object, final String propertyName1,
+    final Object value1, final String propertyName2, final Object value2) {
     this.object = object;
     this.propertyName1 = propertyName1;
     this.value1 = value1;
@@ -27,8 +26,8 @@ public class SwitchObjectProperties extends AbstractUndoableEdit {
     this.value2 = value2;
   }
 
-  public SwitchObjectProperties(final Object object,
-    final String propertyName1, final String propertyName2) {
+  public SwitchObjectProperties(final Object object, final String propertyName1,
+    final String propertyName2) {
     this.object = object;
     this.propertyName1 = propertyName1;
     this.propertyName2 = propertyName2;
@@ -80,7 +79,7 @@ public class SwitchObjectProperties extends AbstractUndoableEdit {
 
   @Override
   public String toString() {
-    return "switch " + this.propertyName1 + "=" + this.value1 + " and "
-      + this.propertyName2 + "=" + this.value2;
+    return "switch " + this.propertyName1 + "=" + this.value1 + " and " + this.propertyName2 + "="
+      + this.value2;
   }
 }

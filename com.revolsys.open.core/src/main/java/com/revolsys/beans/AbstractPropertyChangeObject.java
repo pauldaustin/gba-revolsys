@@ -7,17 +7,14 @@ import java.beans.PropertyChangeSupport;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Property;
 
-public class AbstractPropertyChangeObject implements
-  PropertyChangeSupportProxy, Cloneable {
-  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-    this);
+public class AbstractPropertyChangeObject implements PropertyChangeSupportProxy, Cloneable {
+  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   public void addListener(final PropertyChangeListener listener) {
     Property.addListener(this, listener);
   }
 
-  public void addListener(final String propertyName,
-    final PropertyChangeListener listener) {
+  public void addListener(final String propertyName, final PropertyChangeListener listener) {
     Property.addListener(this, propertyName, listener);
   }
 
@@ -34,31 +31,29 @@ public class AbstractPropertyChangeObject implements
   }
 
   protected void firePropertyChange(final PropertyChangeEvent event) {
-    propertyChangeSupport.firePropertyChange(event);
+    this.propertyChangeSupport.firePropertyChange(event);
   }
 
   protected void firePropertyChange(final String propertyName, final int index,
     final Object oldValue, final Object newValue) {
-    propertyChangeSupport.fireIndexedPropertyChange(propertyName, index,
-      oldValue, newValue);
+    this.propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
   }
 
-  protected void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
-    propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+  protected void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
+    this.propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
   }
 
   @Override
   public PropertyChangeSupport getPropertyChangeSupport() {
-    return propertyChangeSupport;
+    return this.propertyChangeSupport;
   }
 
   public void removeListener(final PropertyChangeListener listener) {
     Property.removeListener(this, listener);
   }
 
-  public void removeListener(final String propertyName,
-    final PropertyChangeListener listener) {
+  public void removeListener(final String propertyName, final PropertyChangeListener listener) {
     Property.removeListener(this, propertyName, listener);
   }
 }

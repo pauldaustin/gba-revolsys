@@ -22,18 +22,16 @@ public class SqlCondition extends Condition {
     this.sql = sql;
   }
 
-  public SqlCondition(final String sql,
-    final FieldDefinition parameterAttribute, final Object parameterValue) {
+  public SqlCondition(final String sql, final FieldDefinition parameterAttribute,
+    final Object parameterValue) {
     this(sql, Arrays.asList(parameterAttribute), Arrays.asList(parameterValue));
   }
 
-  public SqlCondition(final String sql,
-    final List<FieldDefinition> parameterAttributes,
+  public SqlCondition(final String sql, final List<FieldDefinition> parameterAttributes,
     final List<Object> parameterValues) {
     this.sql = sql;
     this.parameterValues = new ArrayList<Object>(parameterValues);
-    this.parameterAttributes = new ArrayList<FieldDefinition>(
-      parameterAttributes);
+    this.parameterAttributes = new ArrayList<FieldDefinition>(parameterAttributes);
   }
 
   public SqlCondition(final String sql, final Object... parameters) {
@@ -93,8 +91,7 @@ public class SqlCondition extends Condition {
 
   @Override
   public SqlCondition clone() {
-    return new SqlCondition(this.sql, this.parameterAttributes,
-      this.parameterValues);
+    return new SqlCondition(this.sql, this.parameterAttributes, this.parameterValues);
   }
 
   @Override
@@ -102,8 +99,7 @@ public class SqlCondition extends Condition {
     if (obj instanceof SqlCondition) {
       final SqlCondition sqlCondition = (SqlCondition)obj;
       if (EqualsRegistry.equal(sqlCondition.getSql(), this.getSql())) {
-        if (EqualsRegistry.equal(sqlCondition.getParameterValues(),
-          this.getParameterValues())) {
+        if (EqualsRegistry.equal(sqlCondition.getParameterValues(), this.getParameterValues())) {
           return true;
         }
       }

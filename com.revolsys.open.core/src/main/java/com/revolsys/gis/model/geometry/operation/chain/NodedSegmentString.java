@@ -19,7 +19,7 @@ import com.revolsys.gis.model.geometry.operation.geomgraph.index.LineIntersector
  * context object, which is useful for preserving topological or parentage
  * information. All noded substrings are initialized with the same context
  * object.
- * 
+ *
  * @version 1.7
  */
 public class NodedSegmentString implements NodableSegmentString {
@@ -39,8 +39,7 @@ public class NodedSegmentString implements NodableSegmentString {
    * @param resultEdgelist a List which will collect the NodedSegmentStrings
    *          representing the substrings
    */
-  public static void getNodedSubstrings(
-    final Collection<NodedSegmentString> segStrings,
+  public static void getNodedSubstrings(final Collection<NodedSegmentString> segStrings,
     final Collection<NodedSegmentString> resultEdgelist) {
     for (final NodedSegmentString ss : segStrings) {
       ss.getNodeList().addSplitEdges(resultEdgelist);
@@ -55,7 +54,7 @@ public class NodedSegmentString implements NodableSegmentString {
 
   /**
    * Creates a new segment string from a list of vertices.
-   * 
+   *
    * @param pts the vertices of the segment string
    * @param data the user-defined data of this segment string (may be null)
    */
@@ -67,7 +66,7 @@ public class NodedSegmentString implements NodableSegmentString {
   /**
    * Adds an intersection node for a given point and segment to this segment
    * string.
-   * 
+   *
    * @param intPt the location of the intersection
    * @param segmentIndex the index of the segment containing the intersection
    */
@@ -83,8 +82,7 @@ public class NodedSegmentString implements NodableSegmentString {
    */
   public void addIntersection(final LineIntersector li, final int segmentIndex,
     final int geomIndex, final int intIndex) {
-    final Coordinates intPt = new DoubleCoordinates(
-      li.getIntersection(intIndex));
+    final Coordinates intPt = new DoubleCoordinates(li.getIntersection(intIndex));
     addIntersection(intPt, segmentIndex);
   }
 
@@ -92,19 +90,18 @@ public class NodedSegmentString implements NodableSegmentString {
    * Adds an intersection node for a given point and segment to this segment
    * string. If an intersection already exists for this exact location, the
    * existing node will be returned.
-   * 
+   *
    * @param intPt the location of the intersection
    * @param segmentIndex the index of the segment containing the intersection
    * @return the intersection node for the point
    */
-  public SegmentNode addIntersectionNode(final Coordinates intPt,
-    final int segmentIndex) {
+  public SegmentNode addIntersectionNode(final Coordinates intPt, final int segmentIndex) {
     int normalizedSegmentIndex = segmentIndex;
     // Debug.println("edge intpt: " + intPt + " dist: " + dist);
     // normalize the intersection point location
     final int nextSegIndex = normalizedSegmentIndex + 1;
-    if (nextSegIndex < pts.size()) {
-      final Coordinates nextPt = pts.get(nextSegIndex);
+    if (nextSegIndex < this.pts.size()) {
+      final Coordinates nextPt = this.pts.get(nextSegIndex);
       // Debug.println("next pt: " + nextPt);
 
       // Normalize segment index if intPt falls on vertex
@@ -117,7 +114,7 @@ public class NodedSegmentString implements NodableSegmentString {
     /**
      * Add the intersection point to edge intersection list.
      */
-    final SegmentNode ei = nodeList.add(intPt, normalizedSegmentIndex);
+    final SegmentNode ei = this.nodeList.add(intPt, normalizedSegmentIndex);
     return ei;
   }
 
@@ -125,8 +122,7 @@ public class NodedSegmentString implements NodableSegmentString {
    * Adds EdgeIntersections for one or both intersections found for a segment of
    * an edge to the edge intersection list.
    */
-  public void addIntersections(final LineIntersector li,
-    final int segmentIndex, final int geomIndex) {
+  public void addIntersections(final LineIntersector li, final int segmentIndex, final int geomIndex) {
     for (int i = 0; i < li.getIntersectionNum(); i++) {
       addIntersection(li, segmentIndex, geomIndex, i);
     }
@@ -134,37 +130,37 @@ public class NodedSegmentString implements NodableSegmentString {
 
   @Override
   public Coordinates getCoordinate(final int i) {
-    return pts.get(i);
+    return this.pts.get(i);
   }
 
   @Override
   public CoordinatesList getCoordinates() {
-    return pts;
+    return this.pts;
   }
 
   /**
    * Gets the user-defined data for this segment string.
-   * 
+   *
    * @return the user-defined data
    */
   @Override
   public Object getData() {
-    return data;
+    return this.data;
   }
 
   public SegmentNodeList getNodeList() {
-    return nodeList;
+    return this.nodeList;
   }
 
   /**
    * Gets the octant of the segment starting at vertex <code>index</code>.
-   * 
+   *
    * @param index the index of the vertex starting the segment. Must not be the
    *          last index in the vertex list
    * @return the octant of the segment at the vertex
    */
   public int getSegmentOctant(final int index) {
-    if (index == pts.size() - 1) {
+    if (index == this.pts.size() - 1) {
       return -1;
     }
     return safeOctant(getCoordinate(index), getCoordinate(index + 1));
@@ -173,7 +169,7 @@ public class NodedSegmentString implements NodableSegmentString {
 
   @Override
   public boolean isClosed() {
-    return pts.equal(0, pts, pts.size() - 1, 2);
+    return this.pts.equal(0, this.pts, this.pts.size() - 1, 2);
   }
 
   private int safeOctant(final Coordinates p0, final Coordinates p1) {
@@ -186,7 +182,7 @@ public class NodedSegmentString implements NodableSegmentString {
 
   /**
    * Sets the user-defined data for this segment string.
-   * 
+   *
    * @param data an Object containing user-defined data
    */
   @Override
@@ -196,11 +192,11 @@ public class NodedSegmentString implements NodableSegmentString {
 
   @Override
   public int size() {
-    return pts.size();
+    return this.pts.size();
   }
 
   @Override
   public String toString() {
-    return new DoubleCoordinatesList(2, pts).toString();
+    return new DoubleCoordinatesList(2, this.pts).toString();
   }
 }

@@ -82,8 +82,7 @@ public final class MoepConstants {
     type.addField(RETIRE_REASON_FOR_CHANGE, DataTypes.STRING, 1, false);
     type.addField(RETIRE_INTEGRATION_DATE, DataTypes.DATE, false);
     type.addField(RETIRE_REVISION_KEY, DataTypes.STRING, 10, false);
-    type.addField(RETIRE_SPECIFICATIONS_RELEASE, DataTypes.STRING, 10,
-      false);
+    type.addField(RETIRE_SPECIFICATIONS_RELEASE, DataTypes.STRING, 10, false);
     type.addField(GEOMETRY, DataTypes.GEOMETRY, true);
     type.setGeometryFieldName(GEOMETRY);
     return type;

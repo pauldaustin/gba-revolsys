@@ -20,8 +20,7 @@ public class JdbcFieldDefinition extends FieldDefinition {
 
   public static JdbcFieldDefinition createField(final Object value) {
     if (value == null) {
-      return new JdbcFieldDefinition(null, DataTypes.OBJECT, Types.OTHER, 0, 0,
-        false, null, null);
+      return new JdbcFieldDefinition(null, DataTypes.OBJECT, Types.OTHER, 0, 0, false, null, null);
     } else if (value instanceof CharSequence) {
       return new JdbcStringFieldDefinition(null, Types.CHAR, -1, false, null, null);
     } else if (value instanceof BigInteger) {
@@ -29,8 +28,7 @@ public class JdbcFieldDefinition extends FieldDefinition {
     } else if (value instanceof Long) {
       return new JdbcLongFieldDefinition(null, Types.BIGINT, -1, false, null, null);
     } else if (value instanceof Integer) {
-      return new JdbcIntegerFieldDefinition(null, Types.INTEGER, -1, false, null,
-        null);
+      return new JdbcIntegerFieldDefinition(null, Types.INTEGER, -1, false, null, null);
     } else if (value instanceof Short) {
       return new JdbcShortFieldDefinition(null, Types.SMALLINT, -1, false, null, null);
     } else if (value instanceof Byte) {
@@ -40,8 +38,7 @@ public class JdbcFieldDefinition extends FieldDefinition {
     } else if (value instanceof Float) {
       return new JdbcFloatFieldDefinition(null, Types.FLOAT, -1, false, null, null);
     } else if (value instanceof BigDecimal) {
-      return new JdbcBigDecimalFieldDefinition(null, Types.NUMERIC, -1, -1, false,
-        null, null);
+      return new JdbcBigDecimalFieldDefinition(null, Types.NUMERIC, -1, -1, false, null, null);
     } else if (value instanceof Date) {
       return new JdbcDateFieldDefinition(null, -1, false, null, null);
     } else if (value instanceof java.util.Date) {
@@ -58,9 +55,8 @@ public class JdbcFieldDefinition extends FieldDefinition {
   private JdbcFieldDefinition() {
   }
 
-  public JdbcFieldDefinition(final String name, final DataType type,
-    final int sqlType, final int length, final int scale,
-    final boolean required, final String description,
+  public JdbcFieldDefinition(final String name, final DataType type, final int sqlType,
+    final int length, final int scale, final boolean required, final String description,
     final Map<String, Object> properties) {
     super(name, type, length, scale, required, description, properties);
     this.sqlType = sqlType;
@@ -74,8 +70,7 @@ public class JdbcFieldDefinition extends FieldDefinition {
     sql.append(getName());
   }
 
-  public void addInsertStatementPlaceHolder(final StringBuffer sql,
-    final boolean generateKeys) {
+  public void addInsertStatementPlaceHolder(final StringBuffer sql, final boolean generateKeys) {
     addStatementPlaceHolder(sql);
   }
 
@@ -89,16 +84,16 @@ public class JdbcFieldDefinition extends FieldDefinition {
 
   @Override
   public JdbcFieldDefinition clone() {
-    return new JdbcFieldDefinition(getName(), getType(), getSqlType(), getLength(),
-      getScale(), isRequired(), getDescription(), getProperties());
+    return new JdbcFieldDefinition(getName(), getType(), getSqlType(), getLength(), getScale(),
+      isRequired(), getDescription(), getProperties());
   }
 
   public int getSqlType() {
     return this.sqlType;
   }
 
-  public int setAttributeValueFromResultSet(final ResultSet resultSet,
-    final int columnIndex, final Record object) throws SQLException {
+  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record object) throws SQLException {
     final Object value = resultSet.getObject(columnIndex);
     object.setValue(getIndex(), value);
     return columnIndex + 1;
@@ -111,8 +106,8 @@ public class JdbcFieldDefinition extends FieldDefinition {
     return setPreparedStatementValue(statement, parameterIndex, value);
   }
 
-  public int setPreparedStatementValue(final PreparedStatement statement,
-    final int parameterIndex, final Object value) throws SQLException {
+  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
+    final Object value) throws SQLException {
     statement.setObject(parameterIndex, value);
     return parameterIndex + 1;
   }

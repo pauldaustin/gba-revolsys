@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.converter.FilterDataObjectConverter;
 import com.revolsys.gis.converter.SimpleDataObjectConveter;
@@ -22,8 +22,7 @@ import com.revolsys.gis.io.Statistics;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 
-public class DataObjectConverterProcess extends
-  BaseInOutProcess<Record, Record> {
+public class DataObjectConverterProcess extends BaseInOutProcess<Record, Record> {
   private static final Logger LOG = LoggerFactory.getLogger(DataObjectConverterProcess.class);
 
   private Converter<Record, Record> defaultConverter;
@@ -41,18 +40,17 @@ public class DataObjectConverterProcess extends
   //
   // private Statistics ignoredStatistics = new Statistics("Ignored");
 
-  public void addTypeConverter(final String typePath,
-    final Converter<Record, Record> converter) {
-    typeConverterMap.put(typePath, converter);
+  public void addTypeConverter(final String typePath, final Converter<Record, Record> converter) {
+    this.typeConverterMap.put(typePath, converter);
   }
 
   public void addTypeFilterConverter(final String typePath,
     final FilterDataObjectConverter filterConverter) {
 
-    Collection<FilterDataObjectConverter> converters = typeFilterConverterMap.get(typePath);
+    Collection<FilterDataObjectConverter> converters = this.typeFilterConverterMap.get(typePath);
     if (converters == null) {
       converters = new ArrayList<FilterDataObjectConverter>();
-      typeFilterConverterMap.put(typePath, converters);
+      this.typeFilterConverterMap.put(typePath, converters);
     }
     converters.add(filterConverter);
   }
@@ -61,7 +59,7 @@ public class DataObjectConverterProcess extends
     int matchCount = 0;
     final RecordDefinition sourceMetaData = source.getRecordDefinition();
     final String sourceTypeName = sourceMetaData.getPath();
-    final Collection<FilterDataObjectConverter> converters = typeFilterConverterMap.get(sourceTypeName);
+    final Collection<FilterDataObjectConverter> converters = this.typeFilterConverterMap.get(sourceTypeName);
     Record target = null;
     if (converters != null && !converters.isEmpty()) {
       for (final FilterDataObjectConverter filterConverter : converters) {
@@ -77,14 +75,14 @@ public class DataObjectConverterProcess extends
       }
     }
     if (matchCount == 0) {
-      final Converter<Record, Record> typeConveter = typeConverterMap.get(sourceTypeName);
+      final Converter<Record, Record> typeConveter = this.typeConverterMap.get(sourceTypeName);
       if (typeConveter != null) {
         target = typeConveter.convert(source);
         return target;
-      } else if (defaultConverter == null) {
+      } else if (this.defaultConverter == null) {
         return convertObjectWithNoConverter(source);
       } else {
-        return defaultConverter.convert(source);
+        return this.defaultConverter.convert(source);
 
       }
     } else {
@@ -108,44 +106,42 @@ public class DataObjectConverterProcess extends
   }
 
   public Converter<Record, Record> getDefaultConverter() {
-    return defaultConverter;
+    return this.defaultConverter;
   }
 
   public Map<String, Collection<FilterDataObjectConverter>> getFilterTypeConverterMap() {
-    return typeFilterConverterMap;
+    return this.typeFilterConverterMap;
   }
 
   public Statistics getStatistics() {
-    return statistics;
+    return this.statistics;
   }
 
   public RecordDefinition getTargetMetaData(final String typePath) {
-    return targetMetaDataFactory.getRecordDefinition(typePath);
+    return this.targetMetaDataFactory.getRecordDefinition(typePath);
   }
 
   public RecordDefinitionFactory getTargetMetaDataFactory() {
-    return targetMetaDataFactory;
+    return this.targetMetaDataFactory;
   }
 
   public Map<String, Converter<Record, Record>> getTypeConverterMap() {
-    return typeConverterMap;
+    return this.typeConverterMap;
   }
 
   @Override
-  protected void postRun(final Channel<Record> in,
-    final Channel<Record> out) {
+  protected void postRun(final Channel<Record> in, final Channel<Record> out) {
     super.postRun(in, out);
-    statistics.disconnect();
+    this.statistics.disconnect();
     // ignoredStatistics.disconnect();
   }
 
   @Override
-  protected void preRun(final Channel<Record> in,
-    final Channel<Record> out) {
-    statistics.connect();
+  protected void preRun(final Channel<Record> in, final Channel<Record> out) {
+    this.statistics.connect();
     // ignoredStatistics.connect();
-    if (simpleMapping != null) {
-      for (final Entry<Object, Map<String, Object>> entry : simpleMapping.entrySet()) {
+    if (this.simpleMapping != null) {
+      for (final Entry<Object, Map<String, Object>> entry : this.simpleMapping.entrySet()) {
         final Object key = entry.getKey();
         String sourceTypeName;
         if (key instanceof String) {
@@ -165,8 +161,7 @@ public class DataObjectConverterProcess extends
         final Map<String, String> attributeMapping = (Map<String, String>)map.get("attributeMapping");
 
         final RecordDefinition targetMetaData = getTargetMetaData(targetTypeName);
-        final SimpleDataObjectConveter converter = new SimpleDataObjectConveter(
-          targetMetaData);
+        final SimpleDataObjectConveter converter = new SimpleDataObjectConveter(targetMetaData);
         converter.addProcessor(new CopyValues(attributeMapping));
         addTypeConverter(sourceTypeName, converter);
       }
@@ -174,26 +169,23 @@ public class DataObjectConverterProcess extends
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record source) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record source) {
     final Record target = convert(source);
     if (target == null) {
       // ignoredStatistics.add(source);
     } else {
       out.write(target);
       if (source != target) {
-        statistics.add(target);
+        this.statistics.add(target);
       }
     }
   }
 
-  public void setDefaultConverter(
-    final Converter<Record, Record> defaultConverter) {
+  public void setDefaultConverter(final Converter<Record, Record> defaultConverter) {
     this.defaultConverter = defaultConverter;
   }
 
-  public void setSimpleMapping(
-    final Map<Object, Map<String, Object>> simpleMapping) {
+  public void setSimpleMapping(final Map<Object, Map<String, Object>> simpleMapping) {
     this.simpleMapping = simpleMapping;
   }
 
@@ -204,13 +196,11 @@ public class DataObjectConverterProcess extends
     }
   }
 
-  public void setTargetMetaDataFactory(
-    final RecordDefinitionFactory targetMetaDataFactory) {
+  public void setTargetMetaDataFactory(final RecordDefinitionFactory targetMetaDataFactory) {
     this.targetMetaDataFactory = targetMetaDataFactory;
   }
 
-  public void setTypeConverterMap(
-    final Map<String, Converter<Record, Record>> typeConverterMap) {
+  public void setTypeConverterMap(final Map<String, Converter<Record, Record>> typeConverterMap) {
     this.typeConverterMap = typeConverterMap;
   }
 

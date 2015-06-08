@@ -21,7 +21,7 @@ import com.vividsolutions.jts.geom.Location;
  * <p>
  * The labelling is stored in an array location[j] where where j has the values
  * ON, LEFT, RIGHT
- * 
+ *
  * @version 1.7
  */
 public class TopologyLocation {
@@ -30,7 +30,7 @@ public class TopologyLocation {
 
   public TopologyLocation(final int on) {
     init(1);
-    location[Position.ON] = on;
+    this.location[Position.ON] = on;
   }
 
   /**
@@ -38,14 +38,14 @@ public class TopologyLocation {
    * to the right of some GraphComponent relate to some Geometry. Possible
    * values for the parameters are Location.NULL, Location.EXTERIOR,
    * Location.BOUNDARY, and Location.INTERIOR.
-   * 
+   *
    * @see Location
    */
   public TopologyLocation(final int on, final int left, final int right) {
     init(3);
-    location[Position.ON] = on;
-    location[Position.LEFT] = left;
-    location[Position.RIGHT] = right;
+    this.location[Position.ON] = on;
+    this.location[Position.LEFT] = left;
+    this.location[Position.RIGHT] = right;
   }
 
   public TopologyLocation(final int[] location) {
@@ -55,15 +55,15 @@ public class TopologyLocation {
   public TopologyLocation(final TopologyLocation gl) {
     init(gl.location.length);
     if (gl != null) {
-      for (int i = 0; i < location.length; i++) {
-        location[i] = gl.location[i];
+      for (int i = 0; i < this.location.length; i++) {
+        this.location[i] = gl.location[i];
       }
     }
   }
 
   public boolean allPositionsEqual(final int loc) {
-    for (int i = 0; i < location.length; i++) {
-      if (location[i] != loc) {
+    for (final int element : this.location) {
+      if (element != loc) {
         return false;
       }
     }
@@ -71,27 +71,27 @@ public class TopologyLocation {
   }
 
   public void flip() {
-    if (location.length <= 1) {
+    if (this.location.length <= 1) {
       return;
     }
-    final int temp = location[Position.LEFT];
-    location[Position.LEFT] = location[Position.RIGHT];
-    location[Position.RIGHT] = temp;
+    final int temp = this.location[Position.LEFT];
+    this.location[Position.LEFT] = this.location[Position.RIGHT];
+    this.location[Position.RIGHT] = temp;
   }
 
   public int get(final int posIndex) {
-    if (posIndex < location.length) {
-      return location[posIndex];
+    if (posIndex < this.location.length) {
+      return this.location[posIndex];
     }
     return Location.NONE;
   }
 
   public int[] getLocations() {
-    return location;
+    return this.location;
   }
 
   private void init(final int size) {
-    location = new int[size];
+    this.location = new int[size];
     setAllLocations(Location.NONE);
   }
 
@@ -99,8 +99,8 @@ public class TopologyLocation {
    * @return true if any locations are NULL
    */
   public boolean isAnyNull() {
-    for (int i = 0; i < location.length; i++) {
-      if (location[i] == Location.NONE) {
+    for (final int element : this.location) {
+      if (element == Location.NONE) {
         return true;
       }
     }
@@ -108,23 +108,23 @@ public class TopologyLocation {
   }
 
   public boolean isArea() {
-    return location.length > 1;
+    return this.location.length > 1;
   }
 
   public boolean isEqualOnSide(final TopologyLocation le, final int locIndex) {
-    return location[locIndex] == le.location[locIndex];
+    return this.location[locIndex] == le.location[locIndex];
   }
 
   public boolean isLine() {
-    return location.length == 1;
+    return this.location.length == 1;
   }
 
   /**
    * @return true if all locations are NULL
    */
   public boolean isNull() {
-    for (int i = 0; i < location.length; i++) {
-      if (location[i] != Location.NONE) {
+    for (final int element : this.location) {
+      if (element != Location.NONE) {
         return false;
       }
     }
@@ -138,30 +138,30 @@ public class TopologyLocation {
   public void merge(final TopologyLocation gl) {
     // if the src is an Area label & and the dest is not, increase the dest to
     // be an Area
-    if (gl.location.length > location.length) {
+    if (gl.location.length > this.location.length) {
       final int[] newLoc = new int[3];
-      newLoc[Position.ON] = location[Position.ON];
+      newLoc[Position.ON] = this.location[Position.ON];
       newLoc[Position.LEFT] = Location.NONE;
       newLoc[Position.RIGHT] = Location.NONE;
-      location = newLoc;
+      this.location = newLoc;
     }
-    for (int i = 0; i < location.length; i++) {
-      if (location[i] == Location.NONE && i < gl.location.length) {
-        location[i] = gl.location[i];
+    for (int i = 0; i < this.location.length; i++) {
+      if (this.location[i] == Location.NONE && i < gl.location.length) {
+        this.location[i] = gl.location[i];
       }
     }
   }
 
   public void setAllLocations(final int locValue) {
-    for (int i = 0; i < location.length; i++) {
-      location[i] = locValue;
+    for (int i = 0; i < this.location.length; i++) {
+      this.location[i] = locValue;
     }
   }
 
   public void setAllLocationsIfNull(final int locValue) {
-    for (int i = 0; i < location.length; i++) {
-      if (location[i] == Location.NONE) {
-        location[i] = locValue;
+    for (int i = 0; i < this.location.length; i++) {
+      if (this.location[i] == Location.NONE) {
+        this.location[i] = locValue;
       }
     }
   }
@@ -171,24 +171,24 @@ public class TopologyLocation {
   }
 
   public void setLocation(final int locIndex, final int locValue) {
-    location[locIndex] = locValue;
+    this.location[locIndex] = locValue;
   }
 
   public void setLocations(final int on, final int left, final int right) {
-    location[Position.ON] = on;
-    location[Position.LEFT] = left;
-    location[Position.RIGHT] = right;
+    this.location[Position.ON] = on;
+    this.location[Position.LEFT] = left;
+    this.location[Position.RIGHT] = right;
   }
 
   @Override
   public String toString() {
     final StringBuffer buf = new StringBuffer();
-    if (location.length > 1) {
-      buf.append(Location.toLocationSymbol(location[Position.LEFT]));
+    if (this.location.length > 1) {
+      buf.append(Location.toLocationSymbol(this.location[Position.LEFT]));
     }
-    buf.append(Location.toLocationSymbol(location[Position.ON]));
-    if (location.length > 1) {
-      buf.append(Location.toLocationSymbol(location[Position.RIGHT]));
+    buf.append(Location.toLocationSymbol(this.location[Position.ON]));
+    if (this.location.length > 1) {
+      buf.append(Location.toLocationSymbol(this.location[Position.RIGHT]));
     }
     return buf.toString();
   }

@@ -13,8 +13,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class QuadTree<T> {
-  public static Envelope ensureExtent(final Envelope envelope,
-    final double minExtent) {
+  public static Envelope ensureExtent(final Envelope envelope, final double minExtent) {
     double minX = envelope.getMinX();
     double maxX = envelope.getMaxX();
     double minY = envelope.getMinY();
@@ -50,40 +49,40 @@ public class QuadTree<T> {
   }
 
   public void clear() {
-    root = new Root<T>();
-    minExtent = 1.0;
-    size = 0;
+    this.root = new Root<T>();
+    this.minExtent = 1.0;
+    this.size = 0;
   }
 
   private void collectStats(final Envelope envelope) {
     final double delX = envelope.getWidth();
-    if (delX < minExtent && delX > 0.0) {
-      minExtent = delX;
+    if (delX < this.minExtent && delX > 0.0) {
+      this.minExtent = delX;
     }
 
     final double delY = envelope.getHeight();
-    if (delY < minExtent && delY > 0.0) {
-      minExtent = delY;
+    if (delY < this.minExtent && delY > 0.0) {
+      this.minExtent = delY;
     }
   }
 
   protected BoundingBox convert(BoundingBox boundingBox) {
-    if (geometryFactory != null) {
-      boundingBox = boundingBox.convert(geometryFactory);
+    if (this.geometryFactory != null) {
+      boundingBox = boundingBox.convert(this.geometryFactory);
     }
     return boundingBox;
   }
 
   public int depth() {
-    return root.depth();
+    return this.root.depth();
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometryFactory;
+    return this.geometryFactory;
   }
 
   public int getSize() {
-    return size;
+    return this.size;
   }
 
   public void insert(BoundingBox boundingBox, final T item) {
@@ -91,10 +90,10 @@ public class QuadTree<T> {
       throw new IllegalArgumentException("Item envelope must not be null");
     } else {
       boundingBox = convert(boundingBox);
-      size++;
+      this.size++;
       collectStats(boundingBox);
-      final Envelope insertEnv = ensureExtent(boundingBox, minExtent);
-      root.insert(insertEnv, item);
+      final Envelope insertEnv = ensureExtent(boundingBox, this.minExtent);
+      this.root.insert(insertEnv, item);
     }
   }
 
@@ -112,19 +111,18 @@ public class QuadTree<T> {
 
   public List<T> query(final BoundingBox boundingBox, final String methodName,
     final Object... parameters) {
-    final InvokeMethodFilter<T> filter = new InvokeMethodFilter<T>(methodName,
-      parameters);
+    final InvokeMethodFilter<T> filter = new InvokeMethodFilter<T>(methodName, parameters);
     return query(boundingBox, filter);
   }
 
   public void query(BoundingBox boundingBox, final Visitor<T> visitor) {
     boundingBox = convert(boundingBox);
-    root.visit(boundingBox, visitor);
+    this.root.visit(boundingBox, visitor);
   }
 
   public List<T> queryAll() {
     final CreateListVisitor<T> visitor = new CreateListVisitor<T>();
-    root.visit(visitor);
+    this.root.visit(visitor);
     return visitor.getList();
   }
 
@@ -146,10 +144,10 @@ public class QuadTree<T> {
 
   public boolean remove(BoundingBox boundingBox, final T item) {
     boundingBox = convert(boundingBox);
-    final Envelope posEnv = ensureExtent(boundingBox, minExtent);
-    final boolean removed = root.remove(posEnv, item);
+    final Envelope posEnv = ensureExtent(boundingBox, this.minExtent);
+    final boolean removed = this.root.remove(posEnv, item);
     if (removed) {
-      size--;
+      this.size--;
     }
     return removed;
   }

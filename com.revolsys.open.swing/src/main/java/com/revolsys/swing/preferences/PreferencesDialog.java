@@ -49,25 +49,23 @@ public class PreferencesDialog extends JDialog {
     }
   }
 
-  public void addPreference(final String title, final String applicationName,
-    final String path, final String propertyName, final Class<?> valueClass,
-    final Object defaultValue) {
-    addPreference(title, applicationName, path, propertyName, valueClass,
-      defaultValue, null);
+  public void addPreference(final String title, final String applicationName, final String path,
+    final String propertyName, final Class<?> valueClass, final Object defaultValue) {
+    addPreference(title, applicationName, path, propertyName, valueClass, defaultValue, null);
   }
 
-  public void addPreference(final String title, final String applicationName,
-    final String path, final String propertyName, final Class<?> valueClass,
-    final Object defaultValue, final Field field) {
-    PreferencesPanel panel = panels.get(title);
+  public void addPreference(final String title, final String applicationName, final String path,
+    final String propertyName, final Class<?> valueClass, final Object defaultValue,
+    final Field field) {
+    PreferencesPanel panel = this.panels.get(title);
     if (panel == null) {
       panel = new SimplePreferencesPanel(title);
       addPanel(panel);
     }
     if (panel instanceof SimplePreferencesPanel) {
       final SimplePreferencesPanel simplePanel = (SimplePreferencesPanel)panel;
-      simplePanel.addPreference(applicationName, path, propertyName,
-        valueClass, defaultValue, field);
+      simplePanel.addPreference(applicationName, path, propertyName, valueClass, defaultValue,
+        field);
     }
   }
 

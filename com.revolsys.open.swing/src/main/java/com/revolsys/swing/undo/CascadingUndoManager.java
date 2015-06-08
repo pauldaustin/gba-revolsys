@@ -8,7 +8,7 @@ import javax.swing.undo.UndoableEdit;
 public class CascadingUndoManager extends UndoManager {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 

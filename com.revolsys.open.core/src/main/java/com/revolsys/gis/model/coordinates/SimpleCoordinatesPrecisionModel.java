@@ -2,10 +2,9 @@ package com.revolsys.gis.model.coordinates;
 
 import java.io.Serializable;
 
-public class SimpleCoordinatesPrecisionModel implements
-  CoordinatesPrecisionModel, Serializable {
+public class SimpleCoordinatesPrecisionModel implements CoordinatesPrecisionModel, Serializable {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -1119410280750540081L;
 
@@ -31,8 +30,7 @@ public class SimpleCoordinatesPrecisionModel implements
     this.scaleZ = scale;
   }
 
-  public SimpleCoordinatesPrecisionModel(final double scaleXY,
-    final double scaleZ) {
+  public SimpleCoordinatesPrecisionModel(final double scaleXY, final double scaleZ) {
     this.scaleXY = scaleXY;
     this.scaleZ = scaleZ;
   }
@@ -46,22 +44,22 @@ public class SimpleCoordinatesPrecisionModel implements
 
   @Override
   public double getScaleXY() {
-    return scaleXY;
+    return this.scaleXY;
   }
 
   @Override
   public double getScaleZ() {
-    return scaleZ;
+    return this.scaleZ;
   }
 
   @Override
   public boolean isFloating() {
-    return scaleXY <= 0 && scaleZ <= 0;
+    return this.scaleXY <= 0 && this.scaleZ <= 0;
   }
 
   @Override
   public void makePrecise(final Coordinates coordinates) {
-    if (scaleXY > 0) {
+    if (this.scaleXY > 0) {
       final double x = coordinates.getX();
       final double newX = makeXyPrecise(x);
       coordinates.setX(newX);
@@ -70,7 +68,7 @@ public class SimpleCoordinatesPrecisionModel implements
       final double newY = makeXyPrecise(y);
       coordinates.setY(newY);
     }
-    if (scaleZ > 0) {
+    if (this.scaleZ > 0) {
       if (coordinates.getNumAxis() > 2) {
         final double z = coordinates.getZ();
         final double newZ = makeZPrecise(z);
@@ -81,12 +79,12 @@ public class SimpleCoordinatesPrecisionModel implements
 
   @Override
   public double makeXyPrecise(final double value) {
-    return makePrecise(value, scaleXY);
+    return makePrecise(value, this.scaleXY);
   }
 
   @Override
   public double makeZPrecise(final double value) {
-    return makePrecise(value, scaleZ);
+    return makePrecise(value, this.scaleZ);
   }
 
   public void setScaleXY(final double scaleXY) {
@@ -101,12 +99,12 @@ public class SimpleCoordinatesPrecisionModel implements
   public String toString() {
     if (isFloating()) {
       return "scale(xyz=floating)";
-    } else if (scaleZ <= 0) {
-      return "scale(xy=" + scaleXY + ",z=floating)";
-    } else if (scaleXY <= 0) {
-      return "scale(xy=floating,z=" + scaleZ + ")";
+    } else if (this.scaleZ <= 0) {
+      return "scale(xy=" + this.scaleXY + ",z=floating)";
+    } else if (this.scaleXY <= 0) {
+      return "scale(xy=floating,z=" + this.scaleZ + ")";
     } else {
-      return "scale(xy=" + scaleXY + ",z=" + scaleZ + "]";
+      return "scale(xy=" + this.scaleXY + ",z=" + this.scaleZ + "]";
     }
   }
 }

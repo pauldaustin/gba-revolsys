@@ -11,8 +11,7 @@ import com.vividsolutions.jts.geom.LineString;
  */
 public final class MatchDistance {
 
-  private static double farLength(final Geometry a, final Geometry b,
-    final double tolerance) {
+  private static double farLength(final Geometry a, final Geometry b, final double tolerance) {
     final Geometry farA = a.difference(b.buffer(tolerance));
     final double farALen = farA.getLength();
     return farALen;
@@ -22,7 +21,7 @@ public final class MatchDistance {
    * Computes the maximum distance apart between two linestrings. (Note this is
    * NOT the distance between the two furthest points on the linestrings, which
    * is not a useful measure of "farness").
-   * 
+   *
    * @param a
    * @param b
    * @return
@@ -36,7 +35,7 @@ public final class MatchDistance {
    * tolerance value, after trimming. The previously computed maxDistance
    * between the lines can be supplied to allow optimizing the calculation (if
    * maxDistance < tolerance, the nearness fraction = 1.0).
-   * 
+   *
    * @param a a LineString
    * @param b a LineString
    * @param fullDistance the full distance between the lines (previously
@@ -88,7 +87,7 @@ public final class MatchDistance {
   /**
    * Computes the fraction of length of LineStrings which is within a given
    * tolerance value, after trimming.
-   * 
+   *
    * @param a a LineString
    * @param b a LineString
    * @param tolerance the distance beyond which to total the length
@@ -101,10 +100,8 @@ public final class MatchDistance {
     double nearnessFrac = nearnessFraction(a, b, tolerance);
 
     if (trimLines) {
-      final LineString trimmedA = MaximalNearestSubline.getMaximalNearestSubline(
-        a, b);
-      final LineString trimmedB = MaximalNearestSubline.getMaximalNearestSubline(
-        b, a);
+      final LineString trimmedA = MaximalNearestSubline.getMaximalNearestSubline(a, b);
+      final LineString trimmedB = MaximalNearestSubline.getMaximalNearestSubline(b, a);
       final double trimmedNF = nearnessFraction(trimmedA, trimmedB, tolerance);
       // choose the largest fraction
       // (it can happen that the original nearness is greater, if the lines are
@@ -121,7 +118,7 @@ public final class MatchDistance {
    * a given tolerance value (optionally after trimming). The previously
    * computed maxDistance between the lines can be supplied to allow optimizing
    * the calculation (if maxDistance < tolerance, the nearness fraction = 1.0).
-   * 
+   *
    * @param a a LineString
    * @param b a LineString
    * @param maxDistance the maximum distance between the lines (if previously
@@ -144,17 +141,15 @@ public final class MatchDistance {
   /**
    * Computes how far apart are two linestrings after trimming any unmatched
    * length at the ends.
-   * 
+   *
    * @param a
    * @param b
    * @return
    * @see MaximalNearestSubline
    */
   public static double trimmedDistance(final LineString a, final LineString b) {
-    final LineString trimA = MaximalNearestSubline.getMaximalNearestSubline(a,
-      b);
-    final LineString trimB = MaximalNearestSubline.getMaximalNearestSubline(b,
-      a);
+    final LineString trimA = MaximalNearestSubline.getMaximalNearestSubline(a, b);
+    final LineString trimB = MaximalNearestSubline.getMaximalNearestSubline(b, a);
     return VertexHausdorffDistance.distance(trimA, trimB);
   }
 

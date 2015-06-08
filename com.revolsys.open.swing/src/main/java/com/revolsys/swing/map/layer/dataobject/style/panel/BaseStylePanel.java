@@ -21,11 +21,11 @@ import javax.measure.unit.Unit;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.jdesktop.swingx.VerticalLayout;
 
@@ -57,32 +57,28 @@ import com.revolsys.swing.map.layer.dataobject.style.MarkerStyle;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.Property;
 
-public class BaseStylePanel extends ValueField implements
-  PropertyChangeListener {
+public class BaseStylePanel extends ValueField implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
-  public static final List<Action> HORIZONTAL_ALIGNMENT_ACTIONS = getTextAlignActions(
-    "left", "center", "right");
+  public static final List<Action> HORIZONTAL_ALIGNMENT_ACTIONS = getTextAlignActions("left",
+    "center", "right");
 
-  public static final List<Action> VERTICAL_ALIGNMENT_ACTIONS = getTextAlignActions(
-    "top", "middle", "bottom");
+  public static final List<Action> VERTICAL_ALIGNMENT_ACTIONS = getTextAlignActions("top",
+    "middle", "bottom");
 
-  public static final List<Action> LINE_JOIN_ACTIONS = getLineActions("join",
-    "MITER", "ROUND", "BEVEL");
+  public static final List<Action> LINE_JOIN_ACTIONS = getLineActions("join", "MITER", "ROUND",
+    "BEVEL");
 
-  public static final List<Action> LINE_CAP_ACTIONS = getLineActions("cap",
-    "BUTT", "ROUND", "SQUARE");
+  public static final List<Action> LINE_CAP_ACTIONS = getLineActions("cap", "BUTT", "ROUND",
+    "SQUARE");
 
-  public static List<Action> getLineActions(final String type,
-    final String... alignmentTypes) {
+  public static List<Action> getLineActions(final String type, final String... alignmentTypes) {
     final List<Action> actions = new ArrayList<Action>();
     for (final String alignmentType : alignmentTypes) {
       final String iconName = ("line_" + type + "_" + alignmentType).toLowerCase();
       final ImageIcon icon = Icons.getIcon(iconName);
-      final String toolTip = CaseConverter.toCapitalizedWords(alignmentType
-        + " " + type);
-      final I18nAction action = new I18nAction(alignmentType, null, toolTip,
-        icon);
+      final String toolTip = CaseConverter.toCapitalizedWords(alignmentType + " " + type);
+      final I18nAction action = new I18nAction(alignmentType, null, toolTip, icon);
       actions.add(action);
     }
     return actions;
@@ -92,8 +88,8 @@ public class BaseStylePanel extends ValueField implements
     final List<Action> actions = new ArrayList<Action>();
     for (final String alignmentType : alignmentTypes) {
       final I18nAction action = new I18nAction(alignmentType, null,
-        CaseConverter.toCapitalizedWords(alignmentType),
-        Icons.getIcon("text_align_" + alignmentType));
+        CaseConverter.toCapitalizedWords(alignmentType), Icons.getIcon("text_align_"
+          + alignmentType));
       actions.add(action);
     }
     return actions;
@@ -127,8 +123,7 @@ public class BaseStylePanel extends ValueField implements
     container.add(field);
   }
 
-  protected void addColorField(final JPanel container, final Object object,
-    final String fieldName) {
+  protected void addColorField(final JPanel container, final Object object, final String fieldName) {
     SwingUtil.addLabel(container, fieldName);
     final Color value = Property.get(object, fieldName);
     final ColorChooserField field = new ColorChooserField(fieldName, value);
@@ -136,8 +131,7 @@ public class BaseStylePanel extends ValueField implements
     container.add(field);
   }
 
-  protected Field addField(final JPanel container, final Object object,
-    final String fieldName) {
+  protected Field addField(final JPanel container, final Object object, final String fieldName) {
     final Class<?> fieldClass = Property.getClass(object, fieldName);
     if (fieldClass == null) {
       return null;
@@ -145,7 +139,7 @@ public class BaseStylePanel extends ValueField implements
       final Object value = Property.get(object, fieldName);
       SwingUtil.addLabel(container, fieldName);
       final Field field = createField(fieldName, fieldClass, value);
-      if (readOnlyFieldNames.contains(fieldName)) {
+      if (this.readOnlyFieldNames.contains(fieldName)) {
         field.setEnabled(false);
       }
       if (field instanceof JTextArea) {
@@ -156,22 +150,21 @@ public class BaseStylePanel extends ValueField implements
       Property.addListener(field, "fieldValue", this);
       Property.addListener(field, fieldName, this);
       if (object instanceof LayerRenderer) {
-        rendererFieldNames.add(fieldName);
-        rendererFieldValues.put(fieldName, value);
+        this.rendererFieldNames.add(fieldName);
+        this.rendererFieldValues.put(fieldName, value);
       }
       return field;
     }
   }
 
-  protected void addFields(final JPanel container, final Object object,
-    final String... fieldNames) {
+  protected void addFields(final JPanel container, final Object object, final String... fieldNames) {
     for (final String fieldName : fieldNames) {
       addField(container, object, fieldName);
     }
   }
 
-  protected void addLengthMeasureField(final JPanel container,
-    final Object object, final String fieldName) {
+  protected void addLengthMeasureField(final JPanel container, final Object object,
+    final String fieldName) {
     SwingUtil.addLabel(container, fieldName);
     final Measure<Length> value = Property.get(object, fieldName);
     Unit<Length> unit;
@@ -180,14 +173,12 @@ public class BaseStylePanel extends ValueField implements
     } else {
       unit = value.getUnit();
     }
-    final LengthMeasureTextField field = new LengthMeasureTextField(fieldName,
-      value, unit);
+    final LengthMeasureTextField field = new LengthMeasureTextField(fieldName, value, unit);
     Property.addListener(field, fieldName, this);
     container.add(field);
   }
 
-  protected void addLineStylePanel(final JPanel stylePanels,
-    final GeometryStyle geometryStyle) {
+  protected void addLineStylePanel(final JPanel stylePanels, final GeometryStyle geometryStyle) {
     final JPanel panel = new JPanel();
     panel.setMinimumSize(new Dimension(300, 0));
     SwingUtil.setTitledBorder(panel, "Line Style");
@@ -201,20 +192,18 @@ public class BaseStylePanel extends ValueField implements
     stylePanels.add(panel);
   }
 
-  protected void addMarkerStylePanel(final JPanel stylePanels,
-    final MarkerStyle markerStyle) {
-    addPanel(stylePanels, "Marker Style", markerStyle, "markerLineColor",
-      "markerLineWidth", "markerFill", "markerWidth", "markerHeight", "marker");
+  protected void addMarkerStylePanel(final JPanel stylePanels, final MarkerStyle markerStyle) {
+    addPanel(stylePanels, "Marker Style", markerStyle, "markerLineColor", "markerLineWidth",
+      "markerFill", "markerWidth", "markerHeight", "marker");
 
-    addPanel(stylePanels, "Marker Position", markerStyle,
-      "markerHorizontalAlignment", "markerVerticalAlignment", "markerDx",
-      "markerDy", "markerOrientationType", "markerOrientation",
-      "markerPlacement");
+    addPanel(stylePanels, "Marker Position", markerStyle, "markerHorizontalAlignment",
+      "markerVerticalAlignment", "markerDx", "markerDy", "markerOrientationType",
+      "markerOrientation", "markerPlacement");
 
   }
 
-  protected JPanel addPanel(final Container container, final String title,
-    final Object object, final String... fieldNames) {
+  protected JPanel addPanel(final Container container, final String title, final Object object,
+    final String... fieldNames) {
     final JPanel panel = new JPanel();
     SwingUtil.setTitledBorder(panel, title);
 
@@ -224,17 +213,16 @@ public class BaseStylePanel extends ValueField implements
     return panel;
   }
 
-  protected void addPolygonStylePanel(final JPanel stylePanels,
-    final GeometryStyle geometryStyle) {
+  protected void addPolygonStylePanel(final JPanel stylePanels, final GeometryStyle geometryStyle) {
     addPanel(stylePanels, "Polygon Style", geometryStyle, "polygonFill");
   }
 
   public void addReadOnlyFieldName(final String fieldName) {
-    readOnlyFieldNames.add(fieldName);
+    this.readOnlyFieldNames.add(fieldName);
   }
 
-  protected void addTextField(final JPanel container, final Object object,
-    final String fieldName, final int columns) {
+  protected void addTextField(final JPanel container, final Object object, final String fieldName,
+    final int columns) {
     SwingUtil.addLabel(container, fieldName);
     final TextField field = new TextField(fieldName, columns);
     field.setFieldValue(Property.get(object, fieldName));
@@ -243,8 +231,7 @@ public class BaseStylePanel extends ValueField implements
   }
 
   @SuppressWarnings("unchecked")
-  protected Field createField(final String fieldName,
-    final Class<?> fieldClass, final Object value) {
+  protected Field createField(final String fieldName, final Class<?> fieldClass, final Object value) {
     Field field;
     if (fieldName.equals("textFaceName")) {
       field = new FontChooserField(fieldName, (String)value);
@@ -269,62 +256,53 @@ public class BaseStylePanel extends ValueField implements
       field = createScaleField(fieldName, (Long)value);
     } else if (Color.class.equals(fieldClass)) {
       field = new ColorChooserField(fieldName, (Color)value);
-    } else if (Boolean.TYPE.equals(fieldClass)
-      || Boolean.class.equals(fieldClass)) {
+    } else if (Boolean.TYPE.equals(fieldClass) || Boolean.class.equals(fieldClass)) {
       field = new CheckBox(fieldName, value);
     } else if (Measure.class.equals(fieldClass)) {
-      field = new LengthMeasureTextField(fieldName, (Measure<Length>)value,
-        NonSI.PIXEL);
+      field = new LengthMeasureTextField(fieldName, (Measure<Length>)value, NonSI.PIXEL);
     } else {
       field = new TextField(fieldName, value, 20);
     }
     return field;
   }
 
-  protected TogglePanel createHorizontalAlignmentField(final String fieldName,
-    String aligment) {
-    if (!"left".equalsIgnoreCase(aligment)
-      && !"right".equalsIgnoreCase(aligment)) {
+  protected TogglePanel createHorizontalAlignmentField(final String fieldName, String aligment) {
+    if (!"left".equalsIgnoreCase(aligment) && !"right".equalsIgnoreCase(aligment)) {
       aligment = "center";
     }
-    return new TogglePanel(fieldName, aligment, new Dimension(28, 28),
-      HORIZONTAL_ALIGNMENT_ACTIONS);
+    return new TogglePanel(fieldName, aligment, new Dimension(28, 28), HORIZONTAL_ALIGNMENT_ACTIONS);
   }
 
   protected TogglePanel createLineCapField(final LineCap lineCap) {
-    return new TogglePanel("lineCap", lineCap.toString(),
-      new Dimension(28, 28), LINE_CAP_ACTIONS);
+    return new TogglePanel("lineCap", lineCap.toString(), new Dimension(28, 28), LINE_CAP_ACTIONS);
 
   }
 
   protected TogglePanel createLineJoinField(final LineJoin lineJoin) {
-    return new TogglePanel("lineJoin", lineJoin.toString(), new Dimension(28,
-      28), LINE_JOIN_ACTIONS);
+    return new TogglePanel("lineJoin", lineJoin.toString(), new Dimension(28, 28),
+      LINE_JOIN_ACTIONS);
   }
 
   private Field createScaleField(final String fieldName, final Long value) {
     final Vector<Long> scales = new Vector<Long>();
     scales.add(Long.MAX_VALUE);
     scales.addAll(MapPanel.SCALES);
-    final InvokeMethodStringConverter converter = new InvokeMethodStringConverter(
-      MapScale.class, "formatScale");
-    converter.setHorizontalAlignment(JLabel.RIGHT);
-    final ComboBox field = new ComboBox(fieldName, new DefaultComboBoxModel(
-      scales), converter, converter);
-    ((JTextField)field.getEditor().getEditorComponent()).setHorizontalAlignment(JTextField.RIGHT);
+    final InvokeMethodStringConverter converter = new InvokeMethodStringConverter(MapScale.class,
+      "formatScale");
+    converter.setHorizontalAlignment(SwingConstants.RIGHT);
+    final ComboBox field = new ComboBox(fieldName, new DefaultComboBoxModel(scales), converter,
+      converter);
+    ((JTextField)field.getEditor().getEditorComponent()).setHorizontalAlignment(SwingConstants.RIGHT);
     field.setSelectedItem(value);
     field.setPreferredSize(new Dimension(150, 22));
     return field;
   }
 
-  protected TogglePanel createVerticalAlignmentField(final String fieldName,
-    String aligment) {
-    if (!"top".equalsIgnoreCase(aligment)
-      && !"bottom".equalsIgnoreCase(aligment)) {
+  protected TogglePanel createVerticalAlignmentField(final String fieldName, String aligment) {
+    if (!"top".equalsIgnoreCase(aligment) && !"bottom".equalsIgnoreCase(aligment)) {
       aligment = "middle";
     }
-    return new TogglePanel(fieldName, aligment, new Dimension(28, 28),
-      VERTICAL_ALIGNMENT_ACTIONS);
+    return new TogglePanel(fieldName, aligment, new Dimension(28, 28), VERTICAL_ALIGNMENT_ACTIONS);
   }
 
   protected void doPropertyChange(final PropertyChangeEvent event) {
@@ -369,10 +347,10 @@ public class BaseStylePanel extends ValueField implements
             scale = 0;
           }
         }
-        rendererFieldValues.put(fieldName, scale);
+        this.rendererFieldValues.put(fieldName, scale);
         return true;
-      } else if (rendererFieldNames.contains(fieldName)) {
-        rendererFieldValues.put(fieldName, fieldValue);
+      } else if (this.rendererFieldNames.contains(fieldName)) {
+        this.rendererFieldValues.put(fieldName, fieldValue);
       }
     }
     return false;
@@ -382,9 +360,9 @@ public class BaseStylePanel extends ValueField implements
   public void save() {
     super.save();
     final LayerRenderer<Layer> renderer = getRenderer();
-    for (final String fieldName : rendererFieldNames) {
+    for (final String fieldName : this.rendererFieldNames) {
 
     }
-    Property.set(renderer, rendererFieldValues);
+    Property.set(renderer, this.rendererFieldValues);
   }
 }

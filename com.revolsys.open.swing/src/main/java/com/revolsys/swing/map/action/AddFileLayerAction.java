@@ -17,8 +17,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.revolsys.data.record.io.RecordReaderFactory;
-import com.revolsys.data.record.io.RecordStoreFactory;
-import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;
 import com.revolsys.io.IoFactoryRegistry;
@@ -96,19 +94,6 @@ public class AddFileLayerAction extends AbstractAction {
     final Collection<String> fileExtensions) {
     final String[] array = fileExtensions.toArray(new String[0]);
     return new FileNameExtensionFilter(description, array);
-  }
-
-  private void getFileDataStoreFilters(final List<FileFilter> fileFilters,
-    final Set<String> allExtensions) {
-    final List<RecordStoreFactory> factories = RecordStoreFactoryRegistry.getFileDataStoreFactories();
-    for (final RecordStoreFactory factory : factories) {
-      final List<String> fileExtensions = factory.getRecordStoreFileExtensions();
-      String description = factory.getName();
-      description += " (" + CollectionUtil.toString(fileExtensions) + ")";
-      final FileNameExtensionFilter filter = createFilter(description, fileExtensions);
-      fileFilters.add(filter);
-      allExtensions.addAll(fileExtensions);
-    }
   }
 
   private void getFilters(final List<FileFilter> fileFilters, final Set<String> allExtensions,

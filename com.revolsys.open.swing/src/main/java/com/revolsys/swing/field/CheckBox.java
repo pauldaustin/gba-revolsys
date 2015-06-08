@@ -18,15 +18,15 @@ public class CheckBox extends JCheckBox implements Field, ActionListener {
 
   private static final long serialVersionUID = 1L;
 
-  private final String fieldName;
-
-  private boolean fieldValue;
-
   public static final Color DEFAULT_SELECTED_FOREGROUND = new JTextField().getSelectedTextColor();
 
   public static final Color DEFAULT_BACKGROUND = new JTextField().getBackground();
 
   public static final Color DEFAULT_FOREGROUND = new JTextField().getForeground();
+
+  private final String fieldName;
+
+  private boolean fieldValue;
 
   private String errorMessage;
 
@@ -57,8 +57,8 @@ public class CheckBox extends JCheckBox implements Field, ActionListener {
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -100,7 +100,8 @@ public class CheckBox extends JCheckBox implements Field, ActionListener {
   }
 
   @Override
-  public void setFieldInvalid(final String message, final Color foregroundColor, Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     setForeground(foregroundColor);
     setBackground(backgroundColor);
     this.errorMessage = message;
@@ -133,8 +134,7 @@ public class CheckBox extends JCheckBox implements Field, ActionListener {
     if (oldValue != newValue) {
       this.fieldValue = newValue;
       firePropertyChange(this.fieldName, oldValue, newValue);
-      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this,
-        oldValue, newValue);
+      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, newValue);
     }
   }
 

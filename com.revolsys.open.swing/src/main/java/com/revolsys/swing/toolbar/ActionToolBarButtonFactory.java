@@ -12,12 +12,10 @@ import javax.swing.JToggleButton;
 
 import com.revolsys.swing.action.AbstractAction;
 
-public class ActionToolBarButtonFactory extends AbstractAction implements
-  ToolBarButtonFactory {
-  private static final List<String> KEYS = Arrays.asList(
-    Action.ACCELERATOR_KEY, Action.ACTION_COMMAND_KEY, Action.DEFAULT,
-    Action.DISPLAYED_MNEMONIC_INDEX_KEY, Action.LARGE_ICON_KEY,
-    Action.LONG_DESCRIPTION, Action.MNEMONIC_KEY, Action.NAME,
+public class ActionToolBarButtonFactory extends AbstractAction implements ToolBarButtonFactory {
+  private static final List<String> KEYS = Arrays.asList(Action.ACCELERATOR_KEY,
+    Action.ACTION_COMMAND_KEY, Action.DEFAULT, Action.DISPLAYED_MNEMONIC_INDEX_KEY,
+    Action.LARGE_ICON_KEY, Action.LONG_DESCRIPTION, Action.MNEMONIC_KEY, Action.NAME,
     Action.SELECTED_KEY, Action.SHORT_DESCRIPTION, Action.SMALL_ICON);
 
   private static final long serialVersionUID = -5626990626102421865L;
@@ -36,8 +34,7 @@ public class ActionToolBarButtonFactory extends AbstractAction implements
     this.actionListener = action;
   }
 
-  public ActionToolBarButtonFactory(final Action action,
-    final ActionListener actionListener) {
+  public ActionToolBarButtonFactory(final Action action, final ActionListener actionListener) {
     this(action);
     this.actionListener = actionListener;
   }

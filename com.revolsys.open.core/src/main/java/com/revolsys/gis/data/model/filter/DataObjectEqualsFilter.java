@@ -16,22 +16,12 @@ public class DataObjectEqualsFilter implements Filter<Record> {
 
   private final Record searchObject;
 
-  public DataObjectEqualsFilter(final Record searchObject) {
+  public DataObjectEqualsFilter(final EqualsRegistry equalsRegistry, final Record searchObject) {
     this(null, searchObject, null);
   }
 
-  public DataObjectEqualsFilter(final Record searchObject,
+  public DataObjectEqualsFilter(final EqualsRegistry equalsRegistry, final Record searchObject,
     final Collection<String> equalExclude) {
-    this(null, searchObject, equalExclude);
-  }
-
-  public DataObjectEqualsFilter(final EqualsRegistry equalsRegistry,
-    final Record searchObject) {
-    this(null, searchObject, null);
-  }
-
-  public DataObjectEqualsFilter(final EqualsRegistry equalsRegistry,
-    final Record searchObject, final Collection<String> equalExclude) {
     if (equalsRegistry != null) {
       this.equalsRegistry = equalsRegistry;
     }
@@ -41,13 +31,21 @@ public class DataObjectEqualsFilter implements Filter<Record> {
     }
   }
 
+  public DataObjectEqualsFilter(final Record searchObject) {
+    this(null, searchObject, null);
+  }
+
+  public DataObjectEqualsFilter(final Record searchObject, final Collection<String> equalExclude) {
+    this(null, searchObject, equalExclude);
+  }
+
   @Override
   public boolean accept(final Record object) {
-    final Geometry serachGeometry = searchObject.getGeometryValue();
+    final Geometry serachGeometry = this.searchObject.getGeometryValue();
     final Geometry geometry = object.getGeometryValue();
 
-    if (equalsRegistry.equals(serachGeometry, geometry, equalExclude)) {
-      if (equalsRegistry.equals(searchObject, object, equalExclude)) {
+    if (this.equalsRegistry.equals(serachGeometry, geometry, this.equalExclude)) {
+      if (this.equalsRegistry.equals(this.searchObject, object, this.equalExclude)) {
         return true;
       }
     }

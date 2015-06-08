@@ -18,8 +18,8 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.util.CollectionUtil;
 
-public abstract class AbstractConnectionRegistry<T> implements
-  ConnectionRegistry<T>, PropertyChangeListener {
+public abstract class AbstractConnectionRegistry<T> implements ConnectionRegistry<T>,
+  PropertyChangeListener {
 
   private Map<String, T> connections;
 
@@ -27,8 +27,7 @@ public abstract class AbstractConnectionRegistry<T> implements
 
   private final Map<String, String> connectionNames = new TreeMap<String, String>();
 
-  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(
-    this);
+  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private File directory;
 
@@ -47,8 +46,7 @@ public abstract class AbstractConnectionRegistry<T> implements
     setConnectionManager(connectionManager);
   }
 
-  protected synchronized void addConnection(final String name,
-    final T connection) {
+  protected synchronized void addConnection(final String name, final T connection) {
     if (connection != null && name != null) {
       final String lowerName = name.toLowerCase();
       final T existingConnection = this.connections.get(lowerName);
@@ -63,14 +61,12 @@ public abstract class AbstractConnectionRegistry<T> implements
         }
       }
       final int index = getConnectionIndex(name);
-      propertyChangeSupport.fireIndexedPropertyChange("connections", index,
-        null, connection);
+      this.propertyChangeSupport.fireIndexedPropertyChange("connections", index, null, connection);
     }
   }
 
   @Override
-  public void createConnection(
-    final Map<String, ? extends Object> connectionParameters) {
+  public void createConnection(final Map<String, ? extends Object> connectionParameters) {
     final String name = CollectionUtil.getString(connectionParameters, "name");
     final File file = getConnectionFile(name);
     if (file != null && (!file.exists() || file.canRead())) {
@@ -81,9 +77,9 @@ public abstract class AbstractConnectionRegistry<T> implements
   }
 
   protected void doInit() {
-    if (directory != null && directory.isDirectory()) {
-      for (final File connectionFile : FileUtil.getFilesByExtension(directory,
-        fileExtension)) {
+    if (this.directory != null && this.directory.isDirectory()) {
+      for (final File connectionFile : FileUtil.getFilesByExtension(this.directory,
+        this.fileExtension)) {
         loadConnection(connectionFile);
       }
     }
@@ -91,85 +87,85 @@ public abstract class AbstractConnectionRegistry<T> implements
 
   @Override
   public List<T> getConections() {
-    return new ArrayList<T>(connections.values());
+    return new ArrayList<T>(this.connections.values());
   }
 
   @Override
   public T getConnection(final String connectionName) {
     if (StringUtils.hasText(connectionName)) {
-      return connections.get(connectionName.toLowerCase());
+      return this.connections.get(connectionName.toLowerCase());
     } else {
       return null;
     }
   }
 
   protected File getConnectionFile(final String name) {
-    if (!directory.exists()) {
+    if (!this.directory.exists()) {
       if (isReadOnly()) {
         return null;
-      } else if (!directory.mkdirs()) {
+      } else if (!this.directory.mkdirs()) {
         return null;
       }
     }
-    final String fileName = FileUtil.toSafeName(name) + "." + fileExtension;
-    final File file = new File(directory, fileName);
+    final String fileName = FileUtil.toSafeName(name) + "." + this.fileExtension;
+    final File file = new File(this.directory, fileName);
     return file;
   }
 
   protected int getConnectionIndex(final String name) {
     final String lowerName = name.toLowerCase();
-    final int index = new ArrayList<String>(connectionNames.keySet()).indexOf(lowerName);
+    final int index = new ArrayList<String>(this.connectionNames.keySet()).indexOf(lowerName);
     return index;
   }
 
   @Override
   public ConnectionRegistryManager<ConnectionRegistry<T>> getConnectionManager() {
-    return connectionManager;
+    return this.connectionManager;
   }
 
   @Override
   public List<String> getConnectionNames() {
-    final List<String> names = new ArrayList<String>(connectionNames.values());
+    final List<String> names = new ArrayList<String>(this.connectionNames.values());
     return names;
   }
 
   public File getDirectory() {
-    return directory;
+    return this.directory;
   }
 
   public String getFileExtension() {
-    return fileExtension;
+    return this.fileExtension;
   }
 
   @Override
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @Override
   public PropertyChangeSupport getPropertyChangeSupport() {
-    return propertyChangeSupport;
+    return this.propertyChangeSupport;
   }
 
   protected synchronized void init() {
-    connections = new TreeMap<String, T>();
+    this.connections = new TreeMap<String, T>();
     doInit();
   }
 
   public boolean isReadOnly() {
-    return readOnly;
+    return this.readOnly;
   }
 
   @Override
   public boolean isVisible() {
-    return visible;
+    return this.visible;
   }
 
   protected abstract T loadConnection(final File connectionFile);
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
-    propertyChangeSupport.firePropertyChange(event);
+    this.propertyChangeSupport.firePropertyChange(event);
   }
 
   public boolean removeConnection(final String name) {
@@ -177,8 +173,7 @@ public abstract class AbstractConnectionRegistry<T> implements
     return removeConnection(connection);
   }
 
-  protected synchronized boolean removeConnection(final String name,
-    final T connection) {
+  protected synchronized boolean removeConnection(final String name, final T connection) {
     if (connection != null && name != null) {
       final String lowerName = name.toLowerCase();
       final T existingConnection = this.connections.get(lowerName);
@@ -193,9 +188,8 @@ public abstract class AbstractConnectionRegistry<T> implements
             propertyChangeSupport.removePropertyChangeListener(this);
           }
         }
-        propertyChangeSupport.fireIndexedPropertyChange("connections", index,
-          connection, null);
-        if (directory != null && !readOnly) {
+        this.propertyChangeSupport.fireIndexedPropertyChange("connections", index, connection, null);
+        if (this.directory != null && !this.readOnly) {
           final File file = getConnectionFile(name);
           file.delete();
         }
@@ -212,11 +206,11 @@ public abstract class AbstractConnectionRegistry<T> implements
     final ConnectionRegistryManager<? extends ConnectionRegistry<T>> connectionManager) {
     if (this.connectionManager != connectionManager) {
       if (this.connectionManager != null) {
-        propertyChangeSupport.removePropertyChangeListener(connectionManager);
+        this.propertyChangeSupport.removePropertyChangeListener(connectionManager);
       }
       this.connectionManager = (ConnectionRegistryManager)connectionManager;
       if (connectionManager != null) {
-        propertyChangeSupport.addPropertyChangeListener(connectionManager);
+        this.propertyChangeSupport.addPropertyChangeListener(connectionManager);
       }
     }
   }
@@ -245,8 +239,7 @@ public abstract class AbstractConnectionRegistry<T> implements
 
   public void setReadOnly(final boolean readOnly) {
     if (this.isReadOnly() && !readOnly) {
-      throw new IllegalArgumentException(
-        "Cannot make a read only registry not read only");
+      throw new IllegalArgumentException("Cannot make a read only registry not read only");
     }
     this.readOnly = readOnly;
   }

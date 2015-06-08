@@ -16,11 +16,10 @@ import com.vividsolutions.jts.geomgraph.Node;
 /**
  * Computes the intersection of line segments,
  * and adds the intersection to the edges containing the segments.
- * 
+ *
  * @version 1.7
  */
-public class SegmentIntersector extends
-  com.vividsolutions.jts.geomgraph.index.SegmentIntersector {
+public class SegmentIntersector extends com.vividsolutions.jts.geomgraph.index.SegmentIntersector {
 
   public static boolean isAdjacentSegments(final int i1, final int i2) {
     return Math.abs(i1 - i2) == 1;
@@ -45,11 +44,6 @@ public class SegmentIntersector extends
 
   private final boolean recordIsolated;
 
-  private boolean isSelfIntersection;
-
-  // private boolean intersectionFound;
-  private int numIntersections = 0;
-
   // testing only
   public int numTests = 0;
 
@@ -60,8 +54,8 @@ public class SegmentIntersector extends
   /*
    * public SegmentIntersector() { }
    */
-  public SegmentIntersector(final LineIntersector li,
-    final boolean includeProper, final boolean recordIsolated) {
+  public SegmentIntersector(final LineIntersector li, final boolean includeProper,
+    final boolean recordIsolated) {
     super(li, includeProper, recordIsolated);
     this.li = li;
     this.includeProper = includeProper;
@@ -75,48 +69,46 @@ public class SegmentIntersector extends
    * certain pairs of segments for efficiency reasons.
    */
   @Override
-  public void addIntersections(final Edge e0, final int segIndex0,
-    final Edge e1, final int segIndex1) {
+  public void addIntersections(final Edge e0, final int segIndex0, final Edge e1,
+    final int segIndex1) {
     if (e0 == e1 && segIndex0 == segIndex1) {
       return;
     }
-    numTests++;
+    this.numTests++;
     final Coordinate p00 = e0.getCoordinates()[segIndex0];
     final Coordinate p01 = e0.getCoordinates()[segIndex0 + 1];
     final Coordinate p10 = e1.getCoordinates()[segIndex1];
     final Coordinate p11 = e1.getCoordinates()[segIndex1 + 1];
 
-    li.computeIntersection(p00, p01, p10, p11);
+    this.li.computeIntersection(p00, p01, p10, p11);
     // if (li.hasIntersection() && li.isProper()) Debug.println(li);
     /**
      *  Always record any non-proper intersections.
      *  If includeProper is true, record any proper intersections as well.
      */
-    if (li.hasIntersection()) {
-      if (recordIsolated) {
+    if (this.li.hasIntersection()) {
+      if (this.recordIsolated) {
         e0.setIsolated(false);
         e1.setIsolated(false);
       }
-      // intersectionFound = true;
-      numIntersections++;
       // if the segments are adjacent they have at least one trivial
       // intersection,
       // the shared endpoint. Don't bother adding it if it is the
       // only intersection.
       if (!isTrivialIntersection(e0, segIndex0, e1, segIndex1)) {
-        hasIntersection = true;
-        if (includeProper || !li.isProper()) {
+        this.hasIntersection = true;
+        if (this.includeProper || !this.li.isProper()) {
           // Debug.println(li);
-          e0.addIntersections(li, segIndex0, 0);
-          e1.addIntersections(li, segIndex1, 1);
+          e0.addIntersections(this.li, segIndex0, 0);
+          e1.addIntersections(this.li, segIndex1, 1);
         }
-        if (li.isProper()) {
-          final Coordinate intersection = li.getIntersection(0);
+        if (this.li.isProper()) {
+          final Coordinate intersection = this.li.getIntersection(0);
           addProperIntersection(intersection);
-          properIntersectionPoint = (Coordinate)intersection.clone();
-          hasProper = true;
-          if (!isBoundaryPoint(li, bdyNodes)) {
-            hasProperInterior = true;
+          this.properIntersectionPoint = (Coordinate)intersection.clone();
+          this.hasProper = true;
+          if (!isBoundaryPoint(this.li, this.bdyNodes)) {
+            this.hasProperInterior = true;
           }
         }
         // if (li.isCollinear())
@@ -126,8 +118,7 @@ public class SegmentIntersector extends
   }
 
   private void addProperIntersection(final Coordinate coordinate) {
-    properIntersections.add(new DoubleCoordinates(
-      CoordinatesUtil.get(coordinate), 2));
+    this.properIntersections.add(new DoubleCoordinates(CoordinatesUtil.get(coordinate), 2));
   }
 
   /**
@@ -135,16 +126,16 @@ public class SegmentIntersector extends
    */
   @Override
   public Coordinate getProperIntersectionPoint() {
-    return properIntersectionPoint;
+    return this.properIntersectionPoint;
   }
 
   public List<Coordinates> getProperIntersections() {
-    return properIntersections;
+    return this.properIntersections;
   }
 
   @Override
   public boolean hasIntersection() {
-    return hasIntersection;
+    return this.hasIntersection;
   }
 
   /**
@@ -153,7 +144,7 @@ public class SegmentIntersector extends
    */
   @Override
   public boolean hasProperInteriorIntersection() {
-    return hasProperInterior;
+    return this.hasProperInterior;
   }
 
   /**
@@ -165,11 +156,10 @@ public class SegmentIntersector extends
    */
   @Override
   public boolean hasProperIntersection() {
-    return hasProper;
+    return this.hasProper;
   }
 
-  private boolean isBoundaryPoint(final LineIntersector li,
-    final Collection bdyNodes) {
+  private boolean isBoundaryPoint(final LineIntersector li, final Collection bdyNodes) {
     for (final Iterator i = bdyNodes.iterator(); i.hasNext();) {
       final Node node = (Node)i.next();
       final Coordinate pt = node.getCoordinate();
@@ -180,8 +170,7 @@ public class SegmentIntersector extends
     return false;
   }
 
-  private boolean isBoundaryPoint(final LineIntersector li,
-    final Collection[] bdyNodes) {
+  private boolean isBoundaryPoint(final LineIntersector li, final Collection[] bdyNodes) {
     if (bdyNodes == null) {
       return false;
     }
@@ -200,17 +189,17 @@ public class SegmentIntersector extends
    * Note that closed edges require a special check for the point shared by the beginning
    * and end segments.
    */
-  private boolean isTrivialIntersection(final Edge e0, final int segIndex0,
-    final Edge e1, final int segIndex1) {
+  private boolean isTrivialIntersection(final Edge e0, final int segIndex0, final Edge e1,
+    final int segIndex1) {
     if (e0 == e1) {
-      if (li.getIntersectionNum() == 1) {
+      if (this.li.getIntersectionNum() == 1) {
         if (isAdjacentSegments(segIndex0, segIndex1)) {
           return true;
         }
         if (e0.isClosed()) {
           final int maxSegIndex = e0.getNumPoints() - 1;
-          if ((segIndex0 == 0 && segIndex1 == maxSegIndex)
-            || (segIndex1 == 0 && segIndex0 == maxSegIndex)) {
+          if (segIndex0 == 0 && segIndex1 == maxSegIndex || segIndex1 == 0
+            && segIndex0 == maxSegIndex) {
             return true;
           }
         }
@@ -220,11 +209,10 @@ public class SegmentIntersector extends
   }
 
   @Override
-  public void setBoundaryNodes(final Collection bdyNodes0,
-    final Collection bdyNodes1) {
-    bdyNodes = new Collection[2];
-    bdyNodes[0] = bdyNodes0;
-    bdyNodes[1] = bdyNodes1;
+  public void setBoundaryNodes(final Collection bdyNodes0, final Collection bdyNodes1) {
+    this.bdyNodes = new Collection[2];
+    this.bdyNodes[0] = bdyNodes0;
+    this.bdyNodes[1] = bdyNodes1;
   }
 
 }

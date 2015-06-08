@@ -22,10 +22,8 @@ public class DateUtil {
     return format.format(date);
   }
 
-  public static String format(final int dateStyle, final int timeStyle,
-    final Timestamp timestamp) {
-    final DateFormat format = DateFormat.getDateTimeInstance(dateStyle,
-      timeStyle);
+  public static String format(final int dateStyle, final int timeStyle, final Timestamp timestamp) {
+    final DateFormat format = DateFormat.getDateTimeInstance(dateStyle, timeStyle);
     return format(format, timestamp);
   }
 
@@ -63,12 +61,10 @@ public class DateUtil {
         final int minute = getInteger(matcher, 5, 0);
         final int second = getInteger(matcher, 6, 0);
         int millisecond = getInteger(matcher, 7, 0);
-        final Calendar calendar = new GregorianCalendar(year, month, day, hour,
-          minute, second);
+        final Calendar calendar = new GregorianCalendar(year, month, day, hour, minute, second);
         if (millisecond != 0) {
           BigDecimal number = new BigDecimal("0." + millisecond);
-          number = number.multiply(BigDecimal.valueOf(100)).setScale(0,
-            RoundingMode.HALF_DOWN);
+          number = number.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_DOWN);
           millisecond = number.intValue();
           calendar.set(Calendar.MILLISECOND, millisecond);
         }
@@ -96,8 +92,7 @@ public class DateUtil {
           throw new IllegalArgumentException("Invalid date '" + dateString
             + "'. Must match pattern '" + simpleFormat.toPattern() + "'.", e);
         } else {
-          throw new IllegalArgumentException("Invalid date  '" + dateString
-            + "'.", e);
+          throw new IllegalArgumentException("Invalid date  '" + dateString + "'.", e);
         }
       }
     }
@@ -115,12 +110,10 @@ public class DateUtil {
         final int minute = getInteger(matcher, 5, 0);
         final int second = getInteger(matcher, 6, 0);
         int millisecond = getInteger(matcher, 7, 0);
-        final Calendar calendar = new GregorianCalendar(year, month, day, hour,
-          minute, second);
+        final Calendar calendar = new GregorianCalendar(year, month, day, hour, minute, second);
         if (millisecond != 0) {
           BigDecimal number = new BigDecimal("0." + millisecond);
-          number = number.multiply(BigDecimal.valueOf(1000)).setScale(0,
-            RoundingMode.HALF_DOWN);
+          number = number.multiply(BigDecimal.valueOf(1000)).setScale(0, RoundingMode.HALF_DOWN);
           millisecond = number.intValue();
           calendar.set(Calendar.MILLISECOND, millisecond);
         }
@@ -138,8 +131,7 @@ public class DateUtil {
     return getDate(format, dateString);
   }
 
-  public static int getInteger(final Matcher matcher, final int groupIndex,
-    final int defaultValue) {
+  public static int getInteger(final Matcher matcher, final int groupIndex, final int defaultValue) {
     final String group = matcher.group(groupIndex);
     if (StringUtils.hasText(group)) {
       return Integer.parseInt(group);
@@ -164,8 +156,7 @@ public class DateUtil {
         final Calendar calendar = new GregorianCalendar(year, month, day);
         if (millisecond != 0) {
           BigDecimal number = new BigDecimal("0." + millisecond);
-          number = number.multiply(BigDecimal.valueOf(1000)).setScale(0,
-            RoundingMode.HALF_DOWN);
+          number = number.multiply(BigDecimal.valueOf(1000)).setScale(0, RoundingMode.HALF_DOWN);
           millisecond = number.intValue();
           calendar.set(Calendar.MILLISECOND, millisecond);
         }
@@ -179,8 +170,7 @@ public class DateUtil {
     }
   }
 
-  public static java.sql.Date getSqlDate(final String pattern,
-    final String dateString) {
+  public static java.sql.Date getSqlDate(final String pattern, final String dateString) {
     final Date date = getDate(pattern, dateString);
     if (date == null) {
       return null;
@@ -206,8 +196,7 @@ public class DateUtil {
         final int minute = getInteger(matcher, 5, 0);
         final int second = getInteger(matcher, 6, 0);
         int nanoSecond = getInteger(matcher, 7, 0);
-        final Calendar calendar = new GregorianCalendar(year, month, day, hour,
-          minute, second);
+        final Calendar calendar = new GregorianCalendar(year, month, day, hour, minute, second);
         final long timeInMillis = calendar.getTimeInMillis();
         final Timestamp time = new Timestamp(timeInMillis);
         if (nanoSecond != 0) {
@@ -226,8 +215,7 @@ public class DateUtil {
     }
   }
 
-  public static Timestamp getTimestamp(final String pattern,
-    final String dateString) {
+  public static Timestamp getTimestamp(final String pattern, final String dateString) {
 
     final Date date = getDate(pattern, dateString);
     if (date == null) {

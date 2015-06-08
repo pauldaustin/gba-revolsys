@@ -24,9 +24,9 @@ public class CloseLocation {
 
   private final Point point;
 
-  public CloseLocation(final AbstractRecordLayer layer,
-    final LayerDataObject object, final Geometry geometry,
-    final int[] vertexIndex, final IndexedLineSegment segment, final Point point) {
+  public CloseLocation(final AbstractRecordLayer layer, final LayerDataObject object,
+    final Geometry geometry, final int[] vertexIndex, final IndexedLineSegment segment,
+    final Point point) {
     this.object = object;
     this.layer = layer;
     this.geometry = geometry;
@@ -93,13 +93,13 @@ public class CloseLocation {
   }
 
   public String getType() {
-    if (geometry instanceof Point) {
+    if (this.geometry instanceof Point) {
       return "Point";
-    } else if (segment != null) {
+    } else if (this.segment != null) {
       return "Edge";
     } else {
-      if (GeometryEditUtil.isFromPoint(geometry, vertexIndex)
-        || GeometryEditUtil.isToPoint(geometry, vertexIndex)) {
+      if (GeometryEditUtil.isFromPoint(this.geometry, this.vertexIndex)
+        || GeometryEditUtil.isToPoint(this.geometry, this.vertexIndex)) {
         return "End-Vertex";
       } else {
         return "Vertex";

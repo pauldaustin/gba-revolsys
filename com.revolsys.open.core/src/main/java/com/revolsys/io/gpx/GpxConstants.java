@@ -23,22 +23,17 @@ public final class GpxConstants {
 
   public static final QName ELEVATION_ELEMENT = new QName(GPX_NS_URI, "ele");
 
-  public static final QName EXTENSION_ELEMENT = new QName(GPX_NS_URI,
-    "extensions");
+  public static final QName EXTENSION_ELEMENT = new QName(GPX_NS_URI, "extensions");
 
   public static final QName GPX_ELEMENT = new QName(GPX_NS_URI, "gpx");
 
-  public static final RecordDefinitionImpl GPX_TYPE = new RecordDefinitionImpl(
-    "gpx");
+  public static final RecordDefinitionImpl GPX_TYPE = new RecordDefinitionImpl("gpx");
 
-  public static final RecordDefinitionImpl GPX_WAYPOINT = new RecordDefinitionImpl(
-    "/gpx/waypoint");
+  public static final RecordDefinitionImpl GPX_WAYPOINT = new RecordDefinitionImpl("/gpx/waypoint");
 
-  public static final RecordDefinitionImpl GPX_TRACK = new RecordDefinitionImpl(
-    "/gpx/track");
+  public static final RecordDefinitionImpl GPX_TRACK = new RecordDefinitionImpl("/gpx/track");
 
-  public static final RecordDefinitionImpl GPX_ROUTE = new RecordDefinitionImpl(
-    "/gpx/route");
+  public static final RecordDefinitionImpl GPX_ROUTE = new RecordDefinitionImpl("/gpx/route");
 
   public static final QName LAT_ATTRIBUTE = new QName(null, "lat");
 
@@ -60,8 +55,7 @@ public final class GpxConstants {
 
   public static final QName TRACK_POINT_ELEMENT = new QName(GPX_NS_URI, "trkpt");
 
-  public static final QName TRACK_SEGMENT_ELEMENT = new QName(GPX_NS_URI,
-    "trkseg");
+  public static final QName TRACK_SEGMENT_ELEMENT = new QName(GPX_NS_URI, "trkseg");
 
   public static final QName TYPE_ELEMENT = new QName(GPX_NS_URI, "type");
 
@@ -105,8 +99,7 @@ public final class GpxConstants {
     GPX_ROUTE.setGeometryFactory(GEOMETRY_FACTORY);
   }
 
-  private static void addAttribute(final String name, final DataType type,
-    final boolean required) {
+  private static void addAttribute(final String name, final DataType type, final boolean required) {
     GPX_TYPE.addField(name, type, required);
     GPX_WAYPOINT.addField(name, type, required);
     GPX_TRACK.addField(name, type, required);

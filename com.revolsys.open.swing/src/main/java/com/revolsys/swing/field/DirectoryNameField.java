@@ -34,8 +34,7 @@ public class DirectoryNameField extends JPanel implements Field {
 
     add(this.directoryName);
     this.browseButton.setText("Browse...");
-    this.browseButton.addActionListener(new InvokeMethodActionListener(this,
-      "browseClick"));
+    this.browseButton.addActionListener(new InvokeMethodActionListener(this, "browseClick"));
     add(this.browseButton);
     SpringLayoutUtil.makeCompactGrid(this, 1, 2, 5, 5, 5, 5);
   }
@@ -49,8 +48,7 @@ public class DirectoryNameField extends JPanel implements Field {
       final String directoryPath = getDirectoryPath();
       final File initialFile = new File(directoryPath);
 
-      if (initialFile.getParentFile() != null
-        && initialFile.getParentFile().exists()) {
+      if (initialFile.getParentFile() != null && initialFile.getParentFile().exists()) {
         fileChooser.setCurrentDirectory(initialFile.getParentFile());
       }
 
@@ -63,14 +61,13 @@ public class DirectoryNameField extends JPanel implements Field {
         }
       }
     } catch (final Throwable t) {
-      JOptionPane.showMessageDialog(this, t.getMessage(), "Error",
-        JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(this, t.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -147,7 +144,8 @@ public class DirectoryNameField extends JPanel implements Field {
   }
 
   @Override
-  public void setFieldInvalid(final String message, final Color foregroundColor, Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     this.directoryName.setForeground(foregroundColor);
     this.directoryName.setSelectedTextColor(foregroundColor);
     this.directoryName.setBackground(backgroundColor);
@@ -194,6 +192,6 @@ public class DirectoryNameField extends JPanel implements Field {
 
   @Override
   public void updateFieldValue() {
-    setFieldValue(directoryName.getText());
+    setFieldValue(this.directoryName.getText());
   }
 }

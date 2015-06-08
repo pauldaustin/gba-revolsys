@@ -13,8 +13,7 @@ import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class ExcludeSavedObjectsInOutProcess extends
-  BaseInOutProcess<Record, Record> {
+public class ExcludeSavedObjectsInOutProcess extends BaseInOutProcess<Record, Record> {
 
   private Set<String> originalIds = new HashSet<String>();
 
@@ -23,9 +22,9 @@ public class ExcludeSavedObjectsInOutProcess extends
 
   @Override
   protected void destroy() {
-    statistics.disconnect();
-    originalIds = null;
-    statistics = null;
+    this.statistics.disconnect();
+    this.originalIds = null;
+    this.statistics = null;
   }
 
   private String getId(final Record object) {
@@ -39,22 +38,21 @@ public class ExcludeSavedObjectsInOutProcess extends
   }
 
   public StatisticsMap getStatistics() {
-    return statistics;
+    return this.statistics;
   }
 
   @Override
   protected void init() {
-    statistics.connect();
+    this.statistics.connect();
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
     final String id = getId(object);
     if (id == null) {
       out.write(object);
-    } else if (originalIds.contains(id.toString())) {
-      statistics.add("Excluded as already loaded from previous area", object);
+    } else if (this.originalIds.contains(id.toString())) {
+      this.statistics.add("Excluded as already loaded from previous area", object);
     } else {
       final Set<String> ids = Collections.singleton(id);
       final Geometry geometry = object.getGeometryValue();
@@ -67,7 +65,7 @@ public class ExcludeSavedObjectsInOutProcess extends
     for (final Record object : objects) {
       final Set<String> ids = object.getValueByPath("GEOMETRY.ORIGINAL_IDS");
       if (ids != null) {
-        originalIds.addAll(ids);
+        this.originalIds.addAll(ids);
       }
     }
   }

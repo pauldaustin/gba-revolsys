@@ -38,22 +38,22 @@ public class IsSimpleOp {
 
     public EndpointInfo(final Coordinate pt) {
       this.pt = pt;
-      isClosed = false;
-      degree = 0;
+      this.isClosed = false;
+      this.degree = 0;
     }
 
     public void addEndpoint(final boolean isClosed) {
-      degree++;
+      this.degree++;
       this.isClosed |= isClosed;
     }
 
     public Coordinate getCoordinate() {
-      return pt;
+      return this.pt;
     }
   }
 
-  public static SegmentIntersector computeIntersections(
-    final GeometryGraph graph, final LineIntersector li, final boolean ringBased) {
+  public static SegmentIntersector computeIntersections(final GeometryGraph graph,
+    final LineIntersector li, final boolean ringBased) {
     final SegmentIntersector si = new SegmentIntersector(li, true, false);
     final EdgeSetIntersector esi = new SimpleMCSweepLineIntersector();
     final List<Edge> edges = new ArrayList<Edge>();
@@ -82,8 +82,8 @@ public class IsSimpleOp {
   /**
    * Add an endpoint to the map, creating an entry for it if none exists
    */
-  private void addEndpoint(final Map<Coordinate, EndpointInfo> endPoints,
-    final Coordinate p, final boolean isClosed) {
+  private void addEndpoint(final Map<Coordinate, EndpointInfo> endPoints, final Coordinate p,
+    final boolean isClosed) {
     EndpointInfo eiInfo = endPoints.get(p);
     if (eiInfo == null) {
       eiInfo = new EndpointInfo(p);
@@ -93,12 +93,11 @@ public class IsSimpleOp {
   }
 
   private void addNonSimplePoint(final Coordinate coordinate) {
-    nonSimplePoints.add(new DoubleCoordinates(CoordinatesUtil.get(coordinate),
-      2));
+    this.nonSimplePoints.add(new DoubleCoordinates(CoordinatesUtil.get(coordinate), 2));
   }
 
   public List<Coordinates> getNonSimplePoints() {
-    return nonSimplePoints;
+    return this.nonSimplePoints;
   }
 
   /**
@@ -122,8 +121,8 @@ public class IsSimpleOp {
       addEndpoint(endPoints, p1, isClosed);
     }
 
-    for (final Iterator i = endPoints.values().iterator(); i.hasNext();) {
-      final EndpointInfo eiInfo = (EndpointInfo)i.next();
+    for (final Object element : endPoints.values()) {
+      final EndpointInfo eiInfo = (EndpointInfo)element;
       if (eiInfo.isClosed && eiInfo.degree != 2) {
         addNonSimplePoint(eiInfo.getCoordinate());
         hasIntersection = true;
@@ -159,14 +158,14 @@ public class IsSimpleOp {
    * @return true if the geometry is simple
    */
   public boolean isSimple() {
-    if (geometry.isEmpty()) {
+    if (this.geometry.isEmpty()) {
       return true;
-    } else if (geometry instanceof LineString) {
-      return isSimpleLinearGeometry(geometry);
-    } else if (geometry instanceof MultiLineString) {
-      return isSimpleLinearGeometry(geometry);
-    } else if (geometry instanceof MultiPoint) {
-      return isSimple((MultiPoint)geometry);
+    } else if (this.geometry instanceof LineString) {
+      return isSimpleLinearGeometry(this.geometry);
+    } else if (this.geometry instanceof MultiLineString) {
+      return isSimpleLinearGeometry(this.geometry);
+    } else if (this.geometry instanceof MultiPoint) {
+      return isSimple((MultiPoint)this.geometry);
     }
     // all other geometry types are simple by definition
     return true;
@@ -180,10 +179,9 @@ public class IsSimpleOp {
       final Set<Coordinates> points = new TreeSet<Coordinates>();
       for (int i = 0; i < multiPoint.getNumGeometries(); i++) {
         final Point point = (Point)multiPoint.getGeometryN(i);
-        final Coordinates coordinates = new DoubleCoordinates(
-          CoordinatesUtil.get(point), 2);
+        final Coordinates coordinates = new DoubleCoordinates(CoordinatesUtil.get(point), 2);
         if (points.contains(coordinates)) {
-          nonSimplePoints.add(coordinates);
+          this.nonSimplePoints.add(coordinates);
           simple = false;
         }
         points.add(coordinates);
@@ -195,8 +193,8 @@ public class IsSimpleOp {
   private boolean isSimpleLinearGeometry(final Geometry geom) {
     final GeometryGraph graph = new GeometryGraph(0, geom);
     final LineIntersector li = new RobustLineIntersector();
-    final boolean ringBased = geom instanceof LinearRing
-      || geom instanceof Polygon || geom instanceof MultiPolygon;
+    final boolean ringBased = geom instanceof LinearRing || geom instanceof Polygon
+      || geom instanceof MultiPolygon;
     final SegmentIntersector si = computeIntersections(graph, li, ringBased);
 
     // if no self-intersection, must be simple
@@ -212,7 +210,7 @@ public class IsSimpleOp {
           return false;
         }
       } else {
-        nonSimplePoints.addAll(properIntersections);
+        this.nonSimplePoints.addAll(properIntersections);
         return false;
       }
     } else {

@@ -6,8 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
-public class BeanReferenceListFactoryBean<T> extends
-  AbstractFactoryBean<List<T>> {
+public class BeanReferenceListFactoryBean<T> extends AbstractFactoryBean<List<T>> {
 
   private List<String> beanNames = new ArrayList<String>();
 
@@ -15,8 +14,8 @@ public class BeanReferenceListFactoryBean<T> extends
   protected List<T> createInstance() throws Exception {
     final BeanFactory beanFactory = getBeanFactory();
     final List<T> beans = new ArrayList<T>();
-    for (int i = 0; i < beanNames.size(); i++) {
-      final String beanName = beanNames.get(i);
+    for (int i = 0; i < this.beanNames.size(); i++) {
+      final String beanName = this.beanNames.get(i);
       final T bean = (T)beanFactory.getBean(beanName);
       beans.add(bean);
     }
@@ -24,7 +23,7 @@ public class BeanReferenceListFactoryBean<T> extends
   }
 
   public List<String> getBeanNames() {
-    return beanNames;
+    return this.beanNames;
   }
 
   @Override

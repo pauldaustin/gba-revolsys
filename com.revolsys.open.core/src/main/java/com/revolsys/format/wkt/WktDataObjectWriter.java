@@ -20,8 +20,7 @@ public class WktDataObjectWriter extends AbstractWriter<Record> {
 
   private boolean open;
 
-  public WktDataObjectWriter(final RecordDefinition metaData,
-    final java.io.Writer out) {
+  public WktDataObjectWriter(final RecordDefinition metaData, final java.io.Writer out) {
     this.metaData = metaData;
     this.out = new PrintWriter(new BufferedWriter(out));
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
@@ -34,33 +33,33 @@ public class WktDataObjectWriter extends AbstractWriter<Record> {
 
   @Override
   public void close() {
-    out.close();
+    this.out.close();
   }
 
   @Override
   public void flush() {
-    out.flush();
+    this.out.flush();
   }
 
   @Override
   public String toString() {
-    return metaData.getPath().toString();
+    return this.metaData.getPath().toString();
   }
 
   @Override
   public void write(final Record object) {
-    if (!open) {
-      open = true;
+    if (!this.open) {
+      this.open = true;
     }
     final Geometry geometry = object.getGeometryValue();
     final int srid = geometry.getSRID();
     if (srid > 0) {
-      out.print("SRID=");
-      out.print(srid);
-      out.print(';');
+      this.out.print("SRID=");
+      this.out.print(srid);
+      this.out.print(';');
     }
-    WktWriter.write(out, geometry);
-    out.println();
+    WktWriter.write(this.out, geometry);
+    this.out.println();
   }
 
 }

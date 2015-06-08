@@ -11,14 +11,14 @@ import com.revolsys.gis.model.data.equals.EqualsRegistry;
 
 public class AngularUnit implements Serializable {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -3508138430785747634L;
 
   /**
    * Get the angular unit representing the conversion factor from
    * {@link SI#RADIAN}.
-   * 
+   *
    * @param conversionFactor The conversion factor.
    * @return The angular unit.
    */
@@ -29,7 +29,7 @@ public class AngularUnit implements Serializable {
   /**
    * Get the angular unit representing the conversion factor from the specified
    * base angular unit.
-   * 
+   *
    * @param baseUnit The base unit.
    * @param conversionFactor The conversion factor.
    * @return The angular unit.
@@ -37,8 +37,7 @@ public class AngularUnit implements Serializable {
   @SuppressWarnings({
     "rawtypes", "unchecked"
   })
-  public static Unit<Angle> getUnit(final Unit<Angle> baseUnit,
-    final double conversionFactor) {
+  public static Unit<Angle> getUnit(final Unit<Angle> baseUnit, final double conversionFactor) {
     Unit<Angle> unit;
     if (baseUnit == null) {
       unit = SI.RADIAN;
@@ -75,14 +74,13 @@ public class AngularUnit implements Serializable {
 
   private Unit<Angle> unit;
 
-  public AngularUnit(final String name, final AngularUnit baseUnit,
-    final double conversionFactor, final Authority authority) {
+  public AngularUnit(final String name, final AngularUnit baseUnit, final double conversionFactor,
+    final Authority authority) {
     this(name, baseUnit, conversionFactor, authority, false);
   }
 
-  public AngularUnit(final String name, final AngularUnit baseUnit,
-    final double conversionFactor, final Authority authority,
-    final boolean deprecated) {
+  public AngularUnit(final String name, final AngularUnit baseUnit, final double conversionFactor,
+    final Authority authority, final boolean deprecated) {
     this.name = name;
     if (name.equals("degree (supplier to define representation)")) {
       this.name = "degree";
@@ -100,8 +98,7 @@ public class AngularUnit implements Serializable {
     }
   }
 
-  public AngularUnit(final String name, final double conversionFactor,
-    final Authority authority) {
+  public AngularUnit(final String name, final double conversionFactor, final Authority authority) {
     this(name, null, conversionFactor, authority, false);
   }
 
@@ -113,9 +110,9 @@ public class AngularUnit implements Serializable {
       return true;
     } else if (object instanceof AngularUnit) {
       final AngularUnit unit = (AngularUnit)object;
-      if (!EqualsRegistry.equal(name, unit.name)) {
+      if (!EqualsRegistry.equal(this.name, unit.name)) {
         return false;
-      } else if (Math.abs(conversionFactor - unit.conversionFactor) > 1.0e-10) {
+      } else if (Math.abs(this.conversionFactor - unit.conversionFactor) > 1.0e-10) {
         return false;
       } else {
         return true;
@@ -126,41 +123,41 @@ public class AngularUnit implements Serializable {
   }
 
   public Authority getAuthority() {
-    return authority;
+    return this.authority;
   }
 
   public AngularUnit getBaseUnit() {
-    return baseUnit;
+    return this.baseUnit;
   }
 
   public double getConversionFactor() {
-    return conversionFactor;
+    return this.conversionFactor;
   }
 
   public String getName() {
-    return name;
+    return this.name;
   }
 
   public Unit<Angle> getUnit() {
-    return unit;
+    return this.unit;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + name.hashCode();
-    final long temp = Double.doubleToLongBits(conversionFactor);
-    result = prime * result + (int)(temp ^ (temp >>> 32));
+    result = prime * result + this.name.hashCode();
+    final long temp = Double.doubleToLongBits(this.conversionFactor);
+    result = prime * result + (int)(temp ^ temp >>> 32);
     return result;
   }
 
   public boolean isDeprecated() {
-    return deprecated;
+    return this.deprecated;
   }
 
   @Override
   public String toString() {
-    return name;
+    return this.name;
   }
 }

@@ -60,9 +60,8 @@ import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.map.list.DataObjectListCellRenderer;
 import com.revolsys.swing.menu.PopupMenu;
 
-public class DataStoreQueryTextField extends TextField implements
-  DocumentListener, KeyListener, MouseListener, FocusListener,
-  ListDataListener, ItemSelectable, Field, ListSelectionListener,
+public class DataStoreQueryTextField extends TextField implements DocumentListener, KeyListener,
+  MouseListener, FocusListener, ListDataListener, ItemSelectable, Field, ListSelectionListener,
   HighlightPredicate {
   private static final Icon ICON_DELETE = Icons.getIcon("delete");
 
@@ -86,18 +85,16 @@ public class DataStoreQueryTextField extends TextField implements
 
   public Record selectedItem;
 
-  private final Map<String, String> valueToDisplayMap = new LruMap<String, String>(
-    100);
+  private final Map<String, String> valueToDisplayMap = new LruMap<String, String>(100);
 
   private Object originalValue;
 
   private boolean below = false;
 
-  public DataStoreQueryTextField(final RecordDefinition metaData,
-    final String displayAttributeName) {
+  public DataStoreQueryTextField(final RecordDefinition metaData, final String displayAttributeName) {
     this(metaData, displayAttributeName, new Query(metaData, new Equal(
-      F.upper(displayAttributeName), new Value(null))), new Query(metaData,
-      Q.iLike(displayAttributeName, "")));
+      F.upper(displayAttributeName), new Value(null))), new Query(metaData, Q.iLike(
+      displayAttributeName, "")));
 
   }
 
@@ -123,25 +120,21 @@ public class DataStoreQueryTextField extends TextField implements
     this.oldValueItem.setHorizontalAlignment(SwingConstants.LEFT);
     this.menu.add(this.oldValueItem, BorderLayout.NORTH);
 
-    this.listModel = new DataStoreQueryListModel(this.dataStore,
-      displayAttributeName, queries);
+    this.listModel = new DataStoreQueryListModel(this.dataStore, displayAttributeName, queries);
     this.list = new JXList(this.listModel);
-    this.list.setCellRenderer(new DataObjectListCellRenderer(
-      displayAttributeName));
+    this.list.setCellRenderer(new DataObjectListCellRenderer(displayAttributeName));
     this.list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     this.list.setHighlighters(HighlighterFactory.createSimpleStriping(Color.LIGHT_GRAY));
     this.list.addMouseListener(this);
     this.listModel.addListDataListener(this);
     this.list.addListSelectionListener(this);
-    this.list.addHighlighter(new ColorHighlighter(this, WebColors.Blue,
-      WebColors.White));
+    this.list.addHighlighter(new ColorHighlighter(this, WebColors.Blue, WebColors.White));
 
     this.menu.add(new JScrollPane(this.list), BorderLayout.CENTER);
     this.menu.setFocusable(false);
     this.menu.setBorderPainted(true);
     this.menu.setBorder(BorderFactory.createCompoundBorder(
-      BorderFactory.createLineBorder(Color.DARK_GRAY),
-      BorderFactory.createEmptyBorder(1, 2, 1, 2)));
+      BorderFactory.createLineBorder(Color.DARK_GRAY), BorderFactory.createEmptyBorder(1, 2, 1, 2)));
 
     setEditable(true);
     PopupMenu.getPopupMenuFactory(this);
@@ -154,11 +147,11 @@ public class DataStoreQueryTextField extends TextField implements
 
   }
 
-  public DataStoreQueryTextField(final RecordStore dataStore,
-    final String typeName, final String displayAttributeName) {
-    this(dataStore.getRecordDefinition(typeName), displayAttributeName, new Query(
-      typeName, new Equal(F.upper(displayAttributeName), new Value(null))),
-      new Query(typeName, Q.iLike(displayAttributeName, "")));
+  public DataStoreQueryTextField(final RecordStore dataStore, final String typeName,
+    final String displayAttributeName) {
+    this(dataStore.getRecordDefinition(typeName), displayAttributeName, new Query(typeName,
+      new Equal(F.upper(displayAttributeName), new Value(null))), new Query(typeName, Q.iLike(
+      displayAttributeName, "")));
   }
 
   @Override
@@ -186,8 +179,8 @@ public class DataStoreQueryTextField extends TextField implements
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -209,8 +202,8 @@ public class DataStoreQueryTextField extends TextField implements
     final String stringValue = StringConverterRegistry.toString(value);
     String displayText = this.valueToDisplayMap.get(stringValue);
     if (!StringUtils.hasText(displayText) && StringUtils.hasText(stringValue)) {
-      final Record record = this.dataStore.queryFirst(Query.equal(
-        this.metaData, this.idAttributeName, stringValue));
+      final Record record = this.dataStore.queryFirst(Query.equal(this.metaData,
+        this.idAttributeName, stringValue));
       if (record == null) {
         displayText = stringValue;
       } else {
@@ -271,8 +264,7 @@ public class DataStoreQueryTextField extends TextField implements
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     final Record object = this.listModel.getElementAt(adapter.row);
     final String text = getText();
     final String value = object.getString(this.displayAttributeName);
@@ -392,8 +384,8 @@ public class DataStoreQueryTextField extends TextField implements
     if (this.selectedItem != null) {
       final Record oldValue = this.selectedItem;
       this.selectedItem = null;
-      fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED,
-        oldValue, ItemEvent.DESELECTED));
+      fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, oldValue,
+        ItemEvent.DESELECTED));
     }
     final String text = getText();
     this.listModel.setSearchText(text);
@@ -401,8 +393,8 @@ public class DataStoreQueryTextField extends TextField implements
       showMenu();
       this.selectedItem = this.listModel.getSelectedItem();
       if (this.selectedItem != null) {
-        fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED,
-          this.selectedItem, ItemEvent.SELECTED));
+        fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this.selectedItem,
+          ItemEvent.SELECTED));
       }
     }
   }
@@ -455,8 +447,8 @@ public class DataStoreQueryTextField extends TextField implements
       int y;
       if (this.below) {
         x = 0;
-        final Insets screenInsets = Toolkit.getDefaultToolkit()
-          .getScreenInsets(getGraphicsConfiguration());
+        final Insets screenInsets = Toolkit.getDefaultToolkit().getScreenInsets(
+          getGraphicsConfiguration());
 
         final Rectangle bounds = getGraphicsConfiguration().getBounds();
         final int menuHeight = this.menu.getBounds().height;

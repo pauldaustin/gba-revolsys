@@ -18,8 +18,7 @@ public class DirectedEdge extends EdgeEnd {
   public static int depthFactor(final int currLocation, final int nextLocation) {
     if (currLocation == Location.EXTERIOR && nextLocation == Location.INTERIOR) {
       return 1;
-    } else if (currLocation == Location.INTERIOR
-      && nextLocation == Location.EXTERIOR) {
+    } else if (currLocation == Location.INTERIOR && nextLocation == Location.EXTERIOR) {
       return -1;
     }
     return 0;
@@ -67,19 +66,19 @@ public class DirectedEdge extends EdgeEnd {
    * Compute the label in the appropriate orientation for this DirEdge
    */
   private void computeDirectedLabel() {
-    label = new Label(edge.getLabel());
-    if (!isForward) {
-      label.flip();
+    this.label = new Label(this.edge.getLabel());
+    if (!this.isForward) {
+      this.label.flip();
     }
   }
 
   public int getDepth(final int position) {
-    return depth[position];
+    return this.depth[position];
   }
 
   public int getDepthDelta() {
-    int depthDelta = edge.getDepthDelta();
-    if (!isForward) {
+    int depthDelta = this.edge.getDepthDelta();
+    if (!this.isForward) {
       depthDelta = -depthDelta;
     }
     return depthDelta;
@@ -87,41 +86,41 @@ public class DirectedEdge extends EdgeEnd {
 
   @Override
   public Edge getEdge() {
-    return edge;
+    return this.edge;
   }
 
   public EdgeRing getEdgeRing() {
-    return edgeRing;
+    return this.edgeRing;
   }
 
   public EdgeRing getMinEdgeRing() {
-    return minEdgeRing;
+    return this.minEdgeRing;
   }
 
   public DirectedEdge getNext() {
-    return next;
+    return this.next;
   }
 
   public DirectedEdge getNextMin() {
-    return nextMin;
+    return this.nextMin;
   }
 
   /**
    * Each Edge gives rise to a pair of symmetric DirectedEdges, in opposite
    * directions.
-   * 
+   *
    * @return the DirectedEdge for the same Edge but in the opposite direction
    */
   public DirectedEdge getSym() {
-    return sym;
+    return this.sym;
   }
 
   public boolean isForward() {
-    return isForward;
+    return this.isForward;
   }
 
   public boolean isInResult() {
-    return isInResult;
+    return this.isInResult;
   }
 
   /**
@@ -130,14 +129,13 @@ public class DirectedEdge extends EdgeEnd {
    * <li>its label is an Area label for both Geometries
    * <li>and for each Geometry both sides are in the interior.
    * </ul>
-   * 
+   *
    * @return true if this is an interior Area edge
    */
   public boolean isInteriorAreaEdge() {
     boolean isInteriorAreaEdge = true;
     for (int i = 0; i < 2; i++) {
-      if (!(label.isArea(i)
-        && label.getLocation(i, Position.LEFT) == Location.INTERIOR && label.getLocation(
+      if (!(this.label.isArea(i) && this.label.getLocation(i, Position.LEFT) == Location.INTERIOR && this.label.getLocation(
         i, Position.RIGHT) == Location.INTERIOR)) {
         isInteriorAreaEdge = false;
       }
@@ -153,27 +151,27 @@ public class DirectedEdge extends EdgeEnd {
    * </ul>
    */
   public boolean isLineEdge() {
-    final boolean isLine = label.isLine(0) || label.isLine(1);
-    final boolean isExteriorIfArea0 = !label.isArea(0)
-      || label.allPositionsEqual(0, Location.EXTERIOR);
-    final boolean isExteriorIfArea1 = !label.isArea(1)
-      || label.allPositionsEqual(1, Location.EXTERIOR);
+    final boolean isLine = this.label.isLine(0) || this.label.isLine(1);
+    final boolean isExteriorIfArea0 = !this.label.isArea(0)
+      || this.label.allPositionsEqual(0, Location.EXTERIOR);
+    final boolean isExteriorIfArea1 = !this.label.isArea(1)
+      || this.label.allPositionsEqual(1, Location.EXTERIOR);
 
     return isLine && isExteriorIfArea0 && isExteriorIfArea1;
   }
 
   public boolean isVisited() {
-    return isVisited;
+    return this.isVisited;
   }
 
   @Override
   public void print(final PrintStream out) {
     super.print(out);
-    out.print(" " + depth[Position.LEFT] + "/" + depth[Position.RIGHT]);
+    out.print(" " + this.depth[Position.LEFT] + "/" + this.depth[Position.RIGHT]);
     out.print(" (" + getDepthDelta() + ")");
     // out.print(" " + this.hashCode());
     // if (next != null) out.print(" next:" + next.hashCode());
-    if (isInResult) {
+    if (this.isInResult) {
       out.print(" inResult");
     }
   }
@@ -181,26 +179,25 @@ public class DirectedEdge extends EdgeEnd {
   public void printEdge(final PrintStream out) {
     print(out);
     out.print(" ");
-    if (isForward) {
-      edge.print(out);
+    if (this.isForward) {
+      this.edge.print(out);
     } else {
-      edge.printReverse(out);
+      this.edge.printReverse(out);
     }
   }
 
   public void setDepth(final int position, final int depthVal) {
-    if (depth[position] != -999) {
+    if (this.depth[position] != -999) {
       // if (depth[position] != depthVal) {
       // Debug.print(this);
       // }
-      if (depth[position] != depthVal) {
-        throw new TopologyException("assigned depths do not match",
-          getCoordinate());
+      if (this.depth[position] != depthVal) {
+        throw new TopologyException("assigned depths do not match", getCoordinate());
         // Assert.isTrue(depth[position] == depthVal,
         // "assigned depths do not match at " + getCoordinate());
       }
     }
-    depth[position] = depthVal;
+    this.depth[position] = depthVal;
   }
 
   /**
@@ -211,7 +208,7 @@ public class DirectedEdge extends EdgeEnd {
   public void setEdgeDepths(final int position, final int depth) {
     // get the depth transition delta from R to L for this directed Edge
     int depthDelta = getEdge().getDepthDelta();
-    if (!isForward) {
+    if (!this.isForward) {
       depthDelta = -depthDelta;
     }
 
@@ -251,7 +248,7 @@ public class DirectedEdge extends EdgeEnd {
   }
 
   public void setSym(final DirectedEdge de) {
-    sym = de;
+    this.sym = de;
   }
 
   public void setVisited(final boolean isVisited) {
@@ -265,7 +262,7 @@ public class DirectedEdge extends EdgeEnd {
    */
   public void setVisitedEdge(final boolean isVisited) {
     setVisited(isVisited);
-    sym.setVisited(isVisited);
+    this.sym.setVisited(isVisited);
   }
 
 }

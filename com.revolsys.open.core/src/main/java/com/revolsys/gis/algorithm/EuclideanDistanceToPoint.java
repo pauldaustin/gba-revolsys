@@ -78,9 +78,9 @@ public class EuclideanDistanceToPoint {
     final PointPairDistance ptDist) {
     final Coordinate[] coords = line.getCoordinates();
     for (int i = 0; i < coords.length - 1; i++) {
-      tempSegment.setCoordinates(coords[i], coords[i + 1]);
+      this.tempSegment.setCoordinates(coords[i], coords[i + 1]);
       // this is somewhat inefficient - could do better
-      final Coordinate closestPt = tempSegment.closestPoint(pt);
+      final Coordinate closestPt = this.tempSegment.closestPoint(pt);
       ptDist.setMinimum(closestPt, pt);
     }
   }

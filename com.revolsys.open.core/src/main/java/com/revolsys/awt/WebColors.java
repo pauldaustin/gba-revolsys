@@ -302,21 +302,20 @@ public class WebColors {
             final Color color = (Color)field.get(null);
             COLOR_NAMES.put(color, field.getName());
           } catch (final Throwable e) {
-            LoggerFactory.getLogger(WebColors.class).error(
-              "Unable to get field value: " + field, e);
+            LoggerFactory.getLogger(WebColors.class)
+              .error("Unable to get field value: " + field, e);
           }
         }
       }
     }
   }
 
-  public static String getName(final Color color) {
-    final Color newColor = new Color(color.getRed(), color.getGreen(),
-      color.getBlue());
-    return COLOR_NAMES.get(newColor);
-  }
-
   public static Color getColorWithOpacity(final Color color, final int opacity) {
     return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+  }
+
+  public static String getName(final Color color) {
+    final Color newColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
+    return COLOR_NAMES.get(newColor);
   }
 }

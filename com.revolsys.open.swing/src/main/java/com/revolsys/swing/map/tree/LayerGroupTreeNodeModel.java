@@ -8,8 +8,7 @@ import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.tree.renderer.LayerGroupTreeCellRenderer;
 import com.revolsys.swing.tree.model.node.AbstractObjectTreeNodeModel;
 
-public class LayerGroupTreeNodeModel extends
-  AbstractObjectTreeNodeModel<LayerGroup, Layer> {
+public class LayerGroupTreeNodeModel extends AbstractObjectTreeNodeModel<LayerGroup, Layer> {
 
   public LayerGroupTreeNodeModel() {
     setSupportedClasses(LayerGroup.class);
@@ -19,8 +18,7 @@ public class LayerGroupTreeNodeModel extends
   }
 
   @Override
-  public int addChild(final LayerGroup parent, final int index,
-    final Layer layer) {
+  public int addChild(final LayerGroup parent, final int index, final Layer layer) {
     parent.add(index, layer);
     return index;
   }

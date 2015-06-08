@@ -6,7 +6,7 @@ import com.vividsolutions.jts.algorithm.Angle;
 
 /**
  * The EdgeComparitor class is used to return edges in a clockwise order.
- * 
+ *
  * @author Paul Austin
  * @param <T> The type of object stored on the edges in the graph.
  */
@@ -35,7 +35,7 @@ public class EdgeFromAngleComparator<T> implements Comparator<Edge<T>> {
    * <li>Otherwise the exit angles {@link Edge#getExitAngle(Node)} from the node
    * for the two edges are compared. </p>
    * </ol>
-   * 
+   *
    * @param edge1 The first edge.
    * @param edge2 The second edge.
    * @see Angle#getTurn(double, double)

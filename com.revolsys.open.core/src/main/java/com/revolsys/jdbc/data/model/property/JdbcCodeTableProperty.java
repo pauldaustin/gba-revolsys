@@ -34,14 +34,14 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
   @Override
   protected synchronized Object createId(final List<Object> values) {
     try {
-      final Connection connection = JdbcUtils.getConnection(dataSource);
+      final Connection connection = JdbcUtils.getConnection(this.dataSource);
       try {
         Object id = loadId(values, false);
         boolean retry = true;
         while (id == null) {
-          final PreparedStatement statement = connection.prepareStatement(insertSql);
+          final PreparedStatement statement = connection.prepareStatement(this.insertSql);
           try {
-            id = dataStore.getNextPrimaryKey(getRecordDefinition());
+            id = this.dataStore.getNextPrimaryKey(getRecordDefinition());
             int index = 1;
             index = JdbcUtils.setValue(statement, index, id);
             for (int i = 0; i < getValueFieldNames().size(); i++) {
@@ -56,8 +56,7 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
               retry = false;
               id = loadId(values, false);
             } else {
-              throw new RuntimeException(tableName
-                + ": Unable to create ID for  " + values, e);
+              throw new RuntimeException(this.tableName + ": Unable to create ID for  " + values, e);
             }
           } finally {
             JdbcUtils.close(statement);
@@ -66,30 +65,29 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
         return id;
 
       } finally {
-        JdbcUtils.release(connection, dataSource);
+        JdbcUtils.release(connection, this.dataSource);
       }
 
     } catch (final SQLException e) {
-      throw new RuntimeException(tableName + ": Unable to create ID for  "
-        + values, e);
+      throw new RuntimeException(this.tableName + ": Unable to create ID for  " + values, e);
     }
 
   }
 
   public DataSource getDataSource() {
-    return dataSource;
+    return this.dataSource;
   }
 
   @Override
   public JdbcDataObjectStore getDataStore() {
-    return dataStore;
+    return this.dataStore;
   }
 
   @Override
   public void setRecordDefinition(final RecordDefinition metaData) {
     super.setRecordDefinition(metaData);
-    dataStore = (JdbcDataObjectStore)metaData.getRecordStore();
-    dataSource = dataStore.getDataSource();
+    this.dataStore = (JdbcDataObjectStore)metaData.getRecordStore();
+    this.dataSource = this.dataStore.getDataSource();
     if (metaData != null) {
       this.tableName = JdbcUtils.getQualifiedTableName(metaData.getPath());
 
@@ -98,28 +96,28 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
       if (!StringUtils.hasText(idColumn)) {
         idColumn = metaData.getFieldName(0);
       }
-      this.insertSql = "INSERT INTO " + tableName + " (" + idColumn;
+      this.insertSql = "INSERT INTO " + this.tableName + " (" + idColumn;
       for (int i = 0; i < valueAttributeNames.size(); i++) {
         final String columnName = valueAttributeNames.get(i);
         this.insertSql += ", " + columnName;
       }
-      if (useAuditColumns) {
-        insertSql += ", WHO_CREATED, WHEN_CREATED, WHO_UPDATED, WHEN_UPDATED";
+      if (this.useAuditColumns) {
+        this.insertSql += ", WHO_CREATED, WHEN_CREATED, WHO_UPDATED, WHEN_UPDATED";
       }
-      insertSql += ") VALUES (?";
+      this.insertSql += ") VALUES (?";
       for (int i = 0; i < valueAttributeNames.size(); i++) {
-        insertSql += ", ?";
+        this.insertSql += ", ?";
       }
-      if (useAuditColumns) {
-        if (dataStore.getClass()
+      if (this.useAuditColumns) {
+        if (this.dataStore.getClass()
           .getName()
           .equals("com.revolsys.gis.oracle.io.OracleDataObjectStore")) {
-          insertSql += ", USER, SYSDATE, USER, SYSDATE";
+          this.insertSql += ", USER, SYSDATE, USER, SYSDATE";
         } else {
-          insertSql += ", current_user, current_timestamp, current_user, current_timestamp";
+          this.insertSql += ", current_user, current_timestamp, current_user, current_timestamp";
         }
       }
-      insertSql += ")";
+      this.insertSql += ")";
     }
   }
 

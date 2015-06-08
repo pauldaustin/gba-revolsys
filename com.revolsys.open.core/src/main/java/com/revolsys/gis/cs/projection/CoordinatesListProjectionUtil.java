@@ -11,10 +11,8 @@ public class CoordinatesListProjectionUtil {
     final CoordinatesOperation operation) {
     final int numAxis = coordinates.getNumAxis();
     final int size = coordinates.size();
-    final CoordinatesList newCoordinates = new DoubleCoordinatesList(size,
-      numAxis);
-    final CoordinatesListCoordinates sourceCoordinates = new CoordinatesListCoordinates(
-      coordinates);
+    final CoordinatesList newCoordinates = new DoubleCoordinatesList(size, numAxis);
+    final CoordinatesListCoordinates sourceCoordinates = new CoordinatesListCoordinates(coordinates);
     final CoordinatesListCoordinates targetCoordinates = new CoordinatesListCoordinates(
       newCoordinates);
     for (int i = 0; i < size; i++) {
@@ -26,8 +24,7 @@ public class CoordinatesListProjectionUtil {
   }
 
   public static CoordinatesList perform(final CoordinatesList coordinates,
-    final CoordinateSystem fromCoordinateSystem,
-    final CoordinateSystem toCoordinateSystem) {
+    final CoordinateSystem fromCoordinateSystem, final CoordinateSystem toCoordinateSystem) {
     final CoordinatesOperation operation = ProjectionFactory.getCoordinatesOperation(
       fromCoordinateSystem, toCoordinateSystem);
     if (operation == null) {

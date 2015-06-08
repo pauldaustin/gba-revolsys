@@ -24,9 +24,9 @@ public class XbaseSchemaReader {
   }
 
   protected RecordDefinition getMetaData() throws IOException {
-    if (metaData == null) {
-      metaData = new RecordDefinitionImpl(typePath);
-      int b = in.read();
+    if (this.metaData == null) {
+      this.metaData = new RecordDefinitionImpl(this.typePath);
+      int b = this.in.read();
       while (b != 0x0D) {
         final StringBuffer fieldName = new StringBuffer();
         boolean endOfName = false;
@@ -38,24 +38,23 @@ public class XbaseSchemaReader {
             endOfName = true;
           }
           if (i != 10) {
-            b = in.read();
+            b = this.in.read();
           }
         }
-        final char fieldType = (char)in.read();
-        in.skipBytes(4);
-        final int length = in.read();
-        in.skipBytes(15);
-        b = in.read();
+        final char fieldType = (char)this.in.read();
+        this.in.skipBytes(4);
+        final int length = this.in.read();
+        this.in.skipBytes(15);
+        b = this.in.read();
         final FieldDefinition field = new FieldDefinition(fieldName.toString(),
           fieldName.toString(), fieldType, length);
-        if (fieldDefinitions != null) {
-          fieldDefinitions.add(field);
+        if (this.fieldDefinitions != null) {
+          this.fieldDefinitions.add(field);
         }
-        metaData.addField(fieldName.toString(), field.getDataType(),
-          length, true);
+        this.metaData.addField(fieldName.toString(), field.getDataType(), length, true);
       }
     }
-    return metaData;
+    return this.metaData;
   }
 
 }

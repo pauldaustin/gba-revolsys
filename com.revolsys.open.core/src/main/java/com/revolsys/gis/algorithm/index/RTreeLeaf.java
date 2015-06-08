@@ -11,7 +11,7 @@ import com.vividsolutions.jts.geom.Envelope;
 public class RTreeLeaf<T> extends RTreeNode<T> {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 5073275000676209987L;
 
@@ -30,34 +30,33 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
   }
 
   public void add(final Envelope envelope, final T object) {
-    envelopes[size] = envelope;
-    objects[size] = object;
-    size++;
+    this.envelopes[this.size] = envelope;
+    this.objects[this.size] = object;
+    this.size++;
     expandToInclude(envelope);
   }
 
   @SuppressWarnings("unchecked")
   public T getObject(final int index) {
-    return (T)objects[index];
+    return (T)this.objects[index];
   }
 
   public int getSize() {
-    return size;
+    return this.size;
   }
 
   @Override
-  public boolean remove(final LinkedList<RTreeNode<T>> path,
-    final Envelope envelope, final T object) {
-    for (int i = 0; i < size; i++) {
-      final Envelope envelope1 = envelopes[i];
+  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope, final T object) {
+    for (int i = 0; i < this.size; i++) {
+      final Envelope envelope1 = this.envelopes[i];
       final T object1 = getObject(i);
       if (object1 == object) {
         if (envelope1.equals(envelope)) {
-          System.arraycopy(envelopes, i + 1, envelopes, i, size - i - 1);
-          envelopes[size - 1] = null;
-          System.arraycopy(objects, i + 1, objects, i, size - i - 1);
-          objects[size - 1] = null;
-          size--;
+          System.arraycopy(this.envelopes, i + 1, this.envelopes, i, this.size - i - 1);
+          this.envelopes[this.size - 1] = null;
+          System.arraycopy(this.objects, i + 1, this.objects, i, this.size - i - 1);
+          this.objects[this.size - 1] = null;
+          this.size--;
           path.add(this);
           updateEnvelope();
           return true;
@@ -71,18 +70,18 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
 
   @SuppressWarnings("unchecked")
   public List<RTreeNode<T>> split(final Envelope envelope, final T object) {
-    final RTreeLeaf<T> leaf1 = new RTreeLeaf<T>(objects.length);
-    final RTreeLeaf<T> leaf2 = new RTreeLeaf<T>(objects.length);
+    final RTreeLeaf<T> leaf1 = new RTreeLeaf<T>(this.objects.length);
+    final RTreeLeaf<T> leaf2 = new RTreeLeaf<T>(this.objects.length);
 
     // TODO Add some ordering to the results
-    final int midPoint = (int)Math.ceil(size / 2.0);
+    final int midPoint = (int)Math.ceil(this.size / 2.0);
     for (int i = 0; i <= midPoint; i++) {
-      final Envelope envelope1 = envelopes[i];
+      final Envelope envelope1 = this.envelopes[i];
       final T object1 = getObject(i);
       leaf1.add(envelope1, object1);
     }
-    for (int i = midPoint + 1; i < size; i++) {
-      final Envelope envelope1 = envelopes[i];
+    for (int i = midPoint + 1; i < this.size; i++) {
+      final Envelope envelope1 = this.envelopes[i];
       final T object1 = getObject(i);
       leaf2.add(envelope1, object1);
     }
@@ -93,17 +92,16 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
   @Override
   protected void updateEnvelope() {
     init();
-    for (int i = 0; i < size; i++) {
-      final Envelope envelope = envelopes[i];
+    for (int i = 0; i < this.size; i++) {
+      final Envelope envelope = this.envelopes[i];
       expandToInclude(envelope);
     }
   }
 
   @Override
-  public boolean visit(final Envelope envelope, final Filter<T> filter,
-    final Visitor<T> visitor) {
-    for (int i = 0; i < size; i++) {
-      final Envelope objectEnvelope = envelopes[i];
+  public boolean visit(final Envelope envelope, final Filter<T> filter, final Visitor<T> visitor) {
+    for (int i = 0; i < this.size; i++) {
+      final Envelope objectEnvelope = this.envelopes[i];
       if (envelope.intersects(objectEnvelope)) {
         final T object = getObject(i);
         if (filter.accept(object)) {
@@ -118,8 +116,8 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
 
   @Override
   public boolean visit(final Envelope envelope, final Visitor<T> visitor) {
-    for (int i = 0; i < size; i++) {
-      final Envelope objectEnvelope = envelopes[i];
+    for (int i = 0; i < this.size; i++) {
+      final Envelope objectEnvelope = this.envelopes[i];
       if (envelope.intersects(objectEnvelope)) {
         final T object = getObject(i);
         if (!visitor.visit(object)) {
@@ -132,7 +130,7 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
 
   @Override
   public boolean visit(final Visitor<T> visitor) {
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < this.size; i++) {
       final T object = getObject(i);
       if (!visitor.visit(object)) {
         return false;

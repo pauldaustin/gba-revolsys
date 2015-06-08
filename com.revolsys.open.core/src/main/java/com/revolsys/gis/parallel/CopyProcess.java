@@ -7,8 +7,8 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
@@ -30,30 +30,28 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
 
   protected Record copy(final Record object) {
     Record targetObject;
-    if (metaData == null) {
+    if (this.metaData == null) {
       targetObject = object;
     } else {
-      targetObject = new ArrayRecord(metaData);
-      for (final String attributeName : metaData.getFieldNames()) {
+      targetObject = new ArrayRecord(this.metaData);
+      for (final String attributeName : this.metaData.getFieldNames()) {
         copyAttribute(object, attributeName, targetObject, attributeName);
       }
-      if (attributeMap != null) {
-        for (final Entry<String, String> mapping : attributeMap.entrySet()) {
+      if (this.attributeMap != null) {
+        for (final Entry<String, String> mapping : this.attributeMap.entrySet()) {
           final String sourceAttributeName = mapping.getKey();
           final String targetAttributeName = mapping.getValue();
-          copyAttribute(object, sourceAttributeName, targetObject,
-            targetAttributeName);
+          copyAttribute(object, sourceAttributeName, targetObject, targetAttributeName);
         }
       }
     }
     return targetObject;
   }
 
-  private void copyAttribute(final Record sourceObject,
-    final String sourceAttributeName, final Record targetObject,
-    final String targetAttributeName) {
+  private void copyAttribute(final Record sourceObject, final String sourceAttributeName,
+    final Record targetObject, final String targetAttributeName) {
     Object value = sourceObject.getValueByPath(sourceAttributeName);
-    final Map<Object, Object> valueMap = valueMaps.get(targetAttributeName);
+    final Map<Object, Object> valueMap = this.valueMaps.get(targetAttributeName);
     if (valueMap != null) {
       final Object mappedValue = valueMap.get(value);
       if (mappedValue != null) {
@@ -64,37 +62,36 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
   }
 
   public Map<String, String> getAttributeMap() {
-    return attributeMap;
+    return this.attributeMap;
   }
 
   public RecordDefinition getMetaData() {
-    return metaData;
+    return this.metaData;
   }
 
   public RecordDefinitionFactory getMetaDataFactory() {
-    return metaDataFactory;
+    return this.metaDataFactory;
   }
 
   public String getTypeName() {
-    return typeName;
+    return this.typeName;
   }
 
   public Map<String, Map<Object, Object>> getValueMaps() {
-    return valueMaps;
+    return this.valueMaps;
   }
 
   @Override
   @PostConstruct
   protected void init() {
     super.init();
-    if (metaData == null) {
-      metaData = metaDataFactory.getRecordDefinition(typeName);
+    if (this.metaData == null) {
+      this.metaData = this.metaDataFactory.getRecordDefinition(this.typeName);
     }
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
     final Record targetObject = copy(object);
     out.write(targetObject);
   }

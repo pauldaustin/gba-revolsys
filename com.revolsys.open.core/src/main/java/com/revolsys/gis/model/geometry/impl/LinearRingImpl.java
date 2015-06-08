@@ -7,8 +7,7 @@ public class LinearRingImpl extends LineStringImpl implements LinearRing {
 
   private static final long serialVersionUID = 1L;
 
-  public LinearRingImpl(final GeometryFactoryImpl geometryFactory,
-    final CoordinatesList points) {
+  public LinearRingImpl(final GeometryFactoryImpl geometryFactory, final CoordinatesList points) {
     super(geometryFactory, points);
     // TODO check closed and simple
   }

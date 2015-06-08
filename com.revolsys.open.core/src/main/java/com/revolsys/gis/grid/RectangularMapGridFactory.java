@@ -31,12 +31,10 @@ public class RectangularMapGridFactory {
     addGrid("BCGS 1:1 000", Bcgs1000RectangularMapGrid.class);
     addGrid("BCGS 1:500", Bcgs500RectangularMapGrid.class);
     addGrid("MTO", MtoRectangularMapGrid.class);
-    gridNames = Collections.unmodifiableList(new ArrayList<String>(
-      gridClassNamesByName.keySet()));
+    gridNames = Collections.unmodifiableList(new ArrayList<String>(gridClassNamesByName.keySet()));
   }
 
-  private static void addGrid(final String name,
-    final Class<? extends RectangularMapGrid> gridClass) {
+  private static void addGrid(final String name, final Class<? extends RectangularMapGrid> gridClass) {
     final String className = gridClass.getName();
     gridClassNamesByName.put(name, className);
 
@@ -55,8 +53,7 @@ public class RectangularMapGridFactory {
     return null;
   }
 
-  public static RectangularMapGrid getGrid(final String name,
-    final int inverseScale) {
+  public static RectangularMapGrid getGrid(final String name, final int inverseScale) {
     if (name.equals("NTS")) {
       switch (inverseScale) {
         case 1000000:

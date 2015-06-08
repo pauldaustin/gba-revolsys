@@ -10,7 +10,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public interface Record extends Map<String, Object>, Comparable<Record> {
   /**
    * Create a clone of the data object.
-   * 
+   *
    * @return The data object.
    */
   Record clone();
@@ -23,7 +23,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Get the factory which created the instance.
-   * 
+   *
    * @return The factory.
    */
   RecordFactory getFactory();
@@ -32,7 +32,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Get the value of the primary geometry attribute.
-   * 
+   *
    * @return The primary geometry.
    */
   <T extends Geometry> T getGeometryValue();
@@ -43,7 +43,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Get the value of the unique identifier attribute.
-   * 
+   *
    * @return The unique identifier.
    */
   <T extends Object> T getIdValue();
@@ -54,7 +54,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Get the meta data describing the DataObject and it's attributes.
-   * 
+   *
    * @return The meta data.
    */
   RecordDefinition getRecordDefinition();
@@ -69,7 +69,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Get the value of the attribute with the specified name.
-   * 
+   *
    * @param name The name of the attribute.
    * @return The attribute value.
    */
@@ -77,7 +77,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Get the value of the attribute with the specified index.
-   * 
+   *
    * @param index The index of the attribute.
    * @return The attribute value.
    */
@@ -85,12 +85,11 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   <T> T getValueByPath(CharSequence attributePath);
 
-  Map<String, Object> getValueMap(
-    final Collection<? extends CharSequence> attributeNames);
+  Map<String, Object> getValueMap(final Collection<? extends CharSequence> attributeNames);
 
   /**
    * Get the values of all attributes.
-   * 
+   *
    * @return The attribute value.
    */
   List<Object> getValues();
@@ -98,7 +97,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
   /**
    * Checks to see if the metadata for this DataObject has an attribute with the
    * specified name.
-   * 
+   *
    * @param name The name of the attribute.
    * @return True if the DataObject has an attribute with the specified name.
    */
@@ -112,14 +111,14 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Set the value of the primary geometry attribute.
-   * 
+   *
    * @param geometry The primary geometry.
    */
   void setGeometryValue(Geometry geometry);
 
   /**
    * Set the value of the unique identifier attribute.
-   * 
+   *
    * @param id The unique identifier.
    */
   void setIdValue(Object id);
@@ -128,7 +127,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Set the value of the attribute with the specified name.
-   * 
+   *
    * @param name The name of the attribute. param value The attribute value.
    * @param value The new value;
    */
@@ -136,26 +135,25 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   /**
    * Set the value of the attribute with the specified name.
-   * 
+   *
    * @param index The index of the attribute. param value The attribute value.
    * @param value The new value;
    */
   void setValue(int index, Object value);
 
-  <T> T setValueByPath(CharSequence attributePath, Record source,
-    String sourceAttributePath);
-
   void setValueByPath(CharSequence attributePath, Object value);
+
+  <T> T setValueByPath(CharSequence attributePath, Record source, String sourceAttributePath);
+
+  void setValues(Map<String, ? extends Object> values);
 
   void setValues(final Record object);
 
   void setValues(Record object, Collection<String> attributeNames);
 
-  void setValues(Map<String, ? extends Object> values);
-
   /**
    * Set the values on the object based on the values in the map.
-   * 
+   *
    * @param values The values to set.
    */
   void setValuesByPath(Map<String, ? extends Object> values);

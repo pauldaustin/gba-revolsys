@@ -21,8 +21,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class LineSegmentQuadTree {
-  public static Envelope ensureExtent(final Envelope envelope,
-    final double minExtent) {
+  public static Envelope ensureExtent(final Envelope envelope, final double minExtent) {
     double minX = envelope.getMinX();
     double maxX = envelope.getMaxX();
     double minY = envelope.getMinY();
@@ -92,8 +91,7 @@ public class LineSegmentQuadTree {
       final int segmentEndVertexIndex = segmentIndex + 1;
       final double x2 = points.getX(segmentEndVertexIndex);
       final double y2 = points.getY(segmentEndVertexIndex);
-      final int[] index = GeometryEditUtil.createVertexIndex(parentIndex,
-        segmentIndex);
+      final int[] index = GeometryEditUtil.createVertexIndex(parentIndex, segmentIndex);
       final Envelope envelope = new Envelope(x1, x2, y1, y2);
       insert(envelope, index);
       x1 = x2;
@@ -103,28 +101,28 @@ public class LineSegmentQuadTree {
 
   private void collectStats(final Envelope envelope) {
     final double width = envelope.getWidth();
-    if (width < minExtent && width > 0.0) {
-      minExtent = width;
+    if (width < this.minExtent && width > 0.0) {
+      this.minExtent = width;
     }
 
     final double height = envelope.getHeight();
-    if (height < minExtent && height > 0.0) {
-      minExtent = height;
+    if (height < this.minExtent && height > 0.0) {
+      this.minExtent = height;
     }
   }
 
   public int depth() {
-    return root.depth();
+    return this.root.depth();
   }
 
   public List<LineSegment> getAll() {
     final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>();
-    root.visit(this, visitor);
+    this.root.visit(this, visitor);
     return visitor.getList();
   }
 
   protected Envelope getEnvelope(final int[] index) {
-    final CoordinatesList points = GeometryEditUtil.getPoints(geometry, index);
+    final CoordinatesList points = GeometryEditUtil.getPoints(this.geometry, index);
     final int vertexIndex = GeometryEditUtil.getVertexIndex(index);
     final double x1 = points.getX(vertexIndex);
     final double y1 = points.getY(vertexIndex);
@@ -145,27 +143,24 @@ public class LineSegmentQuadTree {
   }
 
   protected LineSegment getLineSegment(final int[] index) {
-    final CoordinatesList points = GeometryEditUtil.getPoints(geometry, index);
+    final CoordinatesList points = GeometryEditUtil.getPoints(this.geometry, index);
     final int vertexIndex = GeometryEditUtil.getVertexIndex(index);
     final Coordinates p1 = points.get(vertexIndex);
     final Coordinates p2 = points.get(vertexIndex + 1);
-    return new LineSegment(GeometryFactory.getFactory(geometry), p1, p2);
+    return new LineSegment(GeometryFactory.getFactory(this.geometry), p1, p2);
   }
 
   public int getSize() {
-    return size;
+    return this.size;
   }
 
-  public List<LineSegment> getWithin(final BoundingBox boundingBox,
-    final Filter<LineSegment> filter) {
-    final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>(
-      filter);
+  public List<LineSegment> getWithin(final BoundingBox boundingBox, final Filter<LineSegment> filter) {
+    final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>(filter);
     visit(boundingBox, visitor);
     return visitor.getList();
   }
 
-  public List<LineSegment> getWithinDistance(final Coordinates point,
-    final double maxDistance) {
+  public List<LineSegment> getWithinDistance(final Coordinates point, final double maxDistance) {
     BoundingBox boundingBox = new BoundingBox(point);
     boundingBox = boundingBox.expand(maxDistance);
     final LineSegmentCoordinateDistanceFilter filter = new LineSegmentCoordinateDistanceFilter(
@@ -174,19 +169,18 @@ public class LineSegmentQuadTree {
   }
 
   public void insert(final Envelope envelope, final int[] index) {
-    size++;
+    this.size++;
     collectStats(envelope);
-    final Envelope insertEnv = ensureExtent(envelope, minExtent);
-    root.insert(insertEnv, index);
+    final Envelope insertEnv = ensureExtent(envelope, this.minExtent);
+    this.root.insert(insertEnv, index);
   }
 
   public int size() {
     return getSize();
   }
 
-  public void visit(final BoundingBox boundingBox,
-    final Visitor<LineSegment> visitor) {
-    root.visit(this, boundingBox, visitor);
+  public void visit(final BoundingBox boundingBox, final Visitor<LineSegment> visitor) {
+    this.root.visit(this, boundingBox, visitor);
   }
 
 }

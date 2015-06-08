@@ -4,8 +4,7 @@ import java.util.Comparator;
 
 import com.revolsys.data.record.schema.RecordDefinition;
 
-public class DataObjectMetaDataNameComparator implements
-  Comparator<RecordDefinition> {
+public class DataObjectMetaDataNameComparator implements Comparator<RecordDefinition> {
   public static int compareTypeNames(final RecordDefinition metaData1,
     final RecordDefinition metaData2) {
     final String typePath1 = metaData1.getPath();
@@ -18,8 +17,7 @@ public class DataObjectMetaDataNameComparator implements
   }
 
   @Override
-  public int compare(final RecordDefinition metaData1,
-    final RecordDefinition metaData2) {
+  public int compare(final RecordDefinition metaData1, final RecordDefinition metaData2) {
     return compareTypeNames(metaData1, metaData2);
   }
 }

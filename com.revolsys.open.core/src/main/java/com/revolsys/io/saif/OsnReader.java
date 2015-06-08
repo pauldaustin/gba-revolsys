@@ -12,8 +12,8 @@ import java.util.zip.ZipFile;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.saif.util.OsnConverter;
@@ -39,29 +39,27 @@ public class OsnReader implements DataObjectIterator {
 
   private ZipFile zipFile;
 
-  public OsnReader(final RecordDefinitionFactory metaDataFactory,
-    final File directory, final String fileName, final int srid)
-    throws IOException {
+  public OsnReader(final RecordDefinitionFactory metaDataFactory, final File directory,
+    final String fileName, final int srid) throws IOException {
     this.metaDataFactory = metaDataFactory;
     this.directory = directory;
     this.fileName = fileName;
-    converters = new OsnConverterRegistry(srid);
+    this.converters = new OsnConverterRegistry(srid);
     open();
   }
 
-  public OsnReader(final RecordDefinitionFactory metaDataFactory,
-    final ZipFile zipFile, final String fileName, final int srid)
-    throws IOException {
+  public OsnReader(final RecordDefinitionFactory metaDataFactory, final ZipFile zipFile,
+    final String fileName, final int srid) throws IOException {
     this.metaDataFactory = metaDataFactory;
     this.fileName = fileName;
     this.zipFile = zipFile;
-    converters = new OsnConverterRegistry(srid);
+    this.converters = new OsnConverterRegistry(srid);
     open();
   }
 
   /**
    * Get an attribute definition from the iterator.
-   * 
+   *
    * @param dataObject
    * @param typePath TODO
    * @param iterator The OsnIterator.
@@ -69,12 +67,12 @@ public class OsnReader implements DataObjectIterator {
    * @throws IOException If an I/O error occurs.
    */
   private void addAttribute(final Record dataObject) {
-    if (osnIterator.getEventType() != OsnIterator.START_ATTRIBUTE) {
-      if (osnIterator.next() != OsnIterator.START_ATTRIBUTE) {
-        osnIterator.throwParseError("Excepecting an attribute name");
+    if (this.osnIterator.getEventType() != OsnIterator.START_ATTRIBUTE) {
+      if (this.osnIterator.next() != OsnIterator.START_ATTRIBUTE) {
+        this.osnIterator.throwParseError("Excepecting an attribute name");
       }
     }
-    final String name = osnIterator.getStringValue();
+    final String name = this.osnIterator.getStringValue();
     final Object value = getExpression();
     dataObject.setValue(name, value);
   }
@@ -82,21 +80,21 @@ public class OsnReader implements DataObjectIterator {
   @Override
   public void close() {
     try {
-      osnIterator.close();
+      this.osnIterator.close();
     } catch (final IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
 
   private Object getDataObject() {
-    final String typePath = osnIterator.getPathValue();
-    final OsnConverter converter = converters.getConverter(typePath);
+    final String typePath = this.osnIterator.getPathValue();
+    final OsnConverter converter = this.converters.getConverter(typePath);
     if (converter != null) {
-      return converter.read(osnIterator);
+      return converter.read(this.osnIterator);
     } else {
-      final RecordDefinition type = metaDataFactory.getRecordDefinition(typePath);
-      final Record dataObject = factory.createRecord(type);
-      while (osnIterator.next() != OsnIterator.END_OBJECT) {
+      final RecordDefinition type = this.metaDataFactory.getRecordDefinition(typePath);
+      final Record dataObject = this.factory.createRecord(type);
+      while (this.osnIterator.next() != OsnIterator.END_OBJECT) {
         addAttribute(dataObject);
       }
       return dataObject;
@@ -105,12 +103,12 @@ public class OsnReader implements DataObjectIterator {
 
   /**
    * Get the value of an expression from the iterator.
-   * 
+   *
    * @return The value of the expression.
    * @throws IOException If an I/O error occurs.
    */
   private Object getExpression() {
-    final Object eventType = osnIterator.next();
+    final Object eventType = this.osnIterator.next();
     if (eventType == OsnIterator.START_DEFINITION) {
       return getDataObject();
     } else if (eventType == OsnIterator.START_SET) {
@@ -122,15 +120,15 @@ public class OsnReader implements DataObjectIterator {
       processCollection(list, OsnIterator.END_LIST);
       return list;
     } else if (eventType == OsnIterator.TEXT_VALUE) {
-      return osnIterator.getValue();
+      return this.osnIterator.getValue();
     } else if (eventType == OsnIterator.NUMERIC_VALUE) {
-      return osnIterator.getValue();
+      return this.osnIterator.getValue();
     } else if (eventType == OsnIterator.BOOLEAN_VALUE) {
-      return osnIterator.getValue();
+      return this.osnIterator.getValue();
     } else if (eventType == OsnIterator.ENUM_TAG) {
-      return osnIterator.getValue();
+      return this.osnIterator.getValue();
     } else if (eventType == OsnIterator.UNKNOWN) {
-      osnIterator.throwParseError("Expected an expression");
+      this.osnIterator.throwParseError("Expected an expression");
     }
     return null;
   }
@@ -139,49 +137,48 @@ public class OsnReader implements DataObjectIterator {
    * @return the factory
    */
   public RecordFactory getFactory() {
-    return factory;
+    return this.factory;
   }
 
   /**
    * @return the fileName
    */
   public String getFileName() {
-    return fileName;
+    return this.fileName;
   }
 
   public RecordDefinitionFactory getMetaDataFactory() {
-    return metaDataFactory;
+    return this.metaDataFactory;
   }
 
   @Override
   public boolean hasNext() {
-    if (nextChecked) {
+    if (this.nextChecked) {
       return true;
-    } else if (endOfFile) {
+    } else if (this.endOfFile) {
       return false;
     } else {
-      if (osnIterator.hasNext()) {
-        Object eventType = osnIterator.getEventType();
+      if (this.osnIterator.hasNext()) {
+        Object eventType = this.osnIterator.getEventType();
         if (eventType != OsnIterator.START_DEFINITION) {
-          eventType = osnIterator.next();
+          eventType = this.osnIterator.next();
         }
         if (eventType == OsnIterator.START_DEFINITION) {
-          nextChecked = true;
+          this.nextChecked = true;
           return true;
-        } else if (eventType != OsnIterator.END_DOCUMENT
-          && eventType != OsnIterator.END_SET) {
-          osnIterator.throwParseError("Excepecting start of an object");
+        } else if (eventType != OsnIterator.END_DOCUMENT && eventType != OsnIterator.END_SET) {
+          this.osnIterator.throwParseError("Excepecting start of an object");
         }
       }
     }
-    endOfFile = true;
+    this.endOfFile = true;
     return false;
   }
 
   @Override
   public Record next() {
     if (hasNext()) {
-      nextChecked = false;
+      this.nextChecked = false;
       return (Record)getDataObject();
     } else {
       throw new NoSuchElementException();
@@ -191,10 +188,10 @@ public class OsnReader implements DataObjectIterator {
   @Override
   public void open() {
     try {
-      if (directory != null) {
-        osnIterator = new OsnIterator(directory, fileName);
+      if (this.directory != null) {
+        this.osnIterator = new OsnIterator(this.directory, this.fileName);
       } else {
-        osnIterator = new OsnIterator(zipFile, fileName);
+        this.osnIterator = new OsnIterator(this.zipFile, this.fileName);
       }
       skipToFirstDataObject();
     } catch (final IOException e) {
@@ -204,16 +201,15 @@ public class OsnReader implements DataObjectIterator {
 
   /**
    * Process a collection, loading all the values into the collection.
-   * 
+   *
    * @param collection The collection to save the objects to.
    * @param endEventType The event type indicating the end of a collection.
    * @throws IOException If an I/O error occurs.
    */
-  private void processCollection(final Collection<Object> collection,
-    final Object endEventType) {
-    while (osnIterator.getEventType() != endEventType) {
+  private void processCollection(final Collection<Object> collection, final Object endEventType) {
+    while (this.osnIterator.getEventType() != endEventType) {
       final Object value = getExpression();
-      if (value != null || osnIterator.getEventType() == OsnIterator.NULL_VALUE) {
+      if (value != null || this.osnIterator.getEventType() == OsnIterator.NULL_VALUE) {
         collection.add(value);
       }
     }
@@ -221,8 +217,7 @@ public class OsnReader implements DataObjectIterator {
 
   @Override
   public void remove() {
-    throw new UnsupportedOperationException(
-      "Removing SAIF objects is not supported");
+    throw new UnsupportedOperationException("Removing SAIF objects is not supported");
   }
 
   /**
@@ -234,46 +229,46 @@ public class OsnReader implements DataObjectIterator {
 
   /**
    * Skip all objects and attributes until the first object in the collection.
-   * 
+   *
    * @return True if an object was found.
    * @throws IOException If an I/O error occurs.
    */
   private boolean skipToFirstDataObject() throws IOException {
-    if (osnIterator.next() == OsnIterator.START_DEFINITION) {
-      final String typePath = osnIterator.getPathValue();
-      final RecordDefinitionImpl type = (RecordDefinitionImpl)metaDataFactory.getRecordDefinition(typePath);
-      final RecordDefinition spatialDataSetType = metaDataFactory.getRecordDefinition("/SpatialDataSet");
+    if (this.osnIterator.next() == OsnIterator.START_DEFINITION) {
+      final String typePath = this.osnIterator.getPathValue();
+      final RecordDefinitionImpl type = (RecordDefinitionImpl)this.metaDataFactory.getRecordDefinition(typePath);
+      final RecordDefinition spatialDataSetType = this.metaDataFactory.getRecordDefinition("/SpatialDataSet");
       if (type != null && type.isInstanceOf(spatialDataSetType)) {
-        final String oiName = osnIterator.nextAttributeName();
+        final String oiName = this.osnIterator.nextAttributeName();
 
         if (oiName != null && oiName.equals("objectIdentifier")) {
-          osnIterator.nextStringValue();
-          final String attributeName = osnIterator.nextAttributeName();
+          this.osnIterator.nextStringValue();
+          final String attributeName = this.osnIterator.nextAttributeName();
           if (attributeName != null
             && (attributeName.equals("geoComponents") || attributeName.equals("annotationComponents"))) {
-            if (osnIterator.next() == OsnIterator.START_SET) {
+            if (this.osnIterator.next() == OsnIterator.START_SET) {
               return true;
             } else {
-              osnIterator.throwParseError("Expecting a set of objects");
+              this.osnIterator.throwParseError("Expecting a set of objects");
             }
           } else {
-            osnIterator.throwParseError("Excepecting the 'geoComponents' attribute");
+            this.osnIterator.throwParseError("Excepecting the 'geoComponents' attribute");
           }
 
         } else {
-          osnIterator.throwParseError("Expecting the 'objectIdentifier' attribute");
+          this.osnIterator.throwParseError("Expecting the 'objectIdentifier' attribute");
         }
       } else {
         return true;
       }
     } else {
-      osnIterator.throwParseError("Expecting a start of an object definition");
+      this.osnIterator.throwParseError("Expecting a start of an object definition");
     }
     return false;
   }
 
   @Override
   public String toString() {
-    return fileName;
+    return this.fileName;
   }
 }

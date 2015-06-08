@@ -58,20 +58,19 @@ import com.vividsolutions.jts.algorithm.RobustDeterminant;
  * rule is that segments which can be a priori determined to <i>not</i> touch
  * the ray (i.e. by a test of their bounding box or Y-extent) do not need to be
  * counted. This allows for optimization by indexing.
- * 
+ *
  * @author Martin Davis
  */
 public class RayCrossingCounter {
   /**
    * Determines the {@link Location} of a point in a ring. This method is an
    * exemplar of how to use this class.
-   * 
+   *
    * @param coordinates the point to test
    * @param ring an array of Coordinates forming a ring
    * @return the location of the point in the ring
    */
-  public static Location locatePointInRing(final Coordinates coordinates,
-    final CoordinatesList ring) {
+  public static Location locatePointInRing(final Coordinates coordinates, final CoordinatesList ring) {
     final RayCrossingCounter counter = new RayCrossingCounter(coordinates);
 
     for (int i = 1; i < ring.size(); i++) {
@@ -106,7 +105,7 @@ public class RayCrossingCounter {
   /**
     * For each segment, check if it crosses a horizontal ray running from the
      * test point in the positive x direction.
-    * 
+    *
    * @param p1 an endpoint of the segment
    * @param p2 another endpoint of the segment
    */
@@ -120,14 +119,13 @@ public class RayCrossingCounter {
     countSegment(x1, y1, x2, y2);
   }
 
-  public void countSegment(final double x1, final double y1, final double x2,
-    final double y2) {
-    if (x1 < x && x2 < x) {
+  public void countSegment(final double x1, final double y1, final double x2, final double y2) {
+    if (x1 < this.x && x2 < this.x) {
       // check if the segment is strictly to the left of the test point
-    } else if (x == x2 && y == y2) {
+    } else if (this.x == x2 && this.y == y2) {
       // check if the point is equal to the current ring vertex
-      isPointOnSegment = true;
-    } else if (y1 == y && y2 == y) {
+      this.isPointOnSegment = true;
+    } else if (y1 == this.y && y2 == this.y) {
       /**
        * For horizontal segments, check if the point is on the segment. Otherwise,
        * horizontal segments are not counted.
@@ -138,10 +136,10 @@ public class RayCrossingCounter {
         minX = x2;
         maxX = x1;
       }
-      if (x >= minX && x <= maxX) {
-        isPointOnSegment = true;
+      if (this.x >= minX && this.x <= maxX) {
+        this.isPointOnSegment = true;
       }
-    } else if ((y1 > y && y2 <= y) || (y2 > y && y1 <= y)) {
+    } else if (y1 > this.y && y2 <= this.y || y2 > this.y && y1 <= this.y) {
       /**
        * Evaluate all non-horizontal segments which cross a horizontal ray to the
        * right of the test pt. To avoid double-counting shared vertices, we use
@@ -154,10 +152,10 @@ public class RayCrossingCounter {
        * </ul>
        */
       // translate the segment so that the test point lies on the origin
-      final double deltaX1 = x1 - x;
-      final double deltaY1 = y1 - y;
-      final double deltaX2 = x2 - x;
-      final double deltaY2 = y2 - y;
+      final double deltaX1 = x1 - this.x;
+      final double deltaY1 = y1 - this.y;
+      final double deltaX2 = x2 - this.x;
+      final double deltaY2 = y2 - this.y;
 
       /**
        * The translated segment straddles the x-axis. Compute the sign of the
@@ -167,10 +165,9 @@ public class RayCrossingCounter {
       // double xIntSign = RobustDeterminant.signOfDet2x2(x1, y1, x2, y2) / (y2
       // - y1);
       // MD - faster & more robust computation?
-      double xIntSign = RobustDeterminant.signOfDet2x2(deltaX1, deltaY1,
-        deltaX2, deltaY2);
+      double xIntSign = RobustDeterminant.signOfDet2x2(deltaX1, deltaY1, deltaX2, deltaY2);
       if (xIntSign == 0.0) {
-        isPointOnSegment = true;
+        this.isPointOnSegment = true;
       } else {
         if (deltaY2 < deltaY1) {
           xIntSign = -xIntSign;
@@ -182,7 +179,7 @@ public class RayCrossingCounter {
         // + " = " + xIntSign);
         // The segment crosses the ray if the sign is strictly positive.
         if (xIntSign > 0.0) {
-          crossingCount++;
+          this.crossingCount++;
         }
       }
     }
@@ -193,13 +190,13 @@ public class RayCrossingCounter {
    * multipolygon from which the processed segments were provided. <coordinates>
    * This method only determines the correct location if <b>all</b> relevant
    * segments must have been processed.
-   * 
+   *
    * @return the Location of the point
    */
   public Location getLocation() {
-    if (isPointOnSegment) {
+    if (this.isPointOnSegment) {
       return Location.BOUNDARY;
-    } else if ((crossingCount % 2) == 1) {
+    } else if (this.crossingCount % 2 == 1) {
       // The point is in the interior of the ring if the number of X-crossings
       // is odd.
       return Location.INTERIOR;
@@ -209,11 +206,11 @@ public class RayCrossingCounter {
   }
 
   public double getX() {
-    return x;
+    return this.x;
   }
 
   public double getY() {
-    return y;
+    return this.y;
   }
 
   /**
@@ -221,11 +218,11 @@ public class RayCrossingCounter {
    * This method may be called at any time as segments are processed. If the
    * result of this method is <tt>true</tt>, no further segments need be
    * supplied, since the result will never change again.
-   * 
+   *
    * @return true if the point lies exactly on a segment
    */
   public boolean isOnSegment() {
-    return isPointOnSegment;
+    return this.isPointOnSegment;
   }
 
   /**
@@ -233,7 +230,7 @@ public class RayCrossingCounter {
    * from which the processed segments were provided. <coordinates> This method
    * only determines the correct location if <b>all</b> relevant segments must
    * have been processed.
-   * 
+   *
    * @return true if the point lies in or on the supplied polygon
    */
   public boolean isPointInPolygon() {

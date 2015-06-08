@@ -10,8 +10,7 @@ import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.layout.GroupLayoutUtil;
 
-public abstract class AbstractPreferencesPanel extends JPanel implements
-  PreferencesPanel {
+public abstract class AbstractPreferencesPanel extends JPanel implements PreferencesPanel {
   private static final long serialVersionUID = 1L;
 
   private final String title;
@@ -22,11 +21,11 @@ public abstract class AbstractPreferencesPanel extends JPanel implements
     super(new BorderLayout());
     this.title = title;
     if (instructions != null) {
-      final JLabel instructionsLabel = new JLabel(
-        "<html><p style=\"color:#666666\">" + instructions + "</p></html>");
+      final JLabel instructionsLabel = new JLabel("<html><p style=\"color:#666666\">"
+        + instructions + "</p></html>");
       add(instructionsLabel, BorderLayout.NORTH);
     }
-    add(fieldPanel, BorderLayout.CENTER);
+    add(this.fieldPanel, BorderLayout.CENTER);
   }
 
   public void addField(final Field field) {
@@ -34,9 +33,9 @@ public abstract class AbstractPreferencesPanel extends JPanel implements
   }
 
   public void addField(final String title, final Component component) {
-    SwingUtil.addLabel(fieldPanel, title);
-    fieldPanel.add(component);
-    GroupLayoutUtil.makeColumns(fieldPanel, 2, true);
+    SwingUtil.addLabel(this.fieldPanel, title);
+    this.fieldPanel.add(component);
+    GroupLayoutUtil.makeColumns(this.fieldPanel, 2, true);
   }
 
   @Override
@@ -53,7 +52,7 @@ public abstract class AbstractPreferencesPanel extends JPanel implements
 
   @Override
   public String getTitle() {
-    return title;
+    return this.title;
   }
 
   @Override

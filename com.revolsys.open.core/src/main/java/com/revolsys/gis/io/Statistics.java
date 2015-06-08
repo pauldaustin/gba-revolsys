@@ -30,7 +30,7 @@ public class Statistics {
   }
 
   public Statistics(final String category, final String message) {
-    log = Logger.getLogger(category);
+    this.log = Logger.getLogger(category);
     this.message = message;
   }
 
@@ -62,23 +62,23 @@ public class Statistics {
   }
 
   public synchronized boolean add(final String name, final long count) {
-    final Long oldCount = counts.get(name);
+    final Long oldCount = this.counts.get(name);
     if (oldCount == null) {
-      counts.put(name, count);
+      this.counts.put(name, count);
       return true;
     } else {
-      counts.put(name, oldCount + count);
+      this.counts.put(name, oldCount + count);
       return false;
     }
   }
 
   public synchronized void addCountsText(final StringBuffer sb) {
     int totalCount = 0;
-    if (message != null) {
-      sb.append(message);
+    if (this.message != null) {
+      sb.append(this.message);
     }
     sb.append("\n");
-    for (final Entry<String, Long> entry : counts.entrySet()) {
+    for (final Entry<String, Long> entry : this.counts.entrySet()) {
       sb.append(entry.getKey());
       sb.append("\t");
       final Long count = entry.getValue();
@@ -93,27 +93,27 @@ public class Statistics {
   }
 
   public synchronized void clearCounts() {
-    counts.clear();
+    this.counts.clear();
   }
 
   public synchronized void clearCounts(final String typeName) {
-    counts.remove(typeName);
+    this.counts.remove(typeName);
   }
 
   public synchronized void connect() {
-    providerCount++;
+    this.providerCount++;
   }
 
   public synchronized void disconnect() {
-    providerCount--;
-    if (providerCount <= 0) {
+    this.providerCount--;
+    if (this.providerCount <= 0) {
       logCounts();
     }
   }
 
   public synchronized Long get(final String name) {
     if (name != null) {
-      final Long count = counts.get(name);
+      final Long count = this.counts.get(name);
       return count;
     } else {
       return null;
@@ -121,23 +121,23 @@ public class Statistics {
   }
 
   public String getMessage() {
-    return message;
+    return this.message;
   }
 
   public synchronized Set<String> getNames() {
-    return counts.keySet();
+    return this.counts.keySet();
   }
 
   public boolean isLogCounts() {
-    return logCounts;
+    return this.logCounts;
   }
 
   public synchronized String logCounts() {
     final StringBuffer sb = new StringBuffer();
     addCountsText(sb);
     final String string = sb.toString();
-    if (isLogCounts() && !counts.isEmpty()) {
-      log.info(string);
+    if (isLogCounts() && !this.counts.isEmpty()) {
+      this.log.info(string);
     }
     return string;
   }
@@ -152,6 +152,6 @@ public class Statistics {
 
   @Override
   public String toString() {
-    return message;
+    return this.message;
   }
 }

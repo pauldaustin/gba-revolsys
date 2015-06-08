@@ -17,17 +17,17 @@ public class DataObjectEntry implements Entry<String, Object> {
 
   @Override
   public String getKey() {
-    return dataObject.getRecordDefinition().getFieldName(index);
+    return this.dataObject.getRecordDefinition().getFieldName(this.index);
   }
 
   @Override
   public Object getValue() {
-    return dataObject.getValue(index);
+    return this.dataObject.getValue(this.index);
   }
 
   @Override
   public Object setValue(final Object value) {
-    dataObject.setValue(index, value);
+    this.dataObject.setValue(this.index, value);
     return value;
   }
 }

@@ -14,8 +14,8 @@ import javax.swing.event.ChangeEvent;
 
 import org.springframework.util.StringUtils;
 
-import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
@@ -24,9 +24,8 @@ import com.revolsys.swing.table.SortableTableModel;
 import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class DataObjectRowTableModel extends
-  AbstractDataObjectTableModel implements SortableTableModel,
-  CellEditorListener {
+public abstract class DataObjectRowTableModel extends AbstractDataObjectTableModel implements
+  SortableTableModel, CellEditorListener {
 
   public static final String LOADING_VALUE = "\u2026";
 
@@ -75,7 +74,7 @@ public abstract class DataObjectRowTableModel extends
   }
 
   public int getAttributesOffset() {
-    return attributesOffset;
+    return this.attributesOffset;
   }
 
   public List<String> getAttributeTitles() {
@@ -83,7 +82,7 @@ public abstract class DataObjectRowTableModel extends
   }
 
   public FieldDefinition getColumnAttribute(final int columnIndex) {
-    if (columnIndex < attributesOffset) {
+    if (columnIndex < this.attributesOffset) {
       return null;
     } else {
       final String name = getFieldName(columnIndex);
@@ -94,7 +93,7 @@ public abstract class DataObjectRowTableModel extends
 
   @Override
   public Class<?> getColumnClass(final int columnIndex) {
-    if (columnIndex < attributesOffset) {
+    if (columnIndex < this.attributesOffset) {
       return Object.class;
     } else {
       final String name = getFieldName(columnIndex);
@@ -110,26 +109,25 @@ public abstract class DataObjectRowTableModel extends
 
   @Override
   public int getColumnCount() {
-    final int numColumns = attributesOffset + this.attributeNames.size();
+    final int numColumns = this.attributesOffset + this.attributeNames.size();
     return numColumns;
   }
 
   @Override
   public String getColumnName(final int columnIndex) {
-    if (columnIndex < attributesOffset) {
+    if (columnIndex < this.attributesOffset) {
       return null;
     } else {
-      return this.attributeTitles.get(columnIndex - attributesOffset);
+      return this.attributeTitles.get(columnIndex - this.attributesOffset);
     }
   }
 
   @Override
   public String getFieldName(final int columnIndex) {
-    if (columnIndex < attributesOffset) {
+    if (columnIndex < this.attributesOffset) {
       return null;
     } else {
-      final String attributeName = this.attributeNames.get(columnIndex
-        - attributesOffset);
+      final String attributeName = this.attributeNames.get(columnIndex - this.attributesOffset);
       if (attributeName == null) {
         return null;
       } else {
@@ -178,7 +176,7 @@ public abstract class DataObjectRowTableModel extends
 
   @Override
   public Object getValueAt(final int rowIndex, final int columnIndex) {
-    if (columnIndex < attributesOffset) {
+    if (columnIndex < this.attributesOffset) {
       return null;
     } else {
       final Record record = getRecord(rowIndex);
@@ -202,8 +200,7 @@ public abstract class DataObjectRowTableModel extends
         final String attributeName = getFieldName(rowIndex, columnIndex);
         if (attributeName != null) {
           if (!isReadOnly(attributeName)) {
-            final Class<?> attributeClass = getMetaData().getFieldClass(
-              attributeName);
+            final Class<?> attributeClass = getMetaData().getFieldClass(attributeName);
             if (!Geometry.class.isAssignableFrom(attributeClass)) {
               return true;
             }
@@ -215,9 +212,8 @@ public abstract class DataObjectRowTableModel extends
   }
 
   @Override
-  public boolean isSelected(boolean selected, final int rowIndex,
-    final int columnIndex) {
-    final int[] selectedRows = table.getSelectedRows();
+  public boolean isSelected(boolean selected, final int rowIndex, final int columnIndex) {
+    final int[] selectedRows = this.table.getSelectedRows();
     selected = false;
     for (final int selectedRow : selectedRows) {
       if (rowIndex == selectedRow) {
@@ -288,11 +284,10 @@ public abstract class DataObjectRowTableModel extends
   }
 
   @Override
-  public void setValueAt(final Object value, final int rowIndex,
-    final int columnIndex) {
+  public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
     if (isCellEditable(rowIndex, columnIndex)) {
 
-      if (columnIndex >= attributesOffset) {
+      if (columnIndex >= this.attributesOffset) {
         final Record object = getRecord(rowIndex);
         if (object != null) {
           final String name = getFieldName(columnIndex);
@@ -305,9 +300,9 @@ public abstract class DataObjectRowTableModel extends
   }
 
   @Override
-  public final String toDisplayValue(final int rowIndex,
-    final int attributeIndex, final Object objectValue) {
-    int rowHeight = table.getRowHeight();
+  public final String toDisplayValue(final int rowIndex, final int attributeIndex,
+    final Object objectValue) {
+    int rowHeight = this.table.getRowHeight();
     String displayValue;
     final Record record = getRecord(rowIndex);
     if (record == null) {
@@ -317,18 +312,17 @@ public abstract class DataObjectRowTableModel extends
       if (record.getState() == RecordState.Initalizing) {
         displayValue = LOADING_VALUE;
       } else {
-        displayValue = toDisplayValueInternal(rowIndex, attributeIndex,
-          objectValue);
+        displayValue = toDisplayValueInternal(rowIndex, attributeIndex, objectValue);
       }
     }
-    if (rowHeight != table.getRowHeight(rowIndex)) {
-      table.setRowHeight(rowIndex, rowHeight);
+    if (rowHeight != this.table.getRowHeight(rowIndex)) {
+      this.table.setRowHeight(rowIndex, rowHeight);
     }
     return displayValue;
   }
 
-  protected String toDisplayValueInternal(final int rowIndex,
-    final int attributeIndex, final Object objectValue) {
+  protected String toDisplayValueInternal(final int rowIndex, final int attributeIndex,
+    final Object objectValue) {
     return super.toDisplayValue(rowIndex, attributeIndex, objectValue);
   }
 }

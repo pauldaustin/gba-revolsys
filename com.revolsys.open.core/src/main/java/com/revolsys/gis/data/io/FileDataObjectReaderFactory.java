@@ -14,8 +14,7 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
-public class FileDataObjectReaderFactory extends
-  AbstractFactoryBean<RecordReader> {
+public class FileDataObjectReaderFactory extends AbstractFactoryBean<RecordReader> {
 
   public static RecordReader dataObjectReader(final File file) {
     final Resource resource = new FileSystemResource(file);
@@ -32,20 +31,17 @@ public class FileDataObjectReaderFactory extends
     }
   }
 
-  public static RecordReader dataObjectReader(final Resource resource,
-    final RecordFactory factory) {
+  public static RecordReader dataObjectReader(final Resource resource, final RecordFactory factory) {
     final RecordReaderFactory readerFactory = getDataObjectReaderFactory(resource);
     if (readerFactory == null) {
       return null;
     } else {
-      final RecordReader reader = readerFactory.createRecordReader(
-        resource, factory);
+      final RecordReader reader = readerFactory.createRecordReader(resource, factory);
       return reader;
     }
   }
 
-  protected static RecordReaderFactory getDataObjectReaderFactory(
-    final Resource resource) {
+  protected static RecordReaderFactory getDataObjectReaderFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     final RecordReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
       RecordReaderFactory.class, resource);
@@ -58,21 +54,20 @@ public class FileDataObjectReaderFactory extends
 
   @Override
   public RecordReader createInstance() throws Exception {
-    final Resource resource1 = resource;
-    final RecordFactory factory1 = factory;
+    final Resource resource1 = this.resource;
+    final RecordFactory factory1 = this.factory;
     return RecordIo.recordReader(resource1, factory1);
   }
 
   @Override
-  protected void destroyInstance(final RecordReader reader)
-    throws Exception {
+  protected void destroyInstance(final RecordReader reader) throws Exception {
     reader.close();
-    factory = null;
-    resource = null;
+    this.factory = null;
+    this.resource = null;
   }
 
   public RecordFactory getFactory() {
-    return factory;
+    return this.factory;
   }
 
   @Override
@@ -81,7 +76,7 @@ public class FileDataObjectReaderFactory extends
   }
 
   public Resource getResource() {
-    return resource;
+    return this.resource;
   }
 
   public void setFactory(final RecordFactory factory) {

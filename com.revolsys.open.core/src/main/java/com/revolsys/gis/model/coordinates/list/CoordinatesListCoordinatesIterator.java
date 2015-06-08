@@ -9,11 +9,10 @@ import com.revolsys.gis.model.coordinates.CoordinatesListCoordinates;
 /**
  * The CoordinatesListCoordinatesIterator is an iterator which iterates through
  * each item in a {@link CoordinatesList}.
- * 
+ *
  * @author Paul Austin
  */
-public class CoordinatesListCoordinatesIterator implements
-  Iterator<Coordinates> {
+public class CoordinatesListCoordinatesIterator implements Iterator<Coordinates> {
   /** The coordinates list. */
   private final CoordinatesList coordinatesList;
 
@@ -21,7 +20,7 @@ public class CoordinatesListCoordinatesIterator implements
 
   /**
    * Construct a new CoordinatesListCoordinatesIterator.
-   * 
+   *
    * @param coordinates The coordinates list.
    */
   public CoordinatesListCoordinatesIterator(final CoordinatesList coordinates) {
@@ -29,20 +28,20 @@ public class CoordinatesListCoordinatesIterator implements
   }
 
   public int getIndex() {
-    return index;
+    return this.index;
   }
 
   @Override
   public boolean hasNext() {
-    return index < coordinatesList.size();
+    return this.index < this.coordinatesList.size();
   }
 
   @Override
   public Coordinates next() {
     if (hasNext()) {
       final CoordinatesListCoordinates coordinates = new CoordinatesListCoordinates(
-        coordinatesList, index);
-      index++;
+        this.coordinatesList, this.index);
+      this.index++;
       return coordinates;
     } else {
       throw new NoSuchElementException();
@@ -57,6 +56,6 @@ public class CoordinatesListCoordinatesIterator implements
 
   @Override
   public String toString() {
-    return coordinatesList.toString();
+    return this.coordinatesList.toString();
   }
 }

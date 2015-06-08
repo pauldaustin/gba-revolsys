@@ -9,7 +9,7 @@ import com.revolsys.swing.parallel.Invoke;
 /**
  * An ActionListener that invokes the method on the object when the action is
  * performed.
- * 
+ *
  * @author Paul Austin
  */
 public class InvokeMethodActionListener implements ActionListener {
@@ -17,25 +17,25 @@ public class InvokeMethodActionListener implements ActionListener {
 
   private final boolean invokeLater;
 
-  public InvokeMethodActionListener(final boolean invokeLater,
-    final Class<?> clazz, final String methodName, final Object... parameters) {
+  public InvokeMethodActionListener(final boolean invokeLater, final Class<?> clazz,
+    final String methodName, final Object... parameters) {
     this.runnable = new InvokeMethodRunnable(clazz, methodName, parameters);
     this.invokeLater = invokeLater;
   }
 
-  public InvokeMethodActionListener(final boolean invokeLater,
-    final Object object, final String methodName, final Object... parameters) {
+  public InvokeMethodActionListener(final boolean invokeLater, final Object object,
+    final String methodName, final Object... parameters) {
     this.runnable = new InvokeMethodRunnable(object, methodName, parameters);
     this.invokeLater = invokeLater;
   }
 
-  public InvokeMethodActionListener(final Class<?> clazz,
-    final String methodName, final Object... parameters) {
+  public InvokeMethodActionListener(final Class<?> clazz, final String methodName,
+    final Object... parameters) {
     this(false, clazz, methodName, parameters);
   }
 
-  public InvokeMethodActionListener(final Object object,
-    final String methodName, final Object... parameters) {
+  public InvokeMethodActionListener(final Object object, final String methodName,
+    final Object... parameters) {
     this(false, object, methodName, parameters);
   }
 

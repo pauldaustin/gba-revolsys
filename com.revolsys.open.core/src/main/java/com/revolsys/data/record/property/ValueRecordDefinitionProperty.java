@@ -8,11 +8,11 @@ public class ValueRecordDefinitionProperty extends AbstractRecordDefinitionPrope
 
   @Override
   public String getPropertyName() {
-    return propertyName;
+    return this.propertyName;
   }
 
   public Object getValue() {
-    return value;
+    return this.value;
   }
 
   public void setPropertyName(final String propertyName) {

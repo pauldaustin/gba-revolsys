@@ -10,9 +10,7 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesPrecisionModel;
 import com.revolsys.gis.model.geometry.Geometry;
 import com.revolsys.gis.model.geometry.GeometryFactory;
-import com.revolsys.gis.model.geometry.LineString;
 import com.revolsys.gis.model.geometry.Polygon;
-import com.revolsys.gis.model.geometry.impl.GeometryFactoryImpl;
 import com.revolsys.gis.model.geometry.operation.chain.MCIndexNoder;
 import com.revolsys.gis.model.geometry.operation.chain.Noder;
 import com.revolsys.gis.model.geometry.operation.chain.SegmentString;
@@ -48,17 +46,6 @@ import com.vividsolutions.jts.operation.buffer.BufferParameters;
  * @version 1.7
  */
 public class BufferBuilder {
-  private static Geometry convertSegStrings(final Iterator it) {
-    final GeometryFactory fact = GeometryFactoryImpl.getFactory();
-    final List<LineString> lines = new ArrayList<LineString>();
-    while (it.hasNext()) {
-      final SegmentString ss = (SegmentString)it.next();
-      final LineString line = fact.createLineString(ss.getCoordinates());
-      lines.add(line);
-    }
-    return fact.createGeometry(lines);
-  }
-
   /**
    * Compute the change in depth as an edge is crossed from R to L
    */
@@ -93,19 +80,18 @@ public class BufferBuilder {
   }
 
   public Geometry buffer(final Geometry g, final double distance) {
-    CoordinatesPrecisionModel precisionModel = workingPrecisionModel;
+    CoordinatesPrecisionModel precisionModel = this.workingPrecisionModel;
     if (precisionModel == null) {
       precisionModel = g.getGeometryFactory();
     }
 
     // factory must be the same as the one used by the input
-    geomFact = g.getGeometryFactory();
+    this.geomFact = g.getGeometryFactory();
 
-    final OffsetCurveBuilder curveBuilder = new OffsetCurveBuilder(
-      precisionModel, bufParams);
+    final OffsetCurveBuilder curveBuilder = new OffsetCurveBuilder(precisionModel, this.bufParams);
 
-    final OffsetCurveSetBuilder curveSetBuilder = new OffsetCurveSetBuilder(g,
-      distance, curveBuilder);
+    final OffsetCurveSetBuilder curveSetBuilder = new OffsetCurveSetBuilder(g, distance,
+      curveBuilder);
 
     final List bufferSegStrList = curveSetBuilder.getCurves();
 
@@ -126,11 +112,11 @@ public class BufferBuilder {
     // System.out.println(wktWriter.writeFormatted(convertSegStrings(bufferSegStrList.iterator())));
 
     computeNodedEdges(bufferSegStrList, precisionModel);
-    graph = new PlanarGraph(new OverlayNodeFactory());
-    graph.addEdges(edgeList.getEdges());
+    this.graph = new PlanarGraph(new OverlayNodeFactory());
+    this.graph.addEdges(this.edgeList.getEdges());
 
-    final List subgraphList = createSubgraphs(graph);
-    final PolygonBuilder polyBuilder = new PolygonBuilder(geomFact);
+    final List subgraphList = createSubgraphs(this.graph);
+    final PolygonBuilder polyBuilder = new PolygonBuilder(this.geomFact);
     buildSubgraphs(subgraphList, polyBuilder);
     final List<Polygon> resultPolyList = polyBuilder.getPolygons();
 
@@ -139,7 +125,7 @@ public class BufferBuilder {
       return createEmptyResultGeometry();
     }
 
-    final Geometry resultGeom = geomFact.createGeometry(resultPolyList);
+    final Geometry resultGeom = this.geomFact.createGeometry(resultPolyList);
     return resultGeom;
   }
 
@@ -151,8 +137,7 @@ public class BufferBuilder {
    * @param subgraphList the subgraphs to build
    * @param polyBuilder the PolygonBuilder which will build the final polygons
    */
-  private void buildSubgraphs(final List subgraphList,
-    final PolygonBuilder polyBuilder) {
+  private void buildSubgraphs(final List subgraphList, final PolygonBuilder polyBuilder) {
     final List processedGraphs = new ArrayList();
     for (final Iterator i = subgraphList.iterator(); i.hasNext();) {
       final BufferSubgraph subgraph = (BufferSubgraph)i.next();
@@ -160,8 +145,7 @@ public class BufferBuilder {
       // int outsideDepth = 0;
       // if (polyBuilder.containsPoint(p))
       // outsideDepth = 1;
-      final SubgraphDepthLocater locater = new SubgraphDepthLocater(
-        processedGraphs);
+      final SubgraphDepthLocater locater = new SubgraphDepthLocater(processedGraphs);
       final int outsideDepth = locater.getDepth(p);
       // try {
       subgraph.computeDepth(outsideDepth);
@@ -199,18 +183,18 @@ public class BufferBuilder {
    * Gets the standard result for an empty buffer.
    * Since buffer always returns a polygonal result,
    * this is chosen to be an empty polygon.
-   * 
+   *
    * @return the empty result geometry
    */
   private Geometry createEmptyResultGeometry() {
-    final Geometry emptyGeom = geomFact.createPolygon(null, null);
+    final Geometry emptyGeom = this.geomFact.createPolygon(null, null);
     return emptyGeom;
   }
 
   private List createSubgraphs(final PlanarGraph graph) {
     final List subgraphList = new ArrayList();
-    for (final Iterator i = graph.getNodes().iterator(); i.hasNext();) {
-      final Node node = (Node)i.next();
+    for (final Object element : graph.getNodes()) {
+      final Node node = (Node)element;
       if (!node.isVisited()) {
         final BufferSubgraph subgraph = new BufferSubgraph();
         subgraph.create(node);
@@ -228,8 +212,8 @@ public class BufferBuilder {
   }
 
   private Noder getNoder(final CoordinatesPrecisionModel precisionModel) {
-    if (workingNoder != null) {
-      return workingNoder;
+    if (this.workingNoder != null) {
+      return this.workingNoder;
     }
 
     // otherwise use a fast (but non-robust) noder
@@ -254,7 +238,7 @@ public class BufferBuilder {
   protected void insertUniqueEdge(final Edge e) {
     // <FIX> MD 8 Oct 03 speed up identical edge lookup
     // fast lookup
-    final Edge existingEdge = edgeList.findEqualEdge(e);
+    final Edge existingEdge = this.edgeList.findEqualEdge(e);
 
     // If an identical edge already exists, simply update its label
     if (existingEdge != null) {
@@ -277,7 +261,7 @@ public class BufferBuilder {
     } else { // no matching existing edge was found
       // add this new edge to the list of edges in this graph
       // e.setName(name + edges.size());
-      edgeList.add(e);
+      this.edgeList.add(e);
       e.setDepthDelta(depthDelta(e.getLabel()));
     }
   }
@@ -290,7 +274,7 @@ public class BufferBuilder {
    * @param noder the noder to use
    */
   public void setNoder(final Noder noder) {
-    workingNoder = noder;
+    this.workingNoder = noder;
   }
 
   /**
@@ -302,6 +286,6 @@ public class BufferBuilder {
    * @param pm the precision model to use
    */
   public void setWorkingPrecisionModel(final CoordinatesPrecisionModel pm) {
-    workingPrecisionModel = pm;
+    this.workingPrecisionModel = pm;
   }
 }

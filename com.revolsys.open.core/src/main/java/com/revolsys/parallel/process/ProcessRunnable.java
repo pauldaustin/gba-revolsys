@@ -7,8 +7,7 @@ public class ProcessRunnable extends AbstractRunnable {
 
   private final Process process;
 
-  public ProcessRunnable(final ProcessNetwork processManager,
-    final Process process) {
+  public ProcessRunnable(final ProcessNetwork processManager, final Process process) {
     this.processManager = processManager;
     this.process = process;
   }
@@ -16,9 +15,9 @@ public class ProcessRunnable extends AbstractRunnable {
   @Override
   public void doRun() {
     try {
-      process.run();
+      this.process.run();
     } finally {
-      processManager.removeProcess(process);
+      this.processManager.removeProcess(this.process);
     }
   }
 }

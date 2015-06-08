@@ -27,8 +27,7 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
 
   private final String schemaPath;
 
-  public DataObjectStoreSchemaTreeNode(final TreeNode parent,
-    final String schemaPath) {
+  public DataObjectStoreSchemaTreeNode(final TreeNode parent, final String schemaPath) {
     super(parent, schemaPath);
     setType("Data Store Schema");
     setAllowsChildren(true);
@@ -47,7 +46,7 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
     final List<TreeNode> children = new ArrayList<TreeNode>();
     final RecordStore dataStore = getDataStore();
     if (dataStore != null) {
-      final RecordStoreSchema schema = dataStore.getSchema(schemaPath);
+      final RecordStoreSchema schema = dataStore.getSchema(this.schemaPath);
       if (schema != null) {
         for (final RecordDefinition metaData : schema.getTypes()) {
           final String typeName = metaData.getPath();
@@ -56,8 +55,8 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
           if (geometryAttribute != null) {
             geometryType = geometryAttribute.getType().toString();
           }
-          final DataObjectStoreTableTreeNode tableNode = new DataObjectStoreTableTreeNode(
-            this, typeName, geometryType);
+          final DataObjectStoreTableTreeNode tableNode = new DataObjectStoreTableTreeNode(this,
+            typeName, geometryType);
           children.add(tableNode);
         }
       }

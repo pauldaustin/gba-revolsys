@@ -23,31 +23,29 @@ public class NearParallelEdgeVisitor<T> extends EdgeVisitor<T> {
 
   @Override
   public Envelope getEnvelope() {
-    BoundingBox envelope = BoundingBox.getBoundingBox(line);
-    envelope = envelope.expand(maxDistance);
+    BoundingBox envelope = BoundingBox.getBoundingBox(this.line);
+    envelope = envelope.expand(this.maxDistance);
     return envelope;
   }
 
   private boolean isAlmostParallel(final LineString matchLine) {
-    if (line.getEnvelopeInternal().distance(matchLine.getEnvelopeInternal()) > maxDistance) {
+    if (this.line.getEnvelopeInternal().distance(matchLine.getEnvelopeInternal()) > this.maxDistance) {
       return false;
     }
-    final CoordinateSequence coords = line.getCoordinateSequence();
-    final CoordinateSequence matchCoords = line.getCoordinateSequence();
+    final CoordinateSequence coords = this.line.getCoordinateSequence();
+    final CoordinateSequence matchCoords = this.line.getCoordinateSequence();
     Coordinate previousCoordinate = coords.getCoordinate(0);
     for (int i = 1; i < coords.size(); i++) {
       final Coordinate coordinate = coords.getCoordinate(i);
       Coordinate previousMatchCoordinate = matchCoords.getCoordinate(0);
       for (int j = 1; j < coords.size(); j++) {
         final Coordinate matchCoordinate = matchCoords.getCoordinate(i);
-        final double distance = CGAlgorithms.distanceLineLine(
-          previousCoordinate, coordinate, previousMatchCoordinate,
-          matchCoordinate);
-        if (distance <= maxDistance) {
-          final double angle1 = Angle.normalizePositive(Angle.angle(
-            previousCoordinate, coordinate));
-          final double angle2 = Angle.normalizePositive(Angle.angle(
-            previousMatchCoordinate, matchCoordinate));
+        final double distance = CGAlgorithms.distanceLineLine(previousCoordinate, coordinate,
+          previousMatchCoordinate, matchCoordinate);
+        if (distance <= this.maxDistance) {
+          final double angle1 = Angle.normalizePositive(Angle.angle(previousCoordinate, coordinate));
+          final double angle2 = Angle.normalizePositive(Angle.angle(previousMatchCoordinate,
+            matchCoordinate));
           final double angleDiff = Math.abs(angle1 - angle2);
           if (angleDiff <= Math.PI / 6) {
             return true;

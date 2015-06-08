@@ -17,9 +17,8 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class Query extends AbstractObjectWithProperties implements Cloneable {
-  private static void addFilter(final Query query,
-    final RecordDefinition metaData, final Map<String, ?> filter,
-    final AbstractMultiCondition multipleCondition) {
+  private static void addFilter(final Query query, final RecordDefinition metaData,
+    final Map<String, ?> filter, final AbstractMultiCondition multipleCondition) {
     if (filter != null && !filter.isEmpty()) {
       for (final Entry<String, ?> entry : filter.entrySet()) {
         final String name = entry.getKey();
@@ -50,8 +49,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     }
   }
 
-  public static Query and(final RecordDefinition metaData,
-    final Map<String, ?> filter) {
+  public static Query and(final RecordDefinition metaData, final Map<String, ?> filter) {
     final Query query = new Query(metaData);
     final Condition[] conditions = {};
     final And and = new And(conditions);
@@ -59,8 +57,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return query;
   }
 
-  public static Query equal(final RecordDefinition metaData,
-    final String name, final Object value) {
+  public static Query equal(final RecordDefinition metaData, final String name, final Object value) {
     final FieldDefinition attribute = metaData.getField(name);
     if (attribute == null) {
       return null;
@@ -73,8 +70,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     }
   }
 
-  public static Query or(final RecordDefinition metaData,
-    final Map<String, ?> filter) {
+  public static Query or(final RecordDefinition metaData, final Map<String, ?> filter) {
     final Query query = new Query(metaData);
     final Condition[] conditions = {};
     final Or or = new Or(conditions);
@@ -172,12 +168,12 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     }
   }
 
-  public List<String> getFieldNames() {
-    return this.attributeNames;
-  }
-
   public BoundingBox getBoundingBox() {
     return this.boundingBox;
+  }
+
+  public List<String> getFieldNames() {
+    return this.attributeNames;
   }
 
   public String getFromClause() {
@@ -192,10 +188,6 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return this.limit;
   }
 
-  public RecordDefinition getRecordDefinition() {
-    return this.metaData;
-  }
-
   public int getOffset() {
     return this.offset;
   }
@@ -206,6 +198,10 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
 
   public List<Object> getParameters() {
     return this.parameters;
+  }
+
+  public RecordDefinition getRecordDefinition() {
+    return this.metaData;
   }
 
   public String getSql() {

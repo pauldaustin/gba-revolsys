@@ -9,15 +9,13 @@ import com.revolsys.data.query.Value;
 
 public class RegexpReplace extends Function {
 
-  public RegexpReplace(final QueryValue value, final String pattern,
-    final String replace) {
+  public RegexpReplace(final QueryValue value, final String pattern, final String replace) {
     super("regexp_replace", value, new Value(pattern), new Value(replace));
   }
 
-  public RegexpReplace(final QueryValue value, final String pattern,
-    final String replace, final String flags) {
-    super("regexp_replace", value, new Value(pattern), new Value(replace),
-      new Value(flags));
+  public RegexpReplace(final QueryValue value, final String pattern, final String replace,
+    final String flags) {
+    super("regexp_replace", value, new Value(pattern), new Value(replace), new Value(flags));
   }
 
   @SuppressWarnings("unchecked")

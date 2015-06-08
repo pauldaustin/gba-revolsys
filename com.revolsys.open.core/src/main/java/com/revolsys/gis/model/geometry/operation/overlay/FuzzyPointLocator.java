@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.Location;
  * words, if the point is within the tolerance of the Boundary, it is considered
  * to be on the Boundary; otherwise, whether it is Interior or Exterior is
  * determined directly.
- * 
+ *
  * @author Martin Davis
  * @version 1.7
  */
@@ -33,16 +33,15 @@ public class FuzzyPointLocator {
 
   private final PointLocator ptLocator = new PointLocator();
 
-  public FuzzyPointLocator(final Geometry g,
-    final double boundaryDistanceTolerance) {
+  public FuzzyPointLocator(final Geometry g, final double boundaryDistanceTolerance) {
     this.g = g;
     this.boundaryDistanceTolerance = boundaryDistanceTolerance;
-    linework = extractLinework(g);
+    this.linework = extractLinework(g);
   }
 
   /**
    * Extracts linework for polygonal components.
-   * 
+   *
    * @param g the geometry from which to extract
    * @return a lineal geometry containing the extracted linework
    */
@@ -70,17 +69,17 @@ public class FuzzyPointLocator {
 
     // now we know point must be clearly inside or outside geometry, so return
     // actual location value
-    return ptLocator.locate(pt, g);
+    return this.ptLocator.locate(pt, this.g);
   }
 
   private boolean isWithinToleranceOfBoundary(final Coordinates pt) {
-    for (int i = 0; i < linework.getGeometryCount(); i++) {
-      final LineString line = (LineString)linework.getGeometry(i);
+    for (int i = 0; i < this.linework.getGeometryCount(); i++) {
+      final LineString line = (LineString)this.linework.getGeometry(i);
       for (int j = 0; j < line.size() - 1; j++) {
         final Coordinates p0 = line.get(j);
         final Coordinates p1 = line.get(j + 1);
         final double dist = LineSegmentUtil.distance(p0, p1, pt);
-        if (dist <= boundaryDistanceTolerance) {
+        if (dist <= this.boundaryDistanceTolerance) {
           return true;
         }
       }

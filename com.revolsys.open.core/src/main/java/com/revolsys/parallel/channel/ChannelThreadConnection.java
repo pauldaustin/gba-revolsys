@@ -25,6 +25,6 @@ public class ChannelThreadConnection {
 
   @Override
   public void finalize() {
-    channel.writeDisconnect();
+    this.channel.writeDisconnect();
   }
 }

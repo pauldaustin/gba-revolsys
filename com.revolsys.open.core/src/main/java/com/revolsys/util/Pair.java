@@ -16,11 +16,11 @@ public class Pair<A, B> {
   }
 
   public A getValue1() {
-    return value1;
+    return this.value1;
   }
 
   public B getValue2() {
-    return value2;
+    return this.value2;
   }
 
   public void setValue1(final A value1) {

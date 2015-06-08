@@ -32,15 +32,16 @@ import com.revolsys.util.Property;
 
 public class LoggingEventPanel extends JPanel {
 
-  public static void showDialog(final Component component,
-    final Class<?> category, final String message, final Throwable e) {
+  private static final long serialVersionUID = 1L;
+
+  public static void showDialog(final Component component, final Class<?> category,
+    final String message, final Throwable e) {
     final LoggingEvent event = new LoggingEvent(Logger.class.getName(),
       Logger.getLogger(component.getClass()), Level.ERROR, message, e);
     showDialog(component, event);
   }
 
-  public static void showDialog(final Component component,
-    final LoggingEvent event) {
+  public static void showDialog(final Component component, final LoggingEvent event) {
     final Window window;
     if (component == null) {
       window = SwingUtil.getActiveWindow();
@@ -52,14 +53,11 @@ public class LoggingEventPanel extends JPanel {
     dialog.setLayout(new BorderLayout());
     dialog.add(new LoggingEventPanel(event), BorderLayout.CENTER);
     final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    buttons.add(InvokeMethodAction.createButton("OK", dialog, "setVisible",
-      false));
+    buttons.add(InvokeMethodAction.createButton("OK", dialog, "setVisible", false));
     dialog.add(buttons, BorderLayout.SOUTH);
     dialog.pack();
     dialog.setVisible(true);
   }
-
-  private static final long serialVersionUID = 1L;
 
   public LoggingEventPanel(final LoggingEvent event) {
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -67,8 +65,7 @@ public class LoggingEventPanel extends JPanel {
     final Timestamp timestamp = new Timestamp(time);
     addField("Timestamp", timestamp);
 
-    for (final String fieldName : Arrays.asList("level", "loggerName",
-      "message", "threadName")) {
+    for (final String fieldName : Arrays.asList("level", "loggerName", "message", "threadName")) {
 
       final Object value = Property.get(event, fieldName);
       addField(fieldName, value);
@@ -77,8 +74,7 @@ public class LoggingEventPanel extends JPanel {
     addLabel("Stack Trace");
     final String[] stack = event.getThrowableStrRep();
     if (stack != null) {
-      final TextArea textArea = SwingUtil.createTextArea(
-        Math.min(20, stack.length), 80);
+      final TextArea textArea = SwingUtil.createTextArea(Math.min(20, stack.length), 80);
       textArea.setEditable(false);
       for (final String trace : stack) {
         textArea.append(trace);
@@ -108,8 +104,7 @@ public class LoggingEventPanel extends JPanel {
       if (!StringUtils.hasText(stringValue)) {
         stringValue = "-";
       }
-      final TextField field = SwingUtil.createTextField(Math.min(80,
-        stringValue.length()));
+      final TextField field = SwingUtil.createTextField(Math.min(80, stringValue.length()));
       field.setEditable(false);
       field.setText(stringValue);
       add(field);

@@ -16,7 +16,7 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Computes the {@link EdgeEnd}s which arise from a noded {@link Edge}.
- * 
+ *
  * @version 1.7
  */
 public class EdgeEndBuilder {
@@ -74,8 +74,8 @@ public class EdgeEndBuilder {
    * Otherwise, the next point from the parent edge will be the endpoint. <br>
    * eiCurr will always be an EdgeIntersection, but eiNext may be null.
    */
-  void createEdgeEndForNext(final Edge edge, final List l,
-    final EdgeIntersection eiCurr, final EdgeIntersection eiNext) {
+  void createEdgeEndForNext(final Edge edge, final List l, final EdgeIntersection eiCurr,
+    final EdgeIntersection eiNext) {
 
     final int iNext = eiCurr.segmentIndex + 1;
     // if there is no next edge there is nothing to do
@@ -91,8 +91,7 @@ public class EdgeEndBuilder {
       pNext = eiNext.coord;
     }
 
-    final EdgeEnd e = new EdgeEnd(edge, eiCurr.coord, pNext, new Label(
-      edge.getLabel()));
+    final EdgeEnd e = new EdgeEnd(edge, eiCurr.coord, pNext, new Label(edge.getLabel()));
     // Debug.println(e);
     l.add(e);
   }
@@ -103,8 +102,8 @@ public class EdgeEndBuilder {
    * Otherwise, the previous point from the parent edge will be the endpoint. <br>
    * eiCurr will always be an EdgeIntersection, but eiPrev may be null.
    */
-  void createEdgeEndForPrev(final Edge edge, final List l,
-    final EdgeIntersection eiCurr, final EdgeIntersection eiPrev) {
+  void createEdgeEndForPrev(final Edge edge, final List l, final EdgeIntersection eiCurr,
+    final EdgeIntersection eiPrev) {
 
     int iPrev = eiCurr.segmentIndex;
     if (eiCurr.dist == 0.0) {

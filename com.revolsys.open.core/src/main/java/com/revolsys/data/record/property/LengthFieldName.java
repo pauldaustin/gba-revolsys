@@ -7,16 +7,14 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LengthFieldName extends AbstractRecordDefinitionProperty {
-  public static final String PROPERTY_NAME = LengthFieldName.class.getName()
-    + ".propertyName";
+  public static final String PROPERTY_NAME = LengthFieldName.class.getName() + ".propertyName";
 
   public static LengthFieldName getProperty(final Record object) {
     final RecordDefinition metaData = object.getRecordDefinition();
     return getProperty(metaData);
   }
 
-  public static LengthFieldName getProperty(
-    final RecordDefinition metaData) {
+  public static LengthFieldName getProperty(final RecordDefinition metaData) {
     LengthFieldName property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new LengthFieldName();
@@ -40,7 +38,7 @@ public class LengthFieldName extends AbstractRecordDefinitionProperty {
   }
 
   public String getAttributeName() {
-    return attributeName;
+    return this.attributeName;
   }
 
   @Override
@@ -53,15 +51,15 @@ public class LengthFieldName extends AbstractRecordDefinitionProperty {
   }
 
   public void setLength(final Record object) {
-    if (StringUtils.hasText(attributeName)) {
+    if (StringUtils.hasText(this.attributeName)) {
       final LineString line = object.getGeometryValue();
       final double length = line.getLength();
-      object.setValue(attributeName, length);
+      object.setValue(this.attributeName, length);
     }
   }
 
   @Override
   public String toString() {
-    return "LengthAttribute " + attributeName;
+    return "LengthAttribute " + this.attributeName;
   }
 }

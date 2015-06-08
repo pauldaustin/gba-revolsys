@@ -12,14 +12,13 @@ import com.revolsys.swing.map.layer.dataobject.style.MarkerStyle;
 public abstract class AbstractMarker implements Marker {
 
   @Override
-  public Icon getIcon(MarkerStyle style) {
+  public Icon getIcon(final MarkerStyle style) {
     return null;
   }
 
-  protected void translateMarker(final Viewport2D viewport,
-    final Graphics2D graphics, final MarkerStyle style, final double x,
-    final double y, final double width, final double height,
-    final double orientation) {
+  protected void translateMarker(final Viewport2D viewport, final Graphics2D graphics,
+    final MarkerStyle style, final double x, final double y, final double width,
+    final double height, final double orientation) {
     if (viewport != null) {
 
       final double[] viewCoordinates = viewport.toViewCoordinates(x, y);
@@ -36,15 +35,13 @@ public abstract class AbstractMarker implements Marker {
     final String verticalAlignment = style.getMarkerVerticalAlignment();
     if ("top".equals(verticalAlignment)) {
       dy -= height;
-    } else if ("auto".equals(verticalAlignment)
-      || "middle".equals(verticalAlignment)) {
+    } else if ("auto".equals(verticalAlignment) || "middle".equals(verticalAlignment)) {
       dy -= height / 2;
     }
     final String horizontalAlignment = style.getMarkerHorizontalAlignment();
     if ("right".equals(horizontalAlignment)) {
       dx -= width;
-    } else if ("auto".equals(horizontalAlignment)
-      || "center".equals(horizontalAlignment)) {
+    } else if ("auto".equals(horizontalAlignment) || "center".equals(horizontalAlignment)) {
       dx -= width / 2;
     }
     graphics.translate(dx, dy);

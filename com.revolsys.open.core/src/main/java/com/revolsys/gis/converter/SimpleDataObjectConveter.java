@@ -15,8 +15,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class SimpleDataObjectConveter implements
-  Converter<Record, Record> {
+public class SimpleDataObjectConveter implements Converter<Record, Record> {
   private RecordDefinition dataObjectMetaData;
 
   private RecordFactory factory;
@@ -41,31 +40,30 @@ public class SimpleDataObjectConveter implements
     this(dataObjectMetaData, Arrays.asList(processors));
   }
 
-  public void addProcessor(
-    final SourceToTargetProcess<Record, Record> processor) {
-    processors.add(processor);
+  public void addProcessor(final SourceToTargetProcess<Record, Record> processor) {
+    this.processors.add(processor);
   }
 
   @Override
   public Record convert(final Record sourceObject) {
-    final Record targetObject = factory.createRecord(dataObjectMetaData);
+    final Record targetObject = this.factory.createRecord(this.dataObjectMetaData);
     final Geometry sourceGeometry = sourceObject.getGeometryValue();
     final GeometryFactory geometryFactory = GeometryFactory.getFactory(sourceGeometry);
     final Geometry targetGeometry = geometryFactory.createGeometry(sourceGeometry);
     JtsGeometryUtil.copyUserData(sourceGeometry, targetGeometry);
     targetObject.setGeometryValue(targetGeometry);
-    for (final SourceToTargetProcess<Record, Record> processor : processors) {
+    for (final SourceToTargetProcess<Record, Record> processor : this.processors) {
       processor.process(sourceObject, targetObject);
     }
     return targetObject;
   }
 
   public RecordDefinition getDataObjectMetaData() {
-    return dataObjectMetaData;
+    return this.dataObjectMetaData;
   }
 
   public List<SourceToTargetProcess<Record, Record>> getProcessors() {
-    return processors;
+    return this.processors;
   }
 
   public void setDataObjectMetaData(final RecordDefinition dataObjectMetaData) {
@@ -73,14 +71,13 @@ public class SimpleDataObjectConveter implements
     this.factory = dataObjectMetaData.getRecordFactory();
   }
 
-  public void setProcessors(
-    final List<SourceToTargetProcess<Record, Record>> processors) {
+  public void setProcessors(final List<SourceToTargetProcess<Record, Record>> processors) {
     this.processors = processors;
   }
 
   @Override
   public String toString() {
-    return dataObjectMetaData.getPath() + "\n  "
-      + CollectionUtil.toString("\n  ", processors);
+    return this.dataObjectMetaData.getPath() + "\n  "
+      + CollectionUtil.toString("\n  ", this.processors);
   }
 }

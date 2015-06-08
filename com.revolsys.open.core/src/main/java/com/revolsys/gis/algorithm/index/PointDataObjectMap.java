@@ -38,7 +38,7 @@ public class PointDataObjectMap {
   /**
    * Add a {@link Point} {@link Record} to the list of objects at the given
    * coordinate.
-   * 
+   *
    * @param pointObjects The map of point objects.
    * @param object The object to add.
    */
@@ -93,17 +93,6 @@ public class PointDataObjectMap {
     return coordinates;
   }
 
-  public Record getFirstMatch(final Record object,
-    final Filter<Record> filter) {
-    final List<Record> objects = getObjects(object);
-    for (final Record matchObject : objects) {
-      if (filter.accept(matchObject)) {
-        return matchObject;
-      }
-    }
-    return null;
-  }
-
   public <V extends Record> V getFirstMatch(final Point point) {
     final List<Record> objects = getObjects(point);
     if (objects.isEmpty()) {
@@ -114,8 +103,17 @@ public class PointDataObjectMap {
 
   }
 
-  public List<Record> getMatches(final Record object,
-    final Filter<Record> filter) {
+  public Record getFirstMatch(final Record object, final Filter<Record> filter) {
+    final List<Record> objects = getObjects(object);
+    for (final Record matchObject : objects) {
+      if (filter.accept(matchObject)) {
+        return matchObject;
+      }
+    }
+    return null;
+  }
+
+  public List<Record> getMatches(final Record object, final Filter<Record> filter) {
     final List<Record> objects = getObjects(object);
     final List<Record> filteredObjects = FilterUtil.filter(objects, filter);
     return filteredObjects;
@@ -131,15 +129,15 @@ public class PointDataObjectMap {
     }
   }
 
-  public List<Record> getObjects(final Record object) {
-    final Point point = object.getGeometryValue();
-    final List<Record> objects = getObjects(point);
-    return objects;
-  }
-
   public List<Record> getObjects(final Point point) {
     final Coordinates coordinates = getCoordinates(point);
     final List<Record> objects = getObjects(coordinates);
+    return objects;
+  }
+
+  public List<Record> getObjects(final Record object) {
+    final Point point = object.getGeometryValue();
+    final List<Record> objects = getObjects(point);
     return objects;
   }
 

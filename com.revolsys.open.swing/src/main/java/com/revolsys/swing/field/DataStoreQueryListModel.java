@@ -41,15 +41,15 @@ public class DataStoreQueryListModel implements ListModel {
 
   private int maxResults = Integer.MAX_VALUE;
 
-  public DataStoreQueryListModel(final RecordStore dataStore,
-    final String displayAttributeName, final List<Query> queries) {
+  public DataStoreQueryListModel(final RecordStore dataStore, final String displayAttributeName,
+    final List<Query> queries) {
     this.dataStore = dataStore;
     this.queries.addAll(queries);
     this.displayAttributeName = displayAttributeName;
   }
 
-  public DataStoreQueryListModel(final RecordStore dataStore,
-    final String displayAttributeName, final Query... queries) {
+  public DataStoreQueryListModel(final RecordStore dataStore, final String displayAttributeName,
+    final Query... queries) {
     this(dataStore, displayAttributeName, Arrays.asList(queries));
   }
 
@@ -58,16 +58,14 @@ public class DataStoreQueryListModel implements ListModel {
     this.listDataListeners.add(ListDataListener.class, l);
   }
 
-  protected void fireContentsChanged(final Object source, final int index0,
-    final int index1) {
+  protected void fireContentsChanged(final Object source, final int index0, final int index1) {
     final Object[] listeners = this.listDataListeners.getListenerList();
     ListDataEvent e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == ListDataListener.class) {
         if (e == null) {
-          e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0,
-            index1);
+          e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0, index1);
         }
         ((ListDataListener)listeners[i + 1]).contentsChanged(e);
       }
@@ -103,7 +101,7 @@ public class DataStoreQueryListModel implements ListModel {
             final BinaryCondition binaryCondition = (BinaryCondition)whereCondition;
             if (binaryCondition.getOperator().equalsIgnoreCase("like")) {
               final String likeString = "%"
-                  + searchParam.toUpperCase().replaceAll("[^A-Z0-9 ]", "%") + "%";
+                + searchParam.toUpperCase().replaceAll("[^A-Z0-9 ]", "%") + "%";
               Q.setValue(0, binaryCondition, likeString);
             } else {
               Q.setValue(0, binaryCondition, searchParam);

@@ -17,8 +17,7 @@ import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableM
 
 public class DeletedPredicate implements HighlightPredicate {
 
-  private static final Border BORDER = BorderFactory.createLineBorder(
-    WebColors.Red, 2);
+  private static final Border BORDER = BorderFactory.createLineBorder(WebColors.Red, 2);
 
   public static void add(final DataObjectLayerTable table) {
     final DataObjectLayerTableModel model = (DataObjectLayerTableModel)table.getModel();
@@ -38,8 +37,7 @@ public class DeletedPredicate implements HighlightPredicate {
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToModel(adapter.row);
       final LayerDataObject record = this.model.getRecord(rowIndex);

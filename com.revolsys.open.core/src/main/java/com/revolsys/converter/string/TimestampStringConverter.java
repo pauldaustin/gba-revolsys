@@ -8,8 +8,6 @@ import org.springframework.util.StringUtils;
 import com.revolsys.util.DateUtil;
 
 public class TimestampStringConverter implements StringConverter<Timestamp> {
-  private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-
   public TimestampStringConverter() {
   }
 

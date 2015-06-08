@@ -16,31 +16,30 @@ public class DirectoryDataObjectStoreWriter extends AbstractWriter<Record> {
   @Override
   public void close() {
     super.close();
-    dataStore = null;
+    this.dataStore = null;
   }
 
   @Override
   public void write(final Record object) {
     if (object != null) {
       try {
-        final boolean currentDataStore = object.getRecordDefinition()
-          .getRecordStore() == dataStore;
+        final boolean currentDataStore = object.getRecordDefinition().getRecordStore() == this.dataStore;
         switch (object.getState()) {
           case New:
-            dataStore.insert(object);
+            this.dataStore.insert(object);
           break;
           case Modified:
             if (currentDataStore) {
               throw new UnsupportedOperationException();
             } else {
-              dataStore.insert(object);
+              this.dataStore.insert(object);
             }
           break;
           case Persisted:
             if (currentDataStore) {
               throw new UnsupportedOperationException();
             } else {
-              dataStore.insert(object);
+              this.dataStore.insert(object);
             }
           case Deleted:
             throw new UnsupportedOperationException();

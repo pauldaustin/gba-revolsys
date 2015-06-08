@@ -1,10 +1,8 @@
 package com.revolsys.transaction;
 
-
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
-
 
 public class InvokeMethodInTransaction {
 
@@ -26,8 +24,7 @@ public class InvokeMethodInTransaction {
    * @param beanFactory
    * @param throwExceptions
    */
-  public InvokeMethodInTransaction(final BeanFactory beanFactory,
-    final boolean throwExceptions) {
+  public InvokeMethodInTransaction(final BeanFactory beanFactory, final boolean throwExceptions) {
     this(beanFactory, throwExceptions, -1);
   }
 
@@ -36,8 +33,8 @@ public class InvokeMethodInTransaction {
    * @param throwExceptions
    * @param propagationBehavior
    */
-  public InvokeMethodInTransaction(final BeanFactory beanFactory,
-    final boolean throwExceptions, final int propagationBehavior) {
+  public InvokeMethodInTransaction(final BeanFactory beanFactory, final boolean throwExceptions,
+    final int propagationBehavior) {
     this(beanFactory, throwExceptions, propagationBehavior, false);
   }
 
@@ -47,15 +44,13 @@ public class InvokeMethodInTransaction {
    * @param propagationBehavior
    * @param rollback
    */
-  public InvokeMethodInTransaction(final BeanFactory beanFactory,
-    final boolean throwExceptions, final int propagationBehavior,
-    final boolean rollback) {
-    this((PlatformTransactionManager)beanFactory.getBean("transactionManager"),
-      throwExceptions, propagationBehavior, rollback);
+  public InvokeMethodInTransaction(final BeanFactory beanFactory, final boolean throwExceptions,
+    final int propagationBehavior, final boolean rollback) {
+    this((PlatformTransactionManager)beanFactory.getBean("transactionManager"), throwExceptions,
+      propagationBehavior, rollback);
   }
 
-  public InvokeMethodInTransaction(
-    final PlatformTransactionManager transactionManager) {
+  public InvokeMethodInTransaction(final PlatformTransactionManager transactionManager) {
     this(transactionManager, true);
   }
 
@@ -63,8 +58,7 @@ public class InvokeMethodInTransaction {
    * @param beanFactory
    * @param throwExceptions
    */
-  public InvokeMethodInTransaction(
-    final PlatformTransactionManager transactionManager,
+  public InvokeMethodInTransaction(final PlatformTransactionManager transactionManager,
     final boolean throwExceptions) {
     this(transactionManager, throwExceptions, -1);
   }
@@ -74,16 +68,13 @@ public class InvokeMethodInTransaction {
    * @param throwExceptions
    * @param propagationBehavior
    */
-  public InvokeMethodInTransaction(
-    final PlatformTransactionManager transactionManager,
+  public InvokeMethodInTransaction(final PlatformTransactionManager transactionManager,
     final boolean throwExceptions, final int propagationBehavior) {
     this(transactionManager, throwExceptions, propagationBehavior, false);
   }
 
-  public InvokeMethodInTransaction(
-    final PlatformTransactionManager transactionManager,
-    final boolean throwExceptions, final int propagationBehavior,
-    final boolean rollback) {
+  public InvokeMethodInTransaction(final PlatformTransactionManager transactionManager,
+    final boolean throwExceptions, final int propagationBehavior, final boolean rollback) {
     this.transactionManager = transactionManager;
     this.throwExceptions = throwExceptions;
     this.propagationBehavior = propagationBehavior;
@@ -97,18 +88,16 @@ public class InvokeMethodInTransaction {
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T execute(final Object object, final String methodName,
-    final Object... args) {
+  public <T> T execute(final Object object, final String methodName, final Object... args) {
     try {
-      final TransactionTemplate template = new TransactionTemplate(
-        transactionManager);
-      if (propagationBehavior > -1) {
-        template.setPropagationBehavior(propagationBehavior);
+      final TransactionTemplate template = new TransactionTemplate(this.transactionManager);
+      if (this.propagationBehavior > -1) {
+        template.setPropagationBehavior(this.propagationBehavior);
       }
-      return (T)template.execute(new InvokeMethodTransactionCallback(object,
-        methodName, rollback, args));
+      return (T)template.execute(new InvokeMethodTransactionCallback(object, methodName,
+        this.rollback, args));
     } catch (final RuntimeException e) {
-      if (throwExceptions) {
+      if (this.throwExceptions) {
         throw e;
       } else {
         e.printStackTrace();

@@ -52,15 +52,13 @@ public class LineSegmentIndex extends Quadtree {
     return false;
   }
 
-  public List<CoordinatesList> queryIntersections(final Coordinates c0,
-    final Coordinates c1) {
+  public List<CoordinatesList> queryIntersections(final Coordinates c0, final Coordinates c1) {
     return queryIntersections(new LineSegment(c0, c1));
   }
 
   public List<CoordinatesList> queryIntersections(final LineSegment querySeg) {
     final Envelope env = querySeg.getEnvelope();
-    final LineSegmentIntersectionVisitor visitor = new LineSegmentIntersectionVisitor(
-      querySeg);
+    final LineSegmentIntersectionVisitor visitor = new LineSegmentIntersectionVisitor(querySeg);
     query(env, visitor);
     final List<CoordinatesList> intersections = new ArrayList<CoordinatesList>(
       visitor.getIntersections());

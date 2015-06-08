@@ -11,17 +11,17 @@ public class CoordinateCoordinates extends AbstractCoordinates {
 
   @Override
   public CoordinateCoordinates cloneCoordinates() {
-    final Coordinate newCoordinate = new Coordinate(coordinate);
+    final Coordinate newCoordinate = new Coordinate(this.coordinate);
     return new CoordinateCoordinates(newCoordinate);
   }
 
   public Coordinate getCoordinate() {
-    return coordinate;
+    return this.coordinate;
   }
 
   @Override
   public byte getNumAxis() {
-    if (Double.isNaN(coordinate.z)) {
+    if (Double.isNaN(this.coordinate.z)) {
       return 2;
     } else {
       return 3;
@@ -32,11 +32,11 @@ public class CoordinateCoordinates extends AbstractCoordinates {
   public double getValue(final int index) {
     switch (index) {
       case 0:
-        return coordinate.x;
+        return this.coordinate.x;
       case 1:
-        return coordinate.y;
+        return this.coordinate.y;
       case 2:
-        return coordinate.z;
+        return this.coordinate.z;
       default:
         return Double.NaN;
     }
@@ -50,13 +50,13 @@ public class CoordinateCoordinates extends AbstractCoordinates {
   public void setValue(final int index, final double value) {
     switch (index) {
       case 0:
-        coordinate.x = value;
+        this.coordinate.x = value;
       break;
       case 1:
-        coordinate.y = value;
+        this.coordinate.y = value;
       break;
       case 2:
-        coordinate.z = value;
+        this.coordinate.z = value;
       break;
       default:
       break;
@@ -65,6 +65,6 @@ public class CoordinateCoordinates extends AbstractCoordinates {
 
   @Override
   public String toString() {
-    return coordinate.toString();
+    return this.coordinate.toString();
   }
 }

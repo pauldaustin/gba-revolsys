@@ -39,12 +39,10 @@ import com.revolsys.util.ExceptionUtil;
 
 public abstract class QueryValue implements Cloneable {
   /** Must be in upper case */
-  public static final List<String> SUPPORTED_BINARY_OPERATORS = Arrays.asList(
-    "AND", "OR", "+", "-", "/", "*", "=", "<>", "<", "<=", ">", ">=", "LIKE",
-    "+", "-", "/", "*", "%", "MOD");
+  public static final List<String> SUPPORTED_BINARY_OPERATORS = Arrays.asList("AND", "OR", "+",
+    "-", "/", "*", "=", "<>", "<", "<=", ">", ">=", "LIKE", "+", "-", "/", "*", "%", "MOD");
 
-  public static <V extends QueryValue> List<V> cloneQueryValues(
-    final List<V> values) {
+  public static <V extends QueryValue> List<V> cloneQueryValues(final List<V> values) {
     final List<V> clonedValues = new ArrayList<V>();
     for (final V value : values) {
       @SuppressWarnings("unchecked")
@@ -54,11 +52,10 @@ public abstract class QueryValue implements Cloneable {
     return clonedValues;
   }
 
-  public static Condition parseWhere(final RecordDefinition metaData,
-    final String whereClause) {
+  public static Condition parseWhere(final RecordDefinition metaData, final String whereClause) {
     try {
       final StatementNode statement = new SQLParser().parseStatement("SELECT * FROM "
-          + metaData.getTypeName() + " WHERE " + whereClause);
+        + metaData.getTypeName() + " WHERE " + whereClause);
       if (statement instanceof CursorNode) {
         final CursorNode selectStatement = (CursorNode)statement;
         final ResultSetNode resultSetNode = selectStatement.getResultSetNode();
@@ -71,14 +68,13 @@ public abstract class QueryValue implements Cloneable {
       }
       return null;
     } catch (final Throwable e) {
-      throw new IllegalArgumentException(
-        "Invalid where clause: " + whereClause, e);
+      throw new IllegalArgumentException("Invalid where clause: " + whereClause, e);
     }
   }
 
   @SuppressWarnings("unchecked")
-  public static <V extends QueryValue> V toQueryValue(
-    final RecordDefinition metaData, final ValueNode expression) {
+  public static <V extends QueryValue> V toQueryValue(final RecordDefinition metaData,
+    final ValueNode expression) {
     if (expression instanceof BetweenOperatorNode) {
       final BetweenOperatorNode betweenExpression = (BetweenOperatorNode)expression;
       final ValueNode leftValueNode = betweenExpression.getLeftOperand();
@@ -86,17 +82,17 @@ public abstract class QueryValue implements Cloneable {
       final ValueNode betweenExpressionStart = rightOperandList.get(0);
       final ValueNode betweenExpressionEnd = rightOperandList.get(1);
       if (!(leftValueNode instanceof ColumnReference)) {
-        throw new IllegalArgumentException(
-          "Between operator must use a column name not: " + leftValueNode);
+        throw new IllegalArgumentException("Between operator must use a column name not: "
+          + leftValueNode);
       }
 
       if (!(betweenExpressionStart instanceof NumericConstantNode)) {
-        throw new IllegalArgumentException(
-          "Between min value must be a number not: " + betweenExpressionStart);
+        throw new IllegalArgumentException("Between min value must be a number not: "
+          + betweenExpressionStart);
       }
       if (!(betweenExpressionEnd instanceof NumericConstantNode)) {
-        throw new IllegalArgumentException(
-          "Between max value must be a number not: " + betweenExpressionEnd);
+        throw new IllegalArgumentException("Between max value must be a number not: "
+          + betweenExpressionEnd);
       }
       final Column column = toQueryValue(metaData, leftValueNode);
       final Value min = toQueryValue(metaData, betweenExpressionStart);
@@ -117,8 +113,8 @@ public abstract class QueryValue implements Cloneable {
       } else if ("OR".equals(operator)) {
         return (V)new Or(leftCondition, rightCondition);
       } else {
-        throw new IllegalArgumentException("Binary logical operator "
-            + operator + " not supported.");
+        throw new IllegalArgumentException("Binary logical operator " + operator
+          + " not supported.");
       }
     } else if (expression instanceof BinaryOperatorNode) {
       final BinaryOperatorNode binaryOperatorNode = (BinaryOperatorNode)expression;
@@ -137,25 +133,23 @@ public abstract class QueryValue implements Cloneable {
             final FieldDefinition attribute = metaData.getField(name);
             final Object value = ((Value)rightCondition).getValue();
             if (value == null) {
-              throw new IllegalArgumentException("Values can't be null for "
-                  + operator + " use IS NULL or IS NOT NULL instead.");
+              throw new IllegalArgumentException("Values can't be null for " + operator
+                + " use IS NULL or IS NOT NULL instead.");
             } else {
               final CodeTable codeTable = metaData.getCodeTableByFieldName(name);
               if (codeTable == null || attribute == metaData.getIdField()) {
                 final Class<?> typeClass = attribute.getTypeClass();
                 try {
-                  final Object convertedValue = StringConverterRegistry.toObject(
-                    typeClass, value);
-                  if (convertedValue == null
-                      || !typeClass.isAssignableFrom(typeClass)) {
-                    throw new IllegalArgumentException(name + " requires a "
-                        + attribute.getType() + " not the value " + value);
+                  final Object convertedValue = StringConverterRegistry.toObject(typeClass, value);
+                  if (convertedValue == null || !typeClass.isAssignableFrom(typeClass)) {
+                    throw new IllegalArgumentException(name + " requires a " + attribute.getType()
+                      + " not the value " + value);
                   } else {
                     rightCondition = new Value(attribute, convertedValue);
                   }
                 } catch (final Throwable t) {
-                  throw new IllegalArgumentException(name + " requires a "
-                      + attribute.getType() + " not the value " + value);
+                  throw new IllegalArgumentException(name + " requires a " + attribute.getType()
+                    + " not the value " + value);
                 }
               } else {
                 Object id;
@@ -177,17 +171,15 @@ public abstract class QueryValue implements Cloneable {
           }
         }
         if (expression instanceof BinaryArithmeticOperatorNode) {
-          final QueryValue arithmaticCondition = Q.arithmatic(leftCondition,
-            operator, rightCondition);
+          final QueryValue arithmaticCondition = Q.arithmatic(leftCondition, operator,
+            rightCondition);
           return (V)arithmaticCondition;
         } else {
-          final Condition binaryCondition = Q.binary(leftCondition, operator,
-            rightCondition);
+          final Condition binaryCondition = Q.binary(leftCondition, operator, rightCondition);
           return (V)binaryCondition;
         }
       } else {
-        throw new IllegalArgumentException("Unsupported binary operator "
-            + operator);
+        throw new IllegalArgumentException("Unsupported binary operator " + operator);
       }
     } else if (expression instanceof ColumnReference) {
       final ColumnReference column = (ColumnReference)expression;
@@ -272,8 +264,8 @@ public abstract class QueryValue implements Cloneable {
     } else if (expression == null) {
       return null;
     } else {
-      throw new IllegalArgumentException("Unsupported expression"
-          + expression.getClass() + " " + expression);
+      throw new IllegalArgumentException("Unsupported expression" + expression.getClass() + " "
+        + expression);
     }
   }
 

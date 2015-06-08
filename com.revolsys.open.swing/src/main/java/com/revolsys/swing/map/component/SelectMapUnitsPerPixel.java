@@ -18,7 +18,7 @@ import javax.measure.unit.Unit;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.cs.CoordinateSystem;
@@ -32,16 +32,15 @@ import com.revolsys.util.Property;
 
 public class SelectMapUnitsPerPixel extends JComboBox implements ItemListener,
   PropertyChangeListener, ActionListener {
-  private static ComboBoxModel GEOGRAPHIC_MODEL = new DefaultComboBoxModel(
-    new Vector<Double>(Arrays.asList(2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01,
-      0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001, 0.00005, 0.00002, 0.00001,
-      0.000005, 0.000002, 0.000001, 0.0000005, 0.0000002, 0.0000001)));
+  private static ComboBoxModel GEOGRAPHIC_MODEL = new DefaultComboBoxModel(new Vector<Double>(
+    Arrays.asList(2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002,
+      0.0001, 0.00005, 0.00002, 0.00001, 0.000005, 0.000002, 0.000001, 0.0000005, 0.0000002,
+      0.0000001)));
 
-  private static ComboBoxModel PROJECTED_MODEL = new DefaultComboBoxModel(
-    new Vector<Double>(Arrays.asList(500000.0, 200000.0, 100000.0, 50000.0,
-      20000.0, 10000.0, 5000.0, 2000.0, 1000.0, 500.0, 200.0, 100.0, 50.0,
-      20.0, 10.0, 5.0, 2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002,
-      0.001)));
+  private static ComboBoxModel PROJECTED_MODEL = new DefaultComboBoxModel(new Vector<Double>(
+    Arrays.asList(500000.0, 200000.0, 100000.0, 50000.0, 20000.0, 10000.0, 5000.0, 2000.0, 1000.0,
+      500.0, 200.0, 100.0, 50.0, 20.0, 10.0, 5.0, 2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005,
+      0.002, 0.001)));
 
   private static final long serialVersionUID = 1L;
 
@@ -54,11 +53,9 @@ public class SelectMapUnitsPerPixel extends JComboBox implements ItemListener,
     this.map = new WeakReference<MapPanel>(map);
 
     setEditable(true);
-    final InvokeMethodStringConverter renderer = new InvokeMethodStringConverter(
-      this, "format");
-    renderer.setHorizontalAlignment(JLabel.RIGHT);
-    final SelectMapScaleEditor editor = new SelectMapScaleEditor(getEditor(),
-      renderer);
+    final InvokeMethodStringConverter renderer = new InvokeMethodStringConverter(this, "format");
+    renderer.setHorizontalAlignment(SwingConstants.RIGHT);
+    final SelectMapScaleEditor editor = new SelectMapScaleEditor(getEditor(), renderer);
     setEditor(editor);
     setRenderer(renderer);
     addItemListener(this);
@@ -94,16 +91,15 @@ public class SelectMapUnitsPerPixel extends JComboBox implements ItemListener,
       } else {
         numDigits = 7;
       }
-      return new BigDecimal(number.doubleValue()).setScale(numDigits,
-        BigDecimal.ROUND_HALF_UP).toPlainString()
-        + unitString;
+      return new BigDecimal(number.doubleValue()).setScale(numDigits, BigDecimal.ROUND_HALF_UP)
+        .toPlainString() + this.unitString;
     } else {
       return "Unknown";
     }
   }
 
   public MapPanel getMap() {
-    return map.get();
+    return this.map.get();
   }
 
   @Override
@@ -129,8 +125,7 @@ public class SelectMapUnitsPerPixel extends JComboBox implements ItemListener,
       final String propertyName = event.getPropertyName();
       if ("scale".equals(propertyName) || "unitsPerPixel".equals(propertyName)) {
         final double unitsPerPixel = map.getUnitsPerPixel();
-        if (unitsPerPixel > 0 && !Double.isInfinite(unitsPerPixel)
-          && !Double.isNaN(unitsPerPixel)) {
+        if (unitsPerPixel > 0 && !Double.isInfinite(unitsPerPixel) && !Double.isNaN(unitsPerPixel)) {
           Invoke.later(this, "setSelectedItem", unitsPerPixel);
         }
       } else if ("boundingBox".equals(propertyName)) {

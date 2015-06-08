@@ -42,8 +42,7 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   <T> T createPrimaryIdValue(String typePath);
 
-  Query createQuery(final String typePath, String whereClause,
-    final BoundingBox boundingBox);
+  Query createQuery(final String typePath, String whereClause, final BoundingBox boundingBox);
 
   Transaction createTransaction(Propagation propagation);
 
@@ -135,11 +134,10 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   Reader<Record> query(Query... queries);
 
-  Reader<Record> query(RecordFactory dataObjectFactory, String typePath,
-    Geometry geometry);
+  Reader<Record> query(RecordFactory dataObjectFactory, String typePath, Geometry geometry);
 
-  Reader<Record> query(RecordFactory dataObjectFactory, String typePath,
-    Geometry geometry, double distance);
+  Reader<Record> query(RecordFactory dataObjectFactory, String typePath, Geometry geometry,
+    double distance);
 
   Reader<Record> query(String typePath);
 

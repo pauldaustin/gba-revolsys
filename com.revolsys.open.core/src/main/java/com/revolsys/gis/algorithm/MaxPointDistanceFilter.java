@@ -5,8 +5,7 @@ import com.vividsolutions.jts.geom.CoordinateFilter;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class MaxPointDistanceFilter implements CoordinateFilter {
-  public static double getMaxDistance(final Geometry srcGeom,
-    final Geometry matchGeometry) {
+  public static double getMaxDistance(final Geometry srcGeom, final Geometry matchGeometry) {
     final MaxPointDistanceFilter filter = new MaxPointDistanceFilter(srcGeom);
     matchGeometry.apply(filter);
     return filter.getMaxPointDistance().getDistance();
@@ -26,12 +25,12 @@ public class MaxPointDistanceFilter implements CoordinateFilter {
 
   @Override
   public void filter(final Coordinate pt) {
-    minPtDist.initialize();
-    euclideanDist.computeDistance(geom, pt, minPtDist);
-    maxPtDist.setMaximum(minPtDist);
+    this.minPtDist.initialize();
+    this.euclideanDist.computeDistance(this.geom, pt, this.minPtDist);
+    this.maxPtDist.setMaximum(this.minPtDist);
   }
 
   public PointPairDistance getMaxPointDistance() {
-    return maxPtDist;
+    return this.maxPtDist;
   }
 }

@@ -21,13 +21,12 @@ import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 import com.revolsys.util.Property;
 
-public class FolderConnectionRegistryTreeNode extends LazyLoadTreeNode
-  implements PropertyChangeListener {
+public class FolderConnectionRegistryTreeNode extends LazyLoadTreeNode implements
+  PropertyChangeListener {
 
   private static final MenuFactory MENU = new MenuFactory();
 
-  public FolderConnectionRegistryTreeNode(
-    final FolderConnectionsTreeNode parent,
+  public FolderConnectionRegistryTreeNode(final FolderConnectionsTreeNode parent,
     final FolderConnectionRegistry registry) {
     super(parent, registry);
     setType("Folder Connections");
@@ -74,8 +73,7 @@ public class FolderConnectionRegistryTreeNode extends LazyLoadTreeNode
     final FolderConnectionRegistry registry = getRegistry();
     final List<FolderConnection> conections = registry.getConections();
     for (final FolderConnection connection : conections) {
-      final FolderConnectionTreeNode child = new FolderConnectionTreeNode(this,
-        connection);
+      final FolderConnectionTreeNode child = new FolderConnectionTreeNode(this, connection);
       children.add(child);
     }
     return children;
@@ -106,8 +104,8 @@ public class FolderConnectionRegistryTreeNode extends LazyLoadTreeNode
             nodeRemoved(index, oldValue);
           }
         } else if (oldValue == null) {
-          final FolderConnectionTreeNode node = new FolderConnectionTreeNode(
-            this, (FolderConnection)newValue);
+          final FolderConnectionTreeNode node = new FolderConnectionTreeNode(this,
+            (FolderConnection)newValue);
           addNode(index, node);
 
           nodesInserted(index);

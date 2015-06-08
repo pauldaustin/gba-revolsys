@@ -9,8 +9,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class ClipGeometryProcess extends
-  BaseInOutProcess<Record, Record> {
+public class ClipGeometryProcess extends BaseInOutProcess<Record, Record> {
 
   private Polygon clipPolygon;
 
@@ -18,17 +17,15 @@ public class ClipGeometryProcess extends
    * @return the clipPolygon
    */
   public Polygon getClipPolygon() {
-    return clipPolygon;
+    return this.clipPolygon;
   }
 
   @Override
-  protected void process(final Channel<Record> in,
-    final Channel<Record> out, final Record object) {
+  protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
     final Geometry geometry = object.getGeometryValue();
     if (geometry != null) {
-      final Geometry intersection = geometry.intersection(clipPolygon);
-      if (!intersection.isEmpty()
-        && intersection.getClass() == geometry.getClass()) {
+      final Geometry intersection = geometry.intersection(this.clipPolygon);
+      if (!intersection.isEmpty() && intersection.getClass() == geometry.getClass()) {
         if (intersection instanceof LineString) {
           final LineString lineString = (LineString)intersection;
           final Coordinate c0 = lineString.getCoordinateN(0);

@@ -65,7 +65,7 @@ import com.vividsolutions.jts.geom.Location;
  * <LI>Computing the intersections between the edges and nodes of two different
  * graphs
  * </UL>
- * 
+ *
  * @version 1.7
  */
 public class PlanarGraph {
@@ -89,16 +89,16 @@ public class PlanarGraph {
   protected List edgeEndList = new ArrayList();
 
   public PlanarGraph() {
-    nodes = new NodeMap(new NodeFactory());
+    this.nodes = new NodeMap(new NodeFactory());
   }
 
   public PlanarGraph(final NodeFactory nodeFact) {
-    nodes = new NodeMap(nodeFact);
+    this.nodes = new NodeMap(nodeFact);
   }
 
   public void add(final EdgeEnd e) {
-    nodes.add(e);
-    edgeEndList.add(e);
+    this.nodes.add(e);
+    this.edgeEndList.add(e);
   }
 
   /**
@@ -109,7 +109,7 @@ public class PlanarGraph {
     // create all the nodes for the edges
     for (final Iterator it = edgesToAdd.iterator(); it.hasNext();) {
       final Edge e = (Edge)it.next();
-      edges.add(e);
+      this.edges.add(e);
 
       final DirectedEdge de1 = new DirectedEdge(e, true);
       final DirectedEdge de2 = new DirectedEdge(e, false);
@@ -122,11 +122,11 @@ public class PlanarGraph {
   }
 
   public Node addNode(final Coordinates coord) {
-    return nodes.addNode(coord);
+    return this.nodes.addNode(coord);
   }
 
   public Node addNode(final Node node) {
-    return nodes.addNode(node);
+    return this.nodes.addNode(node);
   }
 
   void debugPrint(final Object o) {
@@ -141,17 +141,17 @@ public class PlanarGraph {
    * @return the node if found; null otherwise
    */
   public Node find(final Coordinates coord) {
-    return nodes.find(coord);
+    return this.nodes.find(coord);
   }
 
   /**
    * Returns the edge whose first two coordinates are p0 and p1
-   * 
+   *
    * @return the edge, if found <code>null</code> if the edge was not found
    */
   public Edge findEdge(final Coordinates p0, final Coordinates p1) {
-    for (int i = 0; i < edges.size(); i++) {
-      final Edge e = (Edge)edges.get(i);
+    for (int i = 0; i < this.edges.size(); i++) {
+      final Edge e = (Edge)this.edges.get(i);
       final CoordinatesList eCoord = e.getCoordinates();
       if (p0.equals(eCoord.get(0)) && p1.equals(eCoord.get(1))) {
         return e;
@@ -163,12 +163,12 @@ public class PlanarGraph {
   /**
    * Returns the EdgeEnd which has edge e as its base edge (MD 18 Feb 2002 -
    * this should return a pair of edges)
-   * 
+   *
    * @return the edge, if found <code>null</code> if the edge was not found
    */
   public EdgeEnd findEdgeEnd(final Edge e) {
-    for (final Iterator i = getEdgeEnds().iterator(); i.hasNext();) {
-      final EdgeEnd ee = (EdgeEnd)i.next();
+    for (final Object element : getEdgeEnds()) {
+      final EdgeEnd ee = (EdgeEnd)element;
       if (ee.getEdge() == e) {
         return ee;
       }
@@ -179,20 +179,19 @@ public class PlanarGraph {
   /**
    * Returns the edge which starts at p0 and whose first segment is parallel to
    * p1
-   * 
+   *
    * @return the edge, if found <code>null</code> if the edge was not found
    */
   public Edge findEdgeInSameDirection(final Coordinates p0, final Coordinates p1) {
-    for (int i = 0; i < edges.size(); i++) {
-      final Edge e = (Edge)edges.get(i);
+    for (int i = 0; i < this.edges.size(); i++) {
+      final Edge e = (Edge)this.edges.get(i);
 
       final CoordinatesList eCoord = e.getCoordinates();
       if (matchInSameDirection(p0, p1, eCoord.get(0), eCoord.get(1))) {
         return e;
       }
 
-      if (matchInSameDirection(p0, p1, eCoord.get(eCoord.size() - 1),
-        eCoord.get(eCoord.size() - 2))) {
+      if (matchInSameDirection(p0, p1, eCoord.get(eCoord.size() - 1), eCoord.get(eCoord.size() - 2))) {
         return e;
       }
     }
@@ -200,27 +199,27 @@ public class PlanarGraph {
   }
 
   public Collection<DirectedEdge> getEdgeEnds() {
-    return edgeEndList;
+    return this.edgeEndList;
   }
 
   public Iterator getEdgeIterator() {
-    return edges.iterator();
+    return this.edges.iterator();
   }
 
   public Iterator getNodeIterator() {
-    return nodes.iterator();
+    return this.nodes.iterator();
   }
 
   public Collection<Node> getNodes() {
-    return nodes.values();
+    return this.nodes.values();
   }
 
   protected void insertEdge(final Edge e) {
-    edges.add(e);
+    this.edges.add(e);
   }
 
   public boolean isBoundaryNode(final int geomIndex, final Coordinates coord) {
-    final Node node = nodes.find(coord);
+    final Node node = this.nodes.find(coord);
     if (node == null) {
       return false;
     }
@@ -237,7 +236,7 @@ public class PlanarGraph {
    * that only a subset is of interest).
    */
   public void linkAllDirectedEdges() {
-    for (final Iterator nodeit = nodes.iterator(); nodeit.hasNext();) {
+    for (final Iterator nodeit = this.nodes.iterator(); nodeit.hasNext();) {
       final Node node = (Node)nodeit.next();
       ((DirectedEdgeStar)node.getEdges()).linkAllDirectedEdges();
     }
@@ -249,7 +248,7 @@ public class PlanarGraph {
    * that only a subset is of interest).
    */
   public void linkResultDirectedEdges() {
-    for (final Iterator nodeit = nodes.iterator(); nodeit.hasNext();) {
+    for (final Iterator nodeit = this.nodes.iterator(); nodeit.hasNext();) {
       final Node node = (Node)nodeit.next();
       ((DirectedEdgeStar)node.getEdges()).linkResultDirectedEdges();
     }
@@ -260,8 +259,8 @@ public class PlanarGraph {
    * direction. E.g. the segments are parallel and in the same quadrant (as
    * opposed to parallel and opposite!).
    */
-  private boolean matchInSameDirection(final Coordinates p0,
-    final Coordinates p1, final Coordinates ep0, final Coordinates ep1) {
+  private boolean matchInSameDirection(final Coordinates p0, final Coordinates p1,
+    final Coordinates ep0, final Coordinates ep1) {
     if (!p0.equals(ep0)) {
       return false;
     }
@@ -275,9 +274,9 @@ public class PlanarGraph {
 
   public void printEdges(final PrintStream out) {
     out.println("Edges:");
-    for (int i = 0; i < edges.size(); i++) {
+    for (int i = 0; i < this.edges.size(); i++) {
       out.println("edge " + i + ":");
-      final Edge e = (Edge)edges.get(i);
+      final Edge e = (Edge)this.edges.get(i);
       e.print(out);
       e.eiList.print(out);
     }

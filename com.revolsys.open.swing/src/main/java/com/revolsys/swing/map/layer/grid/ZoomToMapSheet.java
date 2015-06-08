@@ -22,7 +22,7 @@ import com.revolsys.util.PreferencesUtil;
 public class ZoomToMapSheet extends AbstractAction {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -34,14 +34,12 @@ public class ZoomToMapSheet extends AbstractAction {
   @Override
   public void actionPerformed(final ActionEvent e) {
     final Object source = e.getSource();
-    final GridLayer layer = TreeUtil.getFirstSelectedNode(source,
-      GridLayer.class);
+    final GridLayer layer = TreeUtil.getFirstSelectedNode(source, GridLayer.class);
     final Project project = layer.getProject();
     if (project != null) {
       final RectangularMapGrid grid = layer.getGrid();
       final String gridName = grid.getName();
-      final String preferenceName = CaseConverter.toCapitalizedWords(gridName)
-        + "MapSheet";
+      final String preferenceName = CaseConverter.toCapitalizedWords(gridName) + "MapSheet";
       String mapSheet = PreferencesUtil.getString(getClass(), preferenceName);
       mapSheet = JOptionPane.showInputDialog("Enter name of the" + gridName
         + " map sheet to zoom to", mapSheet);
@@ -51,8 +49,7 @@ public class ZoomToMapSheet extends AbstractAction {
           final BoundingBox boundingBox = mapTile.getBoundingBox();
           project.setViewBoundingBox(boundingBox);
         } catch (final Throwable t) {
-          final String message = "Invalid map sheet " + mapSheet + " for "
-            + gridName;
+          final String message = "Invalid map sheet " + mapSheet + " for " + gridName;
           LoggerFactory.getLogger(getClass()).error(message, e);
           JOptionPane.showMessageDialog((Component)e.getSource(), message);
         } finally {

@@ -56,8 +56,8 @@ public class ComboBox extends JComboBox implements Field {
     this(false, items);
   }
 
-  public ComboBox(final ObjectToStringConverter converter,
-    final boolean editable, final Collection<?> items) {
+  public ComboBox(final ObjectToStringConverter converter, final boolean editable,
+    final Collection<?> items) {
     super(new Vector<Object>(items));
     setEditable(editable);
     AutoCompleteDecorator.decorate(this, converter);
@@ -67,8 +67,8 @@ public class ComboBox extends JComboBox implements Field {
     }
   }
 
-  public ComboBox(final ObjectToStringConverter converter,
-    final boolean editable, final Object... items) {
+  public ComboBox(final ObjectToStringConverter converter, final boolean editable,
+    final Object... items) {
     this(converter, editable, Arrays.asList(items));
   }
 
@@ -113,8 +113,8 @@ public class ComboBox extends JComboBox implements Field {
   }
 
   @Override
-  public void firePropertyChange(final String propertyName,
-    final Object oldValue, final Object newValue) {
+  public void firePropertyChange(final String propertyName, final Object oldValue,
+    final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
   }
 
@@ -160,8 +160,8 @@ public class ComboBox extends JComboBox implements Field {
   }
 
   @Override
-  public void setFieldInvalid(final String message,
-    final Color foregroundColor, final Color backgroundColor) {
+  public void setFieldInvalid(final String message, final Color foregroundColor,
+    final Color backgroundColor) {
     final ComboBoxEditor editor = getEditor();
     final Component component = editor.getEditorComponent();
     component.setForeground(foregroundColor);
@@ -196,8 +196,7 @@ public class ComboBox extends JComboBox implements Field {
     if (!EqualsRegistry.equal(oldValue, value)) {
       this.fieldValue = value;
       firePropertyChange(this.fieldName, oldValue, value);
-      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this,
-        oldValue, value);
+      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, value);
     }
   }
 

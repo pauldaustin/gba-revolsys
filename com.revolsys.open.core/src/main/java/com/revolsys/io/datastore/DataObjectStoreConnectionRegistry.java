@@ -31,16 +31,16 @@ public class DataObjectStoreConnectionRegistry extends
   }
 
   protected DataObjectStoreConnectionRegistry(
-    final DataObjectStoreConnectionManager connectionManager,
-    final String name, final boolean visible) {
+    final DataObjectStoreConnectionManager connectionManager, final String name,
+    final boolean visible) {
     super(connectionManager, name);
     setVisible(visible);
     init();
   }
 
   protected DataObjectStoreConnectionRegistry(
-    final DataObjectStoreConnectionManager connectionManager,
-    final String name, final Resource resource) {
+    final DataObjectStoreConnectionManager connectionManager, final String name,
+    final Resource resource) {
     super(connectionManager, name);
     setDirectory(resource);
     init();
@@ -50,8 +50,8 @@ public class DataObjectStoreConnectionRegistry extends
     this(null, name, true);
   }
 
-  public DataObjectStoreConnectionRegistry(final String name,
-    final Resource resource, final boolean readOnly) {
+  public DataObjectStoreConnectionRegistry(final String name, final Resource resource,
+    final boolean readOnly) {
     super(null, name);
     setReadOnly(readOnly);
     setDirectory(resource);
@@ -63,14 +63,13 @@ public class DataObjectStoreConnectionRegistry extends
   }
 
   public void addConnection(final Map<String, Object> config) {
-    final DataObjectStoreConnection connection = new DataObjectStoreConnection(
-      this, null, config);
+    final DataObjectStoreConnection connection = new DataObjectStoreConnection(this, null, config);
     addConnection(connection);
   }
 
   public void addConnection(final String name, final RecordStore dataStore) {
-    final DataObjectStoreConnection connection = new DataObjectStoreConnection(
-      this, name, dataStore);
+    final DataObjectStoreConnection connection = new DataObjectStoreConnection(this, name,
+      dataStore);
     addConnection(connection);
   }
 
@@ -82,22 +81,21 @@ public class DataObjectStoreConnectionRegistry extends
       name = FileUtil.getBaseName(dataStoreFile);
     }
     try {
-      final Map<String, Object> connectionProperties = CollectionUtil.get(
-        config, "connection", Collections.<String, Object> emptyMap());
+      final Map<String, Object> connectionProperties = CollectionUtil.get(config, "connection",
+        Collections.<String, Object> emptyMap());
       if (connectionProperties.isEmpty()) {
         LoggerFactory.getLogger(getClass()).error(
-          "Data store must include a 'connection' map property: "
-            + dataStoreFile);
+          "Data store must include a 'connection' map property: " + dataStoreFile);
         return null;
       } else {
-        final DataObjectStoreConnection dataStoreConnection = new DataObjectStoreConnection(
-          this, dataStoreFile.toString(), config);
+        final DataObjectStoreConnection dataStoreConnection = new DataObjectStoreConnection(this,
+          dataStoreFile.toString(), config);
         addConnection(name, dataStoreConnection);
         return dataStoreConnection;
       }
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(getClass()).error(
-        "Error creating data store from: " + dataStoreFile, e);
+      LoggerFactory.getLogger(getClass()).error("Error creating data store from: " + dataStoreFile,
+        e);
       return null;
     }
   }

@@ -43,14 +43,14 @@ import com.revolsys.gis.model.geometry.Polygon;
  * It is not possible to short-circuit in all cases, in particular in the case
  * where the test geometry touches the polygon linework. In this case full
  * topology must be computed.
- * 
+ *
  * @author Martin Davis
  */
 public class PolygonContains extends AbstractPolygonContains {
   /**
    * Computes the </tt>contains</tt> predicate between a {@link Polygon} and a
    * {@link Geometry}.
-   * 
+   *
    * @param polygon the prepared polygon
    * @param geometry a test geometry
    * @return true if the polygon contains the geometry
@@ -62,7 +62,7 @@ public class PolygonContains extends AbstractPolygonContains {
 
   /**
    * Creates an instance of this operation.
-   * 
+   *
    * @param polygon the Polygon to evaluate
    */
   public PolygonContains(final Polygon polygon) {
@@ -71,7 +71,7 @@ public class PolygonContains extends AbstractPolygonContains {
 
   /**
    * Tests whether this Polygon <tt>contains</tt> a given geometry.
-   * 
+   *
    * @param geometry the test geometry
    * @return true if the test geometry is contained
    */
@@ -82,13 +82,13 @@ public class PolygonContains extends AbstractPolygonContains {
   /**
    * Computes the full topological <tt>contains</tt> predicate. Used when
    * short-circuit tests are not conclusive.
-   * 
+   *
    * @param geometry the test geometry
    * @return true if this prepared polygon contains the test geometry
    */
   @Override
   protected boolean fullTopologicalPredicate(final Geometry geometry) {
-    return polygon.relate(geometry).isContains();
+    return this.polygon.relate(geometry).isContains();
   }
 
 }

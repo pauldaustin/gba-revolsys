@@ -26,14 +26,13 @@ public class BaseTreeCellRenderer extends DefaultTreeCellRenderer {
   }
 
   @Override
-  public Component getTreeCellRendererComponent(final JTree tree,
-    final Object value, final boolean selected, final boolean expanded,
-    final boolean leaf, final int row, final boolean hasFocus) {
-    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree,
-      value, selected, expanded, leaf, row, hasFocus);
+  public Component getTreeCellRendererComponent(final JTree tree, final Object value,
+    final boolean selected, final boolean expanded, final boolean leaf, final int row,
+    final boolean hasFocus) {
+    final JLabel label = (JLabel)super.getTreeCellRendererComponent(tree, value, selected,
+      expanded, leaf, row, hasFocus);
     if (this.labelPropertyName != null) {
-      final String text = JavaBeanUtil.getProperty(value,
-        this.labelPropertyName);
+      final String text = JavaBeanUtil.getProperty(value, this.labelPropertyName);
       label.setText(text);
     }
     if (value instanceof AbstractTreeNode) {

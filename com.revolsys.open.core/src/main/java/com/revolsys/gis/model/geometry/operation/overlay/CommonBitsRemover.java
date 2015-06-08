@@ -27,7 +27,7 @@ import com.vividsolutions.jts.precision.CommonBits;
  * If the geometry crosses the Y axis but not the X axis (and <i>mutatis
  * mutandum</i>), the common bits for Y are zero, but the common bits for X are
  * non-zero.
- * 
+ *
  * @version 1.7
  */
 public class CommonBitsRemover {
@@ -44,53 +44,52 @@ public class CommonBitsRemover {
    * Add a geometry to the set of geometries whose common bits are being
    * computed. After this method has executed the common coordinate reflects the
    * common bits of all added geometries.
-   * 
+   *
    * @param geom a Geometry to test for common bits
    */
   public void add(final Geometry geom) {
     for (final CoordinatesList points : geom.getCoordinatesLists()) {
       for (int i = 0; i < points.size(); i++) {
         final double x = points.getX(i);
-        commonBitsX.add(x);
+        this.commonBitsX.add(x);
         final double y = points.getY(i);
-        commonBitsY.add(y);
+        this.commonBitsY.add(y);
       }
     }
-    commonCoord = new DoubleCoordinates(commonBitsX.getCommon(),
-      commonBitsY.getCommon());
+    this.commonCoord = new DoubleCoordinates(this.commonBitsX.getCommon(),
+      this.commonBitsY.getCommon());
   }
 
   /**
    * Adds the common coordinate bits back into a Geometry. The coordinates of
    * the Geometry are changed.
-   * 
+   *
    * @param geom the Geometry to which to add the common coordinate bits
    */
   public Geometry addCommonBits(final Geometry geom) {
-    final double deltaX = commonBitsX.getCommon();
-    final double deltaY = commonBitsY.getCommon();
+    final double deltaX = this.commonBitsX.getCommon();
+    final double deltaY = this.commonBitsY.getCommon();
     return translate(geom, deltaX, deltaY);
   }
 
   public Coordinates getCommonCoordinate() {
-    return commonCoord;
+    return this.commonCoord;
   }
 
   /**
    * Removes the common coordinate bits from a Geometry. The coordinates of the
    * Geometry are changed.
-   * 
+   *
    * @param geom the Geometry from which to remove the common coordinate bits
    * @return the shifted Geometry
    */
   public Geometry removeCommonBits(final Geometry geom) {
-    final double deltaX = commonBitsX.getCommon();
-    final double deltaY = commonBitsY.getCommon();
+    final double deltaX = this.commonBitsX.getCommon();
+    final double deltaY = this.commonBitsY.getCommon();
     return translate(geom, -deltaX, -deltaY);
   }
 
-  protected Geometry translate(final Geometry geometry, final double deltaX,
-    final double deltaY) {
+  protected Geometry translate(final Geometry geometry, final double deltaX, final double deltaY) {
     if (deltaX != 0.0 && deltaY != 0.0) {
       for (final CoordinatesList points : geometry.getCoordinatesLists()) {
         for (int i = 0; i < points.size(); i++) {

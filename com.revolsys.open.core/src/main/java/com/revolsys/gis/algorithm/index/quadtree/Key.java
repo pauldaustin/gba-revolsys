@@ -38,37 +38,37 @@ public class Key {
    * whose extent is a power of two and which is based at a power of 2
    */
   public void computeKey(final Envelope itemEnv) {
-    level = computeQuadLevel(itemEnv);
-    env = new Envelope();
-    computeKey(level, itemEnv);
+    this.level = computeQuadLevel(itemEnv);
+    this.env = new Envelope();
+    computeKey(this.level, itemEnv);
     // MD - would be nice to have a non-iterative form of this algorithm
-    while (!env.contains(itemEnv)) {
-      level += 1;
-      computeKey(level, itemEnv);
+    while (!this.env.contains(itemEnv)) {
+      this.level += 1;
+      computeKey(this.level, itemEnv);
     }
   }
 
   private void computeKey(final int level, final Envelope itemEnv) {
     final double quadSize = DoubleBits.powerOf2(level);
-    pt.x = Math.floor(itemEnv.getMinX() / quadSize) * quadSize;
-    pt.y = Math.floor(itemEnv.getMinY() / quadSize) * quadSize;
-    env.init(pt.x, pt.x + quadSize, pt.y, pt.y + quadSize);
+    this.pt.x = Math.floor(itemEnv.getMinX() / quadSize) * quadSize;
+    this.pt.y = Math.floor(itemEnv.getMinY() / quadSize) * quadSize;
+    this.env.init(this.pt.x, this.pt.x + quadSize, this.pt.y, this.pt.y + quadSize);
   }
 
   public Coordinate getCentre() {
-    return new Coordinate((env.getMinX() + env.getMaxX()) / 2,
-      (env.getMinY() + env.getMaxY()) / 2);
+    return new Coordinate((this.env.getMinX() + this.env.getMaxX()) / 2,
+      (this.env.getMinY() + this.env.getMaxY()) / 2);
   }
 
   public Envelope getEnvelope() {
-    return env;
+    return this.env;
   }
 
   public int getLevel() {
-    return level;
+    return this.level;
   }
 
   public Coordinate getPoint() {
-    return pt;
+    return this.pt;
   }
 }

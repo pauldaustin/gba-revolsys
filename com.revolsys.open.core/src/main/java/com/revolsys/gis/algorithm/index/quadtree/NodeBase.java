@@ -8,8 +8,7 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.vividsolutions.jts.geom.Envelope;
 
 public abstract class NodeBase<T> {
-  public static int getSubnodeIndex(final Envelope envelope,
-    final Coordinates centre) {
+  public static int getSubnodeIndex(final Envelope envelope, final Coordinates centre) {
     int subnodeIndex = -1;
     final double minX = envelope.getMinX();
     final double minY = envelope.getMinY();
@@ -46,20 +45,20 @@ public abstract class NodeBase<T> {
 
   public NodeBase() {
     for (int i = 0; i < 4; i++) {
-      nodes.add(null);
+      this.nodes.add(null);
     }
   }
 
   public void add(final Envelope envelope, final T item) {
-    for (int i = 0; i < items.size(); i++) {
-      final T oldItem = items.get(i);
+    for (int i = 0; i < this.items.size(); i++) {
+      final T oldItem = this.items.get(i);
       if (oldItem == item) {
-        envelopes.set(i, envelope);
+        this.envelopes.set(i, envelope);
         return;
       }
     }
-    envelopes.add(envelope);
-    items.add(item);
+    this.envelopes.add(envelope);
+    this.items.add(item);
   }
 
   public int depth() {
@@ -77,11 +76,11 @@ public abstract class NodeBase<T> {
   }
 
   public List<T> getItems() {
-    return items;
+    return this.items;
   }
 
   protected Node<T> getNode(final int i) {
-    return nodes.get(i);
+    return this.nodes.get(i);
   }
 
   protected int getNodeCount() {
@@ -105,12 +104,12 @@ public abstract class NodeBase<T> {
   }
 
   public boolean hasItems() {
-    return !items.isEmpty();
+    return !this.items.isEmpty();
   }
 
   public boolean isEmpty() {
     boolean isEmpty = true;
-    if (!items.isEmpty()) {
+    if (!this.items.isEmpty()) {
       isEmpty = false;
     }
     for (int i = 0; i < 4; i++) {
@@ -137,18 +136,18 @@ public abstract class NodeBase<T> {
         if (node != null) {
           if (node.remove(envelope, item)) {
             if (node.isPrunable()) {
-              nodes.set(i, null);
+              this.nodes.set(i, null);
             }
             return true;
           }
         }
       }
-      final int index = items.indexOf(item);
+      final int index = this.items.indexOf(item);
       if (index == -1) {
         return false;
       } else {
-        envelopes.remove(index);
-        items.remove(index);
+        this.envelopes.remove(index);
+        this.items.remove(index);
         return true;
       }
     } else {
@@ -157,7 +156,7 @@ public abstract class NodeBase<T> {
   }
 
   protected void setNode(final int i, final Node<T> node) {
-    nodes.set(i, node);
+    this.nodes.set(i, node);
   }
 
   protected int size() {
@@ -168,20 +167,20 @@ public abstract class NodeBase<T> {
         subSize += node.size();
       }
     }
-    return subSize + items.size();
+    return subSize + this.items.size();
   }
 
   @Override
   public String toString() {
-    return nodes + "=" + items.size();
+    return this.nodes + "=" + this.items.size();
   }
 
   public boolean visit(final Envelope envelope, final Visitor<T> visitor) {
     if (isSearchMatch(envelope)) {
-      for (int i = 0; i < items.size(); i++) {
-        final Envelope itemEnvelope = envelopes.get(i);
+      for (int i = 0; i < this.items.size(); i++) {
+        final Envelope itemEnvelope = this.envelopes.get(i);
         if (isSearchMatch(itemEnvelope)) {
-          final T item = items.get(i);
+          final T item = this.items.get(i);
           if (!visitor.visit(item)) {
             return false;
           }
@@ -201,7 +200,7 @@ public abstract class NodeBase<T> {
   }
 
   public boolean visit(final Visitor<T> visitor) {
-    for (final T item : items) {
+    for (final T item : this.items) {
       if (!visitor.visit(item)) {
         return false;
       }

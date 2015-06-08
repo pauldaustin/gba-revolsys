@@ -21,23 +21,14 @@ import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
-public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory
-  implements MapWriterFactory, GeometryReaderFactory {
+public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory implements
+  MapWriterFactory, GeometryReaderFactory {
 
   private final Set<CoordinateSystem> coordinateSystems = EpsgCoordinateSystems.getCoordinateSystems();
 
   public KmlIoFactory() {
     super(Kml22Constants.KML_FORMAT_DESCRIPTION, true, true);
-    addMediaTypeAndFileExtension(Kml22Constants.KML_MEDIA_TYPE,
-      Kml22Constants.KML_FILE_EXTENSION);
-  }
-
-  @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
-    final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new KmlDataObjectWriter(writer);
+    addMediaTypeAndFileExtension(Kml22Constants.KML_MEDIA_TYPE, Kml22Constants.KML_FILE_EXTENSION);
   }
 
   @Override
@@ -47,8 +38,15 @@ public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory
   }
 
   @Override
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
+    final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
+    return new KmlDataObjectWriter(writer);
+  }
+
+  @Override
   public Set<CoordinateSystem> getCoordinateSystems() {
-    return coordinateSystems;
+    return this.coordinateSystems;
   }
 
   @Override
@@ -80,8 +78,7 @@ public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory
   }
 
   @Override
-  public boolean isCoordinateSystemSupported(
-    final CoordinateSystem coordinateSystem) {
+  public boolean isCoordinateSystemSupported(final CoordinateSystem coordinateSystem) {
     return EpsgCoordinateSystems.wgs84().equals(coordinateSystem);
   }
 

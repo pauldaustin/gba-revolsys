@@ -24,16 +24,14 @@ import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.util.Property;
 
-public class CodeTableProperty extends AbstractCodeTable implements
-  RecordDefinitionProperty {
+public class CodeTableProperty extends AbstractCodeTable implements RecordDefinitionProperty {
 
   private static final ArrayList<String> DEFAULT_FIELD_NAMES = new ArrayList<String>(
     Arrays.asList("VALUE"));
 
   public static final String PROPERTY_NAME = CodeTableProperty.class.getName();
 
-  public static final CodeTableProperty getProperty(
-    final RecordDefinition metaData) {
+  public static final CodeTableProperty getProperty(final RecordDefinition metaData) {
     final CodeTableProperty property = metaData.getProperty(PROPERTY_NAME);
     return property;
   }
@@ -70,7 +68,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
   }
 
   public void addAttributeAlias(final String columnName) {
-    attributeAliases.add(columnName);
+    this.attributeAliases.add(columnName);
   }
 
   public void addValue(final Record code) {
@@ -93,22 +91,21 @@ public class CodeTableProperty extends AbstractCodeTable implements
   public CodeTableProperty clone() {
     final CodeTableProperty clone = (CodeTableProperty)super.clone();
     clone.recordDefinition = null;
-    clone.attributeAliases = new ArrayList<String>(attributeAliases);
-    clone.valueFieldNames = new ArrayList<String>(valueFieldNames);
+    clone.attributeAliases = new ArrayList<String>(this.attributeAliases);
+    clone.valueFieldNames = new ArrayList<String>(this.valueFieldNames);
     return clone;
   }
 
   protected synchronized Object createId(final List<Object> values) {
-    if (createMissingCodes) {
+    if (this.createMissingCodes) {
       // TODO prevent duplicates from other threads/processes
-      final Record code = dataStore.create(typePath);
+      final Record code = this.dataStore.create(this.typePath);
       final RecordDefinition metaData = code.getRecordDefinition();
-      Object id = dataStore.createPrimaryIdValue(typePath);
+      Object id = this.dataStore.createPrimaryIdValue(this.typePath);
       if (id == null) {
         final FieldDefinition idAttribute = metaData.getIdField();
         if (idAttribute != null) {
-          if (Number.class.isAssignableFrom(idAttribute.getType()
-            .getJavaClass())) {
+          if (Number.class.isAssignableFrom(idAttribute.getType().getJavaClass())) {
             id = getNextId();
           } else {
             id = UUID.randomUUID().toString();
@@ -116,21 +113,21 @@ public class CodeTableProperty extends AbstractCodeTable implements
         }
       }
       code.setIdValue(id);
-      for (int i = 0; i < valueFieldNames.size(); i++) {
-        final String name = valueFieldNames.get(i);
+      for (int i = 0; i < this.valueFieldNames.size(); i++) {
+        final String name = this.valueFieldNames.get(i);
         final Object value = values.get(i);
         code.setValue(name, value);
       }
 
       final Timestamp now = new Timestamp(System.currentTimeMillis());
-      if (creationTimestampAttributeName != null) {
-        code.setValue(creationTimestampAttributeName, now);
+      if (this.creationTimestampAttributeName != null) {
+        code.setValue(this.creationTimestampAttributeName, now);
       }
-      if (modificationTimestampAttributeName != null) {
-        code.setValue(modificationTimestampAttributeName, now);
+      if (this.modificationTimestampAttributeName != null) {
+        code.setValue(this.modificationTimestampAttributeName, now);
       }
 
-      dataStore.insert(code);
+      this.dataStore.insert(code);
       id = code.getIdValue();
       return id;
     } else {
@@ -140,7 +137,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
 
   @Override
   public List<String> getAttributeAliases() {
-    return attributeAliases;
+    return this.attributeAliases;
   }
 
   @Override
@@ -155,25 +152,25 @@ public class CodeTableProperty extends AbstractCodeTable implements
   }
 
   public String getCreationTimestampAttributeName() {
-    return creationTimestampAttributeName;
+    return this.creationTimestampAttributeName;
   }
 
   public RecordStore getDataStore() {
-    return dataStore;
+    return this.dataStore;
   }
 
   @Override
   public String getIdAttributeName() {
-    if (StringUtils.hasText(idFieldName)) {
-      return idFieldName;
-    } else if (recordDefinition == null) {
+    if (StringUtils.hasText(this.idFieldName)) {
+      return this.idFieldName;
+    } else if (this.recordDefinition == null) {
       return "";
     } else {
-      final String idAttributeName = recordDefinition.getIdFieldName();
+      final String idAttributeName = this.recordDefinition.getIdFieldName();
       if (StringUtils.hasText(idAttributeName)) {
         return idAttributeName;
       } else {
-        return recordDefinition.getFieldName(0);
+        return this.recordDefinition.getFieldName(0);
       }
     }
   }
@@ -186,7 +183,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
     } else {
       final Map<String, Object> map = new HashMap<String, Object>();
       for (int i = 0; i < values.size(); i++) {
-        final String name = valueFieldNames.get(i);
+        final String name = this.valueFieldNames.get(i);
         final Object value = values.get(i);
         map.put(name, value);
       }
@@ -194,13 +191,8 @@ public class CodeTableProperty extends AbstractCodeTable implements
     }
   }
 
-  @Override
-  public RecordDefinition getRecordDefinition() {
-    return recordDefinition;
-  }
-
   public String getModificationTimestampAttributeName() {
-    return modificationTimestampAttributeName;
+    return this.modificationTimestampAttributeName;
   }
 
   @Override
@@ -208,27 +200,32 @@ public class CodeTableProperty extends AbstractCodeTable implements
     return PROPERTY_NAME;
   }
 
+  @Override
+  public RecordDefinition getRecordDefinition() {
+    return this.recordDefinition;
+  }
+
   public String getTypeName() {
-    return typePath;
+    return this.typePath;
   }
 
   @Override
   public List<String> getValueFieldNames() {
-    return valueFieldNames;
+    return this.valueFieldNames;
   }
 
   public boolean isCreateMissingCodes() {
-    return createMissingCodes;
+    return this.createMissingCodes;
   }
 
   public boolean isLoadAll() {
-    return loadAll;
+    return this.loadAll;
   }
 
   protected synchronized void loadAll() {
-    if (threadLoading.get() != Boolean.TRUE) {
-      if (loading) {
-        while (loading) {
+    if (this.threadLoading.get() != Boolean.TRUE) {
+      if (this.loading) {
+        while (this.loading) {
           try {
             wait(1000);
           } catch (final InterruptedException e) {
@@ -236,66 +233,61 @@ public class CodeTableProperty extends AbstractCodeTable implements
         }
         return;
       } else {
-        threadLoading.set(Boolean.TRUE);
-        loading = true;
+        this.threadLoading.set(Boolean.TRUE);
+        this.loading = true;
         try {
-          final RecordDefinition metaData = dataStore.getRecordDefinition(typePath);
-          final Query query = new Query(typePath);
+          final RecordDefinition metaData = this.dataStore.getRecordDefinition(this.typePath);
+          final Query query = new Query(this.typePath);
           query.setAttributeNames(metaData.getFieldNames());
-          for (final String order : orderBy) {
+          for (final String order : this.orderBy) {
             query.addOrderBy(order, true);
           }
           try (
-            Reader<Record> reader = dataStore.query(query)) {
+            Reader<Record> reader = this.dataStore.query(query)) {
             final List<Record> codes = reader.read();
-            dataStore.getStatistics()
-              .getStatistics("query")
-              .add(typePath, -codes.size());
-            Collections.sort(codes, new DataObjectAttributeComparator(orderBy));
+            this.dataStore.getStatistics().getStatistics("query").add(this.typePath, -codes.size());
+            Collections.sort(codes, new DataObjectAttributeComparator(this.orderBy));
             addValues(codes);
           }
           Property.firePropertyChange(this, "valuesChanged", false, true);
         } finally {
-          loading = false;
-          threadLoading.set(null);
+          this.loading = false;
+          this.threadLoading.set(null);
         }
       }
     }
   }
 
   @Override
-  protected synchronized Object loadId(final List<Object> values,
-    final boolean createId) {
-    if (loadAll && !loadMissingCodes && !isEmpty()) {
+  protected synchronized Object loadId(final List<Object> values, final boolean createId) {
+    if (this.loadAll && !this.loadMissingCodes && !isEmpty()) {
       return null;
     }
     Object id = null;
-    if (createId && loadAll) {
+    if (createId && this.loadAll) {
       loadAll();
       id = getId(values, false);
     } else {
-      final Query query = new Query(typePath);
+      final Query query = new Query(this.typePath);
       final And and = new And();
       if (!values.isEmpty()) {
         int i = 0;
-        for (final String attributeName : valueFieldNames) {
+        for (final String attributeName : this.valueFieldNames) {
           final Object value = values.get(i);
           if (value == null) {
             and.add(Q.isNull(attributeName));
           } else {
-            final FieldDefinition attribute = recordDefinition.getField(attributeName);
+            final FieldDefinition attribute = this.recordDefinition.getField(attributeName);
             and.add(Q.equal(attribute, value));
           }
           i++;
         }
       }
       query.setWhereCondition(and);
-      final Reader<Record> reader = dataStore.query(query);
+      final Reader<Record> reader = this.dataStore.query(query);
       try {
         final List<Record> codes = reader.read();
-        dataStore.getStatistics()
-          .getStatistics("query")
-          .add(typePath, -codes.size());
+        this.dataStore.getStatistics().getStatistics("query").add(this.typePath, -codes.size());
         addValues(codes);
         id = getIdByValue(values);
         Property.firePropertyChange(this, "valuesChanged", false, true);
@@ -313,11 +305,11 @@ public class CodeTableProperty extends AbstractCodeTable implements
   @Override
   protected List<Object> loadValues(final Object id) {
     List<Object> values = null;
-    if (loadAll) {
+    if (this.loadAll) {
       loadAll();
       values = getValueById(id);
     } else {
-      final Record code = dataStore.load(typePath, id);
+      final Record code = this.dataStore.load(this.typePath, id);
       if (code != null) {
         addValue(code);
         values = getValueById(id);
@@ -342,8 +334,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
     this.createMissingCodes = createMissingCodes;
   }
 
-  public void setCreationTimestampAttributeName(
-    final String creationTimestampAttributeName) {
+  public void setCreationTimestampAttributeName(final String creationTimestampAttributeName) {
     this.creationTimestampAttributeName = creationTimestampAttributeName;
   }
 
@@ -359,6 +350,14 @@ public class CodeTableProperty extends AbstractCodeTable implements
     this.loadMissingCodes = loadMissingCodes;
   }
 
+  public void setModificationTimestampAttributeName(final String modificationTimestampAttributeName) {
+    this.modificationTimestampAttributeName = modificationTimestampAttributeName;
+  }
+
+  public void setOrderBy(final List<String> orderBy) {
+    this.orderBy = new ArrayList<String>(orderBy);
+  }
+
   @Override
   public void setRecordDefinition(final RecordDefinition metaData) {
     if (this.recordDefinition != metaData) {
@@ -371,21 +370,12 @@ public class CodeTableProperty extends AbstractCodeTable implements
         this.typePath = null;
       } else {
         this.typePath = metaData.getPath();
-        setName(Path.getName(typePath));
+        setName(Path.getName(this.typePath));
         this.dataStore = this.recordDefinition.getRecordStore();
         metaData.setProperty(getPropertyName(), this);
-        dataStore.addCodeTable(this);
+        this.dataStore.addCodeTable(this);
       }
     }
-  }
-
-  public void setModificationTimestampAttributeName(
-    final String modificationTimestampAttributeName) {
-    this.modificationTimestampAttributeName = modificationTimestampAttributeName;
-  }
-
-  public void setOrderBy(final List<String> orderBy) {
-    this.orderBy = new ArrayList<String>(orderBy);
   }
 
   public void setValueAttributeName(final String valueColumns) {
@@ -405,7 +395,7 @@ public class CodeTableProperty extends AbstractCodeTable implements
 
   @Override
   public String toString() {
-    return typePath + " " + getIdAttributeName() + " " + valueFieldNames;
+    return this.typePath + " " + getIdAttributeName() + " " + this.valueFieldNames;
 
   }
 

@@ -18,8 +18,7 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
     return getProperty(metaData);
   }
 
-  public static EqualIgnoreAttributes getProperty(
-    final RecordDefinition metaData) {
+  public static EqualIgnoreAttributes getProperty(final RecordDefinition metaData) {
     EqualIgnoreAttributes property = metaData.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new EqualIgnoreAttributes();
@@ -50,7 +49,7 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   }
 
   public Set<String> getAttributeNames() {
-    return attributeNames;
+    return this.attributeNames;
   }
 
   @Override
@@ -59,7 +58,7 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   }
 
   public boolean isAttributeIgnored(final String attributeName) {
-    return attributeNames.contains(attributeName);
+    return this.attributeNames.contains(attributeName);
   }
 
   public void setAttributeNames(final Collection<String> attributeNames) {
@@ -77,18 +76,18 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   @Override
   public void setRecordDefinition(final RecordDefinition metaData) {
     super.setRecordDefinition(metaData);
-    if (attributeNames.contains(DataObjectEquals.EXCLUDE_ID)) {
+    if (this.attributeNames.contains(DataObjectEquals.EXCLUDE_ID)) {
       final String idAttributeName = metaData.getIdFieldName();
-      attributeNames.add(idAttributeName);
+      this.attributeNames.add(idAttributeName);
     }
-    if (attributeNames.contains(DataObjectEquals.EXCLUDE_GEOMETRY)) {
+    if (this.attributeNames.contains(DataObjectEquals.EXCLUDE_GEOMETRY)) {
       final String geometryAttributeName = metaData.getGeometryFieldName();
-      attributeNames.add(geometryAttributeName);
+      this.attributeNames.add(geometryAttributeName);
     }
   }
 
   @Override
   public String toString() {
-    return "EqualIgnore " + attributeNames;
+    return "EqualIgnore " + this.attributeNames;
   }
 }

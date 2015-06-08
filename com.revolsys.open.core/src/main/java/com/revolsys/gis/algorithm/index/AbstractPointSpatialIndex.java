@@ -6,8 +6,7 @@ import java.util.List;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 
-public abstract class AbstractPointSpatialIndex<T> implements
-  PointSpatialIndex<T> {
+public abstract class AbstractPointSpatialIndex<T> implements PointSpatialIndex<T> {
 
   @Override
   public List<T> find(final Envelope envelope) {

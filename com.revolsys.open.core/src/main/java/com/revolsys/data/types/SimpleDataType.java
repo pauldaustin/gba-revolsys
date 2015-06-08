@@ -12,22 +12,22 @@ public class SimpleDataType implements DataType {
 
   @Override
   public Class<?> getJavaClass() {
-    return javaClass;
+    return this.javaClass;
   }
 
   @Override
   public String getName() {
-    return name;
+    return this.name;
   }
 
   @Override
   public int hashCode() {
-    return name.hashCode();
+    return this.name.hashCode();
   }
 
   @Override
   public String toString() {
-    return name.toString();
+    return this.name.toString();
   }
 
 }

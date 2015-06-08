@@ -15,16 +15,10 @@ import com.revolsys.util.ExceptionUtil;
 
 public abstract class LazyLoadTreeNode extends AbstractTreeNode {
 
-  private final AtomicInteger updateIndicies = new AtomicInteger();
-
   private static final DefaultMutableTreeNode LOADING_NODE = new DefaultMutableTreeNode(
     "Loading...");
 
   private static final List<TreeNode> LOADING_NODES = Collections.<TreeNode> singletonList(LOADING_NODE);
-
-  private List<TreeNode> children = LOADING_NODES;
-
-  private final Object sync = new Object();
 
   private static Method setChildrenMethod;
 
@@ -32,13 +26,18 @@ public abstract class LazyLoadTreeNode extends AbstractTreeNode {
     LOADING_NODE.setAllowsChildren(false);
     try {
       final Class<LazyLoadTreeNode> clazz = LazyLoadTreeNode.class;
-      setChildrenMethod = clazz.getDeclaredMethod("setChildren", Integer.TYPE,
-        List.class);
+      setChildrenMethod = clazz.getDeclaredMethod("setChildren", Integer.TYPE, List.class);
       setChildrenMethod.setAccessible(true);
     } catch (final Throwable e) {
       ExceptionUtil.log(LazyLoadTreeNode.class, e);
     }
   }
+
+  private final AtomicInteger updateIndicies = new AtomicInteger();
+
+  private List<TreeNode> children = LOADING_NODES;
+
+  private final Object sync = new Object();
 
   public LazyLoadTreeNode(final TreeNode parent, final Object userObject) {
     super(parent, userObject);
@@ -54,7 +53,7 @@ public abstract class LazyLoadTreeNode extends AbstractTreeNode {
 
   @Override
   protected void doDelete() {
-    children = LOADING_NODES;
+    this.children = LOADING_NODES;
     super.doDelete();
   }
 
@@ -64,24 +63,23 @@ public abstract class LazyLoadTreeNode extends AbstractTreeNode {
 
   @Override
   public List<TreeNode> getChildren() {
-    return children;
+    return this.children;
   }
 
   protected int getUpdateIndex() {
-    synchronized (updateIndicies) {
-      return updateIndicies.incrementAndGet();
+    synchronized (this.updateIndicies) {
+      return this.updateIndicies.incrementAndGet();
     }
   }
 
   public void loadChildren() {
     if (SwingUtilities.isEventDispatchThread()) {
-      if (children == LOADING_NODES) {
-        Invoke.background("Load tree node " + this.getName(), this,
-          "loadChildren");
+      if (this.children == LOADING_NODES) {
+        Invoke.background("Load tree node " + this.getName(), this, "loadChildren");
       }
     } else {
-      synchronized (sync) {
-        if (children == LOADING_NODES) {
+      synchronized (this.sync) {
+        if (this.children == LOADING_NODES) {
           final int updateIndex = getUpdateIndex();
           List<TreeNode> children = doLoadChildren();
           if (children == null) {
@@ -151,10 +149,9 @@ public abstract class LazyLoadTreeNode extends AbstractTreeNode {
     }
   }
 
-  protected void setChildren(final int updateIndex,
-    final List<TreeNode> children) {
-    synchronized (updateIndicies) {
-      if (updateIndex == updateIndicies.get()) {
+  protected void setChildren(final int updateIndex, final List<TreeNode> children) {
+    synchronized (this.updateIndicies) {
+      if (updateIndex == this.updateIndicies.get()) {
         nodeChanged();
         this.children = Collections.emptyList();
         nodeRemoved(0, LOADING_NODE);

@@ -29,7 +29,7 @@ public class EdgeEndBundleStar extends EdgeEndStar {
    */
   @Override
   public void insert(final EdgeEnd e) {
-    EdgeEndBundle eb = (EdgeEndBundle)edgeMap.get(e);
+    EdgeEndBundle eb = (EdgeEndBundle)this.edgeMap.get(e);
     if (eb == null) {
       eb = new EdgeEndBundle(e);
       insertEdgeEnd(e, eb);

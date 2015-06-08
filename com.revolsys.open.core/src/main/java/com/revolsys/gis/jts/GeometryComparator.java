@@ -46,8 +46,7 @@ public class GeometryComparator implements Comparator<Geometry> {
               } else {
                 final Coordinates point1 = points1.get(j);
                 final Coordinates point2 = points2.get(j);
-                final int compare = LowestLeftComparator.compareCoordinates(
-                  point1, point2);
+                final int compare = LowestLeftComparator.compareCoordinates(point1, point2);
                 if (compare != 0) {
                   return compare;
                 }

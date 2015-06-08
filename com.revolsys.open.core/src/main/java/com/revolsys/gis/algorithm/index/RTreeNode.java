@@ -11,26 +11,23 @@ import com.vividsolutions.jts.geom.Envelope;
 public abstract class RTreeNode<T> extends Envelope {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -8110404083135361671L;
 
   public RTreeNode() {
   }
 
-  public abstract boolean remove(LinkedList<RTreeNode<T>> path,
-    Envelope envelope, T object);
+  public abstract boolean remove(LinkedList<RTreeNode<T>> path, Envelope envelope, T object);
 
   @Override
   public String toString() {
-    return new BoundingBox(GeometryFactory.getFactory(), this).toPolygon(1)
-      .toString();
+    return new BoundingBox(GeometryFactory.getFactory(), this).toPolygon(1).toString();
   }
 
   protected abstract void updateEnvelope();
 
-  public abstract boolean visit(Envelope envelope, Filter<T> filter,
-    Visitor<T> visitor);
+  public abstract boolean visit(Envelope envelope, Filter<T> filter, Visitor<T> visitor);
 
   public abstract boolean visit(Envelope envelope, Visitor<T> visitor);
 

@@ -8,7 +8,7 @@ import com.vividsolutions.jts.geom.Geometry;
 public class ReverseDataObjectGeometryUndo extends AbstractUndoableEdit {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 

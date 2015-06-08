@@ -10,6 +10,6 @@ public enum Location {
   }
 
   public int getIndex() {
-    return index;
+    return this.index;
   }
 }

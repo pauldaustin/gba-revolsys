@@ -25,8 +25,7 @@ import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.parallel.Invoke;
 
-public class FileDropTargetListener implements DropTargetListener,
-  HierarchyListener {
+public class FileDropTargetListener implements DropTargetListener, HierarchyListener {
   private static final String ZERO_CHAR_STRING = String.valueOf((char)0);
 
   private static final Logger LOG = Logger.getLogger(FileDropTargetListener.class);
@@ -89,8 +88,7 @@ public class FileDropTargetListener implements DropTargetListener,
           if (flavor.isRepresentationClassReader()) {
             event.acceptDrop(DnDConstants.ACTION_COPY);
 
-            final BufferedReader reader = new BufferedReader(
-              flavor.getReaderForText(tr));
+            final BufferedReader reader = new BufferedReader(flavor.getReaderForText(tr));
             handled = true;
             files = new ArrayList<File>();
             String fileName = null;
@@ -113,8 +111,7 @@ public class FileDropTargetListener implements DropTargetListener,
         }
       }
       if (files != null && !files.isEmpty()) {
-        Invoke.background("Open Files", Project.get(), "openFiles",
-          files);
+        Invoke.background("Open Files", Project.get(), "openFiles", files);
       }
       event.getDropTargetContext().dropComplete(true);
     } catch (final Throwable e) {
@@ -145,8 +142,7 @@ public class FileDropTargetListener implements DropTargetListener,
   private boolean isDragOk(final DropTargetDragEvent event) {
     final DataFlavor[] flavors = event.getCurrentDataFlavors();
     for (final DataFlavor flavor : flavors) {
-      if (flavor.equals(DataFlavor.javaFileListFlavor)
-        || flavor.isRepresentationClassReader()) {
+      if (flavor.equals(DataFlavor.javaFileListFlavor) || flavor.isRepresentationClassReader()) {
         return true;
       }
     }

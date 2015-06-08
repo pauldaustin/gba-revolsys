@@ -18,8 +18,8 @@ import com.revolsys.io.geojson.GeoJsonConstants;
 import com.revolsys.io.geojson.GeoJsonDataObjectWriter;
 import com.revolsys.io.geojson.GeoJsonGeometryIterator;
 
-public class CogoJsonIoFactory extends
-  AbstractRecordAndGeometryWriterFactory implements GeometryReaderFactory {
+public class CogoJsonIoFactory extends AbstractRecordAndGeometryWriterFactory implements
+  GeometryReaderFactory {
 
   public CogoJsonIoFactory() {
     super(GeoJsonConstants.COGO_DESCRIPTION, true, true);
@@ -28,22 +28,20 @@ public class CogoJsonIoFactory extends
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
-    final RecordDefinition metaData, final OutputStream outputStream,
-    final Charset charset) {
-    final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new GeoJsonDataObjectWriter(writer, true);
-  }
-
-  @Override
   public GeometryReader createGeometryReader(final Resource resource) {
     try {
-      final GeoJsonGeometryIterator iterator = new GeoJsonGeometryIterator(
-        resource);
+      final GeoJsonGeometryIterator iterator = new GeoJsonGeometryIterator(resource);
       return new GeometryReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
     }
+  }
+
+  @Override
+  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+    final OutputStream outputStream, final Charset charset) {
+    final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
+    return new GeoJsonDataObjectWriter(writer, true);
   }
 
   @Override

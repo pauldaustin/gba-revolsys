@@ -17,25 +17,22 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.FileUtil;
 
-public class JsonDataObjectIterator extends AbstractIterator<Record>
-  implements RecordIterator {
+public class JsonDataObjectIterator extends AbstractIterator<Record> implements RecordIterator {
 
   private RecordDefinition metaData;
 
   private JsonMapIterator iterator;
 
-  public JsonDataObjectIterator(final RecordDefinition metaData,
-    final InputStream in) {
+  public JsonDataObjectIterator(final RecordDefinition metaData, final InputStream in) {
     this(metaData, FileUtil.createUtf8Reader(in));
   }
 
-  public JsonDataObjectIterator(final RecordDefinition metaData,
-    final Reader in) {
+  public JsonDataObjectIterator(final RecordDefinition metaData, final Reader in) {
     this(metaData, in, false);
   }
 
-  public JsonDataObjectIterator(final RecordDefinition metaData,
-    final Reader in, final boolean single) {
+  public JsonDataObjectIterator(final RecordDefinition metaData, final Reader in,
+    final boolean single) {
     this.metaData = metaData;
     try {
       this.iterator = new JsonMapIterator(in, single);
@@ -46,22 +43,17 @@ public class JsonDataObjectIterator extends AbstractIterator<Record>
 
   @Override
   protected void doClose() {
-    FileUtil.closeSilent(iterator);
-    iterator = null;
-    metaData = null;
-  }
-
-  @Override
-  public RecordDefinition getRecordDefinition() {
-    return metaData;
+    FileUtil.closeSilent(this.iterator);
+    this.iterator = null;
+    this.metaData = null;
   }
 
   @Override
   protected Record getNext() throws NoSuchElementException {
-    if (iterator.hasNext()) {
-      final Map<String, Object> map = iterator.next();
-      final Record object = new ArrayRecord(metaData);
-      for (final FieldDefinition attribute : metaData.getFields()) {
+    if (this.iterator.hasNext()) {
+      final Map<String, Object> map = this.iterator.next();
+      final Record object = new ArrayRecord(this.metaData);
+      for (final FieldDefinition attribute : this.metaData.getFields()) {
         final String name = attribute.getName();
         final Object value = map.get(name);
         if (value != null) {
@@ -86,5 +78,10 @@ public class JsonDataObjectIterator extends AbstractIterator<Record>
     } else {
       throw new NoSuchElementException();
     }
+  }
+
+  @Override
+  public RecordDefinition getRecordDefinition() {
+    return this.metaData;
   }
 }

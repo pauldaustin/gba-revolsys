@@ -11,6 +11,6 @@ public class ProjectOperation implements CoordinatesOperation {
 
   @Override
   public void perform(final Coordinates from, final Coordinates to) {
-    projection.project(from, to);
+    this.projection.project(from, to);
   }
 }

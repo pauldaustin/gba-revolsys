@@ -15,7 +15,7 @@ import com.vividsolutions.jts.util.CollectionUtil;
  * is intended for use with Snap-Rounding noders, which typically are only
  * intended to work in the integer domain. Offsets can be provided to increase
  * the number of digits of available precision.
- * 
+ *
  * @version 1.7
  */
 public class ScaledNoder implements Noder {
@@ -33,34 +33,34 @@ public class ScaledNoder implements Noder {
     this(noder, scaleFactor, 0, 0);
   }
 
-  public ScaledNoder(final Noder noder, final double scaleFactor,
-    final double offsetX, final double offsetY) {
+  public ScaledNoder(final Noder noder, final double scaleFactor, final double offsetX,
+    final double offsetY) {
     this.noder = noder;
     this.scaleFactor = scaleFactor;
     // no need to scale if input precision is already integral
-    isScaled = !isIntegerPrecision();
+    this.isScaled = !isIntegerPrecision();
   }
 
   @Override
   public void computeNodes(final Collection inputSegStrings) {
     Collection intSegStrings = inputSegStrings;
-    if (isScaled) {
+    if (this.isScaled) {
       intSegStrings = scale(inputSegStrings);
     }
-    noder.computeNodes(intSegStrings);
+    this.noder.computeNodes(intSegStrings);
   }
 
   @Override
   public Collection getNodedSubstrings() {
-    final Collection splitSS = noder.getNodedSubstrings();
-    if (isScaled) {
+    final Collection splitSS = this.noder.getNodedSubstrings();
+    if (this.isScaled) {
       rescale(splitSS);
     }
     return splitSS;
   }
 
   public boolean isIntegerPrecision() {
-    return scaleFactor == 1.0;
+    return this.scaleFactor == 1.0;
   }
 
   private void rescale(final Collection segStrings) {
@@ -77,8 +77,8 @@ public class ScaledNoder implements Noder {
 
   private void rescale(final CoordinatesList pts) {
     for (int i = 0; i < pts.size(); i++) {
-      pts.setX(i, pts.getX(i) / scaleFactor + offsetX);
-      pts.setY(i, pts.getY(i) / scaleFactor + offsetY);
+      pts.setX(i, pts.getX(i) / this.scaleFactor + this.offsetX);
+      pts.setY(i, pts.getY(i) / this.scaleFactor + this.offsetY);
     }
   }
 
@@ -97,11 +97,10 @@ public class ScaledNoder implements Noder {
   }
 
   private CoordinatesList scale(final CoordinatesList pts) {
-    final CoordinatesList roundPts = new DoubleCoordinatesList(pts.size(),
-      pts.getNumAxis());
+    final CoordinatesList roundPts = new DoubleCoordinatesList(pts.size(), pts.getNumAxis());
     for (int i = 0; i < pts.size(); i++) {
-      roundPts.setX(i, Math.round((pts.getX(i) - offsetX) * scaleFactor));
-      roundPts.setX(i, Math.round((pts.getY(i) - offsetY) * scaleFactor));
+      roundPts.setX(i, Math.round((pts.getX(i) - this.offsetX) * this.scaleFactor));
+      roundPts.setX(i, Math.round((pts.getY(i) - this.offsetY) * this.scaleFactor));
     }
     final CoordinatesList roundPtsNoDup = CoordinatesListUtil.removeRepeatedPoints(roundPts);
     return roundPtsNoDup;

@@ -12,8 +12,7 @@ import javax.swing.event.ListDataListener;
 
 import com.revolsys.util.Reorderable;
 
-public class BaseListModel<T> extends ArrayList<T> implements ListModel,
-Serializable, Reorderable {
+public class BaseListModel<T> extends ArrayList<T> implements ListModel, Serializable, Reorderable {
   private static final long serialVersionUID = 1L;
 
   protected EventListenerList listenerList = new EventListenerList();
@@ -74,48 +73,42 @@ Serializable, Reorderable {
     }
   }
 
-  protected void fireContentsChanged(final Object source, final int index0,
-    final int index1) {
+  protected void fireContentsChanged(final Object source, final int index0, final int index1) {
     final Object[] listeners = this.listenerList.getListenerList();
     ListDataEvent e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == ListDataListener.class) {
         if (e == null) {
-          e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0,
-            index1);
+          e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0, index1);
         }
         ((ListDataListener)listeners[i + 1]).contentsChanged(e);
       }
     }
   }
 
-  protected void fireIntervalAdded(final Object source, final int index0,
-    final int index1) {
+  protected void fireIntervalAdded(final Object source, final int index0, final int index1) {
     final Object[] listeners = this.listenerList.getListenerList();
     ListDataEvent e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == ListDataListener.class) {
         if (e == null) {
-          e = new ListDataEvent(source, ListDataEvent.INTERVAL_ADDED, index0,
-            index1);
+          e = new ListDataEvent(source, ListDataEvent.INTERVAL_ADDED, index0, index1);
         }
         ((ListDataListener)listeners[i + 1]).intervalAdded(e);
       }
     }
   }
 
-  protected void fireIntervalRemoved(final Object source, final int index0,
-    final int index1) {
+  protected void fireIntervalRemoved(final Object source, final int index0, final int index1) {
     final Object[] listeners = this.listenerList.getListenerList();
     ListDataEvent e = null;
 
     for (int i = listeners.length - 2; i >= 0; i -= 2) {
       if (listeners[i] == ListDataListener.class) {
         if (e == null) {
-          e = new ListDataEvent(source, ListDataEvent.INTERVAL_REMOVED, index0,
-            index1);
+          e = new ListDataEvent(source, ListDataEvent.INTERVAL_REMOVED, index0, index1);
         }
         ((ListDataListener)listeners[i + 1]).intervalRemoved(e);
       }

@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.Location;
 
 /**
  * A map of nodes, indexed by the coordinate of the node
- * 
+ *
  * @version 1.7
  */
 public class NodeMap
@@ -48,18 +48,18 @@ public class NodeMap
    * This method expects that a node has a coordinate value.
    */
   public Node addNode(final Coordinates coord) {
-    Node node = (Node)nodeMap.get(coord);
+    Node node = (Node)this.nodeMap.get(coord);
     if (node == null) {
-      node = nodeFact.createNode(coord);
-      nodeMap.put(coord, node);
+      node = this.nodeFact.createNode(coord);
+      this.nodeMap.put(coord, node);
     }
     return node;
   }
 
   public Node addNode(final Node n) {
-    final Node node = (Node)nodeMap.get(n.getCoordinate());
+    final Node node = (Node)this.nodeMap.get(n.getCoordinate());
     if (node == null) {
-      nodeMap.put(n.getCoordinate(), n);
+      this.nodeMap.put(n.getCoordinate(), n);
       return n;
     }
     node.mergeLabel(n);
@@ -70,7 +70,7 @@ public class NodeMap
    * @return the node if found; null otherwise
    */
   public Node find(final Coordinates coord) {
-    return (Node)nodeMap.get(coord);
+    return (Node)this.nodeMap.get(coord);
   }
 
   public Collection getBoundaryNodes(final int geomIndex) {
@@ -96,6 +96,6 @@ public class NodeMap
   }
 
   public Collection<Node> values() {
-    return nodeMap.values();
+    return this.nodeMap.values();
   }
 }

@@ -23,8 +23,8 @@ public class ErrorPredicate implements HighlightPredicate {
 
   public static Highlighter getHighlighter(final DataObjectRowTableModel model) {
     final ErrorPredicate predicate = new ErrorPredicate(model);
-    return new ColorHighlighter(predicate, ColorUtil.setAlpha(Color.RED, 64),
-      Color.RED, Color.RED, Color.YELLOW);
+    return new ColorHighlighter(predicate, ColorUtil.setAlpha(Color.RED, 64), Color.RED, Color.RED,
+      Color.YELLOW);
   }
 
   private final DataObjectRowTableModel model;
@@ -34,14 +34,13 @@ public class ErrorPredicate implements HighlightPredicate {
   }
 
   @Override
-  public boolean isHighlighted(final Component renderer,
-    final ComponentAdapter adapter) {
+  public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToModel(adapter.row);
       final Record record = this.model.getRecord(rowIndex);
       if (record != null) {
         final int columnIndex = adapter.convertColumnIndexToModel(adapter.column);
-        final String attributeName = model.getFieldName(columnIndex);
+        final String attributeName = this.model.getFieldName(columnIndex);
         if (!record.isValid(attributeName)) {
           return true;
         }

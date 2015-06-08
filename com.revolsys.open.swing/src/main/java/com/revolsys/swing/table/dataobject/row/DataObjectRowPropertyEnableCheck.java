@@ -16,13 +16,12 @@ public class DataObjectRowPropertyEnableCheck extends AbstractEnableCheck {
 
   private boolean invert = false;
 
-  public DataObjectRowPropertyEnableCheck(final boolean invert,
-    final String propertyName) {
+  public DataObjectRowPropertyEnableCheck(final boolean invert, final String propertyName) {
     this(invert, propertyName, true);
   }
 
-  public DataObjectRowPropertyEnableCheck(final boolean invert,
-    final String propertyName, final Object value) {
+  public DataObjectRowPropertyEnableCheck(final boolean invert, final String propertyName,
+    final Object value) {
     this.invert = invert;
     this.propertyName = propertyName;
     this.value = value;
@@ -32,8 +31,7 @@ public class DataObjectRowPropertyEnableCheck extends AbstractEnableCheck {
     this(propertyName, true);
   }
 
-  public DataObjectRowPropertyEnableCheck(final String propertyName,
-    final Object value) {
+  public DataObjectRowPropertyEnableCheck(final String propertyName, final Object value) {
     this(false, propertyName, value);
   }
 
@@ -54,17 +52,16 @@ public class DataObjectRowPropertyEnableCheck extends AbstractEnableCheck {
   public boolean isEnabled() {
     try {
       final Record object = getObject();
-      final Object value = JavaBeanUtil.getSimpleProperty(object,
-        this.propertyName);
+      final Object value = JavaBeanUtil.getSimpleProperty(object, this.propertyName);
       final boolean equal = EqualsRegistry.equal(value, this.value);
       if (equal) {
-        if (invert) {
+        if (this.invert) {
           return disabled();
         } else {
           return enabled();
         }
       } else {
-        if (invert) {
+        if (this.invert) {
           return enabled();
         } else {
           return disabled();

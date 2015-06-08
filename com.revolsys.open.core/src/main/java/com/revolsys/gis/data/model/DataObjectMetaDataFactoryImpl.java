@@ -5,13 +5,13 @@
  * $Revision: 991 $
 
  * Copyright 2004-2005 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,27 +24,27 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.io.AbstractObjectWithProperties;
 
-public class DataObjectMetaDataFactoryImpl extends AbstractObjectWithProperties
-  implements RecordDefinitionFactory {
+public class DataObjectMetaDataFactoryImpl extends AbstractObjectWithProperties implements
+  RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> types = new LinkedHashMap<String, RecordDefinition>();
 
   public void addMetaData(final RecordDefinition type) {
     if (type != null) {
-      types.put(type.getPath(), type);
+      this.types.put(type.getPath(), type);
     }
   }
 
   @Override
   public RecordDefinition getRecordDefinition(final String path) {
-    return types.get(path);
+    return this.types.get(path);
   }
 
   public Collection<RecordDefinition> getTypes() {
-    return types.values();
+    return this.types.values();
   }
 }

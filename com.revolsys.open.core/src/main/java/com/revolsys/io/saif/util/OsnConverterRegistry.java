@@ -17,14 +17,13 @@ public class OsnConverterRegistry {
   }
 
   public OsnConverterRegistry(final int srid) {
-    final GeometryFactory geometryFactory = GeometryFactory.getFactory(srid,
-      1.0, 1.0);
+    final GeometryFactory geometryFactory = GeometryFactory.getFactory(srid, 1.0, 1.0);
 
     init(geometryFactory);
   }
 
   private void addConverter(final String name, final OsnConverter converter) {
-    converters.put(name, converter);
+    this.converters.put(name, converter);
   }
 
   public OsnConverter getConverter(String name) {
@@ -34,12 +33,12 @@ public class OsnConverterRegistry {
       if (name.startsWith("/")) {
         name = name.substring(1);
       }
-      return converters.get(name);
+      return this.converters.get(name);
     }
   }
 
   public GeometryFactory getGeometryFactory() {
-    return geometryFactory;
+    return this.geometryFactory;
   }
 
   public void init(final GeometryFactory geometryFactory) {
@@ -47,18 +46,12 @@ public class OsnConverterRegistry {
     addConverter("Date", new DateConverter());
     addConverter("SpatialObject", new SpatialObjectConverter(this));
     addConverter(SaifConstants.ARC, new ArcConverter(geometryFactory));
-    addConverter(SaifConstants.ORIENTED_ARC, new OrientedArcConverter(
-      geometryFactory, this));
-    addConverter(SaifConstants.ARC_DIRECTED, new ArcDirectedConverter(
-      geometryFactory));
-    addConverter(SaifConstants.CONTOUR, new ContourConverter(geometryFactory,
-      this));
+    addConverter(SaifConstants.ORIENTED_ARC, new OrientedArcConverter(geometryFactory, this));
+    addConverter(SaifConstants.ARC_DIRECTED, new ArcDirectedConverter(geometryFactory));
+    addConverter(SaifConstants.CONTOUR, new ContourConverter(geometryFactory, this));
     addConverter(SaifConstants.POINT, new PointConverter(geometryFactory));
-    addConverter(SaifConstants.ALIGNED_POINT, new AlignedPointConverter(
-      geometryFactory));
-    addConverter(SaifConstants.TEXT_LINE, new TextLineConverter(
-      geometryFactory, this));
-    addConverter(SaifConstants.TEXT_ON_CURVE, new TextOnCurveConverter(
-      geometryFactory, this));
+    addConverter(SaifConstants.ALIGNED_POINT, new AlignedPointConverter(geometryFactory));
+    addConverter(SaifConstants.TEXT_LINE, new TextLineConverter(geometryFactory, this));
+    addConverter(SaifConstants.TEXT_ON_CURVE, new TextOnCurveConverter(geometryFactory, this));
   }
 }

@@ -7,7 +7,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 public class EdgeEvent<T> extends EventObject {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -2271176357444777709L;
 
@@ -33,8 +33,7 @@ public class EdgeEvent<T> extends EventObject {
     this.typePath = edge.getTypeName();
   }
 
-  public EdgeEvent(final Edge<T> edge, final String ruleName,
-    final String action) {
+  public EdgeEvent(final Edge<T> edge, final String ruleName, final String action) {
     super(edge);
     this.line = edge.getLine();
     this.typePath = edge.getTypeName();
@@ -42,8 +41,8 @@ public class EdgeEvent<T> extends EventObject {
     this.action = action;
   }
 
-  public EdgeEvent(final Edge<T> edge, final String ruleName,
-    final String action, final String notes) {
+  public EdgeEvent(final Edge<T> edge, final String ruleName, final String action,
+    final String notes) {
     super(edge);
     this.line = edge.getLine();
     this.typePath = edge.getTypeName();
@@ -53,7 +52,7 @@ public class EdgeEvent<T> extends EventObject {
   }
 
   public String getAction() {
-    return action;
+    return this.action;
   }
 
   public Edge<T> getEdge() {
@@ -61,11 +60,11 @@ public class EdgeEvent<T> extends EventObject {
   }
 
   public LineString getLine() {
-    return line;
+    return this.line;
   }
 
   public String getNotes() {
-    return notes;
+    return this.notes;
   }
 
   public T getObject() {
@@ -73,7 +72,7 @@ public class EdgeEvent<T> extends EventObject {
   }
 
   public String getRuleName() {
-    return ruleName;
+    return this.ruleName;
   }
 
   @Override
@@ -82,7 +81,7 @@ public class EdgeEvent<T> extends EventObject {
   }
 
   public String getTypeName() {
-    return typePath;
+    return this.typePath;
   }
 
 }

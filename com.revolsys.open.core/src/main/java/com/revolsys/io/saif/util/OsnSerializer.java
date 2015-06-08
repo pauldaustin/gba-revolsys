@@ -5,13 +5,13 @@
  * $Revision$
 
  * Copyright 2004-2005 Revolution Systems Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,6 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -94,43 +93,43 @@ public class OsnSerializer {
     this.file = file;
     this.maxSize = maxSize;
     this.converters = converters;
-    prefix = ObjectSetUtil.getObjectSubsetPrefix(file);
+    this.prefix = ObjectSetUtil.getObjectSubsetPrefix(file);
     openFile();
-    scope.addLast(DOCUMENT_SCOPE);
-    lineSeparator = "\r\n";
+    this.scope.addLast(DOCUMENT_SCOPE);
+    this.lineSeparator = "\r\n";
   }
 
-  public void attribute(final String name, final double value,
-    final boolean endLine) throws IOException {
+  public void attribute(final String name, final double value, final boolean endLine)
+    throws IOException {
     attribute(name, new BigDecimal(value), endLine);
   }
 
-  public void attribute(final String name, final Object value,
-    final boolean endLine) throws IOException {
+  public void attribute(final String name, final Object value, final boolean endLine)
+    throws IOException {
     attributeName(name);
     attributeValue(value);
-    if (endLine || indentEnabled) {
+    if (endLine || this.indentEnabled) {
       endLine();
     }
 
   }
 
-  public void attributeEnum(final String name, final String value,
-    final boolean endLine) throws IOException {
+  public void attributeEnum(final String name, final String value, final boolean endLine)
+    throws IOException {
     attributeName(name);
     write(value);
     endAttribute();
-    if (endLine || indentEnabled) {
+    if (endLine || this.indentEnabled) {
       endLine();
     }
 
   }
 
   public void attributeName(final String name) throws IOException {
-    endElement = false;
+    this.endElement = false;
     serializeIndent();
     write(name + ":");
-    scope.addLast(ATTRIBUTE_SCOPE);
+    this.scope.addLast(ATTRIBUTE_SCOPE);
   }
 
   public void attributeValue(final Object value) throws IOException {
@@ -139,96 +138,89 @@ public class OsnSerializer {
   }
 
   public void close() throws IOException {
-    while (!scope.isEmpty()) {
+    while (!this.scope.isEmpty()) {
       final Object scope = this.scope.getLast();
       if (scope == COLLECTION_SCOPE) {
         endCollection();
       } else if (scope == ATTRIBUTE_SCOPE) {
-        if (indentEnabled) {
+        if (this.indentEnabled) {
           endLine();
         }
         this.scope.removeLast();
-      } else if (scope != DOCUMENT_SCOPE
-        && (scope instanceof Record || scope instanceof String)) {
+      } else if (scope != DOCUMENT_SCOPE && (scope instanceof Record || scope instanceof String)) {
         endObject();
       } else {
-        if (indentEnabled) {
+        if (this.indentEnabled) {
           endLine();
         }
         this.scope.removeLast();
       }
     }
     write('\n');
-    out.close();
+    this.out.close();
   }
 
   private void decreaseIndent() {
-    if (indentEnabled) {
-      indent = indent.substring(1);
+    if (this.indentEnabled) {
+      this.indent = this.indent.substring(1);
     }
   }
 
   public void endAttribute() {
-    scope.removeLast();
+    this.scope.removeLast();
   }
 
   public void endCollection() throws IOException {
-    endElement = true;
+    this.endElement = true;
     decreaseIndent();
     serializeIndent();
     write('}');
-    if (indentEnabled) {
+    if (this.indentEnabled) {
       endLine();
     }
     endAttribute();
   }
 
   public void endLine() throws IOException {
-    write(lineSeparator);
+    write(this.lineSeparator);
   }
 
   public void endObject() throws IOException {
-    endElement = true;
+    this.endElement = true;
     decreaseIndent();
     serializeIndent();
     write(')');
-    if (indentEnabled) {
+    if (this.indentEnabled) {
       endLine();
     }
     endAttribute();
   }
 
   private void increaseIndent() {
-    if (indentEnabled) {
-      indent += '\t';
+    if (this.indentEnabled) {
+      this.indent += '\t';
     }
   }
 
   public boolean isIndentEnabled() {
-    return indentEnabled;
+    return this.indentEnabled;
   }
 
   private void openFile() throws IOException {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Creating object subset '" + FileUtil.getFileName(file) + "'");
+      LOG.debug("Creating object subset '" + FileUtil.getFileName(this.file) + "'");
     }
-    out = new BufferedOutputStream(new FileOutputStream(file), 4096);
+    this.out = new BufferedOutputStream(new FileOutputStream(this.file), 4096);
   }
 
   private void openNextFile() throws IOException {
-    out.flush();
-    out.close();
-    index++;
-    final String fileName = ObjectSetUtil.getObjectSubsetName(prefix, index);
-    file = new File(file.getParentFile(), fileName);
-    size = 0;
+    this.out.flush();
+    this.out.close();
+    this.index++;
+    final String fileName = ObjectSetUtil.getObjectSubsetName(this.prefix, this.index);
+    this.file = new File(this.file.getParentFile(), fileName);
+    this.size = 0;
     openFile();
-  }
-
-  public void serialize(final Record object) throws IOException {
-    serializeStartObject(object);
-    serializeAttributes(object);
-    endObject();
   }
 
   private void serialize(final Date date) throws IOException {
@@ -266,18 +258,17 @@ public class OsnSerializer {
   }
 
   private void serialize(final Geometry geometry) throws IOException {
-    final String type = (String)JtsGeometryUtil.getGeometryProperty(geometry,
-      "type");
-    OsnConverter converter = converters.getConverter(type);
+    final String type = (String)JtsGeometryUtil.getGeometryProperty(geometry, "type");
+    OsnConverter converter = this.converters.getConverter(type);
     if (converter == null) {
       if (geometry instanceof Point) {
         if (converter == null) {
-          converter = converters.getConverter(SaifConstants.POINT);
+          converter = this.converters.getConverter(SaifConstants.POINT);
         }
 
       } else if (geometry instanceof LineString) {
         if (converter == null) {
-          converter = converters.getConverter(SaifConstants.ARC);
+          converter = this.converters.getConverter(SaifConstants.ARC);
         }
       }
     }
@@ -286,6 +277,12 @@ public class OsnSerializer {
 
   public void serialize(final List<Object> list) throws IOException {
     serializeCollection("List", list);
+  }
+
+  public void serialize(final Record object) throws IOException {
+    serializeStartObject(object);
+    serializeAttributes(object);
+    endObject();
   }
 
   public void serialize(final Set<Object> set) throws IOException {
@@ -300,10 +297,9 @@ public class OsnSerializer {
     write('"');
   }
 
-  public void serializeAttribute(final String name, final Object value)
-    throws IOException {
+  public void serializeAttribute(final String name, final Object value) throws IOException {
     attributeName(name);
-    if ((value instanceof Geometry) && name.equals("position")) {
+    if (value instanceof Geometry && name.equals("position")) {
       startObject(SPATIAL_OBJECT);
       attributeName("geometry");
       attributeValue(value);
@@ -329,15 +325,14 @@ public class OsnSerializer {
         } else {
           serializeAttribute(name, value);
         }
-        if (indentEnabled) {
+        if (this.indentEnabled) {
           endLine();
         }
-        if (!endElement) {
+        if (!this.endElement) {
           if (i < attributeCount - 1) {
             endLine();
           } else if (type.getTypeName().equals("/Coord3D")) {
-            for (final Iterator<Object> scopes = scope.iterator(); scopes.hasNext();) {
-              final Object parent = scopes.next();
+            for (Object parent : this.scope) {
               if (parent instanceof Record) {
                 final Record parentObject = (Record)parent;
                 if (parentObject.getRecordDefinition()
@@ -355,12 +350,12 @@ public class OsnSerializer {
     }
   }
 
-  private void serializeCollection(final String name,
-    final Collection<Object> collection) throws IOException {
+  private void serializeCollection(final String name, final Collection<Object> collection)
+    throws IOException {
     startCollection(name);
     for (final Object value : collection) {
       serializeValue(value);
-      if (indentEnabled || !endElement) {
+      if (this.indentEnabled || !this.endElement) {
         endLine();
       }
     }
@@ -368,16 +363,16 @@ public class OsnSerializer {
   }
 
   public void serializeDataObject(final Record object) throws IOException {
-    if (size >= maxSize) {
+    if (this.size >= this.maxSize) {
       openNextFile();
-      size = 0;
+      this.size = 0;
     }
     serialize(object);
   }
 
   public void serializeIndent() throws IOException {
-    if (indentEnabled) {
-      write(indent);
+    if (this.indentEnabled) {
+      write(this.indent);
     }
   }
 
@@ -389,7 +384,7 @@ public class OsnSerializer {
 
   @SuppressWarnings("unchecked")
   public void serializeValue(final Object value) throws IOException {
-    if (scope.getLast() == COLLECTION_SCOPE) {
+    if (this.scope.getLast() == COLLECTION_SCOPE) {
       serializeIndent();
     }
     if (value == null) {
@@ -419,18 +414,18 @@ public class OsnSerializer {
   }
 
   public void startCollection(final String name) throws IOException {
-    endElement = false;
+    this.endElement = false;
     write(name);
     write('{');
-    if (indentEnabled) {
+    if (this.indentEnabled) {
       endLine();
     }
     increaseIndent();
-    scope.addLast(COLLECTION_SCOPE);
+    this.scope.addLast(COLLECTION_SCOPE);
   }
 
   public void startObject(final String path) throws IOException {
-    endElement = false;
+    this.endElement = false;
     final String[] elements = path.replaceAll("^/+", "").split("/");
     if (elements.length == 1) {
       write(elements[0]);
@@ -442,31 +437,30 @@ public class OsnSerializer {
       write(schema);
     }
     write('(');
-    if (indentEnabled) {
+    if (this.indentEnabled) {
       endLine();
     }
     increaseIndent();
-    scope.addLast(path);
+    this.scope.addLast(path);
   }
 
   @Override
   public String toString() {
-    return path.toString();
+    return this.path.toString();
   }
 
   public void write(final byte[] b) throws IOException {
     write(b, 0, b.length);
   }
 
-  public void write(final byte[] b, final int off, final int len)
-    throws IOException {
-    out.write(b, off, len);
-    size += len;
+  public void write(final byte[] b, final int off, final int len) throws IOException {
+    this.out.write(b, off, len);
+    this.size += len;
   }
 
   public void write(final int b) throws IOException {
-    out.write(b);
-    size += 1;
+    this.out.write(b);
+    this.size += 1;
   }
 
   public void write(final String s) throws IOException {

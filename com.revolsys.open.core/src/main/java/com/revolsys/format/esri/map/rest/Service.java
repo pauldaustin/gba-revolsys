@@ -11,8 +11,7 @@ public class Service extends ArcGisResponse {
   public Service() {
   }
 
-  protected Service(final Catalog catalog, final String serviceName,
-    final String serviceType) {
+  protected Service(final Catalog catalog, final String serviceName, final String serviceType) {
     super(catalog, serviceName + "/" + serviceType);
     this.serviceName = serviceName;
     this.serviceType = serviceType;
@@ -28,11 +27,11 @@ public class Service extends ArcGisResponse {
   }
 
   public String getServiceName() {
-    return serviceName;
+    return this.serviceName;
   }
 
   public String getServiceType() {
-    return serviceType;
+    return this.serviceType;
   }
 
   public void setServiceName(final String serviceName) {

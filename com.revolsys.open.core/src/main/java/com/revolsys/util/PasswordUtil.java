@@ -63,14 +63,14 @@ public class PasswordUtil {
       final byte[] secret = new byte[encryptedPassword.length() / 2];
       for (int i = 0; i < encryptedPassword.length(); i += 2) {
         final String pair = encryptedPassword.substring(i, i + 2);
-        secret[i / 2] = (byte)(Integer.parseInt(pair, 16));
+        secret[i / 2] = (byte)Integer.parseInt(pair, 16);
       }
       return new String(decryptSqlDeveloper(secret));
     }
   }
 
-  public static byte[] encrypt(final byte[] data, final char[] password,
-    final byte[] salt, final int noIterations) {
+  public static byte[] encrypt(final byte[] data, final char[] password, final byte[] salt,
+    final int noIterations) {
     try {
       final String method = "PBEWithMD5AndTripleDES";
       final SecretKeyFactory kf = SecretKeyFactory.getInstance(method);

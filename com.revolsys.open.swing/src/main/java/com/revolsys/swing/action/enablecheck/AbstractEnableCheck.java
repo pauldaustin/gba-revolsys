@@ -5,8 +5,8 @@ import java.beans.PropertyChangeListener;
 
 import com.revolsys.beans.AbstractPropertyChangeObject;
 
-public abstract class AbstractEnableCheck extends AbstractPropertyChangeObject
-  implements EnableCheck, PropertyChangeListener {
+public abstract class AbstractEnableCheck extends AbstractPropertyChangeObject implements
+  EnableCheck, PropertyChangeListener {
 
   public boolean disabled() {
     firePropertyChange("enabled", true, false);

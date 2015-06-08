@@ -12,10 +12,9 @@ import com.revolsys.visitor.CreateListVisitor;
 import com.revolsys.visitor.DelegatingVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 
-public class EdgeLessThanDistanceToNodeVisitor<T> extends
-  DelegatingVisitor<Edge<T>> {
-  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph,
-    final Node<T> node, final double maxDistance) {
+public class EdgeLessThanDistanceToNodeVisitor<T> extends DelegatingVisitor<Edge<T>> {
+  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph, final Node<T> node,
+    final double maxDistance) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
     final Coordinates point = node;
     BoundingBox env = new BoundingBox(point);
@@ -32,8 +31,8 @@ public class EdgeLessThanDistanceToNodeVisitor<T> extends
 
   private final Node<T> node;
 
-  public EdgeLessThanDistanceToNodeVisitor(final Node<T> node,
-    final double maxDistance, final Visitor<Edge<T>> matchVisitor) {
+  public EdgeLessThanDistanceToNodeVisitor(final Node<T> node, final double maxDistance,
+    final Visitor<Edge<T>> matchVisitor) {
     super(matchVisitor);
     this.node = node;
     this.maxDistance = maxDistance;
@@ -45,9 +44,9 @@ public class EdgeLessThanDistanceToNodeVisitor<T> extends
   @Override
   public boolean visit(final Edge<T> edge) {
     final Envelope envelope = edge.getEnvelope();
-    if (this.envelope.distance(envelope) < maxDistance) {
-      if (!edge.hasNode(node)) {
-        if (edge.isLessThanDistance(node, maxDistance)) {
+    if (this.envelope.distance(envelope) < this.maxDistance) {
+      if (!edge.hasNode(this.node)) {
+        if (edge.isLessThanDistance(this.node, this.maxDistance)) {
           super.visit(edge);
         }
       }

@@ -66,17 +66,17 @@ public class VertexHausdorffDistance {
   }
 
   private void compute(final Geometry g0, final Geometry g1) {
-    computeMaxPointDistance(g0, g1, ptDist);
-    computeMaxPointDistance(g1, g0, ptDist);
+    computeMaxPointDistance(g0, g1, this.ptDist);
+    computeMaxPointDistance(g1, g0, this.ptDist);
   }
 
   private void compute(final LineSegment seg0, final LineSegment seg1) {
-    computeMaxPointDistance(seg0, seg1, ptDist);
-    computeMaxPointDistance(seg1, seg0, ptDist);
+    computeMaxPointDistance(seg0, seg1, this.ptDist);
+    computeMaxPointDistance(seg1, seg0, this.ptDist);
   }
 
-  private void computeMaxPointDistance(final Geometry pointGeom,
-    final Geometry geom, final PointPairDistance ptDist) {
+  private void computeMaxPointDistance(final Geometry pointGeom, final Geometry geom,
+    final PointPairDistance ptDist) {
     final MaxPointDistanceFilter distFilter = new MaxPointDistanceFilter(geom);
     pointGeom.apply(distFilter);
     ptDist.setMaximum(distFilter.getMaxPointDistance());
@@ -85,13 +85,13 @@ public class VertexHausdorffDistance {
   /**
    * Computes the maximum oriented distance between two line segments, as well
    * as the point pair separated by that distance.
-   * 
+   *
    * @param seg0 the line segment containing the furthest point
    * @param seg1 the line segment containing the closest point
    * @param ptDist the point pair and distance to be updated
    */
-  private void computeMaxPointDistance(final LineSegment seg0,
-    final LineSegment seg1, final PointPairDistance ptDist) {
+  private void computeMaxPointDistance(final LineSegment seg0, final LineSegment seg1,
+    final PointPairDistance ptDist) {
     final Coordinate closestPt0 = seg0.closestPoint(seg1.p0);
     ptDist.setMaximum(closestPt0, seg1.p0);
     final Coordinate closestPt1 = seg0.closestPoint(seg1.p1);
@@ -99,11 +99,11 @@ public class VertexHausdorffDistance {
   }
 
   public double distance() {
-    return ptDist.getDistance();
+    return this.ptDist.getDistance();
   }
 
   public Coordinate[] getCoordinates() {
-    return ptDist.getCoordinates();
+    return this.ptDist.getCoordinates();
   }
 
 }
