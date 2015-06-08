@@ -9,23 +9,24 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
 public class JdbcBooleanFieldDefinition extends JdbcFieldDefinition {
-  public JdbcBooleanFieldDefinition(final String name, final int sqlType, final int length,
-    final boolean required, final String description, final Map<String, Object> properties) {
-    super(name, DataTypes.BOOLEAN, sqlType, length, 0, required, description, properties);
+  public JdbcBooleanFieldDefinition(final String dbName, final String name, final int sqlType,
+    final int length, final boolean required, final String description,
+    final Map<String, Object> properties) {
+    super(dbName, name, DataTypes.BOOLEAN, sqlType, length, 0, required, description, properties);
   }
 
   @Override
   public JdbcBooleanFieldDefinition clone() {
-    return new JdbcBooleanFieldDefinition(getName(), getSqlType(), getLength(), isRequired(),
-      getDescription(), getProperties());
+    return new JdbcBooleanFieldDefinition(getDbName(), getName(), getSqlType(), getLength(),
+      isRequired(), getDescription(), getProperties());
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
-    final Record object) throws SQLException {
+  public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record record) throws SQLException {
     final boolean booleanValue = resultSet.getBoolean(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), booleanValue);
+      setValue(record, booleanValue);
     }
     return columnIndex + 1;
   }

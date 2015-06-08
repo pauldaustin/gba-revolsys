@@ -36,10 +36,11 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
 
   private final int numAxis;
 
-  public PostgreSQLGeometryJdbcAttribute(final String name, final DataType type,
-    final boolean required, final String description, final Map<String, Object> properties,
-    final int srid, final int numAxis, final GeometryFactory geometryFactory) {
-    super(name, type, -1, 0, 0, required, description, properties);
+  public PostgreSQLGeometryJdbcAttribute(final String dbName, final String name,
+    final DataType type, final boolean required, final String description,
+    final Map<String, Object> properties, final int srid, final int numAxis,
+    final GeometryFactory geometryFactory) {
+    super(dbName, name, type, -1, 0, 0, required, description, properties);
     this.srid = srid;
     this.geometryFactory = geometryFactory;
     setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
@@ -48,7 +49,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
 
   @Override
   public JdbcFieldDefinition clone() {
-    return new PostgreSQLGeometryJdbcAttribute(getName(), getType(), isRequired(),
+    return new PostgreSQLGeometryJdbcAttribute(getDbName(), getName(), getType(), isRequired(),
       getDescription(), getProperties(), this.srid, this.numAxis, this.geometryFactory);
   }
 
@@ -105,7 +106,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+  public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
     final Record object) throws SQLException {
     final Object oracleValue = resultSet.getObject(columnIndex);
     final Object value = toJava(oracleValue);

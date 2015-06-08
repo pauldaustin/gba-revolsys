@@ -9,16 +9,17 @@ import java.util.Map;
 import com.revolsys.data.types.DataTypes;
 
 public class JdbcDecimalFieldDefinition extends JdbcFieldDefinition {
-  public JdbcDecimalFieldDefinition(final String name, final int sqlType, final int length,
-    final int scale, final boolean required, final String description,
+  public JdbcDecimalFieldDefinition(final String dbName, final String name, final int sqlType,
+    final int length, final int scale, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.DECIMAL, sqlType, length, scale, required, description, properties);
+    super(dbName, name, DataTypes.DECIMAL, sqlType, length, scale, required, description,
+      properties);
   }
 
   @Override
   public JdbcDecimalFieldDefinition clone() {
-    return new JdbcDecimalFieldDefinition(getName(), getSqlType(), getLength(), getScale(),
-      isRequired(), getDescription(), getProperties());
+    return new JdbcDecimalFieldDefinition(getDbName(), getName(), getSqlType(), getLength(),
+      getScale(), isRequired(), getDescription(), getProperties());
   }
 
   @Override

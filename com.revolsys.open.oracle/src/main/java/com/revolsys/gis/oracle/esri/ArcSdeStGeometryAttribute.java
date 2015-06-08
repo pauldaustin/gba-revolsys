@@ -31,10 +31,10 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
 
   private final GeometryFactory geometryFactory;
 
-  public ArcSdeStGeometryAttribute(final String name, final DataType type, final boolean required,
-    final String description, final Map<String, Object> properties,
+  public ArcSdeStGeometryAttribute(final String dbName, final String name, final DataType type,
+    final boolean required, final String description, final Map<String, Object> properties,
     final ArcSdeSpatialReference spatialReference, final int dimension) {
-    super(name, type, -1, 0, 0, required, description, properties);
+    super(dbName, name, type, -1, 0, 0, required, description, properties);
     this.spatialReference = spatialReference;
     final GeometryFactory factory = spatialReference.getGeometryFactory();
     this.geometryFactory = GeometryFactory.getFactory(factory.getSRID(), dimension,
@@ -60,12 +60,12 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
 
   @Override
   public ArcSdeStGeometryAttribute clone() {
-    return new ArcSdeStGeometryAttribute(getName(), getType(), isRequired(), getDescription(),
-      getProperties(), this.spatialReference, this.dimension);
+    return new ArcSdeStGeometryAttribute(getDbName(), getName(), getType(), isRequired(),
+      getDescription(), getProperties(), this.spatialReference, this.dimension);
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+  public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
     final Record object) throws SQLException {
     final int geometryType = resultSet.getInt(columnIndex);
     if (!resultSet.wasNull()) {

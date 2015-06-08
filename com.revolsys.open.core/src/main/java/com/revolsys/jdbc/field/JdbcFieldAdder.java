@@ -147,12 +147,13 @@ public class JdbcFieldAdder {
   }
 
   public FieldDefinition addField(final AbstractJdbcRecordStore recordStore,
-    final RecordDefinitionImpl recordDefinition, final String name, final String dataType,
-    final int sqlType, final int length, final int scale, final boolean required,
-    final String description) {
+    final RecordDefinitionImpl recordDefinition, final String dbName, final String name,
+    final String dataType, final int sqlType, final int length, final int scale,
+    final boolean required, final String description) {
     JdbcFieldDefinition attribute;
     if (dataType.equals("oid")) {
-      attribute = new JdbcBlobFieldDefinition(name, sqlType, length, required, description, null);
+      attribute = new JdbcBlobFieldDefinition(dbName, name, sqlType, length, required, description,
+        null);
     } else {
       switch (sqlType) {
         case Types.CHAR:
@@ -160,77 +161,79 @@ public class JdbcFieldAdder {
         case Types.LONGVARCHAR:
         case Types.VARCHAR:
           final Map<String, Object> properties = recordStore.getProperties();
-          attribute = new JdbcStringFieldDefinition(name, sqlType, length, required, description,
-            properties);
+          attribute = new JdbcStringFieldDefinition(dbName, name, sqlType, length, required,
+            description, properties);
         break;
         case Types.BIGINT:
-          attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcLongFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         case Types.INTEGER:
-          attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcIntegerFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         case Types.SMALLINT:
-          attribute = new JdbcShortFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcShortFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         case Types.TINYINT:
-          attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcByteFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         case Types.DOUBLE:
-          attribute = new JdbcDoubleFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcDoubleFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         case Types.REAL:
-          attribute = new JdbcFloatFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcFloatFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         case Types.DECIMAL:
         case Types.NUMERIC:
         case Types.FLOAT:
           if (scale > 0) {
-            attribute = new JdbcBigDecimalFieldDefinition(name, sqlType, length, scale, required,
-              description, null);
+            attribute = new JdbcBigDecimalFieldDefinition(dbName, name, sqlType, length, scale,
+              required, description, null);
           } else if (length == 131089 || length == 0) {
-            attribute = new JdbcBigDecimalFieldDefinition(name, sqlType, -1, -1, required,
+            attribute = new JdbcBigDecimalFieldDefinition(dbName, name, sqlType, -1, -1, required,
               description, null);
           } else {
             if (length <= 2) {
-              attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description,
-                null);
+              attribute = new JdbcByteFieldDefinition(dbName, name, sqlType, length, required,
+                description, null);
             } else if (length <= 4) {
-              attribute = new JdbcShortFieldDefinition(name, sqlType, length, required,
+              attribute = new JdbcShortFieldDefinition(dbName, name, sqlType, length, required,
                 description, null);
             } else if (length <= 9) {
-              attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required,
+              attribute = new JdbcIntegerFieldDefinition(dbName, name, sqlType, length, required,
                 description, null);
             } else if (length <= 18) {
-              attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description,
-                null);
-            } else {
-              attribute = new JdbcBigIntegerFieldDefinition(name, sqlType, length, required,
+              attribute = new JdbcLongFieldDefinition(dbName, name, sqlType, length, required,
                 description, null);
+            } else {
+              attribute = new JdbcBigIntegerFieldDefinition(dbName, name, sqlType, length,
+                required, description, null);
             }
           }
         break;
         case Types.DATE:
-          attribute = new JdbcDateFieldDefinition(name, sqlType, required, description, null);
+          attribute = new JdbcDateFieldDefinition(dbName, name, sqlType, required, description,
+            null);
         break;
         case Types.TIMESTAMP:
-          attribute = new JdbcTimestampFieldDefinition(name, sqlType, required, description, null);
+          attribute = new JdbcTimestampFieldDefinition(dbName, name, sqlType, required,
+            description, null);
         break;
         case Types.BIT:
-          attribute = new JdbcBooleanFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcBooleanFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         case Types.BLOB:
-          attribute = new JdbcBlobFieldDefinition(name, sqlType, length, required, description,
-            null);
+          attribute = new JdbcBlobFieldDefinition(dbName, name, sqlType, length, required,
+            description, null);
         break;
         default:
-          attribute = new JdbcFieldDefinition(name, this.dataType, sqlType, length, scale,
+          attribute = new JdbcFieldDefinition(dbName, name, this.dataType, sqlType, length, scale,
             required, description, null);
         break;
       }

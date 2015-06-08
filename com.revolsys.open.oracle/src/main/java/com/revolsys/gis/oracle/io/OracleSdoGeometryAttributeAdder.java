@@ -120,9 +120,9 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
 
   @Override
   public FieldDefinition addField(final AbstractJdbcRecordStore recordStore,
-    final RecordDefinitionImpl metaData, final String name, final String dataTypeName,
-    final int sqlType, final int length, final int scale, final boolean required,
-    final String description) {
+    final RecordDefinitionImpl metaData, final String dbName, final String name,
+    final String dataTypeName, final int sqlType, final int length, final int scale,
+    final boolean required, final String description) {
     final String typePath = metaData.getPath();
     final String columnName = name.toUpperCase();
     final RecordStoreSchema schema = metaData.getSchema();
@@ -143,8 +143,8 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
       numAxis = geometryFactory.getNumAxis();
     }
 
-    final FieldDefinition attribute = new OracleSdoGeometryJdbcAttribute(name, dataType, sqlType,
-      required, description, null, geometryFactory, numAxis);
+    final FieldDefinition attribute = new OracleSdoGeometryJdbcAttribute(dbName, name, dataType,
+      sqlType, required, description, null, geometryFactory, numAxis);
     metaData.addField(attribute);
     attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction("SDO_RELATE(",
       ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));

@@ -43,10 +43,10 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
 
   private final PrecisionModel[] precisionModels;
 
-  public OracleSdoGeometryJdbcAttribute(final String name, final DataType type, final int sqlType,
-    final boolean required, final String description, final Map<String, Object> properties,
-    final GeometryFactory geometryFactory, final int numAxis) {
-    super(name, type, sqlType, 0, 0, required, description, properties);
+  public OracleSdoGeometryJdbcAttribute(final String dbName, final String name,
+    final DataType type, final int sqlType, final boolean required, final String description,
+    final Map<String, Object> properties, final GeometryFactory geometryFactory, final int numAxis) {
+    super(dbName, name, type, sqlType, 0, 0, required, description, properties);
     this.geometryFactory = geometryFactory;
     this.numAxis = numAxis;
     this.precisionModels = new PrecisionModel[numAxis];
@@ -81,12 +81,12 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
 
   @Override
   public OracleSdoGeometryJdbcAttribute clone() {
-    return new OracleSdoGeometryJdbcAttribute(getName(), getType(), getSqlType(), isRequired(),
-      getDescription(), getProperties(), this.geometryFactory, this.numAxis);
+    return new OracleSdoGeometryJdbcAttribute(getDbName(), getName(), getType(), getSqlType(),
+      isRequired(), getDescription(), getProperties(), this.geometryFactory, this.numAxis);
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+  public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
     final Record object) throws SQLException {
     Geometry value;
     final int geometryType = resultSet.getInt(columnIndex);

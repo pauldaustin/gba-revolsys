@@ -20,7 +20,7 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
       final Map<String, Object> properties = objectIdAttribute.getProperties();
 
       final ArcSdeObjectIdJdbcAttribute newObjectIdAttribute = new ArcSdeObjectIdJdbcAttribute(
-        name, description, properties, schemaName, registrationId);
+        objectIdAttribute.getDbName(), name, description, properties, schemaName, registrationId);
       newObjectIdAttribute.setMetaData(metaData);
       final RecordDefinitionImpl metaDataImpl = (RecordDefinitionImpl)metaData;
       metaDataImpl.replaceAttribute(objectIdAttribute, newObjectIdAttribute);
@@ -36,9 +36,10 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
   /** The name of the database schema the table owned by. */
   private final String schemaName;
 
-  public ArcSdeObjectIdJdbcAttribute(final String name, final String description,
-    final Map<String, Object> properties, final String schemaName, final long registrationId) {
-    super(name, DataTypes.INT, -1, 19, 0, true, description, properties);
+  public ArcSdeObjectIdJdbcAttribute(final String dbName, final String name,
+    final String description, final Map<String, Object> properties, final String schemaName,
+    final long registrationId) {
+    super(dbName, name, DataTypes.INT, -1, 19, 0, true, description, properties);
     this.schemaName = schemaName;
     this.registrationId = registrationId;
   }
@@ -58,8 +59,8 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
 
   @Override
   public ArcSdeObjectIdJdbcAttribute clone() {
-    return new ArcSdeObjectIdJdbcAttribute(getName(), getDescription(), getProperties(),
-      this.schemaName, this.registrationId);
+    return new ArcSdeObjectIdJdbcAttribute(getDbName(), getName(), getDescription(),
+      getProperties(), this.schemaName, this.registrationId);
   }
 
   /**

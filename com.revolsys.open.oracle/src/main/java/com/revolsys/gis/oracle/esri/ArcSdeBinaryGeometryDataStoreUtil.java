@@ -82,7 +82,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
 
   public void createGeometryColumn(final AbstractJdbcRecordStore dataStore,
     final RecordStoreSchema schema, final RecordDefinition metaData, final String typePath,
-    final String columnName, final Map<String, Object> columnProperties) {
+    final String dbName, final String columnName, final Map<String, Object> columnProperties) {
     final FieldDefinition attribute = metaData.getField(columnName);
 
     DataType dataType = JdbcFieldAdder.getColumnProperty(schema, typePath, columnName,
@@ -98,7 +98,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     }
 
     final ArcSdeBinaryGeometryAttribute sdeAttribute = new ArcSdeBinaryGeometryAttribute(this,
-      columnName, dataType, attribute.isRequired(), "The GEOMETRY reference",
+      dbName, columnName, dataType, attribute.isRequired(), "The GEOMETRY reference",
       attribute.getProperties(), geometryFactory);
     ((RecordDefinitionImpl)metaData).replaceAttribute(attribute, sdeAttribute);
     sdeAttribute.setMetaData(metaData);

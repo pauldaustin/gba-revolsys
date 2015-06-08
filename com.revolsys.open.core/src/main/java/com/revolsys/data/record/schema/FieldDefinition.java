@@ -523,6 +523,23 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
     this.type = type;
   }
 
+  public void setValue(final Record record, final Object value) {
+    if (record != null) {
+      final int index = getIndex();
+      // if (value != null) {
+      // final CodeTable codeTable = getCodeTable();
+      // if (codeTable != null) {
+      // final Identifier id = codeTable.getId(value);
+      // if (id != null) {
+      // value = Value.getValue(id);
+      // }
+      // }
+      // }
+      record.setValue(index, value);
+
+    }
+  }
+
   @Override
   public Map<String, Object> toMap() {
     final Map<String, Object> map = new LinkedHashMap<String, Object>();

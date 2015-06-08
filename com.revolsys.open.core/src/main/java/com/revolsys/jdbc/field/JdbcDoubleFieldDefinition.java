@@ -9,23 +9,24 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
 public class JdbcDoubleFieldDefinition extends JdbcFieldDefinition {
-  public JdbcDoubleFieldDefinition(final String name, final int sqlType, final int length,
-    final boolean required, final String description, final Map<String, Object> properties) {
-    super(name, DataTypes.DOUBLE, sqlType, length, 0, required, description, properties);
+  public JdbcDoubleFieldDefinition(final String dbName, final String name, final int sqlType,
+    final int length, final boolean required, final String description,
+    final Map<String, Object> properties) {
+    super(dbName, name, DataTypes.DOUBLE, sqlType, length, 0, required, description, properties);
   }
 
   @Override
   public JdbcDoubleFieldDefinition clone() {
-    return new JdbcDoubleFieldDefinition(getName(), getSqlType(), getLength(), isRequired(),
-      getDescription(), getProperties());
+    return new JdbcDoubleFieldDefinition(getDbName(), getName(), getSqlType(), getLength(),
+      isRequired(), getDescription(), getProperties());
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
-    final Record object) throws SQLException {
+  public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record record) throws SQLException {
     final double longValue = resultSet.getDouble(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), Double.valueOf(longValue));
+      setValue(record, Double.valueOf(longValue));
     }
     return columnIndex + 1;
   }

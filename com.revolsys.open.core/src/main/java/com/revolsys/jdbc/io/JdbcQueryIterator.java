@@ -40,7 +40,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements Recor
       for (final FieldDefinition attribute : attributes) {
         final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
         try {
-          columnIndex = jdbcAttribute.setAttributeValueFromResultSet(resultSet, columnIndex, object);
+          columnIndex = jdbcAttribute.setFieldValueFromResultSet(resultSet, columnIndex, object);
         } catch (final SQLException e) {
           throw new RuntimeException("Unable to get value " + (columnIndex + 1)
             + " from result set", e);

@@ -149,7 +149,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
     final int length = resultSetMetaData.getPrecision(i);
     final int scale = resultSetMetaData.getScale(i);
     final boolean required = false;
-    addField(metaData, name, dataType, sqlType, length, scale, required, description);
+    addField(metaData, name, name.toUpperCase(), dataType, sqlType, length, scale, required,
+      description);
   }
 
   public void addAttributeAdder(final String sqlTypeName, final JdbcFieldAdder adder) {
@@ -160,15 +161,15 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
     addExcludeTablePaths(tableName);
   }
 
-  protected void addField(final RecordDefinitionImpl recordDefinition, final String name,
-    final String dataType, final int sqlType, final int length, final int scale,
+  protected void addField(final RecordDefinitionImpl recordDefinition, final String dbName,
+    final String name, final String dataType, final int sqlType, final int length, final int scale,
     final boolean required, final String description) {
     JdbcFieldAdder fieldAdder = this.attributeAdders.get(dataType);
     if (fieldAdder == null) {
       fieldAdder = new JdbcFieldAdder(DataTypes.OBJECT);
     }
-    fieldAdder.addField(this, recordDefinition, name, dataType, sqlType, length, scale, required,
-      description);
+    fieldAdder.addField(this, recordDefinition, dbName, name, dataType, sqlType, length, scale,
+      required, description);
   }
 
   @Override
@@ -777,7 +778,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
           final String typePath = Path.toPath(schemaName, tableName);
           final RecordDefinitionImpl metaData = (RecordDefinitionImpl)metaDataMap.get(typePath);
           if (metaData != null) {
-            final String name = columnsRs.getString("COLUMN_NAME").toUpperCase();
+            final String name = columnsRs.getString("COLUMN_NAME");
             final int sqlType = columnsRs.getInt("DATA_TYPE");
             final String dataType = columnsRs.getString("TYPE_NAME");
             final int length = columnsRs.getInt("COLUMN_SIZE");
@@ -787,7 +788,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
             }
             final boolean required = !columnsRs.getString("IS_NULLABLE").equals("YES");
             final String description = columnsRs.getString("REMARKS");
-            addField(metaData, name, dataType, sqlType, length, scale, required, description);
+            addField(metaData, name, name.toUpperCase(), dataType, sqlType, length, scale,
+              required, description);
           }
         }
 

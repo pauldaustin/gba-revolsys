@@ -31,9 +31,10 @@ public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
   private boolean valid;
 
   public ArcSdeBinaryGeometryAttribute(final ArcSdeBinaryGeometryDataStoreUtil sdeUtil,
-    final String name, final DataType type, final boolean required, final String description,
-    final Map<String, Object> properties, final GeometryFactory geometryFactory) {
-    super(name, type, -1, 0, 0, required, description, properties);
+    final String dbName, final String name, final DataType type, final boolean required,
+    final String description, final Map<String, Object> properties,
+    final GeometryFactory geometryFactory) {
+    super(dbName, name, type, -1, 0, 0, required, description, properties);
     this.sdeUtil = sdeUtil;
     this.geometryFactory = geometryFactory;
     setProperty(FieldProperties.GEOMETRY_FACTORY, this.geometryFactory);
@@ -44,7 +45,7 @@ public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+  public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
     final Record object) throws SQLException {
     if (this.valid) {
       final int geometryId = resultSet.getInt(columnIndex);

@@ -10,22 +10,22 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
 public class JdbcDateFieldDefinition extends JdbcFieldDefinition {
-  public JdbcDateFieldDefinition(final String name, final int sqlType, final boolean required,
-    final String description, final Map<String, Object> properties) {
-    super(name, DataTypes.DATE, sqlType, 0, 0, required, description, properties);
+  public JdbcDateFieldDefinition(final String dbName, final String name, final int sqlType,
+    final boolean required, final String description, final Map<String, Object> properties) {
+    super(dbName, name, DataTypes.DATE, sqlType, 0, 0, required, description, properties);
   }
 
   @Override
   public JdbcDateFieldDefinition clone() {
-    return new JdbcDateFieldDefinition(getName(), getSqlType(), isRequired(), getDescription(),
-      getProperties());
+    return new JdbcDateFieldDefinition(getDbName(), getName(), getSqlType(), isRequired(),
+      getDescription(), getProperties());
   }
 
   @Override
-  public int setAttributeValueFromResultSet(final ResultSet resultSet, final int columnIndex,
-    final Record object) throws SQLException {
+  public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
+    final Record record) throws SQLException {
     final Date value = resultSet.getDate(columnIndex);
-    object.setValue(getIndex(), value);
+    setValue(record, value);
     return columnIndex + 1;
   }
 
