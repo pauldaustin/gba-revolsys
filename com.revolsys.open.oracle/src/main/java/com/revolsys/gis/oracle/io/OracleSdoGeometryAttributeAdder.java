@@ -138,7 +138,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
       dataType = DataTypes.GEOMETRY;
     }
 
-    int numAxis = getIntegerColumnProperty(schema, typePath, columnName, NUM_AXIS);
+    int numAxis = getIntegerColumnProperty(schema, typePath, columnName, AXIS_COUNT);
     if (numAxis == -1) {
       numAxis = geometryFactory.getNumAxis();
     }
@@ -197,7 +197,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
               }
               final ARRAY dimInfo = (ARRAY)resultSet.getObject("DIMINFO");
               int numAxis = dimInfo.length();
-              setColumnProperty(schema, typePath, columnName, NUM_AXIS, numAxis);
+              setColumnProperty(schema, typePath, columnName, AXIS_COUNT, numAxis);
               if (numAxis < 2) {
                 numAxis = 2;
               } else if (numAxis > 4) {

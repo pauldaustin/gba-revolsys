@@ -24,9 +24,9 @@ public class JdbcByteFieldDefinition extends JdbcFieldDefinition {
   @Override
   public int setFieldValueFromResultSet(final ResultSet resultSet, final int columnIndex,
     final Record record) throws SQLException {
-    final byte longValue = resultSet.getByte(columnIndex);
+    final byte byteValue = resultSet.getByte(columnIndex);
     if (!resultSet.wasNull()) {
-      setValue(record, Byte.valueOf(longValue));
+      setValue(record, Byte.valueOf(byteValue));
     }
     return columnIndex + 1;
   }

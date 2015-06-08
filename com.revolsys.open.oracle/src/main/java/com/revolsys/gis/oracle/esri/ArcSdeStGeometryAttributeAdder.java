@@ -41,7 +41,7 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcFieldAdder {
         + name);
     }
     final int numAxis = JdbcFieldAdder.getIntegerColumnProperty(schema, typePath, columnName,
-      JdbcFieldAdder.NUM_AXIS);
+      JdbcFieldAdder.AXIS_COUNT);
     if (numAxis == -1) {
       LOG.error("Column not found in SDE.GEOMETRY_COLUMNS table " + owner + "." + tableName + "."
         + name);

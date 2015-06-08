@@ -58,7 +58,7 @@ public class ArcSdeStGeometryDataStoreExtension implements DataObjectStoreExtens
 
           int numAxis = resultSet.getInt(5);
           numAxis = Math.max(numAxis, 2);
-          JdbcFieldAdder.setColumnProperty(schema, typePath, columnName, JdbcFieldAdder.NUM_AXIS,
+          JdbcFieldAdder.setColumnProperty(schema, typePath, columnName, JdbcFieldAdder.AXIS_COUNT,
             numAxis);
 
           final ArcSdeSpatialReference spatialReference = ArcSdeSpatialReferenceCache.getSpatialReference(
