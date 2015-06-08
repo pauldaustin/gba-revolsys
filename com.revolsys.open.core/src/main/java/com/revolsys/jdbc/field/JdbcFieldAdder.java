@@ -1,18 +1,17 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.Types;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
+import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 
-public class JdbcAttributeAdder {
-  private DataType dataType;
-
+public class JdbcFieldAdder {
   public static String GEOMETRY_FACTORY = "geometryFactory";
 
   public static String NUM_AXIS = "numAxis";
@@ -36,10 +35,10 @@ public class JdbcAttributeAdder {
   }
 
   @SuppressWarnings("unchecked")
-  public static <V> V getColumnProperty(final RecordStoreSchema schema,
-    final String typePath, final String columnName, final String propertyName) {
-    final Map<String, Map<String, Object>> columnsProperties = getTypeColumnProperties(
-      schema, typePath);
+  public static <V> V getColumnProperty(final RecordStoreSchema schema, final String typePath,
+    final String columnName, final String propertyName) {
+    final Map<String, Map<String, Object>> columnsProperties = getTypeColumnProperties(schema,
+      typePath);
     final Map<String, Object> properties = columnsProperties.get(columnName);
     if (properties != null) {
       final Object value = properties.get(propertyName);
@@ -48,11 +47,9 @@ public class JdbcAttributeAdder {
     return null;
   }
 
-  public static double getDoubleColumnProperty(
-    final RecordStoreSchema schema, final String typePath,
-    final String columnName, final String propertyName) {
-    final Object value = getColumnProperty(schema, typePath, columnName,
-      propertyName);
+  public static double getDoubleColumnProperty(final RecordStoreSchema schema,
+    final String typePath, final String columnName, final String propertyName) {
+    final Object value = getColumnProperty(schema, typePath, columnName, propertyName);
     if (value instanceof Number) {
       final Number number = (Number)value;
       return number.doubleValue();
@@ -61,11 +58,9 @@ public class JdbcAttributeAdder {
     }
   }
 
-  public static int getIntegerColumnProperty(
-    final RecordStoreSchema schema, final String typePath,
+  public static int getIntegerColumnProperty(final RecordStoreSchema schema, final String typePath,
     final String columnName, final String propertyName) {
-    final Object value = getColumnProperty(schema, typePath, columnName,
-      propertyName);
+    final Object value = getColumnProperty(schema, typePath, columnName, propertyName);
     if (value instanceof Number) {
       final Number number = (Number)value;
       return number.intValue();
@@ -74,8 +69,7 @@ public class JdbcAttributeAdder {
     }
   }
 
-  public static Map<String, Map<String, Object>> getTableProperties(
-    final RecordStoreSchema schema) {
+  public static Map<String, Map<String, Object>> getTableProperties(final RecordStoreSchema schema) {
     synchronized (schema) {
       Map<String, Map<String, Object>> tableProperties = schema.getProperty(TABLE_PROPERTIES);
       if (tableProperties == null) {
@@ -86,8 +80,8 @@ public class JdbcAttributeAdder {
     }
   }
 
-  public static Map<String, Object> getTableProperties(
-    final RecordStoreSchema schema, final String typePath) {
+  public static Map<String, Object> getTableProperties(final RecordStoreSchema schema,
+    final String typePath) {
     final Map<String, Map<String, Object>> tableProperties = getTableProperties(schema);
     synchronized (tableProperties) {
       Map<String, Object> properties = tableProperties.get(typePath);
@@ -100,8 +94,8 @@ public class JdbcAttributeAdder {
   }
 
   @SuppressWarnings("unchecked")
-  public static <V> V getTableProperty(final RecordStoreSchema schema,
-    final String typePath, final String propertyName) {
+  public static <V> V getTableProperty(final RecordStoreSchema schema, final String typePath,
+    final String propertyName) {
     final Map<String, Object> properties = getTableProperties(schema, typePath);
     final Object value = properties.get(propertyName);
     return (V)value;
@@ -118,9 +112,8 @@ public class JdbcAttributeAdder {
     }
   }
 
-  public static void setColumnProperty(final RecordStoreSchema schema,
-    final String typePath, final String columnName, final String propertyName,
-    final Object propertyValue) {
+  public static void setColumnProperty(final RecordStoreSchema schema, final String typePath,
+    final String columnName, final String propertyName, final Object propertyValue) {
     final Map<String, Map<String, Map<String, Object>>> tableColumnProperties = getColumnProperties(schema);
     synchronized (tableColumnProperties) {
 
@@ -138,111 +131,99 @@ public class JdbcAttributeAdder {
     }
   }
 
-  public static void setTableProperty(final RecordStoreSchema schema,
-    final String typePath, final String propertyName, final Object value) {
+  public static void setTableProperty(final RecordStoreSchema schema, final String typePath,
+    final String propertyName, final Object value) {
     final Map<String, Object> properties = getTableProperties(schema, typePath);
     properties.put(propertyName, value);
   }
 
-  public JdbcAttributeAdder() {
+  private DataType dataType;
+
+  public JdbcFieldAdder() {
   }
 
-  public JdbcAttributeAdder(final DataType dataType) {
+  public JdbcFieldAdder(final DataType dataType) {
     this.dataType = dataType;
   }
 
-  public FieldDefinition addAttribute(final RecordDefinitionImpl metaData,
-    final String name, final String dataType, final int sqlType,
-    final int length, final int scale, final boolean required,
+  public FieldDefinition addField(final AbstractJdbcRecordStore recordStore,
+    final RecordDefinitionImpl recordDefinition, final String name, final String dataType,
+    final int sqlType, final int length, final int scale, final boolean required,
     final String description) {
-    JdbcAttribute attribute;
+    JdbcFieldDefinition attribute;
     if (dataType.equals("oid")) {
-      attribute = new JdbcBlobAttribute(name, sqlType, length, required,
-        description, null);
+      attribute = new JdbcBlobFieldDefinition(name, sqlType, length, required, description, null);
     } else {
       switch (sqlType) {
         case Types.CHAR:
         case Types.CLOB:
         case Types.LONGVARCHAR:
         case Types.VARCHAR:
-          attribute = new JdbcStringAttribute(name, sqlType, length, required,
-            description, null);
+          final Map<String, Object> properties = recordStore.getProperties();
+          attribute = new JdbcStringFieldDefinition(name, sqlType, length, required, description, properties);
         break;
         case Types.BIGINT:
-          attribute = new JdbcLongAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description, null);
         break;
         case Types.INTEGER:
-          attribute = new JdbcIntegerAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required, description, null);
         break;
         case Types.SMALLINT:
-          attribute = new JdbcShortAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcShortFieldDefinition(name, sqlType, length, required, description, null);
         break;
         case Types.TINYINT:
-          attribute = new JdbcByteAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description, null);
         break;
         case Types.DOUBLE:
-          attribute = new JdbcDoubleAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcDoubleFieldDefinition(name, sqlType, length, required, description, null);
         break;
         case Types.REAL:
-          attribute = new JdbcFloatAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcFloatFieldDefinition(name, sqlType, length, required, description, null);
         break;
         case Types.DECIMAL:
         case Types.NUMERIC:
         case Types.FLOAT:
           if (scale > 0) {
-            attribute = new JdbcBigDecimalAttribute(name, sqlType, length,
-              scale, required, description, null);
+            attribute = new JdbcBigDecimalFieldDefinition(name, sqlType, length, scale, required,
+              description, null);
           } else if (length == 131089 || length == 0) {
-            attribute = new JdbcBigDecimalAttribute(name, sqlType, -1, -1,
-              required, description, null);
+            attribute = new JdbcBigDecimalFieldDefinition(name, sqlType, -1, -1, required, description,
+              null);
           } else {
             if (length <= 2) {
-              attribute = new JdbcByteAttribute(name, sqlType, length,
-                required, description, null);
+              attribute = new JdbcByteFieldDefinition(name, sqlType, length, required, description, null);
             } else if (length <= 4) {
-              attribute = new JdbcShortAttribute(name, sqlType, length,
-                required, description, null);
+              attribute = new JdbcShortFieldDefinition(name, sqlType, length, required, description, null);
             } else if (length <= 9) {
-              attribute = new JdbcIntegerAttribute(name, sqlType, length,
-                required, description, null);
+              attribute = new JdbcIntegerFieldDefinition(name, sqlType, length, required, description,
+                null);
             } else if (length <= 18) {
-              attribute = new JdbcLongAttribute(name, sqlType, length,
-                required, description, null);
+              attribute = new JdbcLongFieldDefinition(name, sqlType, length, required, description, null);
             } else {
-              attribute = new JdbcBigIntegerAttribute(name, sqlType, length,
-                required, description, null);
+              attribute = new JdbcBigIntegerFieldDefinition(name, sqlType, length, required, description,
+                null);
             }
           }
         break;
         case Types.DATE:
-          attribute = new JdbcDateAttribute(name, sqlType, required,
-            description, null);
+          attribute = new JdbcDateFieldDefinition(name, sqlType, required, description, null);
         break;
         case Types.TIMESTAMP:
-          attribute = new JdbcTimestampAttribute(name, sqlType, required,
-            description, null);
+          attribute = new JdbcTimestampFieldDefinition(name, sqlType, required, description, null);
         break;
         case Types.BIT:
-          attribute = new JdbcBooleanAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcBooleanFieldDefinition(name, sqlType, length, required, description, null);
         break;
         case Types.BLOB:
-          attribute = new JdbcBlobAttribute(name, sqlType, length, required,
-            description, null);
+          attribute = new JdbcBlobFieldDefinition(name, sqlType, length, required, description, null);
         break;
         default:
-          attribute = new JdbcAttribute(name, this.dataType, sqlType, length,
-            scale, required, description, null);
+          attribute = new JdbcFieldDefinition(name, this.dataType, sqlType, length, scale, required,
+            description, null);
         break;
       }
     }
-    metaData.addField(attribute);
+    recordDefinition.addField(attribute);
     return attribute;
   }
 

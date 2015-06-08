@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 
 // TODO accept (how?)
 public class SqlCondition extends Condition {
@@ -65,17 +65,17 @@ public class SqlCondition extends Condition {
   public int appendParameters(int index, final PreparedStatement statement) {
     for (int i = 0; i < this.parameterValues.size(); i++) {
       final Object value = this.parameterValues.get(i);
-      JdbcAttribute jdbcAttribute = null;
+      JdbcFieldDefinition jdbcAttribute = null;
       if (i < this.parameterAttributes.size()) {
         final FieldDefinition attribute = this.parameterAttributes.get(i);
-        if (attribute instanceof JdbcAttribute) {
-          jdbcAttribute = (JdbcAttribute)attribute;
+        if (attribute instanceof JdbcFieldDefinition) {
+          jdbcAttribute = (JdbcFieldDefinition)attribute;
 
         }
       }
 
       if (jdbcAttribute == null) {
-        jdbcAttribute = JdbcAttribute.createAttribute(value);
+        jdbcAttribute = JdbcFieldDefinition.createField(value);
       }
       try {
         index = jdbcAttribute.setPreparedStatementValue(statement, index, value);

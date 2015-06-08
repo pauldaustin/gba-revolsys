@@ -25,7 +25,7 @@ import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 
 public class JdbcQueryIterator extends AbstractIterator<Record> implements
   RecordIterator {
@@ -39,7 +39,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements
       int columnIndex = 1;
 
       for (final FieldDefinition attribute : attributes) {
-        final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
+        final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
         try {
           columnIndex = jdbcAttribute.setAttributeValueFromResultSet(resultSet,
             columnIndex, object);

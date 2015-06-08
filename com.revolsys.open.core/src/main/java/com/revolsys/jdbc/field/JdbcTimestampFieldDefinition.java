@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,8 +9,8 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcTimestampAttribute extends JdbcAttribute {
-  public JdbcTimestampAttribute(final String name, final int sqlType,
+public class JdbcTimestampFieldDefinition extends JdbcFieldDefinition {
+  public JdbcTimestampFieldDefinition(final String name, final int sqlType,
     final boolean required, final String description,
     final Map<String, Object> properties) {
     super(name, DataTypes.DATE_TIME, sqlType, 0, 0, required, description,
@@ -18,8 +18,8 @@ public class JdbcTimestampAttribute extends JdbcAttribute {
   }
 
   @Override
-  public JdbcTimestampAttribute clone() {
-    return new JdbcTimestampAttribute(getName(), getSqlType(), isRequired(),
+  public JdbcTimestampFieldDefinition clone() {
+    return new JdbcTimestampFieldDefinition(getName(), getSqlType(), isRequired(),
       getDescription(), getProperties());
   }
 

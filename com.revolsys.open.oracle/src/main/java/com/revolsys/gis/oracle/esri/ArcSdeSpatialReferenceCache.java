@@ -13,13 +13,13 @@ import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.WktCsParser;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
+import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jts.geom.GeometryFactory;
 
 public class ArcSdeSpatialReferenceCache {
 
   public static ArcSdeSpatialReferenceCache get(
-    final AbstractJdbcDataObjectStore dataStore) {
+    final AbstractJdbcRecordStore dataStore) {
     ArcSdeSpatialReferenceCache spatialReferences = dataStore.getProperty("esriSpatialReferences");
     if (spatialReferences == null) {
       spatialReferences = new ArcSdeSpatialReferenceCache(dataStore);
@@ -30,7 +30,7 @@ public class ArcSdeSpatialReferenceCache {
 
   public static ArcSdeSpatialReferenceCache get(
     final RecordStoreSchema schema) {
-    final AbstractJdbcDataObjectStore dataStore = (AbstractJdbcDataObjectStore)schema.getDataStore();
+    final AbstractJdbcRecordStore dataStore = (AbstractJdbcRecordStore)schema.getDataStore();
     return get(dataStore);
 
   }
@@ -42,12 +42,12 @@ public class ArcSdeSpatialReferenceCache {
 
   private final Map<Integer, ArcSdeSpatialReference> spatialReferences = new HashMap<Integer, ArcSdeSpatialReference>();
 
-  private AbstractJdbcDataObjectStore dataStore;
+  private AbstractJdbcRecordStore dataStore;
 
   public ArcSdeSpatialReferenceCache() {
   }
 
-  public ArcSdeSpatialReferenceCache(final AbstractJdbcDataObjectStore dataStore) {
+  public ArcSdeSpatialReferenceCache(final AbstractJdbcRecordStore dataStore) {
     this.dataStore = dataStore;
   }
 

@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,26 +8,30 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcDoubleAttribute extends JdbcAttribute {
-  public JdbcDoubleAttribute(final String name, final int sqlType,
+public class JdbcLongFieldDefinition extends JdbcFieldDefinition {
+  public JdbcLongFieldDefinition(final String name) {
+    super(name, DataTypes.LONG, 0, 0, 0, false, null, null);
+  }
+
+  public JdbcLongFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.DOUBLE, sqlType, length, 0, required, description,
+    super(name, DataTypes.LONG, sqlType, length, 0, required, description,
       properties);
   }
 
   @Override
-  public JdbcDoubleAttribute clone() {
-    return new JdbcDoubleAttribute(getName(), getSqlType(), getLength(),
+  public JdbcLongFieldDefinition clone() {
+    return new JdbcLongFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
     final int columnIndex, final Record object) throws SQLException {
-    final double longValue = resultSet.getDouble(columnIndex);
+    final long longValue = resultSet.getLong(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), Double.valueOf(longValue));
+      object.setValue(getIndex(), Long.valueOf(longValue));
     }
     return columnIndex + 1;
   }
@@ -38,14 +42,14 @@ public class JdbcDoubleAttribute extends JdbcAttribute {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {
-      double numberValue;
+      long numberValue;
       if (value instanceof Number) {
         final Number number = (Number)value;
-        numberValue = number.doubleValue();
+        numberValue = number.longValue();
       } else {
-        numberValue = Double.parseDouble(value.toString());
+        numberValue = Long.parseLong(value.toString());
       }
-      statement.setDouble(parameterIndex, numberValue);
+      statement.setLong(parameterIndex, numberValue);
 
     }
     return parameterIndex + 1;

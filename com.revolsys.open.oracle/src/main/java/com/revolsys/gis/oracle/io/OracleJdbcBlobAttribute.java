@@ -16,10 +16,10 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.spring.SpringUtil;
 
-public class OracleJdbcBlobAttribute extends JdbcAttribute {
+public class OracleJdbcBlobAttribute extends JdbcFieldDefinition {
   public OracleJdbcBlobAttribute(final String name, final int sqlType,
     final int length, final boolean required, final String description) {
     super(name, DataTypes.BLOB, sqlType, length, 0, required, description,

@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -16,49 +16,49 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcAttribute extends FieldDefinition {
+public class JdbcFieldDefinition extends FieldDefinition {
 
-  public static JdbcAttribute createAttribute(final Object value) {
+  public static JdbcFieldDefinition createField(final Object value) {
     if (value == null) {
-      return new JdbcAttribute(null, DataTypes.OBJECT, Types.OTHER, 0, 0,
+      return new JdbcFieldDefinition(null, DataTypes.OBJECT, Types.OTHER, 0, 0,
         false, null, null);
     } else if (value instanceof CharSequence) {
-      return new JdbcStringAttribute(null, Types.CHAR, -1, false, null, null);
+      return new JdbcStringFieldDefinition(null, Types.CHAR, -1, false, null, null);
     } else if (value instanceof BigInteger) {
-      return new JdbcLongAttribute(null, Types.BIGINT, -1, false, null, null);
+      return new JdbcLongFieldDefinition(null, Types.BIGINT, -1, false, null, null);
     } else if (value instanceof Long) {
-      return new JdbcLongAttribute(null, Types.BIGINT, -1, false, null, null);
+      return new JdbcLongFieldDefinition(null, Types.BIGINT, -1, false, null, null);
     } else if (value instanceof Integer) {
-      return new JdbcIntegerAttribute(null, Types.INTEGER, -1, false, null,
+      return new JdbcIntegerFieldDefinition(null, Types.INTEGER, -1, false, null,
         null);
     } else if (value instanceof Short) {
-      return new JdbcShortAttribute(null, Types.SMALLINT, -1, false, null, null);
+      return new JdbcShortFieldDefinition(null, Types.SMALLINT, -1, false, null, null);
     } else if (value instanceof Byte) {
-      return new JdbcByteAttribute(null, Types.TINYINT, -1, false, null, null);
+      return new JdbcByteFieldDefinition(null, Types.TINYINT, -1, false, null, null);
     } else if (value instanceof Double) {
-      return new JdbcDoubleAttribute(null, Type.DOUBLE, -1, false, null, null);
+      return new JdbcDoubleFieldDefinition(null, Type.DOUBLE, -1, false, null, null);
     } else if (value instanceof Float) {
-      return new JdbcFloatAttribute(null, Types.FLOAT, -1, false, null, null);
+      return new JdbcFloatFieldDefinition(null, Types.FLOAT, -1, false, null, null);
     } else if (value instanceof BigDecimal) {
-      return new JdbcBigDecimalAttribute(null, Types.NUMERIC, -1, -1, false,
+      return new JdbcBigDecimalFieldDefinition(null, Types.NUMERIC, -1, -1, false,
         null, null);
     } else if (value instanceof Date) {
-      return new JdbcDateAttribute(null, -1, false, null, null);
+      return new JdbcDateFieldDefinition(null, -1, false, null, null);
     } else if (value instanceof java.util.Date) {
-      return new JdbcTimestampAttribute(null, -1, false, null, null);
+      return new JdbcTimestampFieldDefinition(null, -1, false, null, null);
     } else if (value instanceof Boolean) {
-      return new JdbcBooleanAttribute(null, Types.BIT, -1, false, null, null);
+      return new JdbcBooleanFieldDefinition(null, Types.BIT, -1, false, null, null);
     } else {
-      return new JdbcAttribute();
+      return new JdbcFieldDefinition();
     }
   }
 
   private int sqlType;
 
-  private JdbcAttribute() {
+  private JdbcFieldDefinition() {
   }
 
-  public JdbcAttribute(final String name, final DataType type,
+  public JdbcFieldDefinition(final String name, final DataType type,
     final int sqlType, final int length, final int scale,
     final boolean required, final String description,
     final Map<String, Object> properties) {
@@ -88,8 +88,8 @@ public class JdbcAttribute extends FieldDefinition {
   }
 
   @Override
-  public JdbcAttribute clone() {
-    return new JdbcAttribute(getName(), getType(), getSqlType(), getLength(),
+  public JdbcFieldDefinition clone() {
+    return new JdbcFieldDefinition(getName(), getType(), getSqlType(), getLength(),
       getScale(), isRequired(), getDescription(), getProperties());
   }
 

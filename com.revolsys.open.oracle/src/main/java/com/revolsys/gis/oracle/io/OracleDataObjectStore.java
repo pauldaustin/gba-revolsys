@@ -27,13 +27,13 @@ import com.revolsys.gis.oracle.esri.ArcSdeStGeometryAttribute;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryDataStoreExtension;
 import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
-import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
+import com.revolsys.jdbc.field.JdbcFieldAdder;
+import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jdbc.io.DataStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
+public class OracleDataObjectStore extends AbstractJdbcRecordStore {
   private boolean initialized;
 
   public static final List<String> ORACLE_INTERNAL_SCHEMAS = Arrays.asList(
@@ -187,14 +187,14 @@ public class OracleDataObjectStore extends AbstractJdbcDataObjectStore {
     super.initialize();
     if (!this.initialized) {
       this.initialized = true;
-      final JdbcAttributeAdder attributeAdder = new JdbcAttributeAdder();
+      final JdbcFieldAdder attributeAdder = new JdbcFieldAdder();
       addAttributeAdder("NUMBER", attributeAdder);
 
       addAttributeAdder("CHAR", attributeAdder);
       addAttributeAdder("NCHAR", attributeAdder);
       addAttributeAdder("VARCHAR", attributeAdder);
       addAttributeAdder("VARCHAR2", attributeAdder);
-      addAttributeAdder("NVARCHAR2", new JdbcAttributeAdder(DataTypes.STRING));
+      addAttributeAdder("NVARCHAR2", new JdbcFieldAdder(DataTypes.STRING));
       addAttributeAdder("LONG", attributeAdder);
       addAttributeAdder("CLOB", attributeAdder);
       addAttributeAdder("NCLOB", attributeAdder);

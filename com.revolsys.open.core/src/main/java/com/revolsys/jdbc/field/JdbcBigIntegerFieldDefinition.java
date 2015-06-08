@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -10,8 +10,8 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcBigIntegerAttribute extends JdbcAttribute {
-  public JdbcBigIntegerAttribute(final String name, final int sqlType,
+public class JdbcBigIntegerFieldDefinition extends JdbcFieldDefinition {
+  public JdbcBigIntegerFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
     super(name, DataTypes.INTEGER, sqlType, length, 0, required, description,
@@ -19,8 +19,8 @@ public class JdbcBigIntegerAttribute extends JdbcAttribute {
   }
 
   @Override
-  public JdbcBigIntegerAttribute clone() {
-    return new JdbcBigIntegerAttribute(getName(), getSqlType(), getLength(),
+  public JdbcBigIntegerFieldDefinition clone() {
+    return new JdbcBigIntegerFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 

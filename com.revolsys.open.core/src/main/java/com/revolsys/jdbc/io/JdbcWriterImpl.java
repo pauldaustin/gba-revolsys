@@ -25,7 +25,7 @@ import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.transaction.Transaction;
 
 public class JdbcWriterImpl extends AbstractWriter<Record> implements
@@ -98,7 +98,7 @@ JdbcWriter {
   }
 
   private void addSqlColumEqualsPlaceholder(final StringBuffer sqlBuffer,
-    final JdbcAttribute attribute) {
+    final JdbcFieldDefinition attribute) {
     final String attributeName = attribute.getName();
     if (this.quoteColumnNames) {
       sqlBuffer.append('"').append(attributeName).append('"');
@@ -157,7 +157,7 @@ JdbcWriter {
       }
     }
     int parameterIndex = 1;
-    final JdbcAttribute idAttribute = (JdbcAttribute)metaData.getIdField();
+    final JdbcFieldDefinition idAttribute = (JdbcFieldDefinition)metaData.getIdField();
     parameterIndex = idAttribute.setInsertPreparedStatementValue(statement,
       parameterIndex, object);
     statement.addBatch();
@@ -300,7 +300,7 @@ JdbcWriter {
       sqlBuffer.append(" from ");
       sqlBuffer.append(tableName);
       sqlBuffer.append(" where ");
-      final JdbcAttribute idAttribute = (JdbcAttribute)type.getIdField();
+      final JdbcFieldDefinition idAttribute = (JdbcFieldDefinition)type.getIdField();
       if (idAttribute == null) {
         throw new RuntimeException("No primary key found for " + type);
       }
@@ -379,7 +379,7 @@ JdbcWriter {
       }
       for (int i = 0; i < type.getFieldCount(); i++) {
         if (!generatePrimaryKey || i != type.getIdFieldIndex()) {
-          final JdbcAttribute attribute = (JdbcAttribute)type.getField(i);
+          final JdbcFieldDefinition attribute = (JdbcFieldDefinition)type.getField(i);
           attribute.addInsertStatementPlaceHolder(sqlBuffer, generatePrimaryKey);
           if (i < type.getFieldCount() - 1) {
             sqlBuffer.append(", ");
@@ -431,7 +431,7 @@ JdbcWriter {
       boolean first = true;
       for (final FieldDefinition attribute : type.getFields()) {
         if (!idAttributes.contains(attribute)) {
-          final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
+          final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
           if (first) {
             first = false;
           } else {
@@ -448,7 +448,7 @@ JdbcWriter {
         } else {
           sqlBuffer.append(" AND ");
         }
-        final JdbcAttribute idJdbcAttribute = (JdbcAttribute)idAttribute;
+        final JdbcFieldDefinition idJdbcAttribute = (JdbcFieldDefinition)idAttribute;
         addSqlColumEqualsPlaceholder(sqlBuffer, idJdbcAttribute);
       }
 
@@ -505,7 +505,7 @@ JdbcWriter {
     }
     int parameterIndex = 1;
     for (final FieldDefinition attribute : metaData.getFields()) {
-      final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
+      final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
       parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement,
         parameterIndex, object);
     }
@@ -541,7 +541,7 @@ JdbcWriter {
     final FieldDefinition idAttribute = metaData.getIdField();
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (attribute != idAttribute) {
-        final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
+        final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
         parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(
           statement, parameterIndex, object);
       }
@@ -677,13 +677,13 @@ JdbcWriter {
     final List<FieldDefinition> idAttributes = metaData.getIdFields();
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (!idAttributes.contains(attribute)) {
-        final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
+        final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
         parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(
           statement, parameterIndex, object);
       }
     }
     for (final FieldDefinition idAttribute : idAttributes) {
-      final JdbcAttribute jdbcAttribute = (JdbcAttribute)idAttribute;
+      final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)idAttribute;
       parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement,
         parameterIndex, object);
 

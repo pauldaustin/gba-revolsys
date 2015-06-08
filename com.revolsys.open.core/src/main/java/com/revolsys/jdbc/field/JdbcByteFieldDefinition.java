@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,26 +8,26 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcFloatAttribute extends JdbcAttribute {
-  public JdbcFloatAttribute(final String name, final int sqlType,
+public class JdbcByteFieldDefinition extends JdbcFieldDefinition {
+  public JdbcByteFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.FLOAT, sqlType, length, 0, required, description,
+    super(name, DataTypes.BYTE, sqlType, length, 0, required, description,
       properties);
   }
 
   @Override
-  public JdbcFloatAttribute clone() {
-    return new JdbcFloatAttribute(getName(), getSqlType(), getLength(),
+  public JdbcByteFieldDefinition clone() {
+    return new JdbcByteFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
     final int columnIndex, final Record object) throws SQLException {
-    final float longValue = resultSet.getFloat(columnIndex);
+    final byte longValue = resultSet.getByte(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), Float.valueOf(longValue));
+      object.setValue(getIndex(), Byte.valueOf(longValue));
     }
     return columnIndex + 1;
   }
@@ -38,14 +38,14 @@ public class JdbcFloatAttribute extends JdbcAttribute {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {
-      float numberValue;
+      byte numberValue;
       if (value instanceof Number) {
         final Number number = (Number)value;
-        numberValue = number.floatValue();
+        numberValue = number.byteValue();
       } else {
-        numberValue = Float.parseFloat(value.toString());
+        numberValue = Byte.parseByte(value.toString());
       }
-      statement.setFloat(parameterIndex, numberValue);
+      statement.setByte(parameterIndex, numberValue);
     }
     return parameterIndex + 1;
   }

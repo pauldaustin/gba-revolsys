@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,26 +8,26 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcShortAttribute extends JdbcAttribute {
-  public JdbcShortAttribute(final String name, final int sqlType,
+public class JdbcIntegerFieldDefinition extends JdbcFieldDefinition {
+  public JdbcIntegerFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.SHORT, sqlType, length, 0, required, description,
+    super(name, DataTypes.INT, sqlType, length, 0, required, description,
       properties);
   }
 
   @Override
-  public JdbcShortAttribute clone() {
-    return new JdbcShortAttribute(getName(), getSqlType(), getLength(),
+  public JdbcIntegerFieldDefinition clone() {
+    return new JdbcIntegerFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
     final int columnIndex, final Record object) throws SQLException {
-    final short value = resultSet.getShort(columnIndex);
+    final int value = resultSet.getInt(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), Short.valueOf(value));
+      object.setValue(getIndex(), Integer.valueOf(value));
     }
     return columnIndex + 1;
   }
@@ -38,14 +38,14 @@ public class JdbcShortAttribute extends JdbcAttribute {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {
-      short numberValue;
+      int numberValue;
       if (value instanceof Number) {
         final Number number = (Number)value;
-        numberValue = number.shortValue();
+        numberValue = number.intValue();
       } else {
-        numberValue = Short.parseShort(value.toString());
+        numberValue = Integer.parseInt(value.toString());
       }
-      statement.setShort(parameterIndex, numberValue);
+      statement.setInt(parameterIndex, numberValue);
     }
     return parameterIndex + 1;
   }

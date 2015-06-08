@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,8 +8,8 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcStringAttribute extends JdbcAttribute {
-  public JdbcStringAttribute(final String name, final int sqlType,
+public class JdbcStringFieldDefinition extends JdbcFieldDefinition {
+  public JdbcStringFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
     super(name, DataTypes.STRING, sqlType, length, 0, required, description,
@@ -17,8 +17,8 @@ public class JdbcStringAttribute extends JdbcAttribute {
   }
 
   @Override
-  public JdbcStringAttribute clone() {
-    return new JdbcStringAttribute(getName(), getSqlType(), getLength(),
+  public JdbcStringFieldDefinition clone() {
+    return new JdbcStringFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 

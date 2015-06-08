@@ -12,13 +12,13 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.util.CollectionUtil;
 
 public class CollectionValue extends QueryValue {
   private List<QueryValue> queryValues = new ArrayList<QueryValue>();
 
-  private JdbcAttribute jdbcAttribute;
+  private JdbcFieldDefinition jdbcAttribute;
 
   private FieldDefinition attribute;
 
@@ -44,12 +44,12 @@ public class CollectionValue extends QueryValue {
   @Override
   public int appendParameters(int index, final PreparedStatement statement) {
     for (final QueryValue queryValue : this.queryValues) {
-      JdbcAttribute jdbcAttribute = this.jdbcAttribute;
+      JdbcFieldDefinition jdbcAttribute = this.jdbcAttribute;
       if (queryValue instanceof Value) {
         final Value valueWrapper = (Value)queryValue;
         final Object value = valueWrapper.getQueryValue();
         if (jdbcAttribute == null) {
-          jdbcAttribute = JdbcAttribute.createAttribute(value);
+          jdbcAttribute = JdbcFieldDefinition.createField(value);
         }
         try {
           index = jdbcAttribute.setPreparedStatementValue(statement, index,
@@ -156,8 +156,8 @@ public class CollectionValue extends QueryValue {
     if (attribute == null) {
       this.jdbcAttribute = null;
     } else {
-      if (attribute instanceof JdbcAttribute) {
-        this.jdbcAttribute = (JdbcAttribute)attribute;
+      if (attribute instanceof JdbcFieldDefinition) {
+        this.jdbcAttribute = (JdbcFieldDefinition)attribute;
       } else {
         this.jdbcAttribute = null;
       }

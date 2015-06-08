@@ -24,13 +24,13 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
-import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
+import com.revolsys.jdbc.field.JdbcFieldAdder;
+import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jdbc.io.DataStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
+public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
 
   public static final List<String> POSTGRESQL_INTERNAL_SCHEMAS = Arrays.asList(
     "information_schema", "pg_catalog", "pg_toast_temp_1");
@@ -154,50 +154,50 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcDataObjectStore {
   @PostConstruct
   public void initialize() {
     super.initialize();
-    final JdbcAttributeAdder numberAttributeAdder = new JdbcAttributeAdder(
+    final JdbcFieldAdder numberAttributeAdder = new JdbcFieldAdder(
       DataTypes.DECIMAL);
     addAttributeAdder("numeric", numberAttributeAdder);
 
-    final JdbcAttributeAdder stringAttributeAdder = new JdbcAttributeAdder(
+    final JdbcFieldAdder stringAttributeAdder = new JdbcFieldAdder(
       DataTypes.STRING);
     addAttributeAdder("varchar", stringAttributeAdder);
     addAttributeAdder("text", stringAttributeAdder);
     addAttributeAdder("name", stringAttributeAdder);
     addAttributeAdder("bpchar", stringAttributeAdder);
 
-    final JdbcAttributeAdder longAttributeAdder = new JdbcAttributeAdder(
+    final JdbcFieldAdder longAttributeAdder = new JdbcFieldAdder(
       DataTypes.LONG);
     addAttributeAdder("int8", longAttributeAdder);
     addAttributeAdder("bigint", longAttributeAdder);
     addAttributeAdder("bigserial", longAttributeAdder);
     addAttributeAdder("serial8", longAttributeAdder);
 
-    final JdbcAttributeAdder intAttributeAdder = new JdbcAttributeAdder(
+    final JdbcFieldAdder intAttributeAdder = new JdbcFieldAdder(
       DataTypes.INT);
     addAttributeAdder("int4", intAttributeAdder);
     addAttributeAdder("integer", intAttributeAdder);
     addAttributeAdder("serial", intAttributeAdder);
     addAttributeAdder("serial4", intAttributeAdder);
 
-    final JdbcAttributeAdder shortAttributeAdder = new JdbcAttributeAdder(
+    final JdbcFieldAdder shortAttributeAdder = new JdbcFieldAdder(
       DataTypes.SHORT);
     addAttributeAdder("int2", shortAttributeAdder);
     addAttributeAdder("smallint", shortAttributeAdder);
 
-    final JdbcAttributeAdder floatAttributeAdder = new JdbcAttributeAdder(
+    final JdbcFieldAdder floatAttributeAdder = new JdbcFieldAdder(
       DataTypes.FLOAT);
     addAttributeAdder("float4", floatAttributeAdder);
 
-    final JdbcAttributeAdder doubleAttributeAdder = new JdbcAttributeAdder(
+    final JdbcFieldAdder doubleAttributeAdder = new JdbcFieldAdder(
       DataTypes.DOUBLE);
     addAttributeAdder("float8", doubleAttributeAdder);
     addAttributeAdder("double precision", doubleAttributeAdder);
 
-    addAttributeAdder("date", new JdbcAttributeAdder(DataTypes.DATE_TIME));
+    addAttributeAdder("date", new JdbcFieldAdder(DataTypes.DATE_TIME));
 
-    addAttributeAdder("bool", new JdbcAttributeAdder(DataTypes.BOOLEAN));
+    addAttributeAdder("bool", new JdbcFieldAdder(DataTypes.BOOLEAN));
 
-    final JdbcAttributeAdder geometryAttributeAdder = new PostgreSQLGeometryAttributeAdder(
+    final JdbcFieldAdder geometryAttributeAdder = new PostgreSQLGeometryAttributeAdder(
       this, getDataSource());
     addAttributeAdder("geometry", geometryAttributeAdder);
     setPrimaryKeySql("select p.table_name,c.column_name from information_schema.table_constraints p join information_schema.key_column_usage c using (constraint_catalog, constraint_schema, constraint_name) where p.constraint_type = 'PRIMARY KEY' and p.table_schema = ?");

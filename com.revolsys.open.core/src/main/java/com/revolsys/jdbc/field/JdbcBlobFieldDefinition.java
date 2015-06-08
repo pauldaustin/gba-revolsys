@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.io.File;
 import java.sql.Blob;
@@ -14,8 +14,8 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.jdbc.LocalBlob;
 
-public class JdbcBlobAttribute extends JdbcAttribute {
-  public JdbcBlobAttribute(final String name, final int sqlType,
+public class JdbcBlobFieldDefinition extends JdbcFieldDefinition {
+  public JdbcBlobFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
     super(name, DataTypes.BLOB, sqlType, length, 0, required, description,

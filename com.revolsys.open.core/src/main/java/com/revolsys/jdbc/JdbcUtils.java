@@ -32,7 +32,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.Path;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 
 public final class JdbcUtils {
@@ -40,8 +40,8 @@ public final class JdbcUtils {
 
   public static void addAttributeName(final StringBuffer sql,
     final String tablePrefix, final FieldDefinition attribute) {
-    if (attribute instanceof JdbcAttribute) {
-      final JdbcAttribute jdbcAttribute = (JdbcAttribute)attribute;
+    if (attribute instanceof JdbcFieldDefinition) {
+      final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
       jdbcAttribute.addColumnName(sql, tablePrefix);
     } else {
       sql.append(attribute.getName());
@@ -618,7 +618,7 @@ public final class JdbcUtils {
     final PreparedStatement statement, final Query query) {
     int index = 1;
     for (final Object parameter : query.getParameters()) {
-      final JdbcAttribute attribute = JdbcAttribute.createAttribute(parameter);
+      final JdbcFieldDefinition attribute = JdbcFieldDefinition.createField(parameter);
       try {
         index = attribute.setPreparedStatementValue(statement, index, parameter);
       } catch (final SQLException e) {
@@ -633,7 +633,7 @@ public final class JdbcUtils {
 
   public static int setValue(final PreparedStatement statement,
     final int index, final Object value) throws SQLException {
-    final JdbcAttribute attribute = JdbcAttribute.createAttribute(value);
+    final JdbcFieldDefinition attribute = JdbcFieldDefinition.createField(value);
     return attribute.setPreparedStatementValue(statement, index, value);
   }
 

@@ -17,22 +17,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.property.FieldProperties;
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.FieldDefinition;
+import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
-import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
+import com.revolsys.jdbc.field.JdbcFieldAdder;
+import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcConstants;
 import com.revolsys.jdbc.io.SqlFunction;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
-  private final DataSource dataSource;
-
+public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
   private static final Map<Integer, String> ID_TO_GEOMETRY_TYPE = new HashMap<Integer, String>();
 
   private static final Map<Integer, DataType> ID_TO_DATA_TYPE = new HashMap<Integer, DataType>();
@@ -88,8 +86,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
     addGeometryType(null, "POLYHEDRALSURFACEZM", 3015);
   }
 
-  private static void addGeometryType(final DataType dataType,
-    final String name, final Integer id) {
+  private static void addGeometryType(final DataType dataType, final String name, final Integer id) {
     ID_TO_GEOMETRY_TYPE.put(id, name);
     GEOMETRY_TYPE_TO_ID.put(name, id);
     ID_TO_DATA_TYPE.put(id, dataType);
@@ -109,59 +106,57 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
     }
   }
 
+  private final DataSource dataSource;
+
   private final Logger LOG = LoggerFactory.getLogger(OracleSdoGeometryAttributeAdder.class);
 
-  private final AbstractJdbcDataObjectStore dataStore;
+  private final AbstractJdbcRecordStore dataStore;
 
-  public OracleSdoGeometryAttributeAdder(
-    final AbstractJdbcDataObjectStore dataStore, final DataSource dataSource) {
+  public OracleSdoGeometryAttributeAdder(final AbstractJdbcRecordStore dataStore,
+    final DataSource dataSource) {
     this.dataStore = dataStore;
     this.dataSource = dataSource;
   }
 
   @Override
-  public FieldDefinition addAttribute(final RecordDefinitionImpl metaData,
-    final String name, final String dataTypeName, final int sqlType,
-    final int length, final int scale, final boolean required,
+  public FieldDefinition addField(final AbstractJdbcRecordStore recordStore,
+    final RecordDefinitionImpl metaData, final String name, final String dataTypeName,
+    final int sqlType, final int length, final int scale, final boolean required,
     final String description) {
     final String typePath = metaData.getPath();
     final String columnName = name.toUpperCase();
     final RecordStoreSchema schema = metaData.getSchema();
 
-    GeometryFactory geometryFactory = getColumnProperty(schema, typePath,
-      columnName, GEOMETRY_FACTORY);
+    GeometryFactory geometryFactory = getColumnProperty(schema, typePath, columnName,
+      GEOMETRY_FACTORY);
     if (geometryFactory == null) {
       geometryFactory = schema.getGeometryFactory();
     }
 
-    DataType dataType = getColumnProperty(schema, typePath, columnName,
-      GEOMETRY_TYPE);
+    DataType dataType = getColumnProperty(schema, typePath, columnName, GEOMETRY_TYPE);
     if (dataType == null) {
       dataType = DataTypes.GEOMETRY;
     }
 
-    int numAxis = getIntegerColumnProperty(schema, typePath, columnName,
-      NUM_AXIS);
+    int numAxis = getIntegerColumnProperty(schema, typePath, columnName, NUM_AXIS);
     if (numAxis == -1) {
       numAxis = geometryFactory.getNumAxis();
     }
 
-    final FieldDefinition attribute = new OracleSdoGeometryJdbcAttribute(name,
-      dataType, sqlType, required, description, null, geometryFactory, numAxis);
+    final FieldDefinition attribute = new OracleSdoGeometryJdbcAttribute(name, dataType, sqlType,
+      required, description, null, geometryFactory, numAxis);
     metaData.addField(attribute);
-    attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction(
-      "SDO_RELATE(", ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));
-    attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction(
-      "SDO_GEOM.SDO_BUFFER(", "," + 1 / geometryFactory.getScaleXY() + ")"));
-    attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction(
-      "SDO_EQUAL(", ") = 'TRUE'"));
+    attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction("SDO_RELATE(",
+      ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));
+    attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("SDO_GEOM.SDO_BUFFER(",
+      "," + 1 / geometryFactory.getScaleXY() + ")"));
+    attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction("SDO_EQUAL(", ") = 'TRUE'"));
     attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     return attribute;
 
   }
 
-  protected double getScale(final Datum[] values, final int axisIndex)
-    throws SQLException {
+  protected double getScale(final Datum[] values, final int axisIndex) throws SQLException {
     if (axisIndex >= values.length) {
       return 0;
     } else {
@@ -179,9 +174,9 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
   @Override
   public void initialize(final RecordStoreSchema schema) {
     try {
-      final Connection connection = JdbcUtils.getConnection(this.dataSource);
+      final Connection connection = JdbcUtils.getConnection(dataSource);
       try {
-        final String schemaName = this.dataStore.getDatabaseSchemaName(schema);
+        final String schemaName = dataStore.getDatabaseSchemaName(schema);
         final String sridSql = "select M.TABLE_NAME, M.COLUMN_NAME, M.SRID, M.DIMINFO, C.GEOMETRY_TYPE "
           + "from ALL_SDO_GEOM_METADATA M "
           + "LEFT OUTER JOIN ALL_GEOMETRY_COLUMNS C ON (M.OWNER = C.F_TABLE_SCHEMA AND M.TABLE_NAME = C.F_TABLE_NAME AND M.COLUMN_NAME = C.F_GEOMETRY_COLUMN) "
@@ -211,10 +206,9 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
               final Datum[] values = dimInfo.getOracleArray();
               final double scaleXy = getScale(values, 0);
               final double scaleZ = getScale(values, 2);
-              final GeometryFactory geometryFactory = GeometryFactory.getFactory(
-                srid, numAxis, scaleXy, scaleZ);
-              setColumnProperty(schema, typePath, columnName, GEOMETRY_FACTORY,
-                geometryFactory);
+              final GeometryFactory geometryFactory = GeometryFactory.getFactory(srid, numAxis,
+                scaleXy, scaleZ);
+              setColumnProperty(schema, typePath, columnName, GEOMETRY_FACTORY, geometryFactory);
 
               final int geometryType = resultSet.getInt(5);
               DataType geometryDataType;
@@ -226,8 +220,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
                   geometryDataType = DataTypes.GEOMETRY;
                 }
               }
-              setColumnProperty(schema, typePath, columnName, GEOMETRY_TYPE,
-                geometryDataType);
+              setColumnProperty(schema, typePath, columnName, GEOMETRY_TYPE, geometryDataType);
             }
           } finally {
             JdbcUtils.close(resultSet);
@@ -236,10 +229,10 @@ public class OracleSdoGeometryAttributeAdder extends JdbcAttributeAdder {
           JdbcUtils.close(statement);
         }
       } finally {
-        JdbcUtils.release(connection, this.dataSource);
+        JdbcUtils.release(connection, dataSource);
       }
     } catch (final SQLException e) {
-      this.LOG.error("Unable to initialize", e);
+      LOG.error("Unable to initialize", e);
     }
   }
 

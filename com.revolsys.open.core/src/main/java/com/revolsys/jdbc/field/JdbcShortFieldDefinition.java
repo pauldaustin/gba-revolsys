@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,30 +8,26 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcLongAttribute extends JdbcAttribute {
-  public JdbcLongAttribute(final String name) {
-    super(name, DataTypes.LONG, 0, 0, 0, false, null, null);
-  }
-
-  public JdbcLongAttribute(final String name, final int sqlType,
+public class JdbcShortFieldDefinition extends JdbcFieldDefinition {
+  public JdbcShortFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.LONG, sqlType, length, 0, required, description,
+    super(name, DataTypes.SHORT, sqlType, length, 0, required, description,
       properties);
   }
 
   @Override
-  public JdbcLongAttribute clone() {
-    return new JdbcLongAttribute(getName(), getSqlType(), getLength(),
+  public JdbcShortFieldDefinition clone() {
+    return new JdbcShortFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
     final int columnIndex, final Record object) throws SQLException {
-    final long longValue = resultSet.getLong(columnIndex);
+    final short value = resultSet.getShort(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), Long.valueOf(longValue));
+      object.setValue(getIndex(), Short.valueOf(value));
     }
     return columnIndex + 1;
   }
@@ -42,15 +38,14 @@ public class JdbcLongAttribute extends JdbcAttribute {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {
-      long numberValue;
+      short numberValue;
       if (value instanceof Number) {
         final Number number = (Number)value;
-        numberValue = number.longValue();
+        numberValue = number.shortValue();
       } else {
-        numberValue = Long.parseLong(value.toString());
+        numberValue = Short.parseShort(value.toString());
       }
-      statement.setLong(parameterIndex, numberValue);
-
+      statement.setShort(parameterIndex, numberValue);
     }
     return parameterIndex + 1;
   }

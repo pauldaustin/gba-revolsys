@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,26 +8,26 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcIntegerAttribute extends JdbcAttribute {
-  public JdbcIntegerAttribute(final String name, final int sqlType,
+public class JdbcBooleanFieldDefinition extends JdbcFieldDefinition {
+  public JdbcBooleanFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.INT, sqlType, length, 0, required, description,
+    super(name, DataTypes.BOOLEAN, sqlType, length, 0, required, description,
       properties);
   }
 
   @Override
-  public JdbcIntegerAttribute clone() {
-    return new JdbcIntegerAttribute(getName(), getSqlType(), getLength(),
+  public JdbcBooleanFieldDefinition clone() {
+    return new JdbcBooleanFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
     final int columnIndex, final Record object) throws SQLException {
-    final int value = resultSet.getInt(columnIndex);
+    final boolean booleanValue = resultSet.getBoolean(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), Integer.valueOf(value));
+      object.setValue(getIndex(), booleanValue);
     }
     return columnIndex + 1;
   }
@@ -38,14 +38,21 @@ public class JdbcIntegerAttribute extends JdbcAttribute {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {
-      int numberValue;
-      if (value instanceof Number) {
+      boolean booleanValue;
+      if (value instanceof Boolean) {
+        booleanValue = (Boolean)value;
+      } else if (value instanceof Number) {
         final Number number = (Number)value;
-        numberValue = number.intValue();
+        booleanValue = number.intValue() == 1;
       } else {
-        numberValue = Integer.parseInt(value.toString());
+        final String stringValue = value.toString();
+        if (stringValue.equals("1") || Boolean.parseBoolean(stringValue)) {
+          booleanValue = true;
+        } else {
+          booleanValue = false;
+        }
       }
-      statement.setInt(parameterIndex, numberValue);
+      statement.setBoolean(parameterIndex, booleanValue);
     }
     return parameterIndex + 1;
   }

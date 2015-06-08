@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -8,8 +8,8 @@ import java.util.Map;
 
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcDecimalAttribute extends JdbcAttribute {
-  public JdbcDecimalAttribute(final String name, final int sqlType,
+public class JdbcDecimalFieldDefinition extends JdbcFieldDefinition {
+  public JdbcDecimalFieldDefinition(final String name, final int sqlType,
     final int length, final int scale, final boolean required,
     final String description, final Map<String, Object> properties) {
     super(name, DataTypes.DECIMAL, sqlType, length, scale, required,
@@ -17,8 +17,8 @@ public class JdbcDecimalAttribute extends JdbcAttribute {
   }
 
   @Override
-  public JdbcDecimalAttribute clone() {
-    return new JdbcDecimalAttribute(getName(), getSqlType(), getLength(),
+  public JdbcDecimalFieldDefinition clone() {
+    return new JdbcDecimalFieldDefinition(getName(), getSqlType(), getLength(),
       getScale(), isRequired(), getDescription(), getProperties());
   }
 

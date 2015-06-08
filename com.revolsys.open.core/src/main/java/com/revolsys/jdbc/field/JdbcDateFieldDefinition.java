@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -9,8 +9,8 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcDateAttribute extends JdbcAttribute {
-  public JdbcDateAttribute(final String name, final int sqlType,
+public class JdbcDateFieldDefinition extends JdbcFieldDefinition {
+  public JdbcDateFieldDefinition(final String name, final int sqlType,
     final boolean required, final String description,
     final Map<String, Object> properties) {
     super(name, DataTypes.DATE, sqlType, 0, 0, required, description,
@@ -18,8 +18,8 @@ public class JdbcDateAttribute extends JdbcAttribute {
   }
 
   @Override
-  public JdbcDateAttribute clone() {
-    return new JdbcDateAttribute(getName(), getSqlType(), isRequired(),
+  public JdbcDateFieldDefinition clone() {
+    return new JdbcDateFieldDefinition(getName(), getSqlType(), isRequired(),
       getDescription(), getProperties());
   }
 

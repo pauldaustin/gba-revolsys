@@ -14,11 +14,11 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.ExceptionUtil;
 
-public class ArcSdeBinaryGeometryAttribute extends JdbcAttribute {
+public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
 
   private final GeometryFactory geometryFactory;
 

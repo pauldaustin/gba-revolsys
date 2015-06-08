@@ -11,8 +11,8 @@ import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.DataObjectStoreExtension;
 import com.revolsys.gis.oracle.io.OracleSdoGeometryJdbcAttribute;
-import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
-import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
+import com.revolsys.jdbc.field.JdbcFieldAdder;
+import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 
 public class ArcSdeBinaryGeometryDataStoreExtension implements
 DataObjectStoreExtension {
@@ -40,10 +40,10 @@ DataObjectStoreExtension {
 
   @Override
   public void postProcess(final RecordStoreSchema schema) {
-    final AbstractJdbcDataObjectStore dataStore = (AbstractJdbcDataObjectStore)schema.getDataStore();
+    final AbstractJdbcRecordStore dataStore = (AbstractJdbcRecordStore)schema.getDataStore();
     for (final RecordDefinition metaData : schema.getTypes()) {
       final String typePath = metaData.getPath();
-      final Map<String, Map<String, Object>> typeColumnProperties = JdbcAttributeAdder.getTypeColumnProperties(
+      final Map<String, Map<String, Object>> typeColumnProperties = JdbcFieldAdder.getTypeColumnProperties(
         schema, typePath);
       for (final Entry<String, Map<String, Object>> columnEntry : typeColumnProperties.entrySet()) {
         final String columnName = columnEntry.getKey();

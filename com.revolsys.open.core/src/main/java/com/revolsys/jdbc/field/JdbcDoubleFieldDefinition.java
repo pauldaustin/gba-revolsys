@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,26 +8,26 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcByteAttribute extends JdbcAttribute {
-  public JdbcByteAttribute(final String name, final int sqlType,
+public class JdbcDoubleFieldDefinition extends JdbcFieldDefinition {
+  public JdbcDoubleFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.BYTE, sqlType, length, 0, required, description,
+    super(name, DataTypes.DOUBLE, sqlType, length, 0, required, description,
       properties);
   }
 
   @Override
-  public JdbcByteAttribute clone() {
-    return new JdbcByteAttribute(getName(), getSqlType(), getLength(),
+  public JdbcDoubleFieldDefinition clone() {
+    return new JdbcDoubleFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
     final int columnIndex, final Record object) throws SQLException {
-    final byte longValue = resultSet.getByte(columnIndex);
+    final double longValue = resultSet.getDouble(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), Byte.valueOf(longValue));
+      object.setValue(getIndex(), Double.valueOf(longValue));
     }
     return columnIndex + 1;
   }
@@ -38,14 +38,15 @@ public class JdbcByteAttribute extends JdbcAttribute {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {
-      byte numberValue;
+      double numberValue;
       if (value instanceof Number) {
         final Number number = (Number)value;
-        numberValue = number.byteValue();
+        numberValue = number.doubleValue();
       } else {
-        numberValue = Byte.parseByte(value.toString());
+        numberValue = Double.parseDouble(value.toString());
       }
-      statement.setByte(parameterIndex, numberValue);
+      statement.setDouble(parameterIndex, numberValue);
+
     }
     return parameterIndex + 1;
   }

@@ -15,12 +15,12 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.DateUtil;
 
 public class Value extends QueryValue {
-  private JdbcAttribute jdbcAttribute;
+  private JdbcFieldDefinition jdbcAttribute;
 
   private Object queryValue;
 
@@ -36,7 +36,7 @@ public class Value extends QueryValue {
   }
 
   public Value(final Object value) {
-    this(JdbcAttribute.createAttribute(value), value);
+    this(JdbcFieldDefinition.createField(value), value);
   }
 
   @Override
@@ -74,8 +74,8 @@ public class Value extends QueryValue {
   }
 
   public void convert(final FieldDefinition attribute) {
-    if (attribute instanceof JdbcAttribute) {
-      this.jdbcAttribute = (JdbcAttribute)attribute;
+    if (attribute instanceof JdbcFieldDefinition) {
+      this.jdbcAttribute = (JdbcFieldDefinition)attribute;
     }
     convert(attribute.getType());
   }
@@ -94,7 +94,7 @@ public class Value extends QueryValue {
     return this.displayValue;
   }
 
-  public JdbcAttribute getJdbcAttribute() {
+  public JdbcFieldDefinition getJdbcAttribute() {
     return this.jdbcAttribute;
   }
 
@@ -128,10 +128,10 @@ public class Value extends QueryValue {
     if (attribute == null) {
 
     } else {
-      if (attribute instanceof JdbcAttribute) {
-        this.jdbcAttribute = (JdbcAttribute)attribute;
+      if (attribute instanceof JdbcFieldDefinition) {
+        this.jdbcAttribute = (JdbcFieldDefinition)attribute;
       } else {
-        this.jdbcAttribute = JdbcAttribute.createAttribute(this.queryValue);
+        this.jdbcAttribute = JdbcFieldDefinition.createField(this.queryValue);
       }
 
       CodeTable codeTable = null;

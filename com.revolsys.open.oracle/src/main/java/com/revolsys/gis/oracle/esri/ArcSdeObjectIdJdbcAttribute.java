@@ -8,13 +8,13 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 
-public class ArcSdeObjectIdJdbcAttribute extends JdbcAttribute {
+public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
   public static void replaceAttribute(final String schemaName,
     final RecordDefinition metaData, final Integer registrationId,
     final String rowIdColumn) {
-    final JdbcAttribute objectIdAttribute = (JdbcAttribute)metaData.getField(rowIdColumn);
+    final JdbcFieldDefinition objectIdAttribute = (JdbcFieldDefinition)metaData.getField(rowIdColumn);
     if (objectIdAttribute != null
         && !(objectIdAttribute instanceof ArcSdeObjectIdJdbcAttribute)) {
       final String name = objectIdAttribute.getName();

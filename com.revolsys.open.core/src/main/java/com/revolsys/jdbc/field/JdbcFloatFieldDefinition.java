@@ -1,4 +1,4 @@
-package com.revolsys.jdbc.attribute;
+package com.revolsys.jdbc.field;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,26 +8,26 @@ import java.util.Map;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 
-public class JdbcBooleanAttribute extends JdbcAttribute {
-  public JdbcBooleanAttribute(final String name, final int sqlType,
+public class JdbcFloatFieldDefinition extends JdbcFieldDefinition {
+  public JdbcFloatFieldDefinition(final String name, final int sqlType,
     final int length, final boolean required, final String description,
     final Map<String, Object> properties) {
-    super(name, DataTypes.BOOLEAN, sqlType, length, 0, required, description,
+    super(name, DataTypes.FLOAT, sqlType, length, 0, required, description,
       properties);
   }
 
   @Override
-  public JdbcBooleanAttribute clone() {
-    return new JdbcBooleanAttribute(getName(), getSqlType(), getLength(),
+  public JdbcFloatFieldDefinition clone() {
+    return new JdbcFloatFieldDefinition(getName(), getSqlType(), getLength(),
       isRequired(), getDescription(), getProperties());
   }
 
   @Override
   public int setAttributeValueFromResultSet(final ResultSet resultSet,
     final int columnIndex, final Record object) throws SQLException {
-    final boolean booleanValue = resultSet.getBoolean(columnIndex);
+    final float longValue = resultSet.getFloat(columnIndex);
     if (!resultSet.wasNull()) {
-      object.setValue(getIndex(), booleanValue);
+      object.setValue(getIndex(), Float.valueOf(longValue));
     }
     return columnIndex + 1;
   }
@@ -38,21 +38,14 @@ public class JdbcBooleanAttribute extends JdbcAttribute {
     if (value == null) {
       statement.setNull(parameterIndex, getSqlType());
     } else {
-      boolean booleanValue;
-      if (value instanceof Boolean) {
-        booleanValue = (Boolean)value;
-      } else if (value instanceof Number) {
+      float numberValue;
+      if (value instanceof Number) {
         final Number number = (Number)value;
-        booleanValue = number.intValue() == 1;
+        numberValue = number.floatValue();
       } else {
-        final String stringValue = value.toString();
-        if (stringValue.equals("1") || Boolean.parseBoolean(stringValue)) {
-          booleanValue = true;
-        } else {
-          booleanValue = false;
-        }
+        numberValue = Float.parseFloat(value.toString());
       }
-      statement.setBoolean(parameterIndex, booleanValue);
+      statement.setFloat(parameterIndex, numberValue);
     }
     return parameterIndex + 1;
   }

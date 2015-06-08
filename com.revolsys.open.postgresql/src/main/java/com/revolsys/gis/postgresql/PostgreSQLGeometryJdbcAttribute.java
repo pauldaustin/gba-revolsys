@@ -26,10 +26,10 @@ import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
-import com.revolsys.jdbc.attribute.JdbcAttribute;
+import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public class PostgreSQLGeometryJdbcAttribute extends JdbcAttribute {
+public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
   private final GeometryFactory geometryFactory;
 
   private final int srid;
@@ -48,7 +48,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcAttribute {
   }
 
   @Override
-  public JdbcAttribute clone() {
+  public JdbcFieldDefinition clone() {
     return new PostgreSQLGeometryJdbcAttribute(getName(), getType(),
       isRequired(), getDescription(), getProperties(), srid, numAxis,
       geometryFactory);

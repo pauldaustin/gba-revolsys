@@ -30,8 +30,8 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.gis.oracle.io.OracleDataObjectStore;
 import com.revolsys.io.FileUtil;
-import com.revolsys.jdbc.attribute.JdbcAttributeAdder;
-import com.revolsys.jdbc.io.AbstractJdbcDataObjectStore;
+import com.revolsys.jdbc.field.JdbcFieldAdder;
+import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jdbc.io.DataStoreIteratorFactory;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jts.geom.BoundingBox;
@@ -80,20 +80,20 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     return null;
   }
 
-  public void createGeometryColumn(final AbstractJdbcDataObjectStore dataStore,
+  public void createGeometryColumn(final AbstractJdbcRecordStore dataStore,
     final RecordStoreSchema schema, final RecordDefinition metaData,
     final String typePath, final String columnName,
     final Map<String, Object> columnProperties) {
     final FieldDefinition attribute = metaData.getField(columnName);
 
-    DataType dataType = JdbcAttributeAdder.getColumnProperty(schema, typePath,
-      columnName, JdbcAttributeAdder.GEOMETRY_TYPE);
+    DataType dataType = JdbcFieldAdder.getColumnProperty(schema, typePath,
+      columnName, JdbcFieldAdder.GEOMETRY_TYPE);
     if (dataType == null) {
       dataType = DataTypes.GEOMETRY;
     }
 
-    GeometryFactory geometryFactory = JdbcAttributeAdder.getColumnProperty(
-      schema, typePath, columnName, JdbcAttributeAdder.GEOMETRY_FACTORY);
+    GeometryFactory geometryFactory = JdbcFieldAdder.getColumnProperty(
+      schema, typePath, columnName, JdbcFieldAdder.GEOMETRY_FACTORY);
     if (geometryFactory == null) {
       geometryFactory = schema.getGeometryFactory();
     }
