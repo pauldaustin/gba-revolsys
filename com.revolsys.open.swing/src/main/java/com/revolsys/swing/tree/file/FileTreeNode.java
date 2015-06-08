@@ -24,6 +24,7 @@ import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;
 import com.revolsys.io.IoFactoryRegistry;
+import com.revolsys.io.Paths;
 import com.revolsys.io.file.FolderConnectionManager;
 import com.revolsys.io.file.FolderConnectionRegistry;
 import com.revolsys.raster.AbstractGeoReferencedImageFactory;
@@ -148,7 +149,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
     final List<TreeNode> children = new ArrayList<TreeNode>();
     if (files != null) {
       for (final File childFile : files) {
-        if (!childFile.isHidden()) {
+        if (!Paths.isHidden(childFile.toPath())) {
           if (FileTreeNode.isDataStore(childFile)) {
             final FileDataObjectStoreTreeNode dataStoreNode = new FileDataObjectStoreTreeNode(
               parent, childFile);
