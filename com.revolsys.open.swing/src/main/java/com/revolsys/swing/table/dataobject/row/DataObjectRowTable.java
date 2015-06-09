@@ -17,9 +17,9 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.SwingUtil;
-import com.revolsys.swing.map.layer.dataobject.table.model.DataObjectLayerTableModel;
-import com.revolsys.swing.map.layer.dataobject.table.predicate.ErrorPredicate;
-import com.revolsys.swing.map.layer.dataobject.table.predicate.ModifiedAttributePredicate;
+import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
+import com.revolsys.swing.map.layer.record.table.predicate.ErrorPredicate;
+import com.revolsys.swing.map.layer.record.table.predicate.ModifiedAttributePredicate;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.dataobject.editor.DataObjectTableCellEditor;
@@ -78,9 +78,9 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
 
   @Override
   public ListSelectionModel getSelectionModel() {
-    if (getTableModel() instanceof DataObjectLayerTableModel) {
-      final DataObjectLayerTableModel layerTableModel = (DataObjectLayerTableModel)getTableModel();
-      if (layerTableModel.getAttributeFilterMode().equals(DataObjectLayerTableModel.MODE_SELECTED)) {
+    if (getTableModel() instanceof RecordLayerTableModel) {
+      final RecordLayerTableModel layerTableModel = (RecordLayerTableModel)getTableModel();
+      if (layerTableModel.getAttributeFilterMode().equals(RecordLayerTableModel.MODE_SELECTED)) {
         return layerTableModel.getHighlightedModel();
       }
     }
@@ -151,8 +151,8 @@ public class DataObjectRowTable extends BaseJxTable implements MouseListener {
   public void tableChanged(final TableModelEvent event) {
     if (SwingUtil.isEventDispatchThread()) {
       final TableModel model = getModel();
-      if (model instanceof DataObjectLayerTableModel) {
-        final DataObjectLayerTableModel layerModel = (DataObjectLayerTableModel)model;
+      if (model instanceof RecordLayerTableModel) {
+        final RecordLayerTableModel layerModel = (RecordLayerTableModel)model;
         final String mode = layerModel.getAttributeFilterMode();
         final List<String> sortableModes = layerModel.getSortableModes();
         if (sortableModes.contains(mode)) {

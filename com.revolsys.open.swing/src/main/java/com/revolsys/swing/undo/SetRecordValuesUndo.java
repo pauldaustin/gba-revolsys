@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.revolsys.gis.model.data.equals.MapEquals;
-import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerDataObject;
 
 public class SetRecordValuesUndo extends AbstractUndoableEdit {
   private static final long serialVersionUID = 1L;

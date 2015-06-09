@@ -8,15 +8,15 @@ import com.revolsys.swing.undo.UndoManager;
 public class DataObjectLayerFormUndoManager extends UndoManager {
   private static final long serialVersionUID = 1L;
 
-  private final Reference<DataObjectLayerForm> form;
+  private final Reference<RecordLayerForm> form;
 
-  public DataObjectLayerFormUndoManager(final DataObjectLayerForm form) {
-    this.form = new WeakReference<DataObjectLayerForm>(form);
+  public DataObjectLayerFormUndoManager(final RecordLayerForm form) {
+    this.form = new WeakReference<RecordLayerForm>(form);
   }
 
   @Override
   public void redo() {
-    final DataObjectLayerForm form = this.form.get();
+    final RecordLayerForm form = this.form.get();
     if (form != null) {
       final boolean validationEnabled = form.setFieldValidationEnabled(false);
       try {
@@ -32,7 +32,7 @@ public class DataObjectLayerFormUndoManager extends UndoManager {
 
   @Override
   public void undo() {
-    final DataObjectLayerForm form = this.form.get();
+    final RecordLayerForm form = this.form.get();
     if (form != null) {
       final boolean validationEnabled = form.setFieldValidationEnabled(false);
       try {

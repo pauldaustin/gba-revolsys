@@ -3,8 +3,8 @@ package com.revolsys.swing.undo;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.swing.map.layer.dataobject.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
+import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
+import com.revolsys.swing.map.layer.record.LayerDataObject;
 
 public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
 

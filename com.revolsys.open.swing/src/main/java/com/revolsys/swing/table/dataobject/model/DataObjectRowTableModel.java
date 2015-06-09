@@ -13,13 +13,12 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 
 import com.revolsys.util.Property;
-
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.swing.map.layer.dataobject.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerDataObject;
 import com.revolsys.swing.table.SortableTableModel;
 import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
 import com.vividsolutions.jts.geom.Geometry;

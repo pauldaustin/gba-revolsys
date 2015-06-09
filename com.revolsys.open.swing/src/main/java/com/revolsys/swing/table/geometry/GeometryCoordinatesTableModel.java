@@ -14,7 +14,7 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.geometry.GeometryCollection;
 import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.swing.map.form.DataObjectLayerForm;
+import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.table.TablePanel;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -48,7 +48,7 @@ public class GeometryCoordinatesTableModel extends AbstractTableModel {
 
   private int numIndexItems;
 
-  private Reference<DataObjectLayerForm> form;
+  private Reference<RecordLayerForm> form;
 
   private int vertexIndexColumn;
 
@@ -86,7 +86,7 @@ public class GeometryCoordinatesTableModel extends AbstractTableModel {
     }
   }
 
-  public DataObjectLayerForm getForm() {
+  public RecordLayerForm getForm() {
     return this.form.get();
   }
 
@@ -139,8 +139,8 @@ public class GeometryCoordinatesTableModel extends AbstractTableModel {
     return this.vertexIndexColumn;
   }
 
-  public void setForm(final DataObjectLayerForm form) {
-    this.form = new WeakReference<DataObjectLayerForm>(form);
+  public void setForm(final RecordLayerForm form) {
+    this.form = new WeakReference<RecordLayerForm>(form);
   }
 
   public void setGeometry(final Geometry geometry) {
