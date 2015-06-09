@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.io.connection.ConnectionRegistry;
 import com.revolsys.io.datastore.DataObjectStoreConnection;
@@ -40,7 +40,7 @@ public class AddDataStoreConnectionPanel extends ValueField {
     this.name = name;
     add(new JLabel("Name:"));
     this.nameField = new JTextField("", 50);
-    if (StringUtils.hasText(name)) {
+    if (Property.hasValue(name)) {
       setTitle("Add Data Store " + name);
       this.nameField.setText(name);
       this.nameField.setEditable(false);
@@ -65,7 +65,7 @@ public class AddDataStoreConnectionPanel extends ValueField {
   public void save() {
     super.save();
     final Map<String, Object> properties = new LinkedHashMap<String, Object>();
-    if (StringUtils.hasText(this.name)) {
+    if (Property.hasValue(this.name)) {
       properties.put("name", this.name);
     } else {
       properties.put("name", this.nameField.getText());

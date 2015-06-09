@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -93,7 +93,7 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
 
       final List<String> valueAttributeNames = getValueFieldNames();
       String idColumn = metaData.getIdFieldName();
-      if (!StringUtils.hasText(idColumn)) {
+      if (!Property.hasValue(idColumn)) {
         idColumn = metaData.getFieldName(0);
       }
       this.insertSql = "INSERT INTO " + this.tableName + " (" + idColumn;

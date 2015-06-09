@@ -27,7 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -600,7 +600,7 @@ public abstract class AbstractGeoReferencedImage extends AbstractPropertyChangeO
       try {
         final Map<String, Object> settings = JsonMapIoFactory.toMap(settingsFile);
         final String boundingBoxWkt = (String)settings.get("boundingBox");
-        if (StringUtils.hasText(boundingBoxWkt)) {
+        if (Property.hasValue(boundingBoxWkt)) {
           final BoundingBox boundingBox = BoundingBox.create(boundingBoxWkt);
           if (!boundingBox.isEmpty()) {
             setBoundingBox(boundingBox);

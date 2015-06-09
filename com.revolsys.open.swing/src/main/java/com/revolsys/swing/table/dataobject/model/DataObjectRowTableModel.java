@@ -12,7 +12,7 @@ import javax.swing.SortOrder;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
@@ -270,7 +270,7 @@ public abstract class DataObjectRowTableModel extends AbstractDataObjectTableMod
   }
 
   public void setSortOrder(final String idAttributeName) {
-    if (StringUtils.hasText(idAttributeName)) {
+    if (Property.hasValue(idAttributeName)) {
       final int index = this.attributeNames.indexOf(idAttributeName);
       if (index != -1) {
         setSortOrder(index);

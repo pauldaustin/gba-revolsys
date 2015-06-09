@@ -12,7 +12,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.iterator.IteratorEnumeration;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -384,7 +384,7 @@ public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
 
   @Override
   public String toString() {
-    if (StringUtils.hasText(this.name)) {
+    if (Property.hasValue(this.name)) {
       return this.name;
     } else {
       final Object userObject = getUserObject();

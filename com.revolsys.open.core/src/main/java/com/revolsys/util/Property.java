@@ -21,7 +21,7 @@ import javax.swing.JComponent;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.beans.NonWeakListener;
 import com.revolsys.beans.PropertyChangeSupportProxy;
@@ -63,7 +63,7 @@ public final class Property {
   }
 
   public static PropertyDescriptor descriptor(final Class<?> beanClass, final String name) {
-    if (beanClass != null && StringUtils.hasText(name)) {
+    if (beanClass != null && Property.hasValue(name)) {
       try {
         final BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
         final PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
@@ -120,7 +120,7 @@ public final class Property {
         final String firstName = JavaBeanUtil.getFirstName(key);
         final String subName = JavaBeanUtil.getSubName(key);
         final Object value = JavaBeanUtil.getProperty(object, firstName);
-        if (value == null || !StringUtils.hasText(subName)) {
+        if (value == null || !Property.hasValue(subName)) {
           return (T)value;
         } else {
           return (T)get(value, subName);
@@ -354,7 +354,7 @@ public final class Property {
       return true;
     } else if (value instanceof CharSequence) {
       final CharSequence charSequence = (CharSequence)value;
-      return !StringUtils.hasText(charSequence);
+      return !Property.hasValue(charSequence);
     } else {
       return false;
     }

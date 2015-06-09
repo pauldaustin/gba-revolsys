@@ -7,7 +7,7 @@ import java.awt.event.FocusListener;
 import javax.swing.JTextField;
 
 import org.jdesktop.swingx.JXTextField;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -51,7 +51,7 @@ public class TextField extends JXTextField implements Field, FocusListener {
 
   public TextField(final String fieldName, final Object fieldValue) {
     setDocument(new PropertyChangeDocument(this));
-    if (StringUtils.hasText(fieldName)) {
+    if (Property.hasValue(fieldName)) {
       this.fieldName = fieldName;
     } else {
       this.fieldName = "fieldValue";
@@ -157,7 +157,7 @@ public class TextField extends JXTextField implements Field, FocusListener {
     this.undoManager.discardAllEdits();
     if (!EqualsRegistry.equal(text, newText)) {
       if (newText == null) {
-        if (StringUtils.hasText(text)) {
+        if (Property.hasValue(text)) {
           setText("");
         }
       } else {
@@ -175,7 +175,7 @@ public class TextField extends JXTextField implements Field, FocusListener {
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

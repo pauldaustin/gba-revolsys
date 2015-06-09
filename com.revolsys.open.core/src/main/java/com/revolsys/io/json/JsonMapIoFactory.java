@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.io.AbstractMapReaderFactory;
 import com.revolsys.io.FileUtil;
@@ -112,7 +112,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWri
   }
 
   public static Map<String, Object> toObjectMap(final String string) {
-    if (StringUtils.hasText(string)) {
+    if (Property.hasValue(string)) {
       final StringReader reader = new StringReader(string);
       final Reader<Map<String, Object>> mapReader = new JsonMapReader(reader, true);
       for (final Map<String, Object> map : mapReader) {

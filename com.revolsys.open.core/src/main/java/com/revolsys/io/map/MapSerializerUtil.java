@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -88,7 +88,7 @@ public class MapSerializerUtil {
         return value;
       } else if (value instanceof String) {
         final String string = (String)value;
-        if (StringUtils.hasText(string)) {
+        if (Property.hasValue(string)) {
           return string.trim();
         } else {
           return null;
@@ -97,7 +97,7 @@ public class MapSerializerUtil {
         return null;
       } else {
         final String string = StringConverterRegistry.toString(value);
-        if (StringUtils.hasText(string)) {
+        if (Property.hasValue(string)) {
           return string.trim();
         } else {
           return null;

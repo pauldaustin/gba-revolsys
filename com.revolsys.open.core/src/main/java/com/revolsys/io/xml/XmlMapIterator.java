@@ -9,7 +9,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.io.NamedLinkedHashMap;
@@ -84,7 +84,7 @@ public class XmlMapIterator extends AbstractIterator<Map<String, Object>> {
         case XMLStreamConstants.CDATA:
         case XMLStreamConstants.CHARACTERS:
           final String text = this.in.getText();
-          if (StringUtils.hasText(text)) {
+          if (Property.hasValue(text)) {
             map.put("xmlText" + ++textIndex, text);
           }
         break;
@@ -139,7 +139,7 @@ public class XmlMapIterator extends AbstractIterator<Map<String, Object>> {
         case XMLStreamConstants.CDATA:
         case XMLStreamConstants.CHARACTERS:
           final String text = this.in.getText();
-          if (StringUtils.hasText(text)) {
+          if (Property.hasValue(text)) {
             map.put("xmlText" + ++textIndex, text);
           }
         break;

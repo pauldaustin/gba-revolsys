@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.jts.geom.BoundingBox;
@@ -116,7 +116,7 @@ public class Nts1000000RectangularMapGrid extends AbstractRectangularMapGrid {
   }
 
   public int getNtsBlock(final String mapTileName) {
-    if (StringUtils.hasText(mapTileName)) {
+    if (Property.hasValue(mapTileName)) {
       final Matcher matcher = NAME_PATTERN.matcher(mapTileName);
       if (matcher.matches()) {
         final String name = matcher.group(1);

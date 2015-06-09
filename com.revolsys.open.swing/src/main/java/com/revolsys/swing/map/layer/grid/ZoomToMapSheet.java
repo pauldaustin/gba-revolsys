@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.grid.RectangularMapGrid;
 import com.revolsys.gis.grid.RectangularMapTile;
@@ -43,7 +43,7 @@ public class ZoomToMapSheet extends AbstractAction {
       String mapSheet = PreferencesUtil.getString(getClass(), preferenceName);
       mapSheet = JOptionPane.showInputDialog("Enter name of the" + gridName
         + " map sheet to zoom to", mapSheet);
-      if (StringUtils.hasText(mapSheet)) {
+      if (Property.hasValue(mapSheet)) {
         try {
           final RectangularMapTile mapTile = grid.getTileByName(mapSheet);
           final BoundingBox boundingBox = mapTile.getBoundingBox();

@@ -1,6 +1,6 @@
 package com.revolsys.converter.string;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 public class IntegerStringConverter extends AbstractNumberStringConverter<Integer> {
   public IntegerStringConverter() {
@@ -34,7 +34,7 @@ public class IntegerStringConverter extends AbstractNumberStringConverter<Intege
 
   @Override
   public Integer toObject(final String string) {
-    if (StringUtils.hasText(string)) {
+    if (Property.hasValue(string)) {
       return Integer.valueOf(string);
     } else {
       return null;

@@ -51,7 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.io.file.FolderConnection;
 import com.revolsys.io.file.FolderConnectionManager;
@@ -713,7 +713,7 @@ public final class FileUtil {
       return null;
     } else {
       String fileName = file.getName();
-      if (!StringUtils.hasText(fileName)) {
+      if (!Property.hasValue(fileName)) {
         fileName = file.getPath().replaceAll("\\\\$", "");
       }
       return fileName;

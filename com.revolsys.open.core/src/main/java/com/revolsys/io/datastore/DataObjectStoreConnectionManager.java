@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
@@ -61,7 +61,7 @@ public class DataObjectStoreConnectionManager extends
       if (dataStore == null) {
         final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone.get("connection");
         final String name = (String)connectionProperties.get("name");
-        if (StringUtils.hasText(name)) {
+        if (Property.hasValue(name)) {
           dataStore = getDataStore(name);
           if (dataStore == null) {
             // TODO give option to add
@@ -111,7 +111,7 @@ public class DataObjectStoreConnectionManager extends
         if (count.decrementAndGet() == 0) {
           final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone.get("connection");
           final String name = (String)connectionProperties.get("name");
-          if (!StringUtils.hasText(name)) {
+          if (!Property.hasValue(name)) {
             // TODO release for connections from connection registries
             dataStore.close();
           }

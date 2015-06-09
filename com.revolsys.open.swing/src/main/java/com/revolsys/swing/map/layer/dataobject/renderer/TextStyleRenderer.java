@@ -24,7 +24,7 @@ import javax.measure.Measure;
 import javax.measure.quantity.Length;
 import javax.swing.Icon;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -212,7 +212,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
   public static final void renderText(final Viewport2D viewport, final Graphics2D graphics,
     final Record object, final Geometry geometry, final TextStyle style) {
     final String label = getLabel(object, style);
-    if (StringUtils.hasText(label) && geometry != null || viewport == null) {
+    if (Property.hasValue(label) && geometry != null || viewport == null) {
 
       final CoordinatesWithOrientation point = getTextLocation(viewport, geometry, style);
       if (point != null) {

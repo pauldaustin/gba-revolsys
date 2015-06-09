@@ -2,7 +2,7 @@ package com.revolsys.converter.string;
 
 import java.math.BigInteger;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 public class BigIntegerStringConverter extends AbstractNumberStringConverter<BigInteger> {
   public BigIntegerStringConverter() {
@@ -33,7 +33,7 @@ public class BigIntegerStringConverter extends AbstractNumberStringConverter<Big
 
   @Override
   public BigInteger toObject(final String string) {
-    if (StringUtils.hasText(string)) {
+    if (Property.hasValue(string)) {
       return new BigInteger(string);
     } else {
       return null;

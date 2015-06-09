@@ -17,7 +17,7 @@ import javax.swing.ListCellRenderer;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.undo.CascadingUndoManager;
@@ -203,7 +203,7 @@ public class ComboBox extends JComboBox implements Field {
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

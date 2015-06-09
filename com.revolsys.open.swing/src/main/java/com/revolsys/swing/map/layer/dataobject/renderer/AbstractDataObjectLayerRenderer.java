@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.filter.AcceptAllFilter;
@@ -70,7 +70,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
         return new MultipleAttributeValuesFilter(filterDefinition);
       } else if ("queryFilter".equals(type)) {
         String query = (String)filterDefinition.remove("query");
-        if (StringUtils.hasText(query)) {
+        if (Property.hasValue(query)) {
           query = query.replaceAll("!= null", "IS NOT NULL");
           query = query.replaceAll("== null", "IS NULL");
           query = query.replaceAll("==", "=");
@@ -83,7 +83,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
         }
       } else if ("sqlFilter".equals(type)) {
         final String query = (String)filterDefinition.remove("query");
-        if (StringUtils.hasText(query)) {
+        if (Property.hasValue(query)) {
           return new SqlLayerFilter(layer, query);
         }
       } else {
@@ -252,7 +252,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
 
   public void setQueryFilter(final String query) {
     if (this.filter instanceof SqlLayerFilter || this.filter instanceof AcceptAllFilter) {
-      if (StringUtils.hasText(query)) {
+      if (Property.hasValue(query)) {
         final AbstractRecordLayer layer = getLayer();
         this.filter = new SqlLayerFilter(layer, query);
       } else {

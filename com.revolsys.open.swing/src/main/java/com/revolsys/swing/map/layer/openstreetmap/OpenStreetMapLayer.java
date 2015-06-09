@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
@@ -40,7 +40,7 @@ public class OpenStreetMapLayer extends AbstractTiledImageLayer {
   @Override
   protected boolean doInitialize() {
     final String serverUrl = getProperty("url");
-    if (StringUtils.hasText(serverUrl)) {
+    if (Property.hasValue(serverUrl)) {
       this.client = new OpenStreetMapClient(serverUrl);
     } else {
       this.client = new OpenStreetMapClient();

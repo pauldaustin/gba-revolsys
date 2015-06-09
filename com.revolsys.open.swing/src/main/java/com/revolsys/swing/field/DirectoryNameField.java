@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.swing.layout.SpringLayoutUtil;
 import com.revolsys.swing.listener.InvokeMethodActionListener;
@@ -73,7 +73,7 @@ public class DirectoryNameField extends JPanel implements Field {
 
   public File getDirectoryFile() {
     final String directoryPath = getDirectoryPath();
-    if (StringUtils.hasText(directoryPath)) {
+    if (Property.hasValue(directoryPath)) {
       return new File(directoryPath);
     } else {
       return null;
@@ -175,7 +175,7 @@ public class DirectoryNameField extends JPanel implements Field {
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
@@ -241,7 +241,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
     }
 
     String oidFieldName = metaData.getProperty(EsriGeodatabaseXmlConstants.ESRI_OBJECT_ID_FIELD_NAME);
-    if (!StringUtils.hasText(oidFieldName)) {
+    if (!Property.hasValue(oidFieldName)) {
       oidFieldName = "OBJECTID";
     }
     final String catalogPath;

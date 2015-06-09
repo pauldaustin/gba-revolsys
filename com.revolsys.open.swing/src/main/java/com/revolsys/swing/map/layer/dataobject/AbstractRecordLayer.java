@@ -37,7 +37,7 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.beans.InvokeMethodCallable;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -529,7 +529,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
   public DataObjectLayerForm createForm(final LayerDataObject record) {
     final String formFactoryExpression = getProperty(FORM_FACTORY_EXPRESSION);
-    if (StringUtils.hasText(formFactoryExpression)) {
+    if (Property.hasValue(formFactoryExpression)) {
       try {
         final SpelExpressionParser parser = new SpelExpressionParser();
         final Expression expression = parser.parseExpression(formFactoryExpression);
@@ -1043,7 +1043,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         RecordReader reader = ClipboardUtil.getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
         if (reader == null) {
           final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
-          if (StringUtils.hasText(string)) {
+          if (Property.hasValue(string)) {
             final Resource resource = new ByteArrayResource("t.csv", string);
             reader = RecordIo.recordReader(resource);
           } else {
@@ -1474,7 +1474,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       RecordReader reader = ClipboardUtil.getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
       if (reader == null) {
         final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
-        if (StringUtils.hasText(string)) {
+        if (Property.hasValue(string)) {
           if (string.contains("\t")) {
             final Resource tsvResource = new ByteArrayResource("t.tsv", string);
             reader = RecordIo.recordReader(tsvResource);
@@ -2118,7 +2118,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       final RecordLayerTablePanel panel = showTableView();
       panel.setFieldFilterMode(fieldFilterMode);
     } else {
-      if (!StringUtils.hasText(fieldFilterMode)) {
+      if (!Property.hasValue(fieldFilterMode)) {
         fieldFilterMode = DataObjectLayerTableModel.MODE_ALL;
       }
       Invoke.later(this, "showRecordsTable", fieldFilterMode);

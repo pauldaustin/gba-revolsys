@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -35,7 +35,7 @@ public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
     setParent(parent);
     this.schemaPath = schemaPath;
     String name = Path.getName(schemaPath);
-    if (!StringUtils.hasText(name)) {
+    if (!Property.hasValue(name)) {
       name = "/";
     }
     setName(name);

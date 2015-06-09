@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.FileUtil;
@@ -77,7 +77,7 @@ public class DataObjectStoreConnectionRegistry extends
   protected DataObjectStoreConnection loadConnection(final File dataStoreFile) {
     final Map<String, ? extends Object> config = JsonMapIoFactory.toMap(dataStoreFile);
     String name = CollectionUtil.getString(config, "name");
-    if (!StringUtils.hasText(name)) {
+    if (!Property.hasValue(name)) {
       name = FileUtil.getBaseName(dataStoreFile);
     }
     try {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.query.And;
 import com.revolsys.data.query.Q;
@@ -161,13 +161,13 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
 
   @Override
   public String getIdAttributeName() {
-    if (StringUtils.hasText(this.idFieldName)) {
+    if (Property.hasValue(this.idFieldName)) {
       return this.idFieldName;
     } else if (this.recordDefinition == null) {
       return "";
     } else {
       final String idAttributeName = this.recordDefinition.getIdFieldName();
-      if (StringUtils.hasText(idAttributeName)) {
+      if (Property.hasValue(idAttributeName)) {
         return idAttributeName;
       } else {
         return this.recordDefinition.getFieldName(0);

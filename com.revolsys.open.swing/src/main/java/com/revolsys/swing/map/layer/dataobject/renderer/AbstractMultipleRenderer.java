@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.map.MapSerializerUtil;
@@ -223,7 +223,7 @@ public abstract class AbstractMultipleRenderer extends AbstractDataObjectLayerRe
 
   @SuppressWarnings("unchecked")
   public <V extends LayerRenderer<?>> V getRenderer(final String name) {
-    if (StringUtils.hasText(name)) {
+    if (Property.hasValue(name)) {
       for (final LayerRenderer<?> renderer : this.renderers) {
         final String rendererName = renderer.getName();
         if (EqualsRegistry.equal(name, rendererName)) {

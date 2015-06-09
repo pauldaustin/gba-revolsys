@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.util.CollectionUtil;
 
@@ -117,13 +117,13 @@ public class MavenPom extends LinkedHashMap<String, Object> {
           final String artifactId = getMapValue(dependency, "artifactId", null);
           final String dependencyKey = groupId + ":" + artifactId;
           String version = versions.get(dependencyKey);
-          if (!StringUtils.hasText(version)) {
+          if (!Property.hasValue(version)) {
             version = getMapValue(dependency, "version", null);
           }
           final String scope = getMapValue(dependency, "scope", "compile");
           final String optional = getMapValue(dependency, "optional", "false");
           if (scope.equals("compile") && (includeOptional || "false".equals(optional))) {
-            if (!StringUtils.hasText(version)) {
+            if (!Property.hasValue(version)) {
               if (groupId.equals(getGroupId())) {
                 version = getVersion();
               }

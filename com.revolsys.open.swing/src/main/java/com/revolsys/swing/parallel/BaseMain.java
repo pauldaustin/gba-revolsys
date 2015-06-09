@@ -15,7 +15,7 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.swing.listener.MacApplicationListenerHandler;
 import com.revolsys.swing.logging.ListLog4jAppender;
@@ -91,7 +91,7 @@ public class BaseMain implements UncaughtExceptionHandler {
   public void uncaughtException(final Thread t, final Throwable e) {
     final Class<? extends BaseMain> logClass = getClass();
     String message = e.getMessage();
-    if (!StringUtils.hasText(message)) {
+    if (!Property.hasValue(message)) {
       if (e instanceof NullPointerException) {
         message = "Null pointer";
       } else {

@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.grid.RectangularMapGrid;
 import com.revolsys.gis.grid.RectangularMapGridFactory;
@@ -54,7 +54,7 @@ public class GridLayer extends AbstractLayer {
   @Override
   protected boolean doInitialize() {
     final String gridName = getProperty("gridName");
-    if (StringUtils.hasText(gridName)) {
+    if (Property.hasValue(gridName)) {
       this.grid = RectangularMapGridFactory.getGrid(gridName);
       if (this.grid == null) {
         LoggerFactory.getLogger(getClass()).error("Cannot find gridName=" + gridName);
@@ -102,7 +102,7 @@ public class GridLayer extends AbstractLayer {
   public void zoomTosheet(final String mapsheet) {
     final Project project = getProject();
     if (project != null) {
-      if (StringUtils.hasText(mapsheet)) {
+      if (Property.hasValue(mapsheet)) {
         final MapPanel map = MapPanel.get(this);
         final RectangularMapGrid grid = getGrid();
         final String gridName = grid.getName();

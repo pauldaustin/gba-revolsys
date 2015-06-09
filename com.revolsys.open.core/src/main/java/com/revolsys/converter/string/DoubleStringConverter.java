@@ -1,6 +1,6 @@
 package com.revolsys.converter.string;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 public class DoubleStringConverter extends AbstractNumberStringConverter<Double> {
   public DoubleStringConverter() {
@@ -34,7 +34,7 @@ public class DoubleStringConverter extends AbstractNumberStringConverter<Double>
 
   @Override
   public Double toObject(final String string) {
-    if (StringUtils.hasText(string)) {
+    if (Property.hasValue(string)) {
       return Double.valueOf(string);
     } else {
       return null;

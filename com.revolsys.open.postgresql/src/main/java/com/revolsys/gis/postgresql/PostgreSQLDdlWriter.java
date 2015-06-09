@@ -3,7 +3,7 @@ package com.revolsys.gis.postgresql;
 import java.io.PrintWriter;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
@@ -36,7 +36,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
     if (shortNameProperty != null) {
       shortName = shortNameProperty.getShortName();
     }
-    if (StringUtils.hasText(shortName) && shortNameProperty.isUseForSequence()) {
+    if (Property.hasValue(shortName) && shortNameProperty.isUseForSequence()) {
       final String sequenceName = schema + "." + shortName.toLowerCase() + "_seq";
       return sequenceName;
     } else {

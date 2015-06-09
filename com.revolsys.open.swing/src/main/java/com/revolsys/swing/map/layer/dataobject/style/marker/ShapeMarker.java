@@ -18,7 +18,7 @@ import javax.measure.quantity.Length;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.dataobject.style.MarkerStyle;
@@ -220,7 +220,7 @@ public class ShapeMarker extends AbstractMarker {
   }
 
   public String getName() {
-    if (StringUtils.hasText(this.name)) {
+    if (Property.hasValue(this.name)) {
       return this.name;
     } else {
       return "unknown";

@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.VerticalLayout;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.query.Condition;
 import com.revolsys.swing.component.ValueField;
@@ -44,7 +44,7 @@ public class QueryFilterField extends ValueField implements PropertyChangeListen
 
     this.clearButton = toolBar.addButtonTitleIcon("search", "Clear Filter", "filter_delete",
       this.queryField, "setFieldValue", "");
-    this.clearButton.setEnabled(StringUtils.hasText(this.queryField.getText()));
+    this.clearButton.setEnabled(Property.hasValue(this.queryField.getText()));
 
     add(toolBar);
     add(new JScrollPane(this.queryField));
@@ -83,7 +83,7 @@ public class QueryFilterField extends ValueField implements PropertyChangeListen
         this.queryField.setFieldValue(filter.toFormattedString());
       }
     }
-    this.clearButton.setEnabled(StringUtils.hasText(this.queryField.getText()));
+    this.clearButton.setEnabled(Property.hasValue(this.queryField.getText()));
   }
 
   @Override

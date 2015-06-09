@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.ShortNameProperty;
@@ -289,7 +289,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
   }
 
   public void writeTableName(final String schemaName, final String tableName) {
-    if (StringUtils.hasText(schemaName)) {
+    if (Property.hasValue(schemaName)) {
       this.out.print(schemaName);
       this.out.print('.');
     }

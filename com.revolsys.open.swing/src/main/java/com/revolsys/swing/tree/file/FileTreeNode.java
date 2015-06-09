@@ -15,7 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.tree.TreeNode;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReaderFactory;
@@ -116,7 +116,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
       if (panel.isSaved()) {
         final FolderConnectionRegistry registry = (FolderConnectionRegistry)registryField.getSelectedItem();
         String connectionName = nameField.getText();
-        if (!StringUtils.hasText(connectionName)) {
+        if (!Property.hasValue(connectionName)) {
           connectionName = fileName;
         }
         final String baseConnectionName = connectionName;
@@ -286,7 +286,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
       return "Folder";
     } else if (file.exists()) {
       final String extension = FileUtil.getFileNameExtension(file);
-      if (StringUtils.hasText(extension)) {
+      if (Property.hasValue(extension)) {
         final IoFactory factory = IoFactoryRegistry.getInstance().getFactoryByFileExtension(
           IoFactory.class, extension);
         if (factory != null) {

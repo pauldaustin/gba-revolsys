@@ -1,6 +1,6 @@
 package com.revolsys.data.record.property;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -51,7 +51,7 @@ public class LengthFieldName extends AbstractRecordDefinitionProperty {
   }
 
   public void setLength(final Record object) {
-    if (StringUtils.hasText(this.attributeName)) {
+    if (Property.hasValue(this.attributeName)) {
       final LineString line = object.getGeometryValue();
       final double length = line.getLength();
       object.setValue(this.attributeName, length);

@@ -40,7 +40,7 @@ import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.collection.map.LruMap;
@@ -201,7 +201,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
   protected String getDisplayText(final Object value) {
     final String stringValue = StringConverterRegistry.toString(value);
     String displayText = this.valueToDisplayMap.get(stringValue);
-    if (!StringUtils.hasText(displayText) && StringUtils.hasText(stringValue)) {
+    if (!Property.hasValue(displayText) && Property.hasValue(stringValue)) {
       final Record record = this.dataStore.queryFirst(Query.equal(this.metaData,
         this.idAttributeName, stringValue));
       if (record == null) {
@@ -280,7 +280,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
       return false;
     } else {
       final String text = getText();
-      if (StringUtils.hasText(text)) {
+      if (Property.hasValue(text)) {
         final String value = this.selectedItem.getString(this.displayAttributeName);
         return text.equals(value);
       } else {

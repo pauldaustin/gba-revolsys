@@ -14,7 +14,7 @@ import javax.measure.quantity.Length;
 import javax.measure.unit.NonSI;
 
 import org.jdesktop.swingx.color.ColorUtil;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -349,7 +349,7 @@ public class GeometryStyle extends MarkerStyle {
   }
 
   public void setLineCompOp(final String lineCompOp) {
-    if (StringUtils.hasText(lineCompOp)) {
+    if (Property.hasValue(lineCompOp)) {
       this.lineCompOp = CompositionOperation.valueOf(lineCompOp);
     } else {
       this.lineCompOp = CompositionOperation.src_over;
@@ -457,7 +457,7 @@ public class GeometryStyle extends MarkerStyle {
   }
 
   public void setPolygonCompOp(final String polygonCompOp) {
-    if (StringUtils.hasText(polygonCompOp)) {
+    if (Property.hasValue(polygonCompOp)) {
       this.polygonCompOp = CompositionOperation.valueOf(polygonCompOp);
     } else {
       this.polygonCompOp = CompositionOperation.src_over;

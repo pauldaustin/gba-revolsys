@@ -12,7 +12,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
@@ -59,7 +59,7 @@ public class ToolBar extends JToolBar {
     final Object... parameters) {
     String name = null;
     Icon icon = null;
-    if (StringUtils.hasText(iconName)) {
+    if (Property.hasValue(iconName)) {
       icon = Icons.getIcon(iconName);
     } else {
       name = title;

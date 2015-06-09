@@ -12,7 +12,7 @@ import javax.swing.event.EventListenerList;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Condition;
@@ -156,7 +156,7 @@ public class DataStoreQueryListModel implements ListModel {
   }
 
   public void setSearchText(final String searchText) {
-    if (StringUtils.hasText(searchText)) {
+    if (Property.hasValue(searchText)) {
       if (!this.searchText.equals(searchText)) {
         this.searchText = searchText;
         this.objects = getObjects(this.searchText);

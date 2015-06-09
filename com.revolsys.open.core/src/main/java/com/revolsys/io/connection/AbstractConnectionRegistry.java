@@ -11,12 +11,12 @@ import java.util.TreeMap;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public abstract class AbstractConnectionRegistry<T> implements ConnectionRegistry<T>,
   PropertyChangeListener {
@@ -92,7 +92,7 @@ public abstract class AbstractConnectionRegistry<T> implements ConnectionRegistr
 
   @Override
   public T getConnection(final String connectionName) {
-    if (StringUtils.hasText(connectionName)) {
+    if (Property.hasValue(connectionName)) {
       return this.connections.get(connectionName.toLowerCase());
     } else {
       return null;

@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 public class DateUtil {
 
@@ -50,7 +50,7 @@ public class DateUtil {
   }
 
   public static Calendar getCalendar(final String dateString) {
-    if (StringUtils.hasText(dateString)) {
+    if (Property.hasValue(dateString)) {
       final Pattern pattern = Pattern.compile(DATE_TIME_NANOS_PATTERN);
       final Matcher matcher = pattern.matcher(dateString);
       if (matcher.find()) {
@@ -81,7 +81,7 @@ public class DateUtil {
   }
 
   public static Date getDate(final DateFormat format, final String dateString) {
-    if (!StringUtils.hasText(dateString)) {
+    if (!Property.hasValue(dateString)) {
       return null;
     } else {
       try {
@@ -99,7 +99,7 @@ public class DateUtil {
   }
 
   public static Date getDate(final String dateString) {
-    if (StringUtils.hasText(dateString)) {
+    if (Property.hasValue(dateString)) {
       final Pattern pattern = Pattern.compile(DATE_TIME_NANOS_PATTERN);
       final Matcher matcher = pattern.matcher(dateString);
       if (matcher.find()) {
@@ -133,7 +133,7 @@ public class DateUtil {
 
   public static int getInteger(final Matcher matcher, final int groupIndex, final int defaultValue) {
     final String group = matcher.group(groupIndex);
-    if (StringUtils.hasText(group)) {
+    if (Property.hasValue(group)) {
       return Integer.parseInt(group);
     } else {
       return defaultValue;
@@ -145,7 +145,7 @@ public class DateUtil {
   }
 
   public static java.sql.Date getSqlDate(final String dateString) {
-    if (StringUtils.hasText(dateString)) {
+    if (Property.hasValue(dateString)) {
       final Pattern pattern = Pattern.compile(DATE_TIME_NANOS_PATTERN);
       final Matcher matcher = pattern.matcher(dateString);
       if (matcher.find()) {
@@ -185,7 +185,7 @@ public class DateUtil {
   }
 
   public static Timestamp getTimestamp(final String dateString) {
-    if (StringUtils.hasText(dateString)) {
+    if (Property.hasValue(dateString)) {
       final Pattern pattern = Pattern.compile(DATE_TIME_NANOS_PATTERN);
       final Matcher matcher = pattern.matcher(dateString);
       if (matcher.find()) {

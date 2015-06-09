@@ -8,7 +8,7 @@ import javax.swing.SwingUtilities;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
@@ -107,7 +107,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
       SwingUtil.addReadOnlyTextField(panel, "URL", this.url);
     }
     final String fileNameExtension = FileUtil.getFileNameExtension(this.url);
-    if (StringUtils.hasText(fileNameExtension)) {
+    if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final GeoReferencedImageFactory factory = IoFactoryRegistry.getInstance()
         .getFactoryByFileExtension(GeoReferencedImageFactory.class, fileNameExtension);
@@ -163,7 +163,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
   @Override
   protected boolean doInitialize() {
     final String url = getProperty("url");
-    if (StringUtils.hasText(url)) {
+    if (Property.hasValue(url)) {
       this.url = url;
       this.resource = SpringUtil.getResource(url);
       cancelChanges();

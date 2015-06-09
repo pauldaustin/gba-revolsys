@@ -12,7 +12,7 @@ import java.util.Set;
 import javax.annotation.PreDestroy;
 import javax.swing.table.AbstractTableModel;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -169,7 +169,7 @@ public abstract class AbstractDataObjectTableModel extends AbstractTableModel im
     }
     if (displayValue instanceof String) {
       final String string = (String)displayValue;
-      if (!StringUtils.hasLength(string)) {
+      if (!Property.hasValue(string)) {
         return null;
       }
     }

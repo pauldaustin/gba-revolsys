@@ -17,7 +17,7 @@ import javax.swing.SwingWorker;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
@@ -273,7 +273,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
       record.setState(RecordState.Deleted);
       unSelectRecords(record);
       final String id = getId(record);
-      if (StringUtils.hasText(id)) {
+      if (Property.hasValue(id)) {
         final LayerDataObject cacheRecord = removeCacheRecord(id, record);
         this.deletedRecordIds.add(id);
         deleteRecord(cacheRecord, true);
@@ -478,7 +478,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
                 writer.write(record);
               } else if (isNew(record)) {
                 Object id = record.getIdValue();
-                if (id == null && StringUtils.hasText(idAttributeName)) {
+                if (id == null && Property.hasValue(idAttributeName)) {
                   id = dataStore.createPrimaryIdValue(this.typePath);
                   record.setValue(idAttributeName, id);
                 }
@@ -536,7 +536,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   }
 
   private LayerDataObject getCacheRecord(final String id, final LayerDataObject record) {
-    if (StringUtils.hasText(id) && record != null && isLayerRecord(record)) {
+    if (Property.hasValue(id) && record != null && isLayerRecord(record)) {
       if (record.getState() == RecordState.New) {
         return record;
       } else if (record.getState() == RecordState.Deleted) {
@@ -687,7 +687,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   protected LayerDataObject internalCancelChanges(final LayerDataObject record) {
     if (record.getState() == RecordState.Deleted) {
       final String id = getId(record);
-      if (StringUtils.hasText(id)) {
+      if (Property.hasValue(id)) {
         this.deletedRecordIds.remove(id);
       }
     }
@@ -751,7 +751,7 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
   }
 
   private LayerDataObject removeCacheRecord(final String id, final LayerDataObject record) {
-    if (StringUtils.hasText(id) && record != null && isLayerRecord(record)) {
+    if (Property.hasValue(id) && record != null && isLayerRecord(record)) {
       if (record.getState() == RecordState.New) {
         return record;
       } else if (record.getState() == RecordState.Deleted) {
@@ -842,10 +842,10 @@ public class DataObjectStoreLayer extends AbstractRecordLayer {
 
   public void setTypePath(final String typePath) {
     this.typePath = typePath;
-    if (!StringUtils.hasText(getName())) {
+    if (!Property.hasValue(getName())) {
       setName(Path.getName(typePath));
     }
-    if (StringUtils.hasText(typePath)) {
+    if (Property.hasValue(typePath)) {
       if (isExists()) {
         final RecordStore dataStore = getRecordStore();
         if (dataStore != null) {

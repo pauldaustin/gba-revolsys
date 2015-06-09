@@ -4,7 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -146,7 +146,7 @@ public class LayerDataObject extends ArrayRecord {
       final FieldDefinition attribute = getRecordDefinition().getField(name);
       if (attribute != null && attribute.isRequired()) {
         final Object value = getValue(name);
-        if (value == null || value instanceof String && !StringUtils.hasText((String)value)) {
+        if (value == null || value instanceof String && !Property.hasValue((String)value)) {
           return false;
         }
       }

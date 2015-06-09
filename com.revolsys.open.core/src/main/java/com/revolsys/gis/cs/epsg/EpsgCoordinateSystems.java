@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.map.IntHashMap;
 import com.revolsys.format.csv.CsvIterator;
@@ -411,7 +411,7 @@ public final class EpsgCoordinateSystems {
             final List<Axis> axisList = new ArrayList<Axis>();
             for (int i = 1; i < values.size(); i += 2) {
               final String name = values.get(i);
-              if (StringUtils.hasText(name)) {
+              if (Property.hasValue(name)) {
                 final String direction = values.get(i + 1);
                 final Axis axis = new Axis(name, direction);
                 axisList.add(axis);

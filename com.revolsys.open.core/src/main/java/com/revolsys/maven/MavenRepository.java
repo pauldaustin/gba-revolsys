@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.io.xml.XmlMapIoFactory;
 import com.revolsys.spring.SpringUtil;
@@ -43,13 +43,13 @@ public class MavenRepository implements URLStreamHandlerFactory {
     path.append(artifactId);
     path.append('-');
     path.append(version);
-    if (StringUtils.hasText(classifier)) {
+    if (Property.hasValue(classifier)) {
       path.append('-');
       path.append(classifier);
     }
     path.append('.');
     path.append(type);
-    if (StringUtils.hasText(algorithm)) {
+    if (Property.hasValue(algorithm)) {
       path.append('.');
       path.append(algorithm);
 
@@ -228,7 +228,7 @@ public class MavenRepository implements URLStreamHandlerFactory {
 
   public String getSha1(final String groupId, final String artifactId, final String type,
     final String classifier, final String version, final String algorithm) {
-    if (!StringUtils.hasText(algorithm)) {
+    if (!Property.hasValue(algorithm)) {
       final Resource digestResource = getResource(groupId, artifactId, type, classifier, version,
         "sha1");
       if (digestResource.exists()) {
@@ -256,9 +256,9 @@ public class MavenRepository implements URLStreamHandlerFactory {
       final Map<String, Object> snapshot = (Map<String, Object>)versioning.get("snapshot");
       if (snapshot != null) {
         final String timestamp = (String)snapshot.get("timestamp");
-        if (StringUtils.hasText(timestamp)) {
+        if (Property.hasValue(timestamp)) {
           final String buildNumber = (String)snapshot.get("buildNumber");
-          if (StringUtils.hasText(timestamp)) {
+          if (Property.hasValue(timestamp)) {
             return timestamp + "-" + buildNumber;
           } else {
             return timestamp + "-1";

@@ -55,7 +55,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.undo.UndoableEdit;
 
 import org.jdesktop.swingx.VerticalLayout;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.beans.PropertyChangeSupportProxy;
@@ -675,7 +675,7 @@ public class DataObjectLayerForm extends JPanel implements PropertyChangeListene
         string = CollectionUtil.toString(values);
       }
     }
-    if (!StringUtils.hasText(string)) {
+    if (!Property.hasValue(string)) {
       string = "-";
     }
     return string;
@@ -971,7 +971,7 @@ public class DataObjectLayerForm extends JPanel implements PropertyChangeListene
             boolean equal = false;
             if (fieldValue instanceof String) {
               final String string = (String)fieldValue;
-              if (!StringUtils.hasText(string) && objectValue == null) {
+              if (!Property.hasValue(string) && objectValue == null) {
                 equal = true;
               }
             }
@@ -1074,7 +1074,7 @@ public class DataObjectLayerForm extends JPanel implements PropertyChangeListene
 
   public void setFieldInvalidToolTip(final String fieldName, final JComponent field) {
     final String message = this.fieldInValidMessage.get(fieldName);
-    if (StringUtils.hasText(message)) {
+    if (Property.hasValue(message)) {
       field.setToolTipText(message);
     }
   }
@@ -1160,7 +1160,7 @@ public class DataObjectLayerForm extends JPanel implements PropertyChangeListene
     this.metaData = metaData;
     setDataStore(metaData.getRecordStore());
     final String idAttributeName = metaData.getIdFieldName();
-    if (StringUtils.hasText(idAttributeName)) {
+    if (Property.hasValue(idAttributeName)) {
       this.readOnlyFieldNames.add(idAttributeName);
     }
     for (final FieldDefinition attribute : metaData.getFields()) {
@@ -1335,7 +1335,7 @@ public class DataObjectLayerForm extends JPanel implements PropertyChangeListene
             setFieldInvalid(fieldName, "Required");
           } else if (value instanceof String) {
             final String string = (String)value;
-            if (!StringUtils.hasText(string)) {
+            if (!Property.hasValue(string)) {
               setFieldInvalid(fieldName, "Required");
             }
           }

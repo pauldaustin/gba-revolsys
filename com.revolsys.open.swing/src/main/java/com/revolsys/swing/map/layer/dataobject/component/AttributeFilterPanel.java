@@ -24,7 +24,7 @@ import javax.swing.text.JTextComponent;
 
 import org.jdesktop.swingx.JXSearchField;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -186,9 +186,9 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
     try {
       this.settingFilter = true;
       String searchField = this.previousSearchFieldName;
-      if (!StringUtils.hasText(searchField)) {
+      if (!Property.hasValue(searchField)) {
         searchField = this.layer.getProperty("searchField");
-        if (!StringUtils.hasText(searchField)) {
+        if (!Property.hasValue(searchField)) {
           searchField = this.metaData.getFieldNames().get(0);
         }
       }
@@ -340,7 +340,7 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
             final Value value = (Value)rightCondition;
             final Object searchValue = value.getValue();
             String searchText = StringConverterRegistry.toString(searchValue);
-            if (StringUtils.hasText(searchText)) {
+            if (Property.hasValue(searchText)) {
               setSearchField(this.searchTextField);
               searchText = searchText.replaceAll("%", "");
               final String previousSearchText = this.searchTextField.getText();
@@ -546,10 +546,10 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
       } else if ("IS NOT NULL".equalsIgnoreCase(searchOperator)) {
         condition = Q.isNotNull(this.attribute);
       } else if (this.attribute != null) {
-        if (StringUtils.hasText(StringConverterRegistry.toString(searchValue))) {
+        if (Property.hasValue(StringConverterRegistry.toString(searchValue))) {
           if ("Like".equalsIgnoreCase(searchOperator)) {
             final String searchText = StringConverterRegistry.toString(searchValue);
-            if (StringUtils.hasText(searchText)) {
+            if (Property.hasValue(searchText)) {
               condition = Q.iLike(this.attribute, "%" + searchText + "%");
             }
           } else {

@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 
 import org.postgis.PGbox2d;
 import org.postgis.Point;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.ResultPager;
 import com.revolsys.collection.iterator.AbstractIterator;
@@ -126,7 +126,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
     final String schema = getDatabaseSchemaName(Path.getPath(typePath));
     final String shortName = ShortNameProperty.getShortName(metaData);
     final String sequenceName;
-    if (StringUtils.hasText(shortName)) {
+    if (Property.hasValue(shortName)) {
       if (this.useSchemaSequencePrefix) {
         sequenceName = schema + "." + shortName.toLowerCase() + "_seq";
       } else {

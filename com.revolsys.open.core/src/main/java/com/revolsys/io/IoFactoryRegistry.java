@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.io.RecordWriterFactory;
 import com.revolsys.util.CollectionUtil;
@@ -77,7 +77,7 @@ public class IoFactoryRegistry {
           properties.load(resourceUrl.openStream());
           final String factoryClassNames = properties.getProperty("com.revolsys.io.IoFactory.factoryClassNames");
           for (final String factoryClassName : factoryClassNames.split(",")) {
-            if (StringUtils.hasText(factoryClassName)) {
+            if (Property.hasValue(factoryClassName)) {
               try {
                 final Class<?> factoryClass = Class.forName(factoryClassName.trim());
                 if (IoFactory.class.isAssignableFrom(factoryClass)) {

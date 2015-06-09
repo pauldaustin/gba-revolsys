@@ -6,7 +6,7 @@ import java.awt.event.FocusListener;
 
 import javax.swing.JTextArea;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -156,7 +156,7 @@ public class TextArea extends JTextArea implements Field, FocusListener {
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

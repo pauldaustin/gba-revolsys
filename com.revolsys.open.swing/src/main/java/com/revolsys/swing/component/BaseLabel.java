@@ -3,7 +3,7 @@ package com.revolsys.swing.component;
 import javax.swing.SwingConstants;
 
 import org.jdesktop.swingx.JXLabel;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.swing.SwingUtil;
 
@@ -30,7 +30,7 @@ public class BaseLabel extends JXLabel {
 
   @Override
   public void setText(String text) {
-    if (StringUtils.hasText(text)) {
+    if (Property.hasValue(text)) {
       if (!text.startsWith("<html")) {
         if (text.startsWith("<")) {
           text = "<html>" + text + "</html>";

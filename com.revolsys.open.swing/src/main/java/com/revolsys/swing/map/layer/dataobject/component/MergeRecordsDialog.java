@@ -26,7 +26,7 @@ import org.jdesktop.swingx.JXPanel;
 import org.jdesktop.swingx.ScrollableSizeHint;
 import org.jdesktop.swingx.VerticalLayout;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataType;
@@ -246,7 +246,7 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
       tablePanel.setPreferredSize(new Dimension(100, 50 + unMergeableRecords.size() * 22));
 
       final JPanel panel = new JPanel(new BorderLayout());
-      if (!StringUtils.hasText(errorMessage)) {
+      if (!Property.hasValue(errorMessage)) {
         errorMessage = "The following records could not be merged and will not be modified.";
       }
       final JLabel unMergeLabel = new JLabel("<html><p style=\"color:red\">" + errorMessage

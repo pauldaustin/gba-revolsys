@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -85,7 +85,7 @@ public class ArcSdeStGeometryDataStoreExtension implements DataObjectStoreExtens
             JdbcFieldAdder.GEOMETRY_TYPE, ArcSdeConstants.getGeometryDataType(geometryType));
 
           String geometryColumnType = resultSet.getString(6);
-          if (!StringUtils.hasText(geometryColumnType)) {
+          if (!Property.hasValue(geometryColumnType)) {
             geometryColumnType = ArcSdeConstants.SDEBINARY;
           }
           JdbcFieldAdder.setColumnProperty(schema, typePath, columnName,

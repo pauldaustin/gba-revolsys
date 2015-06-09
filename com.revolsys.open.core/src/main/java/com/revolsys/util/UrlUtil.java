@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.io.FileUtil;
 
@@ -257,7 +257,7 @@ public final class UrlUtil {
         url = baseUrl + '?' + query;
       }
     }
-    if (StringUtils.hasText(fragment)) {
+    if (Property.hasValue(fragment)) {
       return url + "#" + fragment;
     } else {
       return url;

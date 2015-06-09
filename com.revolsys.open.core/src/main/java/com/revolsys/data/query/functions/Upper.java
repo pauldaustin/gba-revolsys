@@ -2,7 +2,7 @@ package com.revolsys.data.query.functions;
 
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.query.QueryValue;
 
@@ -18,7 +18,7 @@ public class Upper extends UnaryFunction {
 
     final QueryValue parameter = getParameter();
     final String stringValue = parameter.getStringValue(record);
-    if (StringUtils.hasText(stringValue)) {
+    if (Property.hasValue(stringValue)) {
       return (V)stringValue.toUpperCase();
     } else {
       return (V)stringValue;

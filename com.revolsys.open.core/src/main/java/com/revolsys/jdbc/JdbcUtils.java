@@ -23,7 +23,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.query.Condition;
 import com.revolsys.data.query.Query;
@@ -154,7 +154,7 @@ public final class JdbcUtils {
     }
     addColumnNames(sql, metaData, tablePrefix, attributeNames, hasColumns);
     sql.append(" FROM ");
-    if (StringUtils.hasText(fromClause)) {
+    if (Property.hasValue(fromClause)) {
       sql.append(fromClause);
     } else {
       final String tableName = getQualifiedTableName(typePath);
@@ -269,7 +269,7 @@ public final class JdbcUtils {
   }
 
   public static String getQualifiedTableName(final String typePath) {
-    if (StringUtils.hasText(typePath)) {
+    if (Property.hasValue(typePath)) {
       final String tableName = typePath.replaceAll("^/+", "");
       return tableName.replaceAll("/", ".");
     } else {
@@ -278,7 +278,7 @@ public final class JdbcUtils {
   }
 
   public static String getSchemaName(final String typePath) {
-    if (StringUtils.hasText(typePath)) {
+    if (Property.hasValue(typePath)) {
       final String path = Path.getPath(typePath);
       return path.replaceAll("(^/|/$)", "");
     } else {

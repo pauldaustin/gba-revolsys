@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.util.ExceptionUtil;
@@ -84,7 +84,7 @@ public class ColorStringConverter implements StringConverter<Color> {
   }
 
   public static Color getWebColor(final String colorName) {
-    if (StringUtils.hasText(colorName)) {
+    if (Property.hasValue(colorName)) {
       for (final Field field : WebColors.class.getFields()) {
         final String fieldName = field.getName();
         if (Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
@@ -125,7 +125,7 @@ public class ColorStringConverter implements StringConverter<Color> {
 
   @Override
   public Color toObject(final String string) {
-    if (StringUtils.hasText(string)) {
+    if (Property.hasValue(string)) {
       if (string.startsWith("#")) {
         return getColor(string);
       } else if (string.startsWith("rgb(")) {
@@ -150,7 +150,7 @@ public class ColorStringConverter implements StringConverter<Color> {
     if (value instanceof Color) {
       final Color color = (Color)value;
       final String colorName = WebColors.getName(color);
-      if (StringUtils.hasText(colorName)) {
+      if (Property.hasValue(colorName)) {
         return colorName;
       } else {
         final int alpha = color.getAlpha();

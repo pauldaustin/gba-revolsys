@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -56,7 +56,7 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
     final boolean required, final String description) {
     final String typePath = metaData.getPath();
     String owner = this.dataStore.getDatabaseSchemaName(Path.getPath(typePath));
-    if (!StringUtils.hasText(owner)) {
+    if (!Property.hasValue(owner)) {
       owner = "public";
     }
     final String tableName = this.dataStore.getDatabaseTableName(typePath);

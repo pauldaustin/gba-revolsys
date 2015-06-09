@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.comparator.NumericComparator;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -98,7 +98,7 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
   public FieldDefinition(final Map<String, Object> properties) {
     this.name = CollectionUtil.getString(properties, "name");
     this.title = CollectionUtil.getString(properties, "title");
-    if (!StringUtils.hasText(this.title)) {
+    if (!Property.hasValue(this.title)) {
       this.title = CaseConverter.toCapitalizedWords(this.name);
     }
     this.description = CollectionUtil.getString(properties, "description");
@@ -570,7 +570,7 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
     final String fieldName = getName();
 
     if (isRequired()) {
-      if (value == null || value instanceof String && !StringUtils.hasText((String)value)) {
+      if (value == null || value instanceof String && !Property.hasValue((String)value)) {
         throw new IllegalArgumentException(fieldName + " is required");
       }
     }

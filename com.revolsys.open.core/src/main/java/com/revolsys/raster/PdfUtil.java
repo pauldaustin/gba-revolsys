@@ -10,7 +10,7 @@ import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSNumber;
 import org.apache.pdfbox.cos.COSObject;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -134,7 +134,7 @@ public class PdfUtil {
             final int srid = gcs.getInt("EPSG");
             if (srid == -1) {
               final String wkt = gcs.getString("WKT");
-              if (StringUtils.hasText(wkt)) {
+              if (Property.hasValue(wkt)) {
                 geometryFactory = GeometryFactory.getFactory(wkt);
               }
             } else {

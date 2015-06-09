@@ -27,7 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.undo.UndoableEdit;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.data.record.Record;
@@ -319,7 +319,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     if (!boundingBox.isEmpty()) {
       final String name = JOptionPane.showInputDialog(this, "Enter bookmark name",
         "Add Zoom Bookmark", JOptionPane.QUESTION_MESSAGE);
-      if (StringUtils.hasText(name)) {
+      if (Property.hasValue(name)) {
         final Project project = getProject();
         project.addZoomBookmark(name, boundingBox);
       }

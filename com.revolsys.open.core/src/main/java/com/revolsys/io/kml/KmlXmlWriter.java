@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
@@ -124,7 +124,7 @@ public class KmlXmlWriter extends XmlWriter implements Kml22Constants {
       if (!(value instanceof Geometry)) {
         if (value != null) {
           final String stringValue = value.toString();
-          if (StringUtils.hasText(stringValue)) {
+          if (Property.hasValue(stringValue)) {
             if (!hasValues) {
               hasValues = true;
               startTag(EXTENDED_DATA);

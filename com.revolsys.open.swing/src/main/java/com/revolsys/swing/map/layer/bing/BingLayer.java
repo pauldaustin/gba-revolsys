@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
@@ -49,7 +49,7 @@ public class BingLayer extends AbstractTiledImageLayer {
   protected boolean doInitialize() {
     ImagerySet imagerySet = ImagerySet.Road;
     final String imagerySetName = getProperty("imagerySet");
-    if (StringUtils.hasText(imagerySetName)) {
+    if (Property.hasValue(imagerySetName)) {
       try {
         imagerySet = ImagerySet.valueOf(imagerySetName);
       } catch (final Throwable e) {
@@ -58,7 +58,7 @@ public class BingLayer extends AbstractTiledImageLayer {
     }
     MapLayer mapLayer = null;
     final String mapLayerName = getProperty("mapLayer");
-    if (StringUtils.hasText(mapLayerName)) {
+    if (Property.hasValue(mapLayerName)) {
       try {
         mapLayer = MapLayer.valueOf(mapLayerName);
       } catch (final Throwable e) {

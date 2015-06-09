@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.FileUtil;
@@ -80,7 +80,7 @@ public class FolderConnection implements MapSerializer {
     if (file == null) {
       throw new IllegalArgumentException("File must not be null");
     }
-    if (StringUtils.hasText(name)) {
+    if (Property.hasValue(name)) {
       this.name = name;
     } else {
       this.name = FileUtil.getFileName(file);

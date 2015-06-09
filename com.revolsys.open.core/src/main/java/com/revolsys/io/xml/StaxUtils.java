@@ -31,7 +31,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.io.input.XmlStreamReader;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.ExceptionUtil;
@@ -110,7 +110,7 @@ public final class StaxUtils {
 
   public static double getElementTextDouble(final XMLStreamReader in, final double defaultValue) {
     final String text = getElementText(in);
-    if (StringUtils.hasText(text)) {
+    if (Property.hasValue(text)) {
       try {
         return Double.parseDouble(text);
       } catch (final Throwable e) {
@@ -122,7 +122,7 @@ public final class StaxUtils {
 
   public static int getElementTextInt(final XMLStreamReader in, final int defaultValue) {
     final String text = getElementText(in);
-    if (StringUtils.hasText(text)) {
+    if (Property.hasValue(text)) {
       try {
         return Integer.parseInt(text);
       } catch (final Throwable e) {

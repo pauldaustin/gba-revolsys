@@ -8,7 +8,7 @@ import java.nio.channels.FileChannel.MapMode;
 import java.util.NoSuchElementException;
 
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.record.Record;
@@ -281,7 +281,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements Recor
   }
 
   public void setTypeName(final String typeName) {
-    if (StringUtils.hasText(typeName)) {
+    if (Property.hasValue(typeName)) {
       this.typeName = typeName;
     }
   }

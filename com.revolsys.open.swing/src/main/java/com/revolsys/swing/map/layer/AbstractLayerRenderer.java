@@ -12,7 +12,7 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.beans.AbstractPropertyChangeObject;
 import com.revolsys.io.map.MapSerializerUtil;
@@ -62,7 +62,7 @@ public abstract class AbstractLayerRenderer<T extends Layer> extends AbstractPro
       this.visible = visible;
     }
     final String styleName = (String)style.remove("name");
-    if (StringUtils.hasText(styleName)) {
+    if (Property.hasValue(styleName)) {
       name = styleName;
     }
     setName(name);
@@ -246,7 +246,7 @@ public abstract class AbstractLayerRenderer<T extends Layer> extends AbstractPro
 
   public void setName(final String name) {
     final String oldName = getName();
-    if (StringUtils.hasText(name)) {
+    if (Property.hasValue(name)) {
       this.name = name;
     } else {
       this.name = CaseConverter.toCapitalizedWords(this.type);
@@ -294,7 +294,7 @@ public abstract class AbstractLayerRenderer<T extends Layer> extends AbstractPro
 
   @Override
   public String toString() {
-    if (StringUtils.hasText(this.name)) {
+    if (Property.hasValue(this.name)) {
       return this.name;
     } else {
       return this.type;

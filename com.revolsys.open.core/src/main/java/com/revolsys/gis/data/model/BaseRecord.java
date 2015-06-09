@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
@@ -538,7 +538,7 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
         return;
       }
       setValue(name, value);
-    } else if (value == null || !StringUtils.hasText(value.toString())) {
+    } else if (value == null || !Property.hasValue(value.toString())) {
       setValue(codeTableAttributeName, null);
     } else {
       Object targetValue;

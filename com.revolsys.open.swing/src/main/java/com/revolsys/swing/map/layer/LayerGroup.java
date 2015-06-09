@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.Parent;
 import com.revolsys.data.record.io.RecordIo;
@@ -169,7 +169,7 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
   public LayerGroup addLayerGroup() {
     final String name = JOptionPane.showInputDialog(SwingUtil.getActiveWindow(),
       "Enter the name of the new Layer Group.", "Add Layer Group", JOptionPane.PLAIN_MESSAGE);
-    if (StringUtils.hasText(name)) {
+    if (Property.hasValue(name)) {
       return addLayerGroup(name);
     } else {
       return null;

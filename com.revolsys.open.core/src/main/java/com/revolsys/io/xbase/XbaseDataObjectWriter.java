@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
@@ -171,7 +171,7 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
   }
 
   protected boolean hasField(final String name) {
-    if (StringUtils.hasText(name)) {
+    if (Property.hasValue(name)) {
       return this.fieldNames.contains(name.toUpperCase());
     } else {
       return false;

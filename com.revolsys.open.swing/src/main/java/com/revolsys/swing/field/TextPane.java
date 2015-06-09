@@ -10,7 +10,7 @@ import javax.swing.text.Element;
 
 import jsyntaxpane.DefaultSyntaxKit;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -176,7 +176,7 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

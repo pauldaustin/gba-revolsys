@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -63,13 +63,13 @@ public class DatabaseBeanConfigurator extends BeanConfigurrer {
   public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
     throws BeansException {
     try {
-      final boolean hasTypeColumnName = StringUtils.hasText(this.typeColumnName);
+      final boolean hasTypeColumnName = Property.hasValue(this.typeColumnName);
       String sql = "SELECT " + this.propertyColumnName + ", " + this.valueColumnName;
       if (hasTypeColumnName) {
         sql += ", " + this.typeColumnName;
       }
       sql += " FROM " + JdbcUtils.getQualifiedTableName(this.tableName);
-      if (StringUtils.hasText(this.whereClause)) {
+      if (Property.hasValue(this.whereClause)) {
         sql += " WHERE " + this.whereClause;
       }
       final Connection connection = this.dataSource.getConnection();

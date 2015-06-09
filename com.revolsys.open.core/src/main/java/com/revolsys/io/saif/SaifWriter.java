@@ -38,7 +38,7 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -196,7 +196,7 @@ public class SaifWriter extends AbstractWriter<Record> {
       final String objectSubset = (String)export.get("objectSubset");
       String compositeTypeName = Path.getName(compositeType);
       final String compositeNamespace = Path.getPath(compositeType).replaceAll("/", "");
-      if (StringUtils.hasText(compositeNamespace)) {
+      if (Property.hasValue(compositeNamespace)) {
         compositeTypeName += "::" + compositeNamespace;
       }
       writeExport(exportsSerializer, referenceId, compositeTypeName, objectSubset);

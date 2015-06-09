@@ -32,7 +32,7 @@ import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -242,7 +242,7 @@ public class DataStoreSearchTextField extends JXSearchField implements DocumentL
       return false;
     } else {
       final String text = getText();
-      if (StringUtils.hasText(text)) {
+      if (Property.hasValue(text)) {
         final String value = this.selectedItem.getString(this.displayAttributeName);
         return text.equalsIgnoreCase(value);
       } else {
@@ -428,7 +428,7 @@ public class DataStoreSearchTextField extends JXSearchField implements DocumentL
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

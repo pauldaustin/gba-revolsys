@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.util.ExceptionUtil;
 
@@ -65,7 +65,7 @@ public class StringTemplate implements Serializable {
 
   public StringTemplate(final String template) {
     this.template = template;
-    if (StringUtils.hasText(template)) {
+    if (Property.hasValue(template)) {
       try {
         final Parser parser = new Parser(template);
         this.variableNames = parser.getVariableNames();

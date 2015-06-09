@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.ListResultPager;
 import com.revolsys.collection.ResultPager;
@@ -261,7 +261,7 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties i
       if (record != null) {
         record.setValues(values);
         final String idAttributeName = metaData.getIdFieldName();
-        if (StringUtils.hasText(idAttributeName)) {
+        if (Property.hasValue(idAttributeName)) {
           if (values.get(idAttributeName) == null) {
             final Object id = createPrimaryIdValue(typePath);
             record.setIdValue(id);
@@ -322,7 +322,7 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties i
     final Record record = create(metaData);
     if (record != null) {
       final String idAttributeName = metaData.getIdFieldName();
-      if (StringUtils.hasText(idAttributeName)) {
+      if (Property.hasValue(idAttributeName)) {
         final String typePath = metaData.getPath();
         final Object id = createPrimaryIdValue(typePath);
         record.setIdValue(id);
@@ -816,7 +816,7 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties i
 
   @Override
   public String toString() {
-    if (StringUtils.hasText(this.label)) {
+    if (Property.hasValue(this.label)) {
       return this.label;
     } else {
       return super.toString();

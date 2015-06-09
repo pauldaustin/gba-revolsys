@@ -12,7 +12,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.jdesktop.swingx.JXTextField;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.types.DataType;
@@ -175,7 +175,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
 
   public NumberTextField(final String fieldName, final DataType dataType, final int length,
     final int scale, final Number minimumValue, final Number maximumValue) {
-    if (StringUtils.hasText(fieldName)) {
+    if (Property.hasValue(fieldName)) {
       this.fieldName = fieldName;
     } else {
       this.fieldName = "fieldValue";
@@ -371,7 +371,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }
@@ -396,7 +396,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
     final boolean oldValid = this.fieldValid;
     boolean valid = true;
     final String text = getText();
-    if (StringUtils.hasText(text)) {
+    if (Property.hasValue(text)) {
       try {
         BigDecimal number = new BigDecimal(text.trim());
         if (number.scale() < 0) {

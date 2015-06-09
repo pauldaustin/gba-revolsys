@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.HexConverter;
@@ -52,7 +52,7 @@ public class MavenRepositoryCache extends MavenRepository {
     final Resource repositoryResource = SpringUtil.getResource(repository.getRoot(), path);
     if (repositoryResource.exists()) {
       try {
-        if (StringUtils.hasText(sha1Digest)) {
+        if (Property.hasValue(sha1Digest)) {
           final InputStream in = SpringUtil.getInputStream(repositoryResource);
           final DigestInputStream digestIn = new DigestInputStream(in,
             MessageDigest.getInstance("SHA-1"));

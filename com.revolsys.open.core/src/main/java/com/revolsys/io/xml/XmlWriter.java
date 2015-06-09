@@ -30,7 +30,7 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.io.FileUtil;
@@ -333,7 +333,7 @@ public class XmlWriter extends Writer {
   }
 
   public void attribute(final String name, final String value) {
-    if (StringUtils.hasText(value)) {
+    if (Property.hasValue(value)) {
       checkWriteAttribute();
       this.out.write(' ');
       this.out.write(name);

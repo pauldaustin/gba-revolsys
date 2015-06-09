@@ -2,7 +2,7 @@ package com.revolsys.converter.string;
 
 import java.math.BigDecimal;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 public class BigDecimalStringConverter extends AbstractNumberStringConverter<BigDecimal> {
 
@@ -52,7 +52,7 @@ public class BigDecimalStringConverter extends AbstractNumberStringConverter<Big
 
   @Override
   public BigDecimal toObject(final String string) {
-    if (StringUtils.hasText(string)) {
+    if (Property.hasValue(string)) {
       return new BigDecimal(string);
     } else {
       return null;

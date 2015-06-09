@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
@@ -331,17 +331,17 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
         return true;
       } else if (value2 instanceof String) {
         final String string2 = (String)value2;
-        return !StringUtils.hasText(string2);
+        return !Property.hasValue(string2);
       }
     } else if (value2 == null) {
       if (value1 instanceof String) {
         final String string1 = (String)value1;
-        return !StringUtils.hasText(string1);
+        return !Property.hasValue(string1);
       } else {
         return false;
       }
     } else if (value1 instanceof String && value2 instanceof String) {
-      if (!StringUtils.hasText((String)value1) && !StringUtils.hasText((String)value2)) {
+      if (!Property.hasValue((String)value1) && !Property.hasValue((String)value2)) {
         return true;
       }
     }

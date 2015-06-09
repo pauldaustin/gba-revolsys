@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -269,9 +269,9 @@ public final class DataObjectUtil {
     final String value1 = object1.getString(fieldName);
     final String value2 = object2.getString(fieldName);
     Object value;
-    if (!StringUtils.hasText(value1)) {
+    if (!Property.hasValue(value1)) {
       value = value2;
-    } else if (!StringUtils.hasText(value2)) {
+    } else if (!Property.hasValue(value2)) {
       value = value1;
     } else if (EqualsRegistry.equal(value1, value2)) {
       value = value1;

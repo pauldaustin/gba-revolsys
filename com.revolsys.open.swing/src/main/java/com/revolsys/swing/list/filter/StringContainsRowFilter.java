@@ -3,7 +3,7 @@ package com.revolsys.swing.list.filter;
 import javax.swing.ListModel;
 import javax.swing.RowFilter;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 
@@ -31,8 +31,8 @@ public class StringContainsRowFilter extends RowFilter<ListModel, Integer> {
     final Integer identifier = entry.getIdentifier();
     final Object value = entry.getValue(identifier);
     final String string = StringConverterRegistry.toString(value);
-    if (StringUtils.hasText(this.filterText)) {
-      if (StringUtils.hasText(string)) {
+    if (Property.hasValue(this.filterText)) {
+      if (Property.hasValue(string)) {
         return string.contains(this.filterText) == this.match;
       } else {
         return false;

@@ -3,7 +3,7 @@ package com.revolsys.format.wkt;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
@@ -190,7 +190,7 @@ public class WktParser {
   @SuppressWarnings("unchecked")
   public <T extends Geometry> T parseGeometry(final String value,
     final boolean useNumAxisFromGeometryFactory) {
-    if (StringUtils.hasLength(value)) {
+    if (Property.hasValue(value)) {
       GeometryFactory geometryFactory = this.geometryFactory;
       final int numAxis = geometryFactory.getNumAxis();
       final double scaleXY = geometryFactory.getScaleXY();

@@ -35,7 +35,7 @@ import javax.swing.text.Document;
 
 import org.jdesktop.swingx.VerticalLayout;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.akiban.sql.StandardException;
 import com.akiban.sql.parser.BetweenOperatorNode;
@@ -117,7 +117,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
         JComponent field;
         if (attribute.equals(metaData.getIdField())) {
           field = new TextField(20);
-        } else if (StringUtils.hasText(searchFieldFactory)) {
+        } else if (Property.hasValue(searchFieldFactory)) {
           final Map<String, Object> searchFieldFactoryParameters = attribute.getProperty("searchFieldFactoryParameters");
           field = SpelUtil.getValue(searchFieldFactory, attribute, searchFieldFactoryParameters);
         } else {
@@ -296,7 +296,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
     if (filter != null) {
       this.whereTextField.setText(filter.toFormattedString());
     }
-    if (StringUtils.hasText(query)) {
+    if (Property.hasValue(query)) {
       this.whereTextField.setText(query);
     }
     final String searchField = layer.getProperty("searchField");
@@ -317,7 +317,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
     final FieldDefinition attribute = (FieldDefinition)this.fieldNamesList.getSelectedItem();
     if (attribute != null) {
       final String operator = (String)this.binaryConditionOperator.getSelectedItem();
-      if (StringUtils.hasText(operator)) {
+      if (Property.hasValue(operator)) {
         Object fieldValue = ((Field)this.binaryConditionField).getFieldValue();
         if (fieldValue != null) {
           final int position = this.whereTextField.getCaretPosition();
@@ -451,7 +451,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
     final FieldDefinition attribute = (FieldDefinition)this.fieldNamesList.getSelectedItem();
     if (attribute != null) {
       final String operator = (String)this.rightUnaryConditionOperator.getSelectedItem();
-      if (StringUtils.hasText(operator)) {
+      if (Property.hasValue(operator)) {
         final int position = this.whereTextField.getCaretPosition();
 
         final Document document = this.whereTextField.getDocument();
@@ -501,7 +501,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
   }
 
   public void insertText(final String operator) {
-    if (StringUtils.hasText(operator)) {
+    if (Property.hasValue(operator)) {
       int position = this.whereTextField.getCaretPosition();
       String previousText;
       try {
@@ -509,7 +509,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
       } catch (final BadLocationException e) {
         previousText = "";
       }
-      if (!StringUtils.hasText(previousText)
+      if (!Property.hasValue(previousText)
         || !previousText.matches(".*"
           + operator.replaceAll("\\(", "\\\\(")
             .replaceAll("\\)", "\\\\)")
@@ -517,7 +517,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
             .replaceAll("\\+", "\\\\+") + "\\s*$")) {
         final Document document = this.whereTextField.getDocument();
         try {
-          if (StringUtils.hasText(previousText)
+          if (Property.hasValue(previousText)
             && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
             document.insertString(position++, " ", null);
           }
@@ -567,7 +567,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
     if (event.getSource() == this.fieldNamesList) {
       if (SwingUtilities.isLeftMouseButton(event) && event.getClickCount() == 2) {
         final String fieldName = (String)this.fieldNamesList.getSelectedItem();
-        if (StringUtils.hasText(fieldName)) {
+        if (Property.hasValue(fieldName)) {
           int position = this.whereTextField.getCaretPosition();
           String previousText;
           try {
@@ -575,11 +575,11 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
           } catch (final BadLocationException e) {
             previousText = "";
           }
-          if (!StringUtils.hasText(previousText)
+          if (!Property.hasValue(previousText)
             || !previousText.matches(".*\"?" + fieldName + "\"?\\s*$")) {
             final Document document = this.whereTextField.getDocument();
             try {
-              if (StringUtils.hasText(previousText)
+              if (Property.hasValue(previousText)
                 && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
                 document.insertString(position++, " ", null);
               }
@@ -890,7 +890,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
     this.statusLabel.setText("");
     try {
       final String whereClause = this.whereTextField.getText();
-      if (StringUtils.hasText(whereClause)) {
+      if (Property.hasValue(whereClause)) {
         final String sql = "SELECT * FROM X WHERE " + "\n" + whereClause;
         try {
           final StatementNode statement = new SQLParser().parseStatement(sql);

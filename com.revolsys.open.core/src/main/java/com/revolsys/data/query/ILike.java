@@ -2,7 +2,7 @@ package com.revolsys.data.query;
 
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 
@@ -20,8 +20,8 @@ public class ILike extends BinaryCondition {
     final QueryValue right = getRight();
     String value2 = right.getStringValue(record);
 
-    if (StringUtils.hasText(value1)) {
-      if (StringUtils.hasText(value2)) {
+    if (Property.hasValue(value1)) {
+      if (Property.hasValue(value2)) {
         value1 = value1.toUpperCase();
         value2 = value2.toUpperCase();
         if (value2.contains("%")) {
@@ -38,7 +38,7 @@ public class ILike extends BinaryCondition {
         return false;
       }
     } else {
-      return !StringUtils.hasText(value2);
+      return !Property.hasValue(value2);
     }
   }
 

@@ -7,7 +7,7 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
@@ -41,7 +41,7 @@ public class MapObjectFactoryRegistry {
   @SuppressWarnings("unchecked")
   public static <V> V toObject(final Map<String, ? extends Object> map) {
     final String typeClass = CollectionUtil.getString(map, "typeClass");
-    if (StringUtils.hasText(typeClass)) {
+    if (Property.hasValue(typeClass)) {
       // TODO factory methods and constructor arguments
       final V object = (V)JavaBeanUtil.createInstance(typeClass);
       return object;

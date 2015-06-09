@@ -3,7 +3,7 @@ package com.revolsys.format.esri.gdb.xml.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.format.esri.gdb.xml.EsriGeodatabaseXmlConstants;
 import com.revolsys.format.esri.gdb.xml.model.enums.FieldType;
@@ -98,7 +98,7 @@ public class DETable extends DEDataset {
   }
 
   public String getGlobalIDFieldName() {
-    if (!StringUtils.hasText(this.globalIDFieldName)) {
+    if (!Property.hasValue(this.globalIDFieldName)) {
       for (final Field field : getFields()) {
         if (field.getType() == FieldType.esriFieldTypeGlobalID) {
           this.globalIDFieldName = field.getName();
@@ -137,7 +137,7 @@ public class DETable extends DEDataset {
   }
 
   public boolean isHasGlobalID() {
-    return StringUtils.hasText(getGlobalIDFieldName());
+    return Property.hasValue(getGlobalIDFieldName());
   }
 
   public boolean isHasOID() {

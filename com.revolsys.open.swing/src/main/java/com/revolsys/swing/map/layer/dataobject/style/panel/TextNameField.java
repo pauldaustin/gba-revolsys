@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.Icons;
@@ -64,7 +64,7 @@ public class TextNameField extends ValueField {
 
   public void addFieldName() {
     final String selectedFieldName = (String)this.fieldNamesField.getSelectedItem();
-    if (StringUtils.hasText(selectedFieldName)) {
+    if (Property.hasValue(selectedFieldName)) {
       final int position = this.textNameField.getCaretPosition();
       final Document document = this.textNameField.getDocument();
       try {

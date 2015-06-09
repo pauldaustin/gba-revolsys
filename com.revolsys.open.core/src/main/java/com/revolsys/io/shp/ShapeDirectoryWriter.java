@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.annotation.PreDestroy;
 
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordIo;
@@ -79,7 +79,7 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
     if (this.useNamespaceAsSubDirectory) {
       final String typePath = metaData.getPath();
       final String schemaName = Path.getPath(typePath);
-      if (StringUtils.hasText(schemaName)) {
+      if (Property.hasValue(schemaName)) {
         final File childDirectory = new File(this.directory, schemaName);
         if (!childDirectory.mkdirs()) {
           if (!childDirectory.isDirectory()) {

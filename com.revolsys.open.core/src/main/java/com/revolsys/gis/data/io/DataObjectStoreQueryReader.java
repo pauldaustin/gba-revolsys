@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.io.IteratorReader;
@@ -60,7 +60,7 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record> implement
   protected AbstractIterator<Record> createQueryIterator(final int i) {
     if (i < this.queries.size()) {
       final Query query = this.queries.get(i);
-      if (StringUtils.hasText(this.whereClause)) {
+      if (Property.hasValue(this.whereClause)) {
         query.and(new SqlCondition(this.whereClause));
       }
       if (this.boundingBox != null) {

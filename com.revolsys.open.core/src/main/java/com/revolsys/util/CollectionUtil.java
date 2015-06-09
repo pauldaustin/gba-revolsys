@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 
@@ -79,7 +79,7 @@ public final class CollectionUtil {
     for (final Object value : values) {
       if (value != null) {
         final String string = StringConverterRegistry.toString(value);
-        if (StringUtils.hasText(string)) {
+        if (Property.hasValue(string)) {
           if (first) {
             first = false;
           } else {
@@ -303,7 +303,7 @@ public final class CollectionUtil {
       return number.doubleValue();
     } else {
       final String stringValue = value.toString();
-      if (StringUtils.hasText(stringValue)) {
+      if (Property.hasValue(stringValue)) {
         try {
           return Double.valueOf(stringValue);
         } catch (final NumberFormatException e) {
@@ -343,7 +343,7 @@ public final class CollectionUtil {
       return number.intValue();
     } else {
       final String stringValue = value.toString();
-      if (StringUtils.hasText(stringValue)) {
+      if (Property.hasValue(stringValue)) {
         try {
           return Integer.valueOf(stringValue);
         } catch (final NumberFormatException e) {
@@ -383,7 +383,7 @@ public final class CollectionUtil {
       return number.longValue();
     } else {
       final String stringValue = value.toString();
-      if (StringUtils.hasText(stringValue)) {
+      if (Property.hasValue(stringValue)) {
         try {
           return Long.valueOf(stringValue);
         } catch (final NumberFormatException e) {
@@ -589,7 +589,7 @@ public final class CollectionUtil {
   }
 
   public static List<String> split(final String text, final String regex) {
-    if (StringUtils.hasText(text)) {
+    if (Property.hasValue(text)) {
       return Arrays.asList(text.split(regex));
     } else {
       return Collections.emptyList();

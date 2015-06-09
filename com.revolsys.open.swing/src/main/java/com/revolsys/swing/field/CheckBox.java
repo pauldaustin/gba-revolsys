@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.swing.menu.PopupMenu;
@@ -39,7 +39,7 @@ public class CheckBox extends JCheckBox implements Field, ActionListener {
   }
 
   public CheckBox(final String fieldName, final Object fieldValue) {
-    if (StringUtils.hasText(fieldName)) {
+    if (Property.hasValue(fieldName)) {
       this.fieldName = fieldName;
     } else {
       this.fieldName = "fieldValue";
@@ -141,7 +141,7 @@ public class CheckBox extends JCheckBox implements Field, ActionListener {
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

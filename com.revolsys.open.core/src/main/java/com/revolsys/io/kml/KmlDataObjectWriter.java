@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
@@ -77,8 +77,8 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements Kml22
       } else {
         styleUrl = value.toString();
       }
-      if (StringUtils.hasText(styleUrl)) {
-        if (StringUtils.hasText(this.defaultStyleUrl)) {
+      if (Property.hasValue(styleUrl)) {
+        if (Property.hasValue(this.defaultStyleUrl)) {
           this.styleUrl = styleUrl;
         } else {
           this.defaultStyleUrl = styleUrl;
@@ -131,9 +131,9 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements Kml22
       this.writer.endTag(DESCRIPTION);
     }
     writeLookAt(object.getGeometryValue());
-    if (StringUtils.hasText(this.styleUrl)) {
+    if (Property.hasValue(this.styleUrl)) {
       this.writer.element(STYLE_URL, this.styleUrl);
-    } else if (StringUtils.hasText(this.defaultStyleUrl)) {
+    } else if (Property.hasValue(this.defaultStyleUrl)) {
       this.writer.element(STYLE_URL, this.defaultStyleUrl);
     }
     boolean hasValues = false;
@@ -212,7 +212,7 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements Kml22
         writeLookAt(point, range.longValue());
       }
       final String style = getProperty(STYLE_PROPERTY);
-      if (StringUtils.hasText(style)) {
+      if (Property.hasValue(style)) {
         this.writer.write(style);
       }
 

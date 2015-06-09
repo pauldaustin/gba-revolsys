@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import javax.imageio.ImageIO;
 
 import org.springframework.core.io.UrlResource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.io.json.JsonMapIoFactory;
@@ -45,7 +45,7 @@ public class BingClient {
   }
 
   public BingClient(final String bingMapsKey) {
-    if (StringUtils.hasText(bingMapsKey)) {
+    if (Property.hasValue(bingMapsKey)) {
       this.bingMapsKey = bingMapsKey;
     } else {
       this.bingMapsKey = "Aot4lgzhMpHW2veWHlULTZEilxA69oF94eZQrA8B_C25uybJpEERRIFi7R2WI1C_";

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordIo;
@@ -55,7 +55,7 @@ public class DataObjectFileLayer extends DataObjectListLayer {
       SwingUtil.addReadOnlyTextField(panel, "URL", url);
     }
     final String fileNameExtension = FileUtil.getFileNameExtension(url);
-    if (StringUtils.hasText(fileNameExtension)) {
+    if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final RecordReaderFactory factory = IoFactoryRegistry.getInstance()
         .getFactoryByFileExtension(RecordReaderFactory.class, fileNameExtension);
@@ -70,7 +70,7 @@ public class DataObjectFileLayer extends DataObjectListLayer {
   @Override
   protected boolean doInitialize() {
     this.url = getProperty("url");
-    if (StringUtils.hasText(this.url)) {
+    if (Property.hasValue(this.url)) {
       this.resource = SpringUtil.getResource(this.url);
       return revert();
     } else {

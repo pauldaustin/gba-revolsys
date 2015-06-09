@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.json.JsonMapIoFactory;
@@ -39,7 +39,7 @@ public class MultiCopyRecords implements Process {
       final String type = (String)processDefinition.get("type");
       if ("copyRecords".equals(type)) {
         final String typePath = (String)processDefinition.get("typePath");
-        if (StringUtils.hasText(typePath)) {
+        if (Property.hasValue(typePath)) {
           final boolean hasSequence = CollectionUtil.getBool(processDefinition, "hasSequence");
           final Map<String, Boolean> orderBy = CollectionUtil.get(processDefinition, "orderBy",
             Collections.<String, Boolean> emptyMap());

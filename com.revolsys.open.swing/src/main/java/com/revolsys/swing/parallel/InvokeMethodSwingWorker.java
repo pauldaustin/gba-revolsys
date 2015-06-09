@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.beans.InvokeMethodCallable;
 import com.revolsys.parallel.ThreadInterruptedException;
@@ -39,11 +39,11 @@ public class InvokeMethodSwingWorker<T, V> extends AbstractSwingWorker<T, V> {
     final Collection<? extends Object> doneMethodParameters) {
     this.description = description;
     this.doneObject = object;
-    if (StringUtils.hasText(backgroundMethodName)) {
+    if (Property.hasValue(backgroundMethodName)) {
       this.backgroundTask = new InvokeMethodCallable<T>(object, backgroundMethodName,
         backgroundMethodParameters.toArray());
     }
-    if (StringUtils.hasText(doneMethodName)) {
+    if (Property.hasValue(doneMethodName)) {
       this.doneMethodName = doneMethodName;
       this.doneMethodParameters = new ArrayList<Object>(doneMethodParameters);
       if (object == null) {

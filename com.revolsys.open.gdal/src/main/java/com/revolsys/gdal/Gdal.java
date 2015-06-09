@@ -30,7 +30,6 @@ import org.gdal.osr.osr;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 
 import com.revolsys.gdal.raster.GdalImageFactory;
 import com.revolsys.gis.cs.CoordinateSystem;
@@ -43,6 +42,7 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.OS;
+import com.revolsys.util.Property;
 
 public class Gdal {
   private static boolean available = false;
@@ -380,7 +380,7 @@ public class Gdal {
   }
 
   public static Dataset getDataset(final String name, final int mode) {
-    if (StringUtils.hasText(name)) {
+    if (Property.hasValue(name)) {
       final File file = new File(name);
       return getDataset(file, mode);
     } else {
@@ -466,7 +466,7 @@ public class Gdal {
 
         final Map<String, Object> settings = JsonMapIoFactory.toMap(settingsFile);
         final String boundingBoxWkt = (String)settings.get("boundingBox");
-        if (StringUtils.hasText(boundingBoxWkt)) {
+        if (Property.hasValue(boundingBoxWkt)) {
           final BoundingBox boundingBox = BoundingBox.create(boundingBoxWkt);
           if (!boundingBox.isEmpty()) {
             setSpatialReference(dataset, boundingBox.getCoordinateSystem());
@@ -495,13 +495,13 @@ public class Gdal {
 
   private static void setGdalProperty(final String name, final String defaultValue) {
     String value = System.getProperty(name);
-    if (!StringUtils.hasText(value)) {
+    if (!Property.hasValue(value)) {
       value = System.getenv(name);
-      if (!StringUtils.hasText(value)) {
+      if (!Property.hasValue(value)) {
         value = defaultValue;
       }
     }
-    if (StringUtils.hasText(value)) {
+    if (Property.hasValue(value)) {
       gdal.SetConfigOption(name, value);
     }
   }

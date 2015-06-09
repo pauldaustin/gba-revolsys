@@ -6,7 +6,7 @@ import java.lang.ref.WeakReference;
 
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.map.form.DataObjectLayerForm;
@@ -47,7 +47,7 @@ public class FormAllFieldsModifiedPredicate implements HighlightPredicate {
               if (originalValue == null) {
                 if (fieldValue instanceof String) {
                   final String string = (String)fieldValue;
-                  if (!StringUtils.hasText(string)) {
+                  if (!Property.hasValue(string)) {
                     equal = true;
                   }
                 }

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 public class RectangularMapGridFactory {
   public static final List<String> gridNames;
@@ -43,7 +43,7 @@ public class RectangularMapGridFactory {
   public static RectangularMapGrid getGrid(final String name) {
     try {
       final String className = gridClassNamesByName.get(name);
-      if (StringUtils.hasText(className)) {
+      if (Property.hasValue(className)) {
         return (RectangularMapGrid)Class.forName(className).newInstance();
       }
     } catch (final Throwable e) {

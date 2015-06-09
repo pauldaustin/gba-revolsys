@@ -10,7 +10,7 @@ import javax.measure.unit.Unit;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
@@ -65,7 +65,7 @@ public class BoundingBox extends Envelope implements Cloneable {
   private static final long serialVersionUID = -810356856421113732L;
 
   public static BoundingBox create(final String wkt) {
-    if (StringUtils.hasLength(wkt)) {
+    if (Property.hasValue(wkt)) {
       GeometryFactory geometryFactory = null;
       final StringBuffer text = new StringBuffer(wkt);
       if (WktParser.hasText(text, "SRID=")) {

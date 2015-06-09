@@ -5,7 +5,7 @@ import java.awt.Component;
 
 import javax.swing.JTabbedPane;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 
@@ -54,7 +54,7 @@ public class TabbedValuePanel extends ValueField {
   }
 
   public void setSelectdTab(final String tabName) {
-    if (StringUtils.hasText(tabName)) {
+    if (Property.hasValue(tabName)) {
       for (int i = 0; i < this.tabs.getTabCount(); i++) {
         final String name = this.tabs.getTitleAt(i);
         if (tabName.equals(name)) {

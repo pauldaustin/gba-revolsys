@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.io.AbstractMapReaderFactory;
 import com.revolsys.jdbc.JdbcUtils;
@@ -136,7 +136,7 @@ public class JdbcFactoryRegistry {
     try {
       for (final Map<String, Object> factoryDefinition : AbstractMapReaderFactory.mapReader(resource)) {
         final String jdbcFactoryClassName = (String)factoryDefinition.get("jdbcFactoryClassName");
-        if (StringUtils.hasText(jdbcFactoryClassName)) {
+        if (Property.hasValue(jdbcFactoryClassName)) {
           @SuppressWarnings("unchecked")
           final Class<JdbcDatabaseFactory> factoryClass = (Class<JdbcDatabaseFactory>)Class.forName(
             jdbcFactoryClassName, true, classLoader);

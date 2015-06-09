@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.esri.sde.sdk.client.SeColumnDefinition;
 import com.esri.sde.sdk.client.SeConnection;
@@ -121,16 +121,16 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
   public SeConnection createSeConnection() {
     final String server = (String)this.connectionProperties.get("sdeServer");
 
-    if (!StringUtils.hasText(server)) {
+    if (!Property.hasValue(server)) {
       throw new IllegalArgumentException(
         "The connection properties must include a sdeServer to support ESRI ArcSDE SDEBINARY columns");
     }
     String instance = (String)this.connectionProperties.get("sdeInstance");
-    if (!StringUtils.hasText(instance)) {
+    if (!Property.hasValue(instance)) {
       instance = "5151";
     }
     String database = (String)this.connectionProperties.get("sdeDatabase");
-    if (!StringUtils.hasText(database)) {
+    if (!Property.hasValue(database)) {
       database = "none";
     }
     final String username = (String)this.connectionProperties.get("username");

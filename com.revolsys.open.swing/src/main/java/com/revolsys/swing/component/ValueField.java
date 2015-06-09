@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
@@ -185,7 +185,7 @@ public class ValueField extends JPanel implements Field {
     final Object oldValue = this.fieldValue;
     this.fieldValue = value;
     firePropertyChange("fieldValue", oldValue, value);
-    if (StringUtils.hasText(this.fieldName)) {
+    if (Property.hasValue(this.fieldName)) {
       firePropertyChange(this.fieldName, oldValue, value);
     }
   }
@@ -197,7 +197,7 @@ public class ValueField extends JPanel implements Field {
   @Override
   public void setToolTipText(final String text) {
     this.originalToolTip = text;
-    if (!StringUtils.hasText(this.errorMessage)) {
+    if (!Property.hasValue(this.errorMessage)) {
       super.setToolTipText(text);
     }
   }

@@ -2,7 +2,7 @@ package com.revolsys.data.query.functions;
 
 import java.util.Map;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.query.QueryValue;
 import com.revolsys.data.query.Value;
@@ -25,7 +25,7 @@ public class RegexpReplace extends Function {
     final String text = getParameterStringValue(0, record);
     final String pattern = getParameterStringValue(1, record);
     final String replace = getParameterStringValue(2, record);
-    if (StringUtils.hasText(text)) {
+    if (Property.hasValue(text)) {
       return (V)text.replaceAll(pattern, replace);
     } else {
       return null;

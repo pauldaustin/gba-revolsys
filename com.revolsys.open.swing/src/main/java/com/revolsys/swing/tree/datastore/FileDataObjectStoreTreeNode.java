@@ -14,7 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.tree.TreeNode;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
@@ -70,7 +70,7 @@ public class FileDataObjectStoreTreeNode extends FileTreeNode implements DataObj
     if (panel.isSaved()) {
       final DataObjectStoreConnectionRegistry registry = (DataObjectStoreConnectionRegistry)registryField.getSelectedItem();
       String connectionName = nameField.getText();
-      if (!StringUtils.hasText(connectionName)) {
+      if (!Property.hasValue(connectionName)) {
         connectionName = fileName;
       }
       final String baseConnectionName = connectionName;

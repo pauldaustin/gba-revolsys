@@ -4,7 +4,7 @@ import java.io.Writer;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -143,7 +143,7 @@ public class XhtmlDataObjectWriter extends AbstractWriter<Record> {
       this.out.attribute(HtmlUtil.ATTR_CONTENT, "text/html; charset=utf-8");
       this.out.endTag(HtmlUtil.META);
 
-      if (StringUtils.hasText(this.title)) {
+      if (Property.hasValue(this.title)) {
         this.out.element(HtmlUtil.TITLE, this.title);
       }
 
