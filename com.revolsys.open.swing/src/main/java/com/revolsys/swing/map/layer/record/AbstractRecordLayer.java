@@ -115,7 +115,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 public abstract class AbstractRecordLayer extends AbstractLayer implements RecordFactory,
-AddGeometryCompleteAction {
+  AddGeometryCompleteAction {
 
   public static final String FORM_FACTORY_EXPRESSION = "formFactoryExpression";
 
@@ -140,7 +140,7 @@ AddGeometryCompleteAction {
     final EnableCheck hasGeometry = new TreeItemPropertyEnableCheck("hasGeometry");
     menu.addMenuItem("zoom", TreeItemRunnable.createAction("Zoom to Selected",
       "magnifier_zoom_selected", new AndEnableCheck(exists, hasGeometry, hasSelectedRecords),
-        "zoomToSelected"));
+      "zoomToSelected"));
 
     final EnableCheck editable = new TreeItemPropertyEnableCheck("editable");
     final EnableCheck readonly = new TreeItemPropertyEnableCheck("readOnly", false);
@@ -164,7 +164,7 @@ AddGeometryCompleteAction {
 
     menu.addMenuItem("edit", TreeItemRunnable.createAction("Delete Selected Records",
       "table_row_delete", new AndEnableCheck(hasSelectedRecords, canDelete),
-        "deleteSelectedRecords"));
+      "deleteSelectedRecords"));
 
     menu.addMenuItem("edit", TreeItemRunnable.createAction("Merge Selected Records", "shape_group",
       canMergeRecords, "mergeSelectedRecords"));
@@ -477,8 +477,8 @@ AddGeometryCompleteAction {
       if (!cancelled) {
         JOptionPane.showMessageDialog(MapPanel.get(this),
           "<html><p>There was an error cancelling changes for one or more records.</p>" + "<p>"
-              + getPath() + "</p>" + "<p>Check the logging panel for details.</html>",
-              "Error Cancelling Changes", JOptionPane.ERROR_MESSAGE);
+            + getPath() + "</p>" + "<p>Check the logging panel for details.</html>",
+          "Error Cancelling Changes", JOptionPane.ERROR_MESSAGE);
       }
 
     }
@@ -1108,8 +1108,8 @@ AddGeometryCompleteAction {
                   if (alert) {
                     JOptionPane.showMessageDialog(parentComponent,
                       "Clipboard should contain a record with a " + geometryDataType + " not a "
-                          + sourceGeometry.getGeometryType() + ".", "Paste Geometry",
-                          JOptionPane.ERROR_MESSAGE);
+                        + sourceGeometry.getGeometryType() + ".", "Paste Geometry",
+                      JOptionPane.ERROR_MESSAGE);
                   }
                   return null;
                 }
@@ -1364,7 +1364,7 @@ AddGeometryCompleteAction {
 
   public boolean isCanPaste() {
     return ClipboardUtil.isDataFlavorAvailable(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR)
-        || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
+      || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
   }
 
   public boolean isDeleted(final LayerRecord record) {
@@ -1506,7 +1506,7 @@ AddGeometryCompleteAction {
   public void pasteRecords() {
     final List<LayerRecord> newRecords = new ArrayList<>();
     try (
-      EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
       RecordReader reader = ClipboardUtil.getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
       if (reader == null) {
         final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
@@ -1580,7 +1580,7 @@ AddGeometryCompleteAction {
       saveChanges(newRecords);
       if (!newRecords.isEmpty()) {
         zoomToRecords(newRecords);
-        showRecordsTable(RecordLayerTableModel.MODE_EDITS);
+        showRecordsTable(RecordLayerTableModel.MODE_SELECTED);
       }
     }
     firePropertyChange("recordsInserted", null, newRecords);
@@ -1803,7 +1803,7 @@ AddGeometryCompleteAction {
       if (isHasChanges()) {
         final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
         try (
-            EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
           doSaveChanges(errors);
         } finally {
           fireRecordsChanged();
@@ -1819,7 +1819,7 @@ AddGeometryCompleteAction {
       boolean allSaved;
       final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
       try (
-          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
         for (final LayerRecord record : records) {
           try {
             if (isLayerRecord(record)) {
@@ -1844,7 +1844,7 @@ AddGeometryCompleteAction {
       boolean allSaved;
       final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
       try (
-        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
         try {
           final boolean saved = internalSaveChanges(errors, record);
           if (!saved) {
@@ -2390,7 +2390,7 @@ AddGeometryCompleteAction {
     final Project project = getProject();
     final GeometryFactory geometryFactory = project.getGeometryFactory();
     final BoundingBox boundingBox = getSelectedBoundingBox().convert(geometryFactory)
-        .expandPercent(0.1);
+      .expandPercent(0.1);
     project.setViewBoundingBox(boundingBox);
   }
 }
