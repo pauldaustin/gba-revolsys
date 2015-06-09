@@ -11,6 +11,7 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.geometry.Geometry;
 import com.revolsys.gis.model.geometry.GeometryCollection;
+import com.revolsys.gis.model.geometry.GeometryFactory;
 import com.revolsys.gis.model.geometry.LineString;
 import com.revolsys.gis.model.geometry.LinearRing;
 import com.revolsys.gis.model.geometry.MultiLineString;
@@ -102,7 +103,8 @@ public class GeometryGraph extends PlanarGraph {
       // SRID = parentGeom.getSRID();
       add(parentGeom);
     }
-    this.ptLocator = new PointLocator(parentGeom.getGeometryFactory());
+    GeometryFactory geometryFactory = parentGeom.getGeometryFactory();
+    this.ptLocator = new PointLocator(geometryFactory);
   }
 
   private void add(final Geometry g) {

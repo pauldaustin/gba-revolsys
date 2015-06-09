@@ -12,7 +12,7 @@ public class GeometryValueFilter implements Filter<Record> {
   }
 
   public GeometryValueFilter(final Record object) {
-    this(object.getGeometryValue());
+    this(object.<Geometry> getGeometryValue());
   }
 
   @Override
