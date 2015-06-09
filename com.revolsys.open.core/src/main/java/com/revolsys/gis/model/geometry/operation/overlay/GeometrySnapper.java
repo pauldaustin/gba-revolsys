@@ -16,7 +16,6 @@ import com.revolsys.gis.model.geometry.GeometryFactory;
 import com.revolsys.gis.model.geometry.LineString;
 import com.revolsys.gis.model.geometry.Polygonal;
 import com.revolsys.gis.model.geometry.impl.BoundingBox;
-import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * Snaps the vertices and segments of a {@link Geometry} to another Geometry's
@@ -113,17 +112,6 @@ public class GeometrySnapper {
    */
   public GeometrySnapper(final Geometry srcGeom) {
     this.srcGeom = srcGeom;
-  }
-
-  private double computeMinimumSegmentLength(final Coordinate[] pts) {
-    double minSegLen = Double.MAX_VALUE;
-    for (int i = 0; i < pts.length - 1; i++) {
-      final double segLen = pts[i].distance(pts[i + 1]);
-      if (segLen < minSegLen) {
-        minSegLen = segLen;
-      }
-    }
-    return minSegLen;
   }
 
   public List<Coordinates> extractTargetCoordinates(final Geometry g) {

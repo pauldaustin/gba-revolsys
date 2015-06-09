@@ -27,14 +27,14 @@ public class DirectoryDataObjectStoreWriter extends AbstractWriter<Record> {
         switch (object.getState()) {
           case New:
             this.dataStore.insert(object);
-          break;
+            break;
           case Modified:
             if (currentDataStore) {
               throw new UnsupportedOperationException();
             } else {
               this.dataStore.insert(object);
             }
-          break;
+            break;
           case Persisted:
             if (currentDataStore) {
               throw new UnsupportedOperationException();

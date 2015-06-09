@@ -24,7 +24,7 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlPro
   private static final MenuFactory MENU = new MenuFactory();
   static {
     final InvokeMethodAction refresh = TreeItemRunnable.createAction("Refresh", "arrow_refresh",
-      "refresh");
+        "refresh");
     MENU.addMenuItem("default", refresh);
 
     final TreeItemPropertyEnableCheck readOnly = new TreeItemPropertyEnableCheck("readOnly", false);

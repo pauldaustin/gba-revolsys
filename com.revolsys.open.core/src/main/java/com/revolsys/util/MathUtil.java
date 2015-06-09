@@ -589,7 +589,7 @@ public final class MathUtil {
      */
 
     final double r = ((x - x1) * (x2 - x1) + (y - y1) * (y2 - y1))
-      / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
     if (r <= 0.0) {
       return distance(x, y, x1, y1);
@@ -604,7 +604,7 @@ public final class MathUtil {
      */
 
     final double s = ((y1 - y) * (x2 - x1) - (x1 - x) * (y2 - y1))
-      / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 
     return Math.abs(s) * Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
   }

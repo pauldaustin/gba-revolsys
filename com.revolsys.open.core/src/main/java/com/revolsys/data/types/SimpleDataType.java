@@ -21,6 +21,15 @@ public class SimpleDataType implements DataType {
   }
 
   @Override
+  public String getValidationName() {
+    if (Number.class.isAssignableFrom(this.javaClass)) {
+      return "number (" + getName() + ")";
+    } else {
+      return getName();
+    }
+  }
+
+  @Override
   public int hashCode() {
     return this.name.hashCode();
   }

@@ -21,7 +21,7 @@ import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
 
 public abstract class AbstractObjectTreeNodeModel<NODE extends Object, CHILD extends Object>
-  implements ObjectTreeNodeModel<NODE, CHILD> {
+implements ObjectTreeNodeModel<NODE, CHILD> {
 
   public static final ImageIcon ICON_FOLDER = Icons.getIcon("folder");
 

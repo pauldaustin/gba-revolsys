@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.revolsys.util.Property;
 import com.revolsys.collection.map.IntHashMap;
 import com.revolsys.format.csv.CsvIterator;
 import com.revolsys.format.json.JsonMapIoFactory;
@@ -30,6 +29,7 @@ import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.Projection;
 import com.revolsys.gis.cs.Spheroid;
 import com.revolsys.io.FileUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -321,7 +321,7 @@ public final class EpsgCoordinateSystems {
         final ProjectedCoordinateSystem worldMercator = (ProjectedCoordinateSystem)coordinateSystemsById.get(3857);
         coordinateSystemsById.put(900913, worldMercator);
         coordinateSystems = Collections.unmodifiableSet(new LinkedHashSet<CoordinateSystem>(
-          coordinateSystemsById.values()));
+            coordinateSystemsById.values()));
         initialized = true;
       } catch (final Throwable t) {
         t.printStackTrace();

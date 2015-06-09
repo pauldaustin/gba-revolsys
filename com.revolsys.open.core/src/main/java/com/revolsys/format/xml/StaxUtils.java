@@ -31,10 +31,10 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.commons.io.input.XmlStreamReader;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 
 /**
  * The StaxUtils class provides utility methods for processing XML using the
@@ -99,10 +99,10 @@ public final class StaxUtils {
       switch (parser.getEventType()) {
         case XMLStreamConstants.CHARACTERS:
           text.append(parser.getText());
-        break;
+          break;
         case XMLStreamConstants.START_ELEMENT:
           text.append(getElementText(parser));
-        break;
+          break;
       }
     }
     return text.toString();

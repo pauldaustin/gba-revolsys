@@ -56,7 +56,7 @@ public class Mercator2SP implements CoordinatesProjection {
     do {
       final double eSinPhi = this.e * Math.sin(phi);
       final double phi1 = Angle.PI_OVER_2 - 2
-        * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.eOver2));
+          * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.eOver2));
       delta = Math.abs(phi1 - phi);
       phi = phi1;
     } while (delta > 1.0e-011);
@@ -78,8 +78,8 @@ public class Mercator2SP implements CoordinatesProjection {
 
     final double eSinPhi = this.e * Math.sin(phi);
     final double y = this.a
-      * Math.log(Math.tan(Angle.PI_OVER_4 + phi / 2)
-        * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.eOver2)) * this.multiple;
+        * Math.log(Math.tan(Angle.PI_OVER_4 + phi / 2)
+          * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.eOver2)) * this.multiple;
 
     to.setValue(0, this.x0 + x);
     to.setValue(1, this.y0 + y);

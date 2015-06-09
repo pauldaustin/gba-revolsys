@@ -106,7 +106,7 @@ public class JmxUtil {
     try {
       objectNames = mBeanServer.queryNames(new ObjectName(objectNameString), null);
       attributesMap = new TreeMap<String, MBeanAttributeInfo[]>();
-      for (ObjectName objectName : objectNames) {
+      for (final ObjectName objectName : objectNames) {
         MBeanInfo mBeanInfo;
         mBeanInfo = mBeanServer.getMBeanInfo(objectName);
         final MBeanAttributeInfo[] attributes = mBeanInfo.getAttributes();
@@ -134,7 +134,7 @@ public class JmxUtil {
     try {
       objectNames = connection.queryNames(new ObjectName(objectNameString), null);
       attributesMap = new TreeMap<String, MBeanAttributeInfo[]>();
-      for (ObjectName objectName : objectNames) {
+      for (final ObjectName objectName : objectNames) {
         MBeanInfo mBeanInfo;
         mBeanInfo = connection.getMBeanInfo(objectName);
         final MBeanAttributeInfo[] attributes = mBeanInfo.getAttributes();
@@ -243,7 +243,7 @@ public class JmxUtil {
     final String objectNameString, final MBeanAttributeInfo attribute) {
     final String attributeName = attribute.getName();
     System.out.println("objectName=" + objectNameString + " " + attributeName + "="
-      + JmxUtil.getMBeanAttributeValue(connection, objectNameString, attributeName));
+        + JmxUtil.getMBeanAttributeValue(connection, objectNameString, attributeName));
 
   }
 }

@@ -127,7 +127,7 @@ public class GeometryTransformer {
     }
 
     throw new IllegalArgumentException("Unknown Geometry subtype: "
-      + inputGeom.getClass().getName());
+        + inputGeom.getClass().getName());
   }
 
   protected Coordinates transformCoordinates(final Coordinates coords, final Geometry parent) {

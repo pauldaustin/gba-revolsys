@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.esri.sde.sdk.client.SeColumnDefinition;
 import com.esri.sde.sdk.client.SeConnection;
@@ -37,6 +36,7 @@ import com.revolsys.jdbc.io.JdbcDataObjectStore;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.PasswordUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -45,7 +45,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class ArcSdeBinaryGeometryDataStoreUtil {
 
   private final DataStoreIteratorFactory iteratorFactory = new DataStoreIteratorFactory(this,
-    "createIterator");
+      "createIterator");
 
   private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 
@@ -100,8 +100,8 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     final ArcSdeBinaryGeometryAttribute sdeAttribute = new ArcSdeBinaryGeometryAttribute(this,
       dbName, columnName, dataType, attribute.isRequired(), "The GEOMETRY reference",
       attribute.getProperties(), geometryFactory);
-    ((RecordDefinitionImpl)metaData).replaceAttribute(attribute, sdeAttribute);
-    sdeAttribute.setMetaData(metaData);
+    ((RecordDefinitionImpl)metaData).replaceField(attribute, sdeAttribute);
+    sdeAttribute.setRecordDefinition(metaData);
 
     metaData.setProperty("dataStoreIteratorFactory", this.iteratorFactory);
 
@@ -123,7 +123,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
 
     if (!Property.hasValue(server)) {
       throw new IllegalArgumentException(
-        "The connection properties must include a sdeServer to support ESRI ArcSDE SDEBINARY columns");
+          "The connection properties must include a sdeServer to support ESRI ArcSDE SDEBINARY columns");
     }
     String instance = (String)this.connectionProperties.get("sdeInstance");
     if (!Property.hasValue(instance)) {
@@ -179,62 +179,62 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
           switch (type) {
             case SeColumnDefinition.TYPE_INT16:
               value = row.getShort(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_INT32:
               value = row.getInteger(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_INT64:
               value = row.getLong(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_FLOAT32:
               value = row.getFloat(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_FLOAT64:
               value = row.getDouble(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_STRING:
               value = row.getString(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_NSTRING:
               value = row.getNString(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_CLOB:
               final ByteArrayInputStream clob = row.getClob(columnIndex);
               value = FileUtil.getString(clob);
-            break;
+              break;
             case SeColumnDefinition.TYPE_NCLOB:
               final ByteArrayInputStream nClob = row.getNClob(columnIndex);
               value = FileUtil.getString(nClob);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_XML:
               value = row.getXml(columnIndex).getText();
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_UUID:
               value = row.getUuid(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_DATE:
               value = row.getTime(columnIndex);
-            break;
+              break;
 
             case SeColumnDefinition.TYPE_SHAPE:
               final SeShape shape = row.getShape(columnIndex);
               value = toGeometry(shape);
-            break;
+              break;
 
             default:
               LoggerFactory.getLogger(ArcSdeBinaryGeometryDataStoreUtil.class).error(
                 "Unsupported column type: " + object.getRecordDefinition() + "." + name);
-            break;
+              break;
           }
           object.setValue(name, value);
         }

@@ -8,10 +8,11 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.revolsys.util.Property;
-
+import com.revolsys.beans.ObjectPropertyException;
 import com.revolsys.comparator.NumericComparator;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
@@ -23,6 +24,7 @@ import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.MathUtil;
+import com.revolsys.util.Property;
 
 /**
  * The Attribute class defines the name, type and other properties about each
@@ -33,7 +35,7 @@ import com.revolsys.util.MathUtil;
  * @see RecordDefinition
  */
 public class FieldDefinition extends AbstractObjectWithProperties implements Cloneable,
-  MapSerializer {
+MapSerializer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("field",
     "Data Record Field", FieldDefinition.class, "create");
@@ -66,7 +68,7 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
   /** The data type of the attribute value. */
   private DataType type;
 
-  private Reference<RecordDefinition> metaData;
+  private Reference<RecordDefinition> recordDefinition;
 
   private String title;
 
@@ -77,17 +79,17 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
   public FieldDefinition() {
   }
 
-  public FieldDefinition(final FieldDefinition attribute) {
-    this.name = attribute.getName();
-    this.title = attribute.getTitle();
-    this.description = attribute.getDescription();
-    this.type = attribute.getType();
-    this.required = attribute.isRequired();
-    this.length = attribute.getLength();
-    this.scale = attribute.getScale();
-    this.minValue = attribute.getMinValue();
-    this.maxValue = attribute.getMaxValue();
-    final Map<String, Object> properties = attribute.getProperties();
+  public FieldDefinition(final FieldDefinition field) {
+    this.name = field.getName();
+    this.title = field.getTitle();
+    this.description = field.getDescription();
+    this.type = field.getType();
+    this.required = field.isRequired();
+    this.length = field.getLength();
+    this.scale = field.getScale();
+    this.minValue = field.getMinValue();
+    this.maxValue = field.getMaxValue();
+    final Map<String, Object> properties = field.getProperties();
     setProperties(properties);
   }
 
@@ -359,14 +361,6 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
     return (V)this.maxValue;
   }
 
-  public RecordDefinition getMetaData() {
-    if (this.metaData == null) {
-      return null;
-    } else {
-      return this.metaData.get();
-    }
-  }
-
   @SuppressWarnings("unchecked")
   public <V> V getMinValue() {
     return (V)this.minValue;
@@ -379,6 +373,14 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
    */
   public String getName() {
     return this.name;
+  }
+
+  public RecordDefinition getRecordDefinition() {
+    if (this.recordDefinition == null) {
+      return null;
+    } else {
+      return this.recordDefinition.get();
+    }
   }
 
   /**
@@ -499,12 +501,12 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
     this.maxValue = maxValue;
   }
 
-  protected void setMetaData(final RecordDefinition metaData) {
-    this.metaData = new WeakReference<RecordDefinition>(metaData);
-  }
-
   public void setMinValue(final Object minValue) {
     this.minValue = minValue;
+  }
+
+  protected void setRecordDefinition(final RecordDefinition recordDefinition) {
+    this.recordDefinition = new WeakReference<RecordDefinition>(recordDefinition);
   }
 
   public void setRequired(final boolean required) {
@@ -583,11 +585,11 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
           value = StringConverterRegistry.toObject(fieldType, value);
         } catch (final Throwable t) {
           throw new IllegalArgumentException(fieldName + "=" + value + " is not a valid "
-            + fieldType);
+              + fieldType);
         }
         if (value == null) {
           throw new IllegalArgumentException(fieldName + "=" + value + " is not a valid "
-            + fieldType);
+              + fieldType);
         }
       }
       if (value != null) {
@@ -636,11 +638,107 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
         if (!this.allowedValues.isEmpty()) {
           if (!this.allowedValues.containsKey(value)) {
             throw new IllegalArgumentException(fieldName + "=" + value + " not in ("
-              + CollectionUtil.toString(",", this.allowedValues) + ")");
+                + CollectionUtil.toString(",", this.allowedValues) + ")");
           }
         }
       }
     }
+  }
 
+  public Object validate(final Record record, Object value) {
+    final String fieldName = getName();
+    if (isRequired()) {
+      if (value == null || value instanceof String && !Property.hasValue((String)value)) {
+        throw new ObjectPropertyException(record, fieldName, "Required");
+      }
+    }
+    final DataType fieldType = getType();
+    if (value != null) {
+      final RecordDefinition recordDefinition = getRecordDefinition();
+      final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(fieldName);
+      if (codeTable == null) {
+        final Class<?> fieldClass = fieldType.getJavaClass();
+        final Class<? extends Object> valueClass = value.getClass();
+        if (!fieldClass.isAssignableFrom(valueClass)) {
+          try {
+            value = StringConverterRegistry.toObject(fieldType, value);
+          } catch (final Throwable t) {
+            throw new ObjectPropertyException(record, fieldName, "'" + value + "' is not a valid "
+                + fieldType.getValidationName(), t);
+          }
+          if (value == null) {
+            throw new ObjectPropertyException(record, fieldName, "'" + value + "' is not a valid "
+                + fieldType.getValidationName());
+          }
+        }
+        if (value != null) {
+          final int maxLength = getLength();
+          if (value instanceof Number) {
+            final Number number = (Number)value;
+            final BigDecimal bigNumber = new BigDecimal(number.toString());
+            final int length = bigNumber.precision();
+            if (maxLength > 0) {
+              if (length > maxLength) {
+                throw new ObjectPropertyException(record, fieldName, "'" + value + "' length "
+                    + length + " > " + maxLength);
+              }
+            }
+
+            final int scale = bigNumber.scale();
+            final int maxScale = getScale();
+            if (maxScale > 0) {
+              if (scale > maxScale) {
+                throw new ObjectPropertyException(record, fieldName, "'" + value + "' scale "
+                    + scale + " > " + maxScale);
+              }
+            }
+            final Number minValue = getMinValue();
+            if (minValue != null) {
+              if (NumericComparator.numericCompare(number, minValue) < 0) {
+                throw new ObjectPropertyException(record, fieldName, "'" + value + "' > "
+                    + minValue);
+              }
+            }
+            final Number maxValue = getMaxValue();
+            if (maxValue != null) {
+              if (NumericComparator.numericCompare(number, maxValue) > 0) {
+                throw new ObjectPropertyException(record, fieldName, "'" + value + "' < "
+                    + maxValue);
+              }
+            }
+          } else if (value instanceof String) {
+            final String string = (String)value;
+            final int length = string.length();
+            if (maxLength > 0) {
+              if (length > maxLength) {
+                throw new ObjectPropertyException(record, fieldName, "'" + value + "' length "
+                    + length + " > " + maxLength);
+              }
+            }
+          }
+          if (!this.allowedValues.isEmpty()) {
+            if (!this.allowedValues.containsKey(value)) {
+              throw new ObjectPropertyException(record, fieldName, "'" + value + " not in ("
+                  + CollectionUtil.toString(",", this.allowedValues) + ")");
+            }
+          }
+        }
+      } else {
+        final Object id = codeTable.getId(value);
+        if (id == null) {
+          String codeTableName;
+          if (codeTable instanceof CodeTableProperty) {
+            @SuppressWarnings("resource")
+            final CodeTableProperty property = (CodeTableProperty)codeTable;
+            codeTableName = property.getTypeName();
+          } else {
+            codeTableName = codeTable.toString();
+          }
+          throw new ObjectPropertyException(record, fieldName, "Unable to find code for '" + value
+            + "' in " + codeTableName);
+        }
+      }
+    }
+    return value;
   }
 }

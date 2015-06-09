@@ -7,8 +7,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.ShortNameProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -16,6 +14,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.Path;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.MathUtil;
+import com.revolsys.util.Property;
 
 public abstract class JdbcDdlWriter implements Cloneable {
   private PrintWriter out;
@@ -88,7 +87,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     final String referencedTypeName = referencedMetaData.getPath();
     final String referencedAttributeName = referencedMetaData.getIdFieldName();
     final String constraintName = getTableAlias(metaData) + "_" + getTableAlias(referencedMetaData)
-      + "_FK";
+        + "_FK";
     writeAddForeignKeyConstraint(typePath, constraintName, attributeName, referencedTypeName,
       referencedAttributeName);
   }
@@ -100,7 +99,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     final String referencedTypeName = referencedMetaData.getPath();
     final String referencedAttributeName = referencedMetaData.getIdFieldName();
     final String constraintName = getTableAlias(metaData) + "_" + referenceTablePrefix + "_"
-      + getTableAlias(referencedMetaData) + "_FK";
+        + getTableAlias(referencedMetaData) + "_FK";
     writeAddForeignKeyConstraint(typePath, constraintName, attributeName, referencedTypeName,
       referencedAttributeName);
   }

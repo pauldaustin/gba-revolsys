@@ -8,8 +8,6 @@ import java.util.NoSuchElementException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.io.IteratorReader;
 import com.revolsys.data.query.Query;
@@ -20,6 +18,7 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.util.Property;
 
 public class DataObjectStoreQueryReader extends IteratorReader<Record> implements RecordReader {
 

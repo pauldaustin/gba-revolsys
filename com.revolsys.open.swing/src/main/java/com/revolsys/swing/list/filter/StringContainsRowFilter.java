@@ -3,9 +3,8 @@ package com.revolsys.swing.list.filter;
 import javax.swing.ListModel;
 import javax.swing.RowFilter;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.util.Property;
 
 public class StringContainsRowFilter extends RowFilter<ListModel, Integer> {
 

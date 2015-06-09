@@ -73,7 +73,7 @@ public abstract class BoundingBoxTaskSplitter extends AbstractProcess {
             final BoundingBox cellBoundingBox = new BoundingBox(geometryFactory, x, y, x + xInc, y
               + yInc);
             if (this.preparedBoundary == null
-              || this.preparedBoundary.intersects(cellBoundingBox.toPolygon(50))) {
+                || this.preparedBoundary.intersects(cellBoundingBox.toPolygon(50))) {
               if (this.logScriptInfo) {
                 this.log.info("Processing bounding box " + cellBoundingBox.toPolygon(1));
               }

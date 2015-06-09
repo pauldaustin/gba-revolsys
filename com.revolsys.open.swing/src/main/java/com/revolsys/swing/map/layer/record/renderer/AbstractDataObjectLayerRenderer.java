@@ -11,7 +11,6 @@ import javax.swing.ImageIcon;
 
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.util.Property;
 import com.revolsys.data.record.Record;
 import com.revolsys.filter.AcceptAllFilter;
 import com.revolsys.filter.Filter;
@@ -25,7 +24,7 @@ import com.revolsys.swing.map.layer.AbstractLayerRenderer;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.menu.TreeItemScaleMenu;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.SqlLayerFilter;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
@@ -33,10 +32,11 @@ import com.revolsys.swing.tree.TreeItemRunnable;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.TopologyException;
 
 public abstract class AbstractDataObjectLayerRenderer extends
-  AbstractLayerRenderer<AbstractRecordLayer> {
+AbstractLayerRenderer<AbstractRecordLayer> {
 
   static {
     final MenuFactory menu = ObjectTreeModel.getMenu(AbstractDataObjectLayerRenderer.class);
@@ -157,7 +157,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
     }
   }
 
-  protected boolean isFilterAccept(final LayerDataObject record) {
+  protected boolean isFilterAccept(final LayerRecord record) {
     try {
       return this.filter.accept(record);
     } catch (final Throwable e) {
@@ -165,7 +165,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
     }
   }
 
-  public boolean isVisible(final LayerDataObject record) {
+  public boolean isVisible(final LayerRecord record) {
     if (isVisible() && !record.isDeleted()) {
       return isFilterAccept(record);
     } else {
@@ -180,7 +180,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
       final boolean saved = viewport.setUseModelCoordinates(true, graphics);
       try {
         final BoundingBox boundingBox = viewport.getBoundingBox();
-        final List<LayerDataObject> dataObjects = layer.queryBackground(boundingBox);
+        final List<LayerRecord> dataObjects = layer.queryBackground(boundingBox);
         renderRecords(viewport, graphics, layer, dataObjects);
       } finally {
         viewport.setUseModelCoordinates(saved, graphics);
@@ -189,13 +189,13 @@ public abstract class AbstractDataObjectLayerRenderer extends
   }
 
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject record) {
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord record) {
   }
 
   protected void renderRecords(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractRecordLayer layer, final List<LayerDataObject> records) {
+    final AbstractRecordLayer layer, final List<LayerRecord> records) {
     final BoundingBox visibleArea = viewport.getBoundingBox();
-    for (final LayerDataObject record : records) {
+    for (final LayerRecord record : records) {
       if (record != null) {
         if (isVisible(record) && !layer.isHidden(record)) {
           try {
@@ -211,7 +211,7 @@ public abstract class AbstractDataObjectLayerRenderer extends
   }
 
   public void renderSelectedRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractRecordLayer layer, final LayerDataObject record) {
+    final AbstractRecordLayer layer, final LayerRecord record) {
     final BoundingBox boundingBox = viewport.getBoundingBox();
     if (isVisible(record)) {
       try {

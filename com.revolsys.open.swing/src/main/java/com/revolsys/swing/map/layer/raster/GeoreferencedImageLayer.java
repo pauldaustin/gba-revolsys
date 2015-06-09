@@ -8,7 +8,6 @@ import javax.swing.SwingUtilities;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
@@ -110,7 +109,7 @@ public class GeoreferencedImageLayer extends AbstractLayer {
     if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final GeoreferencedImageFactory factory = IoFactoryRegistry.getInstance()
-        .getFactoryByFileExtension(GeoreferencedImageFactory.class, fileNameExtension);
+          .getFactoryByFileExtension(GeoreferencedImageFactory.class, fileNameExtension);
       if (factory != null) {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }
@@ -170,7 +169,7 @@ public class GeoreferencedImageLayer extends AbstractLayer {
       return true;
     } else {
       LoggerFactory.getLogger(getClass()).error(
-        "Layer definition does not contain a 'url' property");
+          "Layer definition does not contain a 'url' property");
       return false;
     }
   }
@@ -352,7 +351,7 @@ public class GeoreferencedImageLayer extends AbstractLayer {
     if (!isShowOriginalImage()) {
       try {
         final AffineTransform transform = image.getAffineTransformation(boundingBox)
-          .createInverse();
+            .createInverse();
         transform.transform(coordinates, 0, coordinates, 0, 1);
       } catch (final NoninvertibleTransformException e) {
       }

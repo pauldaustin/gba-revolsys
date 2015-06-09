@@ -44,11 +44,6 @@ import org.springframework.web.util.UriUtils;
 public class UriTemplate implements Serializable {
 
   /**
-   *
-   */
-  private static final long serialVersionUID = 1L;
-
-  /**
    * Static inner class to parse URI template strings into a matching regular expression.
    */
   private static class Parser {
@@ -89,6 +84,11 @@ public class UriTemplate implements Serializable {
       return Pattern.quote(fullPath.substring(start, end));
     }
   }
+
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
   /** Captures URI template variable names. */
   private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
@@ -175,8 +175,8 @@ public class UriTemplate implements Serializable {
     Assert.notNull(uriVariableValues, "'uriVariableValues' must not be null");
     if (uriVariableValues.length != this.variableNames.size()) {
       throw new IllegalArgumentException("Invalid amount of variables values in ["
-        + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
-        + uriVariableValues.length);
+          + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
+          + uriVariableValues.length);
     }
     final Matcher matcher = NAMES_PATTERN.matcher(this.uriTemplate);
     final StringBuffer buffer = new StringBuffer();
@@ -208,8 +208,8 @@ public class UriTemplate implements Serializable {
     Assert.notNull(uriVariableValues, "'uriVariableValues' must not be null");
     if (uriVariableValues.length != this.variableNames.size()) {
       throw new IllegalArgumentException("Invalid amount of variables values in ["
-        + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
-        + uriVariableValues.length);
+          + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
+          + uriVariableValues.length);
     }
     final Matcher matcher = NAMES_PATTERN.matcher(this.uriTemplate);
     final StringBuffer buffer = new StringBuffer();

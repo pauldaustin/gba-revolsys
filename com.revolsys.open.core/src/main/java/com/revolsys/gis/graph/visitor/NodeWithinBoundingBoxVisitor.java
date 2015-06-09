@@ -14,7 +14,7 @@ public class NodeWithinBoundingBoxVisitor<T> implements Visitor<Node<T>> {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
     final IdObjectIndex<Node<T>> index = graph.getNodeIndex();
     final NodeWithinBoundingBoxVisitor<T> visitor = new NodeWithinBoundingBoxVisitor<T>(
-      boundingBox, results);
+        boundingBox, results);
     index.visit(boundingBox, visitor);
     return results.getList();
   }

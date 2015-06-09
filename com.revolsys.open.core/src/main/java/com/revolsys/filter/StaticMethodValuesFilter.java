@@ -69,14 +69,14 @@ public class StaticMethodValuesFilter<T> implements Filter<T> {
       if (name.equals(this.methodName) && method.getParameterTypes().length == 1) {
         if (this.method != null) {
           throw new IllegalArgumentException("Multiple method match for " + this.methodClass + "."
-            + this.methodName);
+              + this.methodName);
         }
         this.method = method;
       }
     }
     if (this.method == null) {
       throw new IllegalArgumentException("No method match for " + this.methodClass + "."
-        + this.methodName);
+          + this.methodName);
     }
   }
 
@@ -96,7 +96,7 @@ public class StaticMethodValuesFilter<T> implements Filter<T> {
   public String toString() {
     if (this.values.size() == 1) {
       return this.methodClass.getName() + "." + this.methodName + "(object)="
-        + this.values.iterator().next();
+          + this.values.iterator().next();
     } else {
       return this.methodClass.getName() + "." + this.methodName + "(object) in " + this.values;
     }

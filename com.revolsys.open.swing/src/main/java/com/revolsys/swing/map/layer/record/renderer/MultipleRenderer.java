@@ -12,7 +12,7 @@ import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.style.GeometryStyle;
 import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.TopologyException;
@@ -43,7 +43,7 @@ public class MultipleRenderer extends AbstractMultipleRenderer {
   // Needed for filter styles
   @Override
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject record) {
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord record) {
     if (isVisible(record)) {
       for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
         final long scale = (long)viewport.getScale();
@@ -62,12 +62,12 @@ public class MultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   protected void renderRecords(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractRecordLayer layer, final List<LayerDataObject> records) {
+    final AbstractRecordLayer layer, final List<LayerRecord> records) {
     final BoundingBox visibleArea = viewport.getBoundingBox();
     for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
       final long scale = (long)viewport.getScale();
       if (renderer.isVisible(scale)) {
-        for (final LayerDataObject record : records) {
+        for (final LayerRecord record : records) {
           if (isVisible(record) && renderer.isVisible(record) && !layer.isHidden(record)) {
             try {
               renderer.renderRecord(viewport, graphics, visibleArea, layer, record);
@@ -84,7 +84,7 @@ public class MultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   public void renderSelectedRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractRecordLayer layer, final LayerDataObject object) {
+    final AbstractRecordLayer layer, final LayerRecord object) {
     if (isVisible(object)) {
       for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
         final long scale = (long)viewport.getScale();

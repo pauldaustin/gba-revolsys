@@ -97,22 +97,22 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
     switch (geometryType % 1000) {
       case 1:
         value = toPoint(resultSet, columnIndex, numAxis);
-      break;
+        break;
       case 2:
         value = toLineString(resultSet, columnIndex, numAxis);
-      break;
+        break;
       case 3:
         value = toPolygon(resultSet, columnIndex, numAxis);
-      break;
+        break;
       case 5:
         value = toMultiPoint(resultSet, columnIndex, numAxis);
-      break;
+        break;
       case 6:
         value = toMultiLineString(resultSet, columnIndex, numAxis);
-      break;
+        break;
       case 7:
         value = toMultiPolygon(resultSet, columnIndex, numAxis);
-      break;
+        break;
       default:
         throw new IllegalArgumentException("Unsupported geometry type " + geometryType);
     }
@@ -244,7 +244,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
   }
 
   private STRUCT toJdbc(final Connection connection, final Object object, final int dimension)
-    throws SQLException {
+      throws SQLException {
     if (object instanceof Geometry) {
       Geometry geometry = (Geometry)object;
       geometry = GeometryProjectionUtil.performCopy(geometry, this.geometryFactory);
@@ -280,7 +280,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
         return struct;
       } catch (final SQLException e) {
         throw new RuntimeException("Unable to convert Oracle JGeometry to STRUCT: "
-          + e.getMessage(), e);
+            + e.getMessage(), e);
       }
     } else {
       throw new IllegalArgumentException("Unable to convert to SDO_GEOMETRY " + object.getClass());
@@ -426,7 +426,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
         pointsList.add(points);
       } else {
         throw new IllegalArgumentException("Unsupported geometry type " + type + " interpretation "
-          + interpretation);
+            + interpretation);
       }
     }
 
@@ -481,17 +481,17 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
             exteriorRing = ring;
             interiorRings = new ArrayList<LinearRing>();
 
-          break;
+            break;
           case 2003:
             interiorRings.add(ring);
-          break;
+            break;
 
           default:
             throw new IllegalArgumentException("Unsupported geometry type " + type);
         }
       } else {
         throw new IllegalArgumentException("Unsupported geometry type " + type + " interpretation "
-          + interpretation);
+            + interpretation);
       }
     }
     if (exteriorRing != null) {
@@ -504,7 +504,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
   }
 
   private Point toPoint(final ResultSet resultSet, final int columnIndex, final int numAxis)
-    throws SQLException {
+      throws SQLException {
     final CoordinatesList coordinatesList;
     final double x = resultSet.getDouble(columnIndex + 1);
     final double y = resultSet.getDouble(columnIndex + 2);
@@ -518,7 +518,7 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
   }
 
   private Polygon toPolygon(final ResultSet resultSet, final int columnIndex, final int numAxis)
-    throws SQLException {
+      throws SQLException {
     final ARRAY elemInfoArray = (ARRAY)resultSet.getArray(columnIndex + 4);
     final long[] elemInfo = elemInfoArray.getLongArray();
     final ARRAY coordinatesArray = (ARRAY)resultSet.getArray(columnIndex + 5);
@@ -550,21 +550,21 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
             } else {
               throw new IllegalArgumentException("Cannot have two exterior rings on a geometry");
             }
-          break;
+            break;
           case 2003:
             if (numInteriorRings == interiorRings.length) {
               throw new IllegalArgumentException("Too many interior rings");
             } else {
               interiorRings[numInteriorRings++] = ring;
             }
-          break;
+            break;
 
           default:
             throw new IllegalArgumentException("Unsupported geometry type " + type);
         }
       } else {
         throw new IllegalArgumentException("Unsupported geometry type " + type + " interpretation "
-          + interpretation);
+            + interpretation);
       }
     }
     final Polygon polygon = this.geometryFactory.createPolygon(exteriorRing, interiorRings);

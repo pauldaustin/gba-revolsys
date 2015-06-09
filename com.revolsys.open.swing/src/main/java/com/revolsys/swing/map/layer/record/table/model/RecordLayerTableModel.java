@@ -39,22 +39,22 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.swing.listener.InvokeMethodListener;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
-import com.revolsys.swing.map.layer.record.table.DataObjectLayerTable;
+import com.revolsys.swing.map.layer.record.LayerRecord;
+import com.revolsys.swing.map.layer.record.table.RecordLayerTable;
 import com.revolsys.swing.map.layer.record.table.predicate.DeletedPredicate;
 import com.revolsys.swing.map.layer.record.table.predicate.ModifiedPredicate;
 import com.revolsys.swing.map.layer.record.table.predicate.NewPredicate;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.table.SortableTableModel;
-import com.revolsys.swing.table.dataobject.model.DataObjectRowTableModel;
-import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
 import com.revolsys.swing.table.filter.ContainsFilter;
 import com.revolsys.swing.table.filter.EqualFilter;
+import com.revolsys.swing.table.record.model.RecordRowTableModel;
+import com.revolsys.swing.table.record.row.RecordRowTable;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class RecordLayerTableModel extends DataObjectRowTableModel implements
-  SortableTableModel, PropertyChangeListener, PropertyChangeSupportProxy {
+public class RecordLayerTableModel extends RecordRowTableModel implements SortableTableModel,
+  PropertyChangeListener, PropertyChangeSupportProxy {
 
   private static final long serialVersionUID = 1L;
 
@@ -64,14 +64,14 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
 
   public static final String MODE_EDITS = "edits";
 
-  public static DataObjectLayerTable createTable(final AbstractRecordLayer layer) {
+  public static RecordLayerTable createTable(final AbstractRecordLayer layer) {
     final RecordDefinition metaData = layer.getRecordDefinition();
     if (metaData == null) {
       return null;
     } else {
-      final List<String> columnNames = layer.getColumnNames();
+      final List<String> columnNames = layer.getFieldNames();
       final RecordLayerTableModel model = new RecordLayerTableModel(layer, columnNames);
-      final DataObjectLayerTable table = new DataObjectLayerTable(model);
+      final RecordLayerTable table = new RecordLayerTable(model);
 
       ModifiedPredicate.add(table);
       NewPredicate.add(table);
@@ -83,9 +83,9 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     }
   }
 
-  public static final void selectionChanged(final DataObjectLayerTable table,
+  public static final void selectionChanged(final RecordLayerTable table,
     final RecordLayerTableModel tableModel) {
-    final String attributeFilterMode = tableModel.getAttributeFilterMode();
+    final String attributeFilterMode = tableModel.getFieldFilterMode();
     if (MODE_SELECTED.equals(attributeFilterMode)) {
       tableModel.refresh();
     } else {
@@ -105,16 +105,15 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
 
   private boolean filterByBoundingBox;
 
-  private List<String> attributeFilterModes = Arrays.asList(MODE_ALL, MODE_SELECTED, MODE_EDITS);
+  private List<String> fieldFilterModes = Arrays.asList(MODE_ALL, MODE_SELECTED, MODE_EDITS);
 
   private List<String> sortableModes = Arrays.asList(MODE_SELECTED, MODE_EDITS);
 
   private SwingWorker<?, ?> loadObjectsWorker;
 
-  private Map<Integer, List<LayerDataObject>> pageCache = new LruMap<Integer, List<LayerDataObject>>(
-    5);
+  private Map<Integer, List<LayerRecord>> pageCache = new LruMap<Integer, List<LayerRecord>>(5);
 
-  private String attributeFilterMode = MODE_ALL;
+  private String fieldFilterMode = MODE_ALL;
 
   private final int pageSize = 40;
 
@@ -136,29 +135,28 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
 
   private final Object selectedSync = new Object();
 
-  private List<LayerDataObject> selectedRecords = Collections.emptyList();
+  private List<LayerRecord> selectedRecords = Collections.emptyList();
 
-  private final LayerDataObject loadingRecord;
+  private final LayerRecord loadingRecord;
 
-  public RecordLayerTableModel(final AbstractRecordLayer layer,
-    final List<String> attributeNames) {
+  public RecordLayerTableModel(final AbstractRecordLayer layer, final List<String> attributeNames) {
     super(layer.getRecordDefinition(), attributeNames);
     this.layer = layer;
     Property.addListener(layer, this);
     setEditable(true);
     setReadOnlyFieldNames(layer.getUserReadOnlyFieldNames());
-    this.loadingRecord = new LayerDataObject(layer);
+    this.loadingRecord = new LayerRecord(layer);
     this.loadingRecord.setState(RecordState.Initalizing);
-  }
-
-  public String getAttributeFilterMode() {
-    return this.attributeFilterMode;
   }
 
   @Override
   public String getColumnName(final int columnIndex) {
     final String fieldName = getFieldName(columnIndex);
     return this.layer.getFieldTitle(fieldName);
+  }
+
+  public String getFieldFilterMode() {
+    return this.fieldFilterMode;
   }
 
   public Condition getFilter() {
@@ -190,7 +188,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     return this.layer;
   }
 
-  protected List<LayerDataObject> getLayerObjects(final Query query) {
+  protected List<LayerRecord> getLayerObjects(final Query query) {
     return this.layer.query(query);
   }
 
@@ -203,7 +201,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     }
   }
 
-  protected List<LayerDataObject> getLayerSelectedRecords() {
+  protected List<LayerRecord> getLayerSelectedRecords() {
     final AbstractRecordLayer layer = getLayer();
     return layer.getSelectedRecords();
   }
@@ -227,9 +225,9 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     return this.orderBy;
   }
 
-  protected LayerDataObject getPageRecord(final int pageNumber, final int recordNumber) {
+  protected LayerRecord getPageRecord(final int pageNumber, final int recordNumber) {
     synchronized (getSync()) {
-      final List<LayerDataObject> page = this.pageCache.get(pageNumber);
+      final List<LayerRecord> page = this.pageCache.get(pageNumber);
       if (page == null) {
         this.loadingPageNumbers.add(pageNumber);
         synchronized (getSync()) {
@@ -241,7 +239,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
         return this.loadingRecord;
       } else {
         if (recordNumber < page.size()) {
-          final LayerDataObject object = page.get(recordNumber);
+          final LayerRecord object = page.get(recordNumber);
           return object;
         } else {
           return null;
@@ -264,11 +262,11 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
   public <V extends Record> V getRecord(final int row) {
     if (row < 0) {
       return null;
-    } else if (this.attributeFilterMode.equals(MODE_SELECTED)) {
+    } else if (this.fieldFilterMode.equals(MODE_SELECTED)) {
       return (V)getSelectedRecord(row);
-    } else if (this.attributeFilterMode.equals(MODE_EDITS)) {
+    } else if (this.fieldFilterMode.equals(MODE_EDITS)) {
       final AbstractRecordLayer layer = getLayer();
-      final List<LayerDataObject> changes = layer.getChanges();
+      final List<LayerRecord> changes = layer.getChanges();
       if (row < changes.size()) {
         return (V)changes.get(row);
       } else {
@@ -285,8 +283,8 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
       synchronized (getSync()) {
         if (this.countLoaded) {
           int count = this.rowCount;
-          if (!this.attributeFilterMode.equals(MODE_SELECTED)
-            && !this.attributeFilterMode.equals(MODE_EDITS)) {
+          if (!this.fieldFilterMode.equals(MODE_SELECTED)
+              && !this.fieldFilterMode.equals(MODE_EDITS)) {
             final AbstractRecordLayer layer = getLayer();
             final int newRecordCount = layer.getNewRecordCount();
             count += newRecordCount;
@@ -305,19 +303,19 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
   }
 
   protected int getRowCountInternal() {
-    if (this.attributeFilterMode.equals(MODE_SELECTED)) {
+    if (this.fieldFilterMode.equals(MODE_SELECTED)) {
       synchronized (this.selectedSync) {
-        this.selectedRecords = new ArrayList<LayerDataObject>(getLayerSelectedRecords());
+        this.selectedRecords = new ArrayList<LayerRecord>(getLayerSelectedRecords());
         return this.selectedRecords.size();
       }
-    } else if (this.attributeFilterMode.equals(MODE_EDITS)) {
+    } else if (this.fieldFilterMode.equals(MODE_EDITS)) {
       return this.layer.getChangeCount();
     } else {
       return getLayerRowCount();
     }
   }
 
-  protected LayerDataObject getSelectedRecord(final int index) {
+  protected LayerRecord getSelectedRecord(final int index) {
     synchronized (this.selectedSync) {
       if (index < this.selectedRecords.size()) {
         return this.selectedRecords.get(index);
@@ -336,12 +334,12 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
   }
 
   @Override
-  public DataObjectLayerTable getTable() {
-    return (DataObjectLayerTable)super.getTable();
+  public RecordLayerTable getTable() {
+    return (RecordLayerTable)super.getTable();
   }
 
   public String getTypeName() {
-    return getMetaData().getPath();
+    return getRecordDefinition().getPath();
   }
 
   @Override
@@ -359,11 +357,11 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
 
   @Override
   public boolean isSelected(final boolean selected, final int rowIndex, final int columnIndex) {
-    final LayerDataObject object = getRecord(rowIndex);
+    final LayerRecord object = getRecord(rowIndex);
     return this.layer.isSelected(object);
   }
 
-  protected LayerDataObject loadLayerRecord(int row) {
+  protected LayerRecord loadLayerRecord(int row) {
     final AbstractRecordLayer layer = getLayer();
     final int newObjectCount = layer.getNewRecordCount();
     if (row < newObjectCount) {
@@ -377,12 +375,12 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     return getPageRecord(pageNumber, recordNumber);
   }
 
-  protected List<LayerDataObject> loadPage(final int pageNumber) {
+  protected List<LayerRecord> loadPage(final int pageNumber) {
     final Query query = getFilterQuery();
     query.setOrderBy(this.orderBy);
     query.setOffset(this.pageSize * pageNumber);
     query.setLimit(this.pageSize);
-    final List<LayerDataObject> objects = getLayerObjects(query);
+    final List<LayerRecord> objects = getLayerObjects(query);
     return objects;
   }
 
@@ -392,7 +390,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
       if (pageNumber == null) {
         return;
       } else {
-        final List<LayerDataObject> records;
+        final List<LayerRecord> records;
         if (getFilterQuery() == null) {
           records = Collections.emptyList();
         } else {
@@ -413,12 +411,12 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     if (e.getSource() == this.layer) {
       final String propertyName = e.getPropertyName();
       if (Arrays.asList("query", "editable", "recordInserted", "recordsInserted", "recordDeleted",
-        "recordsChanged").contains(propertyName)) {
+          "recordsChanged").contains(propertyName)) {
         refresh();
       } else if ("recordUpdated".equals(propertyName)) {
         repaint();
       } else if (propertyName.equals("selectionCount")) {
-        if (MODE_SELECTED.equals(this.attributeFilterMode)) {
+        if (MODE_SELECTED.equals(this.fieldFilterMode)) {
           refresh();
         }
       }
@@ -439,7 +437,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
         }
         this.loadingPageNumbers.clear();
         this.rowCount = 0;
-        this.pageCache = new LruMap<Integer, List<LayerDataObject>>(5);
+        this.pageCache = new LruMap<Integer, List<LayerRecord>>(5);
         this.countLoaded = false;
 
       }
@@ -453,12 +451,11 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     getTable().repaint();
   }
 
-  protected void replaceCachedObject(final LayerDataObject oldObject,
-    final LayerDataObject newObject) {
+  protected void replaceCachedObject(final LayerRecord oldObject, final LayerRecord newObject) {
     synchronized (this.pageCache) {
-      for (final List<LayerDataObject> objects : this.pageCache.values()) {
-        for (final ListIterator<LayerDataObject> iterator = objects.listIterator(); iterator.hasNext();) {
-          final LayerDataObject object = iterator.next();
+      for (final List<LayerRecord> objects : this.pageCache.values()) {
+        for (final ListIterator<LayerRecord> iterator = objects.listIterator(); iterator.hasNext();) {
+          final LayerRecord object = iterator.next();
           if (object == oldObject) {
             iterator.set(newObject);
             return;
@@ -468,17 +465,17 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     }
   }
 
-  public void setAttributeFilterMode(final String mode) {
-    final DataObjectLayerTable table = getTable();
+  public void setFieldFilterMode(final String mode) {
+    final RecordLayerTable table = getTable();
     if (MODE_SELECTED.equals(mode)) {
       table.setSelectionModel(this.highlightedModel);
     } else {
       this.selectedRecords = Collections.emptyList();
       table.setSelectionModel(this.selectionModel);
     }
-    if (this.attributeFilterModes.contains(mode)) {
-      if (!mode.equals(this.attributeFilterMode)) {
-        this.attributeFilterMode = mode;
+    if (this.fieldFilterModes.contains(mode)) {
+      if (!mode.equals(this.fieldFilterMode)) {
+        this.fieldFilterMode = mode;
         refresh();
       }
     }
@@ -490,7 +487,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
     } else {
       final Object oldValue = this.filter;
       this.filter = filter;
-      if (MODE_SELECTED.equals(getAttributeFilterMode())) {
+      if (MODE_SELECTED.equals(getFieldFilterMode())) {
         setRowSorter(filter);
       } else {
         refresh();
@@ -510,11 +507,11 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
   }
 
   protected void setModes(final String... modes) {
-    this.attributeFilterModes = Arrays.asList(modes);
+    this.fieldFilterModes = Arrays.asList(modes);
   }
 
   public void setRecords(final int refreshIndex, final Integer pageNumber,
-    final List<LayerDataObject> records) {
+    final List<LayerRecord> records) {
     synchronized (getSync()) {
       if (this.refreshIndex == refreshIndex) {
         this.pageCache.put(pageNumber, records);
@@ -541,7 +538,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
   }
 
   protected void setRowSorter(final Condition filter) {
-    final DataObjectLayerTable table = getTable();
+    final RecordLayerTable table = getTable();
     if (filter == null) {
       table.setRowFilter(null);
     } else {
@@ -555,7 +552,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
           if (left instanceof Column) {
             final Column column = (Column)left;
             final String columnName = column.getName();
-            columnIndex = getMetaData().getFieldIndex(columnName);
+            columnIndex = getRecordDefinition().getFieldIndex(columnName);
           } else if (left instanceof Function) {
             final Function function = (Function)left;
             left = function.getQueryValues().get(0);
@@ -622,7 +619,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
   }
 
   @Override
-  public void setTable(final DataObjectRowTable table) {
+  public void setTable(final RecordRowTable table) {
     super.setTable(table);
     table.setSelectionModel(this.selectionModel);
   }
@@ -631,7 +628,7 @@ public class RecordLayerTableModel extends DataObjectRowTableModel implements
   public String toDisplayValueInternal(final int rowIndex, final int attributeIndex,
     final Object objectValue) {
     if (objectValue == null) {
-      if (getMetaData().getIdFieldIndex() == attributeIndex) {
+      if (getRecordDefinition().getIdFieldIndex() == attributeIndex) {
         return "NEW";
       }
     }

@@ -15,7 +15,7 @@ import com.revolsys.io.AbstractReader;
 import com.revolsys.io.Reader;
 
 public class MapReaderDataObjectReader extends AbstractReader<Record> implements RecordReader,
-  Iterator<Record> {
+Iterator<Record> {
 
   private final RecordDefinition metaData;
 

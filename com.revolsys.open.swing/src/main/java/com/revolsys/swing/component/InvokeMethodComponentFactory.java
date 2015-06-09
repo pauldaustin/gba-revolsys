@@ -43,6 +43,11 @@ public class InvokeMethodComponentFactory<T extends Component> extends AbstractC
   }
 
   @Override
+  public String getIconName() {
+    return null;
+  }
+
+  @Override
   public String getName() {
     return null;
   }

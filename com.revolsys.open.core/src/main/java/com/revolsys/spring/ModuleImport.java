@@ -103,7 +103,7 @@ public class ModuleImport implements BeanFactoryPostProcessor, BeanNameAware, Di
   }
 
   protected void beforePostProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
-    throws BeansException {
+      throws BeansException {
   }
 
   @Override
@@ -146,7 +146,7 @@ public class ModuleImport implements BeanFactoryPostProcessor, BeanNameAware, Di
             this.beanNamesNotToExport.add(beanName);
           } else if (beanClassName.equals(MapFactoryBean.class.getName())) {
             final PropertyValue targetMapClass = beanDefinition.getPropertyValues()
-              .getPropertyValue("targetMapClass");
+                .getPropertyValue("targetMapClass");
             if (targetMapClass != null) {
               final Object mapClass = targetMapClass.getValue();
               if (AttributeMap.class.getName().equals(mapClass)) {
@@ -220,7 +220,7 @@ public class ModuleImport implements BeanFactoryPostProcessor, BeanNameAware, Di
   }
 
   private void postProcessBeanDefinitionRegistry(final BeanDefinitionRegistry registry)
-    throws BeansException {
+      throws BeansException {
     beforePostProcessBeanDefinitionRegistry(registry);
     if (this.enabled) {
       final GenericApplicationContext beanFactory = getApplicationContext(registry);
@@ -256,7 +256,7 @@ public class ModuleImport implements BeanFactoryPostProcessor, BeanNameAware, Di
 
   @Override
   public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
-    throws BeansException {
+      throws BeansException {
     if (beanFactory instanceof BeanDefinitionRegistry) {
       final BeanDefinitionRegistry registry = (BeanDefinitionRegistry)beanFactory;
       postProcessBeanDefinitionRegistry(registry);

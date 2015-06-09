@@ -468,14 +468,14 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   public IntHashMap(int initialCapacity, final float loadFactor) {
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + //$NON-NLS-1$
-        initialCapacity);
+          initialCapacity);
     }
     if (initialCapacity > MAXIMUM_CAPACITY) {
       initialCapacity = MAXIMUM_CAPACITY;
     }
     if (loadFactor <= 0 || Float.isNaN(loadFactor)) {
       throw new IllegalArgumentException("Illegal load factor: " + //$NON-NLS-1$
-        loadFactor);
+          loadFactor);
     }
 
     // Find a power of 2 >= initialCapacity
@@ -846,7 +846,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   }
 
   void putAllForCreate(final IntHashMap<T> m) {
-    for (Entry<T> e : m.entryIntSet()) {
+    for (final Entry<T> e : m.entryIntSet()) {
       putForCreate(e.getIntKey(), e.getValue());
     }
   }
@@ -914,7 +914,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    */
   @SuppressWarnings("unchecked")
   private void readObject(final java.io.ObjectInputStream s) throws IOException,
-    ClassNotFoundException {
+  ClassNotFoundException {
     // Read in the threshold, loadfactor, and any hidden stuff
     s.defaultReadObject();
 

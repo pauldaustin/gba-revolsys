@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.DefaultListSelectionModel;
 
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 
 public class RecordLayerHighlightedListSelectionModel extends DefaultListSelectionModel {
   private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class RecordLayerHighlightedListSelectionModel extends DefaultListSelecti
   @Override
   public void addSelectionInterval(final int index0, final int index1) {
     super.addSelectionInterval(convertRowIndexToModel(index0), convertRowIndexToModel(index1));
-    final List<LayerDataObject> records = getObjects(index0, index1);
+    final List<LayerRecord> records = getObjects(index0, index1);
     final AbstractRecordLayer layer = this.model.getLayer();
     layer.addHighlightedRecords(records);
   }
@@ -29,11 +29,11 @@ public class RecordLayerHighlightedListSelectionModel extends DefaultListSelecti
     return this.model.getTable().convertRowIndexToModel(i);
   }
 
-  protected List<LayerDataObject> getObjects(final int index0, final int index1) {
-    final List<LayerDataObject> records = new ArrayList<LayerDataObject>();
+  protected List<LayerRecord> getObjects(final int index0, final int index1) {
+    final List<LayerRecord> records = new ArrayList<LayerRecord>();
     for (int i = index0; i <= index1; i++) {
       final int rowIndex = convertRowIndexToModel(i);
-      final LayerDataObject record = this.model.getRecord(rowIndex);
+      final LayerRecord record = this.model.getRecord(rowIndex);
       records.add(record);
     }
     return records;
@@ -42,7 +42,7 @@ public class RecordLayerHighlightedListSelectionModel extends DefaultListSelecti
   @Override
   public boolean isSelectedIndex(final int index) {
     final int rowIndex = convertRowIndexToModel(index);
-    final LayerDataObject record = this.model.getRecord(rowIndex);
+    final LayerRecord record = this.model.getRecord(rowIndex);
     if (record != null) {
       final AbstractRecordLayer layer = this.model.getLayer();
       return layer.isHighlighted(record);
@@ -60,14 +60,14 @@ public class RecordLayerHighlightedListSelectionModel extends DefaultListSelecti
   @Override
   public void removeSelectionInterval(final int index0, final int index1) {
     super.removeSelectionInterval(convertRowIndexToModel(index0), convertRowIndexToModel(index1));
-    final List<LayerDataObject> records = getObjects(index0, index1);
+    final List<LayerRecord> records = getObjects(index0, index1);
     final AbstractRecordLayer layer = this.model.getLayer();
     layer.unHighlightRecords(records);
   }
 
   @Override
   public void setSelectionInterval(final int index0, final int index1) {
-    final List<LayerDataObject> records = getObjects(index0, index1);
+    final List<LayerRecord> records = getObjects(index0, index1);
     final AbstractRecordLayer layer = this.model.getLayer();
     layer.setHighlightedRecords(records);
     super.setSelectionInterval(convertRowIndexToModel(index0), convertRowIndexToModel(index1));

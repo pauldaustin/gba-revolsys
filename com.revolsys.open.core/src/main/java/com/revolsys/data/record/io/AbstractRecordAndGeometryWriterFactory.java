@@ -14,7 +14,7 @@ import com.revolsys.io.Writer;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractRecordAndGeometryWriterFactory extends AbstractRecordWriterFactory
-  implements GeometryWriterFactory {
+implements GeometryWriterFactory {
 
   public AbstractRecordAndGeometryWriterFactory(final String name, final boolean geometrySupported,
     final boolean customAttributionSupported) {

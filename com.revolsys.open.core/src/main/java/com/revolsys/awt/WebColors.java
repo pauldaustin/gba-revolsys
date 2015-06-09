@@ -292,6 +292,7 @@ public class WebColors {
   public static final Color Yellow = new Color(255, 255, 0);
 
   public static final Color YellowGreen = new Color(154, 205, 50);
+
   static {
     for (final Field field : WebColors.class.getFields()) {
       final int modifiers = field.getModifiers();
@@ -310,12 +311,27 @@ public class WebColors {
     }
   }
 
-  public static Color getColorWithOpacity(final Color color, final int opacity) {
-    return new Color(color.getRed(), color.getGreen(), color.getBlue(), opacity);
+  public static int colorToRGB(final int alpha, final int red, final int green, final int blue) {
+    int rgba = alpha;
+    rgba <<= 8;
+    rgba += red;
+    rgba <<= 8;
+    rgba += green;
+    rgba <<= 8;
+    rgba += blue;
+    return rgba;
   }
 
   public static String getName(final Color color) {
     final Color newColor = new Color(color.getRed(), color.getGreen(), color.getBlue());
     return COLOR_NAMES.get(newColor);
   }
+
+  public static Color setAlpha(final Color color, final int alpha) {
+    final int red = color.getRed();
+    final int green = color.getGreen();
+    final int blue = color.getBlue();
+    return new Color(red, green, blue, alpha);
+  }
+
 }

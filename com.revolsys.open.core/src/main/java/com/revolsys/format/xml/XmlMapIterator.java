@@ -9,10 +9,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.io.NamedLinkedHashMap;
+import com.revolsys.util.Property;
 
 public class XmlMapIterator extends AbstractIterator<Map<String, Object>> {
 
@@ -87,9 +87,9 @@ public class XmlMapIterator extends AbstractIterator<Map<String, Object>> {
           if (Property.hasValue(text)) {
             map.put("xmlText" + ++textIndex, text);
           }
-        break;
+          break;
         case XMLStreamConstants.SPACE:
-        break;
+          break;
         case XMLStreamConstants.START_ELEMENT:
           elementIndex++;
           final String tagName = this.in.getLocalName();
@@ -109,12 +109,12 @@ public class XmlMapIterator extends AbstractIterator<Map<String, Object>> {
             list.add(value);
 
           }
-        break;
+          break;
         case XMLStreamConstants.COMMENT:
-        break;
+          break;
         default:
           System.err.println(this.in.getEventType() + " " + this.in.getText());
-        break;
+          break;
       }
     }
     if (elementIndex == 0) {
@@ -142,9 +142,9 @@ public class XmlMapIterator extends AbstractIterator<Map<String, Object>> {
           if (Property.hasValue(text)) {
             map.put("xmlText" + ++textIndex, text);
           }
-        break;
+          break;
         case XMLStreamConstants.SPACE:
-        break;
+          break;
         case XMLStreamConstants.START_ELEMENT:
           final String tagName = this.in.getLocalName();
           final Object value = readElement();
@@ -163,9 +163,9 @@ public class XmlMapIterator extends AbstractIterator<Map<String, Object>> {
             list.add(value);
 
           }
-        break;
+          break;
         default:
-        break;
+          break;
       }
     }
     return map;

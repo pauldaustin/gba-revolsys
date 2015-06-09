@@ -130,7 +130,7 @@ public class LocationOfPoint {
      * initialized to minLocation
      */
     Assert.isTrue(nextClosestLocation.compareTo(minLocation) >= 0,
-      "computed location is before specified minimum location");
+        "computed location is before specified minimum location");
     return nextClosestLocation;
   }
 }

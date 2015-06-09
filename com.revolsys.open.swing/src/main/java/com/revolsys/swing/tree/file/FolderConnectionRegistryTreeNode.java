@@ -22,7 +22,7 @@ import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 import com.revolsys.util.Property;
 
 public class FolderConnectionRegistryTreeNode extends LazyLoadTreeNode implements
-  PropertyChangeListener {
+PropertyChangeListener {
 
   private static final MenuFactory MENU = new MenuFactory();
 

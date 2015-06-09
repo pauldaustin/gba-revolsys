@@ -170,7 +170,7 @@ public class SubgraphDepthLocater {
 
       // skip if segment is above or below stabbing line
       if (stabbingRayLeftPt.getY() < this.seg.get(0).getY()
-        || stabbingRayLeftPt.getY() > this.seg.get(1).getY()) {
+          || stabbingRayLeftPt.getY() > this.seg.get(1).getY()) {
         continue;
       }
 

@@ -18,11 +18,11 @@ import javax.imageio.ImageIO;
 
 import org.springframework.core.io.UrlResource;
 
-import com.revolsys.util.Property;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 import com.revolsys.util.UriTemplate;
 import com.revolsys.util.UrlUtil;
 
@@ -192,16 +192,16 @@ public class BingClient {
     final double centreY = minY + (maxY - minY) / 2;
     final Map<String, Object> parameters = createParameterMap();
     parameters.put("mapArea", StringConverterRegistry.toString(minY) + ","
-      + StringConverterRegistry.toString(minX) + "," + StringConverterRegistry.toString(maxY) + ","
-      + StringConverterRegistry.toString(maxX));
+        + StringConverterRegistry.toString(minX) + "," + StringConverterRegistry.toString(maxY) + ","
+        + StringConverterRegistry.toString(maxX));
     parameters.put("mapSize", width + "," + height);
     parameters.put("mapLayer", mapLayer);
     parameters.put("format", format);
 
     return UrlUtil.getUrl(
       "http://dev.virtualearth.net/REST/v1/Imagery/Map/" + imagerySet + "/"
-        + StringConverterRegistry.toString(centreY) + ","
-        + StringConverterRegistry.toString(centreX), parameters);
+          + StringConverterRegistry.toString(centreY) + ","
+          + StringConverterRegistry.toString(centreX), parameters);
   }
 
   public String getQuadKey(final int zoomLevel, final int tileX, final int tileY) {
@@ -238,8 +238,8 @@ public class BingClient {
   public int getTileY(final int zoomLevel, final double latitude) {
     final double sinLatitude = Math.sin(latitude * Math.PI / 180);
     final int tileY = (int)Math.floor((0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude))
-      / (4 * Math.PI))
-      * Math.pow(2, zoomLevel));
+        / (4 * Math.PI))
+        * Math.pow(2, zoomLevel));
     return tileY;
   }
 

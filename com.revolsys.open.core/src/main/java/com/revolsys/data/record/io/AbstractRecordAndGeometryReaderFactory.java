@@ -19,7 +19,7 @@ import com.revolsys.io.MapReaderFactory;
 import com.revolsys.io.Reader;
 
 public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeometryReaderFactory
-  implements RecordReaderFactory, MapReaderFactory {
+implements RecordReaderFactory, MapReaderFactory {
 
   public static RecordReader dataObjectReader(final FileSystemResource resource,
     final RecordFactory factory) {

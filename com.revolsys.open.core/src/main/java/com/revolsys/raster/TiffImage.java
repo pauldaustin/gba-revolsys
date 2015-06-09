@@ -315,7 +315,7 @@ public class TiffImage extends JaiGeoreferencedImage {
         if (rasterXOffset != 0 && rasterYOffset != 0) {
           // These should be 0, not sure what to do if they are not
           throw new IllegalArgumentException(
-            "Exepectig 0 for the raster x,y tie points in a GeoTIFF");
+              "Exepectig 0 for the raster x,y tie points in a GeoTIFF");
         }
         // double rasterZOffset = fieldModelTiePoints.getAsDouble(2);
         // setTopLeftRasterPoint(new PointDouble(
@@ -346,7 +346,7 @@ public class TiffImage extends JaiGeoreferencedImage {
       throw new IllegalArgumentException("This is not a (geo)tiff file. Missing TIFF directory.");
     } else {
       if (!(tiffDirectory instanceof XTIFFDirectory)
-        || !loadGeoTiffMetaData((XTIFFDirectory)tiffDirectory)) {
+          || !loadGeoTiffMetaData((XTIFFDirectory)tiffDirectory)) {
       }
     }
   }

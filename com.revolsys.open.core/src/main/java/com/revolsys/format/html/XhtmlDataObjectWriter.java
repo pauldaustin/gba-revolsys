@@ -4,7 +4,6 @@ import java.io.Writer;
 import java.net.URI;
 import java.util.List;
 
-import com.revolsys.util.Property;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
@@ -16,6 +15,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.HtmlUtil;
+import com.revolsys.util.Property;
 
 public class XhtmlDataObjectWriter extends AbstractWriter<Record> {
 

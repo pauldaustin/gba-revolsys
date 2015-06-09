@@ -61,7 +61,7 @@ import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implements
-  JdbcDataObjectStore, DataObjectStoreExtension {
+JdbcDataObjectStore, DataObjectStoreExtension {
   public static final List<String> DEFAULT_PERMISSIONS = Arrays.asList("SELECT");
 
   public static final AbstractIterator<Record> createJdbcIterator(
@@ -133,7 +133,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
   public AbstractJdbcRecordStore(final RecordFactory dataObjectFactory) {
     super(dataObjectFactory);
     setIteratorFactory(new DataStoreIteratorFactory(AbstractJdbcRecordStore.class,
-      "createJdbcIterator"));
+        "createJdbcIterator"));
     addDataStoreExtension(this);
   }
 
@@ -143,7 +143,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
 
   protected void addAttribute(final ResultSetMetaData resultSetMetaData,
     final RecordDefinitionImpl metaData, final String name, final int i, final String description)
-    throws SQLException {
+        throws SQLException {
     final String dataType = resultSetMetaData.getColumnTypeName(i);
     final int sqlType = resultSetMetaData.getColumnType(i);
     final int length = resultSetMetaData.getPrecision(i);
@@ -250,7 +250,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
     }
     final String sql = JdbcUtils.getDeleteSql(query);
     try (
-      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+        Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
@@ -464,7 +464,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
   @Override
   public String getGeneratePrimaryKeySql(final RecordDefinition metaData) {
     throw new UnsupportedOperationException("Cannot create SQL to generate Primary Key for "
-      + metaData);
+        + metaData);
   }
 
   public String getHints() {
@@ -627,7 +627,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
     JdbcWriterImpl writer;
     final JdbcWriterResourceHolder resourceHolder = (JdbcWriterResourceHolder)TransactionSynchronizationManager.getResource(writerKey);
     if (resourceHolder != null
-      && (resourceHolder.hasWriter() || resourceHolder.isSynchronizedWithTransaction())) {
+        && (resourceHolder.hasWriter() || resourceHolder.isSynchronizedWithTransaction())) {
       resourceHolder.requested();
       if (resourceHolder.hasWriter()) {
         writer = resourceHolder.getWriter();
@@ -993,12 +993,12 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
 
   protected void write(final Record record, final RecordState state) {
     try (
-      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+        Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
       try (
-        JdbcWriter writer = getWriter(true)) {
+          JdbcWriter writer = getWriter(true)) {
         write(writer, record, state);
       } catch (final RuntimeException e) {
         transaction.setRollbackOnly();
@@ -1012,12 +1012,12 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
 
   protected void writeAll(final Collection<Record> records, final RecordState state) {
     try (
-      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+        Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
       try (
-        final JdbcWriter writer = getWriter(true)) {
+          final JdbcWriter writer = getWriter(true)) {
         for (final Record record : records) {
           write(writer, record, state);
         }

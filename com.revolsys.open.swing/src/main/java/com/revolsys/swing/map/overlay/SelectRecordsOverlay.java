@@ -25,7 +25,7 @@ import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.Layer;
 import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.renderer.AbstractDataObjectLayerRenderer;
 import com.revolsys.swing.map.layer.record.renderer.TextStyleRenderer;
 import com.revolsys.swing.parallel.Invoke;
@@ -35,8 +35,8 @@ import com.vividsolutions.jts.geom.Point;
 public class SelectRecordsOverlay extends AbstractOverlay {
   protected static final BasicStroke BOX_STROKE = new BasicStroke(2, BasicStroke.CAP_SQUARE,
     BasicStroke.JOIN_MITER, 2, new float[] {
-      6, 6
-    }, 0f);
+    6, 6
+  }, 0f);
 
   private static final Color COLOR_BOX = WebColors.Green;
 
@@ -225,7 +225,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
           paintHighlighted(graphics2d, childGroup);
         } else if (layer instanceof AbstractRecordLayer) {
           final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
-          for (final LayerDataObject record : dataObjectLayer.getHighlightedRecords()) {
+          for (final LayerRecord record : dataObjectLayer.getHighlightedRecords()) {
             if (record != null && dataObjectLayer.isVisible(record)) {
               final Geometry geometry = record.getGeometryValue();
               final AbstractDataObjectLayerRenderer layerRenderer = layer.getRenderer();
@@ -264,7 +264,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
           final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
           final AbstractDataObjectLayerRenderer layerRenderer = layer.getRenderer();
           if (dataObjectLayer.isSelectable()) {
-            for (final LayerDataObject record : dataObjectLayer.getSelectedRecords()) {
+            for (final LayerRecord record : dataObjectLayer.getSelectedRecords()) {
               if (record != null && dataObjectLayer.isVisible(record)) {
                 if (!dataObjectLayer.isHighlighted(record)) {
                   if (!dataObjectLayer.isDeleted(record)) {

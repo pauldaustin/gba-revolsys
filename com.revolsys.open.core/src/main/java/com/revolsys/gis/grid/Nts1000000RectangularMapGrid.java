@@ -6,11 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class Nts1000000RectangularMapGrid extends AbstractRectangularMapGrid {
@@ -174,7 +174,7 @@ public class Nts1000000RectangularMapGrid extends AbstractRectangularMapGrid {
     if (numX > max || numY > max) {
       LoggerFactory.getLogger(getClass()).error(
         "Request would return too many tiles width=" + numX + " (max=" + max + ") height=" + numY
-          + "(max=" + max + ").");
+        + "(max=" + max + ").");
       return tiles;
     }
     for (int y = 0; y < numY; y++) {

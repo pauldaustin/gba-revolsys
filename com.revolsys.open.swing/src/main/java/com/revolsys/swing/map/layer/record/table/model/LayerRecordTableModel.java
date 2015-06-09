@@ -9,16 +9,16 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
-import com.revolsys.swing.table.dataobject.model.AbstractSingleDataObjectTableModel;
+import com.revolsys.swing.map.layer.record.LayerRecord;
+import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 import com.revolsys.util.Property;
 
-public class LayerRecordTableModel extends AbstractSingleDataObjectTableModel
-  implements PropertyChangeListener {
+public class LayerRecordTableModel extends AbstractSingleRecordTableModel implements
+  PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
-  private LayerDataObject object;
+  private LayerRecord object;
 
   private final AbstractRecordLayer layer;
 
@@ -51,7 +51,7 @@ public class LayerRecordTableModel extends AbstractSingleDataObjectTableModel
     return this.layer.getFieldTitle(fieldName);
   }
 
-  public LayerDataObject getObject() {
+  public LayerRecord getObject() {
     return this.object;
   }
 
@@ -80,7 +80,7 @@ public class LayerRecordTableModel extends AbstractSingleDataObjectTableModel
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (columnIndex == 2) {
       if (this.form.get().isEditable()) {
-        final String idAttributeName = getMetaData().getIdFieldName();
+        final String idAttributeName = getRecordDefinition().getIdFieldName();
         final String attributeName = getFieldName(rowIndex);
         if (attributeName.equals(idAttributeName)) {
           return false;
@@ -107,7 +107,7 @@ public class LayerRecordTableModel extends AbstractSingleDataObjectTableModel
     final Object source = event.getSource();
     if (source == this.object) {
       final String propertyName = event.getPropertyName();
-      final RecordDefinition metaData = getMetaData();
+      final RecordDefinition metaData = getRecordDefinition();
       final int index = metaData.getFieldIndex(propertyName);
       if (index > -1) {
         try {
@@ -122,7 +122,7 @@ public class LayerRecordTableModel extends AbstractSingleDataObjectTableModel
     Property.removeListener(this.layer, this);
   }
 
-  public void setObject(final LayerDataObject object) {
+  public void setObject(final LayerRecord object) {
     this.object = object;
   }
 

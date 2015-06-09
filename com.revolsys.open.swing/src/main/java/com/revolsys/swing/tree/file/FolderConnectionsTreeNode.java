@@ -30,7 +30,7 @@ public class FolderConnectionsTreeNode extends AbstractTreeNode {
   protected void init() {
     this.children = new ArrayList<TreeNode>();
     final List<FolderConnectionRegistry> registries = FolderConnectionManager.get()
-      .getVisibleConnectionRegistries();
+        .getVisibleConnectionRegistries();
     for (final FolderConnectionRegistry childRegistry : registries) {
       final FolderConnectionRegistryTreeNode child = new FolderConnectionRegistryTreeNode(this,
         childRegistry);

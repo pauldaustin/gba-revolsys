@@ -14,7 +14,7 @@ import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.Icons;
-import com.revolsys.swing.map.layer.record.DataObjectBoundingBoxLayer;
+import com.revolsys.swing.map.layer.record.BoundingBoxRecordLayer;
 import com.revolsys.swing.map.layer.record.renderer.MarkerStyleRenderer;
 import com.revolsys.swing.map.layer.record.style.MarkerStyle;
 import com.revolsys.swing.map.layer.record.style.marker.ImageMarker;
@@ -26,9 +26,9 @@ public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObje
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("geoname",
     "Geoname.org", GeoNamesBoundingBoxLayerWorker.class, "create");
 
-  public static DataObjectBoundingBoxLayer create(final Map<String, Object> properties) {
+  public static BoundingBoxRecordLayer create(final Map<String, Object> properties) {
     final GeometryFactory wgs84 = GeometryFactory.floating3(4326);
-    final DataObjectBoundingBoxLayer layer = new DataObjectBoundingBoxLayer("geoname", "Geo Names",
+    final BoundingBoxRecordLayer layer = new BoundingBoxRecordLayer("geoname", "Geo Names",
       GeoNamesBoundingBoxLayerWorker.class, wgs84);
 
     final BufferedImage image = Icons.getImage("world");
@@ -40,7 +40,7 @@ public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObje
     return layer;
   }
 
-  private final DataObjectBoundingBoxLayer layer;
+  private final BoundingBoxRecordLayer layer;
 
   private final BoundingBox boundingBox;
 
@@ -48,7 +48,7 @@ public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObje
 
   private final GeometryFactory geometryFactory;
 
-  public GeoNamesBoundingBoxLayerWorker(final DataObjectBoundingBoxLayer layer,
+  public GeoNamesBoundingBoxLayerWorker(final BoundingBoxRecordLayer layer,
     final BoundingBox boundingBox) {
     this.layer = layer;
     this.boundingBox = boundingBox;

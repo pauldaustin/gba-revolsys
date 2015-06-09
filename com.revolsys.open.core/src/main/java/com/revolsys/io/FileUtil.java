@@ -51,7 +51,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.io.file.FolderConnection;
 import com.revolsys.io.file.FolderConnectionManager;
@@ -59,6 +58,7 @@ import com.revolsys.io.file.FolderConnectionRegistry;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 import com.revolsys.io.filter.PatternFilenameFilter;
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 import com.revolsys.util.UrlUtil;
 
 /**
@@ -137,7 +137,7 @@ public final class FileUtil {
       return path.replace(WINDOWS_FILE_SEPARATOR, separator);
     } else {
       return path.replace(UNIX_FILE_SEPARATOR, separator)
-        .replace(WINDOWS_FILE_SEPARATOR, separator);
+          .replace(WINDOWS_FILE_SEPARATOR, separator);
     }
   }
 
@@ -661,7 +661,7 @@ public final class FileUtil {
 
       File file = null;
       for (final FolderConnectionRegistry registry : FolderConnectionManager.get()
-        .getConnectionRegistries()) {
+          .getConnectionRegistries()) {
         final FolderConnection connection = registry.getConnection(connectionName);
         if (connection != null) {
           final File directory = connection.getFile();
@@ -956,7 +956,7 @@ public final class FileUtil {
     for (int i = 0; i < len; i++) {
       final char ch = host.charAt(i);
       if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9' || ch == '-'
-        || ch == ',' || ch == '.' || ch == '_' || ch == '~' || ch == ' ') {
+          || ch == ',' || ch == '.' || ch == '_' || ch == '~' || ch == ' ') {
         encoded.append(ch);
       } else {
         encoded.append('%');

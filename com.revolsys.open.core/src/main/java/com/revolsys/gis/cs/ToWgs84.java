@@ -110,6 +110,6 @@ public class ToWgs84 {
   @Override
   public String toString() {
     return this.dx + ", " + this.dy + ", " + this.dz + ", " + this.ex + ", " + this.ey + ", "
-      + this.ez + ", " + this.ppm;
+        + this.ez + ", " + this.ppm;
   }
 }

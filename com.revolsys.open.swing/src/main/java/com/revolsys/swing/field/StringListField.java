@@ -19,7 +19,6 @@ import org.jdesktop.swingx.HorizontalLayout;
 import org.jdesktop.swingx.JXList;
 import org.jdesktop.swingx.VerticalLayout;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.component.ValueField;
@@ -27,6 +26,7 @@ import com.revolsys.swing.list.BaseListModel;
 import com.revolsys.swing.listener.InvokeMethodListener;
 import com.revolsys.swing.toolbar.ToolBar;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class StringListField extends ValueField {
   public static final String SELECTED = "selected";
@@ -68,7 +68,7 @@ public class StringListField extends ValueField {
     this.valueEntry.addActionListener(this.addButton.getAction());
 
     this.toolBar.addButtonTitleIcon(SELECTED, "Remove Selected", "delete", this,
-      "removeSelectedValues");
+        "removeSelectedValues");
 
     this.valuesField = new JXList(this.values);
     this.valuesField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

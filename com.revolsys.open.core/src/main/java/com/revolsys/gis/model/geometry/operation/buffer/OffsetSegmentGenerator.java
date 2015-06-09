@@ -139,7 +139,7 @@ class OffsetSegmentGenerator {
      * small buffer distances.
      */
     if (bufParams.getQuadrantSegments() >= 8
-      && bufParams.getJoinStyle() == BufferParameters.JOIN_ROUND) {
+        && bufParams.getJoinStyle() == BufferParameters.JOIN_ROUND) {
       this.closingSegLengthFactor = MAX_CLOSING_SEG_LEN_FACTOR;
     }
     init(distance);
@@ -178,7 +178,7 @@ class OffsetSegmentGenerator {
        * would be a self intersection.
        */
       if (this.bufParams.getJoinStyle() == BufferParameters.JOIN_BEVEL
-        || this.bufParams.getJoinStyle() == BufferParameters.JOIN_MITRE) {
+          || this.bufParams.getJoinStyle() == BufferParameters.JOIN_MITRE) {
         if (addStartPoint) {
           this.segList.addPt(this.offset0.get(1));
         }
@@ -240,7 +240,7 @@ class OffsetSegmentGenerator {
 
     if (nSegs < 1) {
       return; // no segments because angle is less than increment - nothing to
-              // do!
+      // do!
     }
 
     double initAngle, currAngleInc;
@@ -306,7 +306,7 @@ class OffsetSegmentGenerator {
       this.hasNarrowConcaveAngle = true;
       // System.out.println("NARROW ANGLE - distance = " + distance);
       if (this.offset0.get(1).distance(this.offset1.get(0)) < this.distance
-        * INSIDE_TURN_VERTEX_SNAP_DISTANCE_FACTOR) {
+          * INSIDE_TURN_VERTEX_SNAP_DISTANCE_FACTOR) {
         this.segList.addPt(this.offset0.get(1));
       } else {
         // add endpoint of this segment offset
@@ -317,16 +317,16 @@ class OffsetSegmentGenerator {
          */
         if (this.closingSegLengthFactor > 0) {
           final Coordinates mid0 = new DoubleCoordinates((this.closingSegLengthFactor
-            * this.offset0.get(1).getX() + this.s1.getX())
-            / (this.closingSegLengthFactor + 1), (this.closingSegLengthFactor
-            * this.offset0.get(1).getY() + this.s1.getY())
-            / (this.closingSegLengthFactor + 1));
+              * this.offset0.get(1).getX() + this.s1.getX())
+              / (this.closingSegLengthFactor + 1), (this.closingSegLengthFactor
+                  * this.offset0.get(1).getY() + this.s1.getY())
+                  / (this.closingSegLengthFactor + 1));
           this.segList.addPt(mid0);
           final Coordinates mid1 = new DoubleCoordinates((this.closingSegLengthFactor
-            * this.offset1.get(0).getX() + this.s1.getX())
-            / (this.closingSegLengthFactor + 1), (this.closingSegLengthFactor
-            * this.offset1.get(0).getY() + this.s1.getY())
-            / (this.closingSegLengthFactor + 1));
+              * this.offset1.get(0).getX() + this.s1.getX())
+              / (this.closingSegLengthFactor + 1), (this.closingSegLengthFactor
+                  * this.offset1.get(0).getY() + this.s1.getY())
+                  / (this.closingSegLengthFactor + 1));
           this.segList.addPt(mid1);
         } else {
           /**
@@ -432,12 +432,12 @@ class OffsetSegmentGenerator {
         addFillet(p1, angle + Math.PI / 2, angle - Math.PI / 2, CGAlgorithms.CLOCKWISE,
           this.distance);
         this.segList.addPt(offsetR.get(1));
-      break;
+        break;
       case BufferParameters.CAP_FLAT:
         // only offset segment points are added
         this.segList.addPt(offsetL.get(1));
         this.segList.addPt(offsetR.get(1));
-      break;
+        break;
       case BufferParameters.CAP_SQUARE:
         // add a square defined by extensions of the offset segment endpoints
         final Coordinates squareCapSideOffset = new DoubleCoordinates();
@@ -450,7 +450,7 @@ class OffsetSegmentGenerator {
           + squareCapSideOffset.getX(), offsetR.get(1).getY() + squareCapSideOffset.getY());
         this.segList.addPt(squareCapLOffset);
         this.segList.addPt(squareCapROffset);
-      break;
+        break;
 
     }
   }
@@ -512,7 +512,7 @@ class OffsetSegmentGenerator {
 
     final int orientation = CoordinatesUtil.orientationIndex(this.s0, this.s1, this.s2);
     final boolean outsideTurn = orientation == CGAlgorithms.CLOCKWISE && this.side == Position.LEFT
-      || orientation == CGAlgorithms.COUNTERCLOCKWISE && this.side == Position.RIGHT;
+        || orientation == CGAlgorithms.COUNTERCLOCKWISE && this.side == Position.RIGHT;
 
     if (orientation == 0) { // lines are collinear
       addCollinear(addStartPoint);
@@ -537,7 +537,7 @@ class OffsetSegmentGenerator {
      * hard to compute a robust intersection for).
      */
     if (this.offset0.get(1).distance(this.offset1.get(0)) < this.distance
-      * OFFSET_SEGMENT_SEPARATION_FACTOR) {
+        * OFFSET_SEGMENT_SEPARATION_FACTOR) {
       this.segList.addPt(this.offset0.get(1));
       return;
     }

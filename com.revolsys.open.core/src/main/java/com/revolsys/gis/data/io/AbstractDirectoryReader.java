@@ -78,8 +78,8 @@ public abstract class AbstractDirectoryReader<T> extends AbstractReader<T> imple
   private final Map<File, Reader<T>> readers = new LinkedHashMap<File, Reader<T>>();
 
   /**
-    * Construct a new AbstractDirectoryReader.
-    */
+   * Construct a new AbstractDirectoryReader.
+   */
   public AbstractDirectoryReader() {
   }
 

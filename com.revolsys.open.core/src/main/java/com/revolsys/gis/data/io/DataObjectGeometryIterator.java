@@ -8,7 +8,7 @@ import com.revolsys.io.DelegatingObjectWithProperties;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectGeometryIterator extends DelegatingObjectWithProperties implements
-  Iterator<Geometry> {
+Iterator<Geometry> {
   private Iterator<Record> iterator;
 
   public DataObjectGeometryIterator(final Iterator<Record> iterator) {

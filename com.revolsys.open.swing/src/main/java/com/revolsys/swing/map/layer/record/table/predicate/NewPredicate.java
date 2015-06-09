@@ -12,15 +12,15 @@ import org.jdesktop.swingx.decorator.Highlighter;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.data.record.RecordState;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
-import com.revolsys.swing.table.dataobject.row.DataObjectRowTable;
+import com.revolsys.swing.table.record.row.RecordRowTable;
 
 public class NewPredicate implements HighlightPredicate {
 
   private static final Border BORDER = BorderFactory.createLineBorder(WebColors.Blue, 2);
 
-  public static void add(final DataObjectRowTable table) {
+  public static void add(final RecordRowTable table) {
     final RecordLayerTableModel model = (RecordLayerTableModel)table.getModel();
     final Highlighter highlighter = getHighlighter(model);
     table.addHighlighter(highlighter);
@@ -41,7 +41,7 @@ public class NewPredicate implements HighlightPredicate {
   public boolean isHighlighted(final Component renderer, final ComponentAdapter adapter) {
     try {
       final int rowIndex = adapter.convertRowIndexToModel(adapter.row);
-      final LayerDataObject object = this.model.getRecord(rowIndex);
+      final LayerRecord object = this.model.getRecord(rowIndex);
       if (object != null) {
         final RecordState state = object.getState();
         return state.equals(RecordState.New);

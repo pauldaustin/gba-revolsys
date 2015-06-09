@@ -5,9 +5,8 @@ import java.awt.Component;
 
 import javax.swing.JTabbedPane;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.util.Property;
 
 public class TabbedValuePanel extends ValueField {
   private static final long serialVersionUID = 1L;

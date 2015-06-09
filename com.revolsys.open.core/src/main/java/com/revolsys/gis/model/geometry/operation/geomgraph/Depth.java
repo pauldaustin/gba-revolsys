@@ -127,6 +127,6 @@ public class Depth {
   @Override
   public String toString() {
     return "A: " + this.depth[0][1] + "," + this.depth[0][2] + " B: " + this.depth[1][1] + ","
-      + this.depth[1][2];
+        + this.depth[1][2];
   }
 }

@@ -41,8 +41,7 @@ public class FormAllFieldsErrorPredicate implements HighlightPredicate {
 
   private final Reference<RecordLayerForm> form;
 
-  public FormAllFieldsErrorPredicate(final RecordLayerForm form,
-    final LayerRecordTableModel model) {
+  public FormAllFieldsErrorPredicate(final RecordLayerForm form, final LayerRecordTableModel model) {
     this.form = new WeakReference<>(form);
     this.model = model;
   }

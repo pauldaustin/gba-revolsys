@@ -5,8 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -18,6 +16,7 @@ import com.revolsys.parallel.channel.MultiInputSelector;
 import com.revolsys.parallel.channel.store.Buffer;
 import com.revolsys.parallel.process.AbstractInProcess;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -114,7 +113,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
     final String geometryAttributeName = metaData.getGeometryFieldName();
     for (final String attributeName : metaData.getFieldNames()) {
       if (!this.equalExclude.contains(attributeName)
-        && !attributeName.equals(geometryAttributeName)) {
+          && !attributeName.equals(geometryAttributeName)) {
         final Object value1 = object1.getValue(attributeName);
         final Object value2 = object2.getValue(attributeName);
         if (!valueEquals(value1, value2)) {
@@ -216,7 +215,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
         final Record readObject = readObject(channel);
         if (readObject != null) {
           if (previousEqualObject != null
-            && EqualsInstance.INSTANCE.equals(previousEqualObject, readObject)) {
+              && EqualsInstance.INSTANCE.equals(previousEqualObject, readObject)) {
             if (index == 0) {
               RecordLog.error(getClass(), "Duplicate in " + this.sourceName, readObject);
             } else {
@@ -264,7 +263,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
                 final boolean geometryEquals = geometryEquals(sourceObject, otherObject);
                 if (!geometryEquals) {
                   final String geometryAttributeName = sourceObject.getRecordDefinition()
-                    .getGeometryFieldName();
+                      .getGeometryFieldName();
                   notEqualAttributeNames.add(geometryAttributeName);
                 }
                 if (!notEqualAttributeNames.isEmpty()) {
@@ -276,7 +275,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
                 guard[1] = true;
                 previousEqualObject = sourceObject;
               } else if (compare < 0) { // other object is bigger, keep other
-                                        // object
+                // object
                 logNoMatch(sourceObject, false);
                 objects[0] = null;
                 objects[1] = otherObject;

@@ -152,7 +152,7 @@ public class RobustLineIntersector extends LineIntersector {
     // do between check first, since it is faster than the orientation test
     if (BoundingBox.intersects(p1, p2, p)) {
       if (CoordinatesUtil.orientationIndex(p1, p2, p) == 0
-        && CoordinatesUtil.orientationIndex(p2, p1, p) == 0) {
+          && CoordinatesUtil.orientationIndex(p2, p1, p) == 0) {
         this.isProper = true;
         if (p.equals(p1) || p.equals(p2)) {
           this.isProper = false;
@@ -309,24 +309,6 @@ public class RobustLineIntersector extends LineIntersector {
       // System.out.println("Snapped to " + intPt);
     }
     return intPt;
-  }
-
-  private double smallestInAbsValue(final double x1, final double x2, final double x3,
-    final double x4) {
-    double x = x1;
-    double xabs = Math.abs(x);
-    if (Math.abs(x2) < xabs) {
-      x = x2;
-      xabs = Math.abs(x2);
-    }
-    if (Math.abs(x3) < xabs) {
-      x = x3;
-      xabs = Math.abs(x3);
-    }
-    if (Math.abs(x4) < xabs) {
-      x = x4;
-    }
-    return x;
   }
 
 }

@@ -279,7 +279,7 @@ public final class DoubleFormatUtil {
           // decimalDigits > scale,
           // Rounding involved
           final long intP = Long.parseLong(intS) * tenPow(exposant)
-            + Long.parseLong(decS.substring(0, exposant));
+              + Long.parseLong(decS.substring(0, exposant));
           final long decP = Long.parseLong(decS.substring(exposant, exposant + scale + 1));
           format(target, scale, intP, decP);
         }
@@ -294,7 +294,7 @@ public final class DoubleFormatUtil {
           format(target, scale, 0L, decP);
         } else if (decLength < digits) {
           final long decP = Long.parseLong(intS) * tenPow(decLength + 1) + Long.parseLong(decS)
-            * 10;
+              * 10;
           format(target, exposant + decLength, 0L, decP);
         } else {
           final long subDecP = Long.parseLong(decS.substring(0, digits));
@@ -316,7 +316,7 @@ public final class DoubleFormatUtil {
     // to have this algorithm
     long exp = Double.doubleToRawLongBits(value) & 0x7ff0000000000000L;
     exp = exp >> 52;
-    return (int)(exp - 1023L);
+        return (int)(exp - 1023L);
   }
 
   /**
@@ -332,7 +332,7 @@ public final class DoubleFormatUtil {
     // Use 4.999999999999999 instead of 5 since in some cases, 5.0 / 1eN > 5e-N
     // (e.g. for N = 37, 42, 45, 66, ...)
     return source == 0.0
-      || Math.abs(source) < 4.999999999999999 / tenPowDouble(Math.max(decimals, precision) + 1);
+        || Math.abs(source) < 4.999999999999999 / tenPowDouble(Math.max(decimals, precision) + 1);
   }
 
   /**

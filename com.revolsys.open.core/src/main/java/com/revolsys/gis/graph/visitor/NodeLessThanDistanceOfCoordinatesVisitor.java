@@ -16,7 +16,7 @@ public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements Visitor<Node
     final double maxDistance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
     final Visitor<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(point,
-      maxDistance, results);
+        maxDistance, results);
     BoundingBox envelope = new BoundingBox(point);
     envelope = envelope.expand(maxDistance);
     final IdObjectIndex<Node<T>> nodeIndex = graph.getNodeIndex();

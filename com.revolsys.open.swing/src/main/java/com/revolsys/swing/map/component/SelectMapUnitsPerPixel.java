@@ -31,16 +31,16 @@ import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.Property;
 
 public class SelectMapUnitsPerPixel extends JComboBox implements ItemListener,
-  PropertyChangeListener, ActionListener {
+PropertyChangeListener, ActionListener {
   private static ComboBoxModel GEOGRAPHIC_MODEL = new DefaultComboBoxModel(new Vector<Double>(
-    Arrays.asList(2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002,
-      0.0001, 0.00005, 0.00002, 0.00001, 0.000005, 0.000002, 0.000001, 0.0000005, 0.0000002,
-      0.0000001)));
+      Arrays.asList(2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002,
+        0.0001, 0.00005, 0.00002, 0.00001, 0.000005, 0.000002, 0.000001, 0.0000005, 0.0000002,
+        0.0000001)));
 
   private static ComboBoxModel PROJECTED_MODEL = new DefaultComboBoxModel(new Vector<Double>(
-    Arrays.asList(500000.0, 200000.0, 100000.0, 50000.0, 20000.0, 10000.0, 5000.0, 2000.0, 1000.0,
-      500.0, 200.0, 100.0, 50.0, 20.0, 10.0, 5.0, 2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005,
-      0.002, 0.001)));
+      Arrays.asList(500000.0, 200000.0, 100000.0, 50000.0, 20000.0, 10000.0, 5000.0, 2000.0, 1000.0,
+        500.0, 200.0, 100.0, 50.0, 20.0, 10.0, 5.0, 2.0, 1.0, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005,
+        0.002, 0.001)));
 
   private static final long serialVersionUID = 1L;
 
@@ -92,7 +92,7 @@ public class SelectMapUnitsPerPixel extends JComboBox implements ItemListener,
         numDigits = 7;
       }
       return new BigDecimal(number.doubleValue()).setScale(numDigits, BigDecimal.ROUND_HALF_UP)
-        .toPlainString() + this.unitString;
+          .toPlainString() + this.unitString;
     } else {
       return "Unknown";
     }

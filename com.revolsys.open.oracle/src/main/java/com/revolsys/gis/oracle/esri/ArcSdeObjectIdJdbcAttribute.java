@@ -21,9 +21,9 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
 
       final ArcSdeObjectIdJdbcAttribute newObjectIdAttribute = new ArcSdeObjectIdJdbcAttribute(
         objectIdAttribute.getDbName(), name, description, properties, schemaName, registrationId);
-      newObjectIdAttribute.setMetaData(metaData);
+      newObjectIdAttribute.setRecordDefinition(metaData);
       final RecordDefinitionImpl metaDataImpl = (RecordDefinitionImpl)metaData;
-      metaDataImpl.replaceAttribute(objectIdAttribute, newObjectIdAttribute);
+      metaDataImpl.replaceField(objectIdAttribute, newObjectIdAttribute);
       if (metaData.getIdFieldName() == null && metaData.getIdFieldNames().isEmpty()) {
         metaDataImpl.setIdFieldName(name);
       }

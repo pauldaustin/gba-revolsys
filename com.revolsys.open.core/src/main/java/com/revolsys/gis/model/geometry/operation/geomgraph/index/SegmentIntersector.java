@@ -176,7 +176,7 @@ public class SegmentIntersector {
         if (e0.isClosed()) {
           final int maxSegIndex = e0.getNumPoints() - 1;
           if (segIndex0 == 0 && segIndex1 == maxSegIndex || segIndex1 == 0
-            && segIndex0 == maxSegIndex) {
+              && segIndex0 == maxSegIndex) {
             return true;
           }
         }

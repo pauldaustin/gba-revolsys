@@ -169,7 +169,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
     this.typePathTemplate = typePathTemplate;
     try {
       this.typePathTemplateExpression = JexlUtil.createExpression(typePathTemplate,
-        "%\\{([^\\}]+)\\}");
+          "%\\{([^\\}]+)\\}");
     } catch (final Exception e) {
       throw new IllegalArgumentException(new StringBuilder().append("Invalid type name template: ")
         .append(typePathTemplate)

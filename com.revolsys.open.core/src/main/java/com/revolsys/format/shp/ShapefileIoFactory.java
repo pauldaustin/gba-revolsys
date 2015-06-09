@@ -24,7 +24,7 @@ import com.revolsys.spring.OutputStreamResource;
 import com.revolsys.spring.SpringUtil;
 
 public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory implements
-  RecordStoreFactory {
+RecordStoreFactory {
   public ShapefileIoFactory() {
     super(ShapefileConstants.DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(ShapefileConstants.MIME_TYPE, ShapefileConstants.FILE_EXTENSION);

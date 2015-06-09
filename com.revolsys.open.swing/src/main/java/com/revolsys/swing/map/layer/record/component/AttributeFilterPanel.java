@@ -25,7 +25,6 @@ import javax.swing.text.JTextComponent;
 import org.jdesktop.swingx.JXSearchField;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.util.Property;
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
@@ -44,8 +43,8 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.SwingUtil;
+import com.revolsys.swing.field.AbstractRecordQueryField;
 import com.revolsys.swing.field.ComboBox;
-import com.revolsys.swing.field.DataStoreQueryTextField;
 import com.revolsys.swing.field.DateField;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.field.QueryWhereConditionField;
@@ -106,8 +105,7 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
 
   private FieldDefinition attribute;
 
-  public AttributeFilterPanel(final TablePanel tablePanel,
-    final RecordLayerTableModel tableModel) {
+  public AttributeFilterPanel(final TablePanel tablePanel, final RecordLayerTableModel tableModel) {
     this.tableModel = tableModel;
     this.layer = tableModel.getLayer();
     this.metaData = this.layer.getRecordDefinition();
@@ -121,7 +119,7 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
     this.whereLabel.setBackground(WebColors.White);
     add(this.whereLabel);
 
-    this.attributeNames = new ArrayList<String>(this.layer.getColumnNames());
+    this.attributeNames = new ArrayList<String>(this.layer.getFieldNames());
     this.attributeNames.remove(this.metaData.getGeometryFieldName());
     final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(this.layer);
     this.nameField = new ComboBox(converter, false, this.attributeNames.toArray());
@@ -157,9 +155,9 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
   }
 
   private void addListeners(final JComponent component) {
-    if (component instanceof DataStoreQueryTextField) {
-      final DataStoreQueryTextField queryField = (DataStoreQueryTextField)component;
-      queryField.addItemListener(this);
+    if (component instanceof AbstractRecordQueryField) {
+      final AbstractRecordQueryField queryField = (AbstractRecordQueryField)component;
+      queryField.addPropertyChangeListener("selectedRecord", this);
     } else if (component instanceof JXSearchField) {
       final JXSearchField searchTextField = (JXSearchField)component;
       searchTextField.addActionListener(this);
@@ -280,9 +278,9 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
   }
 
   private void removeListeners(final JComponent component) {
-    if (component instanceof DataStoreQueryTextField) {
-      final DataStoreQueryTextField queryField = (DataStoreQueryTextField)component;
-      queryField.removeItemListener(this);
+    if (component instanceof AbstractRecordQueryField) {
+      final AbstractRecordQueryField queryField = (AbstractRecordQueryField)component;
+      queryField.removePropertyChangeListener("selectedRecord", this);
     } else if (component instanceof JXSearchField) {
       final JXSearchField searchTextField = (JXSearchField)component;
       searchTextField.removeActionListener(this);
@@ -446,10 +444,9 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
     } else {
       this.searchFieldPanel.setVisible(true);
       addListeners(searchField);
-      if (this.searchField instanceof DataStoreQueryTextField) {
-        final DataStoreQueryTextField dataStoreSearchTextField = (DataStoreQueryTextField)this.searchField;
-        dataStoreSearchTextField.setPreferredSize(new Dimension(200, 22));
-        dataStoreSearchTextField.setBelow(true);
+      if (this.searchField instanceof AbstractRecordQueryField) {
+        final AbstractRecordQueryField recordQueryField = (AbstractRecordQueryField)this.searchField;
+        recordQueryField.setPreferredSize(new Dimension(200, 22));
       } else if (this.searchField instanceof JXSearchField) {
         final JXSearchField searchTextField = (JXSearchField)this.searchField;
         searchTextField.setPreferredSize(new Dimension(200, 22));
@@ -463,7 +460,7 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
     if (!EqualsRegistry.equal(searchFieldName, this.previousSearchFieldName)) {
       this.previousSearchFieldName = searchFieldName;
       this.layer.setProperty("searchField", searchFieldName);
-      final RecordDefinition metaData = this.tableModel.getMetaData();
+      final RecordDefinition metaData = this.tableModel.getRecordDefinition();
       this.attribute = metaData.getField(searchFieldName);
       final Class<?> attributeClass = this.attribute.getTypeClass();
       if (!EqualsRegistry.equal(searchFieldName, this.nameField.getSelectedItem())) {

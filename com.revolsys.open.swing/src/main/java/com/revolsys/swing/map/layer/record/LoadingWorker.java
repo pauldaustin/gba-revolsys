@@ -15,9 +15,9 @@ import com.revolsys.swing.parallel.AbstractSwingWorker;
 public class LoadingWorker extends AbstractSwingWorker<DataObjectQuadTree, Void> {
   private final BoundingBox viewportBoundingBox;
 
-  private final DataObjectStoreLayer layer;
+  private final RecordStoreLayer layer;
 
-  public LoadingWorker(final DataObjectStoreLayer layer, final BoundingBox viewportBoundingBox) {
+  public LoadingWorker(final RecordStoreLayer layer, final BoundingBox viewportBoundingBox) {
     this.layer = layer;
     this.viewportBoundingBox = viewportBoundingBox;
 
@@ -32,7 +32,7 @@ public class LoadingWorker extends AbstractSwingWorker<DataObjectQuadTree, Void>
     if (query != null) {
       query = query.clone();
       query.setBoundingBox(queryBoundingBox);
-      final List<LayerDataObject> records = this.layer.query(query);
+      final List<LayerRecord> records = this.layer.query(query);
       index.insertAll(records);
     }
     return index;

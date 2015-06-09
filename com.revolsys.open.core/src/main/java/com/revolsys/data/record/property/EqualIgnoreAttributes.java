@@ -11,7 +11,7 @@ import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
 public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = EqualIgnoreAttributes.class.getName()
-    + ".propertyName";
+      + ".propertyName";
 
   public static EqualIgnoreAttributes getProperty(final Record object) {
     final RecordDefinition metaData = object.getRecordDefinition();

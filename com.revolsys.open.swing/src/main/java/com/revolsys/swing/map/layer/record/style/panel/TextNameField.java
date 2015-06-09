@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
-import com.revolsys.util.Property;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
@@ -42,7 +41,7 @@ public class TextNameField extends ValueField {
     this.textNameField = new TextArea(fieldName, fieldValue, 3, 30);
     add(new JScrollPane(this.textNameField), BorderLayout.NORTH);
 
-    final ArrayList<String> fieldNames = new ArrayList<String>(layer.getColumnNames());
+    final ArrayList<String> fieldNames = new ArrayList<String>(layer.getFieldNames());
     final RecordDefinition metaData = layer.getRecordDefinition();
     fieldNames.remove(metaData.getGeometryFieldName());
     final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(layer);

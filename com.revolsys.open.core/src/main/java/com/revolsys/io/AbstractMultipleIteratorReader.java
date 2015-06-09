@@ -8,7 +8,7 @@ import javax.annotation.PreDestroy;
 import com.revolsys.collection.iterator.AbstractIterator;
 
 public abstract class AbstractMultipleIteratorReader<T> extends AbstractReader<T> implements
-  Iterator<T> {
+Iterator<T> {
 
   private AbstractIterator<T> iterator;
 

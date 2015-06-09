@@ -7,26 +7,26 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import com.revolsys.util.Property;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
 import com.revolsys.swing.tree.TreeItemRunnable;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.util.JavaBeanUtil;
+import com.revolsys.util.Property;
 
 public abstract class AbstractMultipleRenderer extends AbstractDataObjectLayerRenderer {
   static {
     final MenuFactory menu = ObjectTreeModel.getMenu(AbstractMultipleRenderer.class);
 
     for (final String type : Arrays.asList("Geometry", "Text", "Marker", "Multiple", "Filter",
-      "Scale")) {
+        "Scale")) {
       final String iconName = ("style_" + type + "_add").toLowerCase();
       final ImageIcon icon = Icons.getIcon(iconName);
       final InvokeMethodAction action = TreeItemRunnable.createAction("Add " + type + " Style",
@@ -252,7 +252,7 @@ public abstract class AbstractMultipleRenderer extends AbstractDataObjectLayerRe
   }
 
   @Override
-  public boolean isVisible(final LayerDataObject object) {
+  public boolean isVisible(final LayerRecord object) {
     if (super.isVisible() && super.isVisible(object)) {
       for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
         if (renderer.isVisible(object)) {

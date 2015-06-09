@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.io.FileUtil;
 
 /**
@@ -53,7 +51,7 @@ public final class UrlUtil {
   private static final String WORD_CHARACTERS = "a-zA-Z0-9\\+!#$%&'*+-/=?^_`{}|~";
 
   private static final String LOCAL_PART = "[" + WORD_CHARACTERS + "][" + WORD_CHARACTERS
-    + "\\.]*[" + WORD_CHARACTERS + "]?";
+      + "\\.]*[" + WORD_CHARACTERS + "]?";
 
   private static final String EMAIL_RE = "^(" + LOCAL_PART + ")@(" + DOMAIN + ")$";
 
@@ -67,8 +65,8 @@ public final class UrlUtil {
    */
   public static String cleanPath(final String url) {
     return url.replaceAll("/+", "/")
-      .replaceAll("^((\\w)+:)/", "$1//")
-      .replaceAll("^file://", "file:///");
+        .replaceAll("^((\\w)+:)/", "$1//")
+        .replaceAll("^file://", "file:///");
   }
 
   public static String getContent(final String urlString) {
@@ -227,15 +225,15 @@ public final class UrlUtil {
                     query.append('&');
                   }
                   query.append(name)
-                    .append('=')
-                    .append(URLEncoder.encode(childValue.toString(), "US-ASCII"));
+                  .append('=')
+                  .append(URLEncoder.encode(childValue.toString(), "US-ASCII"));
                 }
               }
 
             } else {
               query.append(name)
-                .append('=')
-                .append(URLEncoder.encode(value.toString(), "US-ASCII"));
+              .append('=')
+              .append(URLEncoder.encode(value.toString(), "US-ASCII"));
             }
           } catch (final UnsupportedEncodingException e) {
             throw new Error(e);
@@ -331,7 +329,7 @@ public final class UrlUtil {
     for (int i = 0; i < len; i++) {
       final char ch = text.charAt(i);
       if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9' || ch == '-'
-        || ch == ',' || ch == '.' || ch == '_' || ch == '~' || ch == '/') {
+          || ch == ',' || ch == '.' || ch == '_' || ch == '~' || ch == '/') {
         encoded.append(ch);
       } else {
         encoded.append('%');

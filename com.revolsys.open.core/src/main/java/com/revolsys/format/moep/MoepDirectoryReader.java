@@ -17,7 +17,7 @@ import com.revolsys.io.Reader;
 import com.revolsys.util.DateUtil;
 
 public class MoepDirectoryReader extends DataObjectDirectoryReader implements
-  RecordDefinitionFactory {
+RecordDefinitionFactory {
 
   private Date integrationDate;
 

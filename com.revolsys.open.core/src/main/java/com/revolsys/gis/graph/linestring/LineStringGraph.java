@@ -132,7 +132,7 @@ public class LineStringGraph extends Graph<LineSegment> {
   public List<LineString> getLines() {
     removeDuplicateEdges();
     final EdgeAttributeValueComparator<LineSegment> comparator = new EdgeAttributeValueComparator<LineSegment>(
-      "INDEX");
+        "INDEX");
     final List<LineString> lines = new ArrayList<LineString>();
     final int numAxis = this.geometryFactory.getNumAxis();
     DoubleListCoordinatesList points = new DoubleListCoordinatesList(numAxis);
@@ -184,9 +184,9 @@ public class LineStringGraph extends Graph<LineSegment> {
       final LineSegment lineSegment = edge.getObject();
       final PointOnLineSegment coordinatesFilter = new PointOnLineSegment(lineSegment, tolerance);
       final NodeCoordinatesFilter<LineSegment> nodeFilter = new NodeCoordinatesFilter<LineSegment>(
-        coordinatesFilter);
+          coordinatesFilter);
       final NodeDistanceComparator<LineSegment> comparator = new NodeDistanceComparator<LineSegment>(
-        fromNode);
+          fromNode);
       final List<Node<LineSegment>> nodes = graph1.getNodes(nodeFilter, comparator);
       for (final Iterator<Node<LineSegment>> iterator = nodes.iterator(); iterator.hasNext();) {
         final Node<LineSegment> node = iterator.next();
@@ -358,7 +358,7 @@ public class LineStringGraph extends Graph<LineSegment> {
     for (final Edge<LineSegment> edge : getEdges()) {
       final LineSegment line = edge.getObject();
       final EdgeObjectFilter<LineSegment> filter = new EdgeObjectFilter<LineSegment>(
-        new LineSegmentIntersectingFilter(line));
+          new LineSegmentIntersectingFilter(line));
       final List<Edge<LineSegment>> edges = getEdges(filter, line.getEnvelope());
       for (final Edge<LineSegment> edge2 : edges) {
         final LineSegment line2 = edge2.getObject();
@@ -384,9 +384,9 @@ public class LineStringGraph extends Graph<LineSegment> {
 
   private void removeDuplicateEdges() {
     final Visitor<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
-      "removeDuplicateEdges");
+        "removeDuplicateEdges");
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
-      INDEX);
+        INDEX);
     visitEdges(comparator, visitor);
   }
 
@@ -440,9 +440,9 @@ public class LineStringGraph extends Graph<LineSegment> {
 
   public void splitCrossingEdges() {
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
-      INDEX);
+        INDEX);
     final Visitor<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
-      "splitCrossingEdges");
+        "splitCrossingEdges");
     visitEdges(comparator, visitor);
   }
 

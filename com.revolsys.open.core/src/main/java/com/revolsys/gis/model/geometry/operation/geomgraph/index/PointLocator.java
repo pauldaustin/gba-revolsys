@@ -67,13 +67,13 @@ import com.vividsolutions.jts.geom.Location;
 public class PointLocator {
   // default is to use OGC SFS rule
   private BoundaryNodeRule boundaryRule =
-  // BoundaryNodeRule.ENDPOINT_BOUNDARY_RULE;
-  BoundaryNodeRule.OGC_SFS_BOUNDARY_RULE;
+      // BoundaryNodeRule.ENDPOINT_BOUNDARY_RULE;
+      BoundaryNodeRule.OGC_SFS_BOUNDARY_RULE;
 
   private boolean isIn; // true if the point lies in or on any Geometry element
 
   private int numBoundaries; // the number of sub-elements whose boundaries the
-                             // point lies in
+  // point lies in
 
   private GeometryFactory geometryFactory;
 

@@ -8,7 +8,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineStringCoordinatesListIterator implements Iterator<LineString>,
-  Iterable<LineString> {
+Iterable<LineString> {
   private final GeometryFactory factory;
 
   private int index = 0;

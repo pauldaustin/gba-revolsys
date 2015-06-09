@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -18,6 +17,7 @@ import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 
 public class ArcSdeStGeometryDataStoreExtension implements DataObjectStoreExtension {
 
@@ -121,7 +121,7 @@ public class ArcSdeStGeometryDataStoreExtension implements DataObjectStoreExtens
       }
     } catch (final Throwable e) {
       LoggerFactory.getLogger(getClass())
-        .error("Unable to load rowid columns for " + schemaName, e);
+      .error("Unable to load rowid columns for " + schemaName, e);
     } finally {
       JdbcUtils.close(statement, resultSet);
     }

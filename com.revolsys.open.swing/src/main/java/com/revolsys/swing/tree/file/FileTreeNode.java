@@ -15,8 +15,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.tree.TreeNode;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
@@ -42,6 +40,7 @@ import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
 import com.revolsys.swing.tree.TreeItemRunnable;
 import com.revolsys.swing.tree.datastore.FileDataObjectStoreTreeNode;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
+import com.revolsys.util.Property;
 import com.revolsys.util.UrlProxy;
 import com.revolsys.util.UrlUtil;
 
@@ -74,11 +73,11 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
     final EnableCheck isFileLayer = new TreeItemPropertyEnableCheck("fileLayer");
 
     final InvokeMethodAction refresh = TreeItemRunnable.createAction("Refresh", "arrow_refresh",
-      "refresh");
+        "refresh");
     MENU.addMenuItem("default", refresh);
 
     MENU.addMenuItemTitleIcon("default", "Add Layer", "map_add", isFileLayer, FileTreeNode.class,
-      "addLayer");
+        "addLayer");
 
     MENU.addMenuItemTitleIcon("default", "Add Folder Connection", "link_add", isDirectory,
       FileTreeNode.class, "addFolderConnection");
@@ -105,7 +104,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
 
       SwingUtil.addLabel(panel, "Folder Connections");
       final List<FolderConnectionRegistry> registries = FolderConnectionManager.get()
-        .getVisibleConnectionRegistries();
+          .getVisibleConnectionRegistries();
       final JComboBox registryField = new JComboBox(
         new Vector<FolderConnectionRegistry>(registries));
 

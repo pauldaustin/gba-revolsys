@@ -5,14 +5,14 @@ import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
 import com.revolsys.gis.model.geometry.util.IndexedLineSegment;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class CloseLocation {
 
-  private final LayerDataObject object;
+  private final LayerRecord object;
 
   private final int[] vertexIndex;
 
@@ -24,7 +24,7 @@ public class CloseLocation {
 
   private final Point point;
 
-  public CloseLocation(final AbstractRecordLayer layer, final LayerDataObject object,
+  public CloseLocation(final AbstractRecordLayer layer, final LayerRecord object,
     final Geometry geometry, final int[] vertexIndex, final IndexedLineSegment segment,
     final Point point) {
     this.object = object;
@@ -76,7 +76,7 @@ public class CloseLocation {
     return this.layer.getRecordDefinition();
   }
 
-  public LayerDataObject getObject() {
+  public LayerRecord getObject() {
     return this.object;
   }
 
@@ -99,7 +99,7 @@ public class CloseLocation {
       return "Edge";
     } else {
       if (GeometryEditUtil.isFromPoint(this.geometry, this.vertexIndex)
-        || GeometryEditUtil.isToPoint(this.geometry, this.vertexIndex)) {
+          || GeometryEditUtil.isToPoint(this.geometry, this.vertexIndex)) {
         return "End-Vertex";
       } else {
         return "Vertex";

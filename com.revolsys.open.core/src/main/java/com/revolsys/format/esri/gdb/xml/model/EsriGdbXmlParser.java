@@ -104,7 +104,7 @@ public class EsriGdbXmlParser extends XmlProcessor implements EsriGeodatabaseXml
   }
 
   public List<ControllerMembership> processControllerMemberships(final XMLStreamReader parser)
-    throws XMLStreamException, IOException {
+      throws XMLStreamException, IOException {
     final List<ControllerMembership> controllerMemberships = new ArrayList<ControllerMembership>();
     while (parser.nextTag() == XMLStreamConstants.START_ELEMENT) {
       final Object value = process(parser);

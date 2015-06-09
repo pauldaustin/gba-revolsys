@@ -184,9 +184,9 @@ public class JdbcCodeTable extends AbstractCodeTable {
     if (!this.initialized) {
 
       this.allSql = "SELECT " + this.idColumn + ", " + toString(this.valueColumns) + " FROM "
-        + this.tableName;
+          + this.tableName;
       this.valueByIdSql = "SELECT " + toString(this.valueColumns) + " FROM " + this.tableName
-        + " WHERE " + this.idColumn + " = ?";
+          + " WHERE " + this.idColumn + " = ?";
       this.idByValueSql = "SELECT " + this.idColumn + " FROM " + this.tableName + " WHERE ";
       this.insertSql = "INSERT INTO " + this.tableName + " (" + this.idColumn;
       for (int i = 0; i < this.valueColumns.size(); i++) {

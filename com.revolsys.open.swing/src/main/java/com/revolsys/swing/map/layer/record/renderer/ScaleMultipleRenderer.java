@@ -12,7 +12,7 @@ import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.TopologyException;
 
@@ -59,7 +59,7 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
   }
 
   @Override
-  public boolean isVisible(final LayerDataObject object) {
+  public boolean isVisible(final LayerRecord object) {
     if (super.isVisible() && super.isVisible(object)) {
       if (this.renderer != null) {
         return this.renderer.isVisible(object);
@@ -82,7 +82,7 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
   // NOTE: Needed for filter styles
   @Override
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject object) {
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord object) {
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {
       if (isVisible(object)) {
@@ -100,11 +100,11 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
   @Override
   // NOTE: Needed for multiple styles
   protected void renderRecords(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractRecordLayer layer, final List<LayerDataObject> objects) {
+    final AbstractRecordLayer layer, final List<LayerRecord> objects) {
     final BoundingBox visibleArea = viewport.getBoundingBox();
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {
-      for (final LayerDataObject object : objects) {
+      for (final LayerRecord object : objects) {
         if (isVisible(object)) {
           try {
             renderer.renderRecord(viewport, graphics, visibleArea, layer, object);
@@ -117,7 +117,7 @@ public class ScaleMultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   public void renderSelectedRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractRecordLayer layer, final LayerDataObject object) {
+    final AbstractRecordLayer layer, final LayerRecord object) {
     final AbstractDataObjectLayerRenderer renderer = getRenderer(viewport);
     if (renderer != null) {
       if (isVisible(object)) {

@@ -46,7 +46,7 @@ import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.renderer.GeometryStyleRenderer;
 import com.revolsys.swing.map.layer.record.style.GeometryStyle;
 import com.revolsys.swing.undo.SetObjectProperty;
@@ -55,7 +55,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class AbstractOverlay extends JComponent implements PropertyChangeListener, MouseListener,
-  MouseMotionListener, MouseWheelListener, KeyListener {
+MouseMotionListener, MouseWheelListener, KeyListener {
   public static final Cursor CURSOR_LINE_ADD_NODE = Icons.getCursor("cursor_line_node_add", 8, 6);
 
   public static final Cursor CURSOR_LINE_SNAP = Icons.getCursor("cursor_line_snap", 8, 4);
@@ -120,9 +120,9 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
         text.append(typePath);
         text.append("</i></b>\n");
         text.append("<table cellspacing=\"0\" cellpadding=\"1\" style=\"border: solid black 1px;margin: 3px 0px 3px 0px;padding: 0px;width: 100%\">"
-          + "<thead><tr style=\"border-bottom: solid black 3px\"><th style=\"border-right: solid black 1px\">"
-          + idAttributeName
-          + "</th><th style=\"border-right: solid black 1px\">INDEX</th><th>POINT</th></tr></th><tbody>");
+            + "<thead><tr style=\"border-bottom: solid black 3px\"><th style=\"border-right: solid black 1px\">"
+            + idAttributeName
+            + "</th><th style=\"border-right: solid black 1px\">INDEX</th><th>POINT</th></tr></th><tbody>");
         for (final CloseLocation location : locations) {
           text.append("<tr style=\"border-bottom: solid black 1px\"><td style=\"border-right: solid black 1px\">");
           text.append(location.getId());
@@ -217,7 +217,7 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
   }
 
   protected CloseLocation findCloseLocation(final AbstractRecordLayer layer,
-    final LayerDataObject object, final Geometry geometry, final BoundingBox boundingBox) {
+    final LayerRecord object, final Geometry geometry, final BoundingBox boundingBox) {
     CloseLocation closeLocation = findCloseVertexLocation(layer, object, geometry, boundingBox);
     if (closeLocation == null) {
       closeLocation = findCloseSegmentLocation(layer, object, geometry, boundingBox);
@@ -225,8 +225,7 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
     return closeLocation;
   }
 
-  protected CloseLocation findCloseLocation(final LayerDataObject object,
-    final BoundingBox boundingBox) {
+  protected CloseLocation findCloseLocation(final LayerRecord object, final BoundingBox boundingBox) {
     if (object.isGeometryEditable()) {
       final AbstractRecordLayer layer = object.getLayer();
       final Geometry geometryValue = object.getGeometryValue();
@@ -237,7 +236,7 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
   }
 
   private CloseLocation findCloseSegmentLocation(final AbstractRecordLayer layer,
-    final LayerDataObject object, final Geometry geometry, final BoundingBox boundingBox) {
+    final LayerRecord object, final Geometry geometry, final BoundingBox boundingBox) {
 
     final GeometryFactory viewportGeometryFactory = getViewport().getGeometryFactory();
     final Geometry convertedGeometry = viewportGeometryFactory.copy(geometry);
@@ -272,7 +271,7 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
   }
 
   protected CloseLocation findCloseVertexLocation(final AbstractRecordLayer layer,
-    final LayerDataObject object, final Geometry geometry, final BoundingBox boundingBox) {
+    final LayerRecord object, final Geometry geometry, final BoundingBox boundingBox) {
     final PointQuadTree<int[]> index = GeometryEditUtil.getPointQuadTree(geometry);
     if (index != null) {
       final GeometryFactory geometryFactory = boundingBox.getGeometryFactory();
@@ -448,11 +447,11 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
     final Point point = boundingBox.getCentrePoint();
     final List<AbstractRecordLayer> layers = getSnapLayers();
     final TreeMap<Point, Set<CloseLocation>> snapLocations = new TreeMap<Point, Set<CloseLocation>>(
-      new GeometryDistanceComparator(point));
+        new GeometryDistanceComparator(point));
     this.snapPoint = null;
     for (final AbstractRecordLayer layer : layers) {
-      final List<LayerDataObject> objects = layer.queryBackground(boundingBox);
-      for (final LayerDataObject object : objects) {
+      final List<LayerRecord> objects = layer.queryBackground(boundingBox);
+      for (final LayerRecord object : objects) {
         if (layer.isVisible(object)) {
           final CloseLocation closeLocation = findCloseLocation(object, boundingBox);
           if (closeLocation != null) {
@@ -611,7 +610,7 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
             nodeSnap = true;
           }
           CollectionUtil.addToSet(typeLocationsMap, typePath + " (<b style=\"color:red\">"
-            + locationType + "</b>)", snapLocation);
+              + locationType + "</b>)", snapLocation);
         }
 
         for (final Entry<String, Set<CloseLocation>> typeLocations : typeLocationsMap.entrySet()) {

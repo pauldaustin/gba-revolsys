@@ -11,7 +11,7 @@ import org.apache.commons.beanutils.MethodUtils;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
 public class InvokeMethodStringConverter extends ObjectToStringConverter implements
-  ListCellRenderer {
+ListCellRenderer {
 
   private final DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 

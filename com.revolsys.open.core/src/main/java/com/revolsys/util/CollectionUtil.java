@@ -17,8 +17,6 @@ import java.util.TreeSet;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.StringConverterRegistry;
 
 public final class CollectionUtil {
@@ -569,11 +567,11 @@ public final class CollectionUtil {
                 }
               }
             }
-          break;
+            break;
 
           default:
             buffer.append(c);
-          break;
+            break;
         }
       }
       return buffer.toString();

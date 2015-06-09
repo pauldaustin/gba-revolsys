@@ -137,7 +137,7 @@ public class GpxIterator implements RecordIterator {
       do {
         this.currentDataObject = parseDataObject();
       } while (this.currentDataObject != null && this.typePath != null
-        && !this.currentDataObject.getRecordDefinition().getPath().equals(this.typePath));
+          && !this.currentDataObject.getRecordDefinition().getPath().equals(this.typePath));
       this.loadNextObject = false;
       if (this.currentDataObject == null) {
         close();
@@ -236,7 +236,7 @@ public class GpxIterator implements RecordIterator {
   }
 
   protected Record parsePoint(final String featureType, final double index)
-    throws XMLStreamException {
+      throws XMLStreamException {
     final Record dataObject = this.dataObjectFactory.createRecord(GpxConstants.GPX_TYPE);
     dataObject.setValue("dataset_name", this.baseName);
     dataObject.setValue("index", index);
@@ -355,7 +355,7 @@ public class GpxIterator implements RecordIterator {
 
     while (this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (this.in.getName().equals(GpxConstants.EXTENSION_ELEMENT)
-        || this.in.getName().equals(GpxConstants.TRACK_SEGMENT_ELEMENT)) {
+          || this.in.getName().equals(GpxConstants.TRACK_SEGMENT_ELEMENT)) {
         StaxUtils.skipSubTree(this.in);
       } else {
         if (this.in.getName().equals(GpxConstants.ELEVATION_ELEMENT)) {

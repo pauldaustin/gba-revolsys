@@ -22,7 +22,7 @@ import com.revolsys.spring.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractRecordAndGeometryIoFactory extends
-  AbstractRecordAndGeometryReaderFactory implements RecordWriterFactory, GeometryWriterFactory {
+AbstractRecordAndGeometryReaderFactory implements RecordWriterFactory, GeometryWriterFactory {
 
   private Set<CoordinateSystem> coordinateSystems = EpsgCoordinateSystems.getCoordinateSystems();
 

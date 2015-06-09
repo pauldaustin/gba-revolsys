@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.gis.grid.RectangularMapGrid;
 import com.revolsys.gis.grid.RectangularMapGridFactory;
@@ -24,6 +23,7 @@ import com.revolsys.swing.tree.TreeItemRunnable;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.PreferencesUtil;
+import com.revolsys.util.Property;
 
 public class GridLayer extends AbstractLayer {
 
@@ -63,7 +63,7 @@ public class GridLayer extends AbstractLayer {
       }
     } else {
       LoggerFactory.getLogger(getClass()).error(
-        "Layer definition does not contain a 'gridName' property");
+          "Layer definition does not contain a 'gridName' property");
     }
     return false;
   }

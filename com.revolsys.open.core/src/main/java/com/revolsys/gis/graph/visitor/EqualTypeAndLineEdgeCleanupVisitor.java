@@ -32,11 +32,11 @@ import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
 public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>> implements
-  ObjectProcessor<DataObjectGraph> {
+ObjectProcessor<DataObjectGraph> {
 
   /** Flag indicating that the edge has been processed. */
   private static final String EDGE_PROCESSED = EqualTypeAndLineEdgeCleanupVisitor.class.getName()
-    + ".processed";
+      + ".processed";
 
   private Statistics duplicateStatistics;
 
@@ -224,7 +224,7 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Rec
       }
 
       final Filter<Record> equalLineFilter = new DataObjectGeometryFilter<LineString>(
-        new LineEqualIgnoreDirectionFilter(line, 2));
+          new LineEqualIgnoreDirectionFilter(line, 2));
       final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(equalLineFilter);
       attributeAndGeometryFilter.addFilter(edgeFilter);
 

@@ -210,9 +210,9 @@ public class CoordinatesListUtil {
     final LineStringGraph graph1 = new LineStringGraph(points1);
     final LineStringGraph graph2 = new LineStringGraph(points2);
     graph1.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", null, graph2, tolerance));
+        "movePointsWithinTolerance", null, graph2, tolerance));
     graph2.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", null, graph1, tolerance));
+        "movePointsWithinTolerance", null, graph1, tolerance));
 
     final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1.getPointsOnEdges(
       graph2, tolerance);
@@ -259,7 +259,7 @@ public class CoordinatesListUtil {
   public static boolean equals2dCoordinates(final CoordinatesList coordinates, final int index1,
     final int index2) {
     return coordinates.getX(index1) == coordinates.getOrdinate(index2, 0)
-      && coordinates.getY(index1) == coordinates.getOrdinate(index2, 1);
+        && coordinates.getY(index1) == coordinates.getOrdinate(index2, 1);
   }
 
   public static boolean equalWithinTolerance(final CoordinatesList points1,
@@ -510,9 +510,9 @@ public class CoordinatesListUtil {
     graph2.setPrecisionModel(geometryFactory);
     final Map<Coordinates, Coordinates> movedNodes = new HashMap<Coordinates, Coordinates>();
     graph1.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", movedNodes, graph2, maxDistance));
+        "movePointsWithinTolerance", movedNodes, graph2, maxDistance));
     graph2.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", movedNodes, graph1, maxDistance));
+        "movePointsWithinTolerance", movedNodes, graph1, maxDistance));
 
     final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1.getPointsOnEdges(
       graph2, maxDistance);
@@ -605,7 +605,7 @@ public class CoordinatesListUtil {
      * it contains coincident line segments.
      */
     if (equals2dCoordinate(ring, iPrev, hiPtX, hiPtY)
-      || equals2dCoordinate(ring, iNext, hiPtX, hiPtY) || equals2dCoordinates(ring, iPrev, iNext)) {
+        || equals2dCoordinate(ring, iNext, hiPtX, hiPtY) || equals2dCoordinates(ring, iPrev, iNext)) {
       return false;
     }
 

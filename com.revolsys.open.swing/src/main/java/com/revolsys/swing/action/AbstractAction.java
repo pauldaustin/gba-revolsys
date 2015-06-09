@@ -2,8 +2,13 @@ package com.revolsys.swing.action;
 
 import javax.swing.Action;
 import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JToggleButton;
 
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
+import com.revolsys.swing.menu.Button;
+import com.revolsys.swing.menu.ToggleButton;
 
 public abstract class AbstractAction extends javax.swing.AbstractAction {
 
@@ -19,12 +24,31 @@ public abstract class AbstractAction extends javax.swing.AbstractAction {
 
   private EnableCheck enableCheck;
 
+  public JButton createButton() {
+    final Button button = new Button(this);
+    return button;
+  }
+
+  public JToggleButton createToggleButton() {
+    final ToggleButton button = new ToggleButton(this);
+    return button;
+  }
+
+  public Icon getDisabledIcon() {
+    final Icon icon = getIcon();
+    return Icons.getDisabledIcon(icon);
+  }
+
   public EnableCheck getEnableCheck() {
     return this.enableCheck;
   }
 
   public Icon getIcon() {
     return (Icon)getValue(Action.SMALL_ICON);
+  }
+
+  public Icon getLargeIcon() {
+    return (Icon)getValue(LARGE_ICON_KEY);
   }
 
   public Integer getMnemonic() {

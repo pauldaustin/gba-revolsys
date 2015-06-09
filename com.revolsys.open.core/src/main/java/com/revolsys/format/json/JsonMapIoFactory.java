@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.io.AbstractMapReaderFactory;
 import com.revolsys.io.FileUtil;
@@ -24,6 +23,7 @@ import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Reader;
 import com.revolsys.spring.SpringUtil;
+import com.revolsys.util.Property;
 
 public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWriterFactory {
   public static Map<String, Object> toMap(final File file) {
@@ -56,7 +56,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWri
       try {
         final java.io.Reader reader = FileUtil.createUtf8Reader(in);
         try (
-          final JsonMapIterator iterator = new JsonMapIterator(reader, true)) {
+            final JsonMapIterator iterator = new JsonMapIterator(reader, true)) {
           if (iterator.hasNext()) {
             return iterator.next();
           } else {

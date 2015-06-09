@@ -19,7 +19,7 @@ import com.revolsys.swing.tree.ObjectTree;
 import com.revolsys.swing.tree.model.node.AbstractObjectTreeNodeModel;
 
 public class BaseLayerTreeNodeModel extends
-  AbstractObjectTreeNodeModel<AbstractLayer, LayerRenderer<Layer>> implements MouseListener {
+AbstractObjectTreeNodeModel<AbstractLayer, LayerRenderer<Layer>> implements MouseListener {
 
   public static BaseLayerTreeNodeModel create(final String name,
     final Class<? extends AbstractLayer> layerClass) {

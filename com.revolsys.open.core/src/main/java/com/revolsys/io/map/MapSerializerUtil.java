@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.util.Property;
 
 public class MapSerializerUtil {
   /**

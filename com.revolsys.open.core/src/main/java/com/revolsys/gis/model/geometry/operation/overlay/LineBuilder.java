@@ -106,7 +106,7 @@ public class LineBuilder {
     }
     if (de.getEdge().isInResult()) {
       return; // if the edge linework is already included, don't include it
-              // again
+      // again
     }
 
     // sanity check for labelling of result edgerings

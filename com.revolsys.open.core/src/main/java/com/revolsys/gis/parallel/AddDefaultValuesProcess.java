@@ -49,20 +49,20 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
   private final Map<RecordDefinition, Map<String, Object>> typeDefaultValues = new HashMap<RecordDefinition, Map<String, Object>>();
 
   private void addDefaultValues(final Map<String, Object> defaultValues, final RecordDefinition type) {
-    if (Path.getPath(type.getPath()).equals(schemaName)) {
+    if (Path.getPath(type.getPath()).equals(this.schemaName)) {
       defaultValues.putAll(type.getDefaultValues());
     }
   }
 
   private Map<String, Object> getDefaultValues(final RecordDefinition type) {
-    if (schemaName == null) {
+    if (this.schemaName == null) {
       return type.getDefaultValues();
     } else {
-      Map<String, Object> defaultValues = typeDefaultValues.get(type);
+      Map<String, Object> defaultValues = this.typeDefaultValues.get(type);
       if (defaultValues == null) {
         defaultValues = new HashMap<String, Object>();
         addDefaultValues(defaultValues, type);
-        typeDefaultValues.put(type, defaultValues);
+        this.typeDefaultValues.put(type, defaultValues);
       }
       return defaultValues;
     }
@@ -75,11 +75,11 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
    * @return The names of the attributes to exclude.
    */
   public Set<String> getExcludedAttributeNames() {
-    return excludedAttributeNames;
+    return this.excludedAttributeNames;
   }
 
   public RecordDefinitionFactory getMetaDataFactory() {
-    return metaDataFactory;
+    return this.metaDataFactory;
   }
 
   /**
@@ -88,15 +88,15 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
    * @return The schema name.
    */
   public String getSchemaName() {
-    return schemaName;
+    return this.schemaName;
   }
 
   private void process(final Record dataObject) {
     final RecordDefinition type = dataObject.getRecordDefinition();
 
     boolean process = true;
-    if (schemaName != null) {
-      if (!Path.getPath(type.getPath()).equals(schemaName)) {
+    if (this.schemaName != null) {
+      if (!Path.getPath(type.getPath()).equals(this.schemaName)) {
         process = false;
       }
     }
@@ -131,7 +131,7 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
   private void setDefaultValue(final Record dataObject, final String key, final Object value) {
     final int dotIndex = key.indexOf('.');
     if (dotIndex == -1) {
-      if (dataObject.getValue(key) == null && !excludedAttributeNames.contains(key)) {
+      if (dataObject.getValue(key) == null && !this.excludedAttributeNames.contains(key)) {
         log.info("Adding attribute " + key + "=" + value);
         dataObject.setValue(key, value);
       }
@@ -148,7 +148,7 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
           final Class<?> typeClass = dataType.getJavaClass();
           if (typeClass == Record.class) {
 
-            final RecordDefinition subClass = metaDataFactory.getRecordDefinition(dataType.getName());
+            final RecordDefinition subClass = this.metaDataFactory.getRecordDefinition(dataType.getName());
             final Record subObject = subClass.createDataObject();
             setDefaultValue(subObject, subKey, value);
             dataObject.setValue(attributeName, subObject);

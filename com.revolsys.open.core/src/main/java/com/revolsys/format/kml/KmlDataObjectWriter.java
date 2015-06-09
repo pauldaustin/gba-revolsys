@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -15,6 +13,7 @@ import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
@@ -142,7 +141,7 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements Kml22
         final String attributeName = metaData.getFieldName(i);
         final Object value = object.getValue(i);
         if (value != null
-          || BooleanStringConverter.isTrue(getProperty(Kml22Constants.WRITE_NULLS_PROPERTY))) {
+            || BooleanStringConverter.isTrue(getProperty(Kml22Constants.WRITE_NULLS_PROPERTY))) {
           if (!hasValues) {
             hasValues = true;
             this.writer.startTag(EXTENDED_DATA);

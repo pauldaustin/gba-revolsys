@@ -28,7 +28,7 @@ public class MultipleFilterProcess<T> extends BaseInOutProcess<T, T> {
 
   @Override
   protected void destroy() {
-    for (Channel<T> channel : this.filters.values()) {
+    for (final Channel<T> channel : this.filters.values()) {
       if (channel != null) {
         channel.writeDisconnect();
       }

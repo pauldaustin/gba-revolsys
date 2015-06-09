@@ -59,7 +59,7 @@ public class WmsClient {
 
   public Image getMapImage(final List<String> layers, final List<String> styles, final String srid,
     final Envelope envelope, final String format, final int width, final int height)
-    throws IOException {
+        throws IOException {
     final URL mapUrl = getMapUrl(layers, styles, srid, envelope, format, width, height);
     final URLConnection connection = mapUrl.openConnection();
     final String userInfo = mapUrl.getUserInfo();
@@ -99,7 +99,7 @@ public class WmsClient {
       parameters.put(WmsParameters.SRS, srid);
     }
     final String bbox = envelope.getMinX() + "," + envelope.getMinY() + "," + envelope.getMaxX()
-      + "," + envelope.getMaxY();
+        + "," + envelope.getMaxY();
     parameters.put(WmsParameters.BBOX, bbox);
     parameters.put(WmsParameters.WIDTH, width);
     parameters.put(WmsParameters.HEIGHT, height);

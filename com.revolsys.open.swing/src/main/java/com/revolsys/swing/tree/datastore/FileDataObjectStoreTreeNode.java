@@ -14,8 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.tree.TreeNode;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
@@ -29,9 +27,10 @@ import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.file.FileTreeNode;
+import com.revolsys.util.Property;
 
 public class FileDataObjectStoreTreeNode extends FileTreeNode implements DataObjectStoreProxy,
-  DataObjectStoreConnectionMapProxy {
+DataObjectStoreConnectionMapProxy {
   private static final MenuFactory MENU = new MenuFactory();
 
   static {
@@ -59,9 +58,9 @@ public class FileDataObjectStoreTreeNode extends FileTreeNode implements DataObj
 
     SwingUtil.addLabel(panel, "Folder Connections");
     final List<DataObjectStoreConnectionRegistry> registries = DataObjectStoreConnectionManager.get()
-      .getVisibleConnectionRegistries();
+        .getVisibleConnectionRegistries();
     final JComboBox registryField = new JComboBox(new Vector<DataObjectStoreConnectionRegistry>(
-      registries));
+        registries));
 
     panel.add(registryField);
 

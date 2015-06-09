@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.util.Property;
 import com.revolsys.collection.Parent;
 import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.format.json.JsonMapIoFactory;
@@ -33,7 +32,7 @@ import com.revolsys.spring.SpringUtil;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.action.AddFileLayerAction;
 import com.revolsys.swing.map.layer.raster.GeoreferencedImageLayer;
-import com.revolsys.swing.map.layer.record.DataObjectFileLayer;
+import com.revolsys.swing.map.layer.record.FileRecordLayer;
 import com.revolsys.swing.map.layer.record.renderer.GeometryStyleRenderer;
 import com.revolsys.swing.map.layer.record.style.GeometryStyle;
 import com.revolsys.swing.menu.MenuFactory;
@@ -394,7 +393,7 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
 
   public Layer getLayerByPath(final String layerPath) {
     final List<String> path = CollectionUtil.split(layerPath.replaceAll("^\\s*/+\\s*", ""),
-      "(\\s*/+\\s*)+");
+        "(\\s*/+\\s*)+");
     return getLayerByPath(path);
   }
 
@@ -594,7 +593,7 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
       final GeoreferencedImageLayer layer = new GeoreferencedImageLayer(properties);
       add(layer);
     } else if (RecordIo.hasRecordReaderFactory(urlString)) {
-      final DataObjectFileLayer layer = new DataObjectFileLayer(properties);
+      final FileRecordLayer layer = new FileRecordLayer(properties);
       final GeometryStyleRenderer renderer = layer.getRenderer();
       renderer.setStyle(GeometryStyle.createStyle());
       add(layer);

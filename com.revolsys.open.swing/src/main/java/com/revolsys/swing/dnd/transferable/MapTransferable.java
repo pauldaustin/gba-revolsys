@@ -31,7 +31,7 @@ public class MapTransferable implements Transferable {
 
   @Override
   public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException,
-    IOException {
+  IOException {
     if (MAP_FLAVOR.equals(flavor)) {
       return this.map;
     } else if (DataFlavor.stringFlavor.equals(flavor)) {

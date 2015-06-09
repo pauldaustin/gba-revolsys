@@ -4,8 +4,6 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;

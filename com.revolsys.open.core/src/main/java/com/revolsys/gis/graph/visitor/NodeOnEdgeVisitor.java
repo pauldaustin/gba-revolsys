@@ -24,7 +24,7 @@ public class NodeOnEdgeVisitor<T> extends DelegatingVisitor<Edge<T>> {
     boundingBox = boundingBox.expand(maxDistance);
     final IdObjectIndex<Edge<T>> index = graph.getEdgeIndex();
     final NodeOnEdgeVisitor<T> visitor = new NodeOnEdgeVisitor<T>(node, boundingBox, maxDistance,
-      results);
+        results);
     index.visit(boundingBox, visitor);
     final List<Edge<T>> edges = results.getList();
     Collections.sort(edges);

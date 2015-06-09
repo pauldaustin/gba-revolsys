@@ -15,7 +15,7 @@ import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 import com.revolsys.util.Property;
 
 public class DataObjectStoreConnectionRegistryTreeNode extends LazyLoadTreeNode implements
-  PropertyChangeListener {
+PropertyChangeListener {
 
   public DataObjectStoreConnectionRegistryTreeNode(final DataObjectStoreConnectionsTreeNode parent,
     final DataObjectStoreConnectionRegistry registry) {

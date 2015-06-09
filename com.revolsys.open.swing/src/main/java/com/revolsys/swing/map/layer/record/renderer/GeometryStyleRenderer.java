@@ -20,7 +20,7 @@ import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.style.GeometryStyle;
 import com.revolsys.swing.map.layer.record.style.panel.GeometryStylePanel;
 import com.revolsys.swing.map.layer.record.style.panel.GeometryStylePreview;
@@ -199,13 +199,13 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
       Shape shape = null;
       final DataType geometryDataType = layer.getGeometryType();
       if (DataTypes.POINT.equals(geometryDataType)
-        || DataTypes.MULTI_POINT.equals(geometryDataType)) {
+          || DataTypes.MULTI_POINT.equals(geometryDataType)) {
         return this.style.getMarker().getIcon(geometryStyle);
       } else if (DataTypes.LINE_STRING.equals(geometryDataType)
-        || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
+          || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
         shape = GeometryStylePreview.getLineShape(16);
       } else if (DataTypes.POLYGON.equals(geometryDataType)
-        || DataTypes.POLYGON.equals(geometryDataType)) {
+          || DataTypes.POLYGON.equals(geometryDataType)) {
         shape = getPolygonShape();
       } else {
         return super.getIcon();
@@ -235,7 +235,7 @@ public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
 
   @Override
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject object) {
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord object) {
     final Geometry geometry = object.getGeometryValue();
     graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     renderGeometry(viewport, graphics, geometry, this.style);

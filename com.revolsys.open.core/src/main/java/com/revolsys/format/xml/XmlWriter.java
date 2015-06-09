@@ -30,11 +30,10 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.MathUtil;
+import com.revolsys.util.Property;
 
 /**
  * <p>
@@ -583,7 +582,7 @@ public class XmlWriter extends Writer {
       final QName currentElement = currentTag.getElement();
       if (!element.equals(currentElement)) {
         throw new IllegalArgumentException("Cannot end tag " + element + " expecting "
-          + currentElement);
+            + currentElement);
       }
       if (this.writingStartTag) {
         writeNamespaces();
@@ -1112,17 +1111,17 @@ public class XmlWriter extends Writer {
   }
 
   /**
-           * Write content for an attribute value to the output, escaping the characters
-           * that are used within markup. This method will escape characters ' <', '>',
-           * '&', 9, 10, 13 and '"'. Note the XML 1.0 standard does allow '>' to be used
-           * unless it is part of "]]>" for simplicity it is allways escaped in this
-           * implementation.
-           *
-           * @param buffer The character buffer to write
-           * @param offset The offset in the character data to write
-           * @param length The number of characters to write.
-           * @throws IOException If an I/O exception occurs.
-           */
+   * Write content for an attribute value to the output, escaping the characters
+   * that are used within markup. This method will escape characters ' <', '>',
+   * '&', 9, 10, 13 and '"'. Note the XML 1.0 standard does allow '>' to be used
+   * unless it is part of "]]>" for simplicity it is allways escaped in this
+   * implementation.
+   *
+   * @param buffer The character buffer to write
+   * @param offset The offset in the character data to write
+   * @param length The number of characters to write.
+   * @throws IOException If an I/O exception occurs.
+   */
   protected void writeAttributeContent(final char[] buffer, final int offset, final int length) {
     final int lastIndex = offset + length;
     int index = offset;
@@ -1132,32 +1131,32 @@ public class XmlWriter extends Writer {
       switch (ch) {
         case '&':
           escapeString = "&amp;";
-        break;
+          break;
         case '<':
           escapeString = "&lt;";
-        break;
+          break;
         case '>':
           escapeString = "&gt;";
-        break;
+          break;
         case '"':
           escapeString = "&quot;";
-        break;
+          break;
         case 9:
           escapeString = "&#9;";
-        break;
+          break;
         case 10:
           escapeString = "&#10;";
-        break;
+          break;
         case 13:
           escapeString = "&#13;";
-        break;
+          break;
         default:
           // Reject all other control characters
           if (ch < 32) {
             throw new IllegalStateException("character " + Integer.toString(ch)
               + " is not allowed in output");
           }
-        break;
+          break;
       }
       if (escapeString != null) {
         if (i > index) {
@@ -1184,16 +1183,16 @@ public class XmlWriter extends Writer {
   }
 
   /**
-           * Write content for an element to the output, escaping the characters that
-           * are used within markup. This method will escape characters ' <', '>' and
-           * '&'. Note the XML 1.0 standard does allow '>' to be used unless it is part
-           * of "]]>" for simplicity it is allways escaped in this implementation.
-           *
-           * @param buffer The character buffer to write
-           * @param offest The offset in the character data to write
-           * @param length The number of characters to write.
-           * @throws IOException If an I/O exception occurs.
-           */
+   * Write content for an element to the output, escaping the characters that
+   * are used within markup. This method will escape characters ' <', '>' and
+   * '&'. Note the XML 1.0 standard does allow '>' to be used unless it is part
+   * of "]]>" for simplicity it is allways escaped in this implementation.
+   *
+   * @param buffer The character buffer to write
+   * @param offest The offset in the character data to write
+   * @param length The number of characters to write.
+   * @throws IOException If an I/O exception occurs.
+   */
   protected void writeElementContent(final char[] buffer, final int offest, final int length) {
     int index = offest;
     final int lastIndex = index + length;
@@ -1203,25 +1202,25 @@ public class XmlWriter extends Writer {
       switch (ch) {
         case '&':
           escapeString = "&amp;";
-        break;
+          break;
         case '<':
           escapeString = "&lt;";
-        break;
+          break;
         case '>':
           escapeString = "&gt;";
-        break;
+          break;
         case 9:
         case 10:
         case 13:
-        // Accept these control characters
-        break;
+          // Accept these control characters
+          break;
         default:
           // Reject all other control characters
           if (ch < 32) {
             throw new IllegalStateException("character " + Integer.toString(ch)
               + " is not allowed in output");
           }
-        break;
+          break;
       }
       if (escapeString != null) {
         if (i > index) {

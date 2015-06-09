@@ -4,11 +4,10 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.map.MapSerializer;
+import com.revolsys.util.Property;
 
 public class FolderConnection implements MapSerializer {
   private final Map<String, Object> config = new LinkedHashMap<String, Object>();

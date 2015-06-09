@@ -245,7 +245,7 @@ public class OsnReader implements DataObjectIterator {
           this.osnIterator.nextStringValue();
           final String attributeName = this.osnIterator.nextAttributeName();
           if (attributeName != null
-            && (attributeName.equals("geoComponents") || attributeName.equals("annotationComponents"))) {
+              && (attributeName.equals("geoComponents") || attributeName.equals("annotationComponents"))) {
             if (this.osnIterator.next() == OsnIterator.START_SET) {
               return true;
             } else {

@@ -33,7 +33,7 @@ public class DataObjectStoreConnectionsTreeNode extends AbstractTreeNode {
   protected void init() {
     this.children = new ArrayList<TreeNode>();
     final List<DataObjectStoreConnectionRegistry> registries = DataObjectStoreConnectionManager.get()
-      .getVisibleConnectionRegistries();
+        .getVisibleConnectionRegistries();
     for (final DataObjectStoreConnectionRegistry registry : registries) {
       final DataObjectStoreConnectionRegistryTreeNode child = new DataObjectStoreConnectionRegistryTreeNode(
         this, registry);

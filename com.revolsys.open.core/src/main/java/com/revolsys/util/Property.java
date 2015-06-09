@@ -21,7 +21,6 @@ import javax.swing.JComponent;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.springframework.core.annotation.AnnotationUtils;
-import com.revolsys.util.Property;
 
 import com.revolsys.beans.NonWeakListener;
 import com.revolsys.beans.PropertyChangeSupportProxy;

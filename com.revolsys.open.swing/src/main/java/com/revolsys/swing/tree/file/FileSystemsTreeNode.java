@@ -20,7 +20,7 @@ public class FileSystemsTreeNode extends AbstractTreeNode {
 
   static {
     final InvokeMethodAction refresh = TreeItemRunnable.createAction("Refresh", "arrow_refresh",
-      "refresh");
+        "refresh");
     MENU.addMenuItem("default", refresh);
   }
 

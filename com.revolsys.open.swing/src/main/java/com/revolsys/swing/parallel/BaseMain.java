@@ -15,12 +15,12 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import com.revolsys.util.Property;
 
 import com.revolsys.swing.listener.MacApplicationListenerHandler;
 import com.revolsys.swing.logging.ListLog4jAppender;
 import com.revolsys.swing.logging.LoggingEventPanel;
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 
 public class BaseMain implements UncaughtExceptionHandler {
 

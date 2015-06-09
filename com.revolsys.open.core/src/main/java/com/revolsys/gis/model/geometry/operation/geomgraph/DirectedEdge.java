@@ -33,10 +33,10 @@ public class DirectedEdge extends EdgeEnd {
   private DirectedEdge sym; // the symmetric edge
 
   private DirectedEdge next; // the next edge in the edge ring for the polygon
-                             // containing this edge
+  // containing this edge
 
   private DirectedEdge nextMin; // the next edge in the MinimalEdgeRing that
-                                // contains this edge
+  // contains this edge
 
   private EdgeRing edgeRing; // the EdgeRing that this edge is part of
 
@@ -153,9 +153,9 @@ public class DirectedEdge extends EdgeEnd {
   public boolean isLineEdge() {
     final boolean isLine = this.label.isLine(0) || this.label.isLine(1);
     final boolean isExteriorIfArea0 = !this.label.isArea(0)
-      || this.label.allPositionsEqual(0, Location.EXTERIOR);
+        || this.label.allPositionsEqual(0, Location.EXTERIOR);
     final boolean isExteriorIfArea1 = !this.label.isArea(1)
-      || this.label.allPositionsEqual(1, Location.EXTERIOR);
+        || this.label.allPositionsEqual(1, Location.EXTERIOR);
 
     return isLine && isExteriorIfArea0 && isExteriorIfArea1;
   }

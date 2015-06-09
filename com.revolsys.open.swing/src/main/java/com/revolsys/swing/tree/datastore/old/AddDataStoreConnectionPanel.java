@@ -6,13 +6,12 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.io.connection.ConnectionRegistry;
 import com.revolsys.io.datastore.DataObjectStoreConnection;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.util.PasswordUtil;
+import com.revolsys.util.Property;
 
 public class AddDataStoreConnectionPanel extends ValueField {
   private static final long serialVersionUID = 2750736040832727823L;

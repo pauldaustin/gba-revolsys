@@ -10,7 +10,6 @@ import javax.measure.unit.Unit;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
@@ -28,6 +27,7 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.gis.model.geometry.LineSegment;
 import com.revolsys.util.MathUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -175,7 +175,7 @@ public class BoundingBox extends Envelope implements Cloneable {
   public static boolean intersects(final double p1X, final double p1Y, final double p2X,
     final double p2Y, final double qX, final double qY) {
     if (qX >= (p1X < p2X ? p1X : p2X) && qX <= (p1X > p2X ? p1X : p2X)
-      && qY >= (p1Y < p2Y ? p1Y : p2Y) && qY <= (p1Y > p2Y ? p1Y : p2Y)) {
+        && qY >= (p1Y < p2Y ? p1Y : p2Y) && qY <= (p1Y > p2Y ? p1Y : p2Y)) {
       return true;
     } else {
       return false;
@@ -229,7 +229,7 @@ public class BoundingBox extends Envelope implements Cloneable {
       return new BoundingBox(GeometryFactory.floating3(4326), x1, y1, x2, y2);
     } else {
       throw new IllegalArgumentException("BBOX must have match <minX>,<minY>,<maxX>,<maxY> not "
-        + bbox);
+          + bbox);
     }
   }
 
@@ -456,7 +456,7 @@ public class BoundingBox extends Envelope implements Cloneable {
 
   public BoundingBox convert(final GeometryFactory geometryFactory) {
     if (this.geometryFactory == null || geometryFactory == null
-      || this.geometryFactory.equals(geometryFactory) || isEmpty()) {
+        || this.geometryFactory.equals(geometryFactory) || isEmpty()) {
       return this;
     } else {
       final CoordinatesOperation operation = ProjectionFactory.getCoordinatesOperation(
@@ -770,7 +770,7 @@ public class BoundingBox extends Envelope implements Cloneable {
 
   public String getId() {
     final String string = MathUtil.toString(getMinX()) + "_" + MathUtil.toString(getMinY()) + "_"
-      + MathUtil.toString(getMaxX()) + "_" + MathUtil.toString(getMaxY());
+        + MathUtil.toString(getMaxX()) + "_" + MathUtil.toString(getMaxY());
     if (this.geometryFactory == null) {
       return string;
     } else {

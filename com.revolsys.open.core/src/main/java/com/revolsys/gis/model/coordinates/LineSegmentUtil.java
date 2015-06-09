@@ -69,14 +69,14 @@ public class LineSegmentUtil {
       final double line2ToY = line2To.getY();
 
       final double r_top = (line1FromY - line2FromY) * (line2ToX - line2FromX)
-        - (line1FromX - line2FromX) * (line2ToY - line2FromY);
+          - (line1FromX - line2FromX) * (line2ToY - line2FromY);
       final double r_bot = (line1ToX - line1FromX) * (line2ToY - line2FromY)
-        - (line1ToY - line1FromY) * (line2ToX - line2FromX);
+          - (line1ToY - line1FromY) * (line2ToX - line2FromX);
 
       final double s_top = (line1FromY - line2FromY) * (line1ToX - line1FromX)
-        - (line1FromX - line2FromX) * (line1ToY - line1FromY);
+          - (line1FromX - line2FromX) * (line1ToY - line1FromY);
       final double s_bot = (line1ToX - line1FromX) * (line2ToY - line2FromY)
-        - (line1ToY - line1FromY) * (line2ToX - line2FromX);
+          - (line1ToY - line1FromY) * (line2ToX - line2FromX);
 
       if (r_bot == 0 || s_bot == 0) {
         return Math.min(
@@ -289,7 +289,7 @@ public class LineSegmentUtil {
     line2End = geometryFactory.createCoordinates(line2End);
     if (BoundingBox.intersects(line1Start, line1End, line2Start, line2End)) {
       final Set<Coordinates> intersections = new TreeSet<Coordinates>(
-        new CoordinatesDistanceComparator(line1Start));
+          new CoordinatesDistanceComparator(line1Start));
       if (LineSegmentUtil.isPointOnLine(geometryFactory, line2Start, line2End, line1Start)) {
         intersections.add(line1Start);
       }

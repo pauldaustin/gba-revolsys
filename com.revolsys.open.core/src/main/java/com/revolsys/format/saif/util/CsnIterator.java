@@ -521,7 +521,7 @@ public class CsnIterator {
 
   public void processComponent(final String componentName) throws IOException {
     final String methodName = "process" + Character.toUpperCase(componentName.charAt(0))
-      + componentName.substring(1);
+        + componentName.substring(1);
     try {
       final Method method = getClass().getMethod(methodName, new Class[0]);
       method.invoke(this, new Object[0]);
@@ -593,7 +593,7 @@ public class CsnIterator {
       }
     } else {
       throw new IllegalStateException(
-        "Expecting end of definition, class name or definition component");
+          "Expecting end of definition, class name or definition component");
     }
   }
 
@@ -634,7 +634,7 @@ public class CsnIterator {
     this.nextEventType = findStartDefinition(buffer);
     if (this.nextEventType == UNKNOWN) {
       throw new IllegalStateException(this.lineNumber + ":"
-        + "Expecting start of an object definition");
+          + "Expecting start of an object definition");
     }
   }
 
@@ -833,7 +833,7 @@ public class CsnIterator {
         this.scopeStack.pop();
       } else {
         throw new IllegalStateException(
-          "Expecting a tag value, component name or end of definition");
+            "Expecting a tag value, component name or end of definition");
       }
     } else if (tagName.equals("comments") && getStrippedBuffer().charAt(0) == ':') {
       removeToken(0, 1);

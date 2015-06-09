@@ -16,7 +16,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
 public class GeoJsonIoFactory extends AbstractRecordAndGeometryWriterFactory implements
-  GeometryReaderFactory {
+GeometryReaderFactory {
 
   public GeoJsonIoFactory() {
     super(GeoJsonConstants.DESCRIPTION, true, true);

@@ -6,6 +6,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -29,16 +31,16 @@ import com.revolsys.swing.dnd.ClipboardUtil;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.component.AttributeFilterPanel;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.table.TablePanel;
 import com.revolsys.swing.table.TableRowCount;
-import com.revolsys.swing.table.dataobject.editor.DataObjectTableCellEditor;
-import com.revolsys.swing.table.dataobject.model.DataObjectRowTableModel;
-import com.revolsys.swing.table.dataobject.row.DataObjectRowPropertyEnableCheck;
-import com.revolsys.swing.table.dataobject.row.DataObjectRowRunnable;
+import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
+import com.revolsys.swing.table.record.model.RecordRowTableModel;
+import com.revolsys.swing.table.record.row.RecordRowPropertyEnableCheck;
+import com.revolsys.swing.table.record.row.RecordRowRunnable;
 import com.revolsys.swing.toolbar.ToolBar;
 import com.revolsys.swing.tree.ObjectTree;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
@@ -50,17 +52,17 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
 
   public static final String FILTER_GEOMETRY = "filter_geometry";
 
-  public static final String FILTER_ATTRIBUTE = "filter_attribute";
+  public static final String FILTER_FIELD = "filter_attribute";
 
   private final AbstractRecordLayer layer;
 
   private final RecordLayerTableModel tableModel;
 
-  private final JToggleButton selectedButton;
+  private final RecordTableCellEditor tableCellEditor;
 
-  private final DataObjectTableCellEditor tableCellEditor;
+  private final Map<String, JToggleButton> buttonByMode = new HashMap<>();
 
-  public RecordLayerTablePanel(final AbstractRecordLayer layer, final DataObjectLayerTable table) {
+  public RecordLayerTablePanel(final AbstractRecordLayer layer, final RecordLayerTable table) {
     super(table);
     this.layer = layer;
     this.tableCellEditor = table.getTableCellEditor();
@@ -70,11 +72,11 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     this.tableModel = getTableModel();
     final RecordDefinition metaData = layer.getRecordDefinition();
     final boolean hasGeometry = metaData.getGeometryFieldIndex() != -1;
-    final EnableCheck deletableEnableCheck = new DataObjectRowPropertyEnableCheck("deletable");
+    final EnableCheck deletableEnableCheck = new RecordRowPropertyEnableCheck("deletable");
 
-    final EnableCheck modifiedEnableCheck = new DataObjectRowPropertyEnableCheck("modified");
-    final EnableCheck deletedEnableCheck = new DataObjectRowPropertyEnableCheck("deleted");
-    final EnableCheck notEnableCheck = new DataObjectRowPropertyEnableCheck("deleted", false);
+    final EnableCheck modifiedEnableCheck = new RecordRowPropertyEnableCheck("modified");
+    final EnableCheck deletedEnableCheck = new RecordRowPropertyEnableCheck("deleted");
+    final EnableCheck notEnableCheck = new RecordRowPropertyEnableCheck("deleted", false);
     final OrEnableCheck modifiedOrDeleted = new OrEnableCheck(modifiedEnableCheck,
       deletedEnableCheck);
 
@@ -96,10 +98,10 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     menu.addMenuItemTitleIcon("record", "Delete Record", "table_row_delete", deletableEnableCheck,
       this, "deleteRecord");
 
-    menu.addMenuItem("record", DataObjectRowRunnable.createAction("Revert Record", "arrow_revert",
+    menu.addMenuItem("record", RecordRowRunnable.createAction("Revert Record", "arrow_revert",
       modifiedOrDeleted, "revertChanges"));
 
-    menu.addMenuItem("record", DataObjectRowRunnable.createAction("Revert Empty Fields",
+    menu.addMenuItem("record", RecordRowRunnable.createAction("Revert Empty Fields",
       "field_empty_revert", modifiedEnableCheck, "revertEmptyFields"));
 
     menu.addMenuItemTitleIcon("dnd", "Copy Record", "page_copy", this, "copyRecord");
@@ -122,8 +124,7 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
         || geometryDataType == DataTypes.MULTI_LINE_STRING) {
         if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_RECORD_NAME,
-            RecordLayerForm.FLIP_RECORD_ICON, editableEnableCheck, this,
-            "flipRecordOrientation");
+            RecordLayerForm.FLIP_RECORD_ICON, editableEnableCheck, this, "flipRecordOrientation");
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_LINE_ORIENTATION_NAME,
             RecordLayerForm.FLIP_LINE_ORIENTATION_ICON, editableEnableCheck, this,
             "flipLineOrientation");
@@ -165,32 +166,45 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
 
     // Filter buttons
 
-    final JToggleButton clearFilter = toolBar.addToggleButtonTitleIcon(FILTER_ATTRIBUTE, -1,
-      "Show All Records", "table_filter", this.tableModel, "setAttributeFilterMode",
-      RecordLayerTableModel.MODE_ALL);
+    final JToggleButton clearFilter = addFieldFilterToggleButton(toolBar, -1, "Show All Records",
+      "table_filter", RecordLayerTableModel.MODE_ALL, null);
     clearFilter.doClick();
 
-    toolBar.addToggleButton(FILTER_ATTRIBUTE, -1, "Show Only Changed Records",
-      "change_table_filter", editableEnableCheck, this.tableModel, "setAttributeFilterMode",
-      RecordLayerTableModel.MODE_EDITS);
+    addFieldFilterToggleButton(toolBar, -1, "Show Only Changed Records", "change_table_filter",
+      RecordLayerTableModel.MODE_EDITS, editableEnableCheck);
 
-    this.selectedButton = toolBar.addToggleButton(FILTER_ATTRIBUTE, -1,
-      "Show Only Selected Records", "filter_selected", null, this.tableModel,
-      "setAttributeFilterMode", RecordLayerTableModel.MODE_SELECTED);
+    addFieldFilterToggleButton(toolBar, -1, "Show Only Selected Records", "filter_selected",
+      RecordLayerTableModel.MODE_SELECTED, null);
 
     if (hasGeometry) {
-      final JToggleButton showAllGeometries = toolBar.addToggleButtonTitleIcon(FILTER_GEOMETRY, -1,
-        "Show All Records ", "world_filter", this.tableModel, "setFilterByBoundingBox", false);
+      final JToggleButton showAllGeometries = addGeometryFilterToggleButton(toolBar, -1,
+        "Show All Records ", "world_filter", "all", null);
       showAllGeometries.doClick();
 
-      toolBar.addToggleButtonTitleIcon(FILTER_GEOMETRY, -1, "Show Records on Map", "map_filter",
-        this.tableModel, "setFilterByBoundingBox", true);
+      addGeometryFilterToggleButton(toolBar, -1, "Show Records on Map", "map_filter",
+        "boundingBox", null);
     }
     Property.addListener(layer, this);
   }
 
+  protected JToggleButton addFieldFilterToggleButton(final ToolBar toolBar, final int index,
+    final String title, final String icon, final String mode, final EnableCheck enableCheck) {
+    final JToggleButton button = toolBar.addToggleButtonTitleIcon(FILTER_FIELD, index, title, icon,
+      () -> setFieldFilterMode(mode));
+    this.buttonByMode.put(FILTER_FIELD + "_" + mode, button);
+    return button;
+  }
+
+  protected JToggleButton addGeometryFilterToggleButton(final ToolBar toolBar, final int index,
+    final String title, final String icon, final String mode, final EnableCheck enableCheck) {
+    final JToggleButton button = toolBar.addToggleButtonTitleIcon(FILTER_GEOMETRY, index, title,
+      icon, () -> setGeometryFilterMode(mode));
+    this.buttonByMode.put(FILTER_GEOMETRY + "_" + mode, button);
+    return button;
+  }
+
   public boolean canPasteRecordGeometry() {
-    final LayerDataObject record = getEventRowObject();
+    final LayerRecord record = getEventRowObject();
     return this.layer.canPasteRecordGeometry(record);
   }
 
@@ -199,7 +213,7 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
       final JComponent editorComponent = this.tableCellEditor.getEditorComponent();
       SwingUtil.dndCopy(editorComponent);
     } else {
-      final DataObjectRowTableModel model = getTableModel();
+      final RecordRowTableModel model = getTableModel();
       final int row = getEventRow();
       final int column = getEventColumn();
       final Object value = model.getValueAt(row, column);
@@ -211,7 +225,7 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
   }
 
   public void copyRecord() {
-    final LayerDataObject record = getEventRowObject();
+    final LayerRecord record = getEventRowObject();
     this.layer.copyRecordsToClipboard(Collections.singletonList(record));
   }
 
@@ -223,12 +237,12 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
   }
 
   public void deleteRecord() {
-    final LayerDataObject object = getEventRowObject();
+    final LayerRecord object = getEventRowObject();
     this.layer.deleteRecords(object);
   }
 
   public void editRecord() {
-    final LayerDataObject object = getEventRowObject();
+    final LayerRecord object = getEventRowObject();
     if (object != null && !object.isDeleted()) {
       this.layer.showForm(object);
     }
@@ -252,14 +266,14 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
   }
 
   public Collection<? extends String> getColumnNames() {
-    return this.layer.getColumnNames();
+    return this.layer.getFieldNames();
   }
 
-  protected LayerDataObject getEventRowObject() {
-    final DataObjectRowTableModel model = getTableModel();
+  protected LayerRecord getEventRowObject() {
+    final RecordRowTableModel model = getTableModel();
     final int row = getEventRow();
     if (row > -1) {
-      final LayerDataObject object = model.getRecord(row);
+      final LayerRecord object = model.getRecord(row);
       return object;
     } else {
       return null;
@@ -294,14 +308,14 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
   }
 
   public void pasteGeometry() {
-    final LayerDataObject record = getEventRowObject();
+    final LayerRecord record = getEventRowObject();
     this.layer.pasteRecordGeometry(record);
   }
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
     final Object source = event.getSource();
-    if (source instanceof LayerDataObject) {
+    if (source instanceof LayerRecord) {
       repaint();
     } else if (source == this.layer) {
       final String propertyName = event.getPropertyName();
@@ -323,8 +337,24 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
   }
 
   public void setFieldFilterMode(final String mode) {
-    if (RecordLayerTableModel.MODE_SELECTED.equals(mode)) {
-      this.selectedButton.doClick();
+    final JToggleButton button = this.buttonByMode.get(FILTER_FIELD + "_" + mode);
+    if (button != null) {
+      if (!button.isSelected()) {
+        button.doClick();
+      }
+      this.tableModel.setFieldFilterMode(mode);
+      this.layer.setProperty("fieldFilterMode", mode);
+    }
+  }
+
+  public void setGeometryFilterMode(final String mode) {
+    final JToggleButton button = this.buttonByMode.get(FILTER_GEOMETRY + "_" + mode);
+    if (button != null) {
+      if (!button.isSelected()) {
+        button.doClick();
+      }
+      this.tableModel.setFilterByBoundingBox("boundingBox".equals(mode));
+      this.layer.setProperty("geometryFilterMode", mode);
     }
   }
 

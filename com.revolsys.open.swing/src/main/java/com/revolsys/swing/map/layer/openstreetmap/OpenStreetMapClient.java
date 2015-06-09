@@ -97,8 +97,8 @@ public class OpenStreetMapClient {
   public int getTileY(final int zoomLevel, final double latitude) {
     final double radians = Math.toRadians(latitude);
     final int tileY = (int)Math.floor((1 - Math.log(Math.tan(radians) + 1 / Math.cos(radians))
-      / Math.PI)
-      / 2 * (1 << zoomLevel));
+        / Math.PI)
+        / 2 * (1 << zoomLevel));
     return tileY;
   }
 

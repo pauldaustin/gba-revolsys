@@ -486,7 +486,7 @@ public class PackedCoordinateUtil {
 
   private static void readOordinates(final PackedIntegerInputStream in,
     final CoordinatesList points, final int axisIndex, final double offset, final double scale)
-    throws IOException {
+        throws IOException {
 
     double previousValue = offset;
     final int numPoints = points.size();

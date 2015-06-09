@@ -97,7 +97,7 @@ public class SaifSchemaReader {
 
   private void addExportedObjects() {
     final RecordDefinitionImpl exportedObjectHandle = new RecordDefinitionImpl(
-      "ExportedObjectHandle");
+        "ExportedObjectHandle");
     this.schema.addMetaData(exportedObjectHandle);
     exportedObjectHandle.addField("referenceID", DataTypes.STRING, true);
     exportedObjectHandle.addField("type", DataTypes.STRING, true);
@@ -135,9 +135,9 @@ public class SaifSchemaReader {
   }
 
   public void attributes(final RecordDefinition type, final CsnIterator iterator)
-    throws IOException {
+      throws IOException {
     while (iterator.getNextEventType() == CsnIterator.ATTRIBUTE_NAME
-      || iterator.getNextEventType() == CsnIterator.OPTIONAL_ATTRIBUTE) {
+        || iterator.getNextEventType() == CsnIterator.OPTIONAL_ATTRIBUTE) {
       boolean required = true;
       switch (iterator.next()) {
         case CsnIterator.OPTIONAL_ATTRIBUTE:
@@ -158,7 +158,7 @@ public class SaifSchemaReader {
 
               this.currentClass.addField(attributeName, dataType, required);
 
-            break;
+              break;
             case CsnIterator.COLLECTION_ATTRIBUTE:
               final String collectionType = iterator.getPathValue();
               if (iterator.next() == CsnIterator.CLASS_NAME) {
@@ -175,26 +175,26 @@ public class SaifSchemaReader {
               } else {
                 throw new IllegalStateException("Expecting attribute type");
               }
-            break;
+              break;
             case CsnIterator.STRING_ATTRIBUTE:
               int length = Integer.MAX_VALUE;
               if (iterator.getEventType() == CsnIterator.STRING_ATTRIBUTE_LENGTH) {
                 length = iterator.getIntegerValue();
               }
               this.currentClass.addField(attributeName, DataTypes.STRING, length, required);
-            break;
+              break;
             default:
               throw new IllegalStateException("Unknown event type: " + iterator.getEventType());
           }
-        break;
+          break;
         default:
-        break;
+          break;
       }
     }
   }
 
   public void classAttributes(final RecordDefinition type, final CsnIterator iterator)
-    throws IOException {
+      throws IOException {
   }
 
   public void comments(final RecordDefinition type, final CsnIterator iterator) throws IOException {
@@ -236,7 +236,7 @@ public class SaifSchemaReader {
 
           }
           this.currentSuperClasses.add(superClass);
-        break;
+          break;
         case CsnIterator.COMPONENT_NAME:
           final String componentName = iterator.getStringValue();
           try {
@@ -265,7 +265,7 @@ public class SaifSchemaReader {
             }
           }
         default:
-        break;
+          break;
       }
     }
     return this.currentClass;
@@ -305,7 +305,7 @@ public class SaifSchemaReader {
   }
 
   public RecordDefinitionFactory loadSchema(final String fileName, final InputStream in)
-    throws IOException {
+      throws IOException {
     return loadSchema(new CsnIterator(fileName, in));
   }
 
@@ -346,7 +346,7 @@ public class SaifSchemaReader {
   }
 
   public void restricted(final RecordDefinition type, final CsnIterator iterator)
-    throws IOException {
+      throws IOException {
     while (iterator.getNextEventType() == CsnIterator.ATTRIBUTE_PATH) {
       iterator.next();
       String attributeName = iterator.getStringValue();
@@ -359,7 +359,7 @@ public class SaifSchemaReader {
             iterator.next();
             final String typePath = iterator.getPathValue();
             typePaths.add(typePath);
-          break;
+            break;
           case CsnIterator.FORCE_TYPE:
             iterator.next();
             if (iterator.next() == CsnIterator.CLASS_NAME) {
@@ -367,7 +367,7 @@ public class SaifSchemaReader {
             } else {
               throw new IllegalStateException("Expecting a class name");
             }
-          break;
+            break;
           case CsnIterator.EXCLUDE_TYPE:
             iterator.next();
             if (iterator.next() == CsnIterator.CLASS_NAME) {
@@ -375,14 +375,14 @@ public class SaifSchemaReader {
             } else {
               throw new IllegalStateException("Expecting a class name");
             }
-          break;
+            break;
           case CsnIterator.VALUE:
             iterator.next();
             values.add(iterator.getValue());
-          break;
+            break;
           default:
             hasMore = false;
-          break;
+            break;
         }
       }
       attributeName = attributeName.replaceFirst("position.geometry", "position");

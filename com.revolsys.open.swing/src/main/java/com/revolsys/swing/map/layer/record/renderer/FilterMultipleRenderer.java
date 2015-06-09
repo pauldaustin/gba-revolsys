@@ -11,7 +11,7 @@ import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.util.ExceptionUtil;
 import com.vividsolutions.jts.geom.TopologyException;
 
@@ -34,7 +34,7 @@ public class FilterMultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject record) {
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord record) {
     if (isVisible(record)) {
       final double scale = viewport.getScale();
       for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
@@ -46,7 +46,7 @@ public class FilterMultipleRenderer extends AbstractMultipleRenderer {
               } catch (final TopologyException e) {
               } catch (final Throwable e) {
                 ExceptionUtil.log(getClass(), "Unabled to render " + layer.getName() + " #"
-                  + record.getIdString(), e);
+                    + record.getIdString(), e);
               }
             }
           }
@@ -59,7 +59,7 @@ public class FilterMultipleRenderer extends AbstractMultipleRenderer {
 
   @Override
   public void renderSelectedRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final AbstractRecordLayer layer, final LayerDataObject record) {
+    final AbstractRecordLayer layer, final LayerRecord record) {
     if (isVisible(record)) {
       final double scale = viewport.getScale();
       for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
@@ -70,7 +70,7 @@ public class FilterMultipleRenderer extends AbstractMultipleRenderer {
                 renderer.renderSelectedRecord(viewport, graphics, layer, record);
               } catch (final Throwable e) {
                 ExceptionUtil.log(getClass(), "Unabled to render " + layer.getName() + " #"
-                  + record.getIdString(), e);
+                    + record.getIdString(), e);
               }
             }
           }

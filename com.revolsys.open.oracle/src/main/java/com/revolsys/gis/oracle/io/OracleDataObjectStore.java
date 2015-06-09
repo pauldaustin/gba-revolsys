@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.collection.ResultPager;
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.data.query.Query;
@@ -32,6 +30,7 @@ import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jdbc.io.DataStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 
 public class OracleDataObjectStore extends AbstractJdbcRecordStore {
   public static final List<String> ORACLE_INTERNAL_SCHEMAS = Arrays.asList("ANONYMOUS",
@@ -97,9 +96,9 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
 
         if (geometryAttribute instanceof OracleSdoGeometryJdbcAttribute) {
           final String where = " SDO_RELATE("
-            + geometryColumnName
-            + ","
-            + "MDSYS.SDO_GEOMETRY(2003,?,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,3),MDSYS.SDO_ORDINATE_ARRAY(?,?,?,?)),'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'";
+              + geometryColumnName
+              + ","
+              + "MDSYS.SDO_GEOMETRY(2003,?,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,3),MDSYS.SDO_ORDINATE_ARRAY(?,?,?,?)),'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'";
           query.and(new SqlCondition(where, geometryFactory.getSRID(), x1, y1, x2, y2));
         } else if (geometryAttribute instanceof ArcSdeStGeometryAttribute) {
           final String where = " SDE.ST_ENVINTERSECTS(" + geometryColumnName + ", ?, ?, ?, ?) = 1";
@@ -208,12 +207,12 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
       setPrimaryKeySql("SELECT distinct cols.table_name, cols.column_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner =?");
 
       setSchemaPermissionsSql("select distinct p.owner \"SCHEMA_NAME\" "
-        + "from ALL_TAB_PRIVS_RECD P "
-        + "where p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') union all select USER \"SCHEMA_NAME\" from DUAL");
+          + "from ALL_TAB_PRIVS_RECD P "
+          + "where p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') union all select USER \"SCHEMA_NAME\" from DUAL");
       setTablePermissionsSql("select distinct p.owner \"SCHEMA_NAME\", p.table_name, p.privilege, comments \"REMARKS\" "
-        + "from ALL_TAB_PRIVS_RECD P "
-        + "join all_tab_comments C on (p.owner = c.owner and p.table_name = c.table_name) "
-        + "where p.owner = ? and c.table_type in ('TABLE', 'VIEW') and p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') ");
+          + "from ALL_TAB_PRIVS_RECD P "
+          + "join all_tab_comments C on (p.owner = c.owner and p.table_name = c.table_name) "
+          + "where p.owner = ? and c.table_type in ('TABLE', 'VIEW') and p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') ");
 
       addDataStoreExtension(new ArcSdeStGeometryDataStoreExtension());
       addDataStoreExtension(new ArcSdeBinaryGeometryDataStoreExtension());

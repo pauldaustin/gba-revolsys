@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.gis.grid.RectangularMapGrid;
 import com.revolsys.gis.grid.RectangularMapTile;
@@ -17,6 +16,7 @@ import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.tree.TreeUtil;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.PreferencesUtil;
+import com.revolsys.util.Property;
 
 @SuppressWarnings("serial")
 public class ZoomToMapSheet extends AbstractAction {

@@ -49,10 +49,10 @@ public class LineStringRelate {
 
     final Map<Coordinates, Coordinates> movedNodes = new HashMap<Coordinates, Coordinates>();
     final InvokeMethodVisitor<Node<LineSegment>> moveNodesVisitor1 = new InvokeMethodVisitor<Node<LineSegment>>(
-      this.graph2, "movePointsWithinTolerance", movedNodes, tolerance);
+        this.graph2, "movePointsWithinTolerance", movedNodes, tolerance);
     this.graph1.visitNodes(moveNodesVisitor1);
     final InvokeMethodVisitor<Node<LineSegment>> moveNodesVisitor2 = new InvokeMethodVisitor<Node<LineSegment>>(
-      this.graph1, "movePointsWithinTolerance", movedNodes, tolerance);
+        this.graph1, "movePointsWithinTolerance", movedNodes, tolerance);
     this.graph2.visitNodes(moveNodesVisitor2);
 
     final int i = 0;

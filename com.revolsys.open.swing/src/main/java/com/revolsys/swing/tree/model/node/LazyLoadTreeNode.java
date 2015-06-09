@@ -16,7 +16,7 @@ import com.revolsys.util.ExceptionUtil;
 public abstract class LazyLoadTreeNode extends AbstractTreeNode {
 
   private static final DefaultMutableTreeNode LOADING_NODE = new DefaultMutableTreeNode(
-    "Loading...");
+      "Loading...");
 
   private static final List<TreeNode> LOADING_NODES = Collections.<TreeNode> singletonList(LOADING_NODE);
 

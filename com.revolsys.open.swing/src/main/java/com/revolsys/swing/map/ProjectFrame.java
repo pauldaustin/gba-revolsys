@@ -60,8 +60,8 @@ import com.revolsys.swing.map.layer.geonames.GeoNamesBoundingBoxLayerWorker;
 import com.revolsys.swing.map.layer.grid.GridLayer;
 import com.revolsys.swing.map.layer.openstreetmap.OpenStreetMapLayer;
 import com.revolsys.swing.map.layer.raster.GeoreferencedImageLayer;
-import com.revolsys.swing.map.layer.record.DataObjectFileLayer;
-import com.revolsys.swing.map.layer.record.DataObjectStoreLayer;
+import com.revolsys.swing.map.layer.record.FileRecordLayer;
+import com.revolsys.swing.map.layer.record.RecordStoreLayer;
 import com.revolsys.swing.map.layer.wikipedia.WikipediaBoundingBoxLayerWorker;
 import com.revolsys.swing.map.tree.ProjectTreeNodeModel;
 import com.revolsys.swing.menu.MenuFactory;
@@ -91,11 +91,11 @@ public class ProjectFrame extends BaseFrame {
 
     // TODO move to a file config
     MapObjectFactoryRegistry.addFactory(LayerGroup.FACTORY);
-    MapObjectFactoryRegistry.addFactory(DataObjectStoreLayer.FACTORY);
+    MapObjectFactoryRegistry.addFactory(RecordStoreLayer.FACTORY);
     MapObjectFactoryRegistry.addFactory(ArcGisServerRestLayer.FACTORY);
     MapObjectFactoryRegistry.addFactory(BingLayer.FACTORY);
     MapObjectFactoryRegistry.addFactory(OpenStreetMapLayer.FACTORY);
-    MapObjectFactoryRegistry.addFactory(DataObjectFileLayer.FACTORY);
+    MapObjectFactoryRegistry.addFactory(FileRecordLayer.FACTORY);
     MapObjectFactoryRegistry.addFactory(GridLayer.FACTORY);
     MapObjectFactoryRegistry.addFactory(WikipediaBoundingBoxLayerWorker.FACTORY);
     MapObjectFactoryRegistry.addFactory(GeoNamesBoundingBoxLayerWorker.FACTORY);
@@ -135,7 +135,7 @@ public class ProjectFrame extends BaseFrame {
 
     final ActionMap actionMap = component.getActionMap();
     actionMap.put(SAVE_PROJECT_KEY, new InvokeMethodAction(SAVE_PROJECT_KEY, project,
-      "saveAllSettings"));
+        "saveAllSettings"));
     actionMap.put(SAVE_CHANGES_KEY,
       new InvokeMethodAction(SAVE_CHANGES_KEY, project, "saveChanges"));
   }
@@ -297,7 +297,7 @@ public class ProjectFrame extends BaseFrame {
 
     if (OS.isWindows()) {
       tools.addMenuItem("options", "Options...", "Options...", null, null, PreferencesDialog.get(),
-        "showPanel");
+          "showPanel");
     }
     addMenu(menuBar, tools);
     WindowManager.addMenu(menuBar);
@@ -317,7 +317,7 @@ public class ProjectFrame extends BaseFrame {
     final MenuFactory tools = new MenuFactory("Tools");
 
     tools.addMenuItem("script", "Run Script...", "Run Script", Icons.getIcon("script_go"), this,
-      "runScript");
+        "runScript");
     return tools;
   }
 
@@ -507,7 +507,7 @@ public class ProjectFrame extends BaseFrame {
     final JFileChooser fileChooser = SwingUtil.createFileChooser("Select Script",
       "com.revolsys.swing.tools.script", "directory");
     final FileNameExtensionFilter groovyFilter = new FileNameExtensionFilter("Groovy Script",
-      "groovy");
+        "groovy");
     fileChooser.addChoosableFileFilter(groovyFilter);
     fileChooser.setMultiSelectionEnabled(false);
     final int returnVal = fileChooser.showOpenDialog(this);

@@ -93,7 +93,7 @@ public class XbaseIterator extends AbstractIterator<Record> implements RecordIte
   private String typeName;
 
   public XbaseIterator(final Resource resource, final RecordFactory dataObjectFactory)
-    throws IOException {
+      throws IOException {
     this.typeName = "/" + this.typeName;
     this.resource = resource;
 

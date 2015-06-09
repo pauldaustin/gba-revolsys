@@ -121,6 +121,6 @@ public class In extends Condition {
   @Override
   public String toString() {
     return StringConverterRegistry.toString(this.left) + " IN "
-      + StringConverterRegistry.toString(this.values);
+        + StringConverterRegistry.toString(this.values);
   }
 }

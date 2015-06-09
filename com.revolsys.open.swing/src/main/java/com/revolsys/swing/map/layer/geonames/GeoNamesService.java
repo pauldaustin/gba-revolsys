@@ -92,7 +92,7 @@ public class GeoNamesService {
     final double width = geographicBoundingBox.getWidth();
     final double diagonal = Math.sqrt(width * width + height * height);
     final double radiusKm = cs.getUnit().getConverterTo(SI.RADIAN).convert(diagonal) * radius
-      / 1000;
+        / 1000;
 
     params.put("lat", geographicBoundingBox.getCentreY());
     params.put("lng", geographicBoundingBox.getCentreX());

@@ -7,7 +7,6 @@ import java.awt.event.FocusListener;
 import javax.swing.JTextField;
 
 import org.jdesktop.swingx.JXTextField;
-import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -15,6 +14,7 @@ import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
+import com.revolsys.util.Property;
 
 public class TextField extends JXTextField implements Field, FocusListener {
   private static final long serialVersionUID = 1L;

@@ -30,7 +30,7 @@ import com.revolsys.swing.tree.model.node.StringTreeNodeModel;
 import com.revolsys.util.ExceptionUtil;
 
 public class ObjectTreeModel implements TreeModel, TreeWillExpandListener, TreeExpansionListener,
-  PropertyChangeListener {
+PropertyChangeListener {
 
   private static final ClassRegistry<MenuFactory> CLASS_MENUS = new ClassRegistry<MenuFactory>();
 

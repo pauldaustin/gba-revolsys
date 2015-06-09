@@ -162,34 +162,34 @@ public class HotPixel {
     final double segMaxy = Math.max(p0.getY(), p1.getY());
 
     final boolean isOutsidePixelEnv = this.maxx < segMinx || this.minx > segMaxx
-      || this.maxy < segMiny || this.miny > segMaxy;
-    if (isOutsidePixelEnv) {
-      return false;
-    }
-    final boolean intersects = intersectsToleranceSquare(p0, p1);
-    // boolean intersectsPixelClosure = intersectsPixelClosure(p0, p1);
+        || this.maxy < segMiny || this.miny > segMaxy;
+        if (isOutsidePixelEnv) {
+          return false;
+        }
+        final boolean intersects = intersectsToleranceSquare(p0, p1);
+        // boolean intersectsPixelClosure = intersectsPixelClosure(p0, p1);
 
-    // if (intersectsPixel != intersects) {
-    // Debug.println("Found hot pixel intersection mismatch at " + pt);
-    // Debug.println("Test segment: " + p0 + " " + p1);
-    // }
+        // if (intersectsPixel != intersects) {
+        // Debug.println("Found hot pixel intersection mismatch at " + pt);
+        // Debug.println("Test segment: " + p0 + " " + p1);
+        // }
 
-    /*
-     * if (scaleFactor != 1.0) { boolean intersectsScaled =
-     * intersectsScaledTest(p0, p1); if (intersectsScaled != intersects) {
-     * intersectsScaledTest(p0, p1); //
-     * Debug.println("Found hot pixel scaled intersection mismatch at " + pt);
-     * // Debug.println("Test segment: " + p0 + " " + p1); } return
-     * intersectsScaled; }
-     */
+        /*
+         * if (scaleFactor != 1.0) { boolean intersectsScaled =
+         * intersectsScaledTest(p0, p1); if (intersectsScaled != intersects) {
+         * intersectsScaledTest(p0, p1); //
+         * Debug.println("Found hot pixel scaled intersection mismatch at " + pt);
+         * // Debug.println("Test segment: " + p0 + " " + p1); } return
+         * intersectsScaled; }
+         */
 
-    Assert.isTrue(!(isOutsidePixelEnv && intersects), "Found bad envelope test");
-    // if (isOutsideEnv && intersects) {
-    // Debug.println("Found bad envelope test");
-    // }
+        Assert.isTrue(!(isOutsidePixelEnv && intersects), "Found bad envelope test");
+        // if (isOutsideEnv && intersects) {
+        // Debug.println("Found bad envelope test");
+        // }
 
-    return intersects;
-    // return intersectsPixelClosure;
+        return intersects;
+        // return intersectsPixelClosure;
   }
 
   /**

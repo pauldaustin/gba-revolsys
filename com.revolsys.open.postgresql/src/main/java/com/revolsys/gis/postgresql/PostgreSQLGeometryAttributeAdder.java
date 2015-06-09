@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -22,6 +21,7 @@ import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcConstants;
 import com.revolsys.jdbc.io.SqlFunction;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 
 public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
 
@@ -89,7 +89,7 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
         required, description, null, srid, numAxis, geometryFactory);
       metaData.addField(attribute);
       attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction("st_intersects(",
-        ")"));
+          ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("st_buffer(", ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction("st_equals(", ")"));
       attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);

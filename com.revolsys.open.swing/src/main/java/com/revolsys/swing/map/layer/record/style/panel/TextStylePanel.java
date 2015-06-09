@@ -62,7 +62,7 @@ public class TextStylePanel extends BaseStylePanel implements PropertyChangeList
         "textHaloFill", "textHaloRadius");
       addPanel(stylePanels, "Text Position", this.textStyle, "textHorizontalAlignment",
         "textVerticalAlignment", "textDx", "textDy", "textOrientationType", "textOrientation",
-        "textPlacementType");
+          "textPlacementType");
 
       this.previews.add(new TextStylePreview(this.textStyle));
     }

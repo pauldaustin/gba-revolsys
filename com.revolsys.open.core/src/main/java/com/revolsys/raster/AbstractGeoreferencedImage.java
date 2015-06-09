@@ -27,9 +27,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-
-import com.revolsys.util.Property;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,7 +52,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Point;
 
 public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeObject implements
-  GeoreferencedImage {
+GeoreferencedImage {
 
   private static double[] calculateLSM(final BoundingBox boundingBox, final int imageWidth,
     final int imageHeight, final List<MappedLocation> mappings) {

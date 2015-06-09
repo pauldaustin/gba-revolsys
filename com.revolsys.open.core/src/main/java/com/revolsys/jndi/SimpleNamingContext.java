@@ -58,7 +58,7 @@ public class SimpleNamingContext implements Context {
     private final Iterator<T> iterator;
 
     private AbstractNamingEnumeration(final SimpleNamingContext context, String proot)
-      throws NamingException {
+        throws NamingException {
       if (!"".equals(proot) && !proot.endsWith("/")) {
         proot = proot + "/";
       }
@@ -116,7 +116,7 @@ public class SimpleNamingContext implements Context {
   private static class BindingEnumeration extends AbstractNamingEnumeration<Binding> {
 
     private BindingEnumeration(final SimpleNamingContext context, final String root)
-      throws NamingException {
+        throws NamingException {
       super(context, root);
     }
 
@@ -129,7 +129,7 @@ public class SimpleNamingContext implements Context {
   private static class NameClassPairEnumeration extends AbstractNamingEnumeration<NameClassPair> {
 
     private NameClassPairEnumeration(final SimpleNamingContext context, final String root)
-      throws NamingException {
+        throws NamingException {
       super(context, root);
     }
 
@@ -185,7 +185,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public void bind(final Name name, final Object obj) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   /**
@@ -210,7 +210,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public Name composeName(final Name name, final Name prefix) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -221,7 +221,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public Context createSubcontext(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -239,7 +239,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public void destroySubcontext(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -255,7 +255,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public String getNameInNamespace() throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   // Unsupported methods follow: no support for javax.naming.Name
@@ -263,19 +263,19 @@ public class SimpleNamingContext implements Context {
   @Override
   public NameParser getNameParser(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
   public NameParser getNameParser(final String name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
   public NamingEnumeration<NameClassPair> list(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -289,7 +289,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public NamingEnumeration<Binding> listBindings(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -303,7 +303,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public Object lookup(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   /**
@@ -334,8 +334,8 @@ public class SimpleNamingContext implements Context {
         }
       }
       throw new NameNotFoundException("Column [" + this.root + lookupName + "] not bound; "
-        + this.boundObjects.size() + " bindings: ["
-        + StringUtils.collectionToDelimitedString(this.boundObjects.keySet(), ",") + "]");
+          + this.boundObjects.size() + " bindings: ["
+          + StringUtils.collectionToDelimitedString(this.boundObjects.keySet(), ",") + "]");
     }
     return found;
   }
@@ -343,7 +343,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public Object lookupLink(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -354,7 +354,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public void rebind(final Name name, final Object obj) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -370,7 +370,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public void rename(final Name oldName, final Name newName) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override
@@ -383,7 +383,7 @@ public class SimpleNamingContext implements Context {
   @Override
   public void unbind(final Name name) throws NamingException {
     throw new OperationNotSupportedException(
-      "SimpleNamingContext does not support [javax.naming.Name]");
+        "SimpleNamingContext does not support [javax.naming.Name]");
   }
 
   @Override

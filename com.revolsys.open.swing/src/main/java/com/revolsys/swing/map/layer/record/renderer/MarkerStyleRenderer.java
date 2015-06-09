@@ -23,7 +23,7 @@ import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.style.MarkerStyle;
 import com.revolsys.swing.map.layer.record.style.marker.Marker;
 import com.revolsys.swing.map.layer.record.style.panel.MarkerStylePanel;
@@ -382,7 +382,7 @@ public class MarkerStyleRenderer extends AbstractDataObjectLayerRenderer {
 
   @Override
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject object) {
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord object) {
     if (isVisible(object)) {
       final Geometry geometry = object.getGeometryValue();
       renderMarker(viewport, graphics, geometry, this.style);

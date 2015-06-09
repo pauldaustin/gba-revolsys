@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import com.revolsys.gis.graph.Edge;
 
 public class EdgeEventListenerList<T> extends LinkedHashSet<EdgeEventListener> implements
-  EdgeEventListener<T> {
+EdgeEventListener<T> {
 
   /**
    *

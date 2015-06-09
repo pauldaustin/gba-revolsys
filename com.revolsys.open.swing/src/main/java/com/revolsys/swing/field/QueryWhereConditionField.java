@@ -36,7 +36,6 @@ import javax.swing.text.Document;
 import org.jdesktop.swingx.VerticalLayout;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.util.Property;
 import com.akiban.sql.StandardException;
 import com.akiban.sql.parser.BetweenOperatorNode;
 import com.akiban.sql.parser.BinaryArithmeticOperatorNode;
@@ -94,9 +93,10 @@ import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.component.AttributeTitleStringConveter;
 import com.revolsys.swing.toolbar.ToolBar;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class QueryWhereConditionField extends ValueField implements MouseListener, CaretListener,
-  ItemListener {
+ItemListener {
 
   private static final ImageIcon ICON = Icons.getIcon("add");
 
@@ -110,7 +110,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
       final String name = attribute.getName();
       final Class<?> typeClass = attribute.getTypeClass();
       final String searchFieldFactory = attribute.getProperty("searchFieldFactory");
-      final RecordDefinition metaData = attribute.getMetaData();
+      final RecordDefinition metaData = attribute.getRecordDefinition();
       if (metaData == null) {
         return new TextField(20);
       } else {
@@ -123,7 +123,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
         } else {
           if (codeTable == null) {
             if (Number.class.isAssignableFrom(typeClass)
-              || String.class.isAssignableFrom(typeClass)) {
+                || String.class.isAssignableFrom(typeClass)) {
               field = new TextField(20);
             } else {
               field = SwingUtil.createField(typeClass, name, null);
@@ -254,7 +254,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
     // pane
 
     this.sqlPrefix = "SELECT * FROM " + this.metaData.getPath().substring(1).replace('/', '.')
-      + " WHERE";
+        + " WHERE";
 
     final JPanel filterTextPanel = new JPanel(new BorderLayout());
     filterTextPanel.setOpaque(false);
@@ -264,7 +264,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
     final ToolBar statusToolBar = new ToolBar();
     statusToolBar.setOpaque(false);
     final JButton verifyButton = statusToolBar.addButton("default", "Verify", this,
-      "verifyCondition");
+        "verifyCondition");
     verifyButton.setBorderPainted(true);
 
     final JPanel queryPanel = new JPanel(new BorderLayout());
@@ -510,15 +510,15 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
         previousText = "";
       }
       if (!Property.hasValue(previousText)
-        || !previousText.matches(".*"
-          + operator.replaceAll("\\(", "\\\\(")
-            .replaceAll("\\)", "\\\\)")
-            .replaceAll("\\*", "\\\\*")
-            .replaceAll("\\+", "\\\\+") + "\\s*$")) {
+          || !previousText.matches(".*"
+              + operator.replaceAll("\\(", "\\\\(")
+              .replaceAll("\\)", "\\\\)")
+              .replaceAll("\\*", "\\\\*")
+              .replaceAll("\\+", "\\\\+") + "\\s*$")) {
         final Document document = this.whereTextField.getDocument();
         try {
           if (Property.hasValue(previousText)
-            && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
+              && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
             document.insertString(position++, " ", null);
           }
           document.insertString(position, operator + " ", null);
@@ -576,11 +576,11 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
             previousText = "";
           }
           if (!Property.hasValue(previousText)
-            || !previousText.matches(".*\"?" + fieldName + "\"?\\s*$")) {
+              || !previousText.matches(".*\"?" + fieldName + "\"?\\s*$")) {
             final Document document = this.whereTextField.getDocument();
             try {
               if (Property.hasValue(previousText)
-                && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
+                  && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
                 document.insertString(position++, " ", null);
               }
 
@@ -763,7 +763,7 @@ public class QueryWhereConditionField extends ValueField implements MouseListene
                   }
                 } catch (final Throwable t) {
                   setInvalidMessage(name + " requires a " + attribute.getType() + " not the value "
-                    + value);
+                      + value);
                 }
               } else {
                 Object id;

@@ -57,6 +57,11 @@ public class ActionMainMenuItemFactory implements ComponentFactory<JMenuItem> {
   }
 
   @Override
+  public String getIconName() {
+    return null;
+  }
+
+  @Override
   public String getName() {
     return (String)this.action.getValue(Action.NAME);
   }

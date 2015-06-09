@@ -6,7 +6,7 @@ import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
 public abstract class AbstractGeoreferencedImageFactory extends AbstractIoFactory implements
-  GeoreferencedImageFactory {
+GeoreferencedImageFactory {
 
   public static GeoreferencedImageFactory getGeoreferencedImageFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();

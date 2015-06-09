@@ -167,12 +167,6 @@ public class MenuFactory extends AbstractObjectWithProperties implements
   public void close(final Component component) {
   }
 
-  /*
-   * public void setGroupEnabled(final String groupName, final boolean enabled)
-   * { final List<Component> components = getGroup(groupName); for (final
-   * Component component : components) { component.setEnabled(enabled); } }
-   */
-
   @Override
   public JMenu createComponent() {
     final JMenu menu = new JMenu(this.name);
@@ -195,6 +189,12 @@ public class MenuFactory extends AbstractObjectWithProperties implements
     }
     return menu;
   }
+
+  /*
+   * public void setGroupEnabled(final String groupName, final boolean enabled)
+   * { final List<Component> components = getGroup(groupName); for (final
+   * Component component : components) { component.setEnabled(enabled); } }
+   */
 
   public JPopupMenu createJPopupMenu() {
     final JPopupMenu menu = new JPopupMenu(this.name);
@@ -247,6 +247,11 @@ public class MenuFactory extends AbstractObjectWithProperties implements
 
   @Override
   public Icon getIcon() {
+    return null;
+  }
+
+  @Override
+  public String getIconName() {
     return null;
   }
 

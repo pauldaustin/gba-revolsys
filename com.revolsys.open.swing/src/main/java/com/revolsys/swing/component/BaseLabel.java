@@ -3,9 +3,9 @@ package com.revolsys.swing.component;
 import javax.swing.SwingConstants;
 
 import org.jdesktop.swingx.JXLabel;
-import com.revolsys.util.Property;
 
 import com.revolsys.swing.SwingUtil;
+import com.revolsys.util.Property;
 
 public class BaseLabel extends JXLabel {
 

@@ -7,7 +7,7 @@ import com.revolsys.gis.model.coordinates.AbstractCoordinates;
 import com.revolsys.gis.model.coordinates.Coordinates;
 
 public class InPlaceIterator extends AbstractCoordinates implements Iterator<Coordinates>,
-  Iterable<Coordinates> {
+Iterable<Coordinates> {
   private final CoordinatesList coordinates;
 
   private int index = -1;

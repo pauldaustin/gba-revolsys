@@ -46,7 +46,7 @@ public class SegmentNode implements Comparable {
   public final Coordinates coord; // the point of intersection
 
   public final int segmentIndex; // the index of the containing line segment in
-                                 // the parent edge
+  // the parent edge
 
   private final int segmentOctant;
 

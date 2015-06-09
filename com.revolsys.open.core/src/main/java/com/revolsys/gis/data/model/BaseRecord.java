@@ -3,10 +3,8 @@ package com.revolsys.gis.data.model;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.sql.Clob;
 import java.sql.SQLException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
@@ -33,12 +30,11 @@ import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.util.JavaBeanUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class BaseRecord extends AbstractMap<String, Object> implements Record, Cloneable,
-  Serializable {
-  /** Seialization version */
-  private static final long serialVersionUID = 2704226494490082708L;
+public abstract class BaseRecord extends AbstractRecord {
+  private static final long serialVersionUID = 1L;
 
   /** The recordDefinition defining the object type. */
   private transient RecordDefinition recordDefinition;
@@ -50,24 +46,8 @@ public abstract class BaseRecord extends AbstractMap<String, Object> implements 
    *
    * @param recordDefinition The recordDefinition defining the object type.
    */
-  public BaseRecord(final RecordDefinition metaData) {
-    this.recordDefinition = metaData;
-  }
-
-  /**
-   * Create a clone of the object.
-   *
-   * @return The cloned object.
-   */
-  @Override
-  public BaseRecord clone() {
-    try {
-      final BaseRecord newObject = (BaseRecord)super.clone();
-      newObject.setState(RecordState.New);
-      return newObject;
-    } catch (final CloneNotSupportedException e) {
-      throw new RuntimeException("Unable to clone", e);
-    }
+  public BaseRecord(final RecordDefinition recordDefinition) {
+    this.recordDefinition = recordDefinition;
   }
 
   @SuppressWarnings("unchecked")

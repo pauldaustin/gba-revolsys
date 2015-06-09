@@ -60,7 +60,7 @@ public class AttributesBeanConfigurer extends BeanConfigurrer {
 
   @Override
   public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
-    throws BeansException {
+      throws BeansException {
     final Map<String, Object> allAttributes = new LinkedHashMap<String, Object>();
     final Map<String, Object> threadAttributes = ThreadSharedAttributes.getAttributes();
     allAttributes.putAll(threadAttributes);
@@ -89,8 +89,8 @@ public class AttributesBeanConfigurer extends BeanConfigurrer {
           if (beanClassName.equals(TargetBeanFactoryBean.class.getName())) {
             final MutablePropertyValues propertyValues = bd.getPropertyValues();
             final BeanDefinition targetBeanDefinition = (BeanDefinition)propertyValues.getPropertyValue(
-              "targetBeanDefinition")
-              .getValue();
+                "targetBeanDefinition")
+                .getValue();
             final String targetBeanClassName = targetBeanDefinition.getBeanClassName();
             addAttributes(allAttributes, beanFactory, targetBeanDefinition, beanName,
               targetBeanClassName);

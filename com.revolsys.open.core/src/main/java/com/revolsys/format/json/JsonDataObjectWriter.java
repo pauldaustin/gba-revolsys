@@ -46,28 +46,28 @@ public class JsonDataObjectWriter extends AbstractWriter<Record> {
       switch (c) {
         case '"':
           this.out.print("\\\"");
-        break;
+          break;
         case '\\':
           this.out.print("\\\\");
-        break;
+          break;
         case '\b':
           this.out.print("\\b");
-        break;
+          break;
         case '\f':
           this.out.print("\\f");
-        break;
+          break;
         case '\n':
           this.out.print("\\n");
-        break;
+          break;
         case '\r':
           this.out.print("\\r");
-        break;
+          break;
         case '\t':
           this.out.print("\\t");
-        break;
+          break;
         default:
           this.out.print(c);
-        break;
+          break;
       }
     }
   }

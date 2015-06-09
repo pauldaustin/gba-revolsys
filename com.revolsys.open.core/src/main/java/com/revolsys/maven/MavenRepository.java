@@ -17,10 +17,10 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.util.Property;
 import com.revolsys.format.xml.XmlMapIoFactory;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class MavenRepository implements URLStreamHandlerFactory {
 
@@ -100,8 +100,8 @@ public class MavenRepository implements URLStreamHandlerFactory {
   public Map<String, Object> getMavenMetadata(final String groupId, final String artifactId,
     final String version) {
     final String metaDataPath = "/"
-      + CollectionUtil.toString("/", groupId.replace('.', '/'), artifactId, version,
-        "maven-metadata.xml");
+        + CollectionUtil.toString("/", groupId.replace('.', '/'), artifactId, version,
+            "maven-metadata.xml");
     final Resource metaDataResource = SpringUtil.getResource(this.root, metaDataPath);
     if (metaDataResource.exists()) {
       try {
@@ -157,7 +157,7 @@ public class MavenRepository implements URLStreamHandlerFactory {
     if (parts.length < 3) {
       throw new IllegalArgumentException(
         id
-          + " is not a valid Maven identifier. Should be in the format: <groupId>:<artifactId>:<version>.");
+        + " is not a valid Maven identifier. Should be in the format: <groupId>:<artifactId>:<version>.");
     }
     final String groupId = parts[0];
     final String artifactId = parts[1];
@@ -230,7 +230,7 @@ public class MavenRepository implements URLStreamHandlerFactory {
     final String classifier, final String version, final String algorithm) {
     if (!Property.hasValue(algorithm)) {
       final Resource digestResource = getResource(groupId, artifactId, type, classifier, version,
-        "sha1");
+          "sha1");
       if (digestResource.exists()) {
         String digestContents = null;
         try {

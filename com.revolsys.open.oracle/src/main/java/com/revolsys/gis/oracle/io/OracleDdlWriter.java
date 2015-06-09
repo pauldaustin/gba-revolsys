@@ -3,8 +3,6 @@ package com.revolsys.gis.oracle.io;
 import java.io.PrintWriter;
 import java.util.List;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.property.ShortNameProperty;
@@ -17,6 +15,7 @@ import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDdlWriter;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class OracleDdlWriter extends JdbcDdlWriter {

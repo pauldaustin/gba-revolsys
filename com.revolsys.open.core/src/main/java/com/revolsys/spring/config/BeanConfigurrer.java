@@ -35,7 +35,7 @@ import com.revolsys.spring.factory.Parameter;
 import com.revolsys.spring.util.PlaceholderResolvingStringValueResolver;
 
 public class BeanConfigurrer implements BeanFactoryPostProcessor, ApplicationContextAware,
-  BeanNameAware, PriorityOrdered {
+BeanNameAware, PriorityOrdered {
 
   protected static final Logger LOG = LoggerFactory.getLogger(BeanConfigurrer.class);
 
@@ -131,7 +131,7 @@ public class BeanConfigurrer implements BeanFactoryPostProcessor, ApplicationCon
 
   @Override
   public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
-    throws BeansException {
+      throws BeansException {
     processPlaceholderAttributes(beanFactory, this.attributes);
     processOverrideAttributes(beanFactory, this.attributes);
   }

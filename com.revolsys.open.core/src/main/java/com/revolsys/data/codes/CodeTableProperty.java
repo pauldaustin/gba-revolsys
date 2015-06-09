@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.query.And;
 import com.revolsys.data.query.Q;
 import com.revolsys.data.query.Query;
@@ -27,7 +25,7 @@ import com.revolsys.util.Property;
 public class CodeTableProperty extends AbstractCodeTable implements RecordDefinitionProperty {
 
   private static final ArrayList<String> DEFAULT_FIELD_NAMES = new ArrayList<String>(
-    Arrays.asList("VALUE"));
+      Arrays.asList("VALUE"));
 
   public static final String PROPERTY_NAME = CodeTableProperty.class.getName();
 
@@ -155,10 +153,6 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
     return this.creationTimestampAttributeName;
   }
 
-  public RecordStore getDataStore() {
-    return this.dataStore;
-  }
-
   @Override
   public String getIdAttributeName() {
     if (Property.hasValue(this.idFieldName)) {
@@ -205,6 +199,10 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
     return this.recordDefinition;
   }
 
+  public RecordStore getRecordStore() {
+    return this.dataStore;
+  }
+
   public String getTypeName() {
     return this.typePath;
   }
@@ -243,7 +241,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
             query.addOrderBy(order, true);
           }
           try (
-            Reader<Record> reader = this.dataStore.query(query)) {
+              Reader<Record> reader = this.dataStore.query(query)) {
             final List<Record> codes = reader.read();
             this.dataStore.getStatistics().getStatistics("query").add(this.typePath, -codes.size());
             Collections.sort(codes, new DataObjectAttributeComparator(this.orderBy));
@@ -304,18 +302,19 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
 
   @Override
   protected List<Object> loadValues(final Object id) {
-    List<Object> values = null;
     if (this.loadAll) {
       loadAll();
-      values = getValueById(id);
     } else {
-      final Record code = this.dataStore.load(this.typePath, id);
-      if (code != null) {
-        addValue(code);
-        values = getValueById(id);
+      try {
+        final Record code = this.dataStore.load(this.typePath, id);
+        if (code != null) {
+          addValue(code);
+        }
+      } catch (final Throwable e) {
+        return null;
       }
     }
-    return values;
+    return getValueById(id);
   }
 
   @Override

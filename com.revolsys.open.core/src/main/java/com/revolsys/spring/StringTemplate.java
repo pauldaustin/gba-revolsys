@@ -9,15 +9,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
-import com.revolsys.util.Property;
 
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 
 public class StringTemplate implements Serializable {
   /**
-  * Static inner class to parse URI template strings into a matching regular
-  * expression.
-  */
+   * Static inner class to parse URI template strings into a matching regular
+   * expression.
+   */
   private static class Parser {
 
     private final List<String> variableNames = new LinkedList<String>();

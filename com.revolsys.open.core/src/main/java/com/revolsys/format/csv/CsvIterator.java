@@ -116,7 +116,7 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
               sb.append(c);
             }
           }
-        break;
+          break;
         case ',':
           if (inQuotes) {
             sb.append(c);
@@ -129,7 +129,7 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
             }
             hadQuotes = false;
           }
-        break;
+          break;
         case '\r':
           if (previewNextChar() == '\n') {
           } else {
@@ -145,7 +145,7 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
               return fields;
             }
           }
-        break;
+          break;
         case '\n':
           if (previewNextChar() == '\r') {
             this.index++;
@@ -161,10 +161,10 @@ public class CsvIterator implements Iterator<List<String>>, Iterable<List<String
             }
             return fields;
           }
-        break;
+          break;
         default:
           sb.append(c);
-        break;
+          break;
       }
     }
     this.hasNext = false;

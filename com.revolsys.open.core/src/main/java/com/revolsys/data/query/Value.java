@@ -133,7 +133,7 @@ public class Value extends QueryValue {
 
       CodeTable codeTable = null;
       if (attribute != null) {
-        final RecordDefinition metaData = attribute.getMetaData();
+        final RecordDefinition metaData = attribute.getRecordDefinition();
         if (metaData != null) {
           final String fieldName = attribute.getName();
           codeTable = metaData.getCodeTableByFieldName(fieldName);

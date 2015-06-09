@@ -12,12 +12,12 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
+import com.revolsys.swing.action.RunnableAction;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentGroup;
+import com.revolsys.util.Property;
 
 public class ToolBar extends JToolBar {
   private static final long serialVersionUID = 1L;
@@ -120,12 +120,31 @@ public class ToolBar extends JToolBar {
     return button;
   }
 
+  public JToggleButton addToggleButton(final String groupName, final int index, final String name,
+    final String title, final Icon icon, final EnableCheck enableCheck, final Runnable runnable) {
+    final RunnableAction action = new RunnableAction(name, title, icon, runnable);
+    action.setEnableCheck(enableCheck);
+
+    final JToggleButton button = action.createToggleButton();
+    button.setBorderPainted(true);
+    this.groups.addComponent(this, groupName, index, button);
+    final ButtonGroup buttonGroup = getButtonGroup(groupName);
+    buttonGroup.add(button);
+    return button;
+  }
+
   public JToggleButton addToggleButtonTitleIcon(final String groupName, final int index,
     final String title, final String iconName, final Object object, final String methodName,
     final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
     return addToggleButton(groupName, index, iconName, title, icon, null, object, methodName,
       parameters);
+  }
+
+  public JToggleButton addToggleButtonTitleIcon(final String groupName, final int index,
+    final String title, final String iconName, final Runnable runnable) {
+    final ImageIcon icon = Icons.getIcon(iconName);
+    return addToggleButton(groupName, index, iconName, title, icon, null, runnable);
   }
 
   public void clear() {

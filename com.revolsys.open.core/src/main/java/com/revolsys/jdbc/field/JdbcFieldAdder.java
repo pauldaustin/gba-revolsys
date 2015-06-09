@@ -163,31 +163,31 @@ public class JdbcFieldAdder {
         case Types.VARCHAR:
           field = new JdbcStringFieldDefinition(dbName, name, sqlType, length, required,
             description, properties);
-        break;
+          break;
         case Types.BIGINT:
           field = new JdbcLongFieldDefinition(dbName, name, sqlType, length, required, description,
             null);
-        break;
+          break;
         case Types.INTEGER:
           field = new JdbcIntegerFieldDefinition(dbName, name, sqlType, length, required,
             description, null);
-        break;
+          break;
         case Types.SMALLINT:
           field = new JdbcShortFieldDefinition(dbName, name, sqlType, length, required,
             description, null);
-        break;
+          break;
         case Types.TINYINT:
           field = new JdbcByteFieldDefinition(dbName, name, sqlType, length, required, description,
             null);
-        break;
+          break;
         case Types.DOUBLE:
           field = new JdbcDoubleFieldDefinition(dbName, name, sqlType, length, required,
             description, null);
-        break;
+          break;
         case Types.REAL:
           field = new JdbcFloatFieldDefinition(dbName, name, sqlType, length, required,
             description, null);
-        break;
+          break;
         case Types.DECIMAL:
         case Types.NUMERIC:
         case Types.FLOAT:
@@ -215,26 +215,26 @@ public class JdbcFieldAdder {
                 description, null);
             }
           }
-        break;
+          break;
         case Types.DATE:
           field = new JdbcDateFieldDefinition(dbName, name, sqlType, required, description, null);
-        break;
+          break;
         case Types.TIMESTAMP:
           field = new JdbcTimestampFieldDefinition(dbName, name, sqlType, required, description,
             null);
-        break;
+          break;
         case Types.BIT:
           field = new JdbcBooleanFieldDefinition(dbName, name, sqlType, length, required,
             description, null);
-        break;
+          break;
         case Types.BLOB:
           field = new JdbcBlobFieldDefinition(dbName, name, sqlType, length, required, description,
             null);
-        break;
+          break;
         default:
           field = new JdbcFieldDefinition(dbName, name, this.dataType, sqlType, length, scale,
             required, description, null);
-        break;
+          break;
       }
     }
     recordDefinition.addField(field);

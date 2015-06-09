@@ -21,7 +21,7 @@ public class NodeWithinDistanceOfGeometryVisitor<T> implements Visitor<Node<T>> 
     env = env.expand(maxDistance);
     final IdObjectIndex<Node<T>> index = graph.getNodeIndex();
     final NodeWithinDistanceOfGeometryVisitor<T> visitor = new NodeWithinDistanceOfGeometryVisitor<T>(
-      geometry, maxDistance, results);
+        geometry, maxDistance, results);
     index.visit(env, visitor);
     return results.getList();
   }

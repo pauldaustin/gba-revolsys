@@ -24,7 +24,7 @@ import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 
 public class ItersectsNodeEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>> implements
-  ObjectProcessor<DataObjectGraph> {
+ObjectProcessor<DataObjectGraph> {
 
   private static final Logger LOG = LoggerFactory.getLogger(ItersectsNodeEdgeCleanupVisitor.class);
 

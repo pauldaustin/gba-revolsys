@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
+
 import com.revolsys.util.Property;
 
 public class RectangularMapGridFactory {

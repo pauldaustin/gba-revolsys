@@ -22,7 +22,7 @@ import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
 public class DataObjectStoreConnectionTreeNode extends LazyLoadTreeNode implements
-  DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
+DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
   public static final Icon ICON = Icons.getIcon("database_link");
 
   private static final MenuFactory MENU = new MenuFactory();

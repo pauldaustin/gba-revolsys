@@ -187,7 +187,7 @@ public final class ProjectionFactory {
             return coordinateProjection;
           } catch (final NoSuchMethodException e) {
             throw new IllegalArgumentException("Constructor " + projectionClass + "("
-              + ProjectedCoordinateSystem.class.getName() + ") does not exist");
+                + ProjectedCoordinateSystem.class.getName() + ") does not exist");
           } catch (final InstantiationException e) {
             throw new IllegalArgumentException(projectionClass + " cannot be instantiated", e);
           } catch (final IllegalAccessException e) {

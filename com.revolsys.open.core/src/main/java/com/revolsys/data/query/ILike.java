@@ -2,9 +2,8 @@ package com.revolsys.data.query;
 
 import java.util.Map;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.util.Property;
 
 public class ILike extends BinaryCondition {
 

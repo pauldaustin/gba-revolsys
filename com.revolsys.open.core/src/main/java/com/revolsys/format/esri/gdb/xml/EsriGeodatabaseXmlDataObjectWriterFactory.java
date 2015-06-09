@@ -11,7 +11,7 @@ import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.io.Writer;
 
 public class EsriGeodatabaseXmlDataObjectWriterFactory extends
-  AbstractRecordAndGeometryWriterFactory {
+AbstractRecordAndGeometryWriterFactory {
   public EsriGeodatabaseXmlDataObjectWriterFactory() {
     super(EsriGeodatabaseXmlConstants.FORMAT_DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(EsriGeodatabaseXmlConstants.MEDIA_TYPE,

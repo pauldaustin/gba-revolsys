@@ -335,6 +335,10 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
     }
   }
 
+  public BoundingBox boundingBox() {
+    return new BoundingBox(this);
+  }
+
   @SuppressWarnings("unchecked")
   public <G extends Geometry> G copy(final G geometry) {
     return (G)createGeometry(geometry);

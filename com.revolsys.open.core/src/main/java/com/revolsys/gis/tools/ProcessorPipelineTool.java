@@ -73,7 +73,7 @@ public class ProcessorPipelineTool {
   private static Throwable getBeanExceptionCause(final BeanCreationException e) {
     Throwable cause = e.getCause();
     while (cause instanceof BeanCreationException || cause instanceof MethodInvocationException
-      || cause instanceof PropertyAccessException) {
+        || cause instanceof PropertyAccessException) {
       final Throwable newCause = cause.getCause();
       if (newCause != null) {
         cause = newCause;
@@ -116,12 +116,12 @@ public class ProcessorPipelineTool {
 
   private void createOptions() {
     final Option script = new Option(SCRIPT_OPTION, SCRIPT, true,
-      "the script file that defines the processor pipeline");
+        "the script file that defines the processor pipeline");
     script.setRequired(true);
     this.options.addOption(script);
 
     final Option sourceDirectory = new Option(SOURCE_DIRECTORY_OPTION, SOURCE_DIRECTORY, true,
-      "the location of the source files to process");
+        "the location of the source files to process");
     sourceDirectory.setRequired(false);
     this.options.addOption(sourceDirectory);
 
@@ -131,17 +131,17 @@ public class ProcessorPipelineTool {
     this.options.addOption(sourceFileExtension);
 
     final Option outputDirectory = new Option(OUTPUT_DIRECTORY_OPTION, OUTPUT_DIRECTORY, true,
-      "the directory to write processed files to");
+        "the directory to write processed files to");
     outputDirectory.setRequired(false);
     this.options.addOption(outputDirectory);
 
     final Option logDirectory = new Option(LOG_DIRECTORY_OPTION, LOG_DIRECTORY, true,
-      "the directory to write log files to");
+        "the directory to write log files to");
     logDirectory.setRequired(false);
     this.options.addOption(logDirectory);
 
     final Option excludePattern = new Option(EXCLUDE_PATTERN_OPTION, EXCLUDE_PATTERN, true,
-      "exclude files matching a regular expression (e.g. '.*_back.zip");
+        "exclude files matching a regular expression (e.g. '.*_back.zip");
     excludePattern.setRequired(false);
     this.options.addOption(excludePattern);
 
@@ -207,7 +207,7 @@ public class ProcessorPipelineTool {
         }
         if (this.sourceFileExtension == null) {
           System.err.println("A " + SOURCE_FLE_EXTENSION + " must be specified if "
-            + SOURCE_DIRECTORY + " is specified");
+              + SOURCE_DIRECTORY + " is specified");
           return false;
         }
       } else {
@@ -273,7 +273,7 @@ public class ProcessorPipelineTool {
     System.setProperty("sourceFile", sourceFile.getAbsolutePath());
     System.setProperty("targetFile", targetFile.getAbsolutePath());
     final BeanFactory beans = new FileSystemXmlApplicationContext("file:"
-      + this.scriptFile.getAbsolutePath());
+        + this.scriptFile.getAbsolutePath());
     try {
       final File parentFile = targetFile.getParentFile();
       if (parentFile != null) {

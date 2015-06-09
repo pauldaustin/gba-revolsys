@@ -153,8 +153,8 @@ public class AlbersConicEqualArea implements CoordinatesProjection {
     final double theta = Math.atan(x / (this.rho0 - y));
     final double rho = Math.sqrt(x * x + Math.pow(this.rho0 - y, 2.0));
     final double q = (this.c - rho * rho * this.n * this.n
-      / (this.semiMajorAxis * this.semiMajorAxis))
-      / this.n;
+        / (this.semiMajorAxis * this.semiMajorAxis))
+        / this.n;
     final double lambda = this.lambda0 + theta / this.n;
     double li = Math.asin(q / 2.0);
     if (!Double.isNaN(li)) {
@@ -165,11 +165,11 @@ public class AlbersConicEqualArea implements CoordinatesProjection {
         final double sinLi = Math.sin(li);
 
         final double j1 = Math.pow(1.0 - this.ee * Math.pow(sinLi, 2.0), 2.0)
-          / (2.0 * Math.cos(li));
+            / (2.0 * Math.cos(li));
         final double k1 = q / (1.0 - this.ee);
         final double k2 = sinLi / (1.0 - this.ee * Math.pow(sinLi, 2.0));
         final double k3 = 1.0 / (2.0 * this.e)
-          * Math.log((1.0 - this.e * sinLi) / (1.0 + this.e * sinLi));
+            * Math.log((1.0 - this.e * sinLi) / (1.0 + this.e * sinLi));
         final double lip1 = li + j1 * (k1 - k2 + k3);
         delta = Math.abs(lip1 - li);
         li = lip1;
@@ -256,8 +256,8 @@ public class AlbersConicEqualArea implements CoordinatesProjection {
     final double sinPhi = Math.sin(phi);
     final double eSinPhi = this.e * sinPhi;
     final double q = (1.0 - this.ee)
-      * (sinPhi / (1.0 - this.ee * sinPhi * sinPhi) - 1.0 / (2.0 * this.e)
-        * Math.log((1.0 - eSinPhi) / (1.0 + eSinPhi)));
+        * (sinPhi / (1.0 - this.ee * sinPhi * sinPhi) - 1.0 / (2.0 * this.e)
+            * Math.log((1.0 - eSinPhi) / (1.0 + eSinPhi)));
     return q;
   }
 }

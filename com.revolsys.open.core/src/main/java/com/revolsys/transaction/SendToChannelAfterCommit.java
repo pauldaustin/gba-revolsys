@@ -11,7 +11,7 @@ public class SendToChannelAfterCommit<T> extends TransactionSynchronizationAdapt
   public static <V> void send(final Channel<V> channel, final V value) {
     if (TransactionSynchronizationManager.isSynchronizationActive()) {
       final SendToChannelAfterCommit<V> synchronization = new SendToChannelAfterCommit<V>(channel,
-        value);
+          value);
       TransactionSynchronizationManager.registerSynchronization(synchronization);
     } else {
       channel.write(value);

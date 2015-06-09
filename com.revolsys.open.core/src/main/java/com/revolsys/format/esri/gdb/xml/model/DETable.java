@@ -3,10 +3,9 @@ package com.revolsys.format.esri.gdb.xml.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.format.esri.gdb.xml.EsriGeodatabaseXmlConstants;
 import com.revolsys.format.esri.gdb.xml.model.enums.FieldType;
+import com.revolsys.util.Property;
 
 public class DETable extends DEDataset {
 

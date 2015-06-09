@@ -65,7 +65,7 @@ public class OverlayOp extends GeometryGraphOperation {
         return loc0 == Location.INTERIOR && loc1 != Location.INTERIOR;
       case SYMDIFFERENCE:
         return loc0 == Location.INTERIOR && loc1 != Location.INTERIOR || loc0 != Location.INTERIOR
-          && loc1 == Location.INTERIOR;
+        && loc1 == Location.INTERIOR;
     }
     return false;
   }
@@ -207,10 +207,10 @@ public class OverlayOp extends GeometryGraphOperation {
                * indicated by the depth values.
                */
               Assert.isTrue(!depth.isNull(i, Position.LEFT),
-                "depth of LEFT side has not been initialized");
+                  "depth of LEFT side has not been initialized");
               lbl.setLocation(i, Position.LEFT, depth.getLocation(i, Position.LEFT));
               Assert.isTrue(!depth.isNull(i, Position.RIGHT),
-                "depth of RIGHT side has not been initialized");
+                  "depth of RIGHT side has not been initialized");
               lbl.setLocation(i, Position.RIGHT, depth.getLocation(i, Position.RIGHT));
             }
           }
@@ -314,9 +314,9 @@ public class OverlayOp extends GeometryGraphOperation {
       // mark all dirEdges with the appropriate label
       final Label label = de.getLabel();
       if (label.isArea()
-        && !de.isInteriorAreaEdge()
-        && isResultOfOp(label.getLocation(0, Position.RIGHT), label.getLocation(1, Position.RIGHT),
-          opCode)) {
+          && !de.isInteriorAreaEdge()
+          && isResultOfOp(label.getLocation(0, Position.RIGHT), label.getLocation(1, Position.RIGHT),
+            opCode)) {
         de.setInResult(true);
         // Debug.print("in result "); Debug.println(de);
       }
@@ -503,28 +503,6 @@ public class OverlayOp extends GeometryGraphOperation {
       }
     }
     this.edgeList.addAll(newEdges);
-  }
-
-  private int resultDimension(final int opCode, final Geometry g0, final Geometry g1) {
-    final int dim0 = g0.getDimension();
-    final int dim1 = g1.getDimension();
-
-    int resultDimension = -1;
-    switch (opCode) {
-      case INTERSECTION:
-        resultDimension = Math.min(dim0, dim1);
-      break;
-      case UNION:
-        resultDimension = Math.max(dim0, dim1);
-      break;
-      case DIFFERENCE:
-        resultDimension = dim0;
-      break;
-      case SYMDIFFERENCE:
-        resultDimension = Math.max(dim0, dim1);
-      break;
-    }
-    return resultDimension;
   }
 
   private void updateNodeLabelling() {

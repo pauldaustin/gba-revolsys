@@ -17,7 +17,7 @@ import com.revolsys.beans.NonWeakListener;
 import com.revolsys.swing.parallel.Invoke;
 
 public class EnableComponentListener implements ItemListener, ListSelectionListener,
-  PropertyChangeListener, DocumentListener, NonWeakListener {
+PropertyChangeListener, DocumentListener, NonWeakListener {
   private final Component component;
 
   public EnableComponentListener(final Component component) {

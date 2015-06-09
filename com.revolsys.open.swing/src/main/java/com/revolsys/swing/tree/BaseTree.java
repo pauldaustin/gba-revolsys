@@ -22,7 +22,7 @@ import com.revolsys.swing.tree.model.node.AbstractTreeNode;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 
 public class BaseTree extends JTree implements MouseListener, TreeWillExpandListener,
-  TreeExpansionListener {
+TreeExpansionListener {
   private static final long serialVersionUID = 1L;
 
   static Object mouseClickItem = null;

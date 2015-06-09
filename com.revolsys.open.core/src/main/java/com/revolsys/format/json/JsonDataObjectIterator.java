@@ -64,7 +64,7 @@ public class JsonDataObjectIterator extends AbstractIterator<Record> implements 
             object.setValue(name, value);
           } else {
             final StringConverter<Object> converter = StringConverterRegistry.getInstance()
-              .getConverter(dataTypeClass);
+                .getConverter(dataTypeClass);
             if (converter == null) {
               object.setValue(name, value);
             } else {

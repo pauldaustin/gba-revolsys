@@ -55,8 +55,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.awt.WebColors;
 import com.revolsys.beans.MethodInvoker;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -654,8 +652,8 @@ public class SwingUtil {
   public static boolean isModifierKeyDown(final InputEvent event) {
     final int modifiersEx = event.getModifiersEx();
     final int flag = modifiersEx
-      & (InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK
-        | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
+        & (InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK
+            | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
     return flag != 0;
   }
 
@@ -793,8 +791,12 @@ public class SwingUtil {
   }
 
   public static void setLocationCentre(final Rectangle bounds, final Window window) {
-    final int x = (bounds.width - window.getWidth()) / 2;
-    final int y = (bounds.height - window.getHeight()) / 2;
+    final int width = window.getWidth();
+    final int height = window.getHeight();
+
+    final int x = bounds.x + (bounds.width - width) / 2;
+    final int y = bounds.y + (bounds.height - height) / 2;
+
     window.setLocation(x, y);
   }
 
@@ -869,7 +871,7 @@ public class SwingUtil {
     final Throwable e) {
     final String exceptionMessage = e.getMessage().replaceAll("\n", "<br />");
     final String errorMessage = "<html><body><p style=\"margin-bottom: 10px\"><strong>" + message
-      + "</strong></p><pre>" + exceptionMessage + "</pre></body></p>";
+        + "</strong></p><pre>" + exceptionMessage + "</pre></body></p>";
 
     final JScrollPane scrollPane = new JScrollPane(new JLabel(errorMessage));
     final Dimension preferredSize = scrollPane.getPreferredSize();

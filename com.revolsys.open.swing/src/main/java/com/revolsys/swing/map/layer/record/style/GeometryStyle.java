@@ -14,11 +14,11 @@ import javax.measure.quantity.Length;
 import javax.measure.unit.NonSI;
 
 import org.jdesktop.swingx.color.ColorUtil;
-import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.swing.map.Viewport2D;
+import com.revolsys.util.Property;
 
 public class GeometryStyle extends MarkerStyle {
 
@@ -403,7 +403,7 @@ public class GeometryStyle extends MarkerStyle {
       throw new IllegalArgumentException("Line opacity must be between 0.0 - 1.0");
     } else {
       this.lineOpacity = (int)(255 * lineOpacity);
-      this.lineColor = WebColors.getColorWithOpacity(this.lineColor, this.lineOpacity);
+      this.lineColor = WebColors.setAlpha(this.lineColor, this.lineOpacity);
     }
   }
 
@@ -412,7 +412,7 @@ public class GeometryStyle extends MarkerStyle {
       throw new IllegalArgumentException("Line opacity must be between 0 - 255");
     } else {
       this.lineOpacity = lineOpacity;
-      this.lineColor = WebColors.getColorWithOpacity(this.lineColor, this.lineOpacity);
+      this.lineColor = WebColors.setAlpha(this.lineColor, this.lineOpacity);
     }
   }
 
@@ -478,7 +478,7 @@ public class GeometryStyle extends MarkerStyle {
       throw new IllegalArgumentException("Polygon fill opacity must be between 0.0 - 1.0");
     } else {
       this.polygonFillOpacity = (int)(255 * polygonFillOpacity);
-      this.polygonFill = WebColors.getColorWithOpacity(this.polygonFill, this.polygonFillOpacity);
+      this.polygonFill = WebColors.setAlpha(this.polygonFill, this.polygonFillOpacity);
     }
   }
 
@@ -487,7 +487,7 @@ public class GeometryStyle extends MarkerStyle {
       throw new IllegalArgumentException("Fill opacity must be between 0 - 255");
     } else {
       this.polygonFillOpacity = polygonFillOpacity;
-      this.polygonFill = WebColors.getColorWithOpacity(this.polygonFill, this.polygonFillOpacity);
+      this.polygonFill = WebColors.setAlpha(this.polygonFill, this.polygonFillOpacity);
     }
   }
 

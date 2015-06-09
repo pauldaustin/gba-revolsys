@@ -10,11 +10,10 @@ import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.swing.layout.SpringLayoutUtil;
 import com.revolsys.swing.listener.InvokeMethodActionListener;
 import com.revolsys.swing.undo.UndoManager;
+import com.revolsys.util.Property;
 
 public class DirectoryNameField extends JPanel implements Field {
   private static final long serialVersionUID = -8433151755294925911L;

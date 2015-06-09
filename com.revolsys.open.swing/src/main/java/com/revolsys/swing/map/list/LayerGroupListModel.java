@@ -14,7 +14,7 @@ import com.revolsys.util.Property;
 import com.revolsys.util.Reorderable;
 
 public class LayerGroupListModel extends AbstractListModel implements ComboBoxModel, Reorderable,
-  PropertyChangeListener {
+PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private final LayerGroup group;

@@ -9,7 +9,6 @@ import javax.swing.JScrollPane;
 
 import org.jdesktop.swingx.VerticalLayout;
 
-import com.revolsys.util.Property;
 import com.revolsys.data.query.Condition;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.field.QueryWhereConditionField;
@@ -40,7 +39,7 @@ public class QueryFilterField extends ValueField implements PropertyChangeListen
     final ToolBar toolBar = new ToolBar();
 
     toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits", this,
-      "showAdvancedFilter");
+        "showAdvancedFilter");
 
     this.clearButton = toolBar.addButtonTitleIcon("search", "Clear Filter", "filter_delete",
       this.queryField, "setFieldValue", "");

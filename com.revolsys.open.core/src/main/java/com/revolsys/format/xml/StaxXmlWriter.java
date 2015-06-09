@@ -119,7 +119,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void setNamespaceContext(final NamespaceContext namespaceContext)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.namespaceContext = namespaceContext;
   }
 
@@ -157,7 +157,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeAttribute(final String namespaceUri, final String name, final String value)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.attribute(new QName(namespaceUri, name), value);
   }
 
@@ -199,7 +199,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeCharacters(final char[] buffer, final int offset, final int length)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.text(buffer, offset, length);
   }
 
@@ -268,7 +268,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeEmptyElement(final String namespaceUri, final String name)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.emptyTag(new QName(namespaceUri, name));
   }
 
@@ -282,7 +282,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeEmptyElement(final String prefix, final String name, final String namespaceUri)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.emptyTag(new QName(namespaceUri, name, prefix));
   }
 
@@ -326,7 +326,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeNamespace(final String prefix, final String namespaceUri)
-    throws XMLStreamException {
+      throws XMLStreamException {
     setPrefix(prefix, namespaceUri);
 
   }
@@ -351,7 +351,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeProcessingInstruction(final String target, final String value)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.processingInstruction(target, value);
   }
 
@@ -388,7 +388,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeStartDocument(final String encoding, final String version)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.startDocument(encoding, version);
   }
 
@@ -412,7 +412,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeStartElement(final String namespaceUri, final String name)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.startTag(new QName(name));
   }
 
@@ -426,7 +426,7 @@ public class StaxXmlWriter implements XMLStreamWriter {
    */
   @Override
   public void writeStartElement(final String prefix, final String name, final String namespaceUri)
-    throws XMLStreamException {
+      throws XMLStreamException {
     this.writer.startTag(new QName(namespaceUri, name, prefix));
   }
 

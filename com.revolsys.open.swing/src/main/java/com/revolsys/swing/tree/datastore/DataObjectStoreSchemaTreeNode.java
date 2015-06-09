@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -19,9 +17,10 @@ import com.revolsys.gis.data.io.DataObjectStoreProxy;
 import com.revolsys.io.Path;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
+import com.revolsys.util.Property;
 
 public class DataObjectStoreSchemaTreeNode extends LazyLoadTreeNode implements
-  DataObjectStoreConnectionMapProxy {
+DataObjectStoreConnectionMapProxy {
 
   public static final ImageIcon ICON_SCHEMA = Icons.getIcon("folder_table");
 

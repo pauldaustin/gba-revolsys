@@ -12,7 +12,7 @@ import com.revolsys.io.Path;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.DataObjectStoreLayer;
+import com.revolsys.swing.map.layer.record.RecordStoreLayer;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
@@ -47,7 +47,7 @@ public class DataObjectStoreTableTreeNode extends LazyLoadTreeNode {
     layerConfig.put("name", node.getName());
     layerConfig.put("connection", connection);
     layerConfig.put("typePath", typePath);
-    final AbstractRecordLayer layer = DataObjectStoreLayer.create(layerConfig);
+    final AbstractRecordLayer layer = RecordStoreLayer.create(layerConfig);
     Project.get().add(layer);
     // TODO different layer groups?
   }

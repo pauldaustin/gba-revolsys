@@ -29,7 +29,7 @@ import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.io.AbstractObjectWithProperties;
 
 public class DataObjectMetaDataFactoryImpl extends AbstractObjectWithProperties implements
-  RecordDefinitionFactory {
+RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> types = new LinkedHashMap<String, RecordDefinition>();
 

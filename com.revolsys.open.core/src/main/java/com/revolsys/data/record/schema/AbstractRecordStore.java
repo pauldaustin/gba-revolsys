@@ -18,7 +18,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.springframework.transaction.PlatformTransactionManager;
-import com.revolsys.util.Property;
 
 import com.revolsys.collection.ListResultPager;
 import com.revolsys.collection.ResultPager;
@@ -51,10 +50,11 @@ import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractRecordStore extends AbstractObjectWithProperties implements
-  RecordStore {
+RecordStore {
 
   public static RecordStore close(final Collection<RecordStore> dataStores) {
     final List<RuntimeException> exceptions = new ArrayList<RuntimeException>();

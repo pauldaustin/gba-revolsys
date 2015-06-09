@@ -7,12 +7,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.border.BevelBorder;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class ObjectLabelField extends JLabel implements Field {
   private static final long serialVersionUID = 1L;

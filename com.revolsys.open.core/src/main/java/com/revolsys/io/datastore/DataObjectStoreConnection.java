@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
@@ -14,6 +13,7 @@ import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class DataObjectStoreConnection implements MapSerializer {
   private Map<String, Object> config;

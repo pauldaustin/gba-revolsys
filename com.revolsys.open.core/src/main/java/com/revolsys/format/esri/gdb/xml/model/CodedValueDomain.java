@@ -44,10 +44,10 @@ public class CodedValueDomain extends Domain implements CodeTable {
     switch (getFieldType()) {
       case esriFieldTypeInteger:
         id = (int)++this.maxId;
-      break;
+        break;
       case esriFieldTypeSmallInteger:
         id = (short)++this.maxId;
-      break;
+        break;
 
       default:
         throw new RuntimeException("Cannot generate code for field type " + getFieldType());

@@ -8,7 +8,6 @@ import javax.annotation.PreDestroy;
 
 import org.springframework.core.io.FileSystemResource;
 
-import com.revolsys.util.Property;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -19,6 +18,7 @@ import com.revolsys.io.IoConstants;
 import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class ShapeDirectoryWriter extends AbstractWriter<Record> {

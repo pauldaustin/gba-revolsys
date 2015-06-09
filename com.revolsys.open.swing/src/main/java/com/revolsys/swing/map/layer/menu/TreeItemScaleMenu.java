@@ -101,6 +101,11 @@ public class TreeItemScaleMenu implements ComponentFactory<JMenu> {
   }
 
   @Override
+  public String getIconName() {
+    return null;
+  }
+
+  @Override
   public String getName() {
     return null;
   }

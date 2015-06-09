@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.revolsys.util.Property;
 import com.revolsys.format.xml.XmlWriter;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.io.StringBufferWriter;
 import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.util.Property;
 import com.revolsys.util.UrlUtil;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;

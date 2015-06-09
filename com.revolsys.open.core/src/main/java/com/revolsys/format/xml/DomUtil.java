@@ -3,11 +3,12 @@ package com.revolsys.format.xml;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revolsys.util.Property;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.revolsys.util.Property;
 
 public class DomUtil {
   public static void appendChildText(final StringBuffer text, final Node node) {

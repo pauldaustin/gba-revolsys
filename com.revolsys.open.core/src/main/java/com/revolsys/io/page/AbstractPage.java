@@ -123,8 +123,8 @@ public abstract class AbstractPage implements Page {
       final int b7 = readNextByte();
       final int b8 = readNextByte();
       return ((long)b1 << 56) + ((long)(b2 & 255) << 48) + ((long)(b3 & 255) << 40)
-        + ((long)(b4 & 255) << 32) + ((long)(b5 & 255) << 24) + ((b6 & 255) << 16)
-        + ((b7 & 255) << 8) + ((b8 & 255) << 0);
+          + ((long)(b4 & 255) << 32) + ((long)(b5 & 255) << 24) + ((b6 & 255) << 16)
+          + ((b7 & 255) << 8) + ((b8 & 255) << 0);
 
     }
   }

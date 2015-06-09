@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
@@ -18,9 +17,10 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistryManager;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.OS;
+import com.revolsys.util.Property;
 
 public class DataObjectStoreConnectionManager extends
-  AbstractConnectionRegistryManager<DataObjectStoreConnectionRegistry, DataObjectStoreConnection> {
+AbstractConnectionRegistryManager<DataObjectStoreConnectionRegistry, DataObjectStoreConnection> {
 
   private static final DataObjectStoreConnectionManager INSTANCE;
 

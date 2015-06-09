@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
-import com.revolsys.util.Property;
 import com.revolsys.format.xml.XmlWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.HtmlUtil;
+import com.revolsys.util.Property;
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationTypeDoc;
 import com.sun.javadoc.ClassDoc;
@@ -153,7 +153,7 @@ public class DocletUtil {
       if (qualifiedTypeName.startsWith(packagePrefix)) {
         final String baseUrl = entry.getValue();
         final String url = baseUrl + qualifiedTypeName.replaceAll("\\.", "/")
-          + ".html?is-external=true";
+            + ".html?is-external=true";
         return url;
       }
     }
@@ -184,17 +184,17 @@ public class DocletUtil {
     writer.startTag(HtmlUtil.HEAD);
     writer.element(HtmlUtil.TITLE, docTitle);
     HtmlUtil.serializeCss(writer,
-      "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css");
+        "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css");
     HtmlUtil.serializeCss(writer,
-      "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css");
+        "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css");
     HtmlUtil.serializeCss(writer, "prettify.css");
     HtmlUtil.serializeCss(writer, "javadoc.css");
     HtmlUtil.serializeScriptLink(writer,
-      "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js");
+        "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js");
     HtmlUtil.serializeScriptLink(writer,
-      "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js");
+        "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js");
     HtmlUtil.serializeScriptLink(writer,
-      "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js");
+        "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js");
     HtmlUtil.serializeScriptLink(writer, "prettify.js");
     HtmlUtil.serializeScriptLink(writer, "javadoc.js");
     writer.endTagLn(HtmlUtil.HEAD);
@@ -204,7 +204,7 @@ public class DocletUtil {
     final ClassDoc classDoc = type.asClassDoc();
     final ClassDoc annotationDoc = type.asAnnotationTypeDoc();
     final boolean included = annotationDoc != null && annotationDoc.isIncluded()
-      || classDoc != null && classDoc.isIncluded();
+        || classDoc != null && classDoc.isIncluded();
     return included;
   }
 

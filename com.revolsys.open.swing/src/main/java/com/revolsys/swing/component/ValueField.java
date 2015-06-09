@@ -14,13 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.CaseConverter;
+import com.revolsys.util.Property;
 
 public class ValueField extends JPanel implements Field {
   private static final long serialVersionUID = 1L;

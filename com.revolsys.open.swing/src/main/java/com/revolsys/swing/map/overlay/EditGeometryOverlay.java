@@ -47,7 +47,7 @@ import com.revolsys.swing.map.layer.Layer;
 import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.undo.AbstractUndoableEdit;
 import com.revolsys.swing.undo.MultipleUndo;
 import com.revolsys.util.CollectionUtil;
@@ -63,7 +63,7 @@ import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 
 public class EditGeometryOverlay extends AbstractOverlay implements PropertyChangeListener,
-  MouseListener, MouseMotionListener {
+MouseListener, MouseMotionListener {
 
   private class AddGeometryUndoEdit extends AbstractUndoableEdit {
 
@@ -196,7 +196,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
         setMapCursor(CURSOR_NODE_ADD);
 
         if (Arrays.asList(DataTypes.POINT, DataTypes.LINE_STRING)
-          .contains(this.addGeometryDataType)) {
+            .contains(this.addGeometryDataType)) {
           this.addGeometryPartIndex = new int[0];
         } else if (Arrays.asList(DataTypes.MULTI_POINT, DataTypes.MULTI_LINE_STRING,
           DataTypes.POLYGON).contains(this.addGeometryDataType)) {
@@ -212,7 +212,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
     }
   }
 
-  private void addRecords(final List<LayerDataObject> results, final LayerGroup group,
+  private void addRecords(final List<LayerRecord> results, final LayerGroup group,
     final PreparedGeometry boundingBox) {
     final double scale = getViewport().getScale();
     final List<Layer> layers = group.getLayers();
@@ -224,8 +224,8 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
       } else if (layer instanceof AbstractRecordLayer) {
         final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
         if (dataObjectLayer.isSelectable(scale)) {
-          final List<LayerDataObject> selectedRecords = dataObjectLayer.getSelectedRecords();
-          for (final LayerDataObject selectedRecord : selectedRecords) {
+          final List<LayerRecord> selectedRecords = dataObjectLayer.getSelectedRecords();
+          for (final LayerRecord selectedRecord : selectedRecords) {
             final Geometry geometry = selectedRecord.getGeometryValue();
             if (boundingBox.intersects(geometry)) {
               results.add(selectedRecord);
@@ -236,7 +236,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
     }
   }
 
-  protected void addSelectedObjects(final List<LayerDataObject> objects, final LayerGroup group,
+  protected void addSelectedObjects(final List<LayerRecord> objects, final LayerGroup group,
     final BoundingBox boundingBox) {
     final double scale = getViewport().getScale();
     for (final Layer layer : group.getLayers()) {
@@ -246,7 +246,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
       } else if (layer instanceof AbstractRecordLayer) {
         final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
         if (dataObjectLayer.isEditable(scale)) {
-          final List<LayerDataObject> selectedObjects = dataObjectLayer.getSelectedRecords(boundingBox);
+          final List<LayerRecord> selectedObjects = dataObjectLayer.getSelectedRecords(boundingBox);
           objects.addAll(selectedObjects);
         }
       }
@@ -292,7 +292,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
           geometry = GeometryEditUtil.appendVertex(geometry, newPoint, geometryPartIndex);
         }
       } else if (DataTypes.LINE_STRING.equals(geometryDataType)
-        || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
+          || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
         if (geometry instanceof Point) {
           final Point point = (Point)geometry;
           geometry = geometryFactory.createLineString(point, newPoint);
@@ -301,7 +301,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
           geometry = GeometryEditUtil.appendVertex(line, newPoint, geometryPartIndex);
         } // TODO MultiLineString
       } else if (DataTypes.POLYGON.equals(geometryDataType)
-        || DataTypes.MULTI_POLYGON.equals(geometryDataType)) {
+          || DataTypes.MULTI_POLYGON.equals(geometryDataType)) {
         if (geometry instanceof Point) {
           final Point point = (Point)geometry;
           geometry = geometryFactory.createLineString(point, newPoint);
@@ -420,8 +420,8 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
     return point;
   }
 
-  protected List<LayerDataObject> getSelectedObjects(final BoundingBox boundingBox) {
-    final List<LayerDataObject> objects = new ArrayList<LayerDataObject>();
+  protected List<LayerRecord> getSelectedObjects(final BoundingBox boundingBox) {
+    final List<LayerRecord> objects = new ArrayList<LayerRecord>();
     addSelectedObjects(objects, getProject(), boundingBox);
     return objects;
   }
@@ -517,7 +517,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
 
   protected boolean isEditable(final AbstractRecordLayer dataObjectLayer) {
     return dataObjectLayer.isExists() && dataObjectLayer.isVisible()
-      && dataObjectLayer.isCanEditRecords();
+        && dataObjectLayer.isCanEditRecords();
   }
 
   protected boolean isGeometryValid(final Geometry geometry) {
@@ -682,7 +682,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
       // TODO make work with multi-part
       final Point fromPoint = JtsGeometryUtil.getFromPoint(this.addGeometry);
       final boolean snapToFirst = !SwingUtil.isControlDown(event)
-        && boundingBox.contains(fromPoint);
+          && boundingBox.contains(fromPoint);
       if (snapToFirst || !updateAddMouseOverGeometry(event.getPoint(), boundingBox)) {
         if (snapToFirst) {
           setMapCursor(CURSOR_NODE_SNAP);
@@ -793,7 +793,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
   public void mouseClicked(final MouseEvent event) {
     if (modeAddMouseClick(event)) {
     } else if (SwingUtil.isLeftButtonAndNoModifiers(event) && event.getClickCount() == 2) {
-      final List<LayerDataObject> records = new ArrayList<LayerDataObject>();
+      final List<LayerRecord> records = new ArrayList<LayerRecord>();
       final BoundingBox boundingBox = getHotspotBoundingBox(event);
       final PreparedGeometry boundary = PreparedGeometryFactory.prepare(boundingBox.toPolygon());
       addRecords(records, getProject(), boundary);
@@ -802,7 +802,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
       if (size == 0) {
 
       } else if (size < 10) {
-        for (final LayerDataObject record : records) {
+        for (final LayerRecord record : records) {
           final AbstractRecordLayer layer = record.getLayer();
           layer.showForm(record);
 
@@ -812,9 +812,9 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
         JOptionPane.showMessageDialog(
           this,
           "There are too many "
-            + size
-            + " selected to view. Maximum 10. Select fewer records or move mouse to middle of geometry.",
-          "Too Many Selected Records", JOptionPane.ERROR_MESSAGE);
+              + size
+              + " selected to view. Maximum 10. Select fewer records or move mouse to middle of geometry.",
+              "Too Many Selected Records", JOptionPane.ERROR_MESSAGE);
         event.consume();
       }
     }
@@ -947,7 +947,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
         // setEditingObject(null, null);
         // }
       }
-    } else if (source instanceof LayerDataObject) {
+    } else if (source instanceof LayerRecord) {
       if (event.getNewValue() instanceof Geometry) {
         // TODO update mouse over locations
         // clearMouseOverLocations();
@@ -976,7 +976,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
         return new AddGeometryUndoEdit(newGeometry);
       }
     } else {
-      final LayerDataObject object = location.getObject();
+      final LayerRecord object = location.getObject();
       final RecordDefinition metaData = location.getMetaData();
       final String geometryAttributeName = metaData.getGeometryFieldName();
       final Geometry oldValue = object.getValue(geometryAttributeName);
@@ -1027,7 +1027,7 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
     if (keyCode == KeyEvent.VK_K) {
       if (!isModeAddGeometry() && !getMouseOverLocations().isEmpty()) {
         for (final CloseLocation mouseLocation : getMouseOverLocations()) {
-          final LayerDataObject record = mouseLocation.getObject();
+          final LayerRecord record = mouseLocation.getObject();
           final AbstractRecordLayer layer = record.getLayer();
           layer.splitRecord(record, mouseLocation);
         }
@@ -1052,9 +1052,9 @@ public class EditGeometryOverlay extends AbstractOverlay implements PropertyChan
 
   protected boolean updateMouseOverGeometry(final java.awt.Point eventPoint,
     final Graphics2D graphics, final BoundingBox boundingBox) {
-    final List<LayerDataObject> selectedObjects = getSelectedObjects(boundingBox);
+    final List<LayerRecord> selectedObjects = getSelectedObjects(boundingBox);
     final List<CloseLocation> closeLocations = new ArrayList<CloseLocation>();
-    for (final LayerDataObject object : selectedObjects) {
+    for (final LayerRecord object : selectedObjects) {
       final CloseLocation closeLocation = findCloseLocation(object, boundingBox);
       if (closeLocation != null) {
         closeLocations.add(closeLocation);

@@ -37,7 +37,7 @@ import com.revolsys.swing.tree.model.node.ListTreeNode;
 import com.revolsys.swing.tree.renderer.BaseTreeCellRenderer;
 
 public class LayerChooserPanel extends ValueField implements TreeSelectionListener,
-  TableCellRenderer {
+TableCellRenderer {
   private static final long serialVersionUID = 1L;
 
   public static BaseTree createTree() {

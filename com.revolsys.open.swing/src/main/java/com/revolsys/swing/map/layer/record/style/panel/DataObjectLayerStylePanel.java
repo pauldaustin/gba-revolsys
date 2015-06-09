@@ -29,7 +29,7 @@ import com.revolsys.swing.tree.model.node.ObjectTreeNodeModel;
 import com.revolsys.util.Property;
 
 public class DataObjectLayerStylePanel extends ValueField implements MouseListener,
-  PropertyChangeListener {
+PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 

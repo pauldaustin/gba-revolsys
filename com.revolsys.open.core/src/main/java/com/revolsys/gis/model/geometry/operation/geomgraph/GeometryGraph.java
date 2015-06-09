@@ -76,7 +76,7 @@ public class GeometryGraph extends PlanarGraph {
   private boolean useBoundaryDeterminationRule = true;
 
   private final int argIndex; // the index of this geometry as an argument to a
-                              // spatial function (used for labelling)
+  // spatial function (used for labelling)
 
   private Collection boundaryNodes;
 
@@ -103,7 +103,7 @@ public class GeometryGraph extends PlanarGraph {
       // SRID = parentGeom.getSRID();
       add(parentGeom);
     }
-    GeometryFactory geometryFactory = parentGeom.getGeometryFactory();
+    final GeometryFactory geometryFactory = parentGeom.getGeometryFactory();
     this.ptLocator = new PointLocator(geometryFactory);
   }
 
@@ -302,7 +302,7 @@ public class GeometryGraph extends PlanarGraph {
     final EdgeSetIntersector esi = createEdgeSetIntersector();
     // optimized test for Polygons and Rings
     if (!computeRingSelfNodes
-      && (this.parentGeom instanceof LinearRing || this.parentGeom instanceof Polygon || this.parentGeom instanceof MultiPolygon)) {
+        && (this.parentGeom instanceof LinearRing || this.parentGeom instanceof Polygon || this.parentGeom instanceof MultiPolygon)) {
       esi.computeIntersections(this.edges, si, false);
     } else {
       esi.computeIntersections(this.edges, si, true);

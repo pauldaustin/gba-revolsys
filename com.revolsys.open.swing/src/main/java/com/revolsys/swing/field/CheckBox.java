@@ -7,12 +7,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
+import com.revolsys.util.Property;
 
 public class CheckBox extends JCheckBox implements Field, ActionListener {
 

@@ -14,19 +14,19 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.swing.listener.InvokeMethodListener;
-import com.revolsys.swing.map.layer.record.DataObjectListLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
-import com.revolsys.swing.map.layer.record.table.DataObjectLayerTable;
+import com.revolsys.swing.map.layer.record.LayerRecord;
+import com.revolsys.swing.map.layer.record.ListRecordLayer;
+import com.revolsys.swing.map.layer.record.table.RecordLayerTable;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordListLayerTableModel extends RecordLayerTableModel implements
-  PropertyChangeListener {
+PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
-  public static DataObjectLayerTable createTable(final DataObjectListLayer layer) {
+  public static RecordLayerTable createTable(final ListRecordLayer layer) {
     final RecordLayerTableModel model = new RecordListLayerTableModel(layer);
-    final DataObjectLayerTable table = new DataObjectLayerTable(model);
+    final RecordLayerTable table = new RecordLayerTable(model);
 
     Property.addListener(layer, "hasSelectedRecords", new InvokeMethodListener(
       RecordLayerTableModel.class, "selectionChanged", table, model));
@@ -34,18 +34,17 @@ public class RecordListLayerTableModel extends RecordLayerTableModel implements
     return table;
   }
 
-  private DataObjectListLayer layer;
+  private ListRecordLayer layer;
 
   private final Set<PropertyChangeListener> propertyChangeListeners = new LinkedHashSet<PropertyChangeListener>();
 
-  private List<LayerDataObject> records = Collections.emptyList();
+  private List<LayerRecord> records = Collections.emptyList();
 
-  public RecordListLayerTableModel(final DataObjectListLayer layer) {
+  public RecordListLayerTableModel(final ListRecordLayer layer) {
     this(layer, layer.getRecordDefinition().getFieldNames());
   }
 
-  public RecordListLayerTableModel(final DataObjectListLayer layer,
-    final List<String> columnNames) {
+  public RecordListLayerTableModel(final ListRecordLayer layer, final List<String> columnNames) {
     super(layer, columnNames);
     this.layer = layer;
     setEditable(false);
@@ -78,7 +77,7 @@ public class RecordListLayerTableModel extends RecordLayerTableModel implements
 
   @Override
   public int getRowCountInternal() {
-    if (getAttributeFilterMode().equals(MODE_ALL)) {
+    if (getFieldFilterMode().equals(MODE_ALL)) {
       final Query query = getFilterQuery();
       query.setOrderBy(getOrderBy());
       this.records = this.layer.query(query);
@@ -92,7 +91,7 @@ public class RecordListLayerTableModel extends RecordLayerTableModel implements
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (isEditable()) {
       final String columnName = getColumnName(columnIndex);
-      final RecordDefinition metaData = getMetaData();
+      final RecordDefinition metaData = getRecordDefinition();
       final DataType dataType = metaData.getFieldType(columnName);
       if (Geometry.class.isAssignableFrom(dataType.getJavaClass())) {
         return false;
@@ -105,7 +104,7 @@ public class RecordListLayerTableModel extends RecordLayerTableModel implements
   }
 
   @Override
-  protected LayerDataObject loadLayerRecord(final int row) {
+  protected LayerRecord loadLayerRecord(final int row) {
     if (row >= 0 && row < this.records.size()) {
       return this.records.get(row);
     } else {

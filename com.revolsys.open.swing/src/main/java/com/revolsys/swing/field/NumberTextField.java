@@ -12,7 +12,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.jdesktop.swingx.JXTextField;
-import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.types.DataType;
@@ -22,6 +21,7 @@ import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
+import com.revolsys.util.Property;
 
 public class NumberTextField extends JXTextField implements Field, DocumentListener, FocusListener {
 

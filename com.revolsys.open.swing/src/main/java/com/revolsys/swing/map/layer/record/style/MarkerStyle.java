@@ -363,7 +363,7 @@ public class MarkerStyle implements Cloneable, MapSerializer {
       throw new IllegalArgumentException("The opacity must be between 0.0 - 1.0");
     } else {
       this.markerFillOpacity = (int)(255 * markerFillOpacity);
-      this.markerFill = WebColors.getColorWithOpacity(this.markerFill, this.markerFillOpacity);
+      this.markerFill = WebColors.setAlpha(this.markerFill, this.markerFillOpacity);
     }
   }
 
@@ -372,7 +372,7 @@ public class MarkerStyle implements Cloneable, MapSerializer {
       throw new IllegalArgumentException("The opacity must be between 0 - 255");
     } else {
       this.markerFillOpacity = markerFillOpacity;
-      this.markerFill = WebColors.getColorWithOpacity(this.markerFill, this.markerFillOpacity);
+      this.markerFill = WebColors.setAlpha(this.markerFill, this.markerFillOpacity);
     }
   }
 
@@ -411,8 +411,7 @@ public class MarkerStyle implements Cloneable, MapSerializer {
       throw new IllegalArgumentException("The opacity must be between 0.0 - 1.0");
     } else {
       this.markerLineOpacity = (int)(255 * markerLineOpacity);
-      this.markerLineColor = WebColors.getColorWithOpacity(this.markerLineColor,
-        this.markerLineOpacity);
+      this.markerLineColor = WebColors.setAlpha(this.markerLineColor, this.markerLineOpacity);
     }
   }
 
@@ -421,8 +420,7 @@ public class MarkerStyle implements Cloneable, MapSerializer {
       throw new IllegalArgumentException("The opacity must be between 0 - 255");
     } else {
       this.markerLineOpacity = markerLineOpacity;
-      this.markerLineColor = WebColors.getColorWithOpacity(this.markerLineColor,
-        this.markerLineOpacity);
+      this.markerLineColor = WebColors.setAlpha(this.markerLineColor, this.markerLineOpacity);
     }
   }
 

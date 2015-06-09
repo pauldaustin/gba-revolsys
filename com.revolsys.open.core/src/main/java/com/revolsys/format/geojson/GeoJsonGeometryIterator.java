@@ -75,7 +75,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
 
   private CoordinatesList readCoordinatesList() {
     if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+        && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<Number> values = new ArrayList<Number>();
       int dimension = 0;
@@ -133,7 +133,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
   private int readCoordinatesListCoordinates(final List<Number> values) {
     int dimension = 0;
     if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+        && this.in.next() == EventType.startArray) {
       EventType event = this.in.getEvent();
       do {
         final Object value = JsonParser.getValue(this.in);
@@ -159,7 +159,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
 
   private List<CoordinatesList> readCoordinatesListList(final boolean cogo, final boolean ring) {
     if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+        && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<CoordinatesList> coordinatesLists = new ArrayList<CoordinatesList>();
       if (event != EventType.endArray) {
@@ -179,7 +179,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
 
   private List<List<CoordinatesList>> readCoordinatesListListList(final boolean cogo) {
     if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+        && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<List<CoordinatesList>> coordinatesLists = new ArrayList<List<CoordinatesList>>();
       if (event != EventType.endArray) {
@@ -215,7 +215,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         }
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
     return factory;
   }
 
@@ -259,14 +259,14 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
 
     return factory.createGeometry(geometries);
   }
 
   private List<Geometry> readGeometryList() {
     if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+        && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<Geometry> geometries = new ArrayList<Geometry>();
       if (event != EventType.endArray) {
@@ -296,7 +296,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
     final LineString lineString = factory.createLineString(points);
     return lineString;
   }
@@ -312,7 +312,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
     return factory.createMultiLineString(lineStrings);
   }
 
@@ -327,7 +327,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
     return factory.createMultiPoint(points);
   }
 
@@ -343,7 +343,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
     if (polygonRings != null) {
       for (final List<CoordinatesList> rings : polygonRings) {
         final Polygon polygon = factory.createPolygon(rings);
@@ -364,7 +364,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
     final Point point = factory.createPoint(coordinates);
     return point;
   }
@@ -376,7 +376,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
 
   private List<CoordinatesList> readPointCoordinatesListList() {
     if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+        && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<CoordinatesList> coordinatesLists = new ArrayList<CoordinatesList>();
       if (event != EventType.endArray) {
@@ -403,7 +403,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
         rings = readCoordinatesListList(cogo, true);
       }
     } while (this.in.getEvent() != EventType.endObject
-      && this.in.getEvent() != EventType.endDocument);
+        && this.in.getEvent() != EventType.endDocument);
     return factory.createPolygon(rings);
   }
 }

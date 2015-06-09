@@ -18,31 +18,31 @@ public final class JsonWriterUtil {
       switch (c) {
         case '"':
           out.print("\\\"");
-        break;
+          break;
         case '\\':
           out.print("\\\\");
-        break;
+          break;
         case '/':
           out.print("\\/");
-        break;
+          break;
         case '\b':
           out.print("\\b");
-        break;
+          break;
         case '\f':
           out.print("\\f");
-        break;
+          break;
         case '\n':
           out.print("\\n");
-        break;
+          break;
         case '\r':
           out.print("\\r");
-        break;
+          break;
         case '\t':
           out.print("\\t");
-        break;
+          break;
         default:
           out.print(c);
-        break;
+          break;
       }
     }
   }

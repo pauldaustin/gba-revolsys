@@ -194,7 +194,7 @@ public class IsSimpleOp {
     final GeometryGraph graph = new GeometryGraph(0, geom);
     final LineIntersector li = new RobustLineIntersector();
     final boolean ringBased = geom instanceof LinearRing || geom instanceof Polygon
-      || geom instanceof MultiPolygon;
+        || geom instanceof MultiPolygon;
     final SegmentIntersector si = computeIntersections(graph, li, ringBased);
 
     // if no self-intersection, must be simple

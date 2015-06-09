@@ -30,7 +30,7 @@ public class WktDataObjectIterator extends AbstractIterator<Record> implements R
   private RecordDefinition metaData;
 
   public WktDataObjectIterator(final RecordFactory factory, final Resource resource)
-    throws IOException {
+      throws IOException {
     this.factory = factory;
     this.in = new BufferedReader(FileUtil.createUtf8Reader(resource.getInputStream()));
     this.metaData = DataObjectUtil.createGeometryMetaData();

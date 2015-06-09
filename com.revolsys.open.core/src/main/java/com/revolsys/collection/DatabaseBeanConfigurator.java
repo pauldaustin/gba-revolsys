@@ -8,7 +8,6 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -16,6 +15,7 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.spring.config.BeanConfigurrer;
+import com.revolsys.util.Property;
 
 public class DatabaseBeanConfigurator extends BeanConfigurrer {
 
@@ -61,7 +61,7 @@ public class DatabaseBeanConfigurator extends BeanConfigurrer {
 
   @Override
   public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
-    throws BeansException {
+      throws BeansException {
     try {
       final boolean hasTypeColumnName = Property.hasValue(this.typeColumnName);
       String sql = "SELECT " + this.propertyColumnName + ", " + this.valueColumnName;
@@ -90,7 +90,7 @@ public class DatabaseBeanConfigurator extends BeanConfigurrer {
               if (dataType != null) {
                 final Class<?> dataTypeClass = dataType.getJavaClass();
                 final StringConverter<?> converter = StringConverterRegistry.getInstance()
-                  .getConverter(dataTypeClass);
+                    .getConverter(dataTypeClass);
                 if (converter != null) {
                   value = converter.toObject(valueString);
                 }

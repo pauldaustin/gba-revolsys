@@ -19,7 +19,7 @@ import com.revolsys.util.CaseConverter;
 import com.revolsys.util.MathUtil;
 
 public abstract class AbstractCodeTable implements Closeable, PropertyChangeSupportProxy,
-  CodeTable, Cloneable {
+CodeTable, Cloneable {
 
   private boolean capitalizeWords = false;
 

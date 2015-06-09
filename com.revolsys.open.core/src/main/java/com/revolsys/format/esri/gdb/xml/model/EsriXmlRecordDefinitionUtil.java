@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
@@ -23,6 +21,7 @@ import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.Path;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants {
   private static final String DE_TABLE_PROPERTY = EsriXmlRecordDefinitionUtil.class + ".DETable";
@@ -72,16 +71,16 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
       switch (shapeType) {
         case esriGeometryPoint:
           dataType = DataTypes.POINT;
-        break;
+          break;
         case esriGeometryMultipoint:
           dataType = DataTypes.MULTI_POINT;
-        break;
+          break;
         case esriGeometryPolyline:
           dataType = DataTypes.MULTI_LINE_STRING;
-        break;
+          break;
         case esriGeometryPolygon:
           dataType = DataTypes.POLYGON;
-        break;
+          break;
 
         default:
           throw new RuntimeException("Unknown geometry type" + shapeType + " for " + tableName
@@ -89,7 +88,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
       }
 
     } else if (precision > 0
-      && (fieldType.equals(FieldType.esriFieldTypeSingle) || fieldType.equals(FieldType.esriFieldTypeDouble))) {
+        && (fieldType.equals(FieldType.esriFieldTypeSingle) || fieldType.equals(FieldType.esriFieldTypeDouble))) {
       dataType = DataTypes.DECIMAL;
     } else {
       dataType = EsriGeodatabaseXmlFieldTypeRegistry.INSTANCE.getDataType(fieldType);
@@ -100,7 +99,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
       length = precision;
     }
     final Boolean required = !field.isIsNullable()
-      || BooleanStringConverter.getBoolean(field.getRequired());
+        || BooleanStringConverter.getBoolean(field.getRequired());
     final FieldDefinition attribute = new FieldDefinition(fieldName, dataType, length, scale,
       required);
 
@@ -198,7 +197,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
     if (geometryAttribute != null) {
       if (spatialReference == null) {
         throw new IllegalArgumentException(
-          "A Geometry Factory with a coordinate system must be specified.");
+            "A Geometry Factory with a coordinate system must be specified.");
       }
       geometryDataType = geometryAttribute.getType();
       if (FIELD_TYPES.getFieldType(geometryDataType) != null) {

@@ -145,7 +145,7 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
       edge.getGraph(), edge);
     if (!intersectEdges.isEmpty()) {
       final Filter<Edge<Record>> edgeEqualFilter = new LineFilter<Record>(
-        new EqualFilter<LineString>(line));
+          new EqualFilter<LineString>(line));
       FilterUtil.remove(intersectEdges, edgeEqualFilter);
       for (final Edge<Record> edge2 : intersectEdges) {
         if (!edge2.isRemoved()) {

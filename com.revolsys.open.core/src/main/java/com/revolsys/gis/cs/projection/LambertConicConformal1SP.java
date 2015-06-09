@@ -80,7 +80,7 @@ public class LambertConicConformal1SP implements CoordinatesProjection {
       final double sinPhi = Math.sin(phi);
       final double eSinPhi = this.e * sinPhi;
       final double phi1 = Angle.PI_OVER_2 - 2
-        * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.e / 2));
+          * Math.atan(t * Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.e / 2));
       delta = Math.abs(phi1 - phi);
       phi = phi1;
     } while (!Double.isNaN(phi) && delta > 1.0e-011);
@@ -124,7 +124,7 @@ public class LambertConicConformal1SP implements CoordinatesProjection {
     final double eSinPhi = this.e * sinPhi;
 
     final double t = Math.tan(Angle.PI_OVER_4 - phi / 2)
-      / Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.e / 2);
+        / Math.pow((1 - eSinPhi) / (1 + eSinPhi), this.e / 2);
     return t;
   }
 }

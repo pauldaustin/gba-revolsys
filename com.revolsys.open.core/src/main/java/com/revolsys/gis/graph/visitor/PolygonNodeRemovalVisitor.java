@@ -40,37 +40,6 @@ public class PolygonNodeRemovalVisitor implements Visitor<Node<Record>> {
     }
   }
 
-  /**
-   * Check the direction of the edge by checking following the edge to the TO
-   * node until the degree of the node != 2 of the next edge is reversed.
-   *
-   * @param node
-   * @param edge The edge.
-   * @return The type of edge.
-   */
-  private EdgeType checkDirection(final Node<Record> node, final Edge<Record> edge) {
-    final Node<Record> toNode = edge.getToNode();
-    final int degree = toNode.getDegree();
-    if (degree == 1) {
-      return EdgeType.END_DEGREE_1;
-    } else if (degree == 2) {
-      final Edge<Record> nextEdge = toNode.getNextEdge(edge);
-      if (nextEdge.isForwards(toNode) == edge.isForwards(toNode)) {
-        return EdgeType.BACKWARDS;
-      } else {
-        final EdgeType nextDirection = checkDirection(toNode, nextEdge);
-        if (nextDirection == EdgeType.BACKWARDS) {
-          return EdgeType.BACKWARDS;
-        } else {
-          return EdgeType.FORWARDS;
-        }
-      }
-    } else {
-      return EdgeType.END_DEGREE_N;
-    }
-
-  }
-
   @Override
   public boolean visit(final Node<Record> node) {
     final Set<Edge<Record>> edges = new LinkedHashSet<Edge<Record>>(node.getEdges());

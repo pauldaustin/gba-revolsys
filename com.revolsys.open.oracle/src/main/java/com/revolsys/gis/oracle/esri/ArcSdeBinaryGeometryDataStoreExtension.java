@@ -50,7 +50,7 @@ public class ArcSdeBinaryGeometryDataStoreExtension implements DataObjectStoreEx
           if (!(attribute instanceof OracleSdoGeometryJdbcAttribute)) {
             if (this.sdeUtil == null) {
               LoggerFactory.getLogger(getClass()).error(
-                "SDE Binary columns not supported without the ArcSDE Java API jars");
+                  "SDE Binary columns not supported without the ArcSDE Java API jars");
             } else {
               ((ArcSdeBinaryGeometryDataStoreUtil)this.sdeUtil).createGeometryColumn(dataStore,
                 schema, metaData, typePath, columnName, columnName.toUpperCase(), columnProperties);

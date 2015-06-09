@@ -29,6 +29,7 @@ import org.jdesktop.swingx.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.beans.EventsEnabler;
 import com.revolsys.beans.KeyedPropertyChangeEvent;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.BooleanStringConverter;
@@ -66,7 +67,7 @@ import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
 public abstract class AbstractLayer extends AbstractObjectWithProperties implements Layer,
-  PropertyChangeListener, PropertyChangeSupportProxy, ProjectFramePanel {
+  PropertyChangeListener, PropertyChangeSupportProxy, EventsEnabler, ProjectFramePanel {
   private static final AtomicLong ID_GEN = new AtomicLong();
 
   static {
@@ -532,6 +533,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
     return isVisible(scale) && isEditable();
   }
 
+  @Override
   public boolean isEventsEnabled() {
     if (this.eventsEnabled.get() != Boolean.FALSE) {
       final LayerGroup layerGroup = getLayerGroup();
@@ -652,6 +654,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
     firePropertyChange("editable", old, isEditable());
   }
 
+  @Override
   public boolean setEventsEnabled(final boolean eventsEnabled) {
     final boolean oldValue = this.eventsEnabled.get() != Boolean.FALSE;
     if (eventsEnabled) {

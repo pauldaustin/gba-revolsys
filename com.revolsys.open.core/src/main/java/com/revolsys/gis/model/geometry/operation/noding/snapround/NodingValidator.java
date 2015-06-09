@@ -68,7 +68,7 @@ public class NodingValidator {
       for (int j = 1; j < pts.size() - 1; j++) {
         if (pts.get(j).equals(testPt)) {
           throw new RuntimeException("found endpt/interior pt intersection at index " + j + " :pt "
-            + testPt);
+              + testPt);
         }
       }
     }
@@ -103,9 +103,9 @@ public class NodingValidator {
     if (this.li.hasIntersection()) {
 
       if (this.li.isProper() || hasInteriorIntersection(this.li, p00, p01)
-        || hasInteriorIntersection(this.li, p10, p11)) {
+          || hasInteriorIntersection(this.li, p10, p11)) {
         throw new RuntimeException("found non-noded intersection at " + p00 + "-" + p01 + " and "
-          + p10 + "-" + p11);
+            + p10 + "-" + p11);
       }
     }
   }

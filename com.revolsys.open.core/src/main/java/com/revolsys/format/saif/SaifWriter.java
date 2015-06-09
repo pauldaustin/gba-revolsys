@@ -39,7 +39,6 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.util.Property;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
@@ -50,6 +49,7 @@ import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Path;
 import com.revolsys.io.ZipUtil;
+import com.revolsys.util.Property;
 
 /**
  * <p>
@@ -106,7 +106,7 @@ public class SaifWriter extends AbstractWriter<Record> {
   }
 
   public SaifWriter(final File file, final RecordDefinitionFactory dataObjectMetaDataFactory)
-    throws IOException {
+      throws IOException {
     this(file);
     setDataObjectMetaDataFactory(dataObjectMetaDataFactory);
   }
@@ -205,7 +205,7 @@ public class SaifWriter extends AbstractWriter<Record> {
   }
 
   private void createMissingDirObject(final String typePath, final String fileName)
-    throws IOException {
+      throws IOException {
     if (!this.serializers.containsKey(typePath)) {
       final File file = new File(this.tempDirectory, fileName);
       final PrintStream out = new PrintStream(new FileOutputStream(file));
@@ -386,15 +386,15 @@ public class SaifWriter extends AbstractWriter<Record> {
           this.serializers.put(typePath, serializer);
         } else if (typePath.equals("/ImportedObjects")) {
           serializer = createSerializer("/ImportedObject", new File(this.tempDirectory,
-            "imports.dir"), Long.MAX_VALUE);
+              "imports.dir"), Long.MAX_VALUE);
           this.serializers.put(typePath, serializer);
         } else if (Path.getName(typePath).endsWith("InternallyReferencedObjects")) {
           serializer = createSerializer("/InternallyReferencedObject", new File(this.tempDirectory,
-            "internal.dir"), Long.MAX_VALUE);
+              "internal.dir"), Long.MAX_VALUE);
           this.serializers.put(typePath, serializer);
         } else if (Path.getName(typePath).endsWith("GlobalMetadata")) {
           serializer = createSerializer(GLOBAL_METADATA, new File(this.tempDirectory,
-            "globmeta.osn"), Long.MAX_VALUE);
+              "globmeta.osn"), Long.MAX_VALUE);
           addExport(typePath, typePath, "globmeta.osn");
           this.serializers.put(typePath, serializer);
         }

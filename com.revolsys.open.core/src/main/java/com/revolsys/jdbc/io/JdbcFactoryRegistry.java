@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import com.revolsys.util.Property;
 
 import com.revolsys.io.AbstractMapReaderFactory;
 import com.revolsys.jdbc.JdbcUtils;
+import com.revolsys.util.Property;
 
 public class JdbcFactoryRegistry {
 

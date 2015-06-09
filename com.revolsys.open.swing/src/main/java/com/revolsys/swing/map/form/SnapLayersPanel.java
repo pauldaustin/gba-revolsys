@@ -120,7 +120,7 @@ public class SnapLayersPanel extends ValueField implements ActionListener, ListS
 
     this.addButton = toolBar.addButtonTitleIcon("default", "Add", "add", this, "addSelected");
     this.removeButton = toolBar.addButtonTitleIcon("default", "Remove", "delete", this,
-      "removeSelected");
+        "removeSelected");
 
     final Collection<String> snapLayerPaths = layer.getSnapLayerPaths();
     this.snapLayerPathsModel = new BaseListModel<String>(snapLayerPaths);

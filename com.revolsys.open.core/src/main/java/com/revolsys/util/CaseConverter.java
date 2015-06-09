@@ -19,7 +19,7 @@ public final class CaseConverter {
       return Collections.emptyList();
     } else {
       final Pattern p = Pattern.compile("([\\p{Lu}\\d']+)$" + "|" + "([\\p{Lu}\\d']+)[ _]" + "|"
-        + "([\\p{L}\\d'][^\\p{Lu} _]*)");
+          + "([\\p{L}\\d'][^\\p{Lu} _]*)");
       final Matcher m = p.matcher(text);
       final List<String> words = new ArrayList<String>();
       while (m.find()) {
@@ -111,7 +111,7 @@ public final class CaseConverter {
   public static String toUpperCamelCase(final String text) {
     final List<String> words = splitWords(text);
     final StringBuffer result = new StringBuffer();
-    for (String word : words) {
+    for (final String word : words) {
       result.append(captialize(word));
     }
     return result.toString();

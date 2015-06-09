@@ -3,9 +3,8 @@ package com.revolsys.converter.string;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.util.DateUtil;
+import com.revolsys.util.Property;
 
 public class TimestampStringConverter implements StringConverter<Timestamp> {
   public TimestampStringConverter() {

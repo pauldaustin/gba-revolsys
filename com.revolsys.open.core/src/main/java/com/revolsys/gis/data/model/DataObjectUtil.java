@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
@@ -41,6 +39,7 @@ import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.util.JavaBeanUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public final class DataObjectUtil {
@@ -240,7 +239,7 @@ public final class DataObjectUtil {
             object.setValue(name, value);
           } else {
             final StringConverter<Object> converter = StringConverterRegistry.getInstance()
-              .getConverter(dataTypeClass);
+                .getConverter(dataTypeClass);
             if (converter == null) {
               object.setValue(name, value);
             } else {

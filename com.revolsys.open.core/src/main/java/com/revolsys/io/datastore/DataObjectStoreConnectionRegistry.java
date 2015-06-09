@@ -7,15 +7,15 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.util.Property;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistry;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class DataObjectStoreConnectionRegistry extends
-  AbstractConnectionRegistry<DataObjectStoreConnection> {
+AbstractConnectionRegistry<DataObjectStoreConnection> {
 
   private static final ThreadLocal<DataObjectStoreConnectionRegistry> threadRegistry = new ThreadLocal<DataObjectStoreConnectionRegistry>();
 

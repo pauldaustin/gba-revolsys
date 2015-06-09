@@ -46,7 +46,6 @@ import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.beanutils.expression.Resolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 /**
  * The JavaBeanUtil is a utility class that provides methods to set/get
@@ -313,13 +312,13 @@ public final class JavaBeanUtil {
             return resultClass;
           } else {
             throw new IllegalArgumentException(method.getName() + " must return "
-              + expectedRawClass.getName() + " with 1 generic type parameter that is a class");
+                + expectedRawClass.getName() + " with 1 generic type parameter that is a class");
           }
         }
       }
     }
     throw new IllegalArgumentException(method.getName() + " must return "
-      + expectedRawClass.getName() + " with 1 generic class parameter");
+        + expectedRawClass.getName() + " with 1 generic class parameter");
   }
 
   public static Method getWriteMethod(final Class<?> beanClass, final String name) {

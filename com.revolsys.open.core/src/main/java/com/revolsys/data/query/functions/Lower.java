@@ -2,9 +2,8 @@ package com.revolsys.data.query.functions;
 
 import java.util.Map;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.query.QueryValue;
+import com.revolsys.util.Property;
 
 public class Lower extends UnaryFunction {
 

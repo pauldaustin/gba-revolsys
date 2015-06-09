@@ -78,17 +78,17 @@ public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
   }
 
   @Override
-  protected void setMetaData(final RecordDefinition metaData) {
+  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
+    final Object value) throws SQLException {
+    throw new UnsupportedOperationException("Editing ArcSDE binary geometries is not supported");
+  }
+
+  @Override
+  protected void setRecordDefinition(final RecordDefinition metaData) {
     this.tableName = this.sdeUtil.getTableName(metaData);
     this.geometryColumns = new String[] {
       getName()
     };
     this.valid = true;
-  }
-
-  @Override
-  public int setPreparedStatementValue(final PreparedStatement statement, final int parameterIndex,
-    final Object value) throws SQLException {
-    throw new UnsupportedOperationException("Editing ArcSDE binary geometries is not supported");
   }
 }

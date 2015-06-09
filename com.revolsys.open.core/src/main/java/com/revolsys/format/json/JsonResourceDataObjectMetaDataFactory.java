@@ -17,7 +17,7 @@ import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 
 public class JsonResourceDataObjectMetaDataFactory extends AbstractObjectWithProperties implements
-  ApplicationContextAware, RecordDefinitionFactory {
+ApplicationContextAware, RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> metaDataMap = new HashMap<String, RecordDefinition>();
 
@@ -49,7 +49,7 @@ public class JsonResourceDataObjectMetaDataFactory extends AbstractObjectWithPro
 
   @Override
   public void setApplicationContext(final ApplicationContext applicationContext)
-    throws BeansException {
+      throws BeansException {
     this.applicationContext = applicationContext;
   }
 

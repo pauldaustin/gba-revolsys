@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 
 public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
 
   private static final long serialVersionUID = 1L;
 
-  private final LayerDataObject record;
+  private final LayerRecord record;
 
   private Map<String, Object> values;
 
-  public DeleteLayerRecordUndo(final LayerDataObject record) {
+  public DeleteLayerRecordUndo(final LayerRecord record) {
     this.record = record;
     if (record != null) {
       this.values = new HashMap<String, Object>(record);
@@ -61,7 +61,7 @@ public class DeleteLayerRecordUndo extends AbstractUndoableEdit {
   @Override
   protected void doUndo() {
     if (this.record != null) {
-      final LayerDataObject sourceRecord = this.record.revertChanges();
+      final LayerRecord sourceRecord = this.record.revertChanges();
       sourceRecord.setValues(this.values);
       final AbstractRecordLayer layer = sourceRecord.getLayer();
       layer.addSelectedRecords(sourceRecord);

@@ -16,7 +16,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
@@ -28,6 +27,7 @@ import com.revolsys.io.AbstractWriter;
 import com.revolsys.spring.NonExistingResource;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.DateUtil;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class XbaseDataObjectWriter extends AbstractWriter<Record> {
@@ -239,7 +239,7 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
         if (!writeField(object, field)) {
           final String attributeName = field.getFullName();
           log.warn("Unable to write attribute '" + attributeName + "' with value "
-            + object.getValue(attributeName));
+              + object.getValue(attributeName));
         }
       }
       this.numRecords++;

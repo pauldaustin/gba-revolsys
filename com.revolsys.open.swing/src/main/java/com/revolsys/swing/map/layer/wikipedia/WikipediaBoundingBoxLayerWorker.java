@@ -14,7 +14,7 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.map.layer.geonames.GeoNamesService;
-import com.revolsys.swing.map.layer.record.DataObjectBoundingBoxLayer;
+import com.revolsys.swing.map.layer.record.BoundingBoxRecordLayer;
 import com.revolsys.swing.map.layer.record.renderer.MarkerStyleRenderer;
 import com.revolsys.swing.map.layer.record.style.MarkerStyle;
 import com.revolsys.swing.map.layer.record.style.marker.ImageMarker;
@@ -26,9 +26,9 @@ public class WikipediaBoundingBoxLayerWorker extends AbstractSwingWorker<DataObj
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("wikipedia",
     "Wikipedia Articles", WikipediaBoundingBoxLayerWorker.class, "create");
 
-  public static DataObjectBoundingBoxLayer create(final Map<String, Object> properties) {
+  public static BoundingBoxRecordLayer create(final Map<String, Object> properties) {
     final GeometryFactory wgs84 = GeometryFactory.floating3(4326);
-    final DataObjectBoundingBoxLayer layer1 = new DataObjectBoundingBoxLayer("wikipedia",
+    final BoundingBoxRecordLayer layer1 = new BoundingBoxRecordLayer("wikipedia",
       "Wikipedia Articles", WikipediaBoundingBoxLayerWorker.class, wgs84);
 
     final BufferedImage image = Icons.getImage("wikipedia");
@@ -36,12 +36,12 @@ public class WikipediaBoundingBoxLayerWorker extends AbstractSwingWorker<DataObj
     final MarkerStyle style = new MarkerStyle();
     style.setMarker(marker);
     layer1.setRenderer(new MarkerStyleRenderer(layer1, style));
-    final DataObjectBoundingBoxLayer layer = layer1;
+    final BoundingBoxRecordLayer layer = layer1;
     layer.setProperties(properties);
     return layer;
   }
 
-  private final DataObjectBoundingBoxLayer layer;
+  private final BoundingBoxRecordLayer layer;
 
   private final BoundingBox boundingBox;
 
@@ -49,7 +49,7 @@ public class WikipediaBoundingBoxLayerWorker extends AbstractSwingWorker<DataObj
 
   private final GeometryFactory geometryFactory;
 
-  public WikipediaBoundingBoxLayerWorker(final DataObjectBoundingBoxLayer layer,
+  public WikipediaBoundingBoxLayerWorker(final BoundingBoxRecordLayer layer,
     final BoundingBox boundingBox) {
     this.layer = layer;
     this.boundingBox = boundingBox;
@@ -75,7 +75,7 @@ public class WikipediaBoundingBoxLayerWorker extends AbstractSwingWorker<DataObj
       String text;
       if (thumbnailImage != null) {
         text = "<html><b>" + title + "</b><br /><img src=\"" + thumbnailImage
-          + "\" /><br /></html>";
+            + "\" /><br /></html>";
       } else {
         text = "<html><b>" + title + "</b><br /></html>";
       }

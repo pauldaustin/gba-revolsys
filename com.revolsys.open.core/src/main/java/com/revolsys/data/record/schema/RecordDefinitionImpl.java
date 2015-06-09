@@ -20,6 +20,7 @@ import javax.annotation.PreDestroy;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.WeakCache;
+import com.revolsys.collection.list.Lists;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
@@ -69,9 +70,9 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
 
   private final Map<String, FieldDefinition> fieldMap = new HashMap<String, FieldDefinition>();
 
-  private final List<String> fieldNames = new ArrayList<String>();
+  private List<String> fieldNames = Collections.emptyList();
 
-  private final List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
+  private List<FieldDefinition> fields = Collections.emptyList();
 
   private Map<String, CodeTable> codeTableByColumnMap = new HashMap<String, CodeTable>();
 
@@ -111,6 +112,10 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
   private final List<RecordDefinition> superClasses = new ArrayList<RecordDefinition>();
 
   private String description;
+
+  private final List<String> internalFieldNames = new ArrayList<>();
+
+  private final List<FieldDefinition> internalFields = new ArrayList<>();
 
   public RecordDefinitionImpl() {
   }
@@ -214,7 +219,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     this.defaultValues.put(fieldName, defaultValue);
   }
 
-  public void addField(final FieldDefinition field) {
+  public synchronized void addField(final FieldDefinition field) {
     final int index = this.fieldNames.size();
     final String name = field.getName();
     String lowerName;
@@ -224,8 +229,10 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
       lowerName = name.toLowerCase();
 
     }
-    this.fieldNames.add(name);
-    this.fields.add(field);
+    this.internalFieldNames.add(name);
+    this.fieldNames = Lists.unmodifiable(this.internalFieldNames);
+    this.internalFields.add(field);
+    this.fields = Lists.unmodifiable(this.internalFields);
     this.fieldMap.put(lowerName, field);
     this.fieldIdMap.put(lowerName, this.fieldIdMap.size());
     final DataType dataType = field.getType();
@@ -242,7 +249,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
       }
     }
     field.setIndex(index);
-    field.setMetaData(this);
+    field.setRecordDefinition(this);
   }
 
   /**
@@ -489,12 +496,12 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
 
   @Override
   public List<String> getFieldNames() {
-    return new ArrayList<String>(this.fieldNames);
+    return this.fieldNames;
   }
 
   @Override
   public List<FieldDefinition> getFields() {
-    return new ArrayList<FieldDefinition>(this.fields);
+    return this.fields;
   }
 
   @Override
@@ -707,17 +714,18 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     METADATA_CACHE.put(this.instanceId, this);
   }
 
-  public void replaceAttribute(final FieldDefinition field, final FieldDefinition newAttribute) {
+  public void replaceField(final FieldDefinition field, final FieldDefinition newField) {
     final String name = field.getName();
     final String lowerName = name.toLowerCase();
-    final String newName = newAttribute.getName();
+    final String newName = newField.getName();
     if (this.fields.contains(field) && name.equals(newName)) {
       final int index = field.getIndex();
-      this.fields.set(index, newAttribute);
-      this.fieldMap.put(lowerName, newAttribute);
-      newAttribute.setIndex(index);
+      this.internalFields.set(index, newField);
+      this.fields = Lists.unmodifiable(this.internalFields);
+      this.fieldMap.put(lowerName, newField);
+      newField.setIndex(index);
     } else {
-      addField(newAttribute);
+      addField(newField);
     }
   }
 

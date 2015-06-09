@@ -15,10 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.HexConverter;
+import com.revolsys.util.Property;
 
 public class MavenRepositoryCache extends MavenRepository {
   private static final Logger LOG = LoggerFactory.getLogger(MavenRepository.class);

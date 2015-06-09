@@ -119,7 +119,7 @@ public class PointConverter implements OsnConverter {
   }
 
   protected void writeAttributes(final OsnSerializer serializer, final Map<String, Object> values)
-    throws IOException {
+      throws IOException {
     writeEnumAttribute(serializer, values, "qualifier");
   }
 

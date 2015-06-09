@@ -41,4 +41,9 @@ public abstract class AbstractActionMainMenuItemFactory extends AbstractAction i
     }
   }
 
+  @Override
+  public String getIconName() {
+    return null;
+  }
+
 }

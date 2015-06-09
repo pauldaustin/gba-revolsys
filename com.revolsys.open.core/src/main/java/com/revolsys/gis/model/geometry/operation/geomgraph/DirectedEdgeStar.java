@@ -314,14 +314,14 @@ public class DirectedEdgeStar extends EdgeEndStar {
           }
           incoming = nextIn;
           state = this.LINKING_TO_OUTGOING;
-        break;
+          break;
         case LINKING_TO_OUTGOING:
           if (nextOut.getEdgeRing() != er) {
             continue;
           }
           incoming.setNextMin(nextOut);
           state = this.SCANNING_FOR_INCOMING;
-        break;
+          break;
       }
     }
     // print(System.out);
@@ -381,14 +381,14 @@ public class DirectedEdgeStar extends EdgeEndStar {
           }
           incoming = nextIn;
           state = this.LINKING_TO_OUTGOING;
-        break;
+          break;
         case LINKING_TO_OUTGOING:
           if (!nextOut.isInResult()) {
             continue;
           }
           incoming.setNext(nextOut);
           state = this.SCANNING_FOR_INCOMING;
-        break;
+          break;
       }
     }
     // Debug.print(this);

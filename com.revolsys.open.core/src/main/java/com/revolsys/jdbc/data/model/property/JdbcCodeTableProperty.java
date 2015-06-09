@@ -7,12 +7,11 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.io.JdbcDataObjectStore;
+import com.revolsys.util.Property;
 
 public class JdbcCodeTableProperty extends CodeTableProperty {
 
@@ -79,7 +78,7 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
   }
 
   @Override
-  public JdbcDataObjectStore getDataStore() {
+  public JdbcDataObjectStore getRecordStore() {
     return this.dataStore;
   }
 
@@ -110,8 +109,8 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
       }
       if (this.useAuditColumns) {
         if (this.dataStore.getClass()
-          .getName()
-          .equals("com.revolsys.gis.oracle.io.OracleDataObjectStore")) {
+            .getName()
+            .equals("com.revolsys.gis.oracle.io.OracleDataObjectStore")) {
           this.insertSql += ", USER, SYSDATE, USER, SYSDATE";
         } else {
           this.insertSql += ", current_user, current_timestamp, current_user, current_timestamp";

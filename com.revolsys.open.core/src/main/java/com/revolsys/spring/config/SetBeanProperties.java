@@ -68,7 +68,7 @@ public class SetBeanProperties implements BeanFactoryPostProcessor, Initializing
 
   @Override
   public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
-    throws BeansException {
+      throws BeansException {
     for (final Entry<String, String> beanPropertyName : this.beanPropertyNames.entrySet()) {
       String beanName = beanPropertyName.getKey();
       final String[] aliases = beanFactory.getAliases(beanName);

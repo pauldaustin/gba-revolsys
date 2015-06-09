@@ -11,8 +11,6 @@ import java.util.TreeMap;
 import javax.measure.Measure;
 import javax.measure.quantity.Length;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
@@ -232,7 +230,7 @@ public class TextStyle implements MapSerializer, Cloneable {
       throw new IllegalArgumentException("Text box opacity must be between 0 - 255");
     } else {
       this.textBoxOpacity = textBoxOpacity;
-      this.textBoxColor = WebColors.getColorWithOpacity(this.textBoxColor, this.textBoxOpacity);
+      this.textBoxColor = WebColors.setAlpha(this.textBoxColor, this.textBoxOpacity);
     }
   }
 
@@ -261,7 +259,7 @@ public class TextStyle implements MapSerializer, Cloneable {
     if (fill == null) {
       this.textHaloFill = new Color(0, 0, 0, this.textOpacity);
     } else {
-      this.textHaloFill = WebColors.getColorWithOpacity(fill, this.textOpacity);
+      this.textHaloFill = WebColors.setAlpha(fill, this.textOpacity);
     }
   }
 
@@ -290,8 +288,8 @@ public class TextStyle implements MapSerializer, Cloneable {
       throw new IllegalArgumentException("Text opacity must be between 0 - 255");
     } else {
       this.textOpacity = textOpacity;
-      this.textFill = WebColors.getColorWithOpacity(this.textFill, this.textOpacity);
-      this.textHaloFill = WebColors.getColorWithOpacity(this.textHaloFill, this.textOpacity);
+      this.textFill = WebColors.setAlpha(this.textFill, this.textOpacity);
+      this.textHaloFill = WebColors.setAlpha(this.textHaloFill, this.textOpacity);
     }
   }
 
@@ -352,7 +350,7 @@ public class TextStyle implements MapSerializer, Cloneable {
       Object value = Property.get(this, name);
       if (value instanceof Color) {
         final Color color = (Color)value;
-        value = WebColors.getColorWithOpacity(color, 255);
+        value = WebColors.setAlpha(color, 255);
       }
       boolean defaultEqual = false;
       if (DEFAULT_VALUES.containsKey(name)) {

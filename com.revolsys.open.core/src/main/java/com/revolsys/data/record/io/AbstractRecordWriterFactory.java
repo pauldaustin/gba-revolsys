@@ -18,7 +18,7 @@ import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
 public abstract class AbstractRecordWriterFactory extends AbstractIoFactory implements
-  RecordWriterFactory {
+RecordWriterFactory {
 
   private boolean singleFile = true;
 

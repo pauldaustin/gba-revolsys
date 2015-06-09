@@ -103,9 +103,9 @@ public class RayCrossingCounter {
   }
 
   /**
-    * For each segment, check if it crosses a horizontal ray running from the
-     * test point in the positive x direction.
-    *
+   * For each segment, check if it crosses a horizontal ray running from the
+   * test point in the positive x direction.
+   *
    * @param p1 an endpoint of the segment
    * @param p2 another endpoint of the segment
    */

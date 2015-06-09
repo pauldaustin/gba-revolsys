@@ -129,13 +129,13 @@ public class QueryValueTest {
       assertConditionTrue(trueCondition, this.record);
     }
     for (final String like : Arrays.asList("%Foobar", "fooBar%", "%foObar%", "%fOo%", "%bAr%",
-      "%o%B%")) {
+        "%o%B%")) {
       final Condition trueCondition = Q.iLike(this.nameAttribute, like);
       assertConditionTrue(trueCondition, this.record);
     }
 
     for (final String like : Arrays.asList("%Foobar1", "Foobar1%", "%Foobar1%", "%Foo1%", "%Bar1%",
-      "%a%b%")) {
+        "%a%b%")) {
       final Condition falseCondition = Q.iLike(this.nameAttribute, like);
       assertConditionFalse(falseCondition, this.record);
     }
@@ -194,13 +194,13 @@ public class QueryValueTest {
       assertConditionTrue(trueCondition, this.record);
     }
     for (final String like : Arrays.asList("%foobar", "foobar%", "%foobar%", "%foo%", "%bar%",
-      "%o%b%")) {
+        "%o%b%")) {
       final Condition trueCondition = Q.like(this.nameAttribute, like);
       assertConditionTrue(trueCondition, this.record);
     }
 
     for (final String like : Arrays.asList("%Foobar", "Foobar%", "%Foobar%", "%Foo%", "%Bar%",
-      "%O%b%")) {
+        "%O%b%")) {
       final Condition falseCondition = Q.like(this.nameAttribute, like);
       assertConditionFalse(falseCondition, this.record);
     }

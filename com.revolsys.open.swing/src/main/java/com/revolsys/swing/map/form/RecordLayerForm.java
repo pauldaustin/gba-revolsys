@@ -56,7 +56,6 @@ import javax.swing.undo.UndoableEdit;
 
 import org.jdesktop.swingx.VerticalLayout;
 
-import com.revolsys.util.Property;
 import com.revolsys.awt.WebColors;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -82,7 +81,7 @@ import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.map.ProjectFrame;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.table.model.LayerRecordTableModel;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
 import com.revolsys.swing.map.layer.record.table.predicate.FormAllFieldsErrorPredicate;
@@ -90,8 +89,8 @@ import com.revolsys.swing.map.layer.record.table.predicate.FormAllFieldsModified
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.table.BaseJxTable;
-import com.revolsys.swing.table.dataobject.editor.DataObjectTableCellEditor;
-import com.revolsys.swing.table.dataobject.model.AbstractSingleDataObjectTableModel;
+import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
+import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 import com.revolsys.swing.toolbar.ToolBar;
 import com.revolsys.swing.tree.ObjectTree;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
@@ -102,8 +101,8 @@ import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class RecordLayerForm extends JPanel implements PropertyChangeListener,
-  CellEditorListener, FocusListener, PropertyChangeSupportProxy, WindowListener {
+public class RecordLayerForm extends JPanel implements PropertyChangeListener, CellEditorListener,
+  FocusListener, PropertyChangeSupportProxy, WindowListener {
 
   public static final String FLIP_FIELDS_ICON = "flip_fields";
 
@@ -153,7 +152,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
 
   private RecordDefinition metaData;
 
-  private LayerDataObject object;
+  private LayerRecord object;
 
   private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
@@ -201,14 +200,14 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     this.undoManager.addKeyMap(this);
   }
 
-  public RecordLayerForm(final AbstractRecordLayer layer, final LayerDataObject object) {
+  public RecordLayerForm(final AbstractRecordLayer layer, final LayerRecord object) {
     this(layer);
     setObject(object);
   }
 
   public void actionAddCancel() {
     final AbstractRecordLayer layer = getLayer();
-    final LayerDataObject object = getObject();
+    final LayerRecord object = getObject();
     layer.deleteRecords(object);
     this.object = null;
     closeWindow();
@@ -216,7 +215,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
 
   public void actionAddOk() {
     final AbstractRecordLayer layer = getLayer();
-    final LayerDataObject record = getObject();
+    final LayerRecord record = getObject();
     layer.saveChanges(record);
     layer.setSelectedRecords(record);
     layer.showRecordsTable(RecordLayerTableModel.MODE_SELECTED);
@@ -386,7 +385,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
 
   protected void addTabAllFields() {
     this.allAttributes = new LayerRecordTableModel(this);
-    final BaseJxTable table = AbstractSingleDataObjectTableModel.createTable(this.allAttributes);
+    final BaseJxTable table = AbstractSingleRecordTableModel.createTable(this.allAttributes);
     final TableColumnModel columnModel = table.getColumnModel();
     FormAllFieldsModifiedPredicate.add(this, table);
     FormAllFieldsErrorPredicate.add(this, table);
@@ -402,7 +401,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     final JScrollPane scrollPane = addTab("All Fields", table);
     int maxHeight = 500;
     for (final GraphicsDevice device : GraphicsEnvironment.getLocalGraphicsEnvironment()
-      .getScreenDevices()) {
+        .getScreenDevices()) {
       final GraphicsConfiguration graphicsConfiguration = device.getDefaultConfiguration();
       final Rectangle bounds = graphicsConfiguration.getBounds();
 
@@ -450,14 +449,14 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     // Cut, Copy Paste
 
     this.toolBar.addButton("dnd", "Copy Record", "page_copy", (EnableCheck)null, this,
-      "dataTransferCopy");
+        "dataTransferCopy");
 
     this.toolBar.addButton("dnd", "Paste Record", "paste_plain", editable, this,
-      "dataTransferPaste");
+        "dataTransferPaste");
 
     if (hasGeometry) {
       this.toolBar.addButton("dnd", "Paste Geometry", "geometry_paste", editable, this,
-        "pasteGeometry");
+          "pasteGeometry");
 
     }
     final EnableCheck canUndo = new ObjectPropertyEnableCheck(this.undoManager, "canUndo");
@@ -466,7 +465,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     final EnableCheck modifiedOrDeleted = new ObjectPropertyEnableCheck(this, "modifiedOrDeleted");
 
     this.toolBar.addButton("changes", "Revert Record", "arrow_revert", modifiedOrDeleted, this,
-      "revertChanges");
+        "revertChanges");
 
     this.toolBar.addButton("changes", "Revert Empty Fields", "field_empty_revert",
       modifiedOrDeleted, this, "revertEmptyFields");
@@ -478,24 +477,24 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
 
     if (hasGeometry) {
       this.toolBar.addButtonTitleIcon("zoom", "Zoom to Object", "magnifier", this,
-        "actionZoomToObject");
+          "actionZoomToObject");
     }
 
     // Geometry manipulation
     if (hasGeometry) {
       final DataType geometryDataType = geometryAttribute.getType();
       if (geometryDataType == DataTypes.LINE_STRING
-        || geometryDataType == DataTypes.MULTI_LINE_STRING) {
+          || geometryDataType == DataTypes.MULTI_LINE_STRING) {
         if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
           this.toolBar.addButton("geometry", FLIP_RECORD_NAME, FLIP_RECORD_ICON, editable, this,
-            "flipRecordOrientation");
+              "flipRecordOrientation");
           this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME,
             FLIP_LINE_ORIENTATION_ICON, editable, this, "flipLineOrientation");
           this.toolBar.addButton("geometry", FLIP_FIELDS_NAME, FLIP_FIELDS_ICON, editable, this,
-            "flipFields");
+              "flipFields");
         } else {
           this.toolBar.addButton("geometry", "Flip Line Orientation", "flip_line", editable, this,
-            "flipLineOrientation");
+              "flipLineOrientation");
         }
       }
     }
@@ -519,7 +518,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     if (layer == null) {
       return false;
     } else {
-      final LayerDataObject record = getObject();
+      final LayerRecord record = getObject();
       return layer.canPasteRecordGeometry(record);
     }
   }
@@ -556,7 +555,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
   }
 
   public void deleteRecord() {
-    final LayerDataObject object = getObject();
+    final LayerRecord object = getObject();
     if (object != null) {
       getLayer().deleteRecords(object);
     }
@@ -610,7 +609,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
 
   @Override
   public void editingStopped(final ChangeEvent e) {
-    final DataObjectTableCellEditor editor = (DataObjectTableCellEditor)e.getSource();
+    final RecordTableCellEditor editor = (RecordTableCellEditor)e.getSource();
     final String name = editor.getAttributeName();
     final Object value = editor.getCellEditorValue();
     setFieldValue(name, value, true);
@@ -792,12 +791,12 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     return this.metaData;
   }
 
-  public LayerDataObject getObject() {
+  public LayerRecord getObject() {
     return this.object;
   }
 
   public <T> T getOriginalValue(final String fieldName) {
-    final LayerDataObject object = getObject();
+    final LayerRecord object = getObject();
     return object.getOriginalValue(fieldName);
   }
 
@@ -873,7 +872,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
   }
 
   public boolean isDeletable() {
-    final LayerDataObject object = getObject();
+    final LayerRecord object = getObject();
     if (object == null) {
       return false;
     } else {
@@ -909,7 +908,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
   }
 
   public boolean isModifiedOrDeleted() {
-    final LayerDataObject object = getObject();
+    final LayerRecord object = getObject();
     if (object == null) {
       return false;
     } else {
@@ -926,7 +925,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
   }
 
   public void pasteGeometry() {
-    final LayerDataObject record = getObject();
+    final LayerRecord record = getObject();
     final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
       if (record != null) {
@@ -959,7 +958,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
   public void propertyChange(final PropertyChangeEvent event) {
     final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
-      final LayerDataObject object = getObject();
+      final LayerRecord object = getObject();
       if (object != null) {
         final Object source = event.getSource();
         if (source instanceof Field) {
@@ -1006,7 +1005,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
   }
 
   public void revertChanges() {
-    final LayerDataObject object = getObject();
+    final LayerRecord object = getObject();
     if (object != null) {
       object.revertChanges();
       setValues(object);
@@ -1014,7 +1013,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
   }
 
   public void revertEmptyFields() {
-    final LayerDataObject record = getObject();
+    final LayerRecord record = getObject();
     if (record != null) {
       record.revertEmptyFields();
     }
@@ -1172,7 +1171,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     }
   }
 
-  public void setObject(final LayerDataObject object) {
+  public void setObject(final LayerRecord object) {
     final boolean undo = this.undoManager.setEventsEnabled(false);
     final boolean validate = setFieldValidationEnabled(false);
     try {
@@ -1239,7 +1238,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
 
   }
 
-  public LayerDataObject showAddDialog() {
+  public LayerRecord showAddDialog() {
     final String title = "Add New " + getName();
     final Window window = SwingUtil.getActiveWindow();
     final JDialog dialog = new JDialog(window, title, ModalityType.APPLICATION_MODAL);
@@ -1251,7 +1250,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     dialog.add(buttons, BorderLayout.SOUTH);
     final JButton addCancelButton = InvokeMethodAction.createButton("Cancel", this,
-      "actionAddCancel");
+        "actionAddCancel");
     buttons.add(addCancelButton);
     this.addOkButton = InvokeMethodAction.createButton("OK", this, "actionAddOk");
     buttons.add(this.addOkButton);
@@ -1260,7 +1259,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener,
     dialog.setLocation(50, 50);
     dialog.addWindowListener(this);
     dialog.setVisible(true);
-    final LayerDataObject object = getObject();
+    final LayerRecord object = getObject();
     dialog.dispose();
     return object;
   }

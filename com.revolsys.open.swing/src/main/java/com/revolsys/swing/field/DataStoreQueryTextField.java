@@ -40,7 +40,6 @@ import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.collection.map.LruMap;
@@ -59,6 +58,7 @@ import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.map.list.DataObjectListCellRenderer;
 import com.revolsys.swing.menu.PopupMenu;
+import com.revolsys.util.Property;
 
 public class DataStoreQueryTextField extends TextField implements DocumentListener, KeyListener,
   MouseListener, FocusListener, ListDataListener, ItemSelectable, Field, ListSelectionListener,
@@ -202,8 +202,12 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
     final String stringValue = StringConverterRegistry.toString(value);
     String displayText = this.valueToDisplayMap.get(stringValue);
     if (!Property.hasValue(displayText) && Property.hasValue(stringValue)) {
-      final Record record = this.dataStore.queryFirst(Query.equal(this.metaData,
-        this.idAttributeName, stringValue));
+      Record record = null;
+      try {
+        record = this.dataStore.queryFirst(Query.equal(this.metaData, this.idAttributeName,
+          stringValue));
+      } catch (final Exception e) {
+      }
       if (record == null) {
         displayText = stringValue;
       } else {

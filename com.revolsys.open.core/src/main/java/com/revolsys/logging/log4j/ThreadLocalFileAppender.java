@@ -38,7 +38,7 @@ public class ThreadLocalFileAppender extends FileAppender {
   }
 
   public ThreadLocalFileAppender(final Layout layout, final String filename, final boolean append)
-    throws IOException {
+      throws IOException {
     setLayout(layout);
     setFile(filename);
     setAppend(append);

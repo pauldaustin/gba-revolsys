@@ -57,7 +57,7 @@ public class PasswordUtil {
   public static String decryptSqlDeveloper(final String encryptedPassword) {
     if (encryptedPassword.length() % 2 != 0) {
       throw new IllegalArgumentException(
-        "Password must consist of hex pairs.  Length is odd (not even).");
+          "Password must consist of hex pairs.  Length is odd (not even).");
     } else {
 
       final byte[] secret = new byte[encryptedPassword.length() / 2];

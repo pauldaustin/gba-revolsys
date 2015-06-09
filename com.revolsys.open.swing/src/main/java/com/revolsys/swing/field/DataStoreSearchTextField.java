@@ -32,7 +32,6 @@ import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -51,10 +50,11 @@ import com.revolsys.swing.map.list.DataObjectListCellRenderer;
 import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
+import com.revolsys.util.Property;
 
 public class DataStoreSearchTextField extends JXSearchField implements DocumentListener,
-  KeyListener, MouseListener, FocusListener, ListDataListener, ItemSelectable, Field,
-  ListSelectionListener, HighlightPredicate {
+KeyListener, MouseListener, FocusListener, ListDataListener, ItemSelectable, Field,
+ListSelectionListener, HighlightPredicate {
   private static final long serialVersionUID = 1L;
 
   private final String displayAttributeName;
@@ -76,7 +76,7 @@ public class DataStoreSearchTextField extends JXSearchField implements DocumentL
   public DataStoreSearchTextField(final RecordDefinition metaData, final String displayAttributeName) {
     this(metaData.getRecordStore(), displayAttributeName, new Query(metaData, new Equal(
       F.upper(displayAttributeName), new Value(null))), new Query(metaData, Q.iLike(
-      displayAttributeName, "")));
+        displayAttributeName, "")));
   }
 
   public DataStoreSearchTextField(final RecordStore dataStore, final String displayAttributeName,
@@ -120,7 +120,7 @@ public class DataStoreSearchTextField extends JXSearchField implements DocumentL
     final String displayAttributeName) {
     this(dataStore, displayAttributeName, new Query(typeName, new Equal(
       F.upper(displayAttributeName), new Value(null))), new Query(typeName, Q.iLike(
-      displayAttributeName, "")));
+        displayAttributeName, "")));
   }
 
   @Override
@@ -272,7 +272,7 @@ public class DataStoreSearchTextField extends JXSearchField implements DocumentL
         }
         this.list.setSelectedIndex(selectedIndex);
         e.consume();
-      break;
+        break;
       case KeyEvent.VK_ENTER:
         if (size > 0) {
           if (selectedIndex >= 0 && selectedIndex < size) {
@@ -291,9 +291,9 @@ public class DataStoreSearchTextField extends JXSearchField implements DocumentL
           findButton.doClick();
           setText("");
         }
-      break;
+        break;
       default:
-      break;
+        break;
     }
     showMenu();
   }

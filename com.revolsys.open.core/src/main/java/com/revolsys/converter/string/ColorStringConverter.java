@@ -5,10 +5,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.util.Property;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 
 public class ColorStringConverter implements StringConverter<Color> {
 
@@ -158,7 +158,7 @@ public class ColorStringConverter implements StringConverter<Color> {
           return "rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")";
         } else {
           return "rgba(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ","
-            + alpha / 255.0 + ")";
+              + alpha / 255.0 + ")";
         }
       }
     } else {

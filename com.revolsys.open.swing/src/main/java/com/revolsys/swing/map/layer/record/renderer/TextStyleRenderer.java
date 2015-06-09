@@ -24,7 +24,6 @@ import javax.measure.Measure;
 import javax.measure.quantity.Length;
 import javax.swing.Icon;
 
-import com.revolsys.util.Property;
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
@@ -44,9 +43,10 @@ import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
-import com.revolsys.swing.map.layer.record.LayerDataObject;
+import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.style.TextStyle;
 import com.revolsys.swing.map.layer.record.style.panel.TextStylePanel;
+import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -165,8 +165,8 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
           point = CoordinatesUtil.get(geometryFactory.copy(geometry.getCentroid()));
           if (!viewport.getBoundingBox().contains(point)) {
             final Geometry clippedGeometry = viewport.getBoundingBox()
-              .toPolygon()
-              .intersection(geometry);
+                .toPolygon()
+                .intersection(geometry);
             if (!clippedGeometry.isEmpty()) {
               double maxArea = 0;
               double maxLength = 0;
@@ -335,7 +335,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
               directDisplay = viewport.getProperty(DIRECT_DISPLAY);
             }
             if (!BooleanStringConverter.isTrue(directDisplay) && textBoxOpacity > 0
-              && textBoxOpacity < 255) {
+                && textBoxOpacity < 255) {
               graphics.setComposite(AlphaComposite.SrcOut);
             } else {
               graphics.setComposite(AlphaComposite.SrcOver);
@@ -410,7 +410,7 @@ public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
 
   @Override
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
-    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerDataObject object) {
+    final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord object) {
     final Geometry geometry = object.getGeometryValue();
     renderText(viewport, graphics, object, geometry, this.style);
   }

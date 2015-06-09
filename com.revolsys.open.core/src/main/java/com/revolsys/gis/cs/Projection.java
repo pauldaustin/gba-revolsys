@@ -29,7 +29,7 @@ public class Projection implements Serializable, Comparable<Projection> {
   private static final Map<String, String> PROJECTION_ALIASES = new TreeMap<>();
   static {
     for (final String alias : Arrays.asList(ALBERS_EQUAL_AREA, "Albers", "Albers_Equal_Area_Conic",
-      "Albers_Conic_Equal_Area")) {
+        "Albers_Conic_Equal_Area")) {
       addAlias(alias, ALBERS_EQUAL_AREA);
     }
 

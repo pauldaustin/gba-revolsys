@@ -5,7 +5,7 @@ import java.awt.Component;
 import javax.swing.Icon;
 
 public abstract class AbstractComponentFactory<T extends Component> implements ComponentFactory<T>,
-  Cloneable {
+Cloneable {
 
   private Icon icon;
 

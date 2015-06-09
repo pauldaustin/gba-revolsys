@@ -178,7 +178,7 @@ public class JavaDoclet {
   public static int optionLength(String optionName) {
     optionName = optionName.toLowerCase();
     if (optionName.equals("-d") || optionName.equals("-doctitle") || optionName.equals("-docid")
-      || optionName.equals("-htmlfooter") || optionName.equals("-htmlheader")) {
+        || optionName.equals("-htmlfooter") || optionName.equals("-htmlheader")) {
       return 2;
     }
     return -1;
@@ -309,16 +309,16 @@ public class JavaDoclet {
     this.writer.startTag(HtmlUtil.HEAD);
     this.writer.element(HtmlUtil.TITLE, this.docTitle);
     HtmlUtil.serializeCss(this.writer,
-      "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css");
+        "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables_themeroller.css");
     HtmlUtil.serializeCss(this.writer,
-      "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css");
+        "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/cupertino/jquery-ui.css");
     HtmlUtil.serializeCss(this.writer, "javadoc.css");
     HtmlUtil.serializeScriptLink(this.writer,
-      "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js");
+        "https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js");
     HtmlUtil.serializeScriptLink(this.writer,
-      "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js");
+        "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js");
     HtmlUtil.serializeScriptLink(this.writer,
-      "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js");
+        "https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js");
     HtmlUtil.serializeScriptLink(this.writer, "javadoc.js");
     this.writer.endTagLn(HtmlUtil.HEAD);
   }

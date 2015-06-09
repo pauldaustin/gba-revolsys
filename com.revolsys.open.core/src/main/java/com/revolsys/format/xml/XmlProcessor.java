@@ -237,14 +237,14 @@ public abstract class XmlProcessor {
 
   @SuppressWarnings("unchecked")
   public <T> T parseObject(final XMLStreamReader parser, final Class<? extends T> objectClass)
-    throws XMLStreamException, IOException {
+      throws XMLStreamException, IOException {
     try {
       if (objectClass == null) {
         Object object = null;
         while (parser.nextTag() == XMLStreamConstants.START_ELEMENT) {
           if (object != null) {
             throw new IllegalArgumentException("Expecting a single child element "
-              + parser.getLocation());
+                + parser.getLocation());
           }
           object = process(parser);
         }

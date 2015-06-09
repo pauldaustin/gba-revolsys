@@ -93,7 +93,7 @@ public class FastNodingValidator {
 
     final Coordinates[] intSegs = this.segInt.getIntersectionSegments();
     return "found non-noded intersection between " + intSegs[0] + "," + intSegs[1] + " and "
-      + intSegs[2] + " " + intSegs[3];
+    + intSegs[2] + " " + intSegs[3];
   }
 
   public List getIntersections() {

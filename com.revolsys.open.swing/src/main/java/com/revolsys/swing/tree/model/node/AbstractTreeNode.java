@@ -12,13 +12,12 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import com.revolsys.util.Property;
-
 import com.revolsys.collection.iterator.IteratorEnumeration;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 
 public abstract class AbstractTreeNode implements TreeNode, Iterable<TreeNode> {
 

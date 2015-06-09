@@ -17,10 +17,10 @@ import java.util.TreeMap;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import com.revolsys.util.Property;
 
 import com.revolsys.data.record.io.RecordWriterFactory;
 import com.revolsys.util.CollectionUtil;
+import com.revolsys.util.Property;
 
 public class IoFactoryRegistry {
   private static IoFactoryRegistry instance = new IoFactoryRegistry();

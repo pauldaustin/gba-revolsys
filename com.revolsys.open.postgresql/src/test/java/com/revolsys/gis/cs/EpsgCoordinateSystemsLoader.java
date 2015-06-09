@@ -85,7 +85,7 @@ public final class EpsgCoordinateSystemsLoader {
     query.addOrderBy("area_code", true);
     final Reader<Record> reader = this.dataStore.query(query);
     final File file = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/area.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/area.csv");
     final CsvWriter writer = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(file)));
     try {
       writer.write("ID", "NAME", "MIN_X", "MIN_Y", "MAX_X", "MAX_Y", "DEPRECATED");
@@ -139,7 +139,7 @@ public final class EpsgCoordinateSystemsLoader {
 
     }
     final File file = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/axis.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/axis.csv");
     final CsvWriter writer = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(file)));
     try {
       writer.write("ID", "NAME_1", "DIRECTION_1", "NAME_2", "DIRECTION_2", "NAME_3", "DIRECTION_3");
@@ -264,7 +264,7 @@ public final class EpsgCoordinateSystemsLoader {
     query.addOrderBy("datum_code", true);
     final Reader<Record> reader = this.dataStore.query(query);
     final File file = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/datum.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/datum.csv");
     final CsvWriter writer = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(file)));
     try {
       writer.write("ID", "NAME", "SPHEROID_ID", "PRIME_MERIDIAN_ID", "DEPRECATED");
@@ -290,7 +290,7 @@ public final class EpsgCoordinateSystemsLoader {
   private void loadGeographicCoordinateSystems() throws IOException {
     final Reader<Record> reader = this.dataStore.query("/public/epsg_coordinatereferencesystem");
     final File file = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/geographic.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/geographic.csv");
     final CsvWriter writer = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(file)));
     try {
       writer.write("ID", "NAME", "DATUM_ID", "UNIT_ID", "AXIS_ID", "AREA_ID", "DEPRECATED");
@@ -321,7 +321,7 @@ public final class EpsgCoordinateSystemsLoader {
     query.addOrderBy("prime_meridian_code", true);
     final Reader<Record> reader = this.dataStore.query(query);
     final File file = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/primemeridian.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/primemeridian.csv");
     final CsvWriter writer = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(file)));
     try {
       writer.write("ID", "NAME", "LONGITUDE", "DEPRECATED");
@@ -348,7 +348,7 @@ public final class EpsgCoordinateSystemsLoader {
     final Map<Integer, Integer> coordinateOperationMethods = loadCoordinateOperations();
     final Reader<Record> reader = this.dataStore.query("/public/epsg_coordinatereferencesystem");
     final File file = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/projected.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/projected.csv");
     final CsvWriter writer = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(file)));
     try {
       writer.write("ID", "NAME", "GEO_CS_ID", "UNIT_ID", "PROJECTION_ID", "PROJECTION_NAME",
@@ -391,11 +391,11 @@ public final class EpsgCoordinateSystemsLoader {
     query.addOrderBy("ellipsoid_code", true);
     final Reader<Record> reader = this.dataStore.query(query);
     final File file = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/spheroid.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/spheroid.csv");
     final CsvWriter writer = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(file)));
     try {
       writer.write("ID", "NAME", "SEMI_MAJOR_AXIS", "SEMI_MINOR_AXIS", "INVERSE_FLATTENING",
-        "DEPRECATED");
+          "DEPRECATED");
       for (final Record object : reader) {
         final Integer code = object.getInteger("ellipsoid_code");
         final boolean deprecated = isDeprecated(object);
@@ -422,11 +422,11 @@ public final class EpsgCoordinateSystemsLoader {
     query.addOrderBy("uom_code", true);
     final Reader<Record> reader = this.dataStore.query(query);
     final File linearFile = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/linearunit.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/linearunit.csv");
     final CsvWriter linearWriter = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(
       linearFile)));
     final File angularFile = new File(
-      "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/angularunit.csv");
+        "../com.revolsys.open.core/src/main/resources/com/revolsys/gis/cs/epsg/angularunit.csv");
     final CsvWriter angularWriter = new CsvWriter(FileUtil.createUtf8Writer(new FileOutputStream(
       angularFile)));
     try {

@@ -7,7 +7,7 @@ import com.revolsys.gis.graph.Edge;
 import com.revolsys.util.ObjectProcessor;
 
 public class EdgeLessThanLengthVisitor extends AbstractEdgeListenerVisitor<Record> implements
-  ObjectProcessor<DataObjectGraph> {
+ObjectProcessor<DataObjectGraph> {
 
   private double minLength;
 

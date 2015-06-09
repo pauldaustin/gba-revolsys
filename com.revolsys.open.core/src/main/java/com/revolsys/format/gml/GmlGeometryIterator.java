@@ -135,7 +135,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements G
   }
 
   private LinearRing readLinearRing(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+      throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     CoordinatesList points = null;
     if (StaxUtils.skipToChildStartElements(this.in, POS_LIST, COORDINATES)) {
@@ -153,7 +153,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements G
   }
 
   private LineString readLineString(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+      throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     CoordinatesList points = null;
     if (StaxUtils.skipToChildStartElements(this.in, POS_LIST)) {
@@ -169,7 +169,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements G
   }
 
   private Geometry readMultiGeometry(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+      throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     final List<Geometry> geometries = new ArrayList<Geometry>();
     StaxUtils.skipSubTree(this.in);
@@ -177,7 +177,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements G
   }
 
   private MultiLineString readMultiLineString(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+      throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     final List<LineString> lines = new ArrayList<LineString>();
     while (StaxUtils.skipToChildStartElements(this.in, LINE_STRING)) {
@@ -191,7 +191,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements G
   }
 
   private MultiPoint readMultiPoint(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+      throws XMLStreamException {
     final List<Point> points = new ArrayList<Point>();
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     while (StaxUtils.skipToChildStartElements(this.in, POINT)) {
@@ -205,7 +205,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry> implements G
   }
 
   private MultiPolygon readMultiPolygon(final GeometryFactory geometryFactory)
-    throws XMLStreamException {
+      throws XMLStreamException {
     final GeometryFactory factory = getGeometryFactory(geometryFactory);
     final List<Polygon> polygons = new ArrayList<Polygon>();
     while (StaxUtils.skipToChildStartElements(this.in, POLYGON)) {
