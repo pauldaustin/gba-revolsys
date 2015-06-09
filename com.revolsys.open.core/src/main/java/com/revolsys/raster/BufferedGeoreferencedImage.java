@@ -4,15 +4,15 @@ import java.awt.image.BufferedImage;
 
 import com.revolsys.jts.geom.BoundingBox;
 
-public class BufferedGeoReferencedImage extends AbstractGeoReferencedImage {
+public class BufferedGeoreferencedImage extends AbstractGeoreferencedImage {
 
-  public BufferedGeoReferencedImage(final BoundingBox boundingBox, final BufferedImage image) {
+  public BufferedGeoreferencedImage(final BoundingBox boundingBox, final BufferedImage image) {
     this(boundingBox, image.getWidth(), image.getHeight());
     setRenderedImage(image);
     postConstruct();
   }
 
-  public BufferedGeoReferencedImage(final BoundingBox boundingBox, final int imageWidth,
+  public BufferedGeoreferencedImage(final BoundingBox boundingBox, final int imageWidth,
     final int imageHeight) {
     setBoundingBox(boundingBox);
     setImageWidth(imageWidth);

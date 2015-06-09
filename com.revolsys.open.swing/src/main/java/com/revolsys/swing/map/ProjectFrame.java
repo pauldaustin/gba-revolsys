@@ -61,7 +61,7 @@ import com.revolsys.swing.map.layer.dataobject.DataObjectStoreLayer;
 import com.revolsys.swing.map.layer.geonames.GeoNamesBoundingBoxLayerWorker;
 import com.revolsys.swing.map.layer.grid.GridLayer;
 import com.revolsys.swing.map.layer.openstreetmap.OpenStreetMapLayer;
-import com.revolsys.swing.map.layer.raster.GeoReferencedImageLayer;
+import com.revolsys.swing.map.layer.raster.GeoreferencedImageLayer;
 import com.revolsys.swing.map.layer.wikipedia.WikipediaBoundingBoxLayerWorker;
 import com.revolsys.swing.map.tree.ProjectTreeNodeModel;
 import com.revolsys.swing.menu.MenuFactory;
@@ -99,7 +99,7 @@ public class ProjectFrame extends BaseFrame {
     MapObjectFactoryRegistry.addFactory(GridLayer.FACTORY);
     MapObjectFactoryRegistry.addFactory(WikipediaBoundingBoxLayerWorker.FACTORY);
     MapObjectFactoryRegistry.addFactory(GeoNamesBoundingBoxLayerWorker.FACTORY);
-    MapObjectFactoryRegistry.addFactory(GeoReferencedImageLayer.FACTORY);
+    MapObjectFactoryRegistry.addFactory(GeoreferencedImageLayer.FACTORY);
 
   }
 

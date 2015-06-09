@@ -32,7 +32,7 @@ import com.revolsys.util.ExceptionUtil;
 import com.sun.media.jai.codec.ImageCodec;
 
 @SuppressWarnings("deprecation")
-public class TiffImage extends JaiGeoReferencedImage {
+public class TiffImage extends JaiGeoreferencedImage {
   private static final int TAG_X_RESOLUTION = 282;
 
   private static final int TAG_Y_RESOLUTION = 283;

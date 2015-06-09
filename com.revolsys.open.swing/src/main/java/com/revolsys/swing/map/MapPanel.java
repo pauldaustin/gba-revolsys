@@ -53,7 +53,7 @@ import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.list.LayerGroupListModel;
 import com.revolsys.swing.map.listener.FileDropTargetListener;
 import com.revolsys.swing.map.overlay.AbstractOverlay;
-import com.revolsys.swing.map.overlay.EditGeoReferencedImageOverlay;
+import com.revolsys.swing.map.overlay.EditGeoreferencedImageOverlay;
 import com.revolsys.swing.map.overlay.EditGeometryOverlay;
 import com.revolsys.swing.map.overlay.LayerRendererOverlay;
 import com.revolsys.swing.map.overlay.MouseOverlay;
@@ -259,7 +259,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     new SelectRecordsOverlay(this);
     new EditGeometryOverlay(this);
     this.mouseOverlay = new MouseOverlay(this.layeredPane);
-    new EditGeoReferencedImageOverlay(this);
+    new EditGeoreferencedImageOverlay(this);
     this.toolTipOverlay = new ToolTipOverlay(this);
   }
 

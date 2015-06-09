@@ -2,7 +2,7 @@ package com.revolsys.raster;
 
 import org.springframework.core.io.Resource;
 
-public class TiffImageFactory extends AbstractGeoReferencedImageFactory {
+public class TiffImageFactory extends AbstractGeoreferencedImageFactory {
 
   public TiffImageFactory() {
     super("TIFF/GeoTIFF");
@@ -11,7 +11,7 @@ public class TiffImageFactory extends AbstractGeoReferencedImageFactory {
   }
 
   @Override
-  public GeoReferencedImage loadImage(final Resource resource) {
+  public GeoreferencedImage loadImage(final Resource resource) {
     return new TiffImage(resource);
   }
 

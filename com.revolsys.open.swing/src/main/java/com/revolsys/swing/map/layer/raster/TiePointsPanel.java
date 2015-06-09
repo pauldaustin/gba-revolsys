@@ -7,7 +7,7 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.raster.GeoReferencedImage;
+import com.revolsys.raster.GeoreferencedImage;
 import com.revolsys.raster.MappedLocation;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.action.enablecheck.ObjectPropertyEnableCheck;
@@ -33,9 +33,9 @@ public class TiePointsPanel extends TablePanel {
   private static final List<String> TITLES = Arrays.asList("Source Pixel X", "Source Pixel Y",
     "Target Point X", "Target Point Y");
 
-  private final GeoReferencedImageLayer layer;
+  private final GeoreferencedImageLayer layer;
 
-  public TiePointsPanel(final GeoReferencedImageLayer layer) {
+  public TiePointsPanel(final GeoreferencedImageLayer layer) {
     super(new ObjectListTable(layer.getImage().getTiePoints(), COLUMN_NAMES, TITLES));
 
     this.layer = layer;
@@ -86,11 +86,11 @@ public class TiePointsPanel extends TablePanel {
     return object;
   }
 
-  public GeoReferencedImage getImage() {
+  public GeoreferencedImage getImage() {
     return getLayer().getImage();
   }
 
-  public GeoReferencedImageLayer getLayer() {
+  public GeoreferencedImageLayer getLayer() {
     return this.layer;
   }
 
@@ -100,7 +100,7 @@ public class TiePointsPanel extends TablePanel {
 
   public void zoomToTiePoint() {
     final MappedLocation object = getEventRowObject();
-    final GeoReferencedImage image = this.layer.getImage();
+    final GeoreferencedImage image = this.layer.getImage();
     final Geometry geometry = object.getSourceToTargetLine(image, this.layer.getBoundingBox(),
       !this.layer.isShowOriginalImage());
     if (geometry != null) {

@@ -28,14 +28,14 @@ import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
-import com.revolsys.raster.AbstractGeoReferencedImageFactory;
+import com.revolsys.raster.AbstractGeoreferencedImageFactory;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.action.AddFileLayerAction;
 import com.revolsys.swing.map.layer.dataobject.DataObjectFileLayer;
 import com.revolsys.swing.map.layer.dataobject.renderer.GeometryStyleRenderer;
 import com.revolsys.swing.map.layer.dataobject.style.GeometryStyle;
-import com.revolsys.swing.map.layer.raster.GeoReferencedImageLayer;
+import com.revolsys.swing.map.layer.raster.GeoreferencedImageLayer;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeItemRunnable;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
@@ -590,8 +590,8 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
     String name = FileUtil.getFileName(urlString);
     name = FileUtil.fromSafeName(name);
     properties.put("name", name);
-    if (AbstractGeoReferencedImageFactory.hasGeoReferencedImageFactory(urlString)) {
-      final GeoReferencedImageLayer layer = new GeoReferencedImageLayer(properties);
+    if (AbstractGeoreferencedImageFactory.hasGeoreferencedImageFactory(urlString)) {
+      final GeoreferencedImageLayer layer = new GeoreferencedImageLayer(properties);
       add(layer);
     } else if (RecordIo.hasRecordReaderFactory(urlString)) {
       final DataObjectFileLayer layer = new DataObjectFileLayer(properties);

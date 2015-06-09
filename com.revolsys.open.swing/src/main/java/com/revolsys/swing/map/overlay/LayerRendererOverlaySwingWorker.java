@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.jts.geom.BoundingBox;
-import com.revolsys.raster.GeoReferencedImage;
+import com.revolsys.raster.GeoreferencedImage;
 import com.revolsys.swing.map.ImageViewport;
 import com.revolsys.swing.map.layer.Layer;
 import com.revolsys.swing.map.layer.LayerRenderer;
@@ -17,10 +17,10 @@ public class LayerRendererOverlaySwingWorker extends AbstractSwingWorker<Void, V
 
   private final LayerRendererOverlay overlay;
 
-  private final GeoReferencedImage referencedImage;
+  private final GeoreferencedImage referencedImage;
 
   public LayerRendererOverlaySwingWorker(final LayerRendererOverlay layerRendererOverlay,
-    final GeoReferencedImage image) {
+    final GeoreferencedImage image) {
     this.overlay = layerRendererOverlay;
     this.referencedImage = image;
   }
@@ -57,7 +57,7 @@ public class LayerRendererOverlaySwingWorker extends AbstractSwingWorker<Void, V
     }
   }
 
-  public GeoReferencedImage getReferencedImage() {
+  public GeoreferencedImage getReferencedImage() {
     return this.referencedImage;
   }
 

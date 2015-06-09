@@ -2,7 +2,7 @@ package com.revolsys.raster;
 
 import org.springframework.core.io.Resource;
 
-public class PdfImageFactory extends AbstractGeoReferencedImageFactory {
+public class PdfImageFactory extends AbstractGeoreferencedImageFactory {
 
   public PdfImageFactory() {
     super("PDF");
@@ -10,7 +10,7 @@ public class PdfImageFactory extends AbstractGeoReferencedImageFactory {
   }
 
   @Override
-  public GeoReferencedImage loadImage(final Resource resource) {
+  public GeoreferencedImage loadImage(final Resource resource) {
     return new PdfImage(resource);
   }
 

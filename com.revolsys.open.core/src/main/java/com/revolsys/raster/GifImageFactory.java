@@ -2,7 +2,7 @@ package com.revolsys.raster;
 
 import org.springframework.core.io.Resource;
 
-public class GifImageFactory extends AbstractGeoReferencedImageFactory {
+public class GifImageFactory extends AbstractGeoreferencedImageFactory {
 
   public GifImageFactory() {
     super("GIF");
@@ -10,7 +10,7 @@ public class GifImageFactory extends AbstractGeoReferencedImageFactory {
   }
 
   @Override
-  public GeoReferencedImage loadImage(final Resource resource) {
+  public GeoreferencedImage loadImage(final Resource resource) {
     return new GifImage(resource);
   }
 

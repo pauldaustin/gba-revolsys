@@ -41,7 +41,7 @@ public class MappedLocation extends AbstractPropertyChangeObject implements MapS
     return new DoubleCoordinates(imageX, imageY);
   }
 
-  public static double[] toModelCoordinates(final GeoReferencedImage image,
+  public static double[] toModelCoordinates(final GeoreferencedImage image,
     final BoundingBox boundingBox, final boolean useTransform, final double... coordinates) {
     double[] targetCoordinates;
     if (useTransform) {
@@ -96,7 +96,7 @@ public class MappedLocation extends AbstractPropertyChangeObject implements MapS
     return this.sourcePixel;
   }
 
-  public Point getSourcePoint(final GeoReferencedImage image, final BoundingBox boundingBox,
+  public Point getSourcePoint(final GeoreferencedImage image, final BoundingBox boundingBox,
     final boolean useTransform) {
     final Coordinates sourcePixel = getSourcePixel();
     final double[] sourcePoint = toModelCoordinates(image, boundingBox, useTransform,
@@ -118,7 +118,7 @@ public class MappedLocation extends AbstractPropertyChangeObject implements MapS
   // }
   // }
 
-  public LineString getSourceToTargetLine(final GeoReferencedImage image,
+  public LineString getSourceToTargetLine(final GeoreferencedImage image,
     final BoundingBox boundingBox, final boolean useTransform) {
 
     final Coordinates sourcePixel = getSourcePixel();

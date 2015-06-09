@@ -19,9 +19,9 @@ import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.raster.AbstractGeoReferencedImageFactory;
-import com.revolsys.raster.GeoReferencedImage;
-import com.revolsys.raster.GeoReferencedImageFactory;
+import com.revolsys.raster.AbstractGeoreferencedImageFactory;
+import com.revolsys.raster.GeoreferencedImage;
+import com.revolsys.raster.GeoreferencedImageFactory;
 import com.revolsys.raster.MappedLocation;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.swing.Icons;
@@ -41,13 +41,13 @@ import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Point;
 
-public class GeoReferencedImageLayer extends AbstractLayer {
+public class GeoreferencedImageLayer extends AbstractLayer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "geoReferencedImage", "Geo-referenced Image", GeoReferencedImageLayer.class, "create");
+    "geoReferencedImage", "Geo-referenced Image", GeoreferencedImageLayer.class, "create");
 
   static {
-    final MenuFactory menu = ObjectTreeModel.getMenu(GeoReferencedImageLayer.class);
+    final MenuFactory menu = ObjectTreeModel.getMenu(GeoreferencedImageLayer.class);
     menu.addGroup(1, "edit");
 
     final EnableCheck readonly = new TreeItemPropertyEnableCheck("readOnly", false);
@@ -75,11 +75,11 @@ public class GeoReferencedImageLayer extends AbstractLayer {
       TreeItemRunnable.createAction("Fit to Screen", "arrow_out", editable, "fitToViewport"));
   }
 
-  public static GeoReferencedImageLayer create(final Map<String, Object> properties) {
-    return new GeoReferencedImageLayer(properties);
+  public static GeoreferencedImageLayer create(final Map<String, Object> properties) {
+    return new GeoreferencedImageLayer(properties);
   }
 
-  private GeoReferencedImage image;
+  private GeoreferencedImage image;
 
   private Resource resource;
 
@@ -87,12 +87,12 @@ public class GeoReferencedImageLayer extends AbstractLayer {
 
   private boolean showOriginalImage = true;
 
-  public GeoReferencedImageLayer(final Map<String, Object> properties) {
+  public GeoreferencedImageLayer(final Map<String, Object> properties) {
     super(properties);
     setType("geoReferencedImage");
     setSelectSupported(false);
     setQuerySupported(false);
-    setRenderer(new GeoReferencedImageLayerRenderer(this));
+    setRenderer(new GeoreferencedImageLayerRenderer(this));
     setIcon(Icons.getIcon("picture"));
   }
 
@@ -109,8 +109,8 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     final String fileNameExtension = FileUtil.getFileNameExtension(this.url);
     if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
-      final GeoReferencedImageFactory factory = IoFactoryRegistry.getInstance()
-        .getFactoryByFileExtension(GeoReferencedImageFactory.class, fileNameExtension);
+      final GeoreferencedImageFactory factory = IoFactoryRegistry.getInstance()
+        .getFactoryByFileExtension(GeoreferencedImageFactory.class, fileNameExtension);
       if (factory != null) {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }
@@ -121,21 +121,21 @@ public class GeoReferencedImageLayer extends AbstractLayer {
 
   public void cancelChanges() {
     if (this.image == null && this.resource != null) {
-      GeoReferencedImage image = null;
+      GeoreferencedImage image = null;
       final Resource imageResource = SpringUtil.getResource(this.url);
       if (imageResource.exists()) {
         try {
-          image = AbstractGeoReferencedImageFactory.loadGeoReferencedImage(imageResource);
+          image = AbstractGeoreferencedImageFactory.loadGeoreferencedImage(imageResource);
           if (image == null) {
-            LoggerFactory.getLogger(GeoReferencedImageLayer.class).error(
+            LoggerFactory.getLogger(GeoreferencedImageLayer.class).error(
               "Cannot load image: " + this.url);
           }
         } catch (final RuntimeException e) {
-          LoggerFactory.getLogger(GeoReferencedImageLayer.class).error(
+          LoggerFactory.getLogger(GeoreferencedImageLayer.class).error(
             "Unable to load image: " + this.url, e);
         }
       } else {
-        LoggerFactory.getLogger(GeoReferencedImageLayer.class).error(
+        LoggerFactory.getLogger(GeoreferencedImageLayer.class).error(
           "Image does not exist: " + this.url);
       }
       setImage(image);
@@ -213,7 +213,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
 
   @Override
   public BoundingBox getBoundingBox() {
-    final GeoReferencedImage image = getImage();
+    final GeoreferencedImage image = getImage();
     if (image == null) {
       return new BoundingBox();
     } else {
@@ -243,7 +243,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     }
   }
 
-  public GeoReferencedImage getImage() {
+  public GeoreferencedImage getImage() {
     return this.image;
   }
 
@@ -266,8 +266,8 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     }
   }
 
-  public void setImage(final GeoReferencedImage image) {
-    final GeoReferencedImage old = this.image;
+  public void setImage(final GeoreferencedImage image) {
+    final GeoreferencedImage old = this.image;
     if (this.image != null) {
       Property.removeListener(image, this);
     }
@@ -315,7 +315,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
     }
     final double imageX = coordinates[0];
     final double imageY = coordinates[1];
-    final GeoReferencedImage image = getImage();
+    final GeoreferencedImage image = getImage();
     final double xPercent = imageX / image.getImageWidth();
     final double yPercent = imageY / image.getImageHeight();
 
@@ -330,7 +330,7 @@ public class GeoReferencedImageLayer extends AbstractLayer {
   }
 
   public Coordinates targetPointToSourcePixel(Point targetPoint) {
-    final GeoReferencedImage image = getImage();
+    final GeoreferencedImage image = getImage();
     final BoundingBox boundingBox = getBoundingBox();
     targetPoint = boundingBox.getGeometryFactory().copy(targetPoint);
     final double modelX = targetPoint.getX();
