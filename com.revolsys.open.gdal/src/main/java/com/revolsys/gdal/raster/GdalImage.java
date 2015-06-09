@@ -37,12 +37,17 @@ public class GdalImage extends AbstractGeoreferencedImage {
     final double[] geoTransform = dataset.GetGeoTransform();
     if (projection != null) {
       final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(projection);
-      final CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(esriCoordinateSystem);
-      final int srid = epsgCoordinateSystem.getId();
-      if (srid > 0 && srid < 2000000) {
-        setGeometryFactory(GeometryFactory.floating(srid, 2));
-      } else {
-        setGeometryFactory(GeometryFactory.getFactory(epsgCoordinateSystem));
+      if (esriCoordinateSystem != null) {
+        CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(esriCoordinateSystem);
+        if (epsgCoordinateSystem == null) {
+          epsgCoordinateSystem = esriCoordinateSystem;
+        }
+        final int srid = epsgCoordinateSystem.getId();
+        if (srid > 0 && srid < 2000000) {
+          setGeometryFactory(GeometryFactory.floating(srid, 2));
+        } else {
+          setGeometryFactory(GeometryFactory.getFactory(epsgCoordinateSystem));
+        }
       }
     }
     setBoundingBox(geoTransform[0], geoTransform[3], geoTransform[1], -geoTransform[5]);
