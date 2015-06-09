@@ -10,9 +10,8 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 
 import com.revolsys.util.Property;
-
+import com.revolsys.format.xml.XmlWriter;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.xml.XmlWriter;
 import com.revolsys.util.HtmlUtil;
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationTypeDoc;

@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
+import com.revolsys.util.Property;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.io.json.JsonMapIoFactory;
+import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.parallel.process.AbstractMultipleProcess;
 import com.revolsys.parallel.process.Parallel;
 import com.revolsys.parallel.process.Process;

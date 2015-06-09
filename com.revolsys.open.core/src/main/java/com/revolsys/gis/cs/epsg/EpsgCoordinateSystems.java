@@ -14,9 +14,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.revolsys.util.Property;
-
 import com.revolsys.collection.map.IntHashMap;
 import com.revolsys.format.csv.CsvIterator;
+import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.gis.cs.AngularUnit;
 import com.revolsys.gis.cs.Area;
 import com.revolsys.gis.cs.Authority;
@@ -30,7 +30,6 @@ import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.Projection;
 import com.revolsys.gis.cs.Spheroid;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.json.JsonMapIoFactory;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 

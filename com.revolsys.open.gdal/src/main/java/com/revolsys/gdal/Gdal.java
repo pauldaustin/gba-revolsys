@@ -31,13 +31,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.gdal.raster.GdalImageFactory;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCsWktWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
-import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.ExceptionUtil;

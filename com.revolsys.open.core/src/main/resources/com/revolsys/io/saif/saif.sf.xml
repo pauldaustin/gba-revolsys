@@ -2,14 +2,14 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
   "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-  <bean id="saifReader" class="com.revolsys.io.saif.SaifReader"
+  <bean id="saifReader" class="com.revolsys.format.saif.SaifReader"
     singleton="false">
     <constructor-arg>
       <value>${sourceFile}</value>
     </constructor-arg>
     <property name="convertGeometries" value="true"/>
   </bean>
-  <bean id="saifWriter" class="com.revolsys.io.saif.SaifWriter"
+  <bean id="saifWriter" class="com.revolsys.format.saif.SaifWriter"
     singleton="false">
     <constructor-arg>
       <value>${targetFile}</value>

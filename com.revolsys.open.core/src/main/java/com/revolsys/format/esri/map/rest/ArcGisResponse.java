@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.io.json.JsonMapIoFactory;
+import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.util.UrlUtil;
 

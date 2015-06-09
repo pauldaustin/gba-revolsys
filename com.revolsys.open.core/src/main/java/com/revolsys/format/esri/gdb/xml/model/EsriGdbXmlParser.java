@@ -24,7 +24,7 @@ import com.revolsys.format.esri.gdb.xml.model.enums.RelKeyType;
 import com.revolsys.format.esri.gdb.xml.model.enums.RelNotification;
 import com.revolsys.format.esri.gdb.xml.model.enums.SplitPolicyType;
 import com.revolsys.format.esri.gdb.xml.model.enums.WorkspaceType;
-import com.revolsys.io.xml.XmlProcessor;
+import com.revolsys.format.xml.XmlProcessor;
 
 public class EsriGdbXmlParser extends XmlProcessor implements EsriGeodatabaseXmlConstants {
 

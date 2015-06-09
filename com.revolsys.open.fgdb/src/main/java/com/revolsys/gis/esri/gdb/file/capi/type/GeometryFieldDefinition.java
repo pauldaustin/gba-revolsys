@@ -16,6 +16,7 @@ import com.revolsys.format.esri.gdb.xml.model.Field;
 import com.revolsys.format.esri.gdb.xml.model.GeometryDef;
 import com.revolsys.format.esri.gdb.xml.model.SpatialReference;
 import com.revolsys.format.esri.gdb.xml.model.enums.GeometryType;
+import com.revolsys.format.shp.ShapefileGeometryUtil;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStore;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
@@ -24,7 +25,6 @@ import com.revolsys.gis.io.EndianOutput;
 import com.revolsys.gis.io.EndianOutputStream;
 import com.revolsys.io.EndianInput;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.shp.ShapefileGeometryUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 

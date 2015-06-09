@@ -2,13 +2,13 @@ package com.revolsys.format.esri.gdb.xml.type;
 
 import com.revolsys.data.types.DataType;
 import com.revolsys.format.esri.gdb.xml.model.enums.FieldType;
+import com.revolsys.format.xml.XmlWriter;
+import com.revolsys.format.xml.XsiConstants;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.InPlaceIterator;
-import com.revolsys.io.xml.XmlWriter;
-import com.revolsys.io.xml.XsiConstants;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;

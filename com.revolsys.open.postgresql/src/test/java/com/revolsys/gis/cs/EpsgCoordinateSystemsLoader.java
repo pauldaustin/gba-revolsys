@@ -21,10 +21,10 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.format.csv.CsvWriter;
+import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.gis.cs.epsg.EpsgUtil;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
-import com.revolsys.io.json.JsonMapIoFactory;
 
 /**
  * Make sure to watch out for parameter value conversions.

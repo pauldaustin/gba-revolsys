@@ -13,8 +13,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
+import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 

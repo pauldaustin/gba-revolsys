@@ -17,13 +17,13 @@ import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import com.revolsys.util.Property;
 
+import com.revolsys.util.Property;
 import com.revolsys.collection.Parent;
 import com.revolsys.data.record.io.RecordIo;
+import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Path;
-import com.revolsys.io.json.JsonMapIoFactory;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
