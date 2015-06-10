@@ -32,12 +32,12 @@ import com.revolsys.io.map.MapSerializer;
 import com.revolsys.jts.geom.GeometryFactory;
 
 public interface RecordDefinition extends ObjectWithProperties, Comparable<RecordDefinition>,
-MapSerializer {
+  MapSerializer {
   void addDefaultValue(String fieldName, Object defaultValue);
 
   RecordDefinition clone();
 
-  Record createDataObject();
+  Record createRecord();
 
   void delete(Record dataObject);
 

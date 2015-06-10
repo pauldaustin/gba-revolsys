@@ -149,7 +149,7 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
           if (typeClass == Record.class) {
 
             final RecordDefinition subClass = this.metaDataFactory.getRecordDefinition(dataType.getName());
-            final Record subObject = subClass.createDataObject();
+            final Record subObject = subClass.createRecord();
             setDefaultValue(subObject, subKey, value);
             dataObject.setValue(attributeName, subObject);
             process(subObject);

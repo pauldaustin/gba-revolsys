@@ -67,7 +67,7 @@ public class SchemaMapper {
     final RecordDefinition type = object.getRecordDefinition();
     final RecordDefinition newType = getClassMapping(type);
     if (newType != null) {
-      final Record newObject = newType.createDataObject();
+      final Record newObject = newType.createRecord();
       for (int i = 0; i < type.getFieldCount(); i++) {
         final FieldDefinition attribute = type.getField(i);
         final FieldDefinition newAttribute = getAttributeMapping(attribute);

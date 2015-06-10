@@ -13,6 +13,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
+import com.revolsys.collection.map.Maps;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.CollectionUtil;
@@ -67,7 +68,7 @@ PropertyChangeListener {
 
   @Override
   public void createConnection(final Map<String, ? extends Object> connectionParameters) {
-    final String name = CollectionUtil.getString(connectionParameters, "name");
+    final String name = Maps.getString(connectionParameters, "name");
     final File file = getConnectionFile(name);
     if (file != null && (!file.exists() || file.canRead())) {
       final FileSystemResource resource = new FileSystemResource(file);

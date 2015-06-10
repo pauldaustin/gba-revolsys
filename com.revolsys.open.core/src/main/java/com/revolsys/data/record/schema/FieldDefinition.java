@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.revolsys.beans.ObjectPropertyException;
+import com.revolsys.collection.map.Maps;
 import com.revolsys.comparator.NumericComparator;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
@@ -98,13 +99,13 @@ MapSerializer {
   }
 
   public FieldDefinition(final Map<String, Object> properties) {
-    this.name = CollectionUtil.getString(properties, "name");
-    this.title = CollectionUtil.getString(properties, "title");
+    this.name = Maps.getString(properties, "name");
+    this.title = Maps.getString(properties, "title");
     if (!Property.hasValue(this.title)) {
       this.title = CaseConverter.toCapitalizedWords(this.name);
     }
-    this.description = CollectionUtil.getString(properties, "description");
-    this.type = DataTypes.getType(CollectionUtil.getString(properties, "dataType"));
+    this.description = Maps.getString(properties, "description");
+    this.type = DataTypes.getType(Maps.getString(properties, "dataType"));
     this.required = CollectionUtil.getBool(properties, "required");
     this.length = CollectionUtil.getInteger(properties, "length", 0);
     this.scale = CollectionUtil.getInteger(properties, "scale", 0);

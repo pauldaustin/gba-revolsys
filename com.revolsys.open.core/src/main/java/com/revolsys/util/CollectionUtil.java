@@ -17,6 +17,7 @@ import java.util.TreeSet;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import com.revolsys.collection.map.Maps;
 import com.revolsys.converter.string.StringConverterRegistry;
 
 public final class CollectionUtil {
@@ -443,15 +444,6 @@ public final class CollectionUtil {
     return value;
   }
 
-  public static String getString(final Map<String, ? extends Object> map, final String name) {
-    final Object value = get(map, name);
-    if (value == null) {
-      return null;
-    } else {
-      return StringConverterRegistry.toString(value);
-    }
-  }
-
   public static <K, V> Set<V> getTreeSet(final Map<K, Set<V>> map, final K key) {
     Set<V> value = map.get(key);
     if (value == null) {
@@ -567,11 +559,11 @@ public final class CollectionUtil {
                 }
               }
             }
-            break;
+          break;
 
           default:
             buffer.append(c);
-            break;
+          break;
         }
       }
       return buffer.toString();

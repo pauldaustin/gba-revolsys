@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.collection.map.Maps;
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
@@ -28,7 +29,7 @@ public class DataObjectStoreConnection implements MapSerializer {
     final String resourceName, final Map<String, ? extends Object> config) {
     this.registry = registry;
     this.config = new LinkedHashMap<String, Object>(config);
-    this.name = CollectionUtil.getString(config, "name");
+    this.name = Maps.getString(config, "name");
     if (!Property.hasValue(this.name)) {
       this.name = FileUtil.getBaseName(resourceName);
     }

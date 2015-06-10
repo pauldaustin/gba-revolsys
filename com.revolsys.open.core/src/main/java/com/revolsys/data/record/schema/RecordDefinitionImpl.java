@@ -19,9 +19,11 @@ import javax.annotation.PreDestroy;
 
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.collection.WeakCache;
 import com.revolsys.collection.list.Lists;
+import com.revolsys.collection.map.Maps;
+import com.revolsys.collection.map.WeakCache;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
@@ -29,7 +31,6 @@ import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.property.ValueRecordDefinitionProperty;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.Path;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
@@ -41,69 +42,74 @@ import com.revolsys.util.CaseConverter;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.util.AssertionFailedException;
 
 public class RecordDefinitionImpl extends AbstractObjectWithProperties implements RecordDefinition,
-Cloneable {
-  private static final AtomicInteger INSTANCE_IDS = new AtomicInteger(0);
-
-  private static final Map<Integer, RecordDefinitionImpl> METADATA_CACHE = new WeakCache<Integer, RecordDefinitionImpl>();
-
+  Cloneable {
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
     "dataRecordDefinition", "Data Record Definition", RecordDefinitionImpl.class, "create");
+
+  private static final AtomicInteger INSTANCE_IDS = new AtomicInteger(0);
+
+  private static final Map<Integer, RecordDefinitionImpl> RECORD_DEFINITION_CACHE = new WeakCache<Integer, RecordDefinitionImpl>();
 
   public static RecordDefinitionImpl create(final Map<String, Object> properties) {
     return new RecordDefinitionImpl(properties);
   }
 
-  public static void destroy(final RecordDefinitionImpl... metaDataList) {
-    for (final RecordDefinitionImpl metaData : metaDataList) {
-      metaData.destroy();
+  public static void destroy(final RecordDefinitionImpl... recordDefinitionList) {
+    for (final RecordDefinitionImpl recordDefinition : recordDefinitionList) {
+      recordDefinition.destroy();
     }
   }
 
-  public static RecordDefinition getMetaData(final int instanceId) {
-    return METADATA_CACHE.get(instanceId);
+  public static RecordDefinition getRecordDefinition(final int instanceId) {
+    return RECORD_DEFINITION_CACHE.get(instanceId);
   }
 
-  private final Map<String, Integer> fieldIdMap = new HashMap<String, Integer>();
+  private Map<String, CodeTable> codeTableByColumnMap = new HashMap<>();
 
-  private final Map<String, FieldDefinition> fieldMap = new HashMap<String, FieldDefinition>();
+  private Map<String, Object> defaultValues = new HashMap<>();
+
+  private String description;
+
+  private final Map<String, Integer> fieldIdMap = new HashMap<>();
+
+  private final Map<String, FieldDefinition> fieldMap = new HashMap<>();
 
   private List<String> fieldNames = Collections.emptyList();
 
   private List<FieldDefinition> fields = Collections.emptyList();
 
-  private Map<String, CodeTable> codeTableByColumnMap = new HashMap<String, CodeTable>();
-
-  private RecordFactory dataObjectFactory = new ArrayRecordFactory();
-
-  private RecordDefinitionFactory recordDefinitionFactory;
-
-  private Reference<RecordStore> dataStore;
-
-  private Map<String, Object> defaultValues = new HashMap<String, Object>();
-
   /** The index of the primary geometry field. */
-  private int geometryFieldIndex = -1;
+  private int geometryFieldDefinitionIndex = -1;
 
-  private final List<Integer> geometryAttributeIndexes = new ArrayList<Integer>();
+  private final List<Integer> geometryFieldDefinitionIndexes = new ArrayList<>();
 
-  private final List<String> geometryAttributeNames = new ArrayList<String>();
-
-  private final List<Integer> idFieldIndexes = new ArrayList<Integer>();
-
-  private final List<String> idFieldNames = new ArrayList<String>();
-
-  private final List<FieldDefinition> idFields = new ArrayList<FieldDefinition>();
+  private final List<String> geometryFieldDefinitionNames = new ArrayList<>();
 
   /** The index of the ID field. */
-  private int idFieldIndex = -1;
+  private int idFieldDefinitionIndex = -1;
+
+  private final List<Integer> idFieldDefinitionIndexes = new ArrayList<>();
+
+  private final List<String> idFieldDefinitionNames = new ArrayList<>();
+
+  private final List<FieldDefinition> idFieldDefinitions = new ArrayList<>();
 
   private final Integer instanceId = INSTANCE_IDS.getAndIncrement();
 
+  private final List<String> internalFieldNames = new ArrayList<>();
+
+  private final List<FieldDefinition> internalFields = new ArrayList<>();
+
   /** The path of the data type. */
   private String path;
+
+  private RecordDefinitionFactory recordDefinitionFactory;
+
+  private RecordFactory recordFactory = new ArrayRecordFactory();
+
+  private Reference<RecordStore> recordStore;
 
   private final Map<String, Collection<Object>> restrictions = new HashMap<String, Collection<Object>>();
 
@@ -111,18 +117,12 @@ Cloneable {
 
   private final List<RecordDefinition> superClasses = new ArrayList<RecordDefinition>();
 
-  private String description;
-
-  private final List<String> internalFieldNames = new ArrayList<>();
-
-  private final List<FieldDefinition> internalFields = new ArrayList<>();
-
   public RecordDefinitionImpl() {
   }
 
   @SuppressWarnings("unchecked")
   public RecordDefinitionImpl(final Map<String, Object> properties) {
-    this(CollectionUtil.getString(properties, "path"));
+    this(Maps.getString(properties, "path"));
     final List<Object> fields = (List<Object>)properties.get("fields");
     for (final Object object : fields) {
       if (object instanceof FieldDefinition) {
@@ -141,28 +141,28 @@ Cloneable {
     }
   }
 
-  public RecordDefinitionImpl(final RecordDefinition metaData) {
-    this(metaData.getPath(), metaData.getProperties(), metaData.getFields());
-    setIdAttributeIndex(metaData.getIdFieldIndex());
-    METADATA_CACHE.put(this.instanceId, this);
+  public RecordDefinitionImpl(final RecordDefinition recordDefinition) {
+    this(recordDefinition.getPath(), recordDefinition.getProperties(), recordDefinition.getFields());
+    setIdFieldIndex(recordDefinition.getIdFieldIndex());
+    RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
-  public RecordDefinitionImpl(final RecordStore dataObjectStore, final RecordStoreSchema schema,
-    final RecordDefinition metaData) {
-    this(metaData);
-    this.dataStore = new WeakReference<RecordStore>(dataObjectStore);
-    this.dataObjectFactory = dataObjectStore.getRecordFactory();
+  public RecordDefinitionImpl(final RecordStore recordStore, final RecordStoreSchema schema,
+    final RecordDefinition recordDefinition) {
+    this(recordDefinition);
+    this.recordStore = new WeakReference<RecordStore>(recordStore);
+    this.recordFactory = recordStore.getRecordFactory();
     this.schema = schema;
-    METADATA_CACHE.put(this.instanceId, this);
+    RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
-  public RecordDefinitionImpl(final RecordStore dataObjectStore, final RecordStoreSchema schema,
+  public RecordDefinitionImpl(final RecordStore recordStore, final RecordStoreSchema schema,
     final String typePath) {
     this(typePath);
-    this.dataStore = new WeakReference<RecordStore>(dataObjectStore);
-    this.dataObjectFactory = dataObjectStore.getRecordFactory();
+    this.recordStore = new WeakReference<RecordStore>(recordStore);
+    this.recordFactory = recordStore.getRecordFactory();
     this.schema = schema;
-    METADATA_CACHE.put(this.instanceId, this);
+    RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
   public RecordDefinitionImpl(final RecordStoreSchema schema, final String path,
@@ -175,39 +175,32 @@ Cloneable {
     cloneProperties(properties);
   }
 
-  public RecordDefinitionImpl(final String name) {
-    this.path = name;
-    METADATA_CACHE.put(this.instanceId, this);
+  public RecordDefinitionImpl(final String path) {
+    this.path = path;
+    RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
-  public RecordDefinitionImpl(final String name, final FieldDefinition... fields) {
-    this(name, null, fields);
+  public RecordDefinitionImpl(final String path, final FieldDefinition... fields) {
+    this(path, null, fields);
   }
 
-  public RecordDefinitionImpl(final String name, final List<FieldDefinition> fields) {
-    this(name, null, fields);
+  public RecordDefinitionImpl(final String path, final List<FieldDefinition> fields) {
+    this(path, null, fields);
   }
 
-  public RecordDefinitionImpl(final String name, final Map<String, Object> properties,
+  public RecordDefinitionImpl(final String path, final Map<String, Object> properties,
     final FieldDefinition... fields) {
-    this(name, properties, Arrays.asList(fields));
+    this(path, properties, Arrays.asList(fields));
   }
 
-  public RecordDefinitionImpl(final String name, final Map<String, Object> properties,
+  public RecordDefinitionImpl(final String path, final Map<String, Object> properties,
     final List<FieldDefinition> fields) {
-    this.path = name;
+    this.path = path;
     for (final FieldDefinition field : fields) {
       addField(field.clone());
     }
     cloneProperties(properties);
-    METADATA_CACHE.put(this.instanceId, this);
-  }
-
-  public FieldDefinition addAttribute(final String name, final DataType type, final int length,
-    final int scale, final boolean required) {
-    final FieldDefinition field = new FieldDefinition(name, type, length, scale, required);
-    addField(field);
-    return field;
+    RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
   public void addColumnCodeTable(final String column, final CodeTable codeTable) {
@@ -241,10 +234,10 @@ Cloneable {
     } else {
       final Class<?> dataClass = dataType.getJavaClass();
       if (Geometry.class.isAssignableFrom(dataClass)) {
-        this.geometryAttributeIndexes.add(index);
-        this.geometryAttributeNames.add(name);
-        if (this.geometryFieldIndex == -1) {
-          this.geometryFieldIndex = index;
+        this.geometryFieldDefinitionIndexes.add(index);
+        this.geometryFieldDefinitionNames.add(name);
+        if (this.geometryFieldDefinitionIndex == -1) {
+          this.geometryFieldDefinitionIndex = index;
         }
       }
     }
@@ -255,7 +248,6 @@ Cloneable {
   /**
    * Adds an field with the given case-sensitive name.
    *
-   * @throws AssertionFailedException if a second Geometry is being added
    */
   public FieldDefinition addField(final String fieldName, final DataType type) {
     return addField(fieldName, type, false);
@@ -274,18 +266,18 @@ Cloneable {
     return field;
   }
 
-  public FieldDefinition addField(final String name, final DataType type, final int length,
+  public FieldDefinition addField(final String fieldName, final DataType type, final int length,
     final int scale) {
-    final FieldDefinition field = new FieldDefinition(name, type, length, scale, false);
+    final FieldDefinition field = new FieldDefinition(fieldName, type, length, scale, false);
     addField(field);
     return field;
   }
 
   public FieldDefinition addField(final String name, final DataType type, final int length,
     final int scale, final boolean required) {
-    final FieldDefinition fieldDefinition = new FieldDefinition(name, type, length, scale, required);
-    addField(fieldDefinition);
-    return fieldDefinition;
+    final FieldDefinition field = new FieldDefinition(name, type, length, scale, required);
+    addField(field);
+    return field;
   }
 
   public void addRestriction(final String fieldPath, final Collection<Object> values) {
@@ -302,7 +294,7 @@ Cloneable {
   public RecordDefinitionImpl clone() {
     final RecordDefinitionImpl clone = new RecordDefinitionImpl(this.path, getProperties(),
       this.fields);
-    clone.setIdAttributeIndex(this.idFieldIndex);
+    clone.setIdFieldIndex(this.idFieldDefinitionIndex);
     clone.setProperties(getProperties());
     return clone;
   }
@@ -312,10 +304,10 @@ Cloneable {
       for (final Entry<String, Object> property : properties.entrySet()) {
         final String propertyName = property.getKey();
         if (property instanceof RecordDefinitionProperty) {
-          RecordDefinitionProperty metaDataProperty = (RecordDefinitionProperty)property;
-          metaDataProperty = metaDataProperty.clone();
-          metaDataProperty.setRecordDefinition(this);
-          setProperty(propertyName, metaDataProperty);
+          RecordDefinitionProperty recordDefinitionProperty = (RecordDefinitionProperty)property;
+          recordDefinitionProperty = recordDefinitionProperty.clone();
+          recordDefinitionProperty.setRecordDefinition(this);
+          setProperty(propertyName, recordDefinitionProperty);
         } else {
           setProperty(propertyName, property);
         }
@@ -338,22 +330,22 @@ Cloneable {
   }
 
   @Override
-  public Record createDataObject() {
-    final RecordFactory dataObjectFactory = this.dataObjectFactory;
-    if (dataObjectFactory == null) {
+  public Record createRecord() {
+    final RecordFactory recordFactory = this.recordFactory;
+    if (recordFactory == null) {
       return null;
     } else {
-      return dataObjectFactory.createRecord(this);
+      return recordFactory.createRecord(this);
     }
   }
 
   @Override
-  public void delete(final Record dataObject) {
-    final RecordStore dataStore = getRecordStore();
-    if (dataStore == null) {
+  public void delete(final Record record) {
+    final RecordStore recordStore = getRecordStore();
+    if (recordStore == null) {
       throw new UnsupportedOperationException();
     } else {
-      dataStore.delete(dataObject);
+      recordStore.delete(record);
     }
   }
 
@@ -361,22 +353,22 @@ Cloneable {
   @PreDestroy
   public void destroy() {
     super.close();
-    METADATA_CACHE.remove(this.instanceId);
+    RECORD_DEFINITION_CACHE.remove(this.instanceId);
     this.fieldIdMap.clear();
     this.fieldMap.clear();
-    this.fieldNames = Collections.emptyList();
     this.internalFieldNames.clear();
     this.fields = Collections.emptyList();
     this.internalFields.clear();
+    this.fieldNames = Collections.emptyList();
     this.codeTableByColumnMap.clear();
-    this.dataObjectFactory = null;
-    this.recordDefinitionFactory = new DataObjectMetaDataFactoryImpl();
-    this.dataStore = null;
+    this.recordFactory = null;
+    this.recordDefinitionFactory = new RecordDefinitionFactoryImpl();
+    this.recordStore = null;
     this.defaultValues.clear();
     this.description = "";
-    this.geometryFieldIndex = -1;
-    this.geometryAttributeIndexes.clear();
-    this.geometryAttributeNames.clear();
+    this.geometryFieldDefinitionIndex = -1;
+    this.geometryFieldDefinitionIndexes.clear();
+    this.geometryFieldDefinitionNames.clear();
     this.restrictions.clear();
     this.schema = new RecordStoreSchema();
     this.superClasses.clear();
@@ -389,13 +381,19 @@ Cloneable {
 
   @Override
   public CodeTable getCodeTableByFieldName(final String column) {
-    final RecordStore dataStore = getRecordStore();
-    if (dataStore == null) {
+    final RecordStore recordStore = getRecordStore();
+    if (recordStore == null) {
       return null;
     } else {
       CodeTable codeTable = this.codeTableByColumnMap.get(column);
-      if (codeTable == null && dataStore != null) {
-        codeTable = dataStore.getCodeTableByFieldName(column);
+      if (codeTable == null && recordStore != null) {
+        codeTable = recordStore.getCodeTableByFieldName(column);
+      }
+      if (codeTable instanceof CodeTableProperty) {
+        final CodeTableProperty property = (CodeTableProperty)codeTable;
+        if (property.getRecordDefinition() == this) {
+          return null;
+        }
       }
       return codeTable;
     }
@@ -549,48 +547,48 @@ Cloneable {
 
   @Override
   public GeometryFactory getGeometryFactory() {
-    final FieldDefinition geometryAttribute = getGeometryField();
-    if (geometryAttribute == null) {
+    final FieldDefinition geometryFieldDefinition = getGeometryField();
+    if (geometryFieldDefinition == null) {
       return null;
     } else {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryFieldDefinition.getProperty(FieldProperties.GEOMETRY_FACTORY);
       return geometryFactory;
     }
   }
 
   @Override
   public FieldDefinition getGeometryField() {
-    if (this.geometryFieldIndex == -1) {
+    if (this.geometryFieldDefinitionIndex == -1) {
       return null;
     } else {
-      return this.fields.get(this.geometryFieldIndex);
+      return this.fields.get(this.geometryFieldDefinitionIndex);
     }
   }
 
   @Override
   public int getGeometryFieldIndex() {
-    return this.geometryFieldIndex;
+    return this.geometryFieldDefinitionIndex;
   }
 
   @Override
   public List<Integer> getGeometryFieldIndexes() {
-    return Collections.unmodifiableList(this.geometryAttributeIndexes);
+    return Collections.unmodifiableList(this.geometryFieldDefinitionIndexes);
   }
 
   @Override
   public String getGeometryFieldName() {
-    return getFieldName(this.geometryFieldIndex);
+    return getFieldName(this.geometryFieldDefinitionIndex);
   }
 
   @Override
   public List<String> getGeometryFieldNames() {
-    return Collections.unmodifiableList(this.geometryAttributeNames);
+    return Collections.unmodifiableList(this.geometryFieldDefinitionNames);
   }
 
   @Override
   public FieldDefinition getIdField() {
-    if (this.idFieldIndex >= 0) {
-      return this.fields.get(this.idFieldIndex);
+    if (this.idFieldDefinitionIndex >= 0) {
+      return this.fields.get(this.idFieldDefinitionIndex);
     } else {
       return null;
     }
@@ -598,27 +596,27 @@ Cloneable {
 
   @Override
   public int getIdFieldIndex() {
-    return this.idFieldIndex;
+    return this.idFieldDefinitionIndex;
   }
 
   @Override
   public List<Integer> getIdFieldIndexes() {
-    return Collections.unmodifiableList(this.idFieldIndexes);
+    return Collections.unmodifiableList(this.idFieldDefinitionIndexes);
   }
 
   @Override
   public String getIdFieldName() {
-    return getFieldName(this.idFieldIndex);
+    return getFieldName(this.idFieldDefinitionIndex);
   }
 
   @Override
   public List<String> getIdFieldNames() {
-    return Collections.unmodifiableList(this.idFieldNames);
+    return Collections.unmodifiableList(this.idFieldDefinitionNames);
   }
 
   @Override
   public List<FieldDefinition> getIdFields() {
-    return Collections.unmodifiableList(this.idFields);
+    return Collections.unmodifiableList(this.idFieldDefinitions);
   }
 
   @Override
@@ -634,8 +632,8 @@ Cloneable {
   @Override
   public RecordDefinitionFactory getRecordDefinitionFactory() {
     if (this.recordDefinitionFactory == null) {
-      final RecordStore dataStore = getRecordStore();
-      return dataStore;
+      final RecordStore recordStore = getRecordStore();
+      return recordStore;
     } else {
       return this.recordDefinitionFactory;
     }
@@ -643,15 +641,15 @@ Cloneable {
 
   @Override
   public RecordFactory getRecordFactory() {
-    return this.dataObjectFactory;
+    return this.recordFactory;
   }
 
   @Override
   public RecordStore getRecordStore() {
-    if (this.dataStore == null) {
+    if (this.recordStore == null) {
       return null;
     } else {
-      return this.dataStore.get();
+      return this.recordStore.get();
     }
   }
 
@@ -670,8 +668,12 @@ Cloneable {
 
   @Override
   public boolean hasField(final CharSequence name) {
-    final String lowerName = name.toString().toLowerCase();
-    return this.fieldMap.containsKey(lowerName);
+    if (name == null) {
+      return false;
+    } else {
+      final String lowerName = name.toString().toLowerCase();
+      return this.fieldMap.containsKey(lowerName);
+    }
   }
 
   @Override
@@ -686,7 +688,11 @@ Cloneable {
   @Override
   public boolean isFieldRequired(final CharSequence name) {
     final FieldDefinition field = getField(name);
-    return field.isRequired();
+    if (field == null) {
+      return false;
+    } else {
+      return field.isRequired();
+    }
   }
 
   @Override
@@ -713,21 +719,28 @@ Cloneable {
 
   private void readObject(final ObjectInputStream ois) throws ClassNotFoundException, IOException {
     ois.defaultReadObject();
-    METADATA_CACHE.put(this.instanceId, this);
+    RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
-  public void replaceField(final FieldDefinition field, final FieldDefinition newField) {
+  public RecordDefinitionImpl rename(final String path) {
+    final RecordDefinitionImpl clone = new RecordDefinitionImpl(path, getProperties(), this.fields);
+    clone.setIdFieldIndex(this.idFieldDefinitionIndex);
+    clone.setProperties(getProperties());
+    return clone;
+  }
+
+  public void replaceField(final FieldDefinition field, final FieldDefinition newFieldDefinition) {
     final String name = field.getName();
     final String lowerName = name.toLowerCase();
-    final String newName = newField.getName();
+    final String newName = newFieldDefinition.getName();
     if (this.fields.contains(field) && name.equals(newName)) {
       final int index = field.getIndex();
-      this.internalFields.set(index, newField);
+      this.internalFields.set(index, newFieldDefinition);
       this.fields = Lists.unmodifiable(this.internalFields);
-      this.fieldMap.put(lowerName, newField);
-      newField.setIndex(index);
+      this.fieldMap.put(lowerName, newFieldDefinition);
+      newFieldDefinition.setIndex(index);
     } else {
-      addField(newField);
+      addField(newFieldDefinition);
     }
   }
 
@@ -750,17 +763,17 @@ Cloneable {
 
   @Override
   public void setGeometryFactory(final GeometryFactory geometryFactory) {
-    final FieldDefinition geometryAttribute = getGeometryField();
-    if (geometryAttribute != null) {
-      geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
+    final FieldDefinition geometryFieldDefinition = getGeometryField();
+    if (geometryFieldDefinition != null) {
+      geometryFieldDefinition.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     }
   }
 
   /**
-   * @param geometryFieldIndex the geometryFieldIndex to set
+   * @param geometryFieldDefinitionIndex the geometryFieldDefinitionIndex to set
    */
-  public void setGeometryFieldIndex(final int geometryAttributeIndex) {
-    this.geometryFieldIndex = geometryAttributeIndex;
+  public void setGeometryFieldIndex(final int geometryFieldDefinitionIndex) {
+    this.geometryFieldDefinitionIndex = geometryFieldDefinitionIndex;
   }
 
   public void setGeometryFieldName(final String name) {
@@ -769,21 +782,21 @@ Cloneable {
   }
 
   /**
-   * @param idFieldIndex the idFieldIndex to set
+   * @param idFieldDefinitionIndex the idFieldDefinitionIndex to set
    */
-  public void setIdAttributeIndex(final int idFieldIndex) {
-    this.idFieldIndex = idFieldIndex;
-    this.idFieldIndexes.clear();
-    this.idFieldIndexes.add(idFieldIndex);
-    this.idFieldNames.clear();
-    this.idFieldNames.add(getIdFieldName());
-    this.idFields.clear();
-    this.idFields.add(getIdField());
+  public void setIdFieldIndex(final int idFieldDefinitionIndex) {
+    this.idFieldDefinitionIndex = idFieldDefinitionIndex;
+    this.idFieldDefinitionIndexes.clear();
+    this.idFieldDefinitionIndexes.add(idFieldDefinitionIndex);
+    this.idFieldDefinitionNames.clear();
+    this.idFieldDefinitionNames.add(getIdFieldName());
+    this.idFieldDefinitions.clear();
+    this.idFieldDefinitions.add(getIdField());
   }
 
   public void setIdFieldName(final String name) {
     final int id = getFieldIndex(name);
-    setIdAttributeIndex(id);
+    setIdFieldIndex(id);
   }
 
   public void setIdFieldNames(final Collection<String> names) {
@@ -798,9 +811,9 @@ Cloneable {
             LoggerFactory.getLogger(getClass()).error(
               "Cannot set ID " + getPath() + "." + name + " does not exist");
           } else {
-            this.idFieldIndexes.add(index);
-            this.idFieldNames.add(name);
-            this.idFields.add(getField(index));
+            this.idFieldDefinitionIndexes.add(index);
+            this.idFieldDefinitionNames.add(name);
+            this.idFieldDefinitions.add(getField(index));
           }
         }
       }

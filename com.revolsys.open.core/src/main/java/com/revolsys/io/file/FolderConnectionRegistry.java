@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.collection.map.Maps;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistry;
@@ -80,7 +81,7 @@ public class FolderConnectionRegistry extends AbstractConnectionRegistry<FolderC
   @Override
   protected FolderConnection loadConnection(final File connectionFile) {
     final Map<String, ? extends Object> config = JsonMapIoFactory.toMap(connectionFile);
-    String name = CollectionUtil.getString(config, "name");
+    String name = Maps.getString(config, "name");
     if (!Property.hasValue(name)) {
       name = FileUtil.getBaseName(connectionFile);
     }

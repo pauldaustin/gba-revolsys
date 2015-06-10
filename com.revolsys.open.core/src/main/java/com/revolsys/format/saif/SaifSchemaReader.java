@@ -42,6 +42,7 @@ import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
+import com.revolsys.data.record.schema.RecordDefinitionFactoryImpl;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.CollectionDataType;
 import com.revolsys.data.types.DataType;
@@ -49,7 +50,6 @@ import com.revolsys.data.types.DataTypes;
 import com.revolsys.data.types.EnumerationDataType;
 import com.revolsys.data.types.SimpleDataType;
 import com.revolsys.format.saif.util.CsnIterator;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 
 public class SaifSchemaReader {
 
@@ -93,7 +93,7 @@ public class SaifSchemaReader {
 
   private final Set<RecordDefinition> currentSuperClasses = new LinkedHashSet<RecordDefinition>();
 
-  private DataObjectMetaDataFactoryImpl schema;
+  private RecordDefinitionFactoryImpl schema;
 
   private void addExportedObjects() {
     final RecordDefinitionImpl exportedObjectHandle = new RecordDefinitionImpl(
@@ -273,7 +273,7 @@ public class SaifSchemaReader {
 
   private RecordDefinitionFactory loadSchema(final CsnIterator iterator) throws IOException {
     if (this.schema == null) {
-      this.schema = new DataObjectMetaDataFactoryImpl();
+      this.schema = new RecordDefinitionFactoryImpl();
 
       this.schema.addMetaData(new RecordDefinitionImpl("/AggregateType"));
       this.schema.addMetaData(new RecordDefinitionImpl("/PrimitiveType"));

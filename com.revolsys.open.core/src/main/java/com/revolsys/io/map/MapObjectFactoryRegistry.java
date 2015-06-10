@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.collection.map.Maps;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.format.json.JsonMapIoFactory;
@@ -40,13 +41,13 @@ public class MapObjectFactoryRegistry {
 
   @SuppressWarnings("unchecked")
   public static <V> V toObject(final Map<String, ? extends Object> map) {
-    final String typeClass = CollectionUtil.getString(map, "typeClass");
+    final String typeClass = Maps.getString(map, "typeClass");
     if (Property.hasValue(typeClass)) {
       // TODO factory methods and constructor arguments
       final V object = (V)JavaBeanUtil.createInstance(typeClass);
       return object;
     } else {
-      final String type = CollectionUtil.getString(map, "type");
+      final String type = Maps.getString(map, "type");
       final MapObjectFactory objectFactory = TYPE_NAME_TO_FACTORY.get(type);
       if (objectFactory == null) {
         LoggerFactory.getLogger(MapObjectFactoryRegistry.class).error(

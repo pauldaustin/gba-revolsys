@@ -300,7 +300,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
     }
     metaData.addField(tableName, dataType, length, true);
     metaData.addField("DESCRIPTION", DataTypes.STRING, 255, true);
-    metaData.setIdAttributeIndex(0);
+    metaData.setIdFieldIndex(0);
     return metaData;
   }
 

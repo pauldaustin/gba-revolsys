@@ -18,7 +18,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import com.revolsys.awt.WebColors;
-import com.revolsys.collection.WeakCache;
+import com.revolsys.collection.map.WeakCache;
 import com.revolsys.util.OS;
 
 public class Icons {

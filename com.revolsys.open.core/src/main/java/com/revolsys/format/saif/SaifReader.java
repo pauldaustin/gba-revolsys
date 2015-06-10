@@ -49,8 +49,8 @@ import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
+import com.revolsys.data.record.schema.RecordDefinitionFactoryImpl;
 import com.revolsys.format.saif.util.PathCache;
-import com.revolsys.gis.data.model.DataObjectMetaDataFactoryImpl;
 import com.revolsys.gis.io.DataObjectIterator;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.FileUtil;
@@ -583,7 +583,7 @@ RecordDefinitionFactory, com.revolsys.data.record.io.RecordReader {
         loadSrid();
         final GeometryFactory geometryFactory = GeometryFactory.getFactory(this.srid, 1.0, 1.0);
 
-        for (final RecordDefinition metaData : ((DataObjectMetaDataFactoryImpl)this.metaDataFactory).getTypes()) {
+        for (final RecordDefinition metaData : ((RecordDefinitionFactoryImpl)this.metaDataFactory).getTypes()) {
           final FieldDefinition geometryAttribute = metaData.getGeometryField();
           if (geometryAttribute != null) {
             geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);

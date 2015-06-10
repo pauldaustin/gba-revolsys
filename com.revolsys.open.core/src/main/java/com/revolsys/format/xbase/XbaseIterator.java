@@ -358,7 +358,7 @@ public class XbaseIterator extends AbstractIterator<Record> implements RecordIte
       if (fieldType == MEMO_TYPE) {
         length = Integer.MAX_VALUE;
       }
-      this.metaData.addAttribute(fieldName.toString(), dataType, length, decimalCount, false);
+      this.metaData.addField(fieldName.toString(), dataType, length, decimalCount, false);
     }
     if (this.mappedFile) {
       final EndianMappedByteBuffer file = (EndianMappedByteBuffer)this.in;

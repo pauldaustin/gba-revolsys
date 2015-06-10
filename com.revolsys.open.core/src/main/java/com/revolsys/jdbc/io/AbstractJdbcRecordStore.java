@@ -492,7 +492,7 @@ JdbcDataObjectStore, DataObjectStoreExtension {
       for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
         final String name = resultSetMetaData.getColumnName(i).toUpperCase();
         if (name.equals(idAttributeName)) {
-          metaData.setIdAttributeIndex(i - 1);
+          metaData.setIdFieldIndex(i - 1);
         }
         addAttribute(resultSetMetaData, metaData, name, i, null);
       }
