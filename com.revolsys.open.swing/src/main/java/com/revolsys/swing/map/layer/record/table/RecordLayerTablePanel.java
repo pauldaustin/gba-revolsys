@@ -83,17 +83,17 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     final EnableCheck editableEnableCheck = new ObjectPropertyEnableCheck(layer, "editable");
 
     final EnableCheck cellEditingEnableCheck = new ObjectPropertyEnableCheck(this,
-      "editingCurrentCell");
+        "editingCurrentCell");
 
     // Right click Menu
     final MenuFactory menu = getMenu();
 
     menu.addMenuItemTitleIcon("record", "View/Edit Record", "table_edit", notEnableCheck, this,
-      "editRecord");
+        "editRecord");
 
     if (hasGeometry) {
       menu.addMenuItemTitleIcon("record", "Zoom to Record", "magnifier_zoom_selected", this,
-        "zoomToRecord");
+          "zoomToRecord");
     }
     menu.addMenuItemTitleIcon("record", "Delete Record", "table_row_delete", deletableEnableCheck,
       this, "deleteRecord");
@@ -109,25 +109,25 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     menu.addMenuItemTitleIcon("dataTransfer", "Cut Field Value", "cut", cellEditingEnableCheck,
       this, "cutFieldValue");
     menu.addMenuItemTitleIcon("dataTransfer", "Copy Field Value", "page_copy", this,
-      "copyFieldValue");
+        "copyFieldValue");
     menu.addMenuItemTitleIcon("dataTransfer", "Paste Field Value", "paste_plain",
       cellEditingEnableCheck, this, "pasteFieldValue");
 
     if (hasGeometry) {
       menu.addMenuItemTitleIcon("dnd", "Paste Geometry", "geometry_paste", new AndEnableCheck(
         editableEnableCheck, new InvokeMethodEnableCheck(this, "canPasteRecordGeometry")), this,
-        "pasteGeometry");
+          "pasteGeometry");
 
       final MenuFactory editMenu = new MenuFactory("Edit Record Operations");
       final DataType geometryDataType = metaData.getGeometryField().getType();
       if (geometryDataType == DataTypes.LINE_STRING
-        || geometryDataType == DataTypes.MULTI_LINE_STRING) {
+          || geometryDataType == DataTypes.MULTI_LINE_STRING) {
         if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_RECORD_NAME,
             RecordLayerForm.FLIP_RECORD_ICON, editableEnableCheck, this, "flipRecordOrientation");
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_LINE_ORIENTATION_NAME,
             RecordLayerForm.FLIP_LINE_ORIENTATION_ICON, editableEnableCheck, this,
-            "flipLineOrientation");
+              "flipLineOrientation");
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_FIELDS_NAME,
             RecordLayerForm.FLIP_FIELDS_ICON, editableEnableCheck, this, "flipFields");
         } else {
@@ -148,6 +148,14 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
       toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu", ObjectTree.class, "showMenu",
         menuFactory, layer, this, 10, 10);
     }
+
+    if (hasGeometry) {
+      final EnableCheck hasSelectedRecords = new ObjectPropertyEnableCheck(layer,
+          "hasSelectedRecords");
+      toolBar.addButton("layer", "Zoom to Selected", "magnifier_zoom_selected", hasSelectedRecords,
+        layer, "zoomToSelected");
+    }
+
     toolBar.addComponent("count", new TableRowCount(this.tableModel));
 
     toolBar.addButtonTitleIcon("table", "Refresh", "table_refresh", this, "refresh");
@@ -157,12 +165,12 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     toolBar.addComponent("search", attributeFilterPanel);
 
     toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits", attributeFilterPanel,
-      "showAdvancedFilter");
+        "showAdvancedFilter");
 
     final EnableCheck hasFilter = new ObjectPropertyEnableCheck(this.tableModel, "hasFilter");
 
     toolBar.addButton("search", "Clear Search", "filter_delete", hasFilter, attributeFilterPanel,
-      "clear");
+        "clear");
 
     // Filter buttons
 
@@ -365,8 +373,8 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     if (geometry != null) {
       final GeometryFactory geometryFactory = project.getGeometryFactory();
       final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry)
-        .convert(geometryFactory)
-        .expandPercent(0.1);
+          .convert(geometryFactory)
+          .expandPercent(0.1);
       project.setViewBoundingBox(boundingBox);
     }
   }

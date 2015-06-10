@@ -44,7 +44,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.util.AssertionFailedException;
 
 public class RecordDefinitionImpl extends AbstractObjectWithProperties implements RecordDefinition,
-  Cloneable {
+Cloneable {
   private static final AtomicInteger INSTANCE_IDS = new AtomicInteger(0);
 
   private static final Map<Integer, RecordDefinitionImpl> METADATA_CACHE = new WeakCache<Integer, RecordDefinitionImpl>();
@@ -364,8 +364,10 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     METADATA_CACHE.remove(this.instanceId);
     this.fieldIdMap.clear();
     this.fieldMap.clear();
-    this.fieldNames.clear();
-    this.fields.clear();
+    this.fieldNames = Collections.emptyList();
+    this.internalFieldNames.clear();
+    this.fields = Collections.emptyList();
+    this.internalFields.clear();
     this.codeTableByColumnMap.clear();
     this.dataObjectFactory = null;
     this.recordDefinitionFactory = new DataObjectMetaDataFactoryImpl();

@@ -173,12 +173,13 @@ public class ProjectFrame extends BaseFrame {
 
   public ProjectFrame(final String title) {
     this(title, new Project());
-    setVisible(true);
   }
 
   public ProjectFrame(final String title, final File projectDirectory) {
     this(title);
-    Invoke.background("Load project", this, "loadProject", projectDirectory);
+    if (projectDirectory != null) {
+      Invoke.background("Load project", this, "loadProject", projectDirectory);
+    }
   }
 
   public ProjectFrame(final String title, final Project project) {
@@ -339,11 +340,12 @@ public class ProjectFrame extends BaseFrame {
       }
 
       this.tocPanel = null;
-      this.leftTabs = null;
-      this.bottomTabs = null;
       this.project = null;
+      this.leftTabs = null;
       this.leftRightSplit = null;
+      this.bottomTabs = null;
       this.topBottomSplit = null;
+
       if (this.mapPanel != null) {
         this.mapPanel.destroy();
         this.mapPanel = null;
@@ -463,7 +465,7 @@ public class ProjectFrame extends BaseFrame {
 
     addTasksPanel();
     addLogPanel();
-    setBounds((Object)null);
+    setBounds((Object)null, false);
 
     createMenuBar();
     super.init();
@@ -474,7 +476,7 @@ public class ProjectFrame extends BaseFrame {
     this.project.readProject(resource);
 
     final Object frameBoundsObject = this.project.getProperty("frameBounds");
-    setBounds(frameBoundsObject);
+    setBounds(frameBoundsObject, true);
 
     final DataObjectStoreConnectionManager dataStoreConnectionManager = DataObjectStoreConnectionManager.get();
     dataStoreConnectionManager.removeConnectionRegistry("Project");
@@ -527,8 +529,8 @@ public class ProjectFrame extends BaseFrame {
     }
   }
 
-  public void setBounds(final Object frameBoundsObject) {
-    if (SwingUtilities.isEventDispatchThread()) {
+  public void setBounds(final Object frameBoundsObject, final boolean visible) {
+    Invoke.later(() -> {
       boolean sizeSet = false;
       if (frameBoundsObject instanceof List) {
         try {
@@ -572,13 +574,10 @@ public class ProjectFrame extends BaseFrame {
 
       final int topBottomDividerLocation = (int)(getHeight() * 0.75);
       this.topBottomSplit.setDividerLocation(topBottomDividerLocation);
-    } else {
-      if (frameBoundsObject == null) {
-        Invoke.later(this, "setBounds", new Object());
-      } else {
-        Invoke.later(this, "setBounds", frameBoundsObject);
+      if (visible) {
+        setVisible(true);
       }
-    }
+    });
   }
 
   public void setExitOnClose(final boolean exitOnClose) {

@@ -7,13 +7,9 @@ import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 
 import com.revolsys.swing.WindowManager;
+import com.revolsys.swing.parallel.Invoke;
 
-@SuppressWarnings("serial")
 public class BaseFrame extends JFrame implements WindowListener {
-
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
 
   public BaseFrame(final String title) throws HeadlessException {
@@ -41,12 +37,14 @@ public class BaseFrame extends JFrame implements WindowListener {
 
   @Override
   public void setVisible(final boolean visible) {
-    if (visible) {
-      WindowManager.addWindow(this);
-    } else {
-      WindowManager.removeWindow(this);
-    }
-    super.setVisible(visible);
+    Invoke.later(() -> {
+      if (visible) {
+        WindowManager.addWindow(this);
+      } else {
+        WindowManager.removeWindow(this);
+      }
+      super.setVisible(visible);
+    });
   }
 
   @Override
