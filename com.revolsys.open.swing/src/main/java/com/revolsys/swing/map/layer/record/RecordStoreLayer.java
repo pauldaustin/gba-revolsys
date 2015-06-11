@@ -23,6 +23,7 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
+import com.revolsys.data.record.io.RecordStoreConnectionManager;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.filter.Filter;
@@ -32,7 +33,6 @@ import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
-import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapSerializerUtil;
@@ -250,7 +250,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       if (connectionProperties != null) {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("connection", connectionProperties);
-        DataObjectStoreConnectionManager.releaseDataStore(config);
+        RecordStoreConnectionManager.releaseDataStore(config);
       }
       this.recordStore = null;
     }
@@ -299,7 +299,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       } else {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("connection", connectionProperties);
-        dataStore = DataObjectStoreConnectionManager.getDataStore(config);
+        dataStore = RecordStoreConnectionManager.getDataStore(config);
 
         if (dataStore == null) {
           LoggerFactory.getLogger(getClass()).error(

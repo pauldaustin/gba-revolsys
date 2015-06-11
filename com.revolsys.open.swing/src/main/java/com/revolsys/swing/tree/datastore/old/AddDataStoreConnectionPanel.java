@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.revolsys.data.record.io.RecordStoreConnection;
 import com.revolsys.io.connection.ConnectionRegistry;
-import com.revolsys.io.datastore.DataObjectStoreConnection;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.util.PasswordUtil;
@@ -24,16 +24,16 @@ public class AddDataStoreConnectionPanel extends ValueField {
 
   private final JTextField nameField;
 
-  private final ConnectionRegistry<DataObjectStoreConnection> registry;
+  private final ConnectionRegistry<RecordStoreConnection> registry;
 
   private final String name;
 
-  public AddDataStoreConnectionPanel(final ConnectionRegistry<DataObjectStoreConnection> registry) {
+  public AddDataStoreConnectionPanel(final ConnectionRegistry<RecordStoreConnection> registry) {
     this(registry, null);
 
   }
 
-  public AddDataStoreConnectionPanel(final ConnectionRegistry<DataObjectStoreConnection> registry,
+  public AddDataStoreConnectionPanel(final ConnectionRegistry<RecordStoreConnection> registry,
     final String name) {
     this.registry = registry;
     this.name = name;

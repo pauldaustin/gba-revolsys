@@ -1,4 +1,4 @@
-package com.revolsys.io.datastore;
+package com.revolsys.data.record.io;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -8,7 +8,6 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.collection.map.Maps;
-import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.io.FileUtil;
@@ -16,16 +15,16 @@ import com.revolsys.io.map.MapSerializer;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class DataObjectStoreConnection implements MapSerializer {
+public class RecordStoreConnection implements MapSerializer {
   private Map<String, Object> config;
 
   private String name;
 
-  private RecordStore dataStore;
+  private RecordStore recordStore;
 
-  private DataObjectStoreConnectionRegistry registry;
+  private RecordStoreConnectionRegistry registry;
 
-  public DataObjectStoreConnection(final DataObjectStoreConnectionRegistry registry,
+  public RecordStoreConnection(final RecordStoreConnectionRegistry registry,
     final String resourceName, final Map<String, ? extends Object> config) {
     this.registry = registry;
     this.config = new LinkedHashMap<String, Object>(config);
@@ -35,11 +34,11 @@ public class DataObjectStoreConnection implements MapSerializer {
     }
   }
 
-  public DataObjectStoreConnection(final DataObjectStoreConnectionRegistry registry,
-    final String name, final RecordStore dataStore) {
+  public RecordStoreConnection(final RecordStoreConnectionRegistry registry, final String name,
+    final RecordStore recordStore) {
     this.registry = registry;
     this.name = name;
-    this.dataStore = dataStore;
+    this.recordStore = recordStore;
   }
 
   public void delete() {
@@ -47,15 +46,19 @@ public class DataObjectStoreConnection implements MapSerializer {
       this.registry.removeConnection(this);
     }
     this.config = null;
-    this.dataStore = null;
+    this.recordStore = null;
     this.name = null;
     this.registry = null;
 
   }
 
-  public RecordStore getDataStore() {
+  public String getName() {
+    return this.name;
+  }
+
+  public RecordStore getRecordStore() {
     synchronized (this) {
-      if (this.dataStore == null) {
+      if (this.recordStore == null) {
         try {
           final Map<String, Object> connectionProperties = CollectionUtil.get(this.config,
             "connection", Collections.<String, Object> emptyMap());
@@ -63,8 +66,8 @@ public class DataObjectStoreConnection implements MapSerializer {
             LoggerFactory.getLogger(getClass()).error(
               "Data store must include a 'connection' map property: " + this.name);
           } else {
-            this.dataStore = RecordStoreFactoryRegistry.createDataObjectStore(connectionProperties);
-            this.dataStore.initialize();
+            this.recordStore = RecordStoreFactoryRegistry.createDataObjectStore(connectionProperties);
+            this.recordStore.initialize();
           }
         } catch (final Throwable e) {
           LoggerFactory.getLogger(getClass()).error("Error creating data store for: " + this.name,
@@ -72,19 +75,15 @@ public class DataObjectStoreConnection implements MapSerializer {
         }
       }
     }
-    return this.dataStore;
-  }
-
-  public String getName() {
-    return this.name;
+    return this.recordStore;
   }
 
   public List<RecordStoreSchema> getSchemas() {
-    final RecordStore dataStore = getDataStore();
-    if (dataStore == null) {
+    final RecordStore recordStore = getRecordStore();
+    if (recordStore == null) {
       return Collections.emptyList();
     } else {
-      return dataStore.getSchemas();
+      return recordStore.getSchemas();
     }
   }
 

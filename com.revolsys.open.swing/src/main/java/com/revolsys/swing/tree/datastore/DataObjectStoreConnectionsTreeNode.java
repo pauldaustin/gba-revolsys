@@ -6,8 +6,8 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.tree.TreeNode;
 
-import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
-import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
+import com.revolsys.data.record.io.RecordStoreConnectionManager;
+import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.tree.model.node.AbstractTreeNode;
 
@@ -32,9 +32,9 @@ public class DataObjectStoreConnectionsTreeNode extends AbstractTreeNode {
 
   protected void init() {
     this.children = new ArrayList<TreeNode>();
-    final List<DataObjectStoreConnectionRegistry> registries = DataObjectStoreConnectionManager.get()
+    final List<RecordStoreConnectionRegistry> registries = RecordStoreConnectionManager.get()
         .getVisibleConnectionRegistries();
-    for (final DataObjectStoreConnectionRegistry registry : registries) {
+    for (final RecordStoreConnectionRegistry registry : registries) {
       final DataObjectStoreConnectionRegistryTreeNode child = new DataObjectStoreConnectionRegistryTreeNode(
         this, registry);
       this.children.add(child);

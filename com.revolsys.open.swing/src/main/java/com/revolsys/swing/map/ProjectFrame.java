@@ -36,8 +36,8 @@ import javax.swing.tree.TreePath;
 
 import org.springframework.core.io.FileSystemResource;
 
-import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
-import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
+import com.revolsys.data.record.io.RecordStoreConnectionManager;
+import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.io.file.FolderConnectionManager;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
@@ -329,8 +329,8 @@ public class ProjectFrame extends BaseFrame {
       super.dispose();
       Property.removeAllListeners(this);
       if (this.project != null) {
-        final DataObjectStoreConnectionRegistry dataStores = this.project.getDataStores();
-        DataObjectStoreConnectionManager.get().removeConnectionRegistry(dataStores);
+        final RecordStoreConnectionRegistry dataStores = this.project.getDataStores();
+        RecordStoreConnectionManager.get().removeConnectionRegistry(dataStores);
         if (Project.get() == this.project) {
           Project.set(null);
         }
@@ -478,7 +478,7 @@ public class ProjectFrame extends BaseFrame {
     final Object frameBoundsObject = this.project.getProperty("frameBounds");
     setBounds(frameBoundsObject, true);
 
-    final DataObjectStoreConnectionManager dataStoreConnectionManager = DataObjectStoreConnectionManager.get();
+    final RecordStoreConnectionManager dataStoreConnectionManager = RecordStoreConnectionManager.get();
     dataStoreConnectionManager.removeConnectionRegistry("Project");
     dataStoreConnectionManager.addConnectionRegistry(this.project.getDataStores());
 

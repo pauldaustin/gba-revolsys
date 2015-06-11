@@ -19,11 +19,11 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
 import com.revolsys.io.file.FolderConnectionRegistry;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
@@ -49,7 +49,7 @@ public class Project extends LayerGroup {
 
   private LayerGroup baseMapLayers = new LayerGroup("Base Maps");
 
-  private DataObjectStoreConnectionRegistry dataStores = new DataObjectStoreConnectionRegistry(
+  private RecordStoreConnectionRegistry dataStores = new RecordStoreConnectionRegistry(
       "Project");
 
   private FolderConnectionRegistry folderConnections = new FolderConnectionRegistry("Project");
@@ -120,7 +120,7 @@ public class Project extends LayerGroup {
     return this.baseMapLayers;
   }
 
-  public DataObjectStoreConnectionRegistry getDataStores() {
+  public RecordStoreConnectionRegistry getDataStores() {
     return this.dataStores;
   }
 
@@ -227,15 +227,15 @@ public class Project extends LayerGroup {
     if (resource.exists()) {
       final Resource layersDir = SpringUtil.getResource(resource, "Layers");
       readProperties(layersDir);
-      final DataObjectStoreConnectionRegistry oldDataStoreConnections = DataObjectStoreConnectionRegistry.getForThread();
+      final RecordStoreConnectionRegistry oldDataStoreConnections = RecordStoreConnectionRegistry.getForThread();
       try {
         final Resource dataStoresDirectory = SpringUtil.getResource(resource, "Data Stores");
 
         final boolean readOnly = isReadOnly();
-        final DataObjectStoreConnectionRegistry dataStores = new DataObjectStoreConnectionRegistry(
+        final RecordStoreConnectionRegistry dataStores = new RecordStoreConnectionRegistry(
           "Project", dataStoresDirectory, readOnly);
         setDataStores(dataStores);
-        DataObjectStoreConnectionRegistry.setForThread(dataStores);
+        RecordStoreConnectionRegistry.setForThread(dataStores);
 
         final Resource folderConnectionsDirectory = SpringUtil.getResource(resource,
             "Folder Connections");
@@ -246,7 +246,7 @@ public class Project extends LayerGroup {
 
         readBaseMapsLayers(resource);
       } finally {
-        DataObjectStoreConnectionRegistry.setForThread(oldDataStoreConnections);
+        RecordStoreConnectionRegistry.setForThread(oldDataStoreConnections);
       }
     }
   }
@@ -379,7 +379,7 @@ public class Project extends LayerGroup {
     return result;
   }
 
-  public void setDataStores(final DataObjectStoreConnectionRegistry dataStores) {
+  public void setDataStores(final RecordStoreConnectionRegistry dataStores) {
     this.dataStores = dataStores;
   }
 

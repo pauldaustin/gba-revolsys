@@ -9,11 +9,11 @@ import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.tree.TreeNode;
 
+import com.revolsys.data.record.io.RecordStoreConnection;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
-import com.revolsys.io.datastore.DataObjectStoreConnection;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.menu.MenuFactory;
@@ -35,7 +35,7 @@ DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
 
   public static void deleteConnection() {
     final DataObjectStoreConnectionTreeNode node = BaseTree.getMouseClickItem();
-    final DataObjectStoreConnection connection = node.getConnection();
+    final RecordStoreConnection connection = node.getConnection();
     final int confirm = JOptionPane.showConfirmDialog(SwingUtil.getActiveWindow(),
       "Delete data store connection '" + connection.getName() + "'? This action cannot be undone.",
       "Delete Layer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -45,7 +45,7 @@ DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
   }
 
   public DataObjectStoreConnectionTreeNode(final TreeNode parent,
-    final DataObjectStoreConnection connection) {
+    final RecordStoreConnection connection) {
     super(parent, connection);
     setType("Data Store Connection");
     setName(connection.getName());
@@ -69,16 +69,16 @@ DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
     return children;
   }
 
-  public DataObjectStoreConnection getConnection() {
-    final DataObjectStoreConnection connection = getUserData();
+  public RecordStoreConnection getConnection() {
+    final RecordStoreConnection connection = getUserData();
     return connection;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public <V extends RecordStore> V getDataStore() {
-    final DataObjectStoreConnection connection = getConnection();
-    return (V)connection.getDataStore();
+    final RecordStoreConnection connection = getConnection();
+    return (V)connection.getRecordStore();
   }
 
   @Override
@@ -92,7 +92,7 @@ DataObjectStoreProxy, DataObjectStoreConnectionMapProxy {
   }
 
   public boolean isReadOnly() {
-    final DataObjectStoreConnection connection = getConnection();
+    final RecordStoreConnection connection = getConnection();
     return connection.isReadOnly();
   }
 

@@ -1,4 +1,4 @@
-package com.revolsys.io.datastore;
+package com.revolsys.data.record.io;
 
 import java.io.File;
 import java.util.Collections;
@@ -15,43 +15,43 @@ import com.revolsys.io.connection.AbstractConnectionRegistry;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class DataObjectStoreConnectionRegistry extends
-AbstractConnectionRegistry<DataObjectStoreConnection> {
+public class RecordStoreConnectionRegistry extends
+AbstractConnectionRegistry<RecordStoreConnection> {
 
-  private static final ThreadLocal<DataObjectStoreConnectionRegistry> threadRegistry = new ThreadLocal<DataObjectStoreConnectionRegistry>();
+  private static final ThreadLocal<RecordStoreConnectionRegistry> threadRegistry = new ThreadLocal<RecordStoreConnectionRegistry>();
 
-  public static DataObjectStoreConnectionRegistry getForThread() {
-    return DataObjectStoreConnectionRegistry.threadRegistry.get();
+  public static RecordStoreConnectionRegistry getForThread() {
+    return RecordStoreConnectionRegistry.threadRegistry.get();
   }
 
-  public static DataObjectStoreConnectionRegistry setForThread(
-    final DataObjectStoreConnectionRegistry registry) {
-    final DataObjectStoreConnectionRegistry oldValue = getForThread();
-    DataObjectStoreConnectionRegistry.threadRegistry.set(registry);
+  public static RecordStoreConnectionRegistry setForThread(
+    final RecordStoreConnectionRegistry registry) {
+    final RecordStoreConnectionRegistry oldValue = getForThread();
+    RecordStoreConnectionRegistry.threadRegistry.set(registry);
     return oldValue;
   }
 
-  protected DataObjectStoreConnectionRegistry(
-    final DataObjectStoreConnectionManager connectionManager, final String name,
+  protected RecordStoreConnectionRegistry(
+    final RecordStoreConnectionManager connectionManager, final String name,
     final boolean visible) {
     super(connectionManager, name);
     setVisible(visible);
     init();
   }
 
-  protected DataObjectStoreConnectionRegistry(
-    final DataObjectStoreConnectionManager connectionManager, final String name,
+  protected RecordStoreConnectionRegistry(
+    final RecordStoreConnectionManager connectionManager, final String name,
     final Resource resource) {
     super(connectionManager, name);
     setDirectory(resource);
     init();
   }
 
-  public DataObjectStoreConnectionRegistry(final String name) {
+  public RecordStoreConnectionRegistry(final String name) {
     this(null, name, true);
   }
 
-  public DataObjectStoreConnectionRegistry(final String name, final Resource resource,
+  public RecordStoreConnectionRegistry(final String name, final Resource resource,
     final boolean readOnly) {
     super(null, name);
     setReadOnly(readOnly);
@@ -59,23 +59,23 @@ AbstractConnectionRegistry<DataObjectStoreConnection> {
     init();
   }
 
-  public void addConnection(final DataObjectStoreConnection connection) {
+  public void addConnection(final RecordStoreConnection connection) {
     addConnection(connection.getName(), connection);
   }
 
   public void addConnection(final Map<String, Object> config) {
-    final DataObjectStoreConnection connection = new DataObjectStoreConnection(this, null, config);
+    final RecordStoreConnection connection = new RecordStoreConnection(this, null, config);
     addConnection(connection);
   }
 
   public void addConnection(final String name, final RecordStore dataStore) {
-    final DataObjectStoreConnection connection = new DataObjectStoreConnection(this, name,
+    final RecordStoreConnection connection = new RecordStoreConnection(this, name,
       dataStore);
     addConnection(connection);
   }
 
   @Override
-  protected DataObjectStoreConnection loadConnection(final File dataStoreFile) {
+  protected RecordStoreConnection loadConnection(final File dataStoreFile) {
     final Map<String, ? extends Object> config = JsonMapIoFactory.toMap(dataStoreFile);
     String name = Maps.getString(config, "name");
     if (!Property.hasValue(name)) {
@@ -89,7 +89,7 @@ AbstractConnectionRegistry<DataObjectStoreConnection> {
           "Data store must include a 'connection' map property: " + dataStoreFile);
         return null;
       } else {
-        final DataObjectStoreConnection dataStoreConnection = new DataObjectStoreConnection(this,
+        final RecordStoreConnection dataStoreConnection = new RecordStoreConnection(this,
           dataStoreFile.toString(), config);
         addConnection(name, dataStoreConnection);
         return dataStoreConnection;
@@ -102,7 +102,7 @@ AbstractConnectionRegistry<DataObjectStoreConnection> {
   }
 
   @Override
-  public boolean removeConnection(final DataObjectStoreConnection connection) {
+  public boolean removeConnection(final RecordStoreConnection connection) {
     if (connection == null) {
       return false;
     } else {

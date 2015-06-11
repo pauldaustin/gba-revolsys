@@ -8,8 +8,8 @@ import java.util.List;
 
 import javax.swing.tree.TreeNode;
 
-import com.revolsys.io.datastore.DataObjectStoreConnection;
-import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
+import com.revolsys.data.record.io.RecordStoreConnection;
+import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.swing.tree.file.FileTreeNode;
 import com.revolsys.swing.tree.model.node.LazyLoadTreeNode;
 import com.revolsys.util.Property;
@@ -18,7 +18,7 @@ public class DataObjectStoreConnectionRegistryTreeNode extends LazyLoadTreeNode 
 PropertyChangeListener {
 
   public DataObjectStoreConnectionRegistryTreeNode(final DataObjectStoreConnectionsTreeNode parent,
-    final DataObjectStoreConnectionRegistry registry) {
+    final RecordStoreConnectionRegistry registry) {
     super(parent, registry);
     setType("DataObjectStore Connections");
     setName(registry.getName());
@@ -29,7 +29,7 @@ PropertyChangeListener {
 
   @Override
   public void doDelete() {
-    final DataObjectStoreConnectionRegistry registry = getRegistry();
+    final RecordStoreConnectionRegistry registry = getRegistry();
     Property.removeListener(registry, this);
     super.doDelete();
   }
@@ -37,9 +37,9 @@ PropertyChangeListener {
   @Override
   protected List<TreeNode> doLoadChildren() {
     final List<TreeNode> children = new ArrayList<TreeNode>();
-    final DataObjectStoreConnectionRegistry registry = getRegistry();
-    final List<DataObjectStoreConnection> conections = registry.getConections();
-    for (final DataObjectStoreConnection connection : conections) {
+    final RecordStoreConnectionRegistry registry = getRegistry();
+    final List<RecordStoreConnection> conections = registry.getConections();
+    for (final RecordStoreConnection connection : conections) {
       final DataObjectStoreConnectionTreeNode child = new DataObjectStoreConnectionTreeNode(this,
         connection);
       children.add(child);
@@ -47,8 +47,8 @@ PropertyChangeListener {
     return children;
   }
 
-  protected DataObjectStoreConnectionRegistry getRegistry() {
-    final DataObjectStoreConnectionRegistry registry = getUserData();
+  protected RecordStoreConnectionRegistry getRegistry() {
+    final RecordStoreConnectionRegistry registry = getUserData();
     return registry;
   }
 
@@ -68,7 +68,7 @@ PropertyChangeListener {
           }
         } else if (oldValue == null) {
           final DataObjectStoreConnectionTreeNode node = new DataObjectStoreConnectionTreeNode(
-            this, (DataObjectStoreConnection)newValue);
+            this, (RecordStoreConnection)newValue);
           addNode(index, node);
 
           nodesInserted(index);

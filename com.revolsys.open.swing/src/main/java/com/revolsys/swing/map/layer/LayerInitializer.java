@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import javax.swing.SwingWorker;
 
-import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
+import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.ExceptionUtil;
 
@@ -32,18 +32,18 @@ public class LayerInitializer extends SwingWorker<Void, Void> {
     }
   }
 
-  private final DataObjectStoreConnectionRegistry dataStoreRegistry;
+  private final RecordStoreConnectionRegistry dataStoreRegistry;
 
   private Layer layer;
 
   public LayerInitializer() {
-    this.dataStoreRegistry = DataObjectStoreConnectionRegistry.getForThread();
+    this.dataStoreRegistry = RecordStoreConnectionRegistry.getForThread();
   }
 
   @Override
   protected Void doInBackground() throws Exception {
     try {
-      DataObjectStoreConnectionRegistry.setForThread(this.dataStoreRegistry);
+      RecordStoreConnectionRegistry.setForThread(this.dataStoreRegistry);
       while (true) {
         synchronized (LAYERS_TO_INITIALIZE) {
           if (LAYERS_TO_INITIALIZE.isEmpty()) {
@@ -64,7 +64,7 @@ public class LayerInitializer extends SwingWorker<Void, Void> {
         }
       }
     } finally {
-      DataObjectStoreConnectionRegistry.setForThread(null);
+      RecordStoreConnectionRegistry.setForThread(null);
       this.layer = null;
     }
   }

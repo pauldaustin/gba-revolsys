@@ -14,13 +14,13 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.tree.TreeNode;
 
+import com.revolsys.data.record.io.RecordStoreConnectionManager;
+import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.data.io.DataObjectStoreConnectionMapProxy;
 import com.revolsys.gis.data.io.DataObjectStoreProxy;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.datastore.DataObjectStoreConnectionManager;
-import com.revolsys.io.datastore.DataObjectStoreConnectionRegistry;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
@@ -57,9 +57,9 @@ DataObjectStoreConnectionMapProxy {
     nameField.setText(fileName);
 
     SwingUtil.addLabel(panel, "Folder Connections");
-    final List<DataObjectStoreConnectionRegistry> registries = DataObjectStoreConnectionManager.get()
+    final List<RecordStoreConnectionRegistry> registries = RecordStoreConnectionManager.get()
         .getVisibleConnectionRegistries();
-    final JComboBox registryField = new JComboBox(new Vector<DataObjectStoreConnectionRegistry>(
+    final JComboBox registryField = new JComboBox(new Vector<RecordStoreConnectionRegistry>(
         registries));
 
     panel.add(registryField);
@@ -67,7 +67,7 @@ DataObjectStoreConnectionMapProxy {
     GroupLayoutUtil.makeColumns(panel, 2, true);
     panel.showDialog();
     if (panel.isSaved()) {
-      final DataObjectStoreConnectionRegistry registry = (DataObjectStoreConnectionRegistry)registryField.getSelectedItem();
+      final RecordStoreConnectionRegistry registry = (RecordStoreConnectionRegistry)registryField.getSelectedItem();
       String connectionName = nameField.getText();
       if (!Property.hasValue(connectionName)) {
         connectionName = fileName;
@@ -112,7 +112,7 @@ DataObjectStoreConnectionMapProxy {
   @SuppressWarnings("unchecked")
   public <V extends RecordStore> V getDataStore() {
     final File file = getUserData();
-    return (V)DataObjectStoreConnectionManager.getDataStore(file);
+    return (V)RecordStoreConnectionManager.getDataStore(file);
   }
 
   @Override

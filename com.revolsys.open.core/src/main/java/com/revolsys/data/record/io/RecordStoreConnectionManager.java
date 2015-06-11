@@ -1,4 +1,4 @@
-package com.revolsys.io.datastore;
+package com.revolsys.data.record.io;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,7 +11,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistryManager;
@@ -19,15 +18,15 @@ import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.OS;
 import com.revolsys.util.Property;
 
-public class DataObjectStoreConnectionManager extends
-AbstractConnectionRegistryManager<DataObjectStoreConnectionRegistry, DataObjectStoreConnection> {
+public class RecordStoreConnectionManager extends
+AbstractConnectionRegistryManager<RecordStoreConnectionRegistry, RecordStoreConnection> {
 
-  private static final DataObjectStoreConnectionManager INSTANCE;
+  private static final RecordStoreConnectionManager INSTANCE;
 
   static {
-    INSTANCE = new DataObjectStoreConnectionManager();
-    final File dataStoresDirectory = OS.getApplicationDataDirectory("com.revolsys.gis/Data Stores");
-    INSTANCE.addConnectionRegistry("User", new FileSystemResource(dataStoresDirectory));
+    INSTANCE = new RecordStoreConnectionManager();
+    final File recordStoresDirectory = OS.getApplicationDataDirectory("com.revolsys.gis/Data Stores");
+    INSTANCE.addConnectionRegistry("User", new FileSystemResource(recordStoresDirectory));
   }
 
   // TODO make this garbage collectable with reference counting.
@@ -35,7 +34,7 @@ AbstractConnectionRegistryManager<DataObjectStoreConnectionRegistry, DataObjectS
 
   private static Map<Map<String, Object>, AtomicInteger> dataStoreCounts = new HashMap<Map<String, Object>, AtomicInteger>();
 
-  public static DataObjectStoreConnectionManager get() {
+  public static RecordStoreConnectionManager get() {
     return INSTANCE;
   }
 
@@ -83,18 +82,18 @@ AbstractConnectionRegistryManager<DataObjectStoreConnectionRegistry, DataObjectS
   }
 
   public static RecordStore getDataStore(final String name) {
-    final DataObjectStoreConnectionManager connectionManager = get();
-    final List<DataObjectStoreConnectionRegistry> registries = new ArrayList<DataObjectStoreConnectionRegistry>();
+    final RecordStoreConnectionManager connectionManager = get();
+    final List<RecordStoreConnectionRegistry> registries = new ArrayList<RecordStoreConnectionRegistry>();
     registries.addAll(connectionManager.getConnectionRegistries());
-    final DataObjectStoreConnectionRegistry threadRegistry = DataObjectStoreConnectionRegistry.getForThread();
+    final RecordStoreConnectionRegistry threadRegistry = RecordStoreConnectionRegistry.getForThread();
     if (threadRegistry != null) {
       registries.add(threadRegistry);
     }
     Collections.reverse(registries);
-    for (final DataObjectStoreConnectionRegistry registry : registries) {
-      final DataObjectStoreConnection dataStoreConnection = registry.getConnection(name);
+    for (final RecordStoreConnectionRegistry registry : registries) {
+      final RecordStoreConnection dataStoreConnection = registry.getConnection(name);
       if (dataStoreConnection != null) {
-        return dataStoreConnection.getDataStore();
+        return dataStoreConnection.getRecordStore();
       }
     }
     return null;
@@ -122,21 +121,21 @@ AbstractConnectionRegistryManager<DataObjectStoreConnectionRegistry, DataObjectS
     }
   }
 
-  public DataObjectStoreConnectionManager() {
+  public RecordStoreConnectionManager() {
     super("Data Stores");
   }
 
-  public DataObjectStoreConnectionRegistry addConnectionRegistry(final String name,
+  public RecordStoreConnectionRegistry addConnectionRegistry(final String name,
     final boolean visible) {
-    final DataObjectStoreConnectionRegistry registry = new DataObjectStoreConnectionRegistry(this,
+    final RecordStoreConnectionRegistry registry = new RecordStoreConnectionRegistry(this,
       name, visible);
     addConnectionRegistry(registry);
     return registry;
   }
 
-  public DataObjectStoreConnectionRegistry addConnectionRegistry(final String name,
+  public RecordStoreConnectionRegistry addConnectionRegistry(final String name,
     final Resource dataStoresDirectory) {
-    final DataObjectStoreConnectionRegistry registry = new DataObjectStoreConnectionRegistry(this,
+    final RecordStoreConnectionRegistry registry = new RecordStoreConnectionRegistry(this,
       name, dataStoresDirectory);
     addConnectionRegistry(registry);
     return registry;
