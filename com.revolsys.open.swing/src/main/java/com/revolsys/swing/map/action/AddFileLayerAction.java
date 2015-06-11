@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
@@ -23,9 +22,10 @@ import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.raster.GeoreferencedImageFactory;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
+import com.revolsys.swing.action.AbstractAction;
 import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.parallel.Invoke;
-import com.revolsys.swing.tree.BaseTree;
+import com.revolsys.swing.tree.BaseTreeOld;
 import com.revolsys.util.CollectionUtil;
 
 public class AddFileLayerAction extends AbstractAction {
@@ -82,7 +82,7 @@ public class AddFileLayerAction extends AbstractAction {
 
     final int status = fileChooser.showDialog(window, "Open File");
     if (status == JFileChooser.APPROVE_OPTION) {
-      final LayerGroup layerGroup = BaseTree.getMouseClickItem();
+      final LayerGroup layerGroup = BaseTreeOld.getMouseClickItem();
       final File file = fileChooser.getSelectedFile();
       Invoke.background("Open File: " + FileUtil.getCanonicalPath(file), layerGroup, "openFile",
         file);

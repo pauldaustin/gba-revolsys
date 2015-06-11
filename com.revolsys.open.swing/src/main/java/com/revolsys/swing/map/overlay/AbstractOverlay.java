@@ -55,7 +55,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class AbstractOverlay extends JComponent implements PropertyChangeListener, MouseListener,
-MouseMotionListener, MouseWheelListener, KeyListener {
+  MouseMotionListener, MouseWheelListener, KeyListener {
   public static final Cursor CURSOR_LINE_ADD_NODE = Icons.getCursor("cursor_line_node_add", 8, 6);
 
   public static final Cursor CURSOR_LINE_SNAP = Icons.getCursor("cursor_line_snap", 8, 4);
@@ -115,14 +115,14 @@ MouseMotionListener, MouseWheelListener, KeyListener {
         final String typePath = entry.getKey();
         final Set<CloseLocation> locations = entry.getValue();
         final CloseLocation firstLocation = CollectionUtil.get(locations, 0);
-        final String idAttributeName = firstLocation.getIdAttributeName();
+        final String idFieldName = firstLocation.getIdFieldName();
         text.append("<b><i>");
         text.append(typePath);
         text.append("</i></b>\n");
         text.append("<table cellspacing=\"0\" cellpadding=\"1\" style=\"border: solid black 1px;margin: 3px 0px 3px 0px;padding: 0px;width: 100%\">"
-            + "<thead><tr style=\"border-bottom: solid black 3px\"><th style=\"border-right: solid black 1px\">"
-            + idAttributeName
-            + "</th><th style=\"border-right: solid black 1px\">INDEX</th><th>POINT</th></tr></th><tbody>");
+          + "<thead><tr style=\"border-bottom: solid black 3px\"><th style=\"border-right: solid black 1px\">"
+          + idFieldName
+          + "</th><th style=\"border-right: solid black 1px\">INDEX</th><th>POINT</th></tr></th><tbody>");
         for (final CloseLocation location : locations) {
           text.append("<tr style=\"border-bottom: solid black 1px\"><td style=\"border-right: solid black 1px\">");
           text.append(location.getId());
@@ -447,7 +447,7 @@ MouseMotionListener, MouseWheelListener, KeyListener {
     final Point point = boundingBox.getCentrePoint();
     final List<AbstractRecordLayer> layers = getSnapLayers();
     final TreeMap<Point, Set<CloseLocation>> snapLocations = new TreeMap<Point, Set<CloseLocation>>(
-        new GeometryDistanceComparator(point));
+      new GeometryDistanceComparator(point));
     this.snapPoint = null;
     for (final AbstractRecordLayer layer : layers) {
       final List<LayerRecord> objects = layer.queryBackground(boundingBox);
@@ -610,7 +610,7 @@ MouseMotionListener, MouseWheelListener, KeyListener {
             nodeSnap = true;
           }
           CollectionUtil.addToSet(typeLocationsMap, typePath + " (<b style=\"color:red\">"
-              + locationType + "</b>)", snapLocation);
+            + locationType + "</b>)", snapLocation);
         }
 
         for (final Entry<String, Set<CloseLocation>> typeLocations : typeLocationsMap.entrySet()) {

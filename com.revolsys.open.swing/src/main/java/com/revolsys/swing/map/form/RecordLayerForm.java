@@ -102,7 +102,7 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class RecordLayerForm extends JPanel implements PropertyChangeListener, CellEditorListener,
-  FocusListener, PropertyChangeSupportProxy, WindowListener {
+FocusListener, PropertyChangeSupportProxy, WindowListener {
 
   public static final String FLIP_FIELDS_ICON = "flip_fields";
 
@@ -401,7 +401,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     final JScrollPane scrollPane = addTab("All Fields", table);
     int maxHeight = 500;
     for (final GraphicsDevice device : GraphicsEnvironment.getLocalGraphicsEnvironment()
-        .getScreenDevices()) {
+      .getScreenDevices()) {
       final GraphicsConfiguration graphicsConfiguration = device.getDefaultConfiguration();
       final Rectangle bounds = graphicsConfiguration.getBounds();
 
@@ -449,14 +449,14 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     // Cut, Copy Paste
 
     this.toolBar.addButton("dnd", "Copy Record", "page_copy", (EnableCheck)null, this,
-        "dataTransferCopy");
+      "dataTransferCopy");
 
     this.toolBar.addButton("dnd", "Paste Record", "paste_plain", editable, this,
-        "dataTransferPaste");
+      "dataTransferPaste");
 
     if (hasGeometry) {
       this.toolBar.addButton("dnd", "Paste Geometry", "geometry_paste", editable, this,
-          "pasteGeometry");
+        "pasteGeometry");
 
     }
     final EnableCheck canUndo = new ObjectPropertyEnableCheck(this.undoManager, "canUndo");
@@ -465,7 +465,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     final EnableCheck modifiedOrDeleted = new ObjectPropertyEnableCheck(this, "modifiedOrDeleted");
 
     this.toolBar.addButton("changes", "Revert Record", "arrow_revert", modifiedOrDeleted, this,
-        "revertChanges");
+      "revertChanges");
 
     this.toolBar.addButton("changes", "Revert Empty Fields", "field_empty_revert",
       modifiedOrDeleted, this, "revertEmptyFields");
@@ -477,24 +477,24 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
     if (hasGeometry) {
       this.toolBar.addButtonTitleIcon("zoom", "Zoom to Object", "magnifier", this,
-          "actionZoomToObject");
+        "actionZoomToObject");
     }
 
     // Geometry manipulation
     if (hasGeometry) {
       final DataType geometryDataType = geometryAttribute.getType();
       if (geometryDataType == DataTypes.LINE_STRING
-          || geometryDataType == DataTypes.MULTI_LINE_STRING) {
+        || geometryDataType == DataTypes.MULTI_LINE_STRING) {
         if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
           this.toolBar.addButton("geometry", FLIP_RECORD_NAME, FLIP_RECORD_ICON, editable, this,
-              "flipRecordOrientation");
+            "flipRecordOrientation");
           this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME,
             FLIP_LINE_ORIENTATION_ICON, editable, this, "flipLineOrientation");
           this.toolBar.addButton("geometry", FLIP_FIELDS_NAME, FLIP_FIELDS_ICON, editable, this,
-              "flipFields");
+            "flipFields");
         } else {
           this.toolBar.addButton("geometry", "Flip Line Orientation", "flip_line", editable, this,
-              "flipLineOrientation");
+            "flipLineOrientation");
         }
       }
     }
@@ -1158,9 +1158,9 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   public void setMetaData(final RecordDefinition metaData) {
     this.metaData = metaData;
     setDataStore(metaData.getRecordStore());
-    final String idAttributeName = metaData.getIdFieldName();
-    if (Property.hasValue(idAttributeName)) {
-      this.readOnlyFieldNames.add(idAttributeName);
+    final String idFieldName = metaData.getIdFieldName();
+    if (Property.hasValue(idFieldName)) {
+      this.readOnlyFieldNames.add(idFieldName);
     }
     for (final FieldDefinition attribute : metaData.getFields()) {
       if (attribute.isRequired()) {
@@ -1250,7 +1250,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     dialog.add(buttons, BorderLayout.SOUTH);
     final JButton addCancelButton = InvokeMethodAction.createButton("Cancel", this,
-        "actionAddCancel");
+      "actionAddCancel");
     buttons.add(addCancelButton);
     this.addOkButton = InvokeMethodAction.createButton("OK", this, "actionAddOk");
     buttons.add(this.addOkButton);
@@ -1323,8 +1323,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
       if (requiredFieldNames.contains(fieldName)) {
         boolean run = true;
         if (this.object.getState() == RecordState.New) {
-          final String idAttributeName = getMetaData().getIdFieldName();
-          if (fieldName.equals(idAttributeName)) {
+          final String idFieldName = getMetaData().getIdFieldName();
+          if (fieldName.equals(idFieldName)) {
             run = false;
           }
         }

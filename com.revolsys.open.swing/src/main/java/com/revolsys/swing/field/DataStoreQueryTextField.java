@@ -61,8 +61,8 @@ import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.util.Property;
 
 public class DataStoreQueryTextField extends TextField implements DocumentListener, KeyListener,
-  MouseListener, FocusListener, ListDataListener, ItemSelectable, Field, ListSelectionListener,
-  HighlightPredicate {
+MouseListener, FocusListener, ListDataListener, ItemSelectable, Field, ListSelectionListener,
+HighlightPredicate {
   private static final Icon ICON_DELETE = Icons.getIcon("delete");
 
   private static final long serialVersionUID = 1L;
@@ -71,7 +71,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
 
   private final String displayAttributeName;
 
-  private final String idAttributeName;
+  private final String idFieldName;
 
   private final JXList list;
 
@@ -94,7 +94,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
   public DataStoreQueryTextField(final RecordDefinition metaData, final String displayAttributeName) {
     this(metaData, displayAttributeName, new Query(metaData, new Equal(
       F.upper(displayAttributeName), new Value(null))), new Query(metaData, Q.iLike(
-      displayAttributeName, "")));
+        displayAttributeName, "")));
 
   }
 
@@ -103,7 +103,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
     super(displayAttributeName);
     this.metaData = metaData;
     this.dataStore = metaData.getRecordStore();
-    this.idAttributeName = metaData.getIdFieldName();
+    this.idFieldName = metaData.getIdFieldName();
     this.displayAttributeName = displayAttributeName;
 
     final Document document = getDocument();
@@ -151,7 +151,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
     final String displayAttributeName) {
     this(dataStore.getRecordDefinition(typeName), displayAttributeName, new Query(typeName,
       new Equal(F.upper(displayAttributeName), new Value(null))), new Query(typeName, Q.iLike(
-      displayAttributeName, "")));
+        displayAttributeName, "")));
   }
 
   @Override
@@ -204,8 +204,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
     if (!Property.hasValue(displayText) && Property.hasValue(stringValue)) {
       Record record = null;
       try {
-        record = this.dataStore.queryFirst(Query.equal(this.metaData, this.idAttributeName,
-          stringValue));
+        record = this.dataStore.queryFirst(Query.equal(this.metaData, this.idFieldName, stringValue));
       } catch (final Exception e) {
       }
       if (record == null) {
@@ -314,7 +313,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
         }
         this.list.setSelectedIndex(selectedIndex);
         e.consume();
-      break;
+        break;
       case KeyEvent.VK_ENTER:
         if (size > 0) {
           if (selectedIndex >= 0 && selectedIndex < size) {
@@ -330,7 +329,7 @@ public class DataStoreQueryTextField extends TextField implements DocumentListen
       case KeyEvent.VK_TAB:
         return;
       default:
-      break;
+        break;
     }
     showMenu();
   }

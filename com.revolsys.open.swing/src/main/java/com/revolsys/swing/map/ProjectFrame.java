@@ -50,7 +50,6 @@ import com.revolsys.swing.component.BaseFrame;
 import com.revolsys.swing.component.ButtonTabComponent;
 import com.revolsys.swing.listener.InvokeMethodPropertyChangeListener;
 import com.revolsys.swing.logging.Log4jTableModel;
-import com.revolsys.swing.map.component.layerchooser.LayerChooserPanel;
 import com.revolsys.swing.map.layer.Layer;
 import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.layer.Project;
@@ -74,6 +73,10 @@ import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.ObjectTree;
 import com.revolsys.swing.tree.ObjectTreePanel;
 import com.revolsys.swing.tree.model.ObjectTreeModel;
+import com.revolsys.swing.tree.node.ListTreeNode;
+import com.revolsys.swing.tree.node.file.FileSystemsTreeNode;
+import com.revolsys.swing.tree.node.file.FolderConnectionsTreeNode;
+import com.revolsys.swing.tree.node.record.RecordStoreConnectionsTreeNode;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.OS;
 import com.revolsys.util.PreferencesUtil;
@@ -135,7 +138,7 @@ public class ProjectFrame extends BaseFrame {
 
     final ActionMap actionMap = component.getActionMap();
     actionMap.put(SAVE_PROJECT_KEY, new InvokeMethodAction(SAVE_PROJECT_KEY, project,
-        "saveAllSettings"));
+      "saveAllSettings"));
     actionMap.put(SAVE_CHANGES_KEY,
       new InvokeMethodAction(SAVE_CHANGES_KEY, project, "saveChanges"));
   }
@@ -219,7 +222,22 @@ public class ProjectFrame extends BaseFrame {
   }
 
   protected void addCatalogPanel() {
-    this.catalogTree = LayerChooserPanel.createTree();
+    final RecordStoreConnectionsTreeNode recordStores = new RecordStoreConnectionsTreeNode();
+
+    final FileSystemsTreeNode fileSystems = new FileSystemsTreeNode();
+
+    final FolderConnectionsTreeNode folderConnections = new FolderConnectionsTreeNode();
+
+    final ListTreeNode root = new ListTreeNode(recordStores, fileSystems, folderConnections);
+
+    final BaseTree tree = new BaseTree(root);
+    tree.setRootVisible(false);
+
+    recordStores.expandChildren();
+    fileSystems.expand();
+    folderConnections.expandChildren();
+
+    this.catalogTree = tree;
 
     addTabIcon(this.leftTabs, "tree_catalog", "Catalog", this.catalogTree, true);
   }
@@ -298,7 +316,7 @@ public class ProjectFrame extends BaseFrame {
 
     if (OS.isWindows()) {
       tools.addMenuItem("options", "Options...", "Options...", null, null, PreferencesDialog.get(),
-          "showPanel");
+        "showPanel");
     }
     addMenu(menuBar, tools);
     WindowManager.addMenu(menuBar);
@@ -318,7 +336,7 @@ public class ProjectFrame extends BaseFrame {
     final MenuFactory tools = new MenuFactory("Tools");
 
     tools.addMenuItem("script", "Run Script...", "Run Script", Icons.getIcon("script_go"), this,
-        "runScript");
+      "runScript");
     return tools;
   }
 
@@ -509,7 +527,7 @@ public class ProjectFrame extends BaseFrame {
     final JFileChooser fileChooser = SwingUtil.createFileChooser("Select Script",
       "com.revolsys.swing.tools.script", "directory");
     final FileNameExtensionFilter groovyFilter = new FileNameExtensionFilter("Groovy Script",
-        "groovy");
+      "groovy");
     fileChooser.addChoosableFileFilter(groovyFilter);
     fileChooser.setMultiSelectionEnabled(false);
     final int returnVal = fileChooser.showOpenDialog(this);

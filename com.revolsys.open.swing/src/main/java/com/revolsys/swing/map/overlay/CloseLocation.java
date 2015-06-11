@@ -55,7 +55,7 @@ public class CloseLocation {
     return id;
   }
 
-  public String getIdAttributeName() {
+  public String getIdFieldName() {
     return getMetaData().getIdFieldName();
   }
 

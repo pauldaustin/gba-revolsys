@@ -30,7 +30,7 @@ public class TreeItemPropertyEnableCheck extends AbstractEnableCheck {
 
   @Override
   public boolean isEnabled() {
-    final Object object = BaseTree.getMouseClickItem();
+    final Object object = BaseTreeOld.getMouseClickItem();
     if (object == null) {
       return disabled();
     } else {

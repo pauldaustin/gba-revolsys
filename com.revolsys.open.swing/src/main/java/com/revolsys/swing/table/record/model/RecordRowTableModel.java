@@ -24,7 +24,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class RecordRowTableModel extends AbstractRecordTableModel implements
-  SortableTableModel, CellEditorListener {
+SortableTableModel, CellEditorListener {
 
   public static final String LOADING_VALUE = "\u2026";
 
@@ -268,9 +268,9 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel imple
     }
   }
 
-  public void setSortOrder(final String idAttributeName) {
-    if (Property.hasValue(idAttributeName)) {
-      final int index = this.fieldNames.indexOf(idAttributeName);
+  public void setSortOrder(final String idFieldName) {
+    if (Property.hasValue(idFieldName)) {
+      final int index = this.fieldNames.indexOf(idFieldName);
       if (index != -1) {
         setSortOrder(index);
       }

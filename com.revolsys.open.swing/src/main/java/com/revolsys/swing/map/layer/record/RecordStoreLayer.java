@@ -292,8 +292,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties == null) {
         LoggerFactory.getLogger(getClass())
-        .error(
-          "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
+          .error(
+            "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
               + getPath());
         return false;
       } else {
@@ -425,7 +425,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       synchronized (this.sync) {
         final BoundingBox loadBoundingBox = boundingBox.expandPercent(0.2);
         if (!this.boundingBox.contains(boundingBox)
-            && !this.loadingBoundingBox.contains(boundingBox)) {
+          && !this.loadingBoundingBox.contains(boundingBox)) {
           if (this.loadingWorker != null) {
             this.loadingWorker.cancel(true);
           }
@@ -462,12 +462,12 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     if (isExists()) {
       final PlatformTransactionManager transactionManager = this.recordStore.getTransactionManager();
       try (
-          Transaction transaction = new Transaction(transactionManager, Propagation.REQUIRES_NEW)) {
+        Transaction transaction = new Transaction(transactionManager, Propagation.REQUIRES_NEW)) {
         try {
           final RecordStore recordStore = getRecordStore();
           if (recordStore != null) {
             try (
-                final Writer<Record> writer = recordStore.createWriter()) {
+              final Writer<Record> writer = recordStore.createWriter()) {
               final RecordDefinition recordDefinition = getRecordDefinition();
               final String idFieldName = recordDefinition.getIdFieldName();
               final String idString = record.getIdString();
@@ -589,15 +589,15 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   @Override
   public LayerRecord getRecordById(final Object id) {
     final RecordDefinition metaData = getRecordDefinition();
-    final String idAttributeName = metaData.getIdFieldName();
-    if (idAttributeName == null) {
+    final String idFieldName = metaData.getIdFieldName();
+    if (idFieldName == null) {
       LoggerFactory.getLogger(getClass()).error(this.typePath + " does not have a primary key");
       return null;
     } else {
       final String idString = StringConverterRegistry.toString(id);
       final LayerRecord record = this.cachedRecords.get(idString);
       if (record == null) {
-        final Query query = Query.equal(metaData, idAttributeName, id);
+        final Query query = Query.equal(metaData, idFieldName, id);
         query.setProperty("recordFactory", this);
         final RecordStore dataStore = getRecordStore();
         return (LayerRecord)dataStore.queryFirst(query);

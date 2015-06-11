@@ -40,9 +40,9 @@ import com.revolsys.util.JavaBeanUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordDefinitionImpl extends AbstractRecordStoreSchemaElement implements
-RecordDefinition {
+  RecordDefinition {
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "recordDefinition", "Record Definition", RecordDefinitionImpl.class, "create");
+    "dataRecordDefinition", "Record Definition", RecordDefinitionImpl.class, "create");
 
   private static final AtomicInteger INSTANCE_IDS = new AtomicInteger(0);
 

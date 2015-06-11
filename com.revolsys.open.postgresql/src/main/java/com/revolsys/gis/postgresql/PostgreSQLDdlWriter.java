@@ -40,8 +40,8 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       return sequenceName;
     } else {
       final String tableName = Path.getName(typePath).toLowerCase();
-      final String idAttributeName = metaData.getIdFieldName().toLowerCase();
-      return schema + "." + tableName + "_" + idAttributeName + "_seq";
+      final String idFieldName = metaData.getIdFieldName().toLowerCase();
+      return schema + "." + tableName + "_" + idFieldName + "_seq";
     }
   }
 

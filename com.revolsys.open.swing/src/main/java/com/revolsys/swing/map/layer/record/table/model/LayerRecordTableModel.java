@@ -14,7 +14,7 @@ import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 import com.revolsys.util.Property;
 
 public class LayerRecordTableModel extends AbstractSingleRecordTableModel implements
-  PropertyChangeListener {
+PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -80,9 +80,9 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (columnIndex == 2) {
       if (this.form.get().isEditable()) {
-        final String idAttributeName = getRecordDefinition().getIdFieldName();
+        final String idFieldName = getRecordDefinition().getIdFieldName();
         final String attributeName = getFieldName(rowIndex);
-        if (attributeName.equals(idAttributeName)) {
+        if (attributeName.equals(idFieldName)) {
           return false;
         } else {
           return this.form.get().isEditable(attributeName);

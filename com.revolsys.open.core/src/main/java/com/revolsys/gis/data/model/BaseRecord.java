@@ -300,10 +300,10 @@ public abstract class BaseRecord extends AbstractRecord {
     for (int i = 0; i < propertyPath.length && propertyValue != null; i++) {
       final String propertyName = propertyPath[i];
       if (propertyValue instanceof Record) {
-        final Record dataObject = (Record)propertyValue;
+        final Record record = (Record)propertyValue;
 
-        if (dataObject.hasAttribute(propertyName)) {
-          propertyValue = dataObject.getValue(propertyName);
+        if (record.hasAttribute(propertyName)) {
+          propertyValue = record.getValue(propertyName);
           if (propertyValue == null) {
             return null;
           } else if (i + 1 < propertyPath.length) {
@@ -333,6 +333,8 @@ public abstract class BaseRecord extends AbstractRecord {
         try {
           propertyValue = JavaBeanUtil.getProperty(propertyValue, propertyName);
         } catch (final IllegalArgumentException e) {
+          propertyValue = null;
+
           LoggerFactory.getLogger(getClass()).error("Path does not exist " + path, e);
           return null;
         }
@@ -616,7 +618,7 @@ public abstract class BaseRecord extends AbstractRecord {
     switch (this.state) {
       case Persisted:
         this.state = RecordState.Modified;
-      break;
+        break;
       case Deleted:
         throw new IllegalStateException("Cannot modify an object which has been deleted");
     }

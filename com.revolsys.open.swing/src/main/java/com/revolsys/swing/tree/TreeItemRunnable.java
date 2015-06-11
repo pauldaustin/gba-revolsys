@@ -38,7 +38,7 @@ public class TreeItemRunnable extends InvokeMethodRunnable {
 
   @Override
   public Object getObject() {
-    return BaseTree.getMouseClickItem();
+    return BaseTreeOld.getMouseClickItem();
   }
 
 }

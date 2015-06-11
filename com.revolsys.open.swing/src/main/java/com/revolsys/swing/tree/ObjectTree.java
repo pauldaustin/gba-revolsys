@@ -26,7 +26,7 @@ import com.revolsys.swing.tree.renderer.ObjectModelTreeCellRenderer;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
-public class ObjectTree extends BaseTree implements PropertyChangeListener {
+public class ObjectTree extends BaseTreeOld implements PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -228,7 +228,7 @@ public class ObjectTree extends BaseTree implements PropertyChangeListener {
         final MouseListener listener = nodeModel.getMouseListener(node);
         if (listener != null) {
           try {
-            BaseTree.mouseClickItem = node;
+            BaseTreeOld.mouseClickItem = node;
             listener.mouseClicked(e);
           } finally {
           }
