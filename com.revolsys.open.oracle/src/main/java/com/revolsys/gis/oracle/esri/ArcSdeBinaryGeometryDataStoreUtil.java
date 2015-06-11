@@ -31,8 +31,8 @@ import com.revolsys.gis.oracle.io.OracleDataObjectStore;
 import com.revolsys.io.FileUtil;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
-import com.revolsys.jdbc.io.DataStoreIteratorFactory;
-import com.revolsys.jdbc.io.JdbcDataObjectStore;
+import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.PasswordUtil;
@@ -44,19 +44,19 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class ArcSdeBinaryGeometryDataStoreUtil {
 
-  private final DataStoreIteratorFactory iteratorFactory = new DataStoreIteratorFactory(this,
+  private final RecordStoreIteratorFactory iteratorFactory = new RecordStoreIteratorFactory(this,
       "createIterator");
 
   private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 
-  private JdbcDataObjectStore dataStore;
+  private JdbcRecordStore dataStore;
 
   public ArcSdeBinaryGeometryDataStoreUtil() {
   }
 
   public ArcSdeBinaryGeometryDataStoreUtil(final RecordStore dataStore,
     final Map<String, Object> connectionProperties) {
-    this.dataStore = (JdbcDataObjectStore)dataStore;
+    this.dataStore = (JdbcRecordStore)dataStore;
     this.connectionProperties = connectionProperties;
   }
 

@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.io;
+package com.revolsys.data.record.io;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,14 +13,12 @@ import com.revolsys.data.io.IteratorReader;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.query.SqlCondition;
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordIterator;
-import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.util.Property;
 
-public class DataObjectStoreQueryReader extends IteratorReader<Record> implements RecordReader {
+public class RecordStoreQueryReader extends IteratorReader<Record> implements RecordReader {
 
   private AbstractRecordStore dataStore;
 
@@ -32,11 +30,11 @@ public class DataObjectStoreQueryReader extends IteratorReader<Record> implement
 
   private String whereClause;
 
-  public DataObjectStoreQueryReader() {
-    setIterator(new DataStoreMultipleQueryIterator(this));
+  public RecordStoreQueryReader() {
+    setIterator(new RecordStoreMultipleQueryIterator(this));
   }
 
-  public DataObjectStoreQueryReader(final AbstractRecordStore dataStore) {
+  public RecordStoreQueryReader(final AbstractRecordStore dataStore) {
     this();
     setDataStore(dataStore);
   }

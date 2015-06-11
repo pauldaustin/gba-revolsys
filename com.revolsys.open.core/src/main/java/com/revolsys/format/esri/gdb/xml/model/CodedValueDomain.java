@@ -70,7 +70,7 @@ public class CodedValueDomain extends Domain implements CodeTable {
   }
 
   @Override
-  public List<String> getAttributeAliases() {
+  public List<String> getFieldAliases() {
     return Collections.emptyList();
   }
 
@@ -110,7 +110,7 @@ public class CodedValueDomain extends Domain implements CodeTable {
   }
 
   @Override
-  public String getIdAttributeName() {
+  public String getIdFieldName() {
     return getDomainName() + "_ID";
   }
 

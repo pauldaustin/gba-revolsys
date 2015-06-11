@@ -22,6 +22,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import com.revolsys.collection.ListResultPager;
 import com.revolsys.collection.ResultPager;
 import com.revolsys.collection.iterator.AbstractIterator;
+import com.revolsys.collection.map.Maps;
 import com.revolsys.collection.map.ThreadSharedAttributes;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.codes.CodeTableProperty;
@@ -30,11 +31,10 @@ import com.revolsys.data.query.Query;
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordStoreExtension;
+import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.io.DataObjectStoreExtension;
-import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
-import com.revolsys.gis.data.io.DataObjectStoreSchemaMapProxy;
 import com.revolsys.gis.data.model.filter.DataObjectGeometryIntersectsFilter;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
@@ -43,78 +43,56 @@ import com.revolsys.io.FilterReader;
 import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
-import com.revolsys.jdbc.io.DataStoreIteratorFactory;
+import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
-import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractRecordStore extends AbstractObjectWithProperties implements
-RecordStore {
-
-  public static RecordStore close(final Collection<RecordStore> dataStores) {
-    final List<RuntimeException> exceptions = new ArrayList<RuntimeException>();
-    for (final RecordStore dataStore : dataStores) {
-      if (dataStore != null) {
-        try {
-          dataStore.close();
-        } catch (final RuntimeException e) {
-          exceptions.add(e);
-        }
-      }
-    }
-    if (!exceptions.isEmpty()) {
-      throw exceptions.get(0);
-    }
-    return null;
-  }
-
-  public static RecordStore close(final RecordStore... dataStores) {
-    return close(Arrays.asList(dataStores));
-  }
+  RecordStore {
 
   private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 
   private Map<String, List<String>> codeTableColumNames = new HashMap<String, List<String>>();
 
-  private RecordFactory dataObjectFactory;
+  private RecordFactory recordFactory;
 
   private final Map<String, CodeTable> columnToTableMap = new HashMap<String, CodeTable>();
 
   private String label;
 
-  private Map<String, RecordStoreSchema> schemaMap = new TreeMap<String, RecordStoreSchema>();
+  private final RecordStoreSchema rootSchema = new RecordStoreSchema(this);
 
-  private List<RecordDefinitionProperty> commonMetaDataProperties = new ArrayList<RecordDefinitionProperty>();
+  private List<RecordDefinitionProperty> commonRecordDefinitionProperties = new ArrayList<RecordDefinitionProperty>();
 
-  private final Map<String, Map<String, Object>> typeMetaDataProperties = new HashMap<String, Map<String, Object>>();
+  private final Map<String, Map<String, Object>> typeRecordDefinitionProperties = new HashMap<String, Map<String, Object>>();
 
   private final StatisticsMap statistics = new StatisticsMap();
 
   private GeometryFactory geometryFactory;
 
-  private DataStoreIteratorFactory iteratorFactory = new DataStoreIteratorFactory();
+  private RecordStoreIteratorFactory iteratorFactory = new RecordStoreIteratorFactory();
 
-  private final Set<DataObjectStoreExtension> dataStoreExtensions = new LinkedHashSet<DataObjectStoreExtension>();
+  private final Set<RecordStoreExtension> recordStoreExtensions = new LinkedHashSet<RecordStoreExtension>();
 
   public AbstractRecordStore() {
     this(new ArrayRecordFactory());
   }
 
-  public AbstractRecordStore(final RecordFactory dataObjectFactory) {
-    this.dataObjectFactory = dataObjectFactory;
+  public AbstractRecordStore(final RecordFactory recordFactory) {
+    this.recordFactory = recordFactory;
   }
 
   @Override
   public void addCodeTable(final CodeTable codeTable) {
-    final String idColumn = codeTable.getIdAttributeName();
+    final String idColumn = codeTable.getIdFieldName();
     addCodeTable(idColumn, codeTable);
-    final List<String> attributeAliases = codeTable.getAttributeAliases();
-    for (final String alias : attributeAliases) {
+    final List<String> fieldAliases = codeTable.getFieldAliases();
+    for (final String alias : fieldAliases) {
       addCodeTable(alias, codeTable);
     }
     final String codeTableName = codeTable.getName();
@@ -129,6 +107,19 @@ RecordStore {
   public void addCodeTable(final String columnName, final CodeTable codeTable) {
     if (columnName != null && !columnName.equalsIgnoreCase("ID")) {
       this.columnToTableMap.put(columnName, codeTable);
+      for (final RecordStoreSchema schema : getSchemas()) {
+        if (schema.isInitialized()) {
+          for (final RecordDefinition recordDefinition : schema.getRecordDefinitions()) {
+            final String idFieldName = recordDefinition.getIdFieldName();
+            for (final FieldDefinition field : recordDefinition.getFields()) {
+              final String fieldName = field.getName();
+              if (fieldName.equals(columnName) && !fieldName.equals(idFieldName)) {
+                field.setCodeTable(codeTable);
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -139,37 +130,39 @@ RecordStore {
     }
   }
 
-  public void addDataStoreExtension(final DataObjectStoreExtension extension) {
-    if (extension != null) {
-      try {
-        final Map<String, Object> connectionProperties = getConnectionProperties();
-        extension.initialize(this, connectionProperties);
-        this.dataStoreExtensions.add(extension);
-      } catch (final Throwable e) {
-        ExceptionUtil.log(extension.getClass(), "Unable to initialize", e);
+  protected void addRecordDefinition(final RecordDefinition recordDefinition) {
+    final String idFieldName = recordDefinition.getIdFieldName();
+    for (final FieldDefinition field : recordDefinition.getFields()) {
+      final String fieldName = field.getName();
+      if (!fieldName.equals(idFieldName)) {
+        final CodeTable codeTable = this.columnToTableMap.get(fieldName);
+        if (codeTable != null) {
+          field.setCodeTable(codeTable);
+        }
       }
     }
   }
 
-  protected void addRecordDefinition(final RecordDefinition metaData) {
-    final String typePath = metaData.getPath();
-    final String schemaName = Path.getPath(typePath);
-    final RecordStoreSchema schema = getSchema(schemaName);
-    schema.addRecordDefinition(metaData);
-  }
-
-  protected void addRecordDefinitionProperties(final RecordDefinitionImpl metaData) {
-    final String typePath = metaData.getPath();
-    for (final RecordDefinitionProperty property : this.commonMetaDataProperties) {
+  protected void addRecordDefinitionProperties(final RecordDefinitionImpl recordDefinition) {
+    final String typePath = recordDefinition.getPath();
+    for (final RecordDefinitionProperty property : this.commonRecordDefinitionProperties) {
       final RecordDefinitionProperty clonedProperty = property.clone();
-      clonedProperty.setRecordDefinition(metaData);
+      clonedProperty.setRecordDefinition(recordDefinition);
     }
-    final Map<String, Object> properties = this.typeMetaDataProperties.get(typePath);
-    metaData.setProperties(properties);
+    final Map<String, Object> properties = this.typeRecordDefinitionProperties.get(typePath);
+    recordDefinition.setProperties(properties);
   }
 
-  protected void addSchema(final RecordStoreSchema schema) {
-    this.schemaMap.put(schema.getPath(), schema);
+  public void addRecordStoreExtension(final RecordStoreExtension extension) {
+    if (extension != null) {
+      try {
+        final Map<String, Object> connectionProperties = getConnectionProperties();
+        extension.initialize(this, connectionProperties);
+        this.recordStoreExtensions.add(extension);
+      } catch (final Throwable e) {
+        ExceptionUtil.log(extension.getClass(), "Unable to initialize", e);
+      }
+    }
   }
 
   @Override
@@ -194,35 +187,29 @@ RecordStore {
       if (this.statistics != null) {
         this.statistics.disconnect();
       }
-      if (this.schemaMap != null) {
-        for (final RecordStoreSchema schema : this.schemaMap.values()) {
-          schema.close();
-        }
-        this.schemaMap.clear();
-      }
+      getRootSchema().close();
     } finally {
       this.codeTableColumNames.clear();
       this.columnToTableMap.clear();
-      this.commonMetaDataProperties.clear();
+      this.commonRecordDefinitionProperties.clear();
       this.connectionProperties.clear();
-      this.dataObjectFactory = null;
-      this.dataStoreExtensions.clear();
+      this.recordFactory = null;
+      this.recordStoreExtensions.clear();
       this.iteratorFactory = null;
       this.label = "deleted";
-      this.schemaMap.clear();
       this.statistics.clear();
-      this.typeMetaDataProperties.clear();
+      this.typeRecordDefinitionProperties.clear();
     }
   }
 
   @Override
   public Record copy(final Record record) {
-    final RecordDefinition metaData = getRecordDefinition(record.getRecordDefinition());
-    final RecordFactory dataObjectFactory = this.dataObjectFactory;
-    if (metaData == null || dataObjectFactory == null) {
+    final RecordDefinition recordDefinition = getRecordDefinition(record.getRecordDefinition());
+    final RecordFactory recordFactory = this.recordFactory;
+    if (recordDefinition == null || recordFactory == null) {
       return null;
     } else {
-      final Record copy = dataObjectFactory.createRecord(metaData);
+      final Record copy = recordFactory.createRecord(recordDefinition);
       copy.setValues(record);
       copy.setIdValue(null);
       return copy;
@@ -230,39 +217,39 @@ RecordStore {
   }
 
   @Override
-  public Record create(final RecordDefinition objectMetaData) {
-    final RecordDefinition metaData = getRecordDefinition(objectMetaData);
-    final RecordFactory dataObjectFactory = this.dataObjectFactory;
-    if (metaData == null || dataObjectFactory == null) {
+  public Record create(final RecordDefinition objectRecordDefinition) {
+    final RecordDefinition recordDefinition = getRecordDefinition(objectRecordDefinition);
+    final RecordFactory recordFactory = this.recordFactory;
+    if (recordDefinition == null || recordFactory == null) {
       return null;
     } else {
-      final Record object = dataObjectFactory.createRecord(metaData);
+      final Record object = recordFactory.createRecord(recordDefinition);
       return object;
     }
   }
 
   @Override
   public Record create(final String typePath) {
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    if (metaData == null) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition == null) {
       return null;
     } else {
-      return create(metaData);
+      return create(recordDefinition);
     }
   }
 
   @Override
   public Record create(final String typePath, final Map<String, ? extends Object> values) {
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    if (metaData == null) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition == null) {
       throw new IllegalArgumentException("Cannot find table " + typePath + " for " + this);
     } else {
-      final Record record = create(metaData);
+      final Record record = create(recordDefinition);
       if (record != null) {
         record.setValues(values);
-        final String idAttributeName = metaData.getIdFieldName();
-        if (Property.hasValue(idAttributeName)) {
-          if (values.get(idAttributeName) == null) {
+        final String idFieldName = recordDefinition.getIdFieldName();
+        if (Property.hasValue(idFieldName)) {
+          if (values.get(idFieldName) == null) {
             final Object id = createPrimaryIdValue(typePath);
             record.setIdValue(id);
           }
@@ -280,12 +267,12 @@ RecordStore {
     if (query == null) {
       return null;
     } else {
-      final RecordDefinition metaData = query.getRecordDefinition();
-      if (metaData != null) {
-        final DataStoreIteratorFactory metaDataIteratorFactory = metaData.getProperty("dataStoreIteratorFactory");
-        if (metaDataIteratorFactory != null) {
-          final AbstractIterator<Record> iterator = metaDataIteratorFactory.createIterator(this,
-            query, properties);
+      final RecordDefinition recordDefinition = query.getRecordDefinition();
+      if (recordDefinition != null) {
+        final RecordStoreIteratorFactory recordDefinitionIteratorFactory = recordDefinition.getProperty("recordStoreIteratorFactory");
+        if (recordDefinitionIteratorFactory != null) {
+          final AbstractIterator<Record> iterator = recordDefinitionIteratorFactory.createIterator(
+            this, query, properties);
           if (iterator != null) {
             return iterator;
           }
@@ -306,8 +293,8 @@ RecordStore {
     throw new UnsupportedOperationException();
   }
 
-  public DataObjectStoreQueryReader createReader() {
-    final DataObjectStoreQueryReader reader = new DataObjectStoreQueryReader(this);
+  public RecordStoreQueryReader createReader() {
+    final RecordStoreQueryReader reader = new RecordStoreQueryReader(this);
     return reader;
   }
 
@@ -318,12 +305,12 @@ RecordStore {
   }
 
   @Override
-  public Record createWithId(final RecordDefinition metaData) {
-    final Record record = create(metaData);
+  public Record createWithId(final RecordDefinition recordDefinition) {
+    final Record record = create(recordDefinition);
     if (record != null) {
-      final String idAttributeName = metaData.getIdFieldName();
-      if (Property.hasValue(idAttributeName)) {
-        final String typePath = metaData.getPath();
+      final String idFieldName = recordDefinition.getIdFieldName();
+      if (Property.hasValue(idFieldName)) {
+        final String typePath = recordDefinition.getPath();
         final Object id = createPrimaryIdValue(typePath);
         record.setIdValue(id);
       }
@@ -358,7 +345,7 @@ RecordStore {
     }
   }
 
-  protected RecordDefinition findMetaData(final String typePath) {
+  protected RecordDefinition findRecordDefinition(final String typePath) {
     final String schemaName = Path.getPath(typePath);
     final RecordStoreSchema schema = getSchema(schemaName);
     if (schema == null) {
@@ -368,27 +355,29 @@ RecordStore {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public CodeTable getCodeTable(final String typePath) {
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    if (metaData == null) {
+  public <V extends CodeTable> V getCodeTable(final String typePath) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition == null) {
       return null;
     } else {
-      final CodeTableProperty codeTable = CodeTableProperty.getProperty(metaData);
-      return codeTable;
+      final CodeTableProperty codeTable = CodeTableProperty.getProperty(recordDefinition);
+      return (V)codeTable;
     }
-  }
-
-  @Override
-  public Map<String, CodeTable> getCodeTableByColumnMap() {
-    return new HashMap<String, CodeTable>(this.columnToTableMap);
   }
 
   @Override
   public CodeTable getCodeTableByFieldName(final String columnName) {
     final CodeTable codeTable = this.columnToTableMap.get(columnName);
+
     return codeTable;
 
+  }
+
+  @Override
+  public Map<String, CodeTable> getCodeTableByFieldNameMap() {
+    return new HashMap<String, CodeTable>(this.columnToTableMap);
   }
 
   public Map<String, List<String>> getCodeTableColumNames() {
@@ -404,15 +393,12 @@ RecordStore {
     return this.connectionProperties;
   }
 
-  public Collection<DataObjectStoreExtension> getRecordStoreExtensions() {
-    return this.dataStoreExtensions;
-  }
-
+  @Override
   public GeometryFactory getGeometryFactory() {
     return this.geometryFactory;
   }
 
-  public DataStoreIteratorFactory getIteratorFactory() {
+  public RecordStoreIteratorFactory getIteratorFactory() {
     return this.iteratorFactory;
   }
 
@@ -422,10 +408,10 @@ RecordStore {
   }
 
   @Override
-  public RecordDefinition getRecordDefinition(final RecordDefinition objectMetaData) {
-    final String typePath = objectMetaData.getPath();
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    return metaData;
+  public RecordDefinition getRecordDefinition(final RecordDefinition objectRecordDefinition) {
+    final String typePath = objectRecordDefinition.getPath();
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    return recordDefinition;
   }
 
   @Override
@@ -441,43 +427,28 @@ RecordStore {
 
   @Override
   public RecordFactory getRecordFactory() {
-    return this.dataObjectFactory;
+    return this.recordFactory;
+  }
+
+  public Collection<RecordStoreExtension> getRecordStoreExtensions() {
+    return this.recordStoreExtensions;
   }
 
   @Override
-  public RecordStoreSchema getSchema(String schemaName) {
-    if (schemaName == null || this.schemaMap == null) {
-      return null;
-    } else {
-      synchronized (this.schemaMap) {
-        if (this.schemaMap.isEmpty()) {
-          loadSchemas(this.schemaMap);
-        }
-        if (!schemaName.startsWith("/")) {
-          schemaName = "/" + schemaName;
-        }
-        RecordStoreSchema schema = this.schemaMap.get(schemaName.toUpperCase());
-        if (schema == null && "/".equals(schemaName)) {
-          schema = new RecordStoreSchema(this, schemaName);
-          this.schemaMap.put(schemaName.toUpperCase(), schema);
-        }
-        return schema;
-      }
-    }
+  public RecordStoreSchema getRootSchema() {
+    return this.rootSchema;
   }
 
-  public Map<String, RecordStoreSchema> getSchemaMap() {
-    return this.schemaMap;
+  @Override
+  public RecordStoreSchema getSchema(final String path) {
+    final RecordStoreSchema rootSchema = getRootSchema();
+    return rootSchema.getSchema(path);
   }
 
   @Override
   public List<RecordStoreSchema> getSchemas() {
-    synchronized (this.schemaMap) {
-      if (this.schemaMap.isEmpty()) {
-        loadSchemas(this.schemaMap);
-      }
-      return new ArrayList<RecordStoreSchema>(this.schemaMap.values());
-    }
+    final RecordStoreSchema rootSchema = getRootSchema();
+    return rootSchema.getSchemas();
   }
 
   @SuppressWarnings("unchecked")
@@ -570,7 +541,7 @@ RecordStore {
   }
 
   @Override
-  public void insert(final Record dataObject) {
+  public void insert(final Record record) {
     throw new UnsupportedOperationException("Insert not supported");
   }
 
@@ -588,22 +559,22 @@ RecordStore {
 
   @Override
   public Record load(final String typePath, final Object... id) {
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    if (metaData == null) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition == null) {
       return null;
     } else {
-      final List<String> idAttributeNames = metaData.getIdFieldNames();
-      if (idAttributeNames.isEmpty()) {
+      final List<String> idFieldNames = recordDefinition.getIdFieldNames();
+      if (idFieldNames.isEmpty()) {
         throw new IllegalArgumentException(typePath + " does not have a primary key");
-      } else if (id.length != idAttributeNames.size()) {
+      } else if (id.length != idFieldNames.size()) {
         throw new IllegalArgumentException(Arrays.toString(id) + " not a valid id for " + typePath
-          + " requires " + idAttributeNames);
+          + " requires " + idFieldNames);
       } else {
-        final Query query = new Query(metaData);
-        for (int i = 0; i < idAttributeNames.size(); i++) {
-          final String name = idAttributeNames.get(i);
+        final Query query = new Query(recordDefinition);
+        for (int i = 0; i < idFieldNames.size(); i++) {
+          final String name = idFieldNames.get(i);
           final Object value = id[i];
-          final FieldDefinition attribute = metaData.getField(name);
+          final FieldDefinition attribute = recordDefinition.getField(name);
           query.and(Q.equal(attribute, value));
         }
         return queryFirst(query);
@@ -611,22 +582,17 @@ RecordStore {
     }
   }
 
-  protected abstract void loadSchemaDataObjectMetaData(RecordStoreSchema schema,
-    Map<String, RecordDefinition> metaDataMap);
-
-  protected abstract void loadSchemas(Map<String, RecordStoreSchema> schemaMap);
-
   @Override
   public Record lock(final String typePath, final Object id) {
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    if (metaData == null) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition == null) {
       return null;
     } else {
-      final String idAttributeName = metaData.getIdFieldName();
-      if (idAttributeName == null) {
+      final String idFieldName = recordDefinition.getIdFieldName();
+      if (idFieldName == null) {
         throw new IllegalArgumentException(typePath + " does not have a primary key");
       } else {
-        final Query query = Query.equal(metaData, idAttributeName, id);
+        final Query query = Query.equal(recordDefinition, idFieldName, id);
         query.setLockResults(true);
         return queryFirst(query);
       }
@@ -646,17 +612,18 @@ RecordStore {
   @Override
   public Reader<Record> query(final List<?> queries) {
     final List<Query> queryObjects = new ArrayList<Query>();
-    for (final Object object : queries) {
-      if (object instanceof Query) {
-        final Query query = (Query)object;
+    for (final Object queryObject : queries) {
+      if (queryObject instanceof Query) {
+        final Query query = (Query)queryObject;
         queryObjects.add(query);
       } else {
-        final Query query = new Query(object.toString());
+        final Query query = new Query(queryObject.toString());
         queryObjects.add(query);
       }
     }
-    final DataObjectStoreQueryReader reader = createReader();
+    final RecordStoreQueryReader reader = createReader();
     reader.setQueries(queryObjects);
+
     return reader;
   }
 
@@ -666,19 +633,19 @@ RecordStore {
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory dataObjectFactory, final String typePath,
+  public Reader<Record> query(final RecordFactory recordFactory, final String typePath,
     final Geometry geometry) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     final Query query = new Query(typePath);
     query.setBoundingBox(boundingBox);
-    query.setProperty("recordFactory", dataObjectFactory);
+    query.setProperty("recordFactory", recordFactory);
     final Reader<Record> reader = query(query);
     final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(geometry);
     return new FilterReader<Record>(filter, reader);
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory dataObjectFactory, final String typePath,
+  public Reader<Record> query(final RecordFactory recordFactory, final String typePath,
     final Geometry geometry, final double distance) {
     final Geometry searchGeometry;
     if (geometry == null || geometry.isEmpty() || distance <= 0) {
@@ -691,7 +658,7 @@ RecordStore {
         searchGeometry = bufferedGeometry;
       }
     }
-    return query(dataObjectFactory, typePath, searchGeometry);
+    return query(recordFactory, typePath, searchGeometry);
   }
 
   @Override
@@ -711,14 +678,14 @@ RecordStore {
 
   @Override
   public Reader<Record> query(final String typePath, final Geometry geometry) {
-    final RecordFactory dataObjectFactory = getRecordFactory();
-    return query(dataObjectFactory, typePath, geometry);
+    final RecordFactory recordFactory = getRecordFactory();
+    return query(recordFactory, typePath, geometry);
   }
 
   @Override
   public Reader<Record> query(final String typePath, final Geometry geometry, final double distance) {
-    final RecordFactory dataObjectFactory = getRecordFactory();
-    return query(dataObjectFactory, typePath, geometry, distance);
+    final RecordFactory recordFactory = getRecordFactory();
+    return query(recordFactory, typePath, geometry, distance);
   }
 
   @Override
@@ -737,15 +704,25 @@ RecordStore {
     }
   }
 
-  protected void refreshMetaData(final String schemaName) {
-    final RecordStoreSchema schema = getSchema(schemaName);
-    if (schema != null) {
-      schema.refreshMetaData();
-    }
+  protected RecordDefinition refreshRecordDefinition(final RecordStoreSchema schema,
+    final String typePath) {
+    return null;
   }
 
   protected void refreshSchema() {
-    this.schemaMap.clear();
+    getRootSchema().refresh();
+  }
+
+  protected void refreshSchema(final String schemaName) {
+    final RecordStoreSchema schema = getSchema(schemaName);
+    if (schema != null) {
+      schema.refresh();
+    }
+  }
+
+  protected Map<String, ? extends RecordStoreSchemaElement> refreshSchemaElements(
+    final RecordStoreSchema schema) {
+    return Collections.emptyMap();
   }
 
   protected void releaseConnected() {
@@ -755,25 +732,20 @@ RecordStore {
     this.codeTableColumNames = domainColumNames;
   }
 
-  public void setCommonMetaDataProperties(
-    final List<RecordDefinitionProperty> commonMetaDataProperties) {
-    this.commonMetaDataProperties = commonMetaDataProperties;
+  public void setCommonRecordDefinitionProperties(
+    final List<RecordDefinitionProperty> commonRecordDefinitionProperties) {
+    this.commonRecordDefinitionProperties = commonRecordDefinitionProperties;
   }
 
   protected void setConnectionProperties(final Map<String, ? extends Object> connectionProperties) {
-    this.connectionProperties = CollectionUtil.createHashMap(connectionProperties);
-  }
-
-  @Override
-  public void setDataObjectFactory(final RecordFactory dataObjectFactory) {
-    this.dataObjectFactory = dataObjectFactory;
+    this.connectionProperties = Maps.createHashMap(connectionProperties);
   }
 
   public void setGeometryFactory(final GeometryFactory geometryFactory) {
     this.geometryFactory = geometryFactory;
   }
 
-  public void setIteratorFactory(final DataStoreIteratorFactory iteratorFactory) {
+  public void setIteratorFactory(final RecordStoreIteratorFactory iteratorFactory) {
     this.iteratorFactory = iteratorFactory;
   }
 
@@ -788,8 +760,9 @@ RecordStore {
     this.statistics.setLogCounts(logCounts);
   }
 
-  public void setSchemaMap(final Map<String, RecordStoreSchema> schemaMap) {
-    this.schemaMap = new DataObjectStoreSchemaMapProxy(this, schemaMap);
+  @Override
+  public void setRecordFactory(final RecordFactory recordFactory) {
+    this.recordFactory = recordFactory;
   }
 
   protected void setSharedAttribute(final String name, final Object value) {
@@ -797,14 +770,14 @@ RecordStore {
     sharedAttributes.put(name, value);
   }
 
-  public void setTypeMetaDataProperties(
-    final Map<String, List<RecordDefinitionProperty>> typeMetaProperties) {
-    for (final Entry<String, List<RecordDefinitionProperty>> typeProperties : typeMetaProperties.entrySet()) {
+  public void setTypeRecordDefinitionProperties(
+    final Map<String, List<RecordDefinitionProperty>> typeRecordDefinitionProperties) {
+    for (final Entry<String, List<RecordDefinitionProperty>> typeProperties : typeRecordDefinitionProperties.entrySet()) {
       final String typePath = typeProperties.getKey();
-      Map<String, Object> currentProperties = this.typeMetaDataProperties.get(typePath);
+      Map<String, Object> currentProperties = this.typeRecordDefinitionProperties.get(typePath);
       if (currentProperties == null) {
         currentProperties = new LinkedHashMap<String, Object>();
-        this.typeMetaDataProperties.put(typePath, currentProperties);
+        this.typeRecordDefinitionProperties.put(typePath, currentProperties);
       }
       final List<RecordDefinitionProperty> properties = typeProperties.getValue();
       for (final RecordDefinitionProperty property : properties) {

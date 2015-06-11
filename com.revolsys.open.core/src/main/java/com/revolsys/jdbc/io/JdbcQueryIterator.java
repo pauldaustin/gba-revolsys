@@ -29,7 +29,7 @@ import com.revolsys.jdbc.field.JdbcFieldDefinition;
 
 public class JdbcQueryIterator extends AbstractIterator<Record> implements RecordIterator {
 
-  public static Record getNextObject(final JdbcDataObjectStore dataStore,
+  public static Record getNextObject(final JdbcRecordStore dataStore,
     final RecordDefinition metaData, final List<FieldDefinition> attributes,
     final RecordFactory dataObjectFactory, final ResultSet resultSet) {
     final Record object = dataObjectFactory.createRecord(metaData);
@@ -67,7 +67,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements Recor
 
   private DataSource dataSource;
 
-  private JdbcDataObjectStore dataStore;
+  private JdbcRecordStore dataStore;
 
   private final int fetchSize = 10;
 
@@ -85,10 +85,10 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements Recor
 
   private Statistics statistics;
 
-  public JdbcQueryIterator(final JdbcDataObjectStore dataStore, final Query query,
+  public JdbcQueryIterator(final JdbcRecordStore dataStore, final Query query,
     final Map<String, Object> properties) {
     super();
-    this.connection = dataStore.getConnection();
+    this.connection = dataStore.getJdbcConnection();
     this.dataSource = dataStore.getDataSource();
 
     if (this.dataSource != null) {
@@ -135,7 +135,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements Recor
     this.resultSet = getResultSet();
   }
 
-  public JdbcDataObjectStore getDataStore() {
+  public JdbcRecordStore getDataStore() {
     return this.dataStore;
   }
 

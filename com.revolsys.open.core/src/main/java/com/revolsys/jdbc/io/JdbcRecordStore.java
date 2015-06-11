@@ -1,23 +1,21 @@
 package com.revolsys.jdbc.io;
 
-import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 
 import javax.sql.DataSource;
 
+import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.io.DataObjectStoreQueryReader;
 import com.revolsys.gis.io.Statistics;
+import com.revolsys.jdbc.JdbcConnection;
 
-public interface JdbcDataObjectStore extends RecordStore {
+public interface JdbcRecordStore extends RecordStore {
 
-  DataObjectStoreQueryReader createReader();
+  RecordStoreQueryReader createReader();
 
   @Override
   JdbcWriter createWriter();
-
-  Connection getConnection();
 
   String getDatabaseQualifiedTableName(final String typePath);
 
@@ -28,6 +26,8 @@ public interface JdbcDataObjectStore extends RecordStore {
   DataSource getDataSource();
 
   String getGeneratePrimaryKeySql(RecordDefinition metaData);
+
+  JdbcConnection getJdbcConnection();
 
   @Override
   String getLabel();

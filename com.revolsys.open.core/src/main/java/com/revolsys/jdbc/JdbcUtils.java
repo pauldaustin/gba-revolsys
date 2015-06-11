@@ -32,7 +32,7 @@ import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.Path;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
-import com.revolsys.jdbc.io.JdbcDataObjectStore;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.util.Property;
 
 public final class JdbcUtils {
@@ -345,8 +345,8 @@ public final class JdbcUtils {
   }
 
   public static void lockTable(final RecordStore dataStore, final String typePath) {
-    if (dataStore instanceof JdbcDataObjectStore) {
-      final JdbcDataObjectStore jdbcDataStore = (JdbcDataObjectStore)dataStore;
+    if (dataStore instanceof JdbcRecordStore) {
+      final JdbcRecordStore jdbcDataStore = (JdbcRecordStore)dataStore;
       final DataSource dataSource = jdbcDataStore.getDataSource();
       final String tableName = getQualifiedTableName(typePath);
       final String sql = "LOCK TABLE " + tableName + " IN SHARE MODE";

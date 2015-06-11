@@ -14,6 +14,7 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.AbstractRecordStore;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -26,248 +27,248 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class DelegatingDataObjectStore extends AbstractRecordStore {
-  private final AbstractRecordStore dataStore;
+public class DelegatingRecordStore extends AbstractRecordStore {
+  private final AbstractRecordStore recordStore;
 
-  public DelegatingDataObjectStore(final AbstractRecordStore dataStore) {
-    this.dataStore = dataStore;
+  public DelegatingRecordStore(final AbstractRecordStore dataStore) {
+    this.recordStore = dataStore;
   }
 
   @Override
   public void addCodeTable(final CodeTable codeTable) {
-    this.dataStore.addCodeTable(codeTable);
+    this.recordStore.addCodeTable(codeTable);
   }
 
   @Override
   public void addCodeTable(final String columnName, final CodeTable codeTable) {
-    this.dataStore.addCodeTable(columnName, codeTable);
+    this.recordStore.addCodeTable(columnName, codeTable);
   }
 
   @Override
   public void addCodeTables(final Collection<CodeTable> codeTables) {
-    this.dataStore.addCodeTables(codeTables);
+    this.recordStore.addCodeTables(codeTables);
   }
 
   @Override
   public void addStatistic(final String statisticName, final Record object) {
-    this.dataStore.addStatistic(statisticName, object);
+    this.recordStore.addStatistic(statisticName, object);
   }
 
   @Override
   public void addStatistic(final String statisticName, final String typePath, final int count) {
-    this.dataStore.addStatistic(statisticName, typePath, count);
+    this.recordStore.addStatistic(statisticName, typePath, count);
   }
 
   @Override
   public void clearProperties() {
-    this.dataStore.clearProperties();
+    this.recordStore.clearProperties();
   }
 
   @Override
   @PreDestroy
   public void close() {
-    this.dataStore.close();
+    this.recordStore.close();
   }
 
   @Override
   public Record create(final RecordDefinition objectMetaData) {
-    return this.dataStore.create(objectMetaData);
+    return this.recordStore.create(objectMetaData);
   }
 
   @Override
   public Record create(final String typePath) {
-    return this.dataStore.create(typePath);
+    return this.recordStore.create(typePath);
   }
 
   @Override
   public <T> T createPrimaryIdValue(final String typePath) {
-    return this.dataStore.createPrimaryIdValue(typePath);
+    return this.recordStore.createPrimaryIdValue(typePath);
   }
 
   @Override
   public Query createQuery(final String typePath, final String whereClause,
     final BoundingBox boundingBox) {
-    return this.dataStore.createQuery(typePath, whereClause, boundingBox);
+    return this.recordStore.createQuery(typePath, whereClause, boundingBox);
   }
 
   @Override
-  public DataObjectStoreQueryReader createReader() {
-    return this.dataStore.createReader();
+  public RecordStoreQueryReader createReader() {
+    return this.recordStore.createReader();
   }
 
   @Override
   public Writer<Record> createWriter() {
-    return this.dataStore.createWriter();
+    return this.recordStore.createWriter();
   }
 
   @Override
   public int delete(final Query query) {
-    return this.dataStore.delete(query);
+    return this.recordStore.delete(query);
   }
 
   @Override
   public void delete(final Record object) {
-    this.dataStore.delete(object);
+    this.recordStore.delete(object);
   }
 
   @Override
   public void deleteAll(final Collection<Record> objects) {
-    this.dataStore.deleteAll(objects);
+    this.recordStore.deleteAll(objects);
   }
 
   @Override
   public boolean equals(final Object obj) {
-    return this.dataStore.equals(obj);
+    return this.recordStore.equals(obj);
   }
 
   @Override
   public CodeTable getCodeTable(final String typePath) {
-    return this.dataStore.getCodeTable(typePath);
+    return this.recordStore.getCodeTable(typePath);
   }
 
   @Override
   public Map<String, CodeTable> getCodeTableByColumnMap() {
-    return this.dataStore.getCodeTableByColumnMap();
+    return this.recordStore.getCodeTableByColumnMap();
   }
 
   @Override
   public CodeTable getCodeTableByFieldName(final String columnName) {
-    return this.dataStore.getCodeTableByFieldName(columnName);
+    return this.recordStore.getCodeTableByFieldName(columnName);
   }
 
   @Override
   public Map<String, List<String>> getCodeTableColumNames() {
-    return this.dataStore.getCodeTableColumNames();
+    return this.recordStore.getCodeTableColumNames();
   }
 
   public AbstractRecordStore getDataStore() {
-    return this.dataStore;
+    return this.recordStore;
   }
 
   @Override
   public GeometryFactory getGeometryFactory() {
-    return this.dataStore.getGeometryFactory();
+    return this.recordStore.getGeometryFactory();
   }
 
   @Override
   public String getLabel() {
-    return this.dataStore.getLabel();
+    return this.recordStore.getLabel();
   }
 
   @Override
   public Map<String, Object> getProperties() {
-    return this.dataStore.getProperties();
+    return this.recordStore.getProperties();
   }
 
   @Override
   public <C> C getProperty(final String name) {
-    return this.dataStore.getProperty(name);
+    return this.recordStore.getProperty(name);
   }
 
   @Override
   public <C> C getProperty(final String name, final C defaultValue) {
-    return this.dataStore.getProperty(name, defaultValue);
+    return this.recordStore.getProperty(name, defaultValue);
   }
 
   @Override
   public RecordDefinition getRecordDefinition(final RecordDefinition objectMetaData) {
-    return this.dataStore.getRecordDefinition(objectMetaData);
+    return this.recordStore.getRecordDefinition(objectMetaData);
   }
 
   @Override
   public RecordDefinition getRecordDefinition(final String typePath) {
-    return this.dataStore.getRecordDefinition(typePath);
+    return this.recordStore.getRecordDefinition(typePath);
   }
 
   @Override
   public RecordFactory getRecordFactory() {
-    return this.dataStore.getRecordFactory();
+    return this.recordStore.getRecordFactory();
   }
 
   @Override
   public int getRowCount(final Query query) {
-    return this.dataStore.getRowCount(query);
+    return this.recordStore.getRowCount(query);
   }
 
   @Override
   public RecordStoreSchema getSchema(final String schemaName) {
-    return this.dataStore.getSchema(schemaName);
+    return this.recordStore.getSchema(schemaName);
   }
 
   @Override
   public Map<String, RecordStoreSchema> getSchemaMap() {
-    return this.dataStore.getSchemaMap();
+    return this.recordStore.getSchemaMap();
   }
 
   @Override
   public List<RecordStoreSchema> getSchemas() {
-    return this.dataStore.getSchemas();
+    return this.recordStore.getSchemas();
   }
 
   @Override
   public StatisticsMap getStatistics() {
-    return this.dataStore.getStatistics();
+    return this.recordStore.getStatistics();
   }
 
   @Override
   public Statistics getStatistics(final String name) {
-    return this.dataStore.getStatistics(name);
+    return this.recordStore.getStatistics(name);
   }
 
   @Override
   public String getString(final Object name) {
-    return this.dataStore.getString(name);
+    return this.recordStore.getString(name);
   }
 
   @Override
   public PlatformTransactionManager getTransactionManager() {
-    return this.dataStore.getTransactionManager();
+    return this.recordStore.getTransactionManager();
   }
 
   @Override
   public List<String> getTypeNames(final String schemaName) {
-    return this.dataStore.getTypeNames(schemaName);
+    return this.recordStore.getTypeNames(schemaName);
   }
 
   @Override
   public List<RecordDefinition> getTypes(final String namespace) {
-    return this.dataStore.getTypes(namespace);
+    return this.recordStore.getTypes(namespace);
   }
 
   @Override
   public Writer<Record> getWriter() {
-    return this.dataStore.getWriter();
+    return this.recordStore.getWriter();
   }
 
   @Override
   public int hashCode() {
-    return this.dataStore.hashCode();
+    return this.recordStore.hashCode();
   }
 
   @Override
   @PostConstruct
   public void initialize() {
-    this.dataStore.initialize();
+    this.recordStore.initialize();
   }
 
   @Override
   public void insert(final Record dataObject) {
-    this.dataStore.insert(dataObject);
+    this.recordStore.insert(dataObject);
   }
 
   @Override
   public void insertAll(final Collection<Record> objects) {
-    this.dataStore.insertAll(objects);
+    this.recordStore.insertAll(objects);
   }
 
   @Override
   public boolean isEditable(final String typePath) {
-    return this.dataStore.isEditable(typePath);
+    return this.recordStore.isEditable(typePath);
   }
 
   @Override
   public Record load(final String typePath, final Object... id) {
-    return this.dataStore.load(typePath, id);
+    return this.recordStore.load(typePath, id);
   }
 
   @Override
@@ -281,114 +282,109 @@ public class DelegatingDataObjectStore extends AbstractRecordStore {
 
   @Override
   public Record lock(final String typePath, final Object id) {
-    return this.dataStore.lock(typePath, id);
+    return this.recordStore.lock(typePath, id);
   }
 
   @Override
   public ResultPager<Record> page(final Query query) {
-    return this.dataStore.page(query);
+    return this.recordStore.page(query);
   }
 
   @Override
   public Reader<Record> query(final List<?> queries) {
-    return this.dataStore.query(queries);
+    return this.recordStore.query(queries);
   }
 
   @Override
   public Reader<Record> query(final Query... queries) {
-    return this.dataStore.query(queries);
+    return this.recordStore.query(queries);
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory dataObjectFactory, final String typePath,
+  public Reader<Record> query(final RecordFactory recordFactory, final String typePath,
     final Geometry geometry) {
-    return this.dataStore.query(dataObjectFactory, typePath, geometry);
+    return this.recordStore.query(recordFactory, typePath, geometry);
   }
 
   @Override
   public Reader<Record> query(final String path) {
-    return this.dataStore.query(path);
+    return this.recordStore.query(path);
   }
 
   @Override
   public Record queryFirst(final Query query) {
-    return this.dataStore.queryFirst(query);
+    return this.recordStore.queryFirst(query);
   }
 
   @Override
   public void removeProperty(final String propertyName) {
-    this.dataStore.removeProperty(propertyName);
+    this.recordStore.removeProperty(propertyName);
   }
 
   @Override
   public void setCodeTableColumNames(final Map<String, List<String>> domainColumNames) {
-    this.dataStore.setCodeTableColumNames(domainColumNames);
+    this.recordStore.setCodeTableColumNames(domainColumNames);
   }
 
   @Override
-  public void setCommonMetaDataProperties(
-    final List<RecordDefinitionProperty> commonMetaDataProperties) {
-    this.dataStore.setCommonMetaDataProperties(commonMetaDataProperties);
-  }
-
-  @Override
-  public void setDataObjectFactory(final RecordFactory dataObjectFactory) {
-    this.dataStore.setDataObjectFactory(dataObjectFactory);
+  public void setCommonRecordDefinitionProperties(
+    final List<RecordDefinitionProperty> commonRecordDefinitionProperties) {
+    this.recordStore.setCommonRecordDefinitionProperties(commonRecordDefinitionProperties);
   }
 
   @Override
   public void setGeometryFactory(final GeometryFactory geometryFactory) {
-    this.dataStore.setGeometryFactory(geometryFactory);
+    this.recordStore.setGeometryFactory(geometryFactory);
   }
 
   @Override
   public void setLabel(final String label) {
-    this.dataStore.setLabel(label);
+    this.recordStore.setLabel(label);
   }
 
   @Override
   public void setProperties(final Map<String, ? extends Object> properties) {
-    this.dataStore.setProperties(properties);
+    this.recordStore.setProperties(properties);
   }
 
   @Override
   public void setProperty(final String name, final Object value) {
-    this.dataStore.setProperty(name, value);
+    this.recordStore.setProperty(name, value);
   }
 
   @Override
   public void setPropertySoft(final String name, final Object value) {
-    this.dataStore.setPropertySoft(name, value);
+    this.recordStore.setPropertySoft(name, value);
   }
 
   @Override
   public void setPropertyWeak(final String name, final Object value) {
-    this.dataStore.setPropertyWeak(name, value);
+    this.recordStore.setPropertyWeak(name, value);
   }
 
   @Override
-  public void setSchemaMap(final Map<String, RecordStoreSchema> schemaMap) {
-    this.dataStore.setSchemaMap(schemaMap);
+  public void setRecordFactory(final RecordFactory recordFactory) {
+    this.recordStore.setRecordFactory(recordFactory);
   }
 
   @Override
-  public void setTypeMetaDataProperties(
+  public void setTypeRecordDefinitionProperties(
     final Map<String, List<RecordDefinitionProperty>> typeMetaProperties) {
-    this.dataStore.setTypeMetaDataProperties(typeMetaProperties);
+    this.recordStore.setTypeRecordDefinitionProperties(typeMetaProperties);
   }
 
   @Override
   public String toString() {
-    return this.dataStore.toString();
+    return this.recordStore.toString();
   }
 
   @Override
   public void update(final Record object) {
-    this.dataStore.update(object);
+    this.recordStore.update(object);
   }
 
   @Override
   public void updateAll(final Collection<Record> objects) {
-    this.dataStore.updateAll(objects);
+    this.recordStore.updateAll(objects);
   }
 }

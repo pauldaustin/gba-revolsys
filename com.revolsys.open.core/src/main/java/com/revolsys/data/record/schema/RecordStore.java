@@ -16,6 +16,7 @@ import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
 import com.vividsolutions.jts.geom.Geometry;
@@ -63,6 +64,8 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
   CodeTable getCodeTableByFieldName(String columnName);
 
   RecordStoreConnected getConnected();
+
+  GeometryFactory getGeometryFactory();
 
   String getLabel();
 
@@ -147,7 +150,7 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   Record queryFirst(Query query);
 
-  void setDataObjectFactory(RecordFactory dataObjectFactory);
+  void setRecordFactory(RecordFactory dataObjectFactory);
 
   void setLabel(String label);
 

@@ -70,7 +70,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
   }
 
   public void addValue(final Record code) {
-    final Object id = code.getValue(getIdAttributeName());
+    final Object id = code.getValue(getIdFieldName());
     final List<Object> values = new ArrayList<Object>();
     for (final String attributeName : this.valueFieldNames) {
       final Object value = code.getValue(attributeName);
@@ -134,7 +134,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
   }
 
   @Override
-  public List<String> getAttributeAliases() {
+  public List<String> getFieldAliases() {
     return this.attributeAliases;
   }
 
@@ -154,15 +154,15 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
   }
 
   @Override
-  public String getIdAttributeName() {
+  public String getIdFieldName() {
     if (Property.hasValue(this.idFieldName)) {
       return this.idFieldName;
     } else if (this.recordDefinition == null) {
       return "";
     } else {
-      final String idAttributeName = this.recordDefinition.getIdFieldName();
-      if (Property.hasValue(idAttributeName)) {
-        return idAttributeName;
+      final String idFieldName = this.recordDefinition.getIdFieldName();
+      if (Property.hasValue(idFieldName)) {
+        return idFieldName;
       } else {
         return this.recordDefinition.getFieldName(0);
       }
@@ -337,8 +337,8 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
     this.creationTimestampAttributeName = creationTimestampAttributeName;
   }
 
-  public void setIdAttributeName(final String idAttributeName) {
-    this.idFieldName = idAttributeName;
+  public void setIdFieldName(final String idFieldName) {
+    this.idFieldName = idFieldName;
   }
 
   public void setLoadAll(final boolean loadAll) {
@@ -394,7 +394,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
 
   @Override
   public String toString() {
-    return this.typePath + " " + getIdAttributeName() + " " + this.valueFieldNames;
+    return this.typePath + " " + getIdFieldName() + " " + this.valueFieldNames;
 
   }
 

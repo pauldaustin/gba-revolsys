@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.swing.JComponent;
 
 public interface CodeTable extends Cloneable {
-  List<String> getAttributeAliases();
+  List<String> getFieldAliases();
 
   Map<Object, List<Object>> getCodes();
 
@@ -14,7 +14,7 @@ public interface CodeTable extends Cloneable {
 
   <T> T getId(final Object... values);
 
-  String getIdAttributeName();
+  String getIdFieldName();
 
   Map<String, ? extends Object> getMap(final Object id);
 

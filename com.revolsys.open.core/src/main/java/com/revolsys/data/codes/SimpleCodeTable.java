@@ -48,7 +48,7 @@ public class SimpleCodeTable extends AbstractCodeTable {
   }
 
   @Override
-  public String getIdAttributeName() {
+  public String getIdFieldName() {
     return getName();
   }
 

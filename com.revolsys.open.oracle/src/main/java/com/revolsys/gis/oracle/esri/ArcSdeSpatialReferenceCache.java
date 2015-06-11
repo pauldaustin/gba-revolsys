@@ -65,70 +65,65 @@ public class ArcSdeSpatialReferenceCache {
   }
 
   protected ArcSdeSpatialReference getSpatialReference(final String sql, final int esriSrid) {
-    try {
-      final Connection connection = this.dataStore.getSqlConnection();
+    try (
+      final Connection connection = this.dataStore.getSqlConnection()) {
+      PreparedStatement statement = null;
+      ResultSet resultSet = null;
       try {
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
 
-          statement = connection.prepareStatement(sql);
-          statement.setInt(1, esriSrid);
-          resultSet = statement.executeQuery();
-          if (resultSet.next()) {
-            final String name = resultSet.getString(2);
-            final BigDecimal xOffset = resultSet.getBigDecimal(3);
-            final BigDecimal yOffset = resultSet.getBigDecimal(4);
-            final BigDecimal zOffset = resultSet.getBigDecimal(5);
-            final BigDecimal mOffset = resultSet.getBigDecimal(6);
-            final BigDecimal scale = resultSet.getBigDecimal(7);
-            final BigDecimal zScale = resultSet.getBigDecimal(8);
-            final BigDecimal mScale = resultSet.getBigDecimal(9);
-            int srid = resultSet.getInt(10);
-            final String wkt = resultSet.getString(11);
-            final GeometryFactory geometryFactory;
+        statement = connection.prepareStatement(sql);
+        statement.setInt(1, esriSrid);
+        resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+          final String name = resultSet.getString(2);
+          final BigDecimal xOffset = resultSet.getBigDecimal(3);
+          final BigDecimal yOffset = resultSet.getBigDecimal(4);
+          final BigDecimal zOffset = resultSet.getBigDecimal(5);
+          final BigDecimal mOffset = resultSet.getBigDecimal(6);
+          final BigDecimal scale = resultSet.getBigDecimal(7);
+          final BigDecimal zScale = resultSet.getBigDecimal(8);
+          final BigDecimal mScale = resultSet.getBigDecimal(9);
+          int srid = resultSet.getInt(10);
+          final String wkt = resultSet.getString(11);
+          final GeometryFactory geometryFactory;
+          if (srid <= 0) {
+            final CoordinateSystem coordinateSystem = new WktCsParser(wkt).parse();
+            final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
+            srid = esriCoordinateSystem.getId();
             if (srid <= 0) {
-              final CoordinateSystem coordinateSystem = new WktCsParser(wkt).parse();
-              final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
-              srid = esriCoordinateSystem.getId();
-              if (srid <= 0) {
-                geometryFactory = GeometryFactory.fixed(coordinateSystem, 3, scale.doubleValue(),
-                  zScale.doubleValue());
-              } else {
-                geometryFactory = GeometryFactory.getFactory(srid, 3, scale.doubleValue(),
-                  zScale.doubleValue());
-              }
+              geometryFactory = GeometryFactory.fixed(coordinateSystem, 3, scale.doubleValue(),
+                zScale.doubleValue());
             } else {
               geometryFactory = GeometryFactory.getFactory(srid, 3, scale.doubleValue(),
                 zScale.doubleValue());
             }
-
-            final ArcSdeSpatialReference spatialReference = new ArcSdeSpatialReference(
-              geometryFactory);
-            spatialReference.setEsriSrid(esriSrid);
-            spatialReference.setName(name);
-            spatialReference.setXOffset(xOffset);
-            spatialReference.setYOffset(yOffset);
-            spatialReference.setZOffset(zOffset);
-            spatialReference.setMOffset(mOffset);
-            spatialReference.setXyScale(scale);
-            spatialReference.setZScale(zScale);
-            spatialReference.setMScale(mScale);
-            spatialReference.setSrid(srid);
-            spatialReference.setCsWkt(wkt);
-            this.spatialReferences.put(esriSrid, spatialReference);
-            return spatialReference;
+          } else {
+            geometryFactory = GeometryFactory.getFactory(srid, 3, scale.doubleValue(),
+              zScale.doubleValue());
           }
-        } finally {
-          JdbcUtils.close(statement, resultSet);
+
+          final ArcSdeSpatialReference spatialReference = new ArcSdeSpatialReference(
+            geometryFactory);
+          spatialReference.setEsriSrid(esriSrid);
+          spatialReference.setName(name);
+          spatialReference.setXOffset(xOffset);
+          spatialReference.setYOffset(yOffset);
+          spatialReference.setZOffset(zOffset);
+          spatialReference.setMOffset(mOffset);
+          spatialReference.setXyScale(scale);
+          spatialReference.setZScale(zScale);
+          spatialReference.setMScale(mScale);
+          spatialReference.setSrid(srid);
+          spatialReference.setCsWkt(wkt);
+          this.spatialReferences.put(esriSrid, spatialReference);
+          return spatialReference;
         }
       } finally {
-        this.dataStore.releaseSqlConnection(connection);
+        JdbcUtils.close(statement, resultSet);
       }
     } catch (final SQLException e) {
       throw new RuntimeException("Unable to get srid " + esriSrid, e);
     }
     return null;
   }
-
 }

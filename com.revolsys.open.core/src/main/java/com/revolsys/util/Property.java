@@ -27,6 +27,7 @@ import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.beans.WeakPropertyChangeListener;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.ObjectWithProperties;
 
 public final class Property {
@@ -78,6 +79,17 @@ public final class Property {
     return null;
   }
 
+  public static boolean equals(final Object object1, final Object object2, final String propertyName) {
+    if (object1 == object2) {
+      return true;
+    } else if (object1 != null && object2 != null) {
+      final Object value1 = getSimple(object1, propertyName);
+      final Object value2 = getSimple(object2, propertyName);
+      return EqualsRegistry.equal(value1, value2);
+    }
+    return false;
+  }
+
   public static void firePropertyChange(final Object source, final PropertyChangeEvent event) {
     final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
     if (propertyChangeSupport != null) {
@@ -107,8 +119,8 @@ public final class Property {
       return null;
     } else {
       if (object instanceof Record) {
-        final Record dataObject = (Record)object;
-        return dataObject.getValueByPath(key);
+        final Record record = (Record)object;
+        return record.getValueByPath(key);
       } else if (object instanceof Map) {
         final Map<String, ?> map = (Map<String, ?>)object;
         return (T)map.get(key);
@@ -359,6 +371,28 @@ public final class Property {
     }
   }
 
+  public static boolean isEqualTrim(final String oldValue, final String newValue) {
+    final boolean oldHasValue = Property.hasValue(oldValue);
+    final boolean newHasValue = Property.hasValue(newValue);
+    if (oldHasValue) {
+      if (newHasValue) {
+        if (EqualsRegistry.equal(oldValue.trim(), newValue.trim())) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      if (newHasValue) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
   public static PropertyChangeSupport propertyChangeSupport(final Object object) {
     if (object instanceof PropertyChangeSupport) {
       return (PropertyChangeSupport)object;
@@ -513,8 +547,8 @@ public final class Property {
   public static void set(final Object object, final String propertyName, final Object value) {
     if (object != null) {
       if (object instanceof Record) {
-        final Record dataObject = (Record)object;
-        dataObject.setValueByPath(propertyName, value);
+        final Record record = (Record)object;
+        record.setValueByPath(propertyName, value);
       } else if (object instanceof Map) {
         @SuppressWarnings("unchecked")
         final Map<String, Object> map = (Map<String, Object>)object;
@@ -527,7 +561,7 @@ public final class Property {
 
   public static String toString(final Object object, final String methodName,
     final List<Object> parameters) {
-    final StringBuffer string = new StringBuffer();
+    final StringBuilder string = new StringBuilder();
 
     if (object == null) {
     } else if (object instanceof Class<?>) {

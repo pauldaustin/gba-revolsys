@@ -30,7 +30,7 @@ public class JdbcCodeTable extends AbstractCodeTable {
 
   private DataSource dataSource;
 
-  private JdbcDataObjectStore dataStore;
+  private JdbcRecordStore dataStore;
 
   private String idByValueSql;
 
@@ -159,12 +159,12 @@ public class JdbcCodeTable extends AbstractCodeTable {
     return this.dataSource;
   }
 
-  public JdbcDataObjectStore getDataStore() {
+  public JdbcRecordStore getDataStore() {
     return this.dataStore;
   }
 
   @Override
-  public String getIdAttributeName() {
+  public String getIdFieldName() {
     return this.idColumn;
   }
 
@@ -350,7 +350,7 @@ public class JdbcCodeTable extends AbstractCodeTable {
     this.dataSource = dataSource;
   }
 
-  public void setDataStore(final JdbcDataObjectStore dataStore) {
+  public void setDataStore(final JdbcRecordStore dataStore) {
     this.dataStore = dataStore;
     if (dataStore != null) {
       this.dataSource = dataStore.getDataSource();

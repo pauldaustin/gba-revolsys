@@ -101,7 +101,7 @@ CodeTable, Cloneable {
   }
 
   @Override
-  public List<String> getAttributeAliases() {
+  public List<String> getFieldAliases() {
     return Collections.emptyList();
   }
 

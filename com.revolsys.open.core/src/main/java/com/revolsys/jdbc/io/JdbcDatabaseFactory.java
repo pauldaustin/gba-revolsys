@@ -14,12 +14,12 @@ public interface JdbcDatabaseFactory extends RecordStoreFactory {
 
   void closeDataSource(DataSource dataSource);
 
-  JdbcDataObjectStore createDataObjectStore(DataSource dataSource);
+  JdbcRecordStore createDataObjectStore(DataSource dataSource);
 
   DataSource createDataSource(Map<String, ? extends Object> connectionProperties);
 
   @Override
-  JdbcDataObjectStore createRecordStore(Map<String, ? extends Object> connectionProperties);
+  JdbcRecordStore createRecordStore(Map<String, ? extends Object> connectionProperties);
 
   List<String> getProductNames();
 

@@ -10,14 +10,14 @@ import javax.sql.DataSource;
 import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.io.JdbcDataObjectStore;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.util.Property;
 
 public class JdbcCodeTableProperty extends CodeTableProperty {
 
   private DataSource dataSource;
 
-  private JdbcDataObjectStore dataStore;
+  private JdbcRecordStore dataStore;
 
   private String insertSql;
 
@@ -78,14 +78,14 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
   }
 
   @Override
-  public JdbcDataObjectStore getRecordStore() {
+  public JdbcRecordStore getRecordStore() {
     return this.dataStore;
   }
 
   @Override
   public void setRecordDefinition(final RecordDefinition metaData) {
     super.setRecordDefinition(metaData);
-    this.dataStore = (JdbcDataObjectStore)metaData.getRecordStore();
+    this.dataStore = (JdbcRecordStore)metaData.getRecordStore();
     this.dataSource = this.dataStore.getDataSource();
     if (metaData != null) {
       this.tableName = JdbcUtils.getQualifiedTableName(metaData.getPath());

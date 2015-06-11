@@ -1,15 +1,15 @@
-package com.revolsys.gis.data.io;
+package com.revolsys.data.record.io;
 
 import java.util.Map;
 
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 
-public interface DataObjectStoreExtension {
+public interface RecordStoreExtension {
 
-  public abstract void initialize(RecordStore dataStore, Map<String, Object> connectionProperties);
+  public abstract void initialize(RecordStore recordStore, Map<String, Object> connectionProperties);
 
-  boolean isEnabled(RecordStore dataStore);
+  boolean isEnabled(RecordStore recordStore);
 
   public abstract void postProcess(RecordStoreSchema schema);
 

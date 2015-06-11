@@ -11,7 +11,7 @@ import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
 public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = EqualIgnoreAttributes.class.getName()
-      + ".propertyName";
+    + ".propertyName";
 
   public static EqualIgnoreAttributes getProperty(final Record object) {
     final RecordDefinition metaData = object.getRecordDefinition();
@@ -77,8 +77,8 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   public void setRecordDefinition(final RecordDefinition metaData) {
     super.setRecordDefinition(metaData);
     if (this.attributeNames.contains(DataObjectEquals.EXCLUDE_ID)) {
-      final String idAttributeName = metaData.getIdFieldName();
-      this.attributeNames.add(idAttributeName);
+      final String idFieldName = metaData.getIdFieldName();
+      this.attributeNames.add(idFieldName);
     }
     if (this.attributeNames.contains(DataObjectEquals.EXCLUDE_GEOMETRY)) {
       final String geometryAttributeName = metaData.getGeometryFieldName();

@@ -26,7 +26,7 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.gis.io.Statistics;
-import com.revolsys.jdbc.io.JdbcDataObjectStore;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 
@@ -36,7 +36,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
 
   private RecordFactory dataObjectFactory;
 
-  private JdbcDataObjectStore dataStore;
+  private JdbcRecordStore dataStore;
 
   private RecordDefinition metaData;
 
@@ -51,7 +51,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
   private ArcSdeBinaryGeometryDataStoreUtil sdeUtil;
 
   public ArcSdeBinaryGeometryQueryIterator(final ArcSdeBinaryGeometryDataStoreUtil sdeUtil,
-    final JdbcDataObjectStore dataStore, final Query query, final Map<String, Object> properties) {
+    final JdbcRecordStore dataStore, final Query query, final Map<String, Object> properties) {
     this.sdeUtil = sdeUtil;
     this.dataObjectFactory = query.getProperty("recordFactory");
     if (this.dataObjectFactory == null) {

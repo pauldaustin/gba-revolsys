@@ -27,7 +27,7 @@ import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
-import com.revolsys.jdbc.io.DataStoreIteratorFactory;
+import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.Property;
@@ -132,7 +132,7 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
   public Object getNextPrimaryKey(final String sequenceName) {
     final String sql = "SELECT " + sequenceName + ".NEXTVAL FROM SYS.DUAL";
     try {
-      return JdbcUtils.selectLong(getDataSource(), getConnection(), sql);
+      return JdbcUtils.selectLong(getDataSource(), getJdbcConnection(), sql);
     } catch (final SQLException e) {
       throw new IllegalArgumentException("Cannot create ID for " + sequenceName, e);
     }
@@ -214,8 +214,8 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
           + "join all_tab_comments C on (p.owner = c.owner and p.table_name = c.table_name) "
           + "where p.owner = ? and c.table_type in ('TABLE', 'VIEW') and p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') ");
 
-      addDataStoreExtension(new ArcSdeStGeometryDataStoreExtension());
-      addDataStoreExtension(new ArcSdeBinaryGeometryDataStoreExtension());
+      addRecordStoreExtension(new ArcSdeStGeometryDataStoreExtension());
+      addRecordStoreExtension(new ArcSdeBinaryGeometryDataStoreExtension());
 
     }
   }
@@ -224,7 +224,7 @@ public class OracleDataObjectStore extends AbstractJdbcRecordStore {
     setExcludeTablePatterns(".*\\$");
     setSqlPrefix("BEGIN ");
     setSqlSuffix(";END;");
-    setIteratorFactory(new DataStoreIteratorFactory(this, "createOracleIterator"));
+    setIteratorFactory(new RecordStoreIteratorFactory(this, "createOracleIterator"));
   }
 
   @Override

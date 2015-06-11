@@ -41,7 +41,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
 
   private RecordFactory dataObjectFactory;
 
-  private JdbcDataObjectStore dataStore;
+  private JdbcRecordStore dataStore;
 
   private RecordDefinition metaData;
 
@@ -53,9 +53,9 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
 
   private final String sql;
 
-  public JdbcQueryResultPager(final JdbcDataObjectStore dataStore,
+  public JdbcQueryResultPager(final JdbcRecordStore dataStore,
     final Map<String, Object> properties, final Query query) {
-    this.connection = dataStore.getConnection();
+    this.connection = dataStore.getJdbcConnection();
     this.dataSource = dataStore.getDataSource();
 
     if (this.dataSource != null) {
@@ -119,7 +119,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     return this.dataSource;
   }
 
-  public JdbcDataObjectStore getDataStore() {
+  public JdbcRecordStore getDataStore() {
     return this.dataStore;
   }
 

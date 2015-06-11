@@ -77,10 +77,10 @@ public class CopyRecords extends AbstractProcess {
             LoggerFactory.getLogger(getClass()).error("Cannot find target table: " + this.typePath);
           } else {
             if (this.hasSequence) {
-              final String idAttributeName = targetMetaData.getIdFieldName();
+              final String idFieldName = targetMetaData.getIdFieldName();
               Object maxId = this.targetDataStore.createPrimaryIdValue(this.typePath);
               for (final Record sourceRecord : reader) {
-                final Object sourceId = sourceRecord.getValue(idAttributeName);
+                final Object sourceId = sourceRecord.getValue(idFieldName);
                 while (CompareUtil.compare(maxId, sourceId) < 0) {
                   maxId = this.targetDataStore.createPrimaryIdValue(this.typePath);
                 }

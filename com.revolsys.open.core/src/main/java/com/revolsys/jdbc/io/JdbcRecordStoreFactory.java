@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import com.revolsys.data.record.io.RecordStoreFactory;
 import com.revolsys.data.record.schema.RecordStore;
 
-public class JdbcDataObjectStoreFactory implements RecordStoreFactory {
+public class JdbcRecordStoreFactory implements RecordStoreFactory {
 
   private static final List<String> URL_PATTERNS = Arrays.asList("jdbc:.*");
 
@@ -25,7 +25,7 @@ public class JdbcDataObjectStoreFactory implements RecordStoreFactory {
   }
 
   @Override
-  public JdbcDataObjectStore createRecordStore(
+  public JdbcRecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
     final JdbcDatabaseFactory databaseFactory = JdbcFactoryRegistry.databaseFactory(connectionProperties);
     return databaseFactory.createRecordStore(connectionProperties);
@@ -44,7 +44,7 @@ public class JdbcDataObjectStoreFactory implements RecordStoreFactory {
   @Override
   public Class<? extends RecordStore> getRecordStoreInterfaceClass(
     final Map<String, ? extends Object> connectionProperties) {
-    return JdbcDataObjectStore.class;
+    return JdbcRecordStore.class;
   }
 
   @Override

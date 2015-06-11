@@ -25,7 +25,7 @@ import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
-import com.revolsys.jdbc.io.DataStoreIteratorFactory;
+import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.Property;
@@ -88,7 +88,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
   public Object getNextPrimaryKey(final String sequenceName) {
     final String sql = "SELECT nextval(?)";
     try {
-      return JdbcUtils.selectLong(getDataSource(), getConnection(), sql, sequenceName);
+      return JdbcUtils.selectLong(getDataSource(), getJdbcConnection(), sql, sequenceName);
     } catch (final SQLException e) {
       throw new IllegalArgumentException("Cannot create ID for " + sequenceName, e);
     }
@@ -202,7 +202,7 @@ public class PostgreSQLDataObjectStore extends AbstractJdbcRecordStore {
   }
 
   protected void initSettings() {
-    setIteratorFactory(new DataStoreIteratorFactory(PostgreSQLDataObjectStore.class,
+    setIteratorFactory(new RecordStoreIteratorFactory(PostgreSQLDataObjectStore.class,
         "createPostgreSQLIterator"));
   }
 

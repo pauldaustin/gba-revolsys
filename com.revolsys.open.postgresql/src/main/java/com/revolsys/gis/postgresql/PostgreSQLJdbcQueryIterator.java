@@ -8,14 +8,14 @@ import org.postgis.Point;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.jdbc.io.JdbcDataObjectStore;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcQueryIterator;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 
 public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
 
-  public PostgreSQLJdbcQueryIterator(final JdbcDataObjectStore dataStore, final Query query,
+  public PostgreSQLJdbcQueryIterator(final JdbcRecordStore dataStore, final Query query,
     final Map<String, Object> properties) {
     super(dataStore, query, properties);
   }

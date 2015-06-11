@@ -37,7 +37,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   private DataSource dataSource;
 
-  private JdbcDataObjectStore dataStore;
+  private JdbcRecordStore dataStore;
 
   private boolean flushBetweenTypes = false;
 
@@ -83,14 +83,14 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   private boolean throwExceptions = false;
 
-  public JdbcWriterImpl(final JdbcDataObjectStore dataStore) {
+  public JdbcWriterImpl(final JdbcRecordStore dataStore) {
     this(dataStore, dataStore.getStatistics());
   }
 
-  public JdbcWriterImpl(final JdbcDataObjectStore dataStore, final StatisticsMap statistics) {
+  public JdbcWriterImpl(final JdbcRecordStore dataStore, final StatisticsMap statistics) {
     this.dataStore = dataStore;
     this.statistics = statistics;
-    setConnection(dataStore.getConnection());
+    setConnection(dataStore.getJdbcConnection());
     setDataSource(dataStore.getDataSource());
     statistics.connect();
   }
@@ -338,11 +338,11 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
       sqlBuffer.append(tableName);
       sqlBuffer.append(" (");
       if (generatePrimaryKey) {
-        final String idAttributeName = type.getIdFieldName();
+        final String idFieldName = type.getIdFieldName();
         if (this.quoteColumnNames) {
-          sqlBuffer.append('"').append(idAttributeName).append('"');
+          sqlBuffer.append('"').append(idFieldName).append('"');
         } else {
-          sqlBuffer.append(idAttributeName);
+          sqlBuffer.append(idFieldName);
         }
         sqlBuffer.append(",");
       }
@@ -455,8 +455,8 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
     final String typePath = objectType.getPath();
     final RecordDefinition metaData = getDataObjectMetaData(typePath);
     flushIfRequired(metaData);
-    final String idAttributeName = metaData.getIdFieldName();
-    final boolean hasId = idAttributeName != null;
+    final String idFieldName = metaData.getIdFieldName();
+    final boolean hasId = idFieldName != null;
 
     final GlobalIdProperty globalIdProperty = GlobalIdProperty.getProperty(object);
     if (globalIdProperty != null) {
@@ -465,7 +465,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
       }
     }
 
-    final boolean hasIdValue = hasId && object.getValue(idAttributeName) != null;
+    final boolean hasIdValue = hasId && object.getValue(idFieldName) != null;
 
     if (!hasId || hasIdValue) {
       insert(object, typePath, metaData);
@@ -477,7 +477,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   }
 
   private void insert(final Record object, final String typePath, final RecordDefinition metaData)
-      throws SQLException {
+    throws SQLException {
     PreparedStatement statement = this.typeInsertStatementMap.get(typePath);
     if (statement == null) {
       final String sql = getInsertSql(metaData, false);
@@ -700,16 +700,16 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
         switch (state) {
           case New:
             insert(object);
-            break;
+          break;
           case Modified:
             update(object);
-            break;
+          break;
           case Persisted:
-            // No action required
-            break;
+          // No action required
+          break;
           case Deleted:
             delete(object);
-            break;
+          break;
           default:
             throw new IllegalStateException("State not known");
         }

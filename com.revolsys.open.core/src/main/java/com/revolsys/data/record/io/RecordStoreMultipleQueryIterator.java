@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.io;
+package com.revolsys.data.record.io;
 
 import java.util.NoSuchElementException;
 
@@ -6,13 +6,13 @@ import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.collection.iterator.AbstractMultipleIterator;
 import com.revolsys.data.record.Record;
 
-public class DataStoreMultipleQueryIterator extends AbstractMultipleIterator<Record> {
+public class RecordStoreMultipleQueryIterator extends AbstractMultipleIterator<Record> {
 
-  private DataObjectStoreQueryReader reader;
+  private RecordStoreQueryReader reader;
 
   private int queryIndex = 0;
 
-  public DataStoreMultipleQueryIterator(final DataObjectStoreQueryReader reader) {
+  public RecordStoreMultipleQueryIterator(final RecordStoreQueryReader reader) {
     this.reader = reader;
   }
 

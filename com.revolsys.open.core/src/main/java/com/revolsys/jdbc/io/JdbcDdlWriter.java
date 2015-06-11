@@ -87,7 +87,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     final String referencedTypeName = referencedMetaData.getPath();
     final String referencedAttributeName = referencedMetaData.getIdFieldName();
     final String constraintName = getTableAlias(metaData) + "_" + getTableAlias(referencedMetaData)
-        + "_FK";
+      + "_FK";
     writeAddForeignKeyConstraint(typePath, constraintName, attributeName, referencedTypeName,
       referencedAttributeName);
   }
@@ -99,7 +99,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     final String referencedTypeName = referencedMetaData.getPath();
     final String referencedAttributeName = referencedMetaData.getIdFieldName();
     final String constraintName = getTableAlias(metaData) + "_" + referenceTablePrefix + "_"
-        + getTableAlias(referencedMetaData) + "_FK";
+      + getTableAlias(referencedMetaData) + "_FK";
     writeAddForeignKeyConstraint(typePath, constraintName, attributeName, referencedTypeName,
       referencedAttributeName);
   }
@@ -121,11 +121,11 @@ public abstract class JdbcDdlWriter implements Cloneable {
   }
 
   public void writeAddPrimaryKeyConstraint(final RecordDefinition metaData) {
-    final String idAttributeName = metaData.getIdFieldName();
-    if (idAttributeName != null) {
+    final String idFieldName = metaData.getIdFieldName();
+    if (idFieldName != null) {
       final String typePath = metaData.getPath();
       final String constraintName = getTableAlias(metaData) + "_PK";
-      writeAddPrimaryKeyConstraint(typePath, constraintName, idAttributeName);
+      writeAddPrimaryKeyConstraint(typePath, constraintName, idFieldName);
     }
   }
 

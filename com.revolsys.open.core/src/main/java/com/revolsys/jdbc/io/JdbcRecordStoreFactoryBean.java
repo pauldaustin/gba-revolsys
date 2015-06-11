@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import com.revolsys.util.Property;
 
-public class JdbcDataObjectStoreFactoryBean extends AbstractFactoryBean<JdbcDataObjectStore>
+public class JdbcRecordStoreFactoryBean extends AbstractFactoryBean<JdbcRecordStore>
 implements ApplicationContextAware {
 
   private Map<String, Object> config = new LinkedHashMap<String, Object>();
@@ -24,8 +24,8 @@ implements ApplicationContextAware {
   private ApplicationContext applicationContext;
 
   @Override
-  protected JdbcDataObjectStore createInstance() throws Exception {
-    JdbcDataObjectStore dataObjectStore;
+  protected JdbcRecordStore createInstance() throws Exception {
+    JdbcRecordStore dataObjectStore;
     final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry.getFactory(this.applicationContext);
     if (this.dataSource == null) {
       final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(this.config);
@@ -40,7 +40,7 @@ implements ApplicationContextAware {
   }
 
   @Override
-  protected void destroyInstance(final JdbcDataObjectStore dataObjectStore) throws Exception {
+  protected void destroyInstance(final JdbcRecordStore dataObjectStore) throws Exception {
     dataObjectStore.close();
     this.config = null;
     this.dataSource = null;
@@ -58,7 +58,7 @@ implements ApplicationContextAware {
 
   @Override
   public Class<?> getObjectType() {
-    return JdbcDataObjectStore.class;
+    return JdbcRecordStore.class;
   }
 
   public Map<String, Object> getProperties() {
