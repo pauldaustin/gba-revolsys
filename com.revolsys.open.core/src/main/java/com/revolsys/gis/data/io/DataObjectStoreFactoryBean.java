@@ -17,7 +17,7 @@ public class DataObjectStoreFactoryBean extends AbstractFactoryBean<RecordStore>
 
   @Override
   protected RecordStore createInstance() throws Exception {
-    final RecordStore dataObjectStore = RecordStoreFactoryRegistry.createDataObjectStore(this.config);
+    final RecordStore dataObjectStore = RecordStoreFactoryRegistry.createRecordStore(this.config);
     Property.set(dataObjectStore, this.properties);
     dataObjectStore.initialize();
     return dataObjectStore;

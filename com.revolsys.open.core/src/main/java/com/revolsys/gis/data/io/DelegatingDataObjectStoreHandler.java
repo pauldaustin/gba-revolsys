@@ -30,7 +30,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
     final Map<String, ? extends Object> config) {
     final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     final Class<?>[] interfaces = new Class<?>[] {
-      RecordStoreFactoryRegistry.getDataObjectStoreInterfaceClass(config)
+      RecordStoreFactoryRegistry.getRecordStoreInterfaceClass(config)
     };
     final DelegatingDataObjectStoreHandler handler = new DelegatingDataObjectStoreHandler(label,
       config);
@@ -66,7 +66,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
 
   protected RecordStore createDataStore() {
     if (this.config != null) {
-      final RecordStore dataStore = RecordStoreFactoryRegistry.createDataObjectStore(this.config);
+      final RecordStore dataStore = RecordStoreFactoryRegistry.createRecordStore(this.config);
       return dataStore;
     } else {
       throw new UnsupportedOperationException("Data store must be set manually");

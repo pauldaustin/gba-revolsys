@@ -250,7 +250,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       if (connectionProperties != null) {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("connection", connectionProperties);
-        RecordStoreConnectionManager.releaseDataStore(config);
+        RecordStoreConnectionManager.releaseRecordStore(config);
       }
       this.recordStore = null;
     }
@@ -292,14 +292,14 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties == null) {
         LoggerFactory.getLogger(getClass())
-          .error(
-            "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
+        .error(
+          "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
               + getPath());
         return false;
       } else {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("connection", connectionProperties);
-        dataStore = RecordStoreConnectionManager.getDataStore(config);
+        dataStore = RecordStoreConnectionManager.getRecordStore(config);
 
         if (dataStore == null) {
           LoggerFactory.getLogger(getClass()).error(
@@ -425,7 +425,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       synchronized (this.sync) {
         final BoundingBox loadBoundingBox = boundingBox.expandPercent(0.2);
         if (!this.boundingBox.contains(boundingBox)
-          && !this.loadingBoundingBox.contains(boundingBox)) {
+            && !this.loadingBoundingBox.contains(boundingBox)) {
           if (this.loadingWorker != null) {
             this.loadingWorker.cancel(true);
           }
@@ -462,12 +462,12 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     if (isExists()) {
       final PlatformTransactionManager transactionManager = this.recordStore.getTransactionManager();
       try (
-        Transaction transaction = new Transaction(transactionManager, Propagation.REQUIRES_NEW)) {
+          Transaction transaction = new Transaction(transactionManager, Propagation.REQUIRES_NEW)) {
         try {
           final RecordStore recordStore = getRecordStore();
           if (recordStore != null) {
             try (
-              final Writer<Record> writer = recordStore.createWriter()) {
+                final Writer<Record> writer = recordStore.createWriter()) {
               final RecordDefinition recordDefinition = getRecordDefinition();
               final String idFieldName = recordDefinition.getIdFieldName();
               final String idString = record.getIdString();

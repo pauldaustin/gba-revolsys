@@ -30,60 +30,60 @@ AbstractConnectionRegistryManager<RecordStoreConnectionRegistry, RecordStoreConn
   }
 
   // TODO make this garbage collectable with reference counting.
-  private static Map<Map<String, Object>, RecordStore> dataStoreByConfig = new HashMap<Map<String, Object>, RecordStore>();
+  private static Map<Map<String, Object>, RecordStore> recordStoreByConfig = new HashMap<>();
 
-  private static Map<Map<String, Object>, AtomicInteger> dataStoreCounts = new HashMap<Map<String, Object>, AtomicInteger>();
+  private static Map<Map<String, Object>, AtomicInteger> recordStoreCounts = new HashMap<>();
 
   public static RecordStoreConnectionManager get() {
     return INSTANCE;
   }
 
-  public static <V extends RecordStore> V getDataStore(final File file) {
+  public static <V extends RecordStore> V getRecordStore(final File file) {
     final Map<String, String> connectionProperties = Collections.singletonMap("url",
       FileUtil.toUrlString(file));
     final Map<String, Object> config = Collections.<String, Object> singletonMap("connection",
       connectionProperties);
-    return getDataStore(config);
+    return getRecordStore(config);
   }
 
   /**
-   * Get an initialized data store.
+   * Get an initialized record store.
    * @param connectionProperties
    * @return
    */
   @SuppressWarnings("unchecked")
-  public static <T extends RecordStore> T getDataStore(final Map<String, ? extends Object> config) {
+  public static <T extends RecordStore> T getRecordStore(final Map<String, ? extends Object> config) {
     @SuppressWarnings("rawtypes")
     final Map<String, Object> configClone = (Map)JavaBeanUtil.clone(config);
-    synchronized (dataStoreByConfig) {
-      RecordStore dataStore = dataStoreByConfig.get(configClone);
-      if (dataStore == null) {
+    synchronized (recordStoreByConfig) {
+      RecordStore recordStore = recordStoreByConfig.get(configClone);
+      if (recordStore == null) {
         final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone.get("connection");
         final String name = (String)connectionProperties.get("name");
         if (Property.hasValue(name)) {
-          dataStore = getDataStore(name);
-          if (dataStore == null) {
+          recordStore = getRecordStore(name);
+          if (recordStore == null) {
             // TODO give option to add
             return null;
           }
         } else {
-          dataStore = RecordStoreFactoryRegistry.createDataObjectStore(connectionProperties);
-          dataStore.setProperties(config);
-          dataStore.initialize();
+          recordStore = RecordStoreFactoryRegistry.createRecordStore(connectionProperties);
+          recordStore.setProperties(config);
+          recordStore.initialize();
         }
-        dataStoreByConfig.put(configClone, dataStore);
-        dataStoreCounts.put(configClone, new AtomicInteger(1));
+        recordStoreByConfig.put(configClone, recordStore);
+        recordStoreCounts.put(configClone, new AtomicInteger(1));
       } else {
-        final AtomicInteger count = dataStoreCounts.get(configClone);
+        final AtomicInteger count = recordStoreCounts.get(configClone);
         count.incrementAndGet();
       }
-      return (T)dataStore;
+      return (T)recordStore;
     }
   }
 
-  public static RecordStore getDataStore(final String name) {
+  public static RecordStore getRecordStore(final String name) {
     final RecordStoreConnectionManager connectionManager = get();
-    final List<RecordStoreConnectionRegistry> registries = new ArrayList<RecordStoreConnectionRegistry>();
+    final List<RecordStoreConnectionRegistry> registries = new ArrayList<>();
     registries.addAll(connectionManager.getConnectionRegistries());
     final RecordStoreConnectionRegistry threadRegistry = RecordStoreConnectionRegistry.getForThread();
     if (threadRegistry != null) {
@@ -91,52 +91,52 @@ AbstractConnectionRegistryManager<RecordStoreConnectionRegistry, RecordStoreConn
     }
     Collections.reverse(registries);
     for (final RecordStoreConnectionRegistry registry : registries) {
-      final RecordStoreConnection dataStoreConnection = registry.getConnection(name);
-      if (dataStoreConnection != null) {
-        return dataStoreConnection.getRecordStore();
+      final RecordStoreConnection recordStoreConnection = registry.getConnection(name);
+      if (recordStoreConnection != null) {
+        return recordStoreConnection.getRecordStore();
       }
     }
     return null;
   }
 
   @SuppressWarnings("unchecked")
-  public static void releaseDataStore(final Map<String, ? extends Object> config) {
+  public static void releaseRecordStore(final Map<String, ? extends Object> config) {
     @SuppressWarnings("rawtypes")
     final Map<String, Object> configClone = (Map)JavaBeanUtil.clone(config);
-    synchronized (dataStoreByConfig) {
-      final RecordStore dataStore = dataStoreByConfig.get(configClone);
-      if (dataStore != null) {
-        final AtomicInteger count = dataStoreCounts.get(configClone);
+    synchronized (recordStoreByConfig) {
+      final RecordStore recordStore = recordStoreByConfig.get(configClone);
+      if (recordStore != null) {
+        final AtomicInteger count = recordStoreCounts.get(configClone);
         if (count.decrementAndGet() == 0) {
           final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone.get("connection");
           final String name = (String)connectionProperties.get("name");
           if (!Property.hasValue(name)) {
             // TODO release for connections from connection registries
-            dataStore.close();
+            recordStore.close();
           }
-          dataStoreByConfig.remove(configClone);
-          dataStoreCounts.remove(configClone);
+          recordStoreByConfig.remove(configClone);
+          recordStoreCounts.remove(configClone);
         }
       }
     }
   }
 
   public RecordStoreConnectionManager() {
-    super("Data Stores");
+    super("Record Stores");
   }
 
   public RecordStoreConnectionRegistry addConnectionRegistry(final String name,
     final boolean visible) {
-    final RecordStoreConnectionRegistry registry = new RecordStoreConnectionRegistry(this,
-      name, visible);
+    final RecordStoreConnectionRegistry registry = new RecordStoreConnectionRegistry(this, name,
+      visible);
     addConnectionRegistry(registry);
     return registry;
   }
 
   public RecordStoreConnectionRegistry addConnectionRegistry(final String name,
-    final Resource dataStoresDirectory) {
-    final RecordStoreConnectionRegistry registry = new RecordStoreConnectionRegistry(this,
-      name, dataStoresDirectory);
+    final Resource recordStoresDirectory) {
+    final RecordStoreConnectionRegistry registry = new RecordStoreConnectionRegistry(this, name,
+      recordStoresDirectory);
     addConnectionRegistry(registry);
     return registry;
   }

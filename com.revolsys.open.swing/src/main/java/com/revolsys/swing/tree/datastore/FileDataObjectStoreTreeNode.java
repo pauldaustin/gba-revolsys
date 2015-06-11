@@ -30,7 +30,7 @@ import com.revolsys.swing.tree.file.FileTreeNode;
 import com.revolsys.util.Property;
 
 public class FileDataObjectStoreTreeNode extends FileTreeNode implements DataObjectStoreProxy,
-DataObjectStoreConnectionMapProxy {
+  DataObjectStoreConnectionMapProxy {
   private static final MenuFactory MENU = new MenuFactory();
 
   static {
@@ -58,9 +58,9 @@ DataObjectStoreConnectionMapProxy {
 
     SwingUtil.addLabel(panel, "Folder Connections");
     final List<RecordStoreConnectionRegistry> registries = RecordStoreConnectionManager.get()
-        .getVisibleConnectionRegistries();
+      .getVisibleConnectionRegistries();
     final JComboBox registryField = new JComboBox(new Vector<RecordStoreConnectionRegistry>(
-        registries));
+      registries));
 
     panel.add(registryField);
 
@@ -112,7 +112,7 @@ DataObjectStoreConnectionMapProxy {
   @SuppressWarnings("unchecked")
   public <V extends RecordStore> V getDataStore() {
     final File file = getUserData();
-    return (V)RecordStoreConnectionManager.getDataStore(file);
+    return (V)RecordStoreConnectionManager.getRecordStore(file);
   }
 
   @Override

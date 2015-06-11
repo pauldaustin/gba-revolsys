@@ -21,7 +21,7 @@ public class OS {
 
   public final static boolean IS_MAC = OS_NAME.contains("OS X") || OS_NAME.equals("Darwin");
 
-  public static File getApplicationDataDirectory(final String applicationName) {
+  public static File getApplicationDataDirectory() {
     String path;
     if (OS.isWindows()) {
       path = System.getenv("APPDATA");
@@ -30,8 +30,13 @@ public class OS {
     } else {
       path = System.getProperty("user.home") + "/.config";
     }
-    final File directory = FileUtil.getFile(path + "/" + applicationName);
-    directory.mkdirs();
+    final File directory = FileUtil.getDirectory(path);
+    return directory;
+  }
+
+  public static File getApplicationDataDirectory(final String applicationName) {
+    final File appsDirectory = getApplicationDataDirectory();
+    final File directory = FileUtil.getDirectory(appsDirectory, applicationName);
     return directory;
   }
 
