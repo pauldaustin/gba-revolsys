@@ -55,7 +55,7 @@ public abstract class QueryValue implements Cloneable {
   public static Condition parseWhere(final RecordDefinition metaData, final String whereClause) {
     try {
       final StatementNode statement = new SQLParser().parseStatement("SELECT * FROM "
-          + metaData.getTypeName() + " WHERE " + whereClause);
+          + metaData.getName() + " WHERE " + whereClause);
       if (statement instanceof CursorNode) {
         final CursorNode selectStatement = (CursorNode)statement;
         final ResultSetNode resultSetNode = selectStatement.getResultSetNode();

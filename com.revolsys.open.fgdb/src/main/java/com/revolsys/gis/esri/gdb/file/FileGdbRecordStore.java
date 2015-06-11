@@ -498,7 +498,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       if (!orderBy.isEmpty()) {
         LoggerFactory.getLogger(getClass()).error(
           "Unable to sort on " + recordDefinition.getPath() + " " + orderBy.keySet()
-          + " as the ESRI library can't sort with a bounding box query");
+            + " as the ESRI library can't sort with a bounding box query");
       }
       sql = whereClause;
     } else {
@@ -536,7 +536,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         } else {
           LoggerFactory.getLogger(getClass()).error(
             "Unable to sort on " + recordDefinition.getPath() + "." + fieldName
-            + " as the ESRI library can't sort on " + dataType + " fields");
+              + " as the ESRI library can't sort on " + dataType + " fields");
         }
       }
     }
@@ -879,8 +879,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           final String tableName = deTable.getName();
           final String typePath = Path.toPath(schemaName, tableName);
           final RecordStoreSchema schema = getSchema(schemaName);
-          final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(this, schema,
-            typePath);
+          final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(schema, typePath);
           for (final Field field : deTable.getFields()) {
             final String fieldName = field.getName();
             final FieldType type = field.getType();
@@ -897,7 +896,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
               } catch (final Throwable e) {
                 LOG.error(tableDefinition);
                 throw new RuntimeException("Error creating field for " + typePath + "."
-                    + field.getName() + " : " + field.getType(), e);
+                  + field.getName() + " : " + field.getType(), e);
               }
             } else {
               LOG.error("Unsupported field type " + fieldName + ":" + type);
@@ -1282,13 +1281,13 @@ public class FileGdbRecordStore extends AbstractRecordStore {
             final String schemaName = schema.getPath();
             if (schemaName.equals(this.defaultSchemaPath)) {
               loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, "\\",
-                  "Feature Class");
+                "Feature Class");
               loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, "\\",
-                  "Table");
+                "Table");
             }
             final String path = schemaName.replaceAll("/", "\\\\");
             loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, path,
-                "Feature Class");
+              "Feature Class");
             loadSchemaRecordDefinition(geodatabase, recordDefinitionMap, schemaName, path, "Table");
           } finally {
             releaseGeodatabase();
@@ -1436,7 +1435,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         } catch (final Throwable t) {
           LoggerFactory.getLogger(getClass()).error(
             "Unable to execute query SELECT " + fields + " FROM " + typePath + " WHERE "
-                + whereClause, t);
+              + whereClause, t);
 
         }
       }
@@ -1454,7 +1453,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           return rows;
         } catch (final Exception e) {
           LOG.error("ERROR executing query SELECT " + fields + " FROM " + typePath + " WHERE "
-              + whereClause + " AND " + boundingBox, e);
+            + whereClause + " AND " + boundingBox, e);
         }
       }
       return null;

@@ -42,7 +42,7 @@ public class GmlDataObjectWriter extends AbstractWriter<Record> implements GmlCo
     this.out = new XmlWriter(out);
     this.qualifiedName = metaData.getProperty(RecordProperties.QUALIFIED_NAME);
     if (this.qualifiedName == null) {
-      this.qualifiedName = new QName(metaData.getTypeName());
+      this.qualifiedName = new QName(metaData.getName());
     }
     this.namespaceUri = this.qualifiedName.getNamespaceURI();
     this.out.setPrefix(this.qualifiedName);

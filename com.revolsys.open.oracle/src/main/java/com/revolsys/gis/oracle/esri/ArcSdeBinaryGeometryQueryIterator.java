@@ -145,9 +145,8 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
 
       final String typePath = this.query.getTypeNameAlias();
       if (typePath != null) {
-        final RecordDefinitionImpl newMetaData = ((RecordDefinitionImpl)this.metaData).clone();
-        newMetaData.setName(typePath);
-        this.metaData = newMetaData;
+        final RecordDefinitionImpl newRecordDefinition = ((RecordDefinitionImpl)this.metaData).rename(typePath);
+        this.metaData = newRecordDefinition;
       }
     } catch (final SeException e) {
       this.seQuery = this.sdeUtil.close(this.seQuery);

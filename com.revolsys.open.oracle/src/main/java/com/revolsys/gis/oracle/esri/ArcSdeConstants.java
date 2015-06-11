@@ -126,7 +126,7 @@ public final class ArcSdeConstants {
   }
 
   public static boolean isSdeAvailable(final RecordStoreSchema schema) {
-    final RecordStore dataStore = schema.getDataStore();
+    final RecordStore dataStore = schema.getRecordStore();
 
     return isSdeAvailable(dataStore);
   }

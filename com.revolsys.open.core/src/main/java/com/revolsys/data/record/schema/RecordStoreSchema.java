@@ -18,7 +18,7 @@ import com.revolsys.util.ExceptionUtil;
 
 public class RecordStoreSchema extends AbstractObjectWithProperties {
 
-  private Reference<AbstractRecordStore> dataStore;
+  private Reference<AbstractRecordStore> recordStore;
 
   private Map<String, RecordDefinition> metaDataCache = new TreeMap<String, RecordDefinition>();
 
@@ -28,7 +28,7 @@ public class RecordStoreSchema extends AbstractObjectWithProperties {
   }
 
   public RecordStoreSchema(final AbstractRecordStore dataStore, final String path) {
-    this.dataStore = new WeakReference<AbstractRecordStore>(dataStore);
+    this.recordStore = new WeakReference<AbstractRecordStore>(dataStore);
     this.path = path;
   }
 
@@ -49,7 +49,7 @@ public class RecordStoreSchema extends AbstractObjectWithProperties {
       }
       this.metaDataCache.clear();
     }
-    this.dataStore = null;
+    this.recordStore = null;
     this.metaDataCache = null;
     this.path = null;
     super.close();
@@ -61,18 +61,18 @@ public class RecordStoreSchema extends AbstractObjectWithProperties {
   }
 
   @SuppressWarnings("unchecked")
-  public <V extends RecordStore> V getDataStore() {
-    if (this.dataStore == null) {
+  public <V extends RecordStore> V getRecordStore() {
+    if (this.recordStore == null) {
       return null;
     } else {
-      return (V)this.dataStore.get();
+      return (V)this.recordStore.get();
     }
   }
 
   public GeometryFactory getGeometryFactory() {
     final GeometryFactory geometryFactory = getProperty("geometryFactory");
     if (geometryFactory == null) {
-      final AbstractRecordStore dataStore = getDataStore();
+      final AbstractRecordStore dataStore = getRecordStore();
       if (dataStore == null) {
         return GeometryFactory.getFactory();
       } else {
@@ -124,7 +124,7 @@ public class RecordStoreSchema extends AbstractObjectWithProperties {
   }
 
   public void refreshMetaData() {
-    final AbstractRecordStore dataStore = getDataStore();
+    final AbstractRecordStore dataStore = getRecordStore();
     if (dataStore != null) {
       final Collection<DataObjectStoreExtension> extensions = dataStore.getDataStoreExtensions();
       for (final DataObjectStoreExtension extension : extensions) {

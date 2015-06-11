@@ -331,12 +331,12 @@ public class OsnSerializer {
         if (!this.endElement) {
           if (i < attributeCount - 1) {
             endLine();
-          } else if (type.getTypeName().equals("/Coord3D")) {
+          } else if (type.getName().equals("/Coord3D")) {
             for (final Object parent : this.scope) {
               if (parent instanceof Record) {
                 final Record parentObject = (Record)parent;
                 if (parentObject.getRecordDefinition()
-                    .getTypeName()
+                    .getName()
                     .equals(SaifConstants.TEXT_ON_CURVE)) {
                   endLine();
                 }

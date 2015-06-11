@@ -219,9 +219,8 @@ public class JdbcQueryIterator extends AbstractIterator<Record> implements Recor
 
       final String typePath = this.query.getTypeNameAlias();
       if (typePath != null) {
-        final RecordDefinitionImpl newMetaData = ((RecordDefinitionImpl)this.metaData).clone();
-        newMetaData.setName(typePath);
-        this.metaData = newMetaData;
+        final RecordDefinitionImpl newRecordDefinition = ((RecordDefinitionImpl)this.metaData).rename(typePath);
+        this.metaData = newRecordDefinition;
       }
     } catch (final SQLException e) {
       JdbcUtils.close(this.statement, this.resultSet);

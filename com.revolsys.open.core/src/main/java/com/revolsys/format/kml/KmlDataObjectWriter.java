@@ -108,7 +108,7 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements Kml22
     }
     if (name == null && idIndex != -1) {
       final Object id = object.getValue(idIndex);
-      final String typeName = metaData.getTypeName();
+      final String typeName = metaData.getName();
       name = typeName + " " + id;
     }
     if (name != null) {

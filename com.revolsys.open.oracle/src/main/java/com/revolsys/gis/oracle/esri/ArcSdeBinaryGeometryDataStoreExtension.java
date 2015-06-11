@@ -37,7 +37,7 @@ public class ArcSdeBinaryGeometryDataStoreExtension implements DataObjectStoreEx
 
   @Override
   public void postProcess(final RecordStoreSchema schema) {
-    final AbstractJdbcRecordStore dataStore = (AbstractJdbcRecordStore)schema.getDataStore();
+    final AbstractJdbcRecordStore dataStore = (AbstractJdbcRecordStore)schema.getRecordStore();
     for (final RecordDefinition metaData : schema.getTypes()) {
       final String typePath = metaData.getPath();
       final Map<String, Map<String, Object>> typeColumnProperties = JdbcFieldAdder.getTypeColumnProperties(

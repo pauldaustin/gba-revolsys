@@ -398,7 +398,7 @@ EsriGeodatabaseXmlConstants {
     this.out.startTag(DATASET_DATA);
     this.out.attribute(XsiConstants.TYPE, DATASET_DATA_TABLE_DATA);
 
-    this.out.element(DATASET_NAME, this.metaData.getTypeName());
+    this.out.element(DATASET_NAME, this.metaData.getName());
     this.out.element(DATASET_TYPE, this.datasetType);
 
     this.out.startTag(DATA);

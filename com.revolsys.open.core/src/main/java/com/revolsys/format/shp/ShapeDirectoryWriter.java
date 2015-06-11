@@ -93,7 +93,7 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
   }
 
   private String getFileName(final RecordDefinition metaData) {
-    return metaData.getTypeName();
+    return metaData.getName();
   }
 
   public String getNameSuffix() {

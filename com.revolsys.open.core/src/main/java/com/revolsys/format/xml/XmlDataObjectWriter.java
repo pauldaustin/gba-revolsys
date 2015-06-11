@@ -127,7 +127,7 @@ public class XmlDataObjectWriter extends AbstractWriter<Record> {
     }
     QName qualifiedName = this.metaData.getProperty(RecordProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
-      qualifiedName = new QName(this.metaData.getTypeName());
+      qualifiedName = new QName(this.metaData.getName());
     }
 
     this.out.startTag(qualifiedName);

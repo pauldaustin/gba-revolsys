@@ -486,7 +486,7 @@ JdbcDataObjectStore, DataObjectStoreExtension {
     try {
       final String schemaName = Path.getPath(typePath);
       final RecordStoreSchema schema = getSchema(schemaName);
-      final RecordDefinitionImpl metaData = new RecordDefinitionImpl(this, schema, typePath);
+      final RecordDefinitionImpl metaData = new RecordDefinitionImpl(schema, typePath);
 
       final String idAttributeName = getIdAttributeName(typePath);
       for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
@@ -762,7 +762,7 @@ JdbcDataObjectStore, DataObjectStoreExtension {
         final String tableName = dbTableName.toUpperCase();
         final String typePath = Path.toPath(schemaName, tableName);
         this.tableNameMap.put(typePath, dbTableName);
-        final RecordDefinitionImpl metaData = new RecordDefinitionImpl(this, schema, typePath);
+        final RecordDefinitionImpl metaData = new RecordDefinitionImpl(schema, typePath);
         final String description = tableDescriptionMap.get(dbTableName);
         metaData.setDescription(description);
         final List<String> permissions = CollectionUtil.get(tablePermissionsMap, dbTableName,

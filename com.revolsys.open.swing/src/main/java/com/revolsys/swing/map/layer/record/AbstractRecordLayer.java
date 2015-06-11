@@ -326,7 +326,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   }
 
   public AbstractRecordLayer(final RecordDefinition recordDefinition) {
-    this(recordDefinition.getTypeName());
+    this(recordDefinition.getName());
     setRecordDefinition(recordDefinition);
   }
 

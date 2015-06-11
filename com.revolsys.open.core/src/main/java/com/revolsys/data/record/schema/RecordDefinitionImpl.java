@@ -2,8 +2,6 @@ package com.revolsys.data.record.schema;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,8 +29,6 @@ import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.property.ValueRecordDefinitionProperty;
 import com.revolsys.data.types.DataType;
-import com.revolsys.io.AbstractObjectWithProperties;
-import com.revolsys.io.Path;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
@@ -43,10 +39,10 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class RecordDefinitionImpl extends AbstractObjectWithProperties implements RecordDefinition,
-  Cloneable {
+public class RecordDefinitionImpl extends AbstractRecordStoreSchemaElement implements
+RecordDefinition {
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "dataRecordDefinition", "Data Record Definition", RecordDefinitionImpl.class, "create");
+    "recordDefinition", "Record Definition", RecordDefinitionImpl.class, "create");
 
   private static final AtomicInteger INSTANCE_IDS = new AtomicInteger(0);
 
@@ -66,7 +62,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     return RECORD_DEFINITION_CACHE.get(instanceId);
   }
 
-  private Map<String, CodeTable> codeTableByColumnMap = new HashMap<>();
+  private Map<String, CodeTable> codeTableByFieldNameMap = new HashMap<>();
 
   private Map<String, Object> defaultValues = new HashMap<>();
 
@@ -102,20 +98,13 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
 
   private final List<FieldDefinition> internalFields = new ArrayList<>();
 
-  /** The path of the data type. */
-  private String path;
-
   private RecordDefinitionFactory recordDefinitionFactory;
 
   private RecordFactory recordFactory = new ArrayRecordFactory();
 
-  private Reference<RecordStore> recordStore;
+  private final Map<String, Collection<Object>> restrictions = new HashMap<>();
 
-  private final Map<String, Collection<Object>> restrictions = new HashMap<String, Collection<Object>>();
-
-  private RecordStoreSchema schema;
-
-  private final List<RecordDefinition> superClasses = new ArrayList<RecordDefinition>();
+  private final List<RecordDefinition> superClasses = new ArrayList<>();
 
   public RecordDefinitionImpl() {
   }
@@ -147,28 +136,27 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
-  public RecordDefinitionImpl(final RecordStore recordStore, final RecordStoreSchema schema,
+  public RecordDefinitionImpl(final RecordStoreSchema schema,
     final RecordDefinition recordDefinition) {
-    this(recordDefinition);
-    this.recordStore = new WeakReference<RecordStore>(recordStore);
-    this.recordFactory = recordStore.getRecordFactory();
-    this.schema = schema;
-    RECORD_DEFINITION_CACHE.put(this.instanceId, this);
+    this(schema, recordDefinition.getPath());
+    for (final FieldDefinition field : recordDefinition.getFields()) {
+      addField(field.clone());
+    }
+    cloneProperties(recordDefinition.getProperties());
   }
 
-  public RecordDefinitionImpl(final RecordStore recordStore, final RecordStoreSchema schema,
-    final String typePath) {
-    this(typePath);
-    this.recordStore = new WeakReference<RecordStore>(recordStore);
-    this.recordFactory = recordStore.getRecordFactory();
-    this.schema = schema;
+  public RecordDefinitionImpl(final RecordStoreSchema schema, final String path) {
+    super(schema, path);
+    final RecordStore recordStore = getRecordStore();
+    if (recordStore != null) {
+      this.recordFactory = recordStore.getRecordFactory();
+    }
     RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
   public RecordDefinitionImpl(final RecordStoreSchema schema, final String path,
     final Map<String, Object> properties, final List<FieldDefinition> fields) {
-    this(path);
-    // TODO implement schema support
+    this(schema, path);
     for (final FieldDefinition field : fields) {
       addField(field.clone());
     }
@@ -176,7 +164,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
   }
 
   public RecordDefinitionImpl(final String path) {
-    this.path = path;
+    super(path);
     RECORD_DEFINITION_CACHE.put(this.instanceId, this);
   }
 
@@ -195,16 +183,12 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
 
   public RecordDefinitionImpl(final String path, final Map<String, Object> properties,
     final List<FieldDefinition> fields) {
-    this.path = path;
+    super(path);
     for (final FieldDefinition field : fields) {
       addField(field.clone());
     }
     cloneProperties(properties);
     RECORD_DEFINITION_CACHE.put(this.instanceId, this);
-  }
-
-  public void addColumnCodeTable(final String column, final CodeTable codeTable) {
-    this.codeTableByColumnMap.put(column, codeTable);
   }
 
   @Override
@@ -280,6 +264,10 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     return field;
   }
 
+  public void addFieldCodeTable(final String fieldName, final CodeTable codeTable) {
+    this.codeTableByFieldNameMap.put(fieldName, codeTable);
+  }
+
   public void addRestriction(final String fieldPath, final Collection<Object> values) {
     this.restrictions.put(fieldPath, values);
   }
@@ -288,15 +276,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     if (!this.superClasses.contains(superClass)) {
       this.superClasses.add(superClass);
     }
-  }
-
-  @Override
-  public RecordDefinitionImpl clone() {
-    final RecordDefinitionImpl clone = new RecordDefinitionImpl(this.path, getProperties(),
-      this.fields);
-    clone.setIdFieldIndex(this.idFieldDefinitionIndex);
-    clone.setProperties(getProperties());
-    return clone;
   }
 
   public void cloneProperties(final Map<String, Object> properties) {
@@ -312,20 +291,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
           setProperty(propertyName, property);
         }
       }
-    }
-  }
-
-  @Override
-  public int compareTo(final RecordDefinition other) {
-    final String otherPath = other.getPath();
-    if (otherPath == this.path) {
-      return 0;
-    } else if (this.path == null) {
-      return 1;
-    } else if (otherPath == null) {
-      return -1;
-    } else {
-      return this.path.compareTo(otherPath);
     }
   }
 
@@ -360,34 +325,27 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     this.fields = Collections.emptyList();
     this.internalFields.clear();
     this.fieldNames = Collections.emptyList();
-    this.codeTableByColumnMap.clear();
+    this.codeTableByFieldNameMap.clear();
     this.recordFactory = null;
     this.recordDefinitionFactory = new RecordDefinitionFactoryImpl();
-    this.recordStore = null;
     this.defaultValues.clear();
     this.description = "";
     this.geometryFieldDefinitionIndex = -1;
     this.geometryFieldDefinitionIndexes.clear();
     this.geometryFieldDefinitionNames.clear();
     this.restrictions.clear();
-    this.schema = new RecordStoreSchema();
     this.superClasses.clear();
   }
 
   @Override
-  public boolean equals(final Object other) {
-    return other == this;
-  }
-
-  @Override
-  public CodeTable getCodeTableByFieldName(final String column) {
+  public CodeTable getCodeTableByFieldName(final String fieldName) {
     final RecordStore recordStore = getRecordStore();
     if (recordStore == null) {
       return null;
     } else {
-      CodeTable codeTable = this.codeTableByColumnMap.get(column);
+      CodeTable codeTable = this.codeTableByFieldNameMap.get(fieldName);
       if (codeTable == null && recordStore != null) {
-        codeTable = recordStore.getCodeTableByFieldName(column);
+        codeTable = recordStore.getCodeTableByFieldName(fieldName);
       }
       if (codeTable instanceof CodeTableProperty) {
         final CodeTableProperty property = (CodeTableProperty)codeTable;
@@ -480,18 +438,11 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
 
   @Override
   public String getFieldName(final int i) {
-    try {
-      if (i == -1) {
-        return null;
-      } else if (this.fields == null) {
-        return null;
-      } else {
-        final FieldDefinition field = this.fields.get(i);
-        return field.getName();
-      }
-    } catch (final ArrayIndexOutOfBoundsException e) {
-      throw e;
+    if (this.fields != null && i >= 0 && i < this.fields.size()) {
+      final FieldDefinition field = this.fields.get(i);
+      return field.getName();
     }
+    return null;
   }
 
   @Override
@@ -625,11 +576,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
   }
 
   @Override
-  public String getPath() {
-    return this.path;
-  }
-
-  @Override
   public RecordDefinitionFactory getRecordDefinitionFactory() {
     if (this.recordDefinitionFactory == null) {
       final RecordStore recordStore = getRecordStore();
@@ -644,26 +590,8 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     return this.recordFactory;
   }
 
-  @Override
-  public RecordStore getRecordStore() {
-    if (this.recordStore == null) {
-      return null;
-    } else {
-      return this.recordStore.get();
-    }
-  }
-
   public Map<String, Collection<Object>> getRestrictions() {
     return this.restrictions;
-  }
-
-  public RecordStoreSchema getSchema() {
-    return this.schema;
-  }
-
-  @Override
-  public String getTypeName() {
-    return Path.getName(this.path);
   }
 
   @Override
@@ -677,12 +605,8 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
   }
 
   @Override
-  public int hashCode() {
-    if (this.path == null) {
-      return super.hashCode();
-    } else {
-      return this.path.hashCode();
-    }
+  public boolean hasGeometryField() {
+    return this.geometryFieldDefinitionIndex != -1;
   }
 
   @Override
@@ -744,8 +668,8 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     }
   }
 
-  public void setCodeTableByColumnMap(final Map<String, CodeTable> codeTableByColumnMap) {
-    this.codeTableByColumnMap = codeTableByColumnMap;
+  public void setCodeTableByFieldNameMap(final Map<String, CodeTable> codeTableByFieldNameMap) {
+    this.codeTableByFieldNameMap = codeTableByFieldNameMap;
   }
 
   @Override
@@ -825,11 +749,6 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
   }
 
   @Override
-  public void setName(final String path) {
-    this.path = path;
-  }
-
-  @Override
   public void setProperties(final Map<String, ? extends Object> properties) {
     if (properties != null) {
       for (final Entry<String, ? extends Object> entry : properties.entrySet()) {
@@ -860,7 +779,7 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
   @Override
   public Map<String, Object> toMap() {
     final Map<String, Object> map = new LinkedHashMap<String, Object>();
-    map.put("type", "dataRecordDefinition");
+    map.put("type", "recordDefinition");
     final String path = getPath();
     map.put("path", path);
     final GeometryFactory geometryFactory = getGeometryFactory();
@@ -870,8 +789,4 @@ public class RecordDefinitionImpl extends AbstractObjectWithProperties implement
     return map;
   }
 
-  @Override
-  public String toString() {
-    return this.path.toString();
-  }
 }

@@ -85,7 +85,7 @@ public class DirectoryDataObjectStore extends AbstractRecordStore {
       if (!schemaDirectory.exists()) {
         schemaDirectory.mkdirs();
       }
-      final RecordDefinitionImpl newMetaData = new RecordDefinitionImpl(this, schema, typePath);
+      final RecordDefinitionImpl newMetaData = new RecordDefinitionImpl(schema, typePath);
       for (final FieldDefinition attribute : objectMetaData.getFields()) {
         final FieldDefinition newAttribute = new FieldDefinition(attribute);
         newMetaData.addField(newAttribute);
@@ -125,7 +125,7 @@ public class DirectoryDataObjectStore extends AbstractRecordStore {
     if (writer == null) {
       final String schemaName = Path.getPath(typePath);
       final File subDirectory = new File(getDirectory(), schemaName);
-      final File file = new File(subDirectory, metaData.getTypeName() + "." + getFileExtension());
+      final File file = new File(subDirectory, metaData.getName() + "." + getFileExtension());
       final Resource resource = new FileSystemResource(file);
       writer = AbstractRecordIoFactory.dataObjectWriter(metaData, resource);
       if (writer instanceof ObjectWithProperties) {

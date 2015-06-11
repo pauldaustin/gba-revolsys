@@ -145,7 +145,7 @@ public class ArcSdeStGeometryDataStoreExtension implements DataObjectStoreExtens
 
   @Override
   public void preProcess(final RecordStoreSchema schema) {
-    final RecordStore dataStore = schema.getDataStore();
+    final RecordStore dataStore = schema.getRecordStore();
     final OracleDataObjectStore oracleDataStore = (OracleDataObjectStore)dataStore;
     try {
       final Connection connection = oracleDataStore.getSqlConnection();

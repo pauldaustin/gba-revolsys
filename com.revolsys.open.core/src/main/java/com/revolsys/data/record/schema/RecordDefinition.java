@@ -1,23 +1,3 @@
-/*
- * $URL$
- * $Author$
- * $Date$
- * $Revision$
-
- * Copyright 2004-2005 Revolution Systems Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.revolsys.data.record.schema;
 
 import java.util.List;
@@ -27,23 +7,19 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.types.DataType;
-import com.revolsys.io.ObjectWithProperties;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public interface RecordDefinition extends ObjectWithProperties, Comparable<RecordDefinition>,
-  MapSerializer {
+public interface RecordDefinition extends RecordStoreSchemaElement, MapSerializer {
   void addDefaultValue(String fieldName, Object defaultValue);
-
-  RecordDefinition clone();
 
   Record createRecord();
 
-  void delete(Record dataObject);
+  void delete(Record record);
 
   void destroy();
 
-  CodeTable getCodeTableByFieldName(String column);
+  CodeTable getCodeTableByFieldName(String fieldName);
 
   Object getDefaultValue(String fieldName);
 
@@ -186,21 +162,9 @@ public interface RecordDefinition extends ObjectWithProperties, Comparable<Recor
 
   int getInstanceId();
 
-  /**
-   * Get the name of the object type. Names are described using a path (e.g.
-   * /SCHEMA/TABLE).
-   *
-   * @return The name.
-   */
-  String getPath();
-
   RecordDefinitionFactory getRecordDefinitionFactory();
 
   RecordFactory getRecordFactory();
-
-  RecordStore getRecordStore();
-
-  String getTypeName();
 
   /**
    * Check to see if the type has the specified field name.
@@ -209,6 +173,8 @@ public interface RecordDefinition extends ObjectWithProperties, Comparable<Recor
    * @return True id the type has the field, false otherwise.
    */
   boolean hasField(CharSequence name);
+
+  boolean hasGeometryField();
 
   boolean isFieldRequired(CharSequence name);
 
@@ -225,12 +191,4 @@ public interface RecordDefinition extends ObjectWithProperties, Comparable<Recor
   void setDefaultValues(Map<String, ? extends Object> defaultValues);
 
   void setGeometryFactory(GeometryFactory geometryFactory);
-
-  /**
-   * Set the name of the object type. Names are described using a (e.g.
-   * /SCHEMA/TABLE).
-   *
-   * @param name The name.
-   */
-  void setName(String name);
 }
