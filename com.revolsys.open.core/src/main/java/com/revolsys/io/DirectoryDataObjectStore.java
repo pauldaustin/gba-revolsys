@@ -90,7 +90,7 @@ public class DirectoryDataObjectStore extends AbstractRecordStore {
         final FieldDefinition newAttribute = new FieldDefinition(attribute);
         newMetaData.addField(newAttribute);
       }
-      schema.addMetaData(newMetaData);
+      schema.addRecordDefinition(newMetaData);
     }
     return metaData;
   }

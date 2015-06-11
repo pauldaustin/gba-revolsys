@@ -15,13 +15,13 @@ public class DataObjectStoreSchemaProxy extends RecordStoreSchema {
   }
 
   @Override
-  public synchronized RecordDefinition findMetaData(final String typePath) {
-    RecordDefinition metaData = super.findMetaData(typePath);
+  public synchronized RecordDefinition findRecordDefinition(final String typePath) {
+    RecordDefinition metaData = super.findRecordDefinition(typePath);
     if (metaData == null) {
-      metaData = this.schema.findMetaData(typePath);
+      metaData = this.schema.findRecordDefinition(typePath);
       if (metaData != null) {
         metaData = new RecordDefinitionImpl(this, metaData);
-        addMetaData(typePath, metaData);
+        addRecordDefinition(typePath, metaData);
       }
     }
     return metaData;
@@ -29,12 +29,12 @@ public class DataObjectStoreSchemaProxy extends RecordStoreSchema {
 
   @Override
   public synchronized RecordDefinition getRecordDefinition(final String typePath) {
-    RecordDefinition metaData = findMetaData(typePath);
+    RecordDefinition metaData = findRecordDefinition(typePath);
     if (metaData == null) {
       metaData = this.schema.getRecordDefinition(typePath);
       if (metaData != null) {
         metaData = new RecordDefinitionImpl(this, metaData);
-        addMetaData(typePath, metaData);
+        addRecordDefinition(typePath, metaData);
       }
     }
     return metaData;

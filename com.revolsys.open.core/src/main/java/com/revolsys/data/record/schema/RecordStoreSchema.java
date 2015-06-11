@@ -20,71 +20,62 @@ public class RecordStoreSchema extends AbstractObjectWithProperties {
 
   private Reference<AbstractRecordStore> recordStore;
 
-  private Map<String, RecordDefinition> metaDataCache = new TreeMap<String, RecordDefinition>();
+  private Map<String, RecordDefinition> recordDefinitionCache = new TreeMap<String, RecordDefinition>();
 
   private String path;
 
   public RecordStoreSchema() {
   }
 
-  public RecordStoreSchema(final AbstractRecordStore dataStore, final String path) {
-    this.recordStore = new WeakReference<AbstractRecordStore>(dataStore);
+  public RecordStoreSchema(final AbstractRecordStore recordStore, final String path) {
+    this.recordStore = new WeakReference<AbstractRecordStore>(recordStore);
     this.path = path;
   }
 
-  public void addMetaData(final RecordDefinition metaData) {
-    addMetaData(metaData.getPath(), metaData);
+  public void addRecordDefinition(final RecordDefinition metaData) {
+    addRecordDefinition(metaData.getPath(), metaData);
   }
 
-  protected void addMetaData(final String typePath, final RecordDefinition metaData) {
-    this.metaDataCache.put(typePath.toUpperCase(), metaData);
+  protected void addRecordDefinition(final String typePath, final RecordDefinition metaData) {
+    this.recordDefinitionCache.put(typePath.toUpperCase(), metaData);
   }
 
   @Override
   @PreDestroy
   public void close() {
-    if (this.metaDataCache != null) {
-      for (final RecordDefinition metaData : this.metaDataCache.values()) {
+    if (this.recordDefinitionCache != null) {
+      for (final RecordDefinition metaData : this.recordDefinitionCache.values()) {
         metaData.destroy();
       }
-      this.metaDataCache.clear();
+      this.recordDefinitionCache.clear();
     }
     this.recordStore = null;
-    this.metaDataCache = null;
+    this.recordDefinitionCache = null;
     this.path = null;
     super.close();
   }
 
-  public synchronized RecordDefinition findMetaData(final String typePath) {
-    final RecordDefinition metaData = this.metaDataCache.get(typePath);
+  public synchronized RecordDefinition findRecordDefinition(final String typePath) {
+    final RecordDefinition metaData = this.recordDefinitionCache.get(typePath);
     return metaData;
-  }
-
-  @SuppressWarnings("unchecked")
-  public <V extends RecordStore> V getRecordStore() {
-    if (this.recordStore == null) {
-      return null;
-    } else {
-      return (V)this.recordStore.get();
-    }
   }
 
   public GeometryFactory getGeometryFactory() {
     final GeometryFactory geometryFactory = getProperty("geometryFactory");
     if (geometryFactory == null) {
-      final AbstractRecordStore dataStore = getRecordStore();
-      if (dataStore == null) {
+      final AbstractRecordStore recordStore = getRecordStore();
+      if (recordStore == null) {
         return GeometryFactory.getFactory();
       } else {
-        return dataStore.getGeometryFactory();
+        return recordStore.getGeometryFactory();
       }
     } else {
       return geometryFactory;
     }
   }
 
-  protected Map<String, RecordDefinition> getMetaDataCache() {
-    return this.metaDataCache;
+  protected Map<String, RecordDefinition> getRecordDefinitionCache() {
+    return this.recordDefinitionCache;
   }
 
   public String getName() {
@@ -99,47 +90,56 @@ public class RecordStoreSchema extends AbstractObjectWithProperties {
   public synchronized RecordDefinition getRecordDefinition(String typePath) {
     typePath = typePath.toUpperCase();
     if (typePath.startsWith(this.path + "/") || this.path.equals("/")) {
-      if (this.metaDataCache.isEmpty()) {
+      if (this.recordDefinitionCache.isEmpty()) {
         refreshMetaData();
       }
-      final RecordDefinition metaData = this.metaDataCache.get(typePath.toUpperCase());
+      final RecordDefinition metaData = this.recordDefinitionCache.get(typePath.toUpperCase());
       return metaData;
     } else {
       return null;
     }
   }
 
+  @SuppressWarnings("unchecked")
+  public <V extends RecordStore> V getRecordStore() {
+    if (this.recordStore == null) {
+      return null;
+    } else {
+      return (V)this.recordStore.get();
+    }
+  }
+
   public List<String> getTypeNames() {
-    if (this.metaDataCache.isEmpty()) {
+    if (this.recordDefinitionCache.isEmpty()) {
       refreshMetaData();
     }
-    return new ArrayList<String>(this.metaDataCache.keySet());
+    return new ArrayList<String>(this.recordDefinitionCache.keySet());
   }
 
   public List<RecordDefinition> getTypes() {
-    if (this.metaDataCache.isEmpty()) {
+    if (this.recordDefinitionCache.isEmpty()) {
       refreshMetaData();
     }
-    return new ArrayList<RecordDefinition>(this.metaDataCache.values());
+    return new ArrayList<RecordDefinition>(this.recordDefinitionCache.values());
   }
 
   public void refreshMetaData() {
-    final AbstractRecordStore dataStore = getRecordStore();
-    if (dataStore != null) {
-      final Collection<DataObjectStoreExtension> extensions = dataStore.getDataStoreExtensions();
+    final AbstractRecordStore recordStore = getRecordStore();
+    if (recordStore != null) {
+      final Collection<DataObjectStoreExtension> extensions = recordStore.getRecordStoreExtensions();
       for (final DataObjectStoreExtension extension : extensions) {
         try {
-          if (extension.isEnabled(dataStore)) {
+          if (extension.isEnabled(recordStore)) {
             extension.preProcess(this);
           }
         } catch (final Throwable e) {
           ExceptionUtil.log(extension.getClass(), "Unable to pre-process schema " + this, e);
         }
       }
-      dataStore.loadSchemaDataObjectMetaData(this, this.metaDataCache);
+      recordStore.loadSchemaDataObjectMetaData(this, this.recordDefinitionCache);
       for (final DataObjectStoreExtension extension : extensions) {
         try {
-          if (extension.isEnabled(dataStore)) {
+          if (extension.isEnabled(recordStore)) {
             extension.postProcess(this);
           }
         } catch (final Throwable e) {

@@ -155,7 +155,7 @@ RecordStore {
     final String typePath = metaData.getPath();
     final String schemaName = Path.getPath(typePath);
     final RecordStoreSchema schema = getSchema(schemaName);
-    schema.addMetaData(metaData);
+    schema.addRecordDefinition(metaData);
   }
 
   protected void addRecordDefinitionProperties(final RecordDefinitionImpl metaData) {
@@ -364,7 +364,7 @@ RecordStore {
     if (schema == null) {
       return null;
     } else {
-      return schema.findMetaData(typePath);
+      return schema.findRecordDefinition(typePath);
     }
   }
 
@@ -404,7 +404,7 @@ RecordStore {
     return this.connectionProperties;
   }
 
-  public Collection<DataObjectStoreExtension> getDataStoreExtensions() {
+  public Collection<DataObjectStoreExtension> getRecordStoreExtensions() {
     return this.dataStoreExtensions;
   }
 
