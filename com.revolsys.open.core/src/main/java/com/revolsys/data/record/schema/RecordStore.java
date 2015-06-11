@@ -35,7 +35,7 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   Record copy(Record record);
 
-  Record create(RecordDefinition metaData);
+  Record create(RecordDefinition recordDefinition);
 
   Record create(String typePath);
 
@@ -47,7 +47,7 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   Transaction createTransaction(Propagation propagation);
 
-  Record createWithId(RecordDefinition objectMetaData);
+  Record createWithId(RecordDefinition recordDefinition);
 
   Writer<Record> createWriter();
 
@@ -57,11 +57,11 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   void deleteAll(Collection<Record> objects);
 
-  CodeTable getCodeTable(String typePath);
+  <V extends CodeTable> V getCodeTable(String typePath);
 
-  Map<String, CodeTable> getCodeTableByColumnMap();
+  CodeTable getCodeTableByFieldName(String fieldName);
 
-  CodeTable getCodeTableByFieldName(String columnName);
+  Map<String, CodeTable> getCodeTableByFieldNameMap();
 
   RecordStoreConnected getConnected();
 
@@ -69,7 +69,7 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   String getLabel();
 
-  RecordDefinition getRecordDefinition(RecordDefinition metaData);
+  RecordDefinition getRecordDefinition(RecordDefinition recordDefinition);
 
   /**
    * Get the meta data for the specified type.
@@ -82,12 +82,14 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   RecordFactory getRecordFactory();
 
+  RecordStoreSchema getRootSchema();
+
   int getRowCount(Query query);
 
   RecordStoreSchema getSchema(final String schemaName);
 
   /**
-   * Get the list of name space names provided by the data store.
+   * Get the list of name space names provided by the record store.
    *
    * @return The name space names.
    */
@@ -150,11 +152,11 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   Record queryFirst(Query query);
 
-  void setRecordFactory(RecordFactory dataObjectFactory);
-
   void setLabel(String label);
 
   void setLogCounts(boolean logCounts);
+
+  void setRecordFactory(RecordFactory recordFactory);
 
   void update(Record object);
 

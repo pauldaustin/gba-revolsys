@@ -78,7 +78,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return query;
   }
 
-  private List<String> attributeNames = Collections.emptyList();
+  private List<String> fieldNames = Collections.emptyList();
 
   private BoundingBox boundingBox;
 
@@ -90,7 +90,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
 
   private boolean lockResults = false;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
   private int offset = 0;
 
@@ -111,7 +111,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
 
   public Query(final RecordDefinition metaData) {
     this(metaData.getPath());
-    this.metaData = metaData;
+    this.recordDefinition = metaData;
   }
 
   public Query(final RecordDefinition metaData, final Condition whereCondition) {
@@ -153,7 +153,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
   public Query clone() {
     try {
       final Query clone = (Query)super.clone();
-      clone.attributeNames = new ArrayList<String>(clone.attributeNames);
+      clone.fieldNames = new ArrayList<String>(clone.fieldNames);
       clone.parameters = new ArrayList<Object>(this.parameters);
       clone.orderBy = new HashMap<String, Boolean>(this.orderBy);
       if (this.whereCondition != null) {
@@ -173,7 +173,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
   }
 
   public List<String> getFieldNames() {
-    return this.attributeNames;
+    return this.fieldNames;
   }
 
   public String getFromClause() {
@@ -201,7 +201,7 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
   }
 
   public RecordDefinition getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 
   public String getSql() {
@@ -232,16 +232,16 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return this.lockResults;
   }
 
-  public void setAttributeNames(final List<String> attributeNames) {
-    this.attributeNames = attributeNames;
-  }
-
-  public void setAttributeNames(final String... attributeNames) {
-    setAttributeNames(Arrays.asList(attributeNames));
-  }
-
   public void setBoundingBox(final BoundingBox boundingBox) {
     this.boundingBox = boundingBox;
+  }
+
+  public void setFieldNames(final List<String> fieldNames) {
+    this.fieldNames = fieldNames;
+  }
+
+  public void setFieldNames(final String... fieldNames) {
+    setFieldNames(Arrays.asList(fieldNames));
   }
 
   public void setFromClause(final String fromClause) {
@@ -260,8 +260,8 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     this.lockResults = lockResults;
   }
 
-  public void setMetaData(final RecordDefinition metaData) {
-    this.metaData = metaData;
+  public void setRecordDefinition(final RecordDefinition metaData) {
+    this.recordDefinition = metaData;
   }
 
   public void setOffset(final int offset) {

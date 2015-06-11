@@ -89,7 +89,7 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
     if (this.metaData == null) {
       if (tableName != null) {
         this.metaData = this.dataStore.getRecordDefinition(tableName);
-        this.query.setMetaData(this.metaData);
+        this.query.setRecordDefinition(this.metaData);
 
       }
     }

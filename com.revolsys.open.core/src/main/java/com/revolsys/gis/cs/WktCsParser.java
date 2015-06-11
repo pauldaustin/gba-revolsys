@@ -16,6 +16,10 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.spring.SpringUtil;
 
 public class WktCsParser {
+  public static CoordinateSystem read(final String wkt) {
+    return new WktCsParser(wkt).parse();
+  }
+
   private int index = 0;
 
   private final Stack<String> nameStack = new Stack<String>();

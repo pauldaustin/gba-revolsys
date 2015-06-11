@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -53,7 +52,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractRecordStore extends AbstractObjectWithProperties implements
-  RecordStore {
+RecordStore {
 
   private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 
@@ -574,8 +573,8 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties i
         for (int i = 0; i < idFieldNames.size(); i++) {
           final String name = idFieldNames.get(i);
           final Object value = id[i];
-          final FieldDefinition attribute = recordDefinition.getField(name);
-          query.and(Q.equal(attribute, value));
+          final FieldDefinition field = recordDefinition.getField(name);
+          query.and(Q.equal(field, value));
         }
         return queryFirst(query);
       }

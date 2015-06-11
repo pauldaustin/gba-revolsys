@@ -236,7 +236,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
         try {
           final RecordDefinition metaData = this.dataStore.getRecordDefinition(this.typePath);
           final Query query = new Query(this.typePath);
-          query.setAttributeNames(metaData.getFieldNames());
+          query.setFieldNames(metaData.getFieldNames());
           for (final String order : this.orderBy) {
             query.addOrderBy(order, true);
           }

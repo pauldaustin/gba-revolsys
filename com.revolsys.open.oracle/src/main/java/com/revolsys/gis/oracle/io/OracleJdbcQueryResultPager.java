@@ -53,7 +53,7 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
           }
           try {
             final JdbcRecordStore dataStore = getDataStore();
-            final RecordFactory dataObjectFactory = getDataObjectFactory();
+            final RecordFactory dataObjectFactory = getRecordFactory();
             final RecordDefinition metaData = getMetaData();
             final List<FieldDefinition> attributes = metaData.getFields();
 

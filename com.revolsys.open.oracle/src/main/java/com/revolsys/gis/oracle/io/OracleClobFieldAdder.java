@@ -5,9 +5,9 @@ import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 
-public class OracleClobAttributeAdder extends JdbcFieldAdder {
+public class OracleClobFieldAdder extends JdbcFieldAdder {
 
-  public OracleClobAttributeAdder() {
+  public OracleClobFieldAdder() {
   }
 
   @Override

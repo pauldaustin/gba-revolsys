@@ -12,25 +12,25 @@ import com.revolsys.data.record.io.RecordStoreExtension;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.gis.oracle.io.OracleDataObjectStore;
+import com.revolsys.gis.oracle.io.OracleRecordStore;
 import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.Property;
 
-public class ArcSdeStGeometryDataStoreExtension implements RecordStoreExtension {
+public class ArcSdeStGeometryRecordStoreExtension implements RecordStoreExtension {
 
-  public ArcSdeStGeometryDataStoreExtension() {
+  public ArcSdeStGeometryRecordStoreExtension() {
   }
 
   @Override
   public void initialize(final RecordStore dataStore, final Map<String, Object> connectionProperties) {
-    final OracleDataObjectStore oracleDataStore = (OracleDataObjectStore)dataStore;
+    final OracleRecordStore oracleDataStore = (OracleRecordStore)dataStore;
     final JdbcFieldAdder stGeometryAttributeAdder = new ArcSdeStGeometryAttributeAdder(
       oracleDataStore);
-    oracleDataStore.addAttributeAdder("ST_GEOMETRY", stGeometryAttributeAdder);
-    oracleDataStore.addAttributeAdder("SDE.ST_GEOMETRY", stGeometryAttributeAdder);
+    oracleDataStore.addFieldAdder("ST_GEOMETRY", stGeometryAttributeAdder);
+    oracleDataStore.addFieldAdder("SDE.ST_GEOMETRY", stGeometryAttributeAdder);
   }
 
   @Override
@@ -121,7 +121,7 @@ public class ArcSdeStGeometryDataStoreExtension implements RecordStoreExtension 
       }
     } catch (final Throwable e) {
       LoggerFactory.getLogger(getClass())
-      .error("Unable to load rowid columns for " + schemaName, e);
+        .error("Unable to load rowid columns for " + schemaName, e);
     } finally {
       JdbcUtils.close(statement, resultSet);
     }
@@ -146,9 +146,9 @@ public class ArcSdeStGeometryDataStoreExtension implements RecordStoreExtension 
   @Override
   public void preProcess(final RecordStoreSchema schema) {
     final RecordStore dataStore = schema.getRecordStore();
-    final OracleDataObjectStore oracleDataStore = (OracleDataObjectStore)dataStore;
+    final OracleRecordStore oracleDataStore = (OracleRecordStore)dataStore;
     try (
-        final Connection connection = oracleDataStore.getSqlConnection()) {
+      final Connection connection = oracleDataStore.getJdbcConnection()) {
       final String schemaName = oracleDataStore.getDatabaseSchemaName(schema);
       loadTableProperties(connection, schema, schemaName);
       loadColumnProperties(schema, schemaName, connection);

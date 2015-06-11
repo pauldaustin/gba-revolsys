@@ -46,7 +46,7 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
 
   @Override
   public JdbcRecordStore createDataObjectStore(final DataSource dataSource) {
-    return new PostgreSQLDataObjectStore(dataSource);
+    return new PostgreSQLRecordStore(dataSource);
   }
 
   @Override
@@ -93,7 +93,7 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   @Override
   public JdbcRecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
-    return new PostgreSQLDataObjectStore(this, connectionProperties);
+    return new PostgreSQLRecordStore(this, connectionProperties);
   }
 
   @Override

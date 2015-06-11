@@ -47,6 +47,8 @@ MapSerializer {
 
   private final Map<Object, Object> allowedValues = new LinkedHashMap<Object, Object>();
 
+  private CodeTable codeTable;
+
   private Object defaultValue;
 
   /** The description of the attribute. */
@@ -57,8 +59,14 @@ MapSerializer {
   /** The maximum length of an attribute value. */
   private int length;
 
+  private Object maxValue;
+
+  private Object minValue;
+
   /** The name of the attribute. */
   private String name;
+
+  private Reference<RecordDefinition> recordDefinition;
 
   /** The flag indicating if a value is required for the attribute. */
   private boolean required;
@@ -66,16 +74,10 @@ MapSerializer {
   /** The maximum number of decimal places. */
   private int scale;
 
-  /** The data type of the attribute value. */
-  private DataType type;
-
-  private Reference<RecordDefinition> recordDefinition;
-
   private String title;
 
-  private Object minValue;
-
-  private Object maxValue;
+  /** The data type of the attribute value. */
+  private DataType type;
 
   public FieldDefinition() {
   }
@@ -320,6 +322,10 @@ MapSerializer {
     return this.allowedValues;
   }
 
+  public CodeTable getCodeTable() {
+    return this.codeTable;
+  }
+
   @SuppressWarnings("unchecked")
   public <T> T getDefaultValue() {
     return (T)this.defaultValue;
@@ -480,6 +486,10 @@ MapSerializer {
 
   public void setAllowedValues(final Map<?, ?> allowedValues) {
     this.allowedValues.putAll(allowedValues);
+  }
+
+  public void setCodeTable(final CodeTable codeTable) {
+    this.codeTable = codeTable;
   }
 
   public void setDefaultValue(final Object defaultValue) {

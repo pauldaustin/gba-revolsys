@@ -27,7 +27,7 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
-import com.revolsys.gis.oracle.io.OracleDataObjectStore;
+import com.revolsys.gis.oracle.io.OracleRecordStore;
 import com.revolsys.io.FileUtil;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
@@ -108,7 +108,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
     ((RecordDefinitionImpl)metaData).setGeometryFieldName(columnName);
   }
 
-  public AbstractIterator<Record> createIterator(final OracleDataObjectStore dataStore,
+  public AbstractIterator<Record> createIterator(final OracleRecordStore dataStore,
     final Query query, final Map<String, Object> properties) {
     final BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox == null) {

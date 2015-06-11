@@ -71,7 +71,7 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
 
   @Override
   public JdbcRecordStore createDataObjectStore(final DataSource dataSource) {
-    return new OracleDataObjectStore(dataSource);
+    return new OracleRecordStore(dataSource);
   }
 
   @Override
@@ -120,7 +120,7 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   @Override
   public JdbcRecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
-    return new OracleDataObjectStore(this, connectionProperties);
+    return new OracleRecordStore(this, connectionProperties);
   }
 
   @Override

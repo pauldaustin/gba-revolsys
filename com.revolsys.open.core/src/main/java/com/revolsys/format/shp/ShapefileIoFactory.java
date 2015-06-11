@@ -1,6 +1,5 @@
 package com.revolsys.format.shp;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -18,13 +17,11 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordStoreFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.io.DirectoryDataObjectStore;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.OutputStreamResource;
-import com.revolsys.spring.SpringUtil;
 
 public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory implements
-RecordStoreFactory {
+  RecordStoreFactory {
   public ShapefileIoFactory() {
     super(ShapefileConstants.DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(ShapefileConstants.MIME_TYPE, ShapefileConstants.FILE_EXTENSION);
@@ -44,10 +41,7 @@ RecordStoreFactory {
 
   @Override
   public RecordStore createRecordStore(final Map<String, ? extends Object> connectionProperties) {
-    final String url = (String)connectionProperties.get("url");
-    final Resource resource = SpringUtil.getResource(url);
-    final File directory = SpringUtil.getFile(resource);
-    return new DirectoryDataObjectStore(directory, ShapefileConstants.FILE_EXTENSION);
+    throw new UnsupportedOperationException();
   }
 
   @Override

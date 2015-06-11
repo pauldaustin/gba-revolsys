@@ -23,9 +23,9 @@ import com.revolsys.jdbc.io.SqlFunction;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.Property;
 
-public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
+public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PostgreSQLGeometryAttributeAdder.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PostgreSQLGeometryFieldAdder.class);
 
   private static final Map<String, DataType> DATA_TYPE_MAP = new HashMap<String, DataType>();
 
@@ -41,9 +41,9 @@ public class PostgreSQLGeometryAttributeAdder extends JdbcFieldAdder {
 
   private final DataSource dataSource;
 
-  private final PostgreSQLDataObjectStore dataStore;
+  private final PostgreSQLRecordStore dataStore;
 
-  public PostgreSQLGeometryAttributeAdder(final PostgreSQLDataObjectStore dataStore,
+  public PostgreSQLGeometryFieldAdder(final PostgreSQLRecordStore dataStore,
     final DataSource dataSource) {
     this.dataStore = dataStore;
     this.dataSource = dataSource;

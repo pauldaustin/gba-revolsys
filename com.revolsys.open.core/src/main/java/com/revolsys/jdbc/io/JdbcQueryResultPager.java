@@ -17,6 +17,7 @@ import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.io.FileUtil;
 import com.revolsys.jdbc.JdbcUtils;
 
 public class JdbcQueryResultPager implements ResultPager<Record> {
@@ -39,9 +40,9 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
 
   private DataSource dataSource;
 
-  private RecordFactory dataObjectFactory;
+  private RecordFactory recordFactory;
 
-  private JdbcRecordStore dataStore;
+  private JdbcRecordStore recordStore;
 
   private RecordDefinition metaData;
 
@@ -53,33 +54,21 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
 
   private final String sql;
 
-  public JdbcQueryResultPager(final JdbcRecordStore dataStore,
+  public JdbcQueryResultPager(final JdbcRecordStore recordStore,
     final Map<String, Object> properties, final Query query) {
-    this.connection = dataStore.getJdbcConnection();
-    this.dataSource = dataStore.getDataSource();
+    final boolean autoCommit = BooleanStringConverter.getBoolean(properties.get("autoCommit"));
+    this.connection = recordStore.getJdbcConnection(autoCommit);
 
-    if (this.dataSource != null) {
-      try {
-        this.connection = JdbcUtils.getConnection(this.dataSource);
-        boolean autoCommit = false;
-        if (BooleanStringConverter.getBoolean(properties.get("autoCommit"))) {
-          autoCommit = true;
-        }
-        this.connection.setAutoCommit(autoCommit);
-      } catch (final SQLException e) {
-        throw new IllegalArgumentException("Unable to create connection", e);
-      }
-    }
-    this.dataObjectFactory = dataStore.getRecordFactory();
-    this.dataStore = dataStore;
+    this.recordFactory = recordStore.getRecordFactory();
+    this.recordStore = recordStore;
 
     this.query = query;
 
     final String tableName = query.getTypeName();
     this.metaData = query.getRecordDefinition();
     if (this.metaData == null) {
-      this.metaData = dataStore.getRecordDefinition(tableName);
-      query.setMetaData(this.metaData);
+      this.metaData = recordStore.getRecordDefinition(tableName);
+      query.setRecordDefinition(this.metaData);
     }
 
     this.sql = JdbcUtils.getSelectSql(query);
@@ -89,11 +78,11 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
   @PreDestroy
   public void close() {
     JdbcUtils.close(this.statement, this.resultSet);
-    JdbcUtils.release(this.connection, this.dataSource);
+    FileUtil.closeSilent(this.connection);
     this.connection = null;
-    this.dataObjectFactory = null;
+    this.recordFactory = null;
     this.dataSource = null;
-    this.dataStore = null;
+    this.recordStore = null;
     this.metaData = null;
     this.results = null;
     this.resultSet = null;
@@ -111,16 +100,12 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     return this.connection;
   }
 
-  public RecordFactory getDataObjectFactory() {
-    return this.dataObjectFactory;
-  }
-
   public DataSource getDataSource() {
     return this.dataSource;
   }
 
   public JdbcRecordStore getDataStore() {
-    return this.dataStore;
+    return this.recordStore;
   }
 
   /**
@@ -218,6 +203,10 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     return this.query;
   }
 
+  public RecordFactory getRecordFactory() {
+    return this.recordFactory;
+  }
+
   protected String getSql() {
     return this.sql;
   }
@@ -274,7 +263,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
   }
 
   public boolean isClosed() {
-    return this.dataStore == null;
+    return this.recordStore == null;
   }
 
   /**
@@ -341,8 +330,8 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
         if (this.resultSet.absolute(this.pageNumber * this.pageSize + 1)) {
           int i = 0;
           do {
-            final Record object = JdbcQueryIterator.getNextObject(this.dataStore, this.metaData,
-              this.metaData.getFields(), this.dataObjectFactory, this.resultSet);
+            final Record object = JdbcQueryIterator.getNextObject(this.recordStore, this.metaData,
+              this.metaData.getFields(), this.recordFactory, this.resultSet);
             this.results.add(object);
             i++;
           } while (this.resultSet.next() && i < this.pageSize);

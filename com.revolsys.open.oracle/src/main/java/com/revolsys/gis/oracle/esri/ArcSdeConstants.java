@@ -11,7 +11,7 @@ import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.oracle.io.OracleDataObjectStore;
+import com.revolsys.gis.oracle.io.OracleRecordStore;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -117,8 +117,8 @@ public final class ArcSdeConstants {
   }
 
   public static boolean isSdeAvailable(final RecordStore dataStore) {
-    if (dataStore instanceof OracleDataObjectStore) {
-      final OracleDataObjectStore oracleDataStore = (OracleDataObjectStore)dataStore;
+    if (dataStore instanceof OracleRecordStore) {
+      final OracleRecordStore oracleDataStore = (OracleRecordStore)dataStore;
       final Set<String> allSchemaNames = oracleDataStore.getAllSchemaNames();
       return allSchemaNames.contains("SDE");
     }

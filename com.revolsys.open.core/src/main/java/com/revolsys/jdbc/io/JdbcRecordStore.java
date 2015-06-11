@@ -2,8 +2,6 @@ package com.revolsys.jdbc.io;
 
 import java.sql.ResultSetMetaData;
 
-import javax.sql.DataSource;
-
 import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -23,28 +21,26 @@ public interface JdbcRecordStore extends RecordStore {
 
   String getDatabaseTableName(final String typePath);
 
-  DataSource getDataSource();
-
-  String getGeneratePrimaryKeySql(RecordDefinition metaData);
+  String getGeneratePrimaryKeySql(RecordDefinition recordDefinition);
 
   JdbcConnection getJdbcConnection();
+
+  JdbcConnection getJdbcConnection(boolean autoCommit);
 
   @Override
   String getLabel();
 
-  RecordDefinition getMetaData(String tableName, ResultSetMetaData resultSetMetaData);
-
-  Object getNextPrimaryKey(RecordDefinition metaData);
+  Object getNextPrimaryKey(RecordDefinition recordDefinition);
 
   Object getNextPrimaryKey(String typePath);
+
+  RecordDefinition getRecordDefinition(String tableName, ResultSetMetaData resultSetMetaData);
 
   @Override
   Statistics getStatistics(String name);
 
   @Override
   void initialize();
-
-  void setDataSource(DataSource dataSource);
 
   @Override
   void setLabel(String label);

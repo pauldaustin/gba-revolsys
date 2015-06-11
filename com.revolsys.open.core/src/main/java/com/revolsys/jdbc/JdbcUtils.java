@@ -34,6 +34,7 @@ import com.revolsys.io.Path;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.util.Property;
+import com.revolsys.util.WrappedException;
 
 public final class JdbcUtils {
   private static final Logger LOG = Logger.getLogger(JdbcUtils.class);
@@ -174,7 +175,7 @@ public final class JdbcUtils {
     final String idColumn, final Object id) {
 
     final String sql = "DELETE FROM " + cleanObjectName(tableName) + " WHERE "
-        + cleanObjectName(idColumn) + " = ?";
+      + cleanObjectName(idColumn) + " = ?";
     try {
       final PreparedStatement statement = connection.prepareStatement(sql);
       try {
@@ -334,7 +335,7 @@ public final class JdbcUtils {
   }
 
   public static void lockTable(final Connection connection, final String tableName)
-      throws SQLException {
+    throws SQLException {
     final String sql = "LOCK TABLE " + tableName + " IN SHARE MODE";
     final PreparedStatement statement = connection.prepareStatement(sql);
     try {
@@ -344,13 +345,17 @@ public final class JdbcUtils {
     }
   }
 
-  public static void lockTable(final RecordStore dataStore, final String typePath) {
-    if (dataStore instanceof JdbcRecordStore) {
-      final JdbcRecordStore jdbcDataStore = (JdbcRecordStore)dataStore;
-      final DataSource dataSource = jdbcDataStore.getDataSource();
-      final String tableName = getQualifiedTableName(typePath);
-      final String sql = "LOCK TABLE " + tableName + " IN SHARE MODE";
-      executeUpdate(dataSource, sql);
+  public static void lockTable(final RecordStore recordStore, final String typePath) {
+    if (recordStore instanceof JdbcRecordStore) {
+      final JdbcRecordStore jdbcRecordStore = (JdbcRecordStore)recordStore;
+      try (
+        final Connection connection = jdbcRecordStore.getJdbcConnection()) {
+        final String tableName = getQualifiedTableName(typePath);
+        final String sql = "LOCK TABLE " + tableName + " IN SHARE MODE";
+        executeUpdate(connection, sql);
+      } catch (final SQLException e) {
+        throw new WrappedException(e);
+      }
     }
 
   }
@@ -526,7 +531,7 @@ public final class JdbcUtils {
           return readMap(resultSet);
         } else {
           throw new IllegalArgumentException("Value not found for " + sql + " "
-              + Arrays.asList(parameters));
+            + Arrays.asList(parameters));
         }
       } finally {
         close(resultSet);
@@ -586,7 +591,7 @@ public final class JdbcUtils {
   }
 
   public static void setParameters(final PreparedStatement statement, final Object... parameters)
-      throws SQLException {
+    throws SQLException {
     int index = 1;
     for (final Object parameter : parameters) {
       index = setValue(statement, index, parameter);
@@ -611,7 +616,7 @@ public final class JdbcUtils {
   }
 
   public static int setValue(final PreparedStatement statement, final int index, final Object value)
-      throws SQLException {
+    throws SQLException {
     final JdbcFieldDefinition attribute = JdbcFieldDefinition.createField(value);
     return attribute.setPreparedStatementValue(statement, index, value);
   }

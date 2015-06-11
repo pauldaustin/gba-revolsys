@@ -15,7 +15,7 @@ public class OracleJdbcQueryIterator extends JdbcQueryIterator {
 
   @Override
   protected String getSql(Query query) {
-    final OracleDataObjectStore dataStore = (OracleDataObjectStore)getDataStore();
+    final OracleRecordStore dataStore = (OracleRecordStore)getDataStore();
     query = dataStore.addBoundingBoxFilter(query);
     setQuery(query);
     String sql = super.getSql(query);

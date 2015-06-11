@@ -127,13 +127,13 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   }
 
   @Override
-  public Map<String, CodeTable> getCodeTableByColumnMap() {
-    return this.recordStore.getCodeTableByColumnMap();
+  public CodeTable getCodeTableByFieldName(final String columnName) {
+    return this.recordStore.getCodeTableByFieldName(columnName);
   }
 
   @Override
-  public CodeTable getCodeTableByFieldName(final String columnName) {
-    return this.recordStore.getCodeTableByFieldName(columnName);
+  public Map<String, CodeTable> getCodeTableByFieldNameMap() {
+    return this.recordStore.getCodeTableByFieldNameMap();
   }
 
   @Override
@@ -193,11 +193,6 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   @Override
   public RecordStoreSchema getSchema(final String schemaName) {
     return this.recordStore.getSchema(schemaName);
-  }
-
-  @Override
-  public Map<String, RecordStoreSchema> getSchemaMap() {
-    return this.recordStore.getSchemaMap();
   }
 
   @Override
@@ -269,15 +264,6 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   @Override
   public Record load(final String typePath, final Object... id) {
     return this.recordStore.load(typePath, id);
-  }
-
-  @Override
-  protected void loadSchemaDataObjectMetaData(final RecordStoreSchema schema,
-    final Map<String, RecordDefinition> metaDataMap) {
-  }
-
-  @Override
-  protected void loadSchemas(final Map<String, RecordStoreSchema> schemaMap) {
   }
 
   @Override

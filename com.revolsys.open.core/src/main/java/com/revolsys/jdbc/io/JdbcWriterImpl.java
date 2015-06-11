@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 import javax.annotation.PreDestroy;
-import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataAccessException;
@@ -24,6 +23,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.AbstractWriter;
+import com.revolsys.io.FileUtil;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.transaction.Transaction;
@@ -35,9 +35,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   private Connection connection;
 
-  private DataSource dataSource;
-
-  private JdbcRecordStore dataStore;
+  private JdbcRecordStore recordStore;
 
   private boolean flushBetweenTypes = false;
 
@@ -83,15 +81,14 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   private boolean throwExceptions = false;
 
-  public JdbcWriterImpl(final JdbcRecordStore dataStore) {
-    this(dataStore, dataStore.getStatistics());
+  public JdbcWriterImpl(final JdbcRecordStore recordStore) {
+    this(recordStore, recordStore.getStatistics());
   }
 
-  public JdbcWriterImpl(final JdbcRecordStore dataStore, final StatisticsMap statistics) {
-    this.dataStore = dataStore;
+  public JdbcWriterImpl(final JdbcRecordStore recordStore, final StatisticsMap statistics) {
+    this.recordStore = recordStore;
     this.statistics = statistics;
-    setConnection(dataStore.getJdbcConnection());
-    setDataSource(dataStore.getDataSource());
+    this.connection = recordStore.getJdbcConnection(false);
     statistics.connect();
   }
 
@@ -165,7 +162,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
       batchCount += 1;
       this.typeDeleteBatchCountMap.put(typePath, batchCount);
     }
-    this.dataStore.addStatistic("Delete", object);
+    this.recordStore.addStatistic("Delete", object);
 
     // TODO this locks code tables which prevents insert
     // if (batchCount >= batchSize) {
@@ -176,7 +173,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   }
 
   protected synchronized void doClose() {
-    if (this.dataStore != null) {
+    if (this.recordStore != null) {
       try {
 
         close(this.typeInsertSqlMap, this.typeInsertStatementMap, this.typeInsertBatchCountMap);
@@ -201,8 +198,8 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
         this.typeDeleteBatchCountMap = null;
         this.typeDeleteSqlMap = null;
         this.typeDeleteStatementMap = null;
-        this.dataStore = null;
-        if (this.dataSource != null) {
+        this.recordStore = null;
+        if (this.connection != null) {
           try {
             if (!Transaction.isHasCurrentTransaction()) {
               this.connection.commit();
@@ -210,8 +207,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
           } catch (final SQLException e) {
             throw new RuntimeException("Failed to commit data:", e);
           } finally {
-            JdbcUtils.release(this.connection, this.dataSource);
-            this.dataSource = null;
+            FileUtil.closeSilent(this.connection);
             this.connection = null;
           }
         }
@@ -260,16 +256,12 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   }
 
   private RecordDefinition getDataObjectMetaData(final String typePath) {
-    if (this.dataStore == null) {
+    if (this.recordStore == null) {
       return null;
     } else {
-      final RecordDefinition metaData = this.dataStore.getRecordDefinition(typePath);
+      final RecordDefinition metaData = this.recordStore.getRecordDefinition(typePath);
       return metaData;
     }
-  }
-
-  public DataSource getDataSource() {
-    return this.dataSource;
   }
 
   private String getDeleteSql(final RecordDefinition type) {
@@ -306,7 +298,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   }
 
   private String getGeneratePrimaryKeySql(final RecordDefinition metaData) {
-    return this.dataStore.getGeneratePrimaryKeySql(metaData);
+    return this.recordStore.getGeneratePrimaryKeySql(metaData);
   }
 
   /**
@@ -473,7 +465,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
       insertSequence(object, typePath, metaData);
     }
     object.setState(RecordState.Persisted);
-    this.dataStore.addStatistic("Insert", object);
+    this.recordStore.addStatistic("Insert", object);
   }
 
   private void insert(final Record object, final String typePath, final RecordDefinition metaData)
@@ -573,7 +565,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
       this.typeCountMap.put(typePath, typeCount);
       statement.executeBatch();
     } catch (final SQLException e) {
-      throw JdbcUtils.getException(getDataSource(), this.connection, "Process Batch", sql, e);
+      throw JdbcUtils.getException(null, this.connection, "Process Batch", sql, e);
     } catch (final RuntimeException e) {
       LOG.error(sql, e);
       throw e;
@@ -584,20 +576,6 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   public void setBatchSize(final int batchSize) {
     this.batchSize = batchSize;
-  }
-
-  public void setConnection(final Connection connection) {
-    this.connection = connection;
-  }
-
-  public void setDataSource(final DataSource dataSource) {
-    this.dataSource = dataSource;
-    try {
-      setConnection(JdbcUtils.getConnection(dataSource));
-      this.connection.setAutoCommit(false);
-    } catch (final SQLException e) {
-      throw new RuntimeException("Unable to create connection", e);
-    }
   }
 
   public void setFlushBetweenTypes(final boolean flushBetweenTypes) {
@@ -633,10 +611,10 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   @Override
   public String toString() {
-    if (this.dataStore == null) {
+    if (this.recordStore == null) {
       return super.toString();
     } else {
-      return this.dataStore.toString() + " writer";
+      return this.recordStore.toString() + " writer";
     }
   }
 
@@ -683,16 +661,16 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
       final String sql = getUpdateSql(metaData);
       processCurrentBatch(typePath, sql, statement, this.typeUpdateBatchCountMap);
     }
-    this.dataStore.addStatistic("Update", object);
+    this.recordStore.addStatistic("Update", object);
   }
 
   @Override
   public synchronized void write(final Record object) {
     try {
       final RecordDefinition metaData = object.getRecordDefinition();
-      final RecordStore dataStore = metaData.getRecordStore();
+      final RecordStore recordStore = metaData.getRecordStore();
       final RecordState state = object.getState();
-      if (dataStore != this.dataStore) {
+      if (recordStore != this.recordStore) {
         if (state != RecordState.Deleted) {
           insert(object);
         }

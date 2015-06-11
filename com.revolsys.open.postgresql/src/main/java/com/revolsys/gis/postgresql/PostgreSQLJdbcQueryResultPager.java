@@ -51,7 +51,7 @@ public class PostgreSQLJdbcQueryResultPager extends JdbcQueryResultPager {
           }
           try {
             final JdbcRecordStore dataStore = getDataStore();
-            final RecordFactory dataObjectFactory = getDataObjectFactory();
+            final RecordFactory dataObjectFactory = getRecordFactory();
             final RecordDefinition metaData = getMetaData();
             if (metaData != null) {
               final List<FieldDefinition> attributes = metaData.getFields();
