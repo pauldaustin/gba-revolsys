@@ -1,27 +1,42 @@
 package com.revolsys.swing.tree;
 
+import java.util.Map;
+
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.collection.map.Maps;
 import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.swing.action.enablecheck.AbstractEnableCheck;
+import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.util.Property;
 
-public class TreeItemPropertyEnableCheck extends AbstractEnableCheck {
+public class MenuSourcePropertyEnableCheck extends AbstractEnableCheck {
+
+  public static MenuSourcePropertyEnableCheck create(final Map<String, Object> config) {
+    return new MenuSourcePropertyEnableCheck(config);
+  }
+
   private final String propertyName;
 
   private final Object value;
 
   private boolean inverse = false;
 
-  public TreeItemPropertyEnableCheck(final String propertyName) {
+  public MenuSourcePropertyEnableCheck(final Map<String, Object> config) {
+    this.propertyName = (String)config.get("propertyName");
+    this.value = config.get("value");
+    this.inverse = Maps.getBool(config, "inverse");
+  }
+
+  public MenuSourcePropertyEnableCheck(final String propertyName) {
     this(propertyName, true);
   }
 
-  public TreeItemPropertyEnableCheck(final String propertyName, final Object value) {
+  public MenuSourcePropertyEnableCheck(final String propertyName, final Object value) {
     this(propertyName, value, false);
   }
 
-  public TreeItemPropertyEnableCheck(final String propertyName, final Object value,
+  public MenuSourcePropertyEnableCheck(final String propertyName, final Object value,
     final boolean inverse) {
     this.propertyName = propertyName;
     this.value = value;
@@ -30,7 +45,7 @@ public class TreeItemPropertyEnableCheck extends AbstractEnableCheck {
 
   @Override
   public boolean isEnabled() {
-    final Object object = BaseTreeOld.getMouseClickItem();
+    final Object object = MenuFactory.getMenuSource();
     if (object == null) {
       return disabled();
     } else {

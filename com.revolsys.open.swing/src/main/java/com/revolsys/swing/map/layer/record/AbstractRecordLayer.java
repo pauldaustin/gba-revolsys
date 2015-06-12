@@ -87,10 +87,10 @@ import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.layer.LayerRenderer;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.record.component.MergeRecordsDialog;
-import com.revolsys.swing.map.layer.record.renderer.AbstractDataObjectLayerRenderer;
+import com.revolsys.swing.map.layer.record.renderer.AbstractRecordLayerRenderer;
 import com.revolsys.swing.map.layer.record.renderer.GeometryStyleRenderer;
 import com.revolsys.swing.map.layer.record.style.GeometryStyle;
-import com.revolsys.swing.map.layer.record.style.panel.DataObjectLayerStylePanel;
+import com.revolsys.swing.map.layer.record.style.panel.LayerStylePanel;
 import com.revolsys.swing.map.layer.record.table.RecordLayerTable;
 import com.revolsys.swing.map.layer.record.table.RecordLayerTablePanel;
 import com.revolsys.swing.map.layer.record.table.model.RecordDefinitionTableModel;
@@ -103,9 +103,8 @@ import com.revolsys.swing.map.overlay.EditGeometryOverlay;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.table.BaseJxTable;
-import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
-import com.revolsys.swing.tree.TreeItemRunnable;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
+import com.revolsys.swing.tree.MenuSourcePropertyEnableCheck;
+import com.revolsys.swing.tree.MenuSourceRunnable;
 import com.revolsys.swing.undo.SetObjectProperty;
 import com.revolsys.util.CompareUtil;
 import com.revolsys.util.ExceptionUtil;
@@ -126,64 +125,63 @@ AddGeometryCompleteAction {
   public static Map<String, Icon> ICONS_GEOMETRY = new HashMap<String, Icon>();
 
   static {
-    final MenuFactory menu = ObjectTreeModel.getMenu(AbstractRecordLayer.class);
+    final Class<AbstractRecordLayer> clazz = AbstractRecordLayer.class;
+    final MenuFactory menu = MenuFactory.getMenu(clazz);
+    menu.setName("Layer");
     menu.addGroup(0, "table");
     menu.addGroup(2, "edit");
     menu.addGroup(3, "dnd");
 
-    final EnableCheck exists = new TreeItemPropertyEnableCheck("exists");
+    final EnableCheck exists = new MenuSourcePropertyEnableCheck("exists");
 
-    menu.addMenuItem("table",
-      TreeItemRunnable.createAction("View Records", "table_go", exists, "showRecordsTable"));
+    menu.addMenuItem(clazz, "ViewRecords");
 
-    final EnableCheck hasSelectedRecords = new TreeItemPropertyEnableCheck("hasSelectedRecords");
-    final EnableCheck hasGeometry = new TreeItemPropertyEnableCheck("hasGeometry");
-    menu.addMenuItem("zoom", TreeItemRunnable.createAction("Zoom to Selected",
+    final EnableCheck hasSelectedRecords = new MenuSourcePropertyEnableCheck("hasSelectedRecords");
+    final EnableCheck hasGeometry = new MenuSourcePropertyEnableCheck("hasGeometry");
+    menu.addMenuItem("zoom", MenuSourceRunnable.createAction("Zoom to Selected",
       "magnifier_zoom_selected", new AndEnableCheck(exists, hasGeometry, hasSelectedRecords),
-        "zoomToSelected"));
+      "zoomToSelected"));
 
-    final EnableCheck editable = new TreeItemPropertyEnableCheck("editable");
-    final EnableCheck readonly = new TreeItemPropertyEnableCheck("readOnly", false);
-    final EnableCheck hasChanges = new TreeItemPropertyEnableCheck("hasChanges");
-    final EnableCheck canAdd = new TreeItemPropertyEnableCheck("canAddRecords");
-    final EnableCheck canDelete = new TreeItemPropertyEnableCheck("canDeleteRecords");
-    final EnableCheck canMergeRecords = new TreeItemPropertyEnableCheck("canMergeRecords");
-    final EnableCheck canPaste = new TreeItemPropertyEnableCheck("canPaste");
+    final EnableCheck editable = new MenuSourcePropertyEnableCheck("editable");
+    final EnableCheck readonly = new MenuSourcePropertyEnableCheck("readOnly", false);
+    final EnableCheck hasChanges = new MenuSourcePropertyEnableCheck("hasChanges");
+    final EnableCheck canAdd = new MenuSourcePropertyEnableCheck("canAddRecords");
+    final EnableCheck canDelete = new MenuSourcePropertyEnableCheck("canDeleteRecords");
+    final EnableCheck canMergeRecords = new MenuSourcePropertyEnableCheck("canMergeRecords");
+    final EnableCheck canPaste = new MenuSourcePropertyEnableCheck("canPaste");
 
     menu.addCheckboxMenuItem("edit",
-      TreeItemRunnable.createAction("Editable", "pencil", readonly, "toggleEditable"), editable);
+      MenuSourceRunnable.createAction("Editable", "pencil", readonly, "toggleEditable"), editable);
 
     menu.addMenuItem("edit",
-      TreeItemRunnable.createAction("Save Changes", "table_save", hasChanges, "saveChanges"));
+      MenuSourceRunnable.createAction("Save Changes", "table_save", hasChanges, "saveChanges"));
+
+    menu.addMenuItem(
+      "edit",
+      MenuSourceRunnable.createAction("Cancel Changes", "table_cancel", hasChanges, "cancelChanges"));
 
     menu.addMenuItem("edit",
-      TreeItemRunnable.createAction("Cancel Changes", "table_cancel", hasChanges, "cancelChanges"));
+      MenuSourceRunnable.createAction("Add New Record", "table_row_insert", canAdd, "addNewRecord"));
 
-    menu.addMenuItem("edit",
-      TreeItemRunnable.createAction("Add New Record", "table_row_insert", canAdd, "addNewRecord"));
-
-    menu.addMenuItem("edit", TreeItemRunnable.createAction("Delete Selected Records",
+    menu.addMenuItem("edit", MenuSourceRunnable.createAction("Delete Selected Records",
       "table_row_delete", new AndEnableCheck(hasSelectedRecords, canDelete),
-        "deleteSelectedRecords"));
+      "deleteSelectedRecords"));
 
-    menu.addMenuItem("edit", TreeItemRunnable.createAction("Merge Selected Records", "shape_group",
-      canMergeRecords, "mergeSelectedRecords"));
+    menu.addMenuItem("edit", MenuSourceRunnable.createAction("Merge Selected Records",
+      "shape_group", canMergeRecords, "mergeSelectedRecords"));
 
-    menu.addMenuItem("dnd", TreeItemRunnable.createAction("Copy Selected Records", "page_copy",
+    menu.addMenuItem("dnd", MenuSourceRunnable.createAction("Copy Selected Records", "page_copy",
       hasSelectedRecords, "copySelectedRecords"));
 
-    menu.addMenuItem("dnd", TreeItemRunnable.createAction("Paste New Records", "paste_plain",
+    menu.addMenuItem("dnd", MenuSourceRunnable.createAction("Paste New Records", "paste_plain",
       new AndEnableCheck(canAdd, canPaste), "pasteRecords"));
 
-    menu.addMenuItem("layer", 0, TreeItemRunnable.createAction("Layer Style", "palette",
+    menu.addMenuItem("layer", 0, MenuSourceRunnable.createAction("Layer Style", "palette",
       new AndEnableCheck(exists, hasGeometry), "showProperties", "Style"));
 
-    for (final String geometryType : Arrays.asList("Geometry", "Point", "MultiPoint", "LineString",
-      "MultiLineString", "Polygon", "MultiPolygon")) {
-      ICONS_GEOMETRY.put(geometryType, Icons.getIcon("table_" + geometryType.toLowerCase()));
-    }
-    ICONS_GEOMETRY.put("GeometryCollection", Icons.getIcon("table_geometry"));
-
+    // menu.addMenuItem("edit", 0, MenuSourceRunnable.createAction(
+    // "Export Records", "disk", new AndEnableCheck(exists, hasSelectedRecords),
+    // "exportRecords"));
   }
 
   public static void addVisibleLayers(final List<AbstractRecordLayer> layers, final LayerGroup group) {
@@ -578,7 +576,7 @@ AddGeometryCompleteAction {
 
   protected void createPropertiesPanelStyle(final TabbedValuePanel propertiesPanel) {
     if (getRenderer() != null) {
-      final DataObjectLayerStylePanel stylePanel = new DataObjectLayerStylePanel(this);
+      final LayerStylePanel stylePanel = new LayerStylePanel(this);
       propertiesPanel.addTab("Style", stylePanel);
     }
   }
@@ -1482,7 +1480,7 @@ AddGeometryCompleteAction {
 
   public boolean isVisible(final LayerRecord record) {
     if (isExists() && isVisible()) {
-      final AbstractDataObjectLayerRenderer renderer = getRenderer();
+      final AbstractRecordLayerRenderer renderer = getRenderer();
       if (renderer == null || renderer.isVisible(record)) {
         return true;
       }
@@ -1960,7 +1958,7 @@ AddGeometryCompleteAction {
       if (value instanceof Map) {
         @SuppressWarnings("unchecked")
         final Map<String, Object> style = (Map<String, Object>)value;
-        final LayerRenderer<AbstractRecordLayer> renderer = AbstractDataObjectLayerRenderer.getRenderer(
+        final LayerRenderer<AbstractRecordLayer> renderer = AbstractRecordLayerRenderer.getRenderer(
           this, style);
         if (renderer != null) {
           setRenderer(renderer);

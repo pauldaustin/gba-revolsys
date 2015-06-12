@@ -1,6 +1,7 @@
 package com.revolsys.swing.action.enablecheck;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class AndEnableCheck extends MultiEnableCheck {
 
@@ -13,6 +14,10 @@ public class AndEnableCheck extends MultiEnableCheck {
 
   public AndEnableCheck(final EnableCheck... enableChecks) {
     super(enableChecks);
+  }
+
+  public AndEnableCheck(final Map<String, Object> config) {
+    super(config);
   }
 
   @Override

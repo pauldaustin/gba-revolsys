@@ -92,8 +92,6 @@ import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
 import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 import com.revolsys.swing.toolbar.ToolBar;
-import com.revolsys.swing.tree.ObjectTree;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.swing.undo.ReverseDataObjectAttributesUndo;
 import com.revolsys.swing.undo.ReverseDataObjectGeometryUndo;
 import com.revolsys.swing.undo.ReverseDataObjectUndo;
@@ -102,7 +100,7 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class RecordLayerForm extends JPanel implements PropertyChangeListener, CellEditorListener,
-FocusListener, PropertyChangeSupportProxy, WindowListener {
+  FocusListener, PropertyChangeSupportProxy, WindowListener {
 
   public static final String FLIP_FIELDS_ICON = "flip_fields";
 
@@ -401,7 +399,7 @@ FocusListener, PropertyChangeSupportProxy, WindowListener {
     final JScrollPane scrollPane = addTab("All Fields", table);
     int maxHeight = 500;
     for (final GraphicsDevice device : GraphicsEnvironment.getLocalGraphicsEnvironment()
-      .getScreenDevices()) {
+        .getScreenDevices()) {
       final GraphicsConfiguration graphicsConfiguration = device.getDefaultConfiguration();
       final Rectangle bounds = graphicsConfiguration.getBounds();
 
@@ -436,10 +434,10 @@ FocusListener, PropertyChangeSupportProxy, WindowListener {
     final EnableCheck editable = new ObjectPropertyEnableCheck(this, "editable");
 
     if (layer != null) {
-      final MenuFactory menuFactory = ObjectTreeModel.findMenu(layer);
+      final MenuFactory menuFactory = MenuFactory.findMenu(layer);
       if (menuFactory != null) {
-        this.toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu", ObjectTree.class, "showMenu",
-          menuFactory, layer, this, 10, 10);
+        this.toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu", menuFactory, "show", layer,
+          this, 10, 10);
       }
     }
     final EnableCheck deletableEnableCheck = new ObjectPropertyEnableCheck(this, "deletable");
@@ -449,14 +447,14 @@ FocusListener, PropertyChangeSupportProxy, WindowListener {
     // Cut, Copy Paste
 
     this.toolBar.addButton("dnd", "Copy Record", "page_copy", (EnableCheck)null, this,
-      "dataTransferCopy");
+        "dataTransferCopy");
 
     this.toolBar.addButton("dnd", "Paste Record", "paste_plain", editable, this,
-      "dataTransferPaste");
+        "dataTransferPaste");
 
     if (hasGeometry) {
       this.toolBar.addButton("dnd", "Paste Geometry", "geometry_paste", editable, this,
-        "pasteGeometry");
+          "pasteGeometry");
 
     }
     final EnableCheck canUndo = new ObjectPropertyEnableCheck(this.undoManager, "canUndo");
@@ -465,7 +463,7 @@ FocusListener, PropertyChangeSupportProxy, WindowListener {
     final EnableCheck modifiedOrDeleted = new ObjectPropertyEnableCheck(this, "modifiedOrDeleted");
 
     this.toolBar.addButton("changes", "Revert Record", "arrow_revert", modifiedOrDeleted, this,
-      "revertChanges");
+        "revertChanges");
 
     this.toolBar.addButton("changes", "Revert Empty Fields", "field_empty_revert",
       modifiedOrDeleted, this, "revertEmptyFields");
@@ -477,24 +475,24 @@ FocusListener, PropertyChangeSupportProxy, WindowListener {
 
     if (hasGeometry) {
       this.toolBar.addButtonTitleIcon("zoom", "Zoom to Object", "magnifier", this,
-        "actionZoomToObject");
+          "actionZoomToObject");
     }
 
     // Geometry manipulation
     if (hasGeometry) {
       final DataType geometryDataType = geometryAttribute.getType();
       if (geometryDataType == DataTypes.LINE_STRING
-        || geometryDataType == DataTypes.MULTI_LINE_STRING) {
+          || geometryDataType == DataTypes.MULTI_LINE_STRING) {
         if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
           this.toolBar.addButton("geometry", FLIP_RECORD_NAME, FLIP_RECORD_ICON, editable, this,
-            "flipRecordOrientation");
+              "flipRecordOrientation");
           this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME,
             FLIP_LINE_ORIENTATION_ICON, editable, this, "flipLineOrientation");
           this.toolBar.addButton("geometry", FLIP_FIELDS_NAME, FLIP_FIELDS_ICON, editable, this,
-            "flipFields");
+              "flipFields");
         } else {
           this.toolBar.addButton("geometry", "Flip Line Orientation", "flip_line", editable, this,
-            "flipLineOrientation");
+              "flipLineOrientation");
         }
       }
     }
@@ -1250,7 +1248,7 @@ FocusListener, PropertyChangeSupportProxy, WindowListener {
     final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     dialog.add(buttons, BorderLayout.SOUTH);
     final JButton addCancelButton = InvokeMethodAction.createButton("Cancel", this,
-      "actionAddCancel");
+        "actionAddCancel");
     buttons.add(addCancelButton);
     this.addOkButton = InvokeMethodAction.createButton("OK", this, "actionAddOk");
     buttons.add(this.addOkButton);

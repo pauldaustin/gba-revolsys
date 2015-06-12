@@ -30,7 +30,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class GeometryStyleRenderer extends AbstractDataObjectLayerRenderer {
+public class GeometryStyleRenderer extends AbstractRecordLayerRenderer {
 
   private static final Icon ICON = Icons.getIcon("style_geometry");
 

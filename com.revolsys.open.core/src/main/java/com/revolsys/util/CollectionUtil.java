@@ -17,7 +17,6 @@ import java.util.TreeSet;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import com.revolsys.collection.map.Maps;
 import com.revolsys.converter.string.StringConverterRegistry;
 
 public final class CollectionUtil {
@@ -462,6 +461,26 @@ public final class CollectionUtil {
     }
   }
 
+  public static <V> List<V> list(final Iterable<? extends V> values) {
+    final ArrayList<V> list = new ArrayList<V>();
+    if (values != null) {
+      for (final V value : values) {
+        list.add(value);
+      }
+    }
+    return list;
+  }
+
+  public static <V> List<V> list(final V... values) {
+    final ArrayList<V> list = new ArrayList<V>();
+    if (values != null) {
+      for (final V value : values) {
+        list.add(value);
+      }
+    }
+    return list;
+  }
+
   public static <K1, K2, V> V put(final Map<K1, Map<K2, V>> map, final K1 key1, final K2 key2,
     final V value) {
     final Map<K2, V> values = getMap(map, key1);
@@ -559,11 +578,11 @@ public final class CollectionUtil {
                 }
               }
             }
-          break;
+            break;
 
           default:
             buffer.append(c);
-          break;
+            break;
         }
       }
       return buffer.toString();

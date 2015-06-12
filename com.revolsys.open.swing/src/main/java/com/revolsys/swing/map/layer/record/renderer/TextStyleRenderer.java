@@ -52,7 +52,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class TextStyleRenderer extends AbstractDataObjectLayerRenderer {
+public class TextStyleRenderer extends AbstractRecordLayerRenderer {
 
   public static final String DIRECT_DISPLAY = "DIRECT_DISPLAY";
 

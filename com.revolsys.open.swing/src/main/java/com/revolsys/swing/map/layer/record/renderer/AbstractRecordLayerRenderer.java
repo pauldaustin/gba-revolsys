@@ -27,34 +27,34 @@ import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.SqlLayerFilter;
 import com.revolsys.swing.menu.MenuFactory;
-import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
-import com.revolsys.swing.tree.TreeItemRunnable;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
+import com.revolsys.swing.tree.MenuSourcePropertyEnableCheck;
+import com.revolsys.swing.tree.MenuSourceRunnable;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.TopologyException;
 
-public abstract class AbstractDataObjectLayerRenderer extends
+public abstract class AbstractRecordLayerRenderer extends
 AbstractLayerRenderer<AbstractRecordLayer> {
 
   static {
-    final MenuFactory menu = ObjectTreeModel.getMenu(AbstractDataObjectLayerRenderer.class);
-    menu.addMenuItem("layer", TreeItemRunnable.createAction("View/Edit Style", "palette",
-      new TreeItemPropertyEnableCheck("editing", false), "showProperties"));
-    menu.addMenuItem("layer", TreeItemRunnable.createAction("Delete", "delete",
-      new TreeItemPropertyEnableCheck("parent", null, true), "delete"));
+    final MenuFactory menu = MenuFactory.getMenu(AbstractRecordLayerRenderer.class);
+    menu.addMenuItem("layer", MenuSourceRunnable.createAction("View/Edit Style", "palette",
+      new MenuSourcePropertyEnableCheck("editing", false), "showProperties"));
+    menu.addMenuItem("layer", MenuSourceRunnable.createAction("Delete", "delete",
+      new MenuSourcePropertyEnableCheck("parent", null, true), "delete"));
 
-    menu.addComponentFactory("scale", new TreeItemScaleMenu(true));
-    menu.addComponentFactory("scale", new TreeItemScaleMenu(false));
+    menu.addComponentFactory("scale", new TreeItemScaleMenu(true, null));
+    menu.addComponentFactory("scale", new TreeItemScaleMenu(false, null));
 
     for (final String type : Arrays.asList("Multiple", "Filter", "Scale")) {
       final String iconName = ("style_" + type + "_wrap").toLowerCase();
       final ImageIcon icon = Icons.getIcon(iconName);
-      final InvokeMethodAction action = TreeItemRunnable.createAction("Wrap With " + type
+      final InvokeMethodAction action = MenuSourceRunnable.createAction("Wrap With " + type
         + " Style", icon, null, "wrapWith" + type + "Style");
       menu.addMenuItem("wrap", action);
     }
+
   }
 
   private static final AcceptAllFilter<Record> DEFAULT_FILTER = new AcceptAllFilter<Record>();
@@ -87,14 +87,14 @@ AbstractLayerRenderer<AbstractRecordLayer> {
           return new SqlLayerFilter(layer, query);
         }
       } else {
-        LoggerFactory.getLogger(AbstractDataObjectLayerRenderer.class).error(
+        LoggerFactory.getLogger(AbstractRecordLayerRenderer.class).error(
           "Unknown filter type " + type);
       }
     }
     return DEFAULT_FILTER;
   }
 
-  public static AbstractDataObjectLayerRenderer getRenderer(final AbstractRecordLayer layer,
+  public static AbstractRecordLayerRenderer getRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final Map<String, Object> style) {
     final String type = (String)style.remove("type");
     if ("geometryStyle".equals(type)) {
@@ -110,8 +110,8 @@ AbstractLayerRenderer<AbstractRecordLayer> {
     } else if ("filterStyle".equals(type)) {
       return new FilterMultipleRenderer(layer, parent, style);
     }
-    LoggerFactory.getLogger(AbstractDataObjectLayerRenderer.class).error(
-      "Unknown style type: " + style);
+    LoggerFactory.getLogger(AbstractRecordLayerRenderer.class)
+    .error("Unknown style type: " + style);
     return null;
   }
 
@@ -122,20 +122,20 @@ AbstractLayerRenderer<AbstractRecordLayer> {
 
   private Filter<Record> filter = DEFAULT_FILTER;
 
-  public AbstractDataObjectLayerRenderer(final String type, final String name,
+  public AbstractRecordLayerRenderer(final String type, final String name,
     final AbstractRecordLayer layer, final LayerRenderer<?> parent) {
     this(type, name, layer, parent, Collections.<String, Object> emptyMap());
   }
 
-  public AbstractDataObjectLayerRenderer(final String type, final String name,
+  public AbstractRecordLayerRenderer(final String type, final String name,
     final AbstractRecordLayer layer, final LayerRenderer<?> parent, final Map<String, Object> style) {
     super(type, name, layer, parent, style);
     this.filter = getFilter(layer, style);
   }
 
   @Override
-  public AbstractDataObjectLayerRenderer clone() {
-    final AbstractDataObjectLayerRenderer clone = (AbstractDataObjectLayerRenderer)super.clone();
+  public AbstractRecordLayerRenderer clone() {
+    final AbstractRecordLayerRenderer clone = (AbstractRecordLayerRenderer)super.clone();
     clone.filter = JavaBeanUtil.clone(this.filter);
     return clone;
   }

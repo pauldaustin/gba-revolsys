@@ -25,6 +25,7 @@ import com.revolsys.raster.MappedLocation;
 import com.revolsys.spring.SpringUtil;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
+import com.revolsys.swing.action.enablecheck.AndEnableCheck;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.TabbedValuePanel;
@@ -34,9 +35,8 @@ import com.revolsys.swing.map.layer.AbstractLayer;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
-import com.revolsys.swing.tree.TreeItemPropertyEnableCheck;
-import com.revolsys.swing.tree.TreeItemRunnable;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
+import com.revolsys.swing.tree.MenuSourcePropertyEnableCheck;
+import com.revolsys.swing.tree.MenuSourceRunnable;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Point;
 
@@ -46,32 +46,36 @@ public class GeoreferencedImageLayer extends AbstractLayer {
     "geoReferencedImage", "Geo-referenced Image", GeoreferencedImageLayer.class, "create");
 
   static {
-    final MenuFactory menu = ObjectTreeModel.getMenu(GeoreferencedImageLayer.class);
-    menu.addGroup(1, "edit");
+    final MenuFactory menu = MenuFactory.getMenu(GeoreferencedImageLayer.class);
+    menu.addGroup(0, "table");
+    menu.addGroup(2, "edit");
 
-    final EnableCheck readonly = new TreeItemPropertyEnableCheck("readOnly", false);
-    final EnableCheck editable = new TreeItemPropertyEnableCheck("editable");
-    final EnableCheck showOriginalImage = new TreeItemPropertyEnableCheck("showOriginalImage");
+    final EnableCheck readonly = new MenuSourcePropertyEnableCheck("readOnly", false);
+    final EnableCheck editable = new MenuSourcePropertyEnableCheck("editable");
+    final EnableCheck showOriginalImage = new MenuSourcePropertyEnableCheck("showOriginalImage");
+    final EnableCheck hasTransform = new MenuSourcePropertyEnableCheck("hasTransform");
+
+    menu.addMenuItem("table",
+      MenuSourceRunnable.createAction("View Tie-Points", "table_go", "showTiePointsTable"));
 
     menu.addCheckboxMenuItem("edit",
-      TreeItemRunnable.createAction("Editable", "pencil", readonly, "toggleEditable"), editable);
+      MenuSourceRunnable.createAction("Editable", "pencil", readonly, "toggleEditable"), editable);
 
-    final EnableCheck hasChanges = new TreeItemPropertyEnableCheck("hasChanges");
+    final EnableCheck hasChanges = new MenuSourcePropertyEnableCheck("hasChanges");
+    menu.addMenuItem("edit",
+      MenuSourceRunnable.createAction("Save Changes", "map_save", hasChanges, "saveChanges"));
 
     menu.addMenuItem("edit",
-      TreeItemRunnable.createAction("Save Changes", "map_save", hasChanges, "saveChanges"));
+      MenuSourceRunnable.createAction("Cancel Changes", "map_cancel", "cancelChanges"));
+
+    menu.addCheckboxMenuItem("edit", MenuSourceRunnable.createAction("Show Original Image",
+      (String)null, new AndEnableCheck(editable, hasTransform), "toggleShowOriginalImage"),
+      showOriginalImage);
 
     menu.addMenuItem("edit",
-      TreeItemRunnable.createAction("Cancel Changes", "map_cancel", "cancelChanges"));
+      MenuSourceRunnable.createAction("Fit to Screen", "arrow_out", editable, "fitToViewport"));
 
-    menu.addMenuItem("edit",
-      TreeItemRunnable.createAction("View Tie-Points", "table_go", "showTiePointsTable"));
-
-    menu.addCheckboxMenuItem("edit", TreeItemRunnable.createAction("Show Original Image",
-      (String)null, editable, "toggleShowOriginalImage"), showOriginalImage);
-
-    menu.addMenuItem("edit",
-      TreeItemRunnable.createAction("Fit to Screen", "arrow_out", editable, "fitToViewport"));
+    menu.deleteMenuItem("refresh", "Refresh");
   }
 
   public static GeoreferencedImageLayer create(final Map<String, Object> properties) {
@@ -109,7 +113,7 @@ public class GeoreferencedImageLayer extends AbstractLayer {
     if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final GeoreferencedImageFactory factory = IoFactoryRegistry.getInstance()
-          .getFactoryByFileExtension(GeoreferencedImageFactory.class, fileNameExtension);
+        .getFactoryByFileExtension(GeoreferencedImageFactory.class, fileNameExtension);
       if (factory != null) {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }
@@ -169,7 +173,7 @@ public class GeoreferencedImageLayer extends AbstractLayer {
       return true;
     } else {
       LoggerFactory.getLogger(getClass()).error(
-          "Layer definition does not contain a 'url' property");
+        "Layer definition does not contain a 'url' property");
       return false;
     }
   }
@@ -351,7 +355,7 @@ public class GeoreferencedImageLayer extends AbstractLayer {
     if (!isShowOriginalImage()) {
       try {
         final AffineTransform transform = image.getAffineTransformation(boundingBox)
-            .createInverse();
+          .createInverse();
         transform.transform(coordinates, 0, coordinates, 0, 1);
       } catch (final NoninvertibleTransformException e) {
       }

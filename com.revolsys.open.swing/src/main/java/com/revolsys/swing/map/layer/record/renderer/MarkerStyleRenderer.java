@@ -33,7 +33,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class MarkerStyleRenderer extends AbstractDataObjectLayerRenderer {
+public class MarkerStyleRenderer extends AbstractRecordLayerRenderer {
 
   private static final Geometry EMPTY_GEOMETRY = GeometryFactory.getFactory().createEmptyGeometry();
 

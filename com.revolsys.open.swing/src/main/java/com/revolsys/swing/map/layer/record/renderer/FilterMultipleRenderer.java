@@ -37,7 +37,7 @@ public class FilterMultipleRenderer extends AbstractMultipleRenderer {
     final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord record) {
     if (isVisible(record)) {
       final double scale = viewport.getScale();
-      for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
+      for (final AbstractRecordLayerRenderer renderer : getRenderers()) {
         if (renderer.isFilterAccept(record)) {
           if (renderer.isVisible(record) && !layer.isHidden(record)) {
             if (renderer.isVisible(scale)) {
@@ -62,7 +62,7 @@ public class FilterMultipleRenderer extends AbstractMultipleRenderer {
     final AbstractRecordLayer layer, final LayerRecord record) {
     if (isVisible(record)) {
       final double scale = viewport.getScale();
-      for (final AbstractDataObjectLayerRenderer renderer : getRenderers()) {
+      for (final AbstractRecordLayerRenderer renderer : getRenderers()) {
         if (renderer.isFilterAccept(record)) {
           if (renderer.isVisible(record)) {
             if (renderer.isVisible(scale)) {

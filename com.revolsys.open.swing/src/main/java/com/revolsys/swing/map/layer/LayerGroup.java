@@ -36,8 +36,7 @@ import com.revolsys.swing.map.layer.record.FileRecordLayer;
 import com.revolsys.swing.map.layer.record.renderer.GeometryStyleRenderer;
 import com.revolsys.swing.map.layer.record.style.GeometryStyle;
 import com.revolsys.swing.menu.MenuFactory;
-import com.revolsys.swing.tree.TreeItemRunnable;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
+import com.revolsys.swing.tree.MenuSourceRunnable;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
@@ -47,10 +46,10 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
     "Layer Group", LayerGroup.class, "create");
 
   static {
-    final MenuFactory menu = ObjectTreeModel.getMenu(LayerGroup.class);
+    final MenuFactory menu = MenuFactory.getMenu(LayerGroup.class);
     menu.addGroup(0, "group");
     menu.addMenuItem("group",
-      TreeItemRunnable.createAction("Add Group", "folder_add", "addLayerGroup"));
+      MenuSourceRunnable.createAction("Add Group", "folder_add", "addLayerGroup"));
     menu.addMenuItem("group", new AddFileLayerAction());
   }
 
@@ -103,35 +102,12 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
 
   @Override
   public void add(final int index, final Layer layer) {
-    synchronized (this.layers) {
-      if (layer != null && !this.layers.contains(layer)) {
-        final String name = layer.getName();
-        String newName = name;
-        int i = 1;
-        while (hasLayerWithSameName(layer, newName)) {
-          newName = name + i;
-          i++;
-        }
-        layer.setName(newName);
-        this.layers.add(index, layer);
-        layer.setLayerGroup(this);
-        initialize(layer);
-        fireIndexedPropertyChange("layers", index, null, layer);
-      }
-    }
+    addLayer(index, layer);
   }
 
   @Override
   public boolean add(final Layer layer) {
-    synchronized (this.layers) {
-      if (layer == null || this.layers.contains(layer)) {
-        return false;
-      } else {
-        final int index = this.layers.size();
-        add(index, layer);
-        return true;
-      }
-    }
+    return addLayer(layer);
   }
 
   @Override
@@ -162,6 +138,37 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
     addLayers(layers, layerClass);
     for (final LayerGroup layerGroup : getLayerGroups()) {
       layerGroup.addDescendants(layers, layerClass);
+    }
+  }
+
+  public void addLayer(final int index, final Layer layer) {
+    synchronized (this.layers) {
+      if (layer != null && !this.layers.contains(layer)) {
+        final String name = layer.getName();
+        String newName = name;
+        int i = 1;
+        while (hasLayerWithSameName(layer, newName)) {
+          newName = name + i;
+          i++;
+        }
+        layer.setName(newName);
+        this.layers.add(index, layer);
+        layer.setLayerGroup(this);
+        initialize(layer);
+        fireIndexedPropertyChange("layers", index, null, layer);
+      }
+    }
+  }
+
+  public boolean addLayer(final Layer layer) {
+    synchronized (this.layers) {
+      if (layer == null || this.layers.contains(layer)) {
+        return false;
+      } else {
+        final int index = this.layers.size();
+        add(index, layer);
+        return true;
+      }
     }
   }
 
@@ -393,7 +400,7 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
 
   public Layer getLayerByPath(final String layerPath) {
     final List<String> path = CollectionUtil.split(layerPath.replaceAll("^\\s*/+\\s*", ""),
-        "(\\s*/+\\s*)+");
+      "(\\s*/+\\s*)+");
     return getLayerByPath(path);
   }
 
@@ -582,28 +589,59 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
     }
   }
 
-  public void openFile(final URL url) {
+  public int openFile(final int index, final File file) {
+    final String extension = FileUtil.getFileNameExtension(file);
+    if ("rgobject".equals(extension)) {
+      loadLayer(file);
+      // TODO index
+      return index;
+    } else {
+      final URL url = FileUtil.toUrl(file);
+      return openFile(index, url);
+    }
+  }
+
+  public int openFile(int index, final URL url) {
     final String urlString = url.toString();
     final Map<String, Object> properties = new HashMap<String, Object>();
     properties.put("url", urlString);
     String name = FileUtil.getFileName(urlString);
     name = FileUtil.fromSafeName(name);
     properties.put("name", name);
+    Layer layer;
     if (AbstractGeoreferencedImageFactory.hasGeoreferencedImageFactory(urlString)) {
-      final GeoreferencedImageLayer layer = new GeoreferencedImageLayer(properties);
-      add(layer);
+      layer = new GeoreferencedImageLayer(properties);
     } else if (RecordIo.hasRecordReaderFactory(urlString)) {
-      final FileRecordLayer layer = new FileRecordLayer(properties);
-      final GeometryStyleRenderer renderer = layer.getRenderer();
+      final FileRecordLayer recordLayer = new FileRecordLayer(properties);
+      final GeometryStyleRenderer renderer = recordLayer.getRenderer();
       renderer.setStyle(GeometryStyle.createStyle());
-      add(layer);
+      layer = recordLayer;
+    } else {
+      layer = null;
+    }
+    if (layer != null) {
+      layer.setProperty("showTableView", true);
+      if (index == -1) {
+        addLayer(layer);
+      } else {
+        addLayer(index++, layer);
+      }
+    }
+    return index;
+  }
+
+  public void openFile(final URL url) {
+    openFile(-1, url);
+  }
+
+  public void openFiles(int index, final List<File> files) {
+    for (final File file : files) {
+      index = openFile(index, file);
     }
   }
 
   public void openFiles(final List<File> files) {
-    for (final File file : files) {
-      openFile(file);
-    }
+    openFiles(-1, files);
   }
 
   @Override
@@ -627,16 +665,8 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
   }
 
   @Override
-  public boolean remove(final Object o) {
-    synchronized (this.layers) {
-      final int index = this.layers.indexOf(o);
-      if (index < 0) {
-        return false;
-      } else {
-        remove(index);
-        return true;
-      }
-    }
+  public boolean remove(final Object layer) {
+    return removeLayer(layer);
   }
 
   @Override
@@ -649,6 +679,18 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
         }
       }
       return removed;
+    }
+  }
+
+  public boolean removeLayer(final Object layer) {
+    synchronized (this.layers) {
+      final int index = this.layers.indexOf(layer);
+      if (index < 0) {
+        return false;
+      } else {
+        remove(index);
+        return true;
+      }
     }
   }
 

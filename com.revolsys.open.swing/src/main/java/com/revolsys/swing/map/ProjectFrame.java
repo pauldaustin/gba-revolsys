@@ -62,20 +62,17 @@ import com.revolsys.swing.map.layer.raster.GeoreferencedImageLayer;
 import com.revolsys.swing.map.layer.record.FileRecordLayer;
 import com.revolsys.swing.map.layer.record.RecordStoreLayer;
 import com.revolsys.swing.map.layer.wikipedia.WikipediaBoundingBoxLayerWorker;
-import com.revolsys.swing.map.tree.ProjectTreeNodeModel;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.parallel.SwingWorkerProgressBar;
 import com.revolsys.swing.preferences.PreferencesDialog;
 import com.revolsys.swing.table.worker.SwingWorkerTableModel;
-import com.revolsys.swing.toolbar.ToolBar;
 import com.revolsys.swing.tree.BaseTree;
-import com.revolsys.swing.tree.ObjectTree;
-import com.revolsys.swing.tree.ObjectTreePanel;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
+import com.revolsys.swing.tree.node.BaseTreeNode;
 import com.revolsys.swing.tree.node.ListTreeNode;
 import com.revolsys.swing.tree.node.file.FileSystemsTreeNode;
 import com.revolsys.swing.tree.node.file.FolderConnectionsTreeNode;
+import com.revolsys.swing.tree.node.layer.ProjectTreeNode;
 import com.revolsys.swing.tree.node.record.RecordStoreConnectionsTreeNode;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.OS;
@@ -138,7 +135,7 @@ public class ProjectFrame extends BaseFrame {
 
     final ActionMap actionMap = component.getActionMap();
     actionMap.put(SAVE_PROJECT_KEY, new InvokeMethodAction(SAVE_PROJECT_KEY, project,
-      "saveAllSettings"));
+        "saveAllSettings"));
     actionMap.put(SAVE_CHANGES_KEY,
       new InvokeMethodAction(SAVE_CHANGES_KEY, project, "saveChanges"));
   }
@@ -156,8 +153,6 @@ public class ProjectFrame extends BaseFrame {
     }
   }
 
-  private ObjectTreePanel tocPanel;
-
   private Project project;
 
   private MapPanel mapPanel;
@@ -173,6 +168,8 @@ public class ProjectFrame extends BaseFrame {
   private JSplitPane leftRightSplit;
 
   private JSplitPane topBottomSplit;
+
+  private BaseTree tocTree;
 
   public ProjectFrame(final String title) {
     this(title, new Project());
@@ -277,21 +274,13 @@ public class ProjectFrame extends BaseFrame {
   }
 
   protected void addTableOfContents() {
-    final JPanel panel = new JPanel(new BorderLayout());
-
-    final ToolBar toolBar = new ToolBar();
-    panel.add(toolBar, BorderLayout.NORTH);
-
-    final ProjectTreeNodeModel model = new ProjectTreeNodeModel();
-    this.tocPanel = new ObjectTreePanel(this.project, model);
-    final ObjectTree tree = this.tocPanel.getTree();
-    tree.setRootVisible(true);
+    final Project project = getProject();
+    this.tocTree = ProjectTreeNode.createTree(project);
 
     Property.addListener(this.project, "layers", new InvokeMethodPropertyChangeListener(true, this,
       "expandLayers", PropertyChangeEvent.class));
-    panel.add(this.tocPanel, BorderLayout.CENTER);
 
-    addTabIcon(this.leftTabs, "tree_layers", "TOC", panel, true);
+    addTabIcon(this.leftTabs, "tree_layers", "TOC", this.tocTree, true);
   }
 
   protected void addTasksPanel() {
@@ -316,7 +305,7 @@ public class ProjectFrame extends BaseFrame {
 
     if (OS.isWindows()) {
       tools.addMenuItem("options", "Options...", "Options...", null, null, PreferencesDialog.get(),
-        "showPanel");
+          "showPanel");
     }
     addMenu(menuBar, tools);
     WindowManager.addMenu(menuBar);
@@ -336,7 +325,7 @@ public class ProjectFrame extends BaseFrame {
     final MenuFactory tools = new MenuFactory("Tools");
 
     tools.addMenuItem("script", "Run Script...", "Run Script", Icons.getIcon("script_go"), this,
-      "runScript");
+        "runScript");
     return tools;
   }
 
@@ -353,11 +342,8 @@ public class ProjectFrame extends BaseFrame {
           Project.set(null);
         }
       }
-      if (this.tocPanel != null) {
-        this.tocPanel.destroy();
-      }
 
-      this.tocPanel = null;
+      this.tocTree = null;
       this.project = null;
       this.leftTabs = null;
       this.leftRightSplit = null;
@@ -392,22 +378,21 @@ public class ProjectFrame extends BaseFrame {
   }
 
   public void expandLayers(final Layer layer) {
-    if (SwingUtilities.isEventDispatchThread()) {
-      final List<Layer> pathList = layer.getPathList();
-      final ObjectTree tree = this.tocPanel.getTree();
-      final TreePath treePath = ObjectTree.createTreePath(pathList);
-      if (layer instanceof LayerGroup) {
-        final LayerGroup layerGroup = (LayerGroup)layer;
-        tree.expandPath(treePath);
-        for (final Layer childLayer : layerGroup) {
-          expandLayers(childLayer);
+    if (layer != null) {
+      if (SwingUtilities.isEventDispatchThread()) {
+        final LayerGroup group;
+        if (layer instanceof LayerGroup) {
+          group = (LayerGroup)layer;
+        } else {
+          group = layer.getLayerGroup();
+        }
+        if (group != null) {
+          final List<Layer> layerPath = group.getPathList();
+          this.tocTree.expandPath(layerPath);
         }
       } else {
-        final ObjectTreeModel model = tree.getModel();
-        model.fireTreeNodesChanged(treePath);
+        Invoke.later(this, "expandLayers", layer);
       }
-    } else {
-      Invoke.later(this, "expandLayers", layer);
     }
   }
 
@@ -441,8 +426,14 @@ public class ProjectFrame extends BaseFrame {
     return this.project;
   }
 
-  public ObjectTreePanel getTocPanel() {
-    return this.tocPanel;
+  public BaseTreeNode getTreeNode(final Layer layer) {
+    final List<Layer> layerPath = layer.getPathList();
+    final TreePath treePath = this.tocTree.getTreePath(layerPath);
+    if (treePath == null) {
+      return null;
+    } else {
+      return (BaseTreeNode)treePath.getLastPathComponent();
+    }
   }
 
   @Override
@@ -527,7 +518,7 @@ public class ProjectFrame extends BaseFrame {
     final JFileChooser fileChooser = SwingUtil.createFileChooser("Select Script",
       "com.revolsys.swing.tools.script", "directory");
     final FileNameExtensionFilter groovyFilter = new FileNameExtensionFilter("Groovy Script",
-      "groovy");
+        "groovy");
     fileChooser.addChoosableFileFilter(groovyFilter);
     fileChooser.setMultiSelectionEnabled(false);
     final int returnVal = fileChooser.showOpenDialog(this);

@@ -4,6 +4,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.Icon;
+
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.collection.Child;
 import com.revolsys.io.ObjectWithProperties;
@@ -24,6 +26,8 @@ PropertyChangeListener, Comparable<Layer>, MapSerializer, Child<LayerGroup> {
   BoundingBox getBoundingBox(boolean visibleLayersOnly);
 
   GeometryFactory getGeometryFactory();
+
+  Icon getIcon();
 
   long getId();
 
@@ -48,6 +52,8 @@ PropertyChangeListener, Comparable<Layer>, MapSerializer, Child<LayerGroup> {
   String getType();
 
   void initialize();
+
+  boolean isClonable();
 
   boolean isEditable();
 

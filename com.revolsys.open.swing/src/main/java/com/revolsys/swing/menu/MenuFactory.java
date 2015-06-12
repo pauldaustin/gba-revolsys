@@ -30,7 +30,7 @@ import com.revolsys.swing.component.ComponentFactory;
 import com.revolsys.util.Property;
 
 public class MenuFactory extends AbstractObjectWithProperties implements
-ComponentFactory<JMenuItem> {
+  ComponentFactory<JMenuItem> {
 
   private static Object menuSource;
 

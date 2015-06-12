@@ -166,6 +166,30 @@ public final class JavaBeanUtil {
     }
   }
 
+  public static <T> Constructor<T> getConstructor(final Class<T> clazz,
+    final Class<?>... parameterClasses) {
+    try {
+      return clazz.getConstructor(parameterClasses);
+    } catch (final NoSuchMethodException e) {
+      return null;
+    } catch (final Throwable e) {
+      return ExceptionUtil.throwUncheckedException(e);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> Constructor<T> getConstructor(final String className,
+    final Class<?>... parameterClasses) {
+    try {
+      final Class<T> clazz = (Class<T>)Class.forName(className);
+      return clazz.getConstructor(parameterClasses);
+    } catch (final NoSuchMethodException e) {
+      return null;
+    } catch (final Throwable e) {
+      return ExceptionUtil.throwUncheckedException(e);
+    }
+  }
+
   public static ConvertUtilsBean getConvertutilsbean() {
     if (convertUtilsBean == null) {
       convertUtilsBean = new ConvertUtilsBean();
@@ -312,13 +336,13 @@ public final class JavaBeanUtil {
             return resultClass;
           } else {
             throw new IllegalArgumentException(method.getName() + " must return "
-                + expectedRawClass.getName() + " with 1 generic type parameter that is a class");
+              + expectedRawClass.getName() + " with 1 generic type parameter that is a class");
           }
         }
       }
     }
     throw new IllegalArgumentException(method.getName() + " must return "
-        + expectedRawClass.getName() + " with 1 generic class parameter");
+      + expectedRawClass.getName() + " with 1 generic class parameter");
   }
 
   public static Method getWriteMethod(final Class<?> beanClass, final String name) {

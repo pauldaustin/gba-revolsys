@@ -19,8 +19,6 @@ import com.revolsys.swing.map.layer.AbstractLayer;
 import com.revolsys.swing.map.layer.LayerGroup;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.menu.MenuFactory;
-import com.revolsys.swing.tree.TreeItemRunnable;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.PreferencesUtil;
 import com.revolsys.util.Property;
@@ -28,9 +26,10 @@ import com.revolsys.util.Property;
 public class GridLayer extends AbstractLayer {
 
   static {
-    final MenuFactory menu = ObjectTreeModel.getMenu(GridLayer.class);
-    menu.addMenuItem("zoom",
-      TreeItemRunnable.createAction("Zoom to Mapsheet", "magnifier_zoom_grid", "zoomTosheet"));
+    final MenuFactory menu = MenuFactory.createMenu(GridLayer.class, "ZoomToSheet");
+
+    menu.deleteMenuItem("zoom", "Zoom to Layer");
+    menu.deleteMenuItem("refresh", "Refresh");
   }
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("grid", "Grid",
@@ -63,7 +62,7 @@ public class GridLayer extends AbstractLayer {
       }
     } else {
       LoggerFactory.getLogger(getClass()).error(
-          "Layer definition does not contain a 'gridName' property");
+        "Layer definition does not contain a 'gridName' property");
     }
     return false;
   }
@@ -85,7 +84,7 @@ public class GridLayer extends AbstractLayer {
     return map;
   }
 
-  public void zoomTosheet() {
+  public void zoomToSheet() {
     final LayerGroup project = getProject();
     if (project != null) {
       final MapPanel map = MapPanel.get(this);
@@ -95,11 +94,11 @@ public class GridLayer extends AbstractLayer {
       String mapsheet = PreferencesUtil.getString(getClass(), preferenceName);
       mapsheet = JOptionPane.showInputDialog(map, "Enter name of the" + gridName
         + " mapsheet to zoom to", mapsheet);
-      zoomTosheet(mapsheet);
+      zoomToSheet(mapsheet);
     }
   }
 
-  public void zoomTosheet(final String mapsheet) {
+  public void zoomToSheet(final String mapsheet) {
     final Project project = getProject();
     if (project != null) {
       if (Property.hasValue(mapsheet)) {

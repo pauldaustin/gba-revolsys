@@ -4,9 +4,10 @@ import java.awt.Component;
 
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 
+import com.revolsys.swing.action.AbstractAction;
+import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentFactory;
 import com.revolsys.util.ExceptionUtil;
@@ -15,13 +16,20 @@ public class ActionMainMenuItemFactory implements ComponentFactory<JMenuItem> {
 
   private EnableCheck checkBoxSelectedCheck;
 
-  private final Action action;
+  private final AbstractAction action;
 
-  public ActionMainMenuItemFactory(final Action action) {
+  private String iconName;
+
+  public ActionMainMenuItemFactory(final AbstractAction action) {
     this.action = action;
+    if (action instanceof InvokeMethodAction) {
+      final InvokeMethodAction invokeAction = (InvokeMethodAction)action;
+      this.iconName = invokeAction.getIconName();
+    }
   }
 
-  public ActionMainMenuItemFactory(final EnableCheck checkBoxSelectedCheck, final Action action) {
+  public ActionMainMenuItemFactory(final EnableCheck checkBoxSelectedCheck,
+    final AbstractAction action) {
     this(action);
     this.checkBoxSelectedCheck = checkBoxSelectedCheck;
   }
@@ -42,12 +50,12 @@ public class ActionMainMenuItemFactory implements ComponentFactory<JMenuItem> {
 
   @Override
   public JMenuItem createComponent() {
-    if (this.checkBoxSelectedCheck != null) {
-      final JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(this.action);
-      menuItem.setSelected(this.checkBoxSelectedCheck.isEnabled());
-      return menuItem;
+    if (this.checkBoxSelectedCheck == null) {
+      return this.action.createMenuItem();
     } else {
-      return new JMenuItem(this.action);
+      final CheckBoxMenuItem menuItem = this.action.createCheckboxMenuItem();
+      menuItem.setSelectedCheck(this.checkBoxSelectedCheck);
+      return menuItem;
     }
   }
 
@@ -58,7 +66,7 @@ public class ActionMainMenuItemFactory implements ComponentFactory<JMenuItem> {
 
   @Override
   public String getIconName() {
-    return null;
+    return this.iconName;
   }
 
   @Override

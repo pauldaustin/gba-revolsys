@@ -68,6 +68,8 @@ public class InvokeMethodAction extends AbstractActionMainMenuItemFactory {
 
   private Runnable runnable;
 
+  private String iconName;
+
   public InvokeMethodAction() {
   }
 
@@ -172,32 +174,12 @@ public class InvokeMethodAction extends AbstractActionMainMenuItemFactory {
   }
 
   @Override
-  public Integer getMnemonic() {
-    return (Integer)getValue(Action.MNEMONIC_KEY);
+  public String getIconName() {
+    return this.iconName;
   }
 
-  @Override
-  public String getName() {
-    return (String)getValue(Action.NAME);
-  }
-
-  @Override
-  public String getToolTip() {
-    return (String)getValue(Action.SHORT_DESCRIPTION);
-  }
-
-  @Override
-  protected void setIcon(final Icon icon) {
-    putValue(Action.SMALL_ICON, icon);
-  }
-
-  @Override
-  protected void setName(final String name) {
-    putValue(Action.NAME, name);
-  }
-
-  protected void setToolTip(final CharSequence toolTip) {
-    putValue(Action.SHORT_DESCRIPTION, toolTip.toString());
+  public void setIconName(final String iconName) {
+    this.iconName = iconName;
   }
 
   @Override

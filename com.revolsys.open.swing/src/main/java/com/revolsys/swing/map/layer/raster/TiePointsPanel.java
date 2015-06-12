@@ -19,9 +19,7 @@ import com.revolsys.swing.table.TablePanel;
 import com.revolsys.swing.table.object.ObjectListTable;
 import com.revolsys.swing.table.object.ObjectListTableModel;
 import com.revolsys.swing.toolbar.ToolBar;
-import com.revolsys.swing.tree.ObjectTree;
-import com.revolsys.swing.tree.TreeItemRunnable;
-import com.revolsys.swing.tree.model.ObjectTreeModel;
+import com.revolsys.swing.tree.MenuSourceRunnable;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class TiePointsPanel extends TablePanel {
@@ -58,14 +56,14 @@ public class TiePointsPanel extends TablePanel {
 
     final ToolBar toolBar = getToolBar();
 
-    final MenuFactory menuFactory = ObjectTreeModel.findMenu(layer);
+    final MenuFactory menuFactory = MenuFactory.findMenu(layer);
     if (menuFactory != null) {
-      toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu", ObjectTree.class, "showMenu",
-        menuFactory, layer, this, 10, 10);
+      toolBar.addButtonTitleIcon("menu", "Layer Menu", "menu", menuFactory, "show", layer, this,
+        10, 10);
     }
 
     menu.addMenuItem("zoom",
-      TreeItemRunnable.createAction("Zoom to Layer", "magnifier", "zoomToLayer"));
+      MenuSourceRunnable.createAction("Zoom to Layer", "magnifier", "zoomToLayer"));
 
     toolBar.addButton("zoom", "Zoom to Layer", "magnifier", (EnableCheck)null, layer, "zoomToLayer");
 
