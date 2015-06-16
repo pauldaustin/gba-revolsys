@@ -105,23 +105,22 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\?");
 
   static {
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeInteger, IntegerFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSmallInteger,
-      ShortFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDouble, DoubleFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeSingle, FloatFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeString, StringFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeDate, DateFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGeometry, GeometryFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeOID, OidFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeBlob, BinaryFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGlobalID, GlobalIdFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeGUID, GuidFieldDefinition.class);
-    addFieldTypeAttributeConstructor(FieldType.esriFieldTypeXML, XmlFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeInteger, IntegerFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeSmallInteger, ShortFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeDouble, DoubleFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeSingle, FloatFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeString, StringFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeDate, DateFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeGeometry, GeometryFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeOID, OidFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeBlob, BinaryFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeGlobalID, GlobalIdFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeGUID, GuidFieldDefinition.class);
+    addFieldTypeConstructor(FieldType.esriFieldTypeXML, XmlFieldDefinition.class);
 
   }
 
-  private static void addFieldTypeAttributeConstructor(final FieldType fieldType,
+  private static void addFieldTypeConstructor(final FieldType fieldType,
     final Class<? extends AbstractFileGdbFieldDefinition> fieldClass) {
     try {
       final Constructor<? extends AbstractFileGdbFieldDefinition> constructor = fieldClass.getConstructor(Field.class);
@@ -933,19 +932,19 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           for (final Field field : deTable.getFields()) {
             final String fieldName = field.getName();
             final FieldType type = field.getType();
-            final Constructor<? extends AbstractFileGdbFieldDefinition> attributeConstructor = ESRI_FIELD_TYPE_ATTRIBUTE_MAP.get(type);
-            if (attributeConstructor != null) {
+            final Constructor<? extends AbstractFileGdbFieldDefinition> fieldConstructor = ESRI_FIELD_TYPE_ATTRIBUTE_MAP.get(type);
+            if (fieldConstructor != null) {
               try {
-                final AbstractFileGdbFieldDefinition attribute = JavaBeanUtil.invokeConstructor(
-                  attributeConstructor, field);
-                attribute.setRecordStore(this);
-                recordDefinition.addField(attribute);
-                if (attribute instanceof GlobalIdFieldDefinition) {
+                final AbstractFileGdbFieldDefinition fieldDefinition = JavaBeanUtil.invokeConstructor(
+                  fieldConstructor, field);
+                fieldDefinition.setRecordStore(this);
+                recordDefinition.addField(fieldDefinition);
+                if (fieldDefinition instanceof GlobalIdFieldDefinition) {
                   recordDefinition.setIdFieldName(fieldName);
                 }
               } catch (final Throwable e) {
                 LOG.error(tableDefinition);
-                throw new RuntimeException("Error creating attribute for " + typePath + "."
+                throw new RuntimeException("Error creating field definition for " + typePath + "."
                     + field.getName() + " : " + field.getType(), e);
               }
             } else {
@@ -1034,12 +1033,12 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                 }
               }
             } else {
-              final GeometryFieldDefinition geometryAttribute = (GeometryFieldDefinition)recordDefinition.getGeometryField();
-              if (geometryAttribute == null || boundingBox.isEmpty()) {
+              final GeometryFieldDefinition geometryField = (GeometryFieldDefinition)recordDefinition.getGeometryField();
+              if (geometryField == null || boundingBox.isEmpty()) {
                 return 0;
               } else {
                 final StringBuffer sql = new StringBuffer();
-                sql.append("SELECT " + geometryAttribute.getName() + " FROM ");
+                sql.append("SELECT " + geometryField.getName() + " FROM ");
                 sql.append(JdbcUtils.getTableName(typePath));
                 if (whereClause.length() > 0) {
                   sql.append(" WHERE ");
@@ -1050,7 +1049,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                 try {
                   int count = 0;
                   for (Row row = rows.next(); row != null; row = rows.next()) {
-                    final Geometry geometry = (Geometry)geometryAttribute.getValue(row);
+                    final Geometry geometry = (Geometry)geometryField.getValue(row);
                     final BoundingBox geometryBoundingBox = BoundingBox.getBoundingBox(geometry);
                     if (geometryBoundingBox.intersects(boundingBox)) {
                       count++;
