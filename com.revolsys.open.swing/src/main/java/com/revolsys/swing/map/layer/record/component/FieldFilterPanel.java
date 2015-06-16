@@ -57,7 +57,7 @@ import com.revolsys.swing.table.TablePanel;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
-public class AttributeFilterPanel extends JComponent implements ActionListener, ItemListener,
+public class FieldFilterPanel extends JComponent implements ActionListener, ItemListener,
   DocumentListener, PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
@@ -103,9 +103,9 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
 
   private boolean settingFilter = false;
 
-  private FieldDefinition attribute;
+  private FieldDefinition fieldDefinition;
 
-  public AttributeFilterPanel(final TablePanel tablePanel, final RecordLayerTableModel tableModel) {
+  public FieldFilterPanel(final TablePanel tablePanel, final RecordLayerTableModel tableModel) {
     this.tableModel = tableModel;
     this.layer = tableModel.getLayer();
     this.metaData = this.layer.getRecordDefinition();
@@ -461,8 +461,8 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
       this.previousSearchFieldName = searchFieldName;
       this.layer.setProperty("searchField", searchFieldName);
       final RecordDefinition metaData = this.tableModel.getRecordDefinition();
-      this.attribute = metaData.getField(searchFieldName);
-      final Class<?> attributeClass = this.attribute.getTypeClass();
+      this.fieldDefinition = metaData.getField(searchFieldName);
+      final Class<?> attributeClass = this.fieldDefinition.getTypeClass();
       if (!EqualsRegistry.equal(searchFieldName, this.nameField.getSelectedItem())) {
         this.nameField.setFieldValue(searchFieldName);
       }
@@ -509,16 +509,16 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
         searchField = this.searchTextField;
       } else if ("IS NULL".equals(searchOperator)) {
         if (!this.settingFilter) {
-          setFilter(Q.isNull(this.attribute));
+          setFilter(Q.isNull(this.fieldDefinition));
         }
         this.codeTable = null;
       } else if ("IS NOT NULL".equals(searchOperator)) {
         if (!this.settingFilter) {
-          setFilter(Q.isNotNull(this.attribute));
+          setFilter(Q.isNotNull(this.fieldDefinition));
         }
         this.codeTable = null;
       } else {
-        searchField = QueryWhereConditionField.createSearchField(this.attribute, this.codeTable);
+        searchField = QueryWhereConditionField.createSearchField(layer, this.fieldDefinition, this.codeTable);
       }
 
       setSearchField(searchField);
@@ -539,21 +539,21 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
       Condition condition = null;
       final String searchOperator = getSearchOperator();
       if ("IS NULL".equalsIgnoreCase(searchOperator)) {
-        condition = Q.isNull(this.attribute);
+        condition = Q.isNull(this.fieldDefinition);
       } else if ("IS NOT NULL".equalsIgnoreCase(searchOperator)) {
-        condition = Q.isNotNull(this.attribute);
-      } else if (this.attribute != null) {
+        condition = Q.isNotNull(this.fieldDefinition);
+      } else if (this.fieldDefinition != null) {
         if (Property.hasValue(StringConverterRegistry.toString(searchValue))) {
           if ("Like".equalsIgnoreCase(searchOperator)) {
             final String searchText = StringConverterRegistry.toString(searchValue);
             if (Property.hasValue(searchText)) {
-              condition = Q.iLike(this.attribute, "%" + searchText + "%");
+              condition = Q.iLike(this.fieldDefinition, "%" + searchText + "%");
             }
           } else {
             Object value = null;
             if (this.codeTable == null) {
               try {
-                final Class<?> attributeClass = this.attribute.getTypeClass();
+                final Class<?> attributeClass = this.fieldDefinition.getTypeClass();
                 value = StringConverterRegistry.toObject(attributeClass, searchValue);
               } catch (final Throwable t) {
                 return;
@@ -565,7 +565,7 @@ public class AttributeFilterPanel extends JComponent implements ActionListener, 
               }
             }
             if (value != null) {
-              condition = Q.binary(this.attribute, searchOperator, value);
+              condition = Q.binary(this.fieldDefinition, searchOperator, value);
             }
           }
         }

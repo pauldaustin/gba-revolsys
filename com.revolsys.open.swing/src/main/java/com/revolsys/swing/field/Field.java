@@ -2,9 +2,16 @@ package com.revolsys.swing.field;
 
 import java.awt.Color;
 
+import javax.swing.ImageIcon;
+
+import com.revolsys.swing.Icons;
 import com.revolsys.swing.undo.UndoManager;
 
-public interface Field {
+public interface Field extends Cloneable {
+
+  ImageIcon ERROR_ICON = Icons.getIcon("exclamation");
+
+  Field clone();
 
   void firePropertyChange(String propertyName, Object oldValue, Object newValue);
 
@@ -15,6 +22,10 @@ public interface Field {
   <T> T getFieldValue();
 
   boolean isFieldValid();
+
+  default void setEditable(final boolean editable) {
+    setEnabled(editable);
+  }
 
   void setEnabled(boolean enabled);
 

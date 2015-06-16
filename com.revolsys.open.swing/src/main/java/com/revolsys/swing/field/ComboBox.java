@@ -104,6 +104,16 @@ public class ComboBox extends JComboBox implements Field {
   }
 
   @Override
+  public ComboBox clone() {
+    try {
+      final ComboBox clone = (ComboBox)super.clone();
+      return clone;
+    } catch (final CloneNotSupportedException e) {
+      return null;
+    }
+  }
+
+  @Override
   protected void finalize() throws Throwable {
     final ComboBoxModel model = getModel();
     if (model instanceof Closeable) {

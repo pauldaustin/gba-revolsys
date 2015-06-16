@@ -15,7 +15,6 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -82,7 +81,6 @@ import com.revolsys.data.query.Value;
 import com.revolsys.data.query.functions.Function;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.spring.SpelUtil;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
@@ -91,6 +89,7 @@ import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.layout.GroupLayoutUtil;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.component.AttributeTitleStringConveter;
+import com.revolsys.swing.map.layer.record.component.RecordLayerFields;
 import com.revolsys.swing.toolbar.ToolBar;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
@@ -102,38 +101,13 @@ ItemListener {
 
   private static final long serialVersionUID = 1L;
 
-  public static JComponent createSearchField(final FieldDefinition attribute,
-    final CodeTable codeTable) {
-    if (attribute == null) {
+  public static JComponent createSearchField(final AbstractRecordLayer layer,
+    final FieldDefinition fieldDefinition, final CodeTable codeTable) {
+    if (fieldDefinition == null) {
       return new TextField(20);
     } else {
-      final String name = attribute.getName();
-      final Class<?> typeClass = attribute.getTypeClass();
-      final String searchFieldFactory = attribute.getProperty("searchFieldFactory");
-      final RecordDefinition metaData = attribute.getRecordDefinition();
-      if (metaData == null) {
-        return new TextField(20);
-      } else {
-        JComponent field;
-        if (attribute.equals(metaData.getIdField())) {
-          field = new TextField(20);
-        } else if (Property.hasValue(searchFieldFactory)) {
-          final Map<String, Object> searchFieldFactoryParameters = attribute.getProperty("searchFieldFactoryParameters");
-          field = SpelUtil.getValue(searchFieldFactory, attribute, searchFieldFactoryParameters);
-        } else {
-          if (codeTable == null) {
-            if (Number.class.isAssignableFrom(typeClass)
-                || String.class.isAssignableFrom(typeClass)) {
-              field = new TextField(20);
-            } else {
-              field = SwingUtil.createField(typeClass, name, null);
-            }
-          } else {
-            field = SwingUtil.createComboBox(codeTable, false, 30);
-          }
-        }
-        return field;
-      }
+      final String fieldName = fieldDefinition.getName();
+      return RecordLayerFields.createCompactField(layer, fieldName, true);
     }
   }
 
@@ -151,7 +125,7 @@ ItemListener {
 
   private final PropertyChangeListener listener;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private final ComboBox rightUnaryConditionOperator;
 
@@ -175,6 +149,8 @@ ItemListener {
 
   private final Condition originalFilter;
 
+  private final AbstractRecordLayer layer;
+
   public QueryWhereConditionField(final AbstractRecordLayer layer,
     final PropertyChangeListener listener, final Condition filter) {
     this(layer, listener, filter, null);
@@ -184,12 +160,13 @@ ItemListener {
     final PropertyChangeListener listener, final Condition filter, final String query) {
     super(new BorderLayout());
     setTitle("Advanced Search");
+    this.layer = layer;
     this.originalFilter = filter;
     this.listener = listener;
-    this.metaData = layer.getRecordDefinition();
-    final List<FieldDefinition> attributes = this.metaData.getFields();
+    this.recordDefinition = layer.getRecordDefinition();
+    final List<FieldDefinition> fields = this.recordDefinition.getFields();
 
-    this.fieldNamesList = new ComboBox(new AttributeTitleStringConveter(layer), false, attributes);
+    this.fieldNamesList = new ComboBox(new AttributeTitleStringConveter(layer), false, fields);
     this.fieldNamesList.addItemListener(this);
     this.fieldNamesList.addMouseListener(this);
 
@@ -253,8 +230,8 @@ ItemListener {
     // whereTextField.setContentType("text/sql"); // Requires the above scroll
     // pane
 
-    this.sqlPrefix = "SELECT * FROM " + this.metaData.getPath().substring(1).replace('/', '.')
-        + " WHERE";
+    this.sqlPrefix = "SELECT * FROM "
+        + this.recordDefinition.getPath().substring(1).replace('/', '.') + " WHERE";
 
     final JPanel filterTextPanel = new JPanel(new BorderLayout());
     filterTextPanel.setOpaque(false);
@@ -300,7 +277,7 @@ ItemListener {
       this.whereTextField.setText(query);
     }
     final String searchField = layer.getProperty("searchField");
-    final FieldDefinition searchAttribute = this.metaData.getField(searchField);
+    final FieldDefinition searchAttribute = this.recordDefinition.getField(searchField);
     if (searchAttribute == null) {
       this.fieldNamesList.setSelectedIndex(0);
     } else {
@@ -500,6 +477,12 @@ ItemListener {
     }
   }
 
+  @Override
+  public QueryWhereConditionField clone() {
+    return new QueryWhereConditionField(this.layer, this.listener, this.originalFilter,
+      this.whereTextField.getText());
+  }
+
   public void insertText(final String operator) {
     if (Property.hasValue(operator)) {
       int position = this.whereTextField.getCaretPosition();
@@ -533,31 +516,25 @@ ItemListener {
   public void itemStateChanged(final ItemEvent event) {
     if (event.getSource() == this.fieldNamesList) {
       if (event.getStateChange() == ItemEvent.SELECTED) {
-        final FieldDefinition attribute = (FieldDefinition)event.getItem();
-        final String name = attribute.getName();
-        this.codeTable = this.metaData.getCodeTableByFieldName(name);
-        final JComponent binaryConditionField = createSearchField(attribute, this.codeTable);
-        if (binaryConditionField instanceof DataStoreQueryTextField) {
-          final DataStoreQueryTextField queryField = (DataStoreQueryTextField)binaryConditionField;
-          queryField.setBelow(true);
-        }
-        final JComponent inConditionField = createSearchField(attribute, this.codeTable);
-        if (inConditionField instanceof DataStoreQueryTextField) {
-          final DataStoreQueryTextField queryField = (DataStoreQueryTextField)inConditionField;
-          queryField.setBelow(true);
-        }
+        final FieldDefinition field = (FieldDefinition)event.getItem();
+        final String name = field.getName();
+        this.codeTable = this.recordDefinition.getCodeTableByFieldName(name);
+        final JComponent binaryConditionField = createSearchField(this.layer, field, this.codeTable);
+        if (binaryConditionField instanceof AbstractRecordQueryField) {
+          final JComponent inConditionField = createSearchField(this.layer, field, this.codeTable);
 
-        if (this.codeTable == null) {
-          if (binaryConditionField instanceof DateField) {
-            this.likePanel.setVisible(false);
+          if (this.codeTable == null) {
+            if (binaryConditionField instanceof DateField) {
+              this.likePanel.setVisible(false);
+            } else {
+              this.likePanel.setVisible(true);
+            }
           } else {
-            this.likePanel.setVisible(true);
+            this.likePanel.setVisible(false);
           }
-        } else {
-          this.likePanel.setVisible(false);
+          setBinaryConditionField(binaryConditionField);
+          setInConditionField(inConditionField);
         }
-        setBinaryConditionField(binaryConditionField);
-        setInConditionField(inConditionField);
       }
     }
   }
@@ -710,7 +687,7 @@ ItemListener {
       final Column column = toQueryValue(leftValueNode);
       final Value min = toQueryValue(betweenExpressionStart);
       final Value max = toQueryValue(betweenExpressionEnd);
-      final FieldDefinition attribute = this.metaData.getField(column.getName());
+      final FieldDefinition attribute = this.recordDefinition.getField(column.getName());
       min.convert(attribute);
       max.convert(attribute);
       return (V)new Between(column, min, max);
@@ -748,9 +725,9 @@ ItemListener {
               final Column column = (Column)leftCondition;
 
               final String name = column.getName();
-              final FieldDefinition attribute = this.metaData.getField(name);
-              final CodeTable codeTable = this.metaData.getCodeTableByFieldName(name);
-              if (codeTable == null || attribute == this.metaData.getIdField()) {
+              final FieldDefinition attribute = this.recordDefinition.getField(name);
+              final CodeTable codeTable = this.recordDefinition.getCodeTableByFieldName(name);
+              if (codeTable == null || attribute == this.recordDefinition.getIdField()) {
                 final Class<?> typeClass = attribute.getTypeClass();
                 try {
                   final Object convertedValue = StringConverterRegistry.toObject(typeClass, value);
@@ -800,7 +777,7 @@ ItemListener {
       final ColumnReference column = (ColumnReference)expression;
       String columnName = column.getColumnName();
       columnName = columnName.replaceAll("\"", "");
-      final FieldDefinition attribute = this.metaData.getField(columnName);
+      final FieldDefinition attribute = this.recordDefinition.getField(columnName);
       if (attribute == null) {
         setInvalidMessage("Invalid column name " + columnName);
       } else {

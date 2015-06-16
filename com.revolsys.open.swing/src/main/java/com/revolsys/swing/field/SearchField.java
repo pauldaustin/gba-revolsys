@@ -36,6 +36,11 @@ public class SearchField extends JXSearchField implements FocusListener, Field {
   }
 
   @Override
+  public SearchField clone() {
+    return new SearchField(this.fieldName);
+  }
+
+  @Override
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);

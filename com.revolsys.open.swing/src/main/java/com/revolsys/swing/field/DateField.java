@@ -39,6 +39,11 @@ public class DateField extends JXDatePicker implements Field, PropertyChangeList
   }
 
   @Override
+  public DateField clone() {
+    return new DateField(this.fieldName);
+  }
+
+  @Override
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);

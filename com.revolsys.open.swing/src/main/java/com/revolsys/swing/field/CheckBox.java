@@ -56,6 +56,11 @@ public class CheckBox extends JCheckBox implements Field, ActionListener {
   }
 
   @Override
+  public CheckBox clone() {
+    return new CheckBox(this.fieldName, this.fieldValue);
+  }
+
+  @Override
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);

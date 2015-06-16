@@ -287,45 +287,49 @@ public class SwingUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T extends Field> T createField(final RecordDefinition metaData,
+  public static <T extends Field> T createField(final RecordDefinition recordDefinition,
     final String fieldName, final boolean editable) {
     Field field;
-    final FieldDefinition attribute = metaData.getField(fieldName);
-    if (attribute == null) {
+    final FieldDefinition fieldDefinition = recordDefinition.getField(fieldName);
+    if (fieldDefinition == null) {
       throw new IllegalArgumentException("Cannot find field " + fieldName);
     } else {
-      final boolean required = attribute.isRequired();
-      final int length = attribute.getLength();
+      final boolean required = fieldDefinition.isRequired();
+      final int length = fieldDefinition.getLength();
       CodeTable codeTable;
-      if (metaData.getIdFieldNames().contains(fieldName)) {
+      if (recordDefinition.getIdFieldNames().contains(fieldName)) {
         codeTable = null;
       } else {
-        codeTable = metaData.getCodeTableByFieldName(fieldName);
+        codeTable = recordDefinition.getCodeTableByFieldName(fieldName);
       }
 
-      final DataType type = attribute.getType();
+      final DataType type = fieldDefinition.getType();
       int columns = length;
-      if (columns == 0) {
+      if (columns <= 0) {
         columns = 10;
       } else if (columns > 50) {
         columns = 50;
       }
       final Class<?> javaClass = type.getJavaClass();
-      if (!editable) {
+      if (codeTable != null) {
+        if (editable) {
+          final JComponent component = codeTable.getSwingEditor();
+          if (component == null) {
+            field = createComboBox(fieldName, codeTable, required, -1);
+          } else {
+            field = ((Field)component).clone();
+          }
+        } else {
+          field = new ObjectLabelField(fieldName, columns, codeTable);
+        }
+      } else if (!editable) {
         final TextField textField = createTextField(fieldName, columns);
         textField.setEditable(false);
         field = textField;
-      } else if (codeTable != null) {
-        final JComponent component = codeTable.getSwingEditor();
-        if (component == null) {
-          field = createComboBox(fieldName, codeTable, required, -1);
-        } else {
-          field = (Field)component;
-        }
       } else if (Number.class.isAssignableFrom(javaClass)) {
-        final int scale = attribute.getScale();
-        final Number minValue = attribute.getMinValue();
-        final Number maxValue = attribute.getMaxValue();
+        final int scale = fieldDefinition.getScale();
+        final Number minValue = fieldDefinition.getMinValue();
+        final Number maxValue = fieldDefinition.getMaxValue();
         final NumberTextField numberTextField = new NumberTextField(fieldName, type, length, scale,
           minValue, maxValue);
         field = numberTextField;
@@ -652,8 +656,8 @@ public class SwingUtil {
   public static boolean isModifierKeyDown(final InputEvent event) {
     final int modifiersEx = event.getModifiersEx();
     final int flag = modifiersEx
-        & (InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK
-            | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
+      & (InputEvent.SHIFT_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.ALT_GRAPH_DOWN_MASK
+        | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK);
     return flag != 0;
   }
 
@@ -871,7 +875,7 @@ public class SwingUtil {
     final Throwable e) {
     final String exceptionMessage = e.getMessage().replaceAll("\n", "<br />");
     final String errorMessage = "<html><body><p style=\"margin-bottom: 10px\"><strong>" + message
-        + "</strong></p><pre>" + exceptionMessage + "</pre></body></p>";
+      + "</strong></p><pre>" + exceptionMessage + "</pre></body></p>";
 
     final JScrollPane scrollPane = new JScrollPane(new JLabel(errorMessage));
     final Dimension preferredSize = scrollPane.getPreferredSize();

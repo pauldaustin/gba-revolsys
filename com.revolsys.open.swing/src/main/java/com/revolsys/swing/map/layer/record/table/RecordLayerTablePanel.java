@@ -32,7 +32,7 @@ import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.LayerRecord;
-import com.revolsys.swing.map.layer.record.component.AttributeFilterPanel;
+import com.revolsys.swing.map.layer.record.component.FieldFilterPanel;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.table.TablePanel;
@@ -159,16 +159,16 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
 
     toolBar.addButtonTitleIcon("table", "Refresh", "table_refresh", this, "refresh");
 
-    final AttributeFilterPanel attributeFilterPanel = new AttributeFilterPanel(this,
+    final FieldFilterPanel fieldFilterPanel = new FieldFilterPanel(this,
       this.tableModel);
-    toolBar.addComponent("search", attributeFilterPanel);
+    toolBar.addComponent("search", fieldFilterPanel);
 
-    toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits", attributeFilterPanel,
+    toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits", fieldFilterPanel,
       "showAdvancedFilter");
 
     final EnableCheck hasFilter = new ObjectPropertyEnableCheck(this.tableModel, "hasFilter");
 
-    toolBar.addButton("search", "Clear Search", "filter_delete", hasFilter, attributeFilterPanel,
+    toolBar.addButton("search", "Clear Search", "filter_delete", hasFilter, fieldFilterPanel,
       "clear");
 
     // Filter buttons

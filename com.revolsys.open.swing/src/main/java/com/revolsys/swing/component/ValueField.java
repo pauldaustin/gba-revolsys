@@ -80,6 +80,11 @@ public class ValueField extends JPanel implements Field {
   }
 
   @Override
+  public ValueField clone() {
+    return new ValueField(this.fieldName, this.fieldValue);
+  }
+
+  @Override
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);

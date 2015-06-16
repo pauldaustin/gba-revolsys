@@ -82,6 +82,7 @@ import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.map.ProjectFrame;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.LayerRecord;
+import com.revolsys.swing.map.layer.record.component.RecordLayerFields;
 import com.revolsys.swing.map.layer.record.table.model.LayerRecordTableModel;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
 import com.revolsys.swing.map.layer.record.table.predicate.FormAllFieldsErrorPredicate;
@@ -699,9 +700,9 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     synchronized (this.fields) {
       Field field = this.fields.get(fieldName);
       if (field == null) {
-        final boolean enabled = !this.readOnlyFieldNames.contains(fieldName);
+        final boolean editable = !this.readOnlyFieldNames.contains(fieldName);
         try {
-          field = SwingUtil.createField(this.metaData, fieldName, enabled);
+          field = RecordLayerFields.createFormField(this.layer, fieldName, editable);
           addField(fieldName, field);
         } catch (final IllegalArgumentException e) {
         }

@@ -65,6 +65,12 @@ public class DirectoryNameField extends JPanel implements Field {
   }
 
   @Override
+  public DirectoryNameField clone() {
+    final DirectoryNameField field = new DirectoryNameField();
+    return field;
+  }
+
+  @Override
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);

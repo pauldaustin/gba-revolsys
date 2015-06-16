@@ -35,7 +35,7 @@ import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.record.model.AbstractRecordTableModel;
 
 public class RecordTableCellEditor extends AbstractCellEditor implements TableCellEditor,
-  KeyListener, MouseListener, TableModelListener {
+KeyListener, MouseListener, TableModelListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -68,6 +68,11 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
     }
   }
 
+  protected Field createField(final String fieldName) {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    return SwingUtil.createField(recordDefinition, fieldName, true);
+  }
+
   public String getAttributeName() {
     return this.attributeName;
   }
@@ -88,6 +93,11 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
 
   public Object getOldValue() {
     return this.oldValue;
+  }
+
+  protected RecordDefinition getRecordDefinition() {
+    final AbstractRecordTableModel tableModel = getTableModel();
+    return tableModel.getRecordDefinition();
   }
 
   public int getRowIndex() {
@@ -137,6 +147,10 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
       this.popupMenu.addToComponent(this.editorComponent);
     }
     return this.editorComponent;
+  }
+
+  protected AbstractRecordTableModel getTableModel() {
+    return (AbstractRecordTableModel)this.table.getModel();
   }
 
   @Override
@@ -235,9 +249,9 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
       return true;
     } catch (final Throwable t) {
       final int result = JOptionPane.showConfirmDialog(this.editorComponent, "<html><p><b>'"
-        + getCellEditorValue() + "' is not a valid " + this.dataType
-        + ".</b></p><p>Discard changes (Yes) or edit field (No).</p></html>", "Invalid value",
-        JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+          + getCellEditorValue() + "' is not a valid " + this.dataType
+          + ".</b></p><p>Discard changes (Yes) or edit field (No).</p></html>", "Invalid value",
+          JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
       if (result == JOptionPane.YES_OPTION) {
         cancelCellEditing();
         return true;

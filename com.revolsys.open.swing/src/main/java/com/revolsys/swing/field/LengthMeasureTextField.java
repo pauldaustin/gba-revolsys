@@ -77,6 +77,11 @@ public class LengthMeasureTextField extends ValueField implements ItemListener {
     GroupLayoutUtil.makeColumns(this, 2, true);
   }
 
+  @Override
+  public LengthMeasureTextField clone() {
+    return new LengthMeasureTextField(getFieldName(), getFieldValue(), this.unit);
+  }
+
   public Measure<Length> getLength() {
     return Measure.valueOf(this.number.doubleValue(), this.unit);
   }

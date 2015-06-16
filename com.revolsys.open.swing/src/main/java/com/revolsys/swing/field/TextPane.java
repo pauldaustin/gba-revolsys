@@ -35,6 +35,10 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
 
   private final CascadingUndoManager undoManager = new CascadingUndoManager();
 
+  private int columns;
+
+  private int rows;
+
   public TextPane() {
     this("fieldValue");
   }
@@ -61,6 +65,11 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
     addFocusListener(new WeakFocusListener(this));
     PopupMenu.getPopupMenuFactory(this);
     this.undoManager.addKeyMap(this);
+  }
+
+  @Override
+  public TextPane clone() {
+    return new TextPane(this.fieldName, this.rows, this.columns);
   }
 
   @Override
@@ -169,6 +178,8 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
   }
 
   protected void setRowsAndColumns(final int rows, final int columns) {
+    this.rows = rows;
+    this.columns = columns;
     setPreferredSize(new Dimension(12 * columns, 15 * rows));
   }
 

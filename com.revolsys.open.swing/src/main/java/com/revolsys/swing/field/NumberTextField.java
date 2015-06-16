@@ -200,6 +200,12 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
   }
 
   @Override
+  public NumberTextField clone() {
+    return new NumberTextField(this.fieldName, this.dataType, this.length, this.scale,
+      this.minimumValue, this.maximumValue);
+  }
+
+  @Override
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);

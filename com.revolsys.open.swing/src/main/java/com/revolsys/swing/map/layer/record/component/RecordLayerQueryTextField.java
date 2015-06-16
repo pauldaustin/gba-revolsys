@@ -31,6 +31,13 @@ public class RecordLayerQueryTextField extends AbstractRecordQueryField {
   }
 
   @Override
+  public RecordLayerQueryTextField clone() {
+    final String fieldName = getFieldName();
+    final String displayFieldName = getDisplayFieldName();
+    return new RecordLayerQueryTextField(fieldName, this.layer, displayFieldName);
+  }
+
+  @Override
   protected LayerRecord getRecord(final Object identifier) {
     return this.layer.getRecordById(identifier);
   }

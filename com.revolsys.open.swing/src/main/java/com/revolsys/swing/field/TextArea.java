@@ -62,6 +62,13 @@ public class TextArea extends JTextArea implements Field, FocusListener {
   }
 
   @Override
+  public TextArea clone() {
+    final int rows = getRows();
+    final int columns = getColumns();
+    return new TextArea(this.fieldName, this.fieldValue, rows, columns);
+  }
+
+  @Override
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
