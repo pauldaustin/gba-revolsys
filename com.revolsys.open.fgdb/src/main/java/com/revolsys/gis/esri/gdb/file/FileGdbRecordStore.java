@@ -81,6 +81,7 @@ import com.revolsys.gis.esri.gdb.file.capi.type.OidFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.capi.type.ShortFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.capi.type.StringFieldDefinition;
 import com.revolsys.gis.esri.gdb.file.capi.type.XmlFieldDefinition;
+import com.revolsys.gis.util.NoOp;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
@@ -538,7 +539,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       if (!orderBy.isEmpty()) {
         LoggerFactory.getLogger(getClass()).error(
           "Unable to sort on " + recordDefinition.getPath() + " " + orderBy.keySet()
-            + " as the ESRI library can't sort with a bounding box query");
+          + " as the ESRI library can't sort with a bounding box query");
       }
       sql = whereClause;
     } else {
@@ -576,7 +577,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         } else {
           LoggerFactory.getLogger(getClass()).error(
             "Unable to sort on " + recordDefinition.getPath() + "." + column
-              + " as the ESRI library can't sort on " + dataType + " columns");
+            + " as the ESRI library can't sort on " + dataType + " columns");
         }
       }
     }
@@ -660,7 +661,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                         LOG.debug(datasetDefinition);
                       }
                       throw new RuntimeException("Unable to create feature dataset "
-                        + childCatalogPath, t);
+                          + childCatalogPath, t);
                     }
                   }
                 }
@@ -766,8 +767,10 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     // methods
     if (record.getState() == RecordState.Persisted || record.getState() == RecordState.Modified) {
       record.setState(RecordState.Deleted);
-      final Writer<Record> writer = getWriter();
-      writer.write(record);
+      try (
+          FileGdbWriter writer = createWriter()) {
+        writer.write(record);
+      }
     }
   }
 
@@ -943,7 +946,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
               } catch (final Throwable e) {
                 LOG.error(tableDefinition);
                 throw new RuntimeException("Error creating attribute for " + typePath + "."
-                  + field.getName() + " : " + field.getType(), e);
+                    + field.getName() + " : " + field.getType(), e);
               }
             } else {
               LOG.error("Unsupported field type " + fieldName + ":" + type);
@@ -1088,6 +1091,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                     if (this.tablesToClose.isEmpty()) {
                       this.geodatabaseReferenceCount++;
                     }
+                    Maps.addCount(this.tableReferenceCountsByTypePath, typePath);
                     this.tablesToClose.put(typePath, table);
                   }
                 }
@@ -1214,7 +1218,10 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   public void insert(final Record record) {
     // Don't synchronize to avoid deadlock as that is done lower down in the
     // methods
-    getWriter().write(record);
+    try (
+        FileGdbWriter writer = createWriter()) {
+      writer.write(record);
+    }
   }
 
   protected void insertRow(final Table table, final Row row) {
@@ -1262,7 +1269,11 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       if (table == null) {
         return false;
       } else {
-        return this.tablesToClose.containsValue(table);
+        final boolean open = this.tablesToClose.containsValue(table);
+        if (!open) {
+          NoOp.noOp();
+        }
+        return open;
       }
     }
   }
@@ -1399,7 +1410,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
             final String schemaPath = schema.getPath();
             final String schemaCatalogPath = getCatalogPath(schema);
             final VectorOfWString childDatasets = getChildDatasets(geodatabase, schemaCatalogPath,
-              "Feature Dataset");
+                "Feature Dataset");
             if (childDatasets != null) {
               for (int i = 0; i < childDatasets.size(); i++) {
                 final String childCatalogPath = childDatasets.get(i);
@@ -1416,7 +1427,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
               }
             }
             if (Path.isParent(schemaPath, this.defaultSchemaPath)
-              && !elementsByPath.containsKey(this.defaultSchemaPath)) {
+                && !elementsByPath.containsKey(this.defaultSchemaPath)) {
               final SpatialReference spatialReference = getSpatialReference(getGeometryFactory());
               final RecordStoreSchema childSchema = createSchema(this.defaultSchemaPath,
                 spatialReference);
@@ -1428,7 +1439,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
               refreshSchemaRecordDefinitions(elementsByPath, schemaPath, "\\", "Table");
             }
             refreshSchemaRecordDefinitions(elementsByPath, schemaPath, schemaCatalogPath,
-              "Feature Class");
+                "Feature Class");
             refreshSchemaRecordDefinitions(elementsByPath, schemaPath, schemaCatalogPath, "Table");
           } finally {
             releaseGeodatabase();
@@ -1574,7 +1585,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           return rows;
         } catch (final Exception e) {
           LOG.error("ERROR executing query SELECT " + fields + " FROM " + typePath + " WHERE "
-            + whereClause + " AND " + boundingBox, e);
+              + whereClause + " AND " + boundingBox, e);
         }
       }
       return null;
@@ -1626,7 +1637,10 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   public void update(final Record record) {
     // Don't synchronize to avoid deadlock as that is done lower down in the
     // methods
-    getWriter().write(record);
+    try (
+        FileGdbWriter writer = createWriter()) {
+      writer.write(record);
+    }
   }
 
   protected void updateRow(final String typePath, final Table table, final Row row) {

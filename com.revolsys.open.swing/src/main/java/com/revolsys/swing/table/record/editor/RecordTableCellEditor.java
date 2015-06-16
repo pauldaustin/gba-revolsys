@@ -35,7 +35,7 @@ import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.record.model.AbstractRecordTableModel;
 
 public class RecordTableCellEditor extends AbstractCellEditor implements TableCellEditor,
-KeyListener, MouseListener, TableModelListener {
+  KeyListener, MouseListener, TableModelListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -248,10 +248,11 @@ KeyListener, MouseListener, TableModelListener {
     } catch (final IndexOutOfBoundsException e) {
       return true;
     } catch (final Throwable t) {
+      t.printStackTrace();
       final int result = JOptionPane.showConfirmDialog(this.editorComponent, "<html><p><b>'"
-          + getCellEditorValue() + "' is not a valid " + this.dataType
-          + ".</b></p><p>Discard changes (Yes) or edit field (No).</p></html>", "Invalid value",
-          JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+        + getCellEditorValue() + "' is not a valid " + this.dataType
+        + ".</b></p><p>Discard changes (Yes) or edit field (No).</p></html>", "Invalid value",
+        JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
       if (result == JOptionPane.YES_OPTION) {
         cancelCellEditing();
         return true;

@@ -45,12 +45,10 @@ public class FileGdbWriter extends AbstractRecordWriter {
     }
   }
 
-  public void closeTable(final String typePath) {
+  public synchronized void closeTable(final String typePath) {
     if (this.tables != null) {
-      synchronized (this.tables) {
-        if (this.tables.remove(typePath) != null) {
-          this.recordStore.releaseTableAndWriteLock(typePath);
-        }
+      if (this.tables.remove(typePath) != null) {
+        this.recordStore.releaseTableAndWriteLock(typePath);
       }
     }
   }
@@ -87,17 +85,15 @@ public class FileGdbWriter extends AbstractRecordWriter {
     close();
   }
 
-  private Table getTable(final String typePath) {
-    synchronized (this) {
-      Table table = this.tables.get(typePath);
-      if (table == null) {
-        table = this.recordStore.getTableWithWriteLock(typePath);
-        if (table != null) {
-          this.tables.put(typePath, table);
-        }
+  private synchronized Table getTable(final String typePath) {
+    Table table = this.tables.get(typePath);
+    if (table == null) {
+      table = this.recordStore.getTableWithWriteLock(typePath);
+      if (table != null) {
+        this.tables.put(typePath, table);
       }
-      return table;
     }
+    return table;
   }
 
   private void insert(final Record record) {
