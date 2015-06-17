@@ -76,27 +76,30 @@ public class IoFactoryRegistry {
           final Properties properties = new Properties();
           properties.load(resourceUrl.openStream());
           final String factoryClassNames = properties.getProperty("com.revolsys.io.IoFactory.factoryClassNames");
-          for (final String factoryClassName : factoryClassNames.split(",")) {
-            if (Property.hasValue(factoryClassName)) {
-              try {
-                final Class<?> factoryClass = Class.forName(factoryClassName.trim());
-                if (IoFactory.class.isAssignableFrom(factoryClass)) {
-                  @SuppressWarnings("unchecked")
-                  final IoFactory factory = ((Class<IoFactory>)factoryClass).newInstance();
-                  addFactory(factory);
-                } else {
+          if (Property.hasValue(factoryClassNames)) {
+            for (final String factoryClassName : factoryClassNames.split(",")) {
+              if (Property.hasValue(factoryClassName)) {
+                try {
+                  final Class<?> factoryClass = Class.forName(factoryClassName.trim());
+                  if (IoFactory.class.isAssignableFrom(factoryClass)) {
+                    @SuppressWarnings("unchecked")
+                    final IoFactory factory = ((Class<IoFactory>)factoryClass).newInstance();
+                    addFactory(factory);
+                  } else {
+                    LoggerFactory.getLogger(IoFactoryRegistry.class).error(
+                      factoryClassName + " is not a subclass of "
+                        + IoFactory.class);
+                  }
+                } catch (final Throwable e) {
                   LoggerFactory.getLogger(IoFactoryRegistry.class).error(
-                    factoryClassName + " is not a subclass of " + IoFactory.class);
+                    "Unable to load: " + factoryClassName, e);
                 }
-              } catch (final Throwable e) {
-                LoggerFactory.getLogger(IoFactoryRegistry.class).error(
-                  "Unable to load: " + factoryClassName, e);
               }
             }
           }
         } catch (final Throwable e) {
-          LoggerFactory.getLogger(IoFactoryRegistry.class).error("Unable to load: " + resourceUrl,
-            e);
+          LoggerFactory.getLogger(IoFactoryRegistry.class).error(
+            "Unable to load: " + resourceUrl, e);
         }
       }
     } catch (final IOException e) {
@@ -113,7 +116,8 @@ public class IoFactoryRegistry {
   }
 
   @SuppressWarnings("unchecked")
-  private void addFactory(final IoFactory factory, final Class<? extends IoFactory> factoryClass) {
+  private void addFactory(final IoFactory factory,
+    final Class<? extends IoFactory> factoryClass) {
     final Class<?>[] interfaces = factoryClass.getInterfaces();
     for (final Class<?> factoryInterface : interfaces) {
       if (IoFactory.class.isAssignableFrom(factoryInterface)) {
@@ -121,11 +125,13 @@ public class IoFactoryRegistry {
         final Set<IoFactory> factories = getFactories(ioInterface);
         if (factories.add(factory)) {
           for (final String fileExtension : factory.getFileExtensions()) {
-            CollectionUtil.addToTreeSet(this.classFileExtensions, ioInterface, fileExtension);
+            CollectionUtil.addToTreeSet(this.classFileExtensions, ioInterface,
+              fileExtension);
             final Map<String, IoFactory> factoriesByFileExtension = getFactoriesByFileExtensionMap(ioInterface);
             factoriesByFileExtension.put(fileExtension, factory);
             for (final String mediaType : factory.getMediaTypes()) {
-              this.extensionMimeTypeMap.put(fileExtension.toLowerCase(), mediaType);
+              this.extensionMimeTypeMap.put(fileExtension.toLowerCase(),
+                mediaType);
             }
           }
           final Map<String, IoFactory> factoriesByMediaType = getFactoriesByMediaType(ioInterface);
@@ -163,8 +169,8 @@ public class IoFactoryRegistry {
     return this.factories;
   }
 
-  public <F extends IoFactory> List<F> getFactoriesByFileExtension(final Class<F> factoryClass,
-    final List<String> fileExtensions) {
+  public <F extends IoFactory> List<F> getFactoriesByFileExtension(
+    final Class<F> factoryClass, final List<String> fileExtensions) {
     final Map<String, F> factoriesByFileExtension = getFactoriesByFileExtensionMap(factoryClass);
     final List<F> factories = new ArrayList<F>();
     for (final String fileExtension : fileExtensions) {
@@ -182,7 +188,8 @@ public class IoFactoryRegistry {
     Map<String, IoFactory> factoriesByFileExtension = this.classFactoriesByFileExtension.get(factoryClass);
     if (factoriesByFileExtension == null) {
       factoriesByFileExtension = new TreeMap<String, IoFactory>();
-      this.classFactoriesByFileExtension.put(factoryClass, factoriesByFileExtension);
+      this.classFactoriesByFileExtension.put(factoryClass,
+        factoriesByFileExtension);
     }
     return (Map<String, F>)factoriesByFileExtension;
   }
@@ -198,20 +205,20 @@ public class IoFactoryRegistry {
     return (Map<String, F>)factoriesByMediaType;
   }
 
-  public <F extends IoFactory> F getFactoryByFileExtension(final Class<F> factoryClass,
-    final String fileExtension) {
+  public <F extends IoFactory> F getFactoryByFileExtension(
+    final Class<F> factoryClass, final String fileExtension) {
     final Map<String, F> factoriesByFileExtension = getFactoriesByFileExtensionMap(factoryClass);
     return factoriesByFileExtension.get(fileExtension.toLowerCase());
   }
 
-  public <F extends IoFactory> F getFactoryByFileName(final Class<F> factoryClass,
-    final String fileName) {
+  public <F extends IoFactory> F getFactoryByFileName(
+    final Class<F> factoryClass, final String fileName) {
     final String fileExtension = FileUtil.getFileNameExtension(fileName);
     return getFactoryByFileExtension(factoryClass, fileExtension);
   }
 
-  public <F extends IoFactory> F getFactoryByMediaType(final Class<F> factoryClass,
-    final String mediaType) {
+  public <F extends IoFactory> F getFactoryByMediaType(
+    final Class<F> factoryClass, final String mediaType) {
     if (mediaType.contains("/")) {
       final Map<String, F> factoriesByMediaType = getFactoriesByMediaType(factoryClass);
       return factoriesByMediaType.get(mediaType);
@@ -220,8 +227,8 @@ public class IoFactoryRegistry {
     }
   }
 
-  public <F extends IoFactory> F getFactoryByResource(final Class<F> factoryClass,
-    final Resource resource) {
+  public <F extends IoFactory> F getFactoryByResource(
+    final Class<F> factoryClass, final Resource resource) {
     String fileName;
     if (resource instanceof UrlResource) {
       final UrlResource urlResoure = (UrlResource)resource;
@@ -236,18 +243,20 @@ public class IoFactoryRegistry {
     return getFactoryByFileName(factoryClass, fileName);
   }
 
-  public Set<String> getFileExtensions(final Class<? extends IoFactory> factoryClass) {
+  public Set<String> getFileExtensions(
+    final Class<? extends IoFactory> factoryClass) {
     final Set<String> emptySet = Collections.<String> emptySet();
     return CollectionUtil.get(this.classFileExtensions, factoryClass, emptySet);
   }
 
-  public <F extends IoFactory> Set<String> getMediaTypes(final Class<F> factoryClass) {
+  public <F extends IoFactory> Set<String> getMediaTypes(
+    final Class<F> factoryClass) {
     final Map<String, F> factoriesByMediaType = getFactoriesByMediaType(factoryClass);
     return factoriesByMediaType.keySet();
   }
 
-  public boolean isFileExtensionSupported(final Class<? extends IoFactory> factoryClass,
-    final String fileExtension) {
+  public boolean isFileExtensionSupported(
+    final Class<? extends IoFactory> factoryClass, final String fileExtension) {
     if (factoryClass == null || fileExtension == null) {
       return false;
     } else {
