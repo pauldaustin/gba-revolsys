@@ -49,17 +49,17 @@ public class FileGdbDomainCodeTable implements CodeTable {
   }
 
   @Override
-  public List<String> getFieldAliases() {
-    return this.domain.getFieldAliases();
-  }
-
-  @Override
   public Map<Object, List<Object>> getCodes() {
     return this.domain.getCodes();
   }
 
   public Domain getDomain() {
     return this.domain;
+  }
+
+  @Override
+  public List<String> getFieldAliases() {
+    return this.domain.getFieldAliases();
   }
 
   @Override
