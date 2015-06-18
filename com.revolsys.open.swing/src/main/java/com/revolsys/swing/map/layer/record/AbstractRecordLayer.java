@@ -24,7 +24,6 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -69,7 +68,6 @@ import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.spring.ByteArrayResource;
-import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
@@ -105,6 +103,7 @@ import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.tree.MenuSourcePropertyEnableCheck;
 import com.revolsys.swing.tree.MenuSourceRunnable;
+import com.revolsys.swing.tree.node.record.RecordStoreTableTreeNode;
 import com.revolsys.swing.undo.SetObjectProperty;
 import com.revolsys.util.CompareUtil;
 import com.revolsys.util.ExceptionUtil;
@@ -114,15 +113,11 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 public abstract class AbstractRecordLayer extends AbstractLayer implements RecordFactory,
-  AddGeometryCompleteAction {
+AddGeometryCompleteAction {
 
   public static final String FORM_FACTORY_EXPRESSION = "formFactoryExpression";
 
   private static AtomicInteger formCount = new AtomicInteger();
-
-  public static final ImageIcon ICON_TABLE = Icons.getIcon("table");
-
-  public static Map<String, Icon> ICONS_GEOMETRY = new HashMap<String, Icon>();
 
   static {
     final Class<AbstractRecordLayer> clazz = AbstractRecordLayer.class;
@@ -140,7 +135,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
     final EnableCheck hasGeometry = new MenuSourcePropertyEnableCheck("hasGeometry");
     menu.addMenuItem("zoom", MenuSourceRunnable.createAction("Zoom to Selected",
       "magnifier_zoom_selected", new AndEnableCheck(exists, hasGeometry, hasSelectedRecords),
-      "zoomToSelected"));
+        "zoomToSelected"));
 
     final EnableCheck editable = new MenuSourcePropertyEnableCheck("editable");
     final EnableCheck readonly = new MenuSourcePropertyEnableCheck("readOnly", false);
@@ -165,7 +160,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
     menu.addMenuItem("edit", MenuSourceRunnable.createAction("Delete Selected Records",
       "table_row_delete", new AndEnableCheck(hasSelectedRecords, canDelete),
-      "deleteSelectedRecords"));
+        "deleteSelectedRecords"));
 
     menu.addMenuItem("edit", MenuSourceRunnable.createAction("Merge Selected Records",
       "shape_group", canMergeRecords, "mergeSelectedRecords"));
@@ -226,14 +221,6 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       }
     }
     return null;
-  }
-
-  public static Icon getIcon(final String geometryType) {
-    Icon icon = ICONS_GEOMETRY.get(geometryType);
-    if (icon == null) {
-      icon = ICON_TABLE;
-    }
-    return icon;
   }
 
   public static List<AbstractRecordLayer> getVisibleLayers(final LayerGroup group) {
@@ -475,8 +462,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       if (!cancelled) {
         JOptionPane.showMessageDialog(MapPanel.get(this),
           "<html><p>There was an error cancelling changes for one or more records.</p>" + "<p>"
-            + getPath() + "</p>" + "<p>Check the logging panel for details.</html>",
-          "Error Cancelling Changes", JOptionPane.ERROR_MESSAGE);
+              + getPath() + "</p>" + "<p>Check the logging panel for details.</html>",
+              "Error Cancelling Changes", JOptionPane.ERROR_MESSAGE);
       }
 
     }
@@ -1106,8 +1093,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
                   if (alert) {
                     JOptionPane.showMessageDialog(parentComponent,
                       "Clipboard should contain a record with a " + geometryDataType + " not a "
-                        + sourceGeometry.getGeometryType() + ".", "Paste Geometry",
-                      JOptionPane.ERROR_MESSAGE);
+                          + sourceGeometry.getGeometryType() + ".", "Paste Geometry",
+                          JOptionPane.ERROR_MESSAGE);
                   }
                   return null;
                 }
@@ -1362,7 +1349,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
 
   public boolean isCanPaste() {
     return ClipboardUtil.isDataFlavorAvailable(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR)
-      || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
+        || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
   }
 
   public boolean isDeleted(final LayerRecord record) {
@@ -1504,7 +1491,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
   public void pasteRecords() {
     final List<LayerRecord> newRecords = new ArrayList<>();
     try (
-      EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
       RecordReader reader = ClipboardUtil.getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
       if (reader == null) {
         final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
@@ -1801,7 +1788,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       if (isHasChanges()) {
         final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
         try (
-          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+            EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
           doSaveChanges(errors);
         } finally {
           fireRecordsChanged();
@@ -1817,7 +1804,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       boolean allSaved;
       final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
       try (
-        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
         for (final LayerRecord record : records) {
           try {
             if (isLayerRecord(record)) {
@@ -1842,7 +1829,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
       boolean allSaved;
       final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
       try (
-        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
         try {
           final boolean saved = internalSaveChanges(errors, record);
           if (!saved) {
@@ -2000,7 +1987,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
         geometryType = geometryField.getType().toString();
       }
       setGeometryFactory(geometryFactory);
-      final Icon icon = getIcon(geometryType);
+      final Icon icon = RecordStoreTableTreeNode.getIcon(geometryType);
       setIcon(icon);
       if (recordDefinition.getGeometryFieldIndex() == -1) {
         setVisible(false);
@@ -2388,7 +2375,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer implements Recor
     final Project project = getProject();
     final GeometryFactory geometryFactory = project.getGeometryFactory();
     final BoundingBox boundingBox = getSelectedBoundingBox().convert(geometryFactory)
-      .expandPercent(0.1);
+        .expandPercent(0.1);
     project.setViewBoundingBox(boundingBox);
   }
 }
