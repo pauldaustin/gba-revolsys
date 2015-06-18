@@ -19,7 +19,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
 public class CogoJsonIoFactory extends AbstractRecordAndGeometryWriterFactory implements
-GeometryReaderFactory {
+  GeometryReaderFactory {
 
   public CogoJsonIoFactory() {
     super(GeoJsonConstants.COGO_DESCRIPTION, true, true);

@@ -102,7 +102,7 @@ public class JdbcCodeTable extends AbstractCodeTable {
   protected Object createId(final List<Object> values) {
     init();
     try (
-        final Connection connection = this.recordStore.getJdbcConnection()) {
+      final Connection connection = this.recordStore.getJdbcConnection()) {
       try {
         JdbcUtils.lockTable(connection, this.tableName);
         Object id = loadId(values, false);
@@ -210,7 +210,7 @@ public class JdbcCodeTable extends AbstractCodeTable {
 
   private void loadAll() {
     try (
-        final Connection connection = this.recordStore.getJdbcConnection()) {
+      final Connection connection = this.recordStore.getJdbcConnection()) {
       final PreparedStatement statement = connection.prepareStatement(this.allSql);
       try {
         final ResultSet rs = statement.executeQuery();
@@ -282,7 +282,7 @@ public class JdbcCodeTable extends AbstractCodeTable {
       values = getValueById(id);
     } else {
       try (
-          final Connection connection = this.recordStore.getJdbcConnection()) {
+        final Connection connection = this.recordStore.getJdbcConnection()) {
         final PreparedStatement statement = connection.prepareStatement(this.valueByIdSql);
         try {
           JdbcUtils.setValue(statement, 1, id);

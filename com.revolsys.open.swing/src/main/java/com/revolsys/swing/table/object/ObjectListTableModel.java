@@ -19,7 +19,7 @@ import com.revolsys.util.Property;
 import com.revolsys.util.Reorderable;
 
 public class ObjectListTableModel<T> extends AbstractTableModel implements Reorderable,
-PropertyChangeListener {
+  PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 

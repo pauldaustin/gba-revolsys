@@ -260,10 +260,6 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     this.lockResults = lockResults;
   }
 
-  public void setRecordDefinition(final RecordDefinition metaData) {
-    this.recordDefinition = metaData;
-  }
-
   public void setOffset(final int offset) {
     this.offset = offset;
   }
@@ -286,6 +282,10 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
 
   public void setOrderByColumns(final String... orderBy) {
     setOrderByColumns(Arrays.asList(orderBy));
+  }
+
+  public void setRecordDefinition(final RecordDefinition metaData) {
+    this.recordDefinition = metaData;
   }
 
   public void setSql(final String sql) {

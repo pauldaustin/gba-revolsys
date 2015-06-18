@@ -95,7 +95,7 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class QueryWhereConditionField extends ValueField implements MouseListener, CaretListener,
-ItemListener {
+  ItemListener {
 
   private static final ImageIcon ICON = Icons.getIcon("add");
 
@@ -231,7 +231,7 @@ ItemListener {
     // pane
 
     this.sqlPrefix = "SELECT * FROM "
-        + this.recordDefinition.getPath().substring(1).replace('/', '.') + " WHERE";
+      + this.recordDefinition.getPath().substring(1).replace('/', '.') + " WHERE";
 
     final JPanel filterTextPanel = new JPanel(new BorderLayout());
     filterTextPanel.setOpaque(false);
@@ -241,7 +241,7 @@ ItemListener {
     final ToolBar statusToolBar = new ToolBar();
     statusToolBar.setOpaque(false);
     final JButton verifyButton = statusToolBar.addButton("default", "Verify", this,
-        "verifyCondition");
+      "verifyCondition");
     verifyButton.setBorderPainted(true);
 
     final JPanel queryPanel = new JPanel(new BorderLayout());
@@ -493,15 +493,15 @@ ItemListener {
         previousText = "";
       }
       if (!Property.hasValue(previousText)
-          || !previousText.matches(".*"
-              + operator.replaceAll("\\(", "\\\\(")
-              .replaceAll("\\)", "\\\\)")
-              .replaceAll("\\*", "\\\\*")
-              .replaceAll("\\+", "\\\\+") + "\\s*$")) {
+        || !previousText.matches(".*"
+          + operator.replaceAll("\\(", "\\\\(")
+            .replaceAll("\\)", "\\\\)")
+            .replaceAll("\\*", "\\\\*")
+            .replaceAll("\\+", "\\\\+") + "\\s*$")) {
         final Document document = this.whereTextField.getDocument();
         try {
           if (Property.hasValue(previousText)
-              && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
+            && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
             document.insertString(position++, " ", null);
           }
           document.insertString(position, operator + " ", null);
@@ -553,11 +553,11 @@ ItemListener {
             previousText = "";
           }
           if (!Property.hasValue(previousText)
-              || !previousText.matches(".*\"?" + fieldName + "\"?\\s*$")) {
+            || !previousText.matches(".*\"?" + fieldName + "\"?\\s*$")) {
             final Document document = this.whereTextField.getDocument();
             try {
               if (Property.hasValue(previousText)
-                  && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
+                && !previousText.substring(previousText.length() - 1).matches("\\s$")) {
                 document.insertString(position++, " ", null);
               }
 
@@ -740,7 +740,7 @@ ItemListener {
                   }
                 } catch (final Throwable t) {
                   setInvalidMessage(name + " requires a " + attribute.getType() + " not the value "
-                      + value);
+                    + value);
                 }
               } else {
                 Object id;

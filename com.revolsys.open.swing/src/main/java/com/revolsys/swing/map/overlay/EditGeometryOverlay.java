@@ -63,7 +63,7 @@ import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 
 public class EditGeometryOverlay extends AbstractOverlay implements PropertyChangeListener,
-MouseListener, MouseMotionListener {
+  MouseListener, MouseMotionListener {
 
   private class AddGeometryUndoEdit extends AbstractUndoableEdit {
 
@@ -196,7 +196,7 @@ MouseListener, MouseMotionListener {
         setMapCursor(CURSOR_NODE_ADD);
 
         if (Arrays.asList(DataTypes.POINT, DataTypes.LINE_STRING)
-            .contains(this.addGeometryDataType)) {
+          .contains(this.addGeometryDataType)) {
           this.addGeometryPartIndex = new int[0];
         } else if (Arrays.asList(DataTypes.MULTI_POINT, DataTypes.MULTI_LINE_STRING,
           DataTypes.POLYGON).contains(this.addGeometryDataType)) {
@@ -292,7 +292,7 @@ MouseListener, MouseMotionListener {
           geometry = GeometryEditUtil.appendVertex(geometry, newPoint, geometryPartIndex);
         }
       } else if (DataTypes.LINE_STRING.equals(geometryDataType)
-          || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
+        || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
         if (geometry instanceof Point) {
           final Point point = (Point)geometry;
           geometry = geometryFactory.createLineString(point, newPoint);
@@ -301,7 +301,7 @@ MouseListener, MouseMotionListener {
           geometry = GeometryEditUtil.appendVertex(line, newPoint, geometryPartIndex);
         } // TODO MultiLineString
       } else if (DataTypes.POLYGON.equals(geometryDataType)
-          || DataTypes.MULTI_POLYGON.equals(geometryDataType)) {
+        || DataTypes.MULTI_POLYGON.equals(geometryDataType)) {
         if (geometry instanceof Point) {
           final Point point = (Point)geometry;
           geometry = geometryFactory.createLineString(point, newPoint);
@@ -517,7 +517,7 @@ MouseListener, MouseMotionListener {
 
   protected boolean isEditable(final AbstractRecordLayer dataObjectLayer) {
     return dataObjectLayer.isExists() && dataObjectLayer.isVisible()
-        && dataObjectLayer.isCanEditRecords();
+      && dataObjectLayer.isCanEditRecords();
   }
 
   protected boolean isGeometryValid(final Geometry geometry) {
@@ -682,7 +682,7 @@ MouseListener, MouseMotionListener {
       // TODO make work with multi-part
       final Point fromPoint = JtsGeometryUtil.getFromPoint(this.addGeometry);
       final boolean snapToFirst = !SwingUtil.isControlDown(event)
-          && boundingBox.contains(fromPoint);
+        && boundingBox.contains(fromPoint);
       if (snapToFirst || !updateAddMouseOverGeometry(event.getPoint(), boundingBox)) {
         if (snapToFirst) {
           setMapCursor(CURSOR_NODE_SNAP);
@@ -812,9 +812,9 @@ MouseListener, MouseMotionListener {
         JOptionPane.showMessageDialog(
           this,
           "There are too many "
-              + size
-              + " selected to view. Maximum 10. Select fewer records or move mouse to middle of geometry.",
-              "Too Many Selected Records", JOptionPane.ERROR_MESSAGE);
+            + size
+            + " selected to view. Maximum 10. Select fewer records or move mouse to middle of geometry.",
+          "Too Many Selected Records", JOptionPane.ERROR_MESSAGE);
         event.consume();
       }
     }

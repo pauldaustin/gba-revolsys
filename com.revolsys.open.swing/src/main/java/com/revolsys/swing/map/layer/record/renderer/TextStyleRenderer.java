@@ -165,8 +165,8 @@ public class TextStyleRenderer extends AbstractRecordLayerRenderer {
           point = CoordinatesUtil.get(geometryFactory.copy(geometry.getCentroid()));
           if (!viewport.getBoundingBox().contains(point)) {
             final Geometry clippedGeometry = viewport.getBoundingBox()
-                .toPolygon()
-                .intersection(geometry);
+              .toPolygon()
+              .intersection(geometry);
             if (!clippedGeometry.isEmpty()) {
               double maxArea = 0;
               double maxLength = 0;
@@ -335,7 +335,7 @@ public class TextStyleRenderer extends AbstractRecordLayerRenderer {
               directDisplay = viewport.getProperty(DIRECT_DISPLAY);
             }
             if (!BooleanStringConverter.isTrue(directDisplay) && textBoxOpacity > 0
-                && textBoxOpacity < 255) {
+              && textBoxOpacity < 255) {
               graphics.setComposite(AlphaComposite.SrcOut);
             } else {
               graphics.setComposite(AlphaComposite.SrcOver);

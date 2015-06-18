@@ -16,11 +16,10 @@ import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.collection.map.Maps;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
-import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public abstract class AbstractConnectionRegistry<T> implements ConnectionRegistry<T>,
-PropertyChangeListener {
+  PropertyChangeListener {
 
   private Map<String, T> connections;
 
@@ -42,7 +41,7 @@ PropertyChangeListener {
 
   public AbstractConnectionRegistry(
     final ConnectionRegistryManager<? extends ConnectionRegistry<T>> connectionManager,
-      final String name) {
+    final String name) {
     this.name = name;
     setConnectionManager(connectionManager);
   }

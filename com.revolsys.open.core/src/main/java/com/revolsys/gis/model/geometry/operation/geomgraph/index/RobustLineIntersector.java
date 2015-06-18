@@ -152,7 +152,7 @@ public class RobustLineIntersector extends LineIntersector {
     // do between check first, since it is faster than the orientation test
     if (BoundingBox.intersects(p1, p2, p)) {
       if (CoordinatesUtil.orientationIndex(p1, p2, p) == 0
-          && CoordinatesUtil.orientationIndex(p2, p1, p) == 0) {
+        && CoordinatesUtil.orientationIndex(p2, p1, p) == 0) {
         this.isProper = true;
         if (p.equals(p1) || p.equals(p2)) {
           this.isProper = false;

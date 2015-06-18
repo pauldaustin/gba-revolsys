@@ -20,20 +20,20 @@ import com.revolsys.swing.map.MapPanel;
 import com.revolsys.util.Property;
 
 public class SelectMapCoordinateSystem extends ComboBox implements ItemListener,
-PropertyChangeListener {
+  PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private final Reference<MapPanel> map;
 
   public SelectMapCoordinateSystem(final MapPanel map) {
     super(3857, 3005// , 26907, 26908, 26909, 26910, 26911
-        );
+    );
 
     this.map = new WeakReference<MapPanel>(map);
     setSelectedItem(map.getGeometryFactory().getSRID());
     setEditable(true);
     final InvokeMethodStringConverter renderer = new InvokeMethodStringConverter(this,
-        "formatCoordinateSystem");
+      "formatCoordinateSystem");
     setRenderer(renderer);
     AutoCompleteDecorator.decorate(this, renderer);
     addItemListener(this);

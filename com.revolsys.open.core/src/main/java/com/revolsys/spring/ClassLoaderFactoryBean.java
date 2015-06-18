@@ -15,7 +15,7 @@ import com.revolsys.io.filter.ExtensionFilenameFilter;
 public class ClassLoaderFactoryBean extends AbstractFactoryBean<ClassLoader> {
 
   private static final ExtensionFilenameFilter JAR_FILTER = new ExtensionFilenameFilter("jar",
-      "zip");
+    "zip");
 
   public static void addJars(final Collection<URL> urls, final File directory) {
     if (directory.exists() && directory.isDirectory()) {

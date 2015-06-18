@@ -99,7 +99,7 @@ public class XmlProcessorError {
   public String toString() {
     if (this.location != null) {
       return "[" + this.location.getLineNumber() + ", " + this.location.getColumnNumber() + "] "
-          + this.message;
+        + this.message;
     } else {
       return this.message;
 

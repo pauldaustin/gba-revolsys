@@ -109,11 +109,11 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
             this.coordinateListeners.coordinateEvent(new Coordinate(x2, y2), typePath,
               "Short Segment", "Fixed",
               distance + " " + Math.toDegrees(previousAngle) + " " + Math.toDegrees(angle) + " "
-                  + Math.toDegrees(nextAngle));
+                + Math.toDegrees(nextAngle));
           } else {
             this.coordinateListeners.coordinateEvent(new Coordinate(x2, y2), typePath,
               "Short Segment", "Review", distance + " " + Math.toDegrees(previousAngle) + " "
-                  + Math.toDegrees(angle) + " " + Math.toDegrees(nextAngle));
+                + Math.toDegrees(angle) + " " + Math.toDegrees(nextAngle));
           }
         }
         x1 = x2;

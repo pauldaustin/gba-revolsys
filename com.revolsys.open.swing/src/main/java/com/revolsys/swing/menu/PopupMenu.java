@@ -87,7 +87,7 @@ public class PopupMenu implements MouseListener {
             menu.addMenuItemTitleIcon("dataTransfer", "Cut", "cut", textComponent, "cut");
             menu.addMenuItemTitleIcon("dataTransfer", "Copy", "page_copy", textComponent, "copy");
             menu.addMenuItemTitleIcon("dataTransfer", "Paste", "paste_plain", textComponent,
-                "paste");
+              "paste");
           }
         }
         textComponent.setDragEnabled(true);

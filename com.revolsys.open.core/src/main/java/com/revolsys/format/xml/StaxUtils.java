@@ -99,10 +99,10 @@ public final class StaxUtils {
       switch (parser.getEventType()) {
         case XMLStreamConstants.CHARACTERS:
           text.append(parser.getText());
-          break;
+        break;
         case XMLStreamConstants.START_ELEMENT:
           text.append(getElementText(parser));
-          break;
+        break;
       }
     }
     return text.toString();

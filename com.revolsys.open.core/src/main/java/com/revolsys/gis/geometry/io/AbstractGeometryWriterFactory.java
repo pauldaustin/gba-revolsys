@@ -13,7 +13,7 @@ import com.revolsys.spring.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractGeometryWriterFactory extends AbstractIoFactory implements
-GeometryWriterFactory {
+  GeometryWriterFactory {
 
   public static Writer<Geometry> createWriter(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();

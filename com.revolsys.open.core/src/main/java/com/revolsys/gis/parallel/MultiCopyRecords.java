@@ -48,13 +48,13 @@ public class MultiCopyRecords implements Process {
           return copy;
         } else {
           LoggerFactory.getLogger(getClass()).error(
-              "Parameter 'typePath' required for type='copyRecords'");
+            "Parameter 'typePath' required for type='copyRecords'");
         }
       } else if ("sequential".equals(type)) {
         final List<Map<String, Object>> processList = (List<Map<String, Object>>)processDefinition.get("processes");
         if (processList == null) {
           LoggerFactory.getLogger(getClass()).error(
-              "Parameter 'processes' required for type='sequential'");
+            "Parameter 'processes' required for type='sequential'");
         } else {
           final Sequential processes = new Sequential();
           createProcesses(processes, processList);
@@ -64,7 +64,7 @@ public class MultiCopyRecords implements Process {
         final List<Map<String, Object>> processList = (List<Map<String, Object>>)processDefinition.get("processes");
         if (processList == null) {
           LoggerFactory.getLogger(getClass()).error(
-              "Parameter 'processes' required for type='parallel'");
+            "Parameter 'processes' required for type='parallel'");
         } else {
           final Parallel processes = new Parallel();
           createProcesses(processes, processList);

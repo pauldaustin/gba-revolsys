@@ -1,5 +1,7 @@
 package com.revolsys.swing.parallel;
 
+import org.slf4j.LoggerFactory;
+
 public class RunnableSwingWorker extends AbstractSwingWorker<Void, Void> {
   private final String description;
 
@@ -17,7 +19,13 @@ public class RunnableSwingWorker extends AbstractSwingWorker<Void, Void> {
   @Override
   protected Void doInBackground() throws Exception {
     if (this.backgroundTask != null) {
-      this.backgroundTask.run();
+      try {
+        this.backgroundTask.run();
+      } catch (final Throwable e) {
+        LoggerFactory.getLogger(this.backgroundTask.getClass()).error(
+          "Error running :" + this.description, e);
+        throw e;
+      }
     }
     return null;
   }

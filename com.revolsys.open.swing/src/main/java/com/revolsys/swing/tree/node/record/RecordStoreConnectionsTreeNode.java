@@ -10,12 +10,10 @@ import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.swing.EventQueue;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.tree.node.BaseTreeNode;
-import com.revolsys.swing.tree.node.ListTreeNode;
+import com.revolsys.swing.tree.node.LazyLoadTreeNode;
 
-public class RecordStoreConnectionsTreeNode extends ListTreeNode {
+public class RecordStoreConnectionsTreeNode extends LazyLoadTreeNode {
   public static final Icon ICON = Icons.getIcon("folder_database");
-
-  public static final Icon ICON_OPEN = Icons.getIcon("folder_database_open");
 
   public RecordStoreConnectionsTreeNode() {
     setName("Record Stores");
@@ -35,10 +33,5 @@ public class RecordStoreConnectionsTreeNode extends ListTreeNode {
       children.add(child);
     }
     return children;
-  }
-
-  @Override
-  public Icon getOpenIcon() {
-    return ICON_OPEN;
   }
 }

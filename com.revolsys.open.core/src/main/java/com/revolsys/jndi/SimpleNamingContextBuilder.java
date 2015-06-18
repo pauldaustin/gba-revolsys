@@ -47,7 +47,7 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
       if (!initialized) {
         if (NamingManager.hasInitialContextFactoryBuilder()) {
           throw new IllegalStateException(
-              "Cannot activate SimpleNamingContextBuilder: there is already a JNDI provider registered. Note that JNDI is a JVM-wide service, shared at the JVM system class loader level, with no reset option. As a consequence, a JNDI provider must only be registered once per JVM.");
+            "Cannot activate SimpleNamingContextBuilder: there is already a JNDI provider registered. Note that JNDI is a JVM-wide service, shared at the JVM system class loader level, with no reset option. As a consequence, a JNDI provider must only be registered once per JVM.");
         }
         NamingManager.setInitialContextFactoryBuilder(this);
         initialized = true;
@@ -83,21 +83,21 @@ public class SimpleNamingContextBuilder implements InitialContextFactoryBuilder 
           icfClass = ClassUtils.resolveClassName((String)icf, getClass().getClassLoader());
         } else {
           throw new IllegalArgumentException(new StringBuilder(
-              "Invalid value type for environment key [java.naming.factory.initial]: ").append(
-                icf.getClass().getName()).toString());
+            "Invalid value type for environment key [java.naming.factory.initial]: ").append(
+            icf.getClass().getName()).toString());
         }
         if (!InitialContextFactory.class.isAssignableFrom(icfClass)) {
           throw new IllegalArgumentException(new StringBuilder(
-              "Specified class does not implement [").append(InitialContextFactory.class.getName())
-              .append("]: ")
-              .append(icf)
-              .toString());
+            "Specified class does not implement [").append(InitialContextFactory.class.getName())
+            .append("]: ")
+            .append(icf)
+            .toString());
         }
         try {
           return (InitialContextFactory)icfClass.newInstance();
         } catch (final Throwable ex) {
           final IllegalStateException ise = new IllegalStateException(new StringBuilder(
-              "Cannot instantiate specified InitialContextFactory: ").append(icf).toString());
+            "Cannot instantiate specified InitialContextFactory: ").append(icf).toString());
           ise.initCause(ex);
           throw ise;
         }

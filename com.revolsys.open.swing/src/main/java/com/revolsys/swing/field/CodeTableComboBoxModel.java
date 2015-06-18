@@ -17,7 +17,7 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class CodeTableComboBoxModel extends AbstractListModel<Object> implements
-ComboBoxModel<Object>, PropertyChangeListener, Closeable {
+  ComboBoxModel<Object>, PropertyChangeListener, Closeable {
   private static final long serialVersionUID = 1L;
 
   public static final Object NULL = new Object();
@@ -115,7 +115,7 @@ ComboBoxModel<Object>, PropertyChangeListener, Closeable {
   @Override
   public void setSelectedItem(final Object item) {
     if (this.selectedItem != null && !this.selectedItem.equals(item) || this.selectedItem == null
-        && item != null) {
+      && item != null) {
       this.selectedItem = item;
       fireContentsChanged(this, -1, -1);
     }

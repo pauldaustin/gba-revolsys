@@ -309,7 +309,7 @@ abstract public class EdgeEndStar {
            * be the current location.
            */
           Assert.isTrue(label.getLocation(geomIndex, Position.LEFT) == Location.NONE,
-              "found single null side");
+            "found single null side");
           label.setLocation(geomIndex, Position.RIGHT, currLoc);
           label.setLocation(geomIndex, Position.LEFT, currLoc);
         }

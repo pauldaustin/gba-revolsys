@@ -17,7 +17,7 @@ import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
 
 public class DataObjectDirectoryReader extends AbstractDirectoryReader<Record> implements
-RecordDefinitionFactory {
+  RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
 

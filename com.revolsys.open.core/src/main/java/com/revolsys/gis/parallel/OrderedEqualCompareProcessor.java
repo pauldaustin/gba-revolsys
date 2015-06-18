@@ -113,7 +113,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
     final String geometryAttributeName = metaData.getGeometryFieldName();
     for (final String attributeName : metaData.getFieldNames()) {
       if (!this.equalExclude.contains(attributeName)
-          && !attributeName.equals(geometryAttributeName)) {
+        && !attributeName.equals(geometryAttributeName)) {
         final Object value1 = object1.getValue(attributeName);
         final Object value2 = object2.getValue(attributeName);
         if (!valueEquals(value1, value2)) {
@@ -215,7 +215,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
         final Record readObject = readObject(channel);
         if (readObject != null) {
           if (previousEqualObject != null
-              && EqualsInstance.INSTANCE.equals(previousEqualObject, readObject)) {
+            && EqualsInstance.INSTANCE.equals(previousEqualObject, readObject)) {
             if (index == 0) {
               RecordLog.error(getClass(), "Duplicate in " + this.sourceName, readObject);
             } else {
@@ -263,7 +263,7 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
                 final boolean geometryEquals = geometryEquals(sourceObject, otherObject);
                 if (!geometryEquals) {
                   final String geometryAttributeName = sourceObject.getRecordDefinition()
-                      .getGeometryFieldName();
+                    .getGeometryFieldName();
                   notEqualAttributeNames.add(geometryAttributeName);
                 }
                 if (!notEqualAttributeNames.isEmpty()) {

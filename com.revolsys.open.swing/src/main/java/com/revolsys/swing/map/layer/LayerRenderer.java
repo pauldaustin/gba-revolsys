@@ -12,7 +12,7 @@ import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.map.Viewport2D;
 
 public interface LayerRenderer<T extends Layer> extends PropertyChangeListener,
-PropertyChangeSupportProxy, MapSerializer, Cloneable {
+  PropertyChangeSupportProxy, MapSerializer, Cloneable {
 
   LayerRenderer<T> clone();
 

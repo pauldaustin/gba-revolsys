@@ -35,7 +35,7 @@ public class ZipDataObjectReader extends DelegatingReader<Record> implements Rec
       if (this.reader == null) {
         close();
         throw new IllegalArgumentException("No *." + fileExtension + " exists in zip file "
-            + resource);
+          + resource);
       } else {
         setReader(this.reader);
       }

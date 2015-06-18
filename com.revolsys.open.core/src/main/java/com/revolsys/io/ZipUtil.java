@@ -28,7 +28,7 @@ public class ZipUtil {
    * @throws IOException If an I/O error occurs.
    */
   public static void addDirectoryToZipFile(final ZipOutputStream zipOut, final File directory)
-      throws IOException {
+    throws IOException {
     addDirectoryToZipFile(zipOut, directory, directory);
   }
 
@@ -85,7 +85,7 @@ public class ZipUtil {
   }
 
   public static List<String> unzipFile(final File file, final File outputDirectory)
-      throws IOException {
+    throws IOException {
     final List<String> entryNames = new ArrayList<String>();
     final ZipFile zipFile = new ZipFile(file);
     for (final Enumeration<? extends ZipEntry> entries = zipFile.entries(); entries.hasMoreElements();) {
@@ -141,7 +141,7 @@ public class ZipUtil {
   }
 
   public static void zipDirectory(final File directory, final OutputStream outputStream)
-      throws IOException {
+    throws IOException {
     final ZipOutputStream zipOut = new ZipOutputStream(outputStream);
     addDirectoryToZipFile(zipOut, directory, directory);
     zipOut.close();

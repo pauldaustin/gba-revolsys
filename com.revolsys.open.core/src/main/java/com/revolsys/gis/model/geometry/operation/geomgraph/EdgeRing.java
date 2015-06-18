@@ -18,11 +18,13 @@ import com.vividsolutions.jts.util.Assert;
 public abstract class EdgeRing {
 
   protected DirectedEdge startDe; // the directed edge which starts the list of
+
   // edges for this EdgeRing
 
   private int maxNodeDegree = -1;
 
   private final List edges = new ArrayList(); // the DirectedEdges making up
+
   // this
 
   // EdgeRing
@@ -30,6 +32,7 @@ public abstract class EdgeRing {
   private final List<Coordinates> pts = new ArrayList<Coordinates>();
 
   private final Label label = new Label(Location.NONE.getIndex()); // label
+
   // stores the
 
   // locations
@@ -43,9 +46,11 @@ public abstract class EdgeRing {
   private boolean isHole;
 
   private EdgeRing shell; // if non-null, the ring is a hole and this EdgeRing
+
   // is its containing shell
 
   private final List<EdgeRing> holes = new ArrayList<EdgeRing>(); // a list of
+
   // EdgeRings
   // which
 
@@ -116,7 +121,7 @@ public abstract class EdgeRing {
       }
       if (de.getEdgeRing() == this) {
         throw new TopologyException("Directed Edge visited twice during ring-building at "
-            + de.getCoordinate());
+          + de.getCoordinate());
       }
 
       this.edges.add(de);

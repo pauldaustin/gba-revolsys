@@ -7,7 +7,7 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.vividsolutions.jts.geom.Envelope;
 
 public abstract class AbstractIdObjectPointQuadTree<T> extends AbstractPointSpatialIndex<T>
-implements IdObjectIndex<T> {
+  implements IdObjectIndex<T> {
 
   private final PointSpatialIndex<Integer> index = new PointQuadTree<Integer>();
 
@@ -54,7 +54,7 @@ implements IdObjectIndex<T> {
   @Override
   public void visit(final Envelope envelope, final Visitor<T> visitor) {
     final IdObjectIndexEnvelopeVisitor<T> itemVisitor = new IdObjectIndexEnvelopeVisitor<T>(this,
-        envelope, visitor);
+      envelope, visitor);
     this.index.visit(envelope, itemVisitor);
   }
 

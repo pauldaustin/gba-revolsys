@@ -159,8 +159,7 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
 
     toolBar.addButtonTitleIcon("table", "Refresh", "table_refresh", this, "refresh");
 
-    final FieldFilterPanel fieldFilterPanel = new FieldFilterPanel(this,
-      this.tableModel);
+    final FieldFilterPanel fieldFilterPanel = new FieldFilterPanel(this, this.tableModel);
     toolBar.addComponent("search", fieldFilterPanel);
 
     toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits", fieldFilterPanel,

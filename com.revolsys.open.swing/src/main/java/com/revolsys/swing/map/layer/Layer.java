@@ -15,7 +15,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.component.TabbedValuePanel;
 
 public interface Layer extends PropertyChangeSupportProxy, ObjectWithProperties,
-PropertyChangeListener, Comparable<Layer>, MapSerializer, Child<LayerGroup> {
+  PropertyChangeListener, Comparable<Layer>, MapSerializer, Child<LayerGroup> {
 
   TabbedValuePanel createPropertiesPanel();
 
@@ -54,6 +54,8 @@ PropertyChangeListener, Comparable<Layer>, MapSerializer, Child<LayerGroup> {
   void initialize();
 
   boolean isClonable();
+
+  boolean isDeleted();
 
   boolean isEditable();
 

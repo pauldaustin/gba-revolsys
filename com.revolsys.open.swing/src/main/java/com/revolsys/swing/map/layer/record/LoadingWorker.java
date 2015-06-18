@@ -25,17 +25,27 @@ public class LoadingWorker extends AbstractSwingWorker<DataObjectQuadTree, Void>
 
   @Override
   protected DataObjectQuadTree doInBackground() throws Exception {
-    final DataObjectQuadTree index = new DataObjectQuadTree();
-    final GeometryFactory geometryFactory = this.layer.getGeometryFactory();
-    final BoundingBox queryBoundingBox = this.viewportBoundingBox.convert(geometryFactory);
-    Query query = this.layer.getQuery();
-    if (query != null) {
-      query = query.clone();
-      query.setBoundingBox(queryBoundingBox);
-      final List<LayerRecord> records = this.layer.query(query);
-      index.insertAll(records);
+    try {
+      final DataObjectQuadTree index = new DataObjectQuadTree();
+      final GeometryFactory geometryFactory = this.layer.getGeometryFactory();
+      final BoundingBox queryBoundingBox = this.viewportBoundingBox.convert(geometryFactory);
+      Query query = this.layer.getQuery();
+      if (query != null) {
+        query = query.clone();
+        query.setBoundingBox(queryBoundingBox);
+        if (!this.layer.isDeleted()) {
+          final List<LayerRecord> records = this.layer.query(query);
+          index.insertAll(records);
+        }
+      }
+      return index;
+    } catch (final Exception e) {
+      if (this.layer.isDeleted()) {
+        return null;
+      } else {
+        throw e;
+      }
     }
-    return index;
   }
 
   public AbstractLayer getLayer() {

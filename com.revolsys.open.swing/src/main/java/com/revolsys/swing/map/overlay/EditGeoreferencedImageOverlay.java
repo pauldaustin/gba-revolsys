@@ -394,7 +394,7 @@ public class EditGeoreferencedImageOverlay extends AbstractOverlay {
     if (this.layer != null) {
       final int keyCode = event.getKeyCode();
       if (this.moveTiePointIndex > -1 || this.addTiePointFirstPoint != null
-          || this.moveTiePointStarted) {
+        || this.moveTiePointStarted) {
         final char keyChar = event.getKeyChar();
         if (keyChar >= '1' && keyChar <= '9') {
           event.consume();
@@ -592,19 +592,19 @@ public class EditGeoreferencedImageOverlay extends AbstractOverlay {
           switch (closestIndex) {
             case 0:
               this.moveCornerCursor = Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR);
-              break;
+            break;
             case 1:
               this.moveCornerCursor = Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR);
-              break;
+            break;
             case 2:
               this.moveCornerCursor = Cursor.getPredefinedCursor(Cursor.NW_RESIZE_CURSOR);
-              break;
+            break;
             case 3:
               this.moveCornerCursor = Cursor.getPredefinedCursor(Cursor.NE_RESIZE_CURSOR);
-              break;
+            break;
             default:
               this.moveCornerCursor = null;
-              break;
+            break;
           }
           if (this.moveCornerCursor != null) {
             setMapCursor(this.moveCornerCursor);

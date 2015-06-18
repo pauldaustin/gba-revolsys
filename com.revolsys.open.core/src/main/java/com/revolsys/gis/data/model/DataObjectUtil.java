@@ -239,7 +239,7 @@ public final class DataObjectUtil {
             object.setValue(name, value);
           } else {
             final StringConverter<Object> converter = StringConverterRegistry.getInstance()
-                .getConverter(dataTypeClass);
+              .getConverter(dataTypeClass);
             if (converter == null) {
               object.setValue(name, value);
             } else {

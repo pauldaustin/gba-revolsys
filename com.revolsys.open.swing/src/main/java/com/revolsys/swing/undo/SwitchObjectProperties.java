@@ -80,6 +80,6 @@ public class SwitchObjectProperties extends AbstractUndoableEdit {
   @Override
   public String toString() {
     return "switch " + this.propertyName1 + "=" + this.value1 + " and " + this.propertyName2 + "="
-        + this.value2;
+      + this.value2;
   }
 }

@@ -38,7 +38,7 @@ public class UrlResource extends org.springframework.core.io.UrlResource {
       return new UrlResource(relativeUrl);
     } catch (final IOException e) {
       throw new IllegalArgumentException("Unable to create relative URL " + this + " "
-          + relativePath, e);
+        + relativePath, e);
     }
   }
 

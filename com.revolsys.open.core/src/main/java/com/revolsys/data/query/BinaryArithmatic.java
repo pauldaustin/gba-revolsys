@@ -98,6 +98,6 @@ public abstract class BinaryArithmatic extends QueryValue {
   @Override
   public String toString() {
     return StringConverterRegistry.toString(this.left) + " " + this.operator + " "
-        + StringConverterRegistry.toString(this.right);
+      + StringConverterRegistry.toString(this.right);
   }
 }

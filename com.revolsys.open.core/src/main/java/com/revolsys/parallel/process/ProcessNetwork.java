@@ -25,7 +25,7 @@ import com.revolsys.spring.TargetBeanFactoryBean;
 import com.revolsys.spring.TargetBeanProcess;
 
 public class ProcessNetwork implements BeanPostProcessor,
-ApplicationListener<ContextRefreshedEvent> {
+  ApplicationListener<ContextRefreshedEvent> {
 
   public static void startAndWait(final Process... processes) {
     final ProcessNetwork processNetwork = new ProcessNetwork(processes);
@@ -132,7 +132,7 @@ ApplicationListener<ContextRefreshedEvent> {
 
   @Override
   public Object postProcessAfterInitialization(final Object bean, final String beanName)
-      throws BeansException {
+    throws BeansException {
     if (this.parent == null) {
       if (bean instanceof TargetBeanFactoryBean) {
         final TargetBeanFactoryBean targetBean = (TargetBeanFactoryBean)bean;
@@ -180,7 +180,7 @@ ApplicationListener<ContextRefreshedEvent> {
 
   @Override
   public Object postProcessBeforeInitialization(final Object bean, final String beanName)
-      throws BeansException {
+    throws BeansException {
     return bean;
   }
 

@@ -216,7 +216,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
 
   private void addLayerControls() {
     this.toolBar.addButtonTitleIcon("layers", "Refresh All Layers", "arrow_refresh", this,
-        "refresh");
+      "refresh");
 
     final SelectMapCoordinateSystem selectCoordinateSystem = new SelectMapCoordinateSystem(this);
     this.toolBar.addComponent("layers", selectCoordinateSystem);
@@ -225,7 +225,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     this.baseMapLayerField = new ComboBox(baseMapLayersModel);
     this.baseMapLayerField.setMaximumSize(new Dimension(200, 22));
     this.baseMapLayerField.addItemListener(new InvokeMethodSelectedItemListener(this,
-        "setBaseMapLayer"));
+      "setBaseMapLayer"));
     if (this.baseMapLayers.size() > 0) {
       this.baseMapLayerField.setSelectedIndex(1);
     }
@@ -326,7 +326,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
 
   private void addZoomButtons() {
     this.toolBar.addButtonTitleIcon("zoom", "Zoom to World", "magnifier_zoom_world", this,
-        "zoomToWorld");
+      "zoomToWorld");
 
     this.toolBar.addButtonTitleIcon("zoom", "Zoom to British Columbia", "zoom_bc", this,
       "setBoundingBox", MapPanel.BC_ENVELOPE);
@@ -347,7 +347,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     Property.addListener(this, "zoomNextEnabled", new EnableComponentListener(zoomNextButton));
 
     this.toolBar.addButtonTitleIcon("zoom", "Zoom To Selected", "magnifier_zoom_selected", this,
-        "zoomToSelected");
+      "zoomToSelected");
 
     this.zoomBookmarkButton = this.toolBar.addButtonTitleIcon("zoom", "Zoom Bookmarks",
       "zoom_bookmark", this, "showZoomBookmarkMenu");
@@ -602,7 +602,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     } else if (source == this.baseMapLayers) {
       if ("layers".equals(propertyName)) {
         if (this.baseMapOverlay != null
-            && (this.baseMapOverlay.getLayer() == null || NullLayer.INSTANCE.equals(this.baseMapOverlay.getLayer()))) {
+          && (this.baseMapOverlay.getLayer() == null || NullLayer.INSTANCE.equals(this.baseMapOverlay.getLayer()))) {
           final Layer layer = (Layer)event.getNewValue();
           if (layer != null && layer.isVisible()) {
             this.baseMapOverlay.setLayer(layer);

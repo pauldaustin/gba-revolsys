@@ -454,7 +454,7 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
           if (lineSegmentMatch.hasSegment(0) && !processedEdges.contains(edge)) {
             if (lineSegmentMatch.getMatchCount(0) > 2) {
               for (int i = 1; i < lineSegmentMatch.getSegmentCount()
-                  && lineSegmentMatch.getMatchCount(0) > 2; i++) {
+                && lineSegmentMatch.getMatchCount(0) > 2; i++) {
                 if (lineSegmentMatch.hasSegment(i)) {
                   if (!hasMatch(currentNode, false, 0, i)) {
                     final Node<LineSegmentMatch> toNode = edge.getToNode();
@@ -603,7 +603,7 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
             if (!matchEdges.isEmpty()) {
               final boolean allowSplit = edge.getLength() >= 2 * this.tolerance;
               final Set<Node<LineSegmentMatch>> splitNodes = new TreeSet<Node<LineSegmentMatch>>(
-                  new NodeDistanceComparator<LineSegmentMatch>(edge.getFromNode()));
+                new NodeDistanceComparator<LineSegmentMatch>(edge.getFromNode()));
               final Node<LineSegmentMatch> lineStart = edge.getFromNode();
               final Node<LineSegmentMatch> lineEnd = edge.getToNode();
 
@@ -612,11 +612,11 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
                 iterator.remove();
                 final LineSegmentMatch matchLineSegmentMatch = matchEdge.getObject();
                 if (!matchLineSegmentMatch.hasSegment(index)
-                    && matchLineSegmentMatch.hasOtherSegment(index)) {
+                  && matchLineSegmentMatch.hasOtherSegment(index)) {
                   final Node<LineSegmentMatch> line2Start = matchEdge.getFromNode();
                   final Node<LineSegmentMatch> line2End = matchEdge.getToNode();
                   final Set<Node<LineSegmentMatch>> matchSplitNodes = new TreeSet<Node<LineSegmentMatch>>(
-                      new NodeDistanceComparator<LineSegmentMatch>(line2Start));
+                    new NodeDistanceComparator<LineSegmentMatch>(line2Start));
                   if (matchEdge.getLength() >= 2 * this.tolerance) {
                     if (LineSegmentUtil.isPointOnLineMiddle(line2Start, line2End, lineStart,
                       this.tolerance)) {

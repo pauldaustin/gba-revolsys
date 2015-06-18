@@ -36,7 +36,7 @@ import com.revolsys.util.Property;
  * @see RecordDefinition
  */
 public class FieldDefinition extends AbstractObjectWithProperties implements Cloneable,
-MapSerializer {
+  MapSerializer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("field",
     "Data Record Field", FieldDefinition.class, "create");
@@ -596,11 +596,11 @@ MapSerializer {
           value = StringConverterRegistry.toObject(fieldType, value);
         } catch (final Throwable t) {
           throw new IllegalArgumentException(fieldName + "=" + value + " is not a valid "
-              + fieldType);
+            + fieldType);
         }
         if (value == null) {
           throw new IllegalArgumentException(fieldName + "=" + value + " is not a valid "
-              + fieldType);
+            + fieldType);
         }
       }
       if (value != null) {
@@ -649,7 +649,7 @@ MapSerializer {
         if (!this.allowedValues.isEmpty()) {
           if (!this.allowedValues.containsKey(value)) {
             throw new IllegalArgumentException(fieldName + "=" + value + " not in ("
-                + CollectionUtil.toString(",", this.allowedValues) + ")");
+              + CollectionUtil.toString(",", this.allowedValues) + ")");
           }
         }
       }
@@ -675,11 +675,11 @@ MapSerializer {
             value = StringConverterRegistry.toObject(fieldType, value);
           } catch (final Throwable t) {
             throw new ObjectPropertyException(record, fieldName, "'" + value + "' is not a valid "
-                + fieldType.getValidationName(), t);
+              + fieldType.getValidationName(), t);
           }
           if (value == null) {
             throw new ObjectPropertyException(record, fieldName, "'" + value + "' is not a valid "
-                + fieldType.getValidationName());
+              + fieldType.getValidationName());
           }
         }
         if (value != null) {
@@ -691,7 +691,7 @@ MapSerializer {
             if (maxLength > 0) {
               if (length > maxLength) {
                 throw new ObjectPropertyException(record, fieldName, "'" + value + "' length "
-                    + length + " > " + maxLength);
+                  + length + " > " + maxLength);
               }
             }
 
@@ -700,21 +700,21 @@ MapSerializer {
             if (maxScale > 0) {
               if (scale > maxScale) {
                 throw new ObjectPropertyException(record, fieldName, "'" + value + "' scale "
-                    + scale + " > " + maxScale);
+                  + scale + " > " + maxScale);
               }
             }
             final Number minValue = getMinValue();
             if (minValue != null) {
               if (NumericComparator.numericCompare(number, minValue) < 0) {
                 throw new ObjectPropertyException(record, fieldName, "'" + value + "' > "
-                    + minValue);
+                  + minValue);
               }
             }
             final Number maxValue = getMaxValue();
             if (maxValue != null) {
               if (NumericComparator.numericCompare(number, maxValue) > 0) {
                 throw new ObjectPropertyException(record, fieldName, "'" + value + "' < "
-                    + maxValue);
+                  + maxValue);
               }
             }
           } else if (value instanceof String) {
@@ -723,14 +723,14 @@ MapSerializer {
             if (maxLength > 0) {
               if (length > maxLength) {
                 throw new ObjectPropertyException(record, fieldName, "'" + value + "' length "
-                    + length + " > " + maxLength);
+                  + length + " > " + maxLength);
               }
             }
           }
           if (!this.allowedValues.isEmpty()) {
             if (!this.allowedValues.containsKey(value)) {
               throw new ObjectPropertyException(record, fieldName, "'" + value + " not in ("
-                  + CollectionUtil.toString(",", this.allowedValues) + ")");
+                + CollectionUtil.toString(",", this.allowedValues) + ")");
             }
           }
         }

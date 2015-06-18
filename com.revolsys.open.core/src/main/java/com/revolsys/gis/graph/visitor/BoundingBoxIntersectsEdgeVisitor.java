@@ -23,7 +23,7 @@ public class BoundingBoxIntersectsEdgeVisitor<T> extends DelegatingVisitor<Edge<
     BoundingBox boundingBox = new BoundingBox(geometryFactory, line.getEnvelopeInternal());
     boundingBox = boundingBox.expand(maxDistance);
     final BoundingBoxIntersectsEdgeVisitor<T> visitor = new BoundingBoxIntersectsEdgeVisitor<T>(
-        boundingBox, results);
+      boundingBox, results);
     final IdObjectIndex<Edge<T>> index = graph.getEdgeIndex();
     index.visit(boundingBox, visitor);
     final List<Edge<T>> list = results.getList();

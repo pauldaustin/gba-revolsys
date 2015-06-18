@@ -95,7 +95,7 @@ public class TextOnCurveConverter implements OsnConverter {
   }
 
   protected void writeAttributes(final OsnSerializer serializer, final Map<String, Object> values)
-      throws IOException {
+    throws IOException {
     for (final Entry<String, Object> entry : values.entrySet()) {
       final String key = entry.getKey();
       if (key != TYPE) {

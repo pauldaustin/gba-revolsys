@@ -141,7 +141,7 @@ public class KmlDataObjectWriter extends AbstractWriter<Record> implements Kml22
         final String attributeName = metaData.getFieldName(i);
         final Object value = object.getValue(i);
         if (value != null
-            || BooleanStringConverter.isTrue(getProperty(Kml22Constants.WRITE_NULLS_PROPERTY))) {
+          || BooleanStringConverter.isTrue(getProperty(Kml22Constants.WRITE_NULLS_PROPERTY))) {
           if (!hasValues) {
             hasValues = true;
             this.writer.startTag(EXTENDED_DATA);

@@ -67,7 +67,7 @@ import com.revolsys.spring.SpringUtil;
  * @see SaifWriter
  */
 public class SaifReader extends AbstractReader<Record> implements DataObjectIterator,
-RecordDefinitionFactory, com.revolsys.data.record.io.RecordReader {
+  RecordDefinitionFactory, com.revolsys.data.record.io.RecordReader {
   /** The logging instance. */
   private static final Logger log = Logger.getLogger(SaifReader.class);
 
@@ -626,7 +626,7 @@ RecordDefinitionFactory, com.revolsys.data.record.io.RecordReader {
   }
 
   protected Record readObject(final String className, final RecordFactory factory)
-      throws IOException {
+    throws IOException {
     final OsnReader reader = getOsnReader(className, factory);
     try {
       final Record object = reader.next();

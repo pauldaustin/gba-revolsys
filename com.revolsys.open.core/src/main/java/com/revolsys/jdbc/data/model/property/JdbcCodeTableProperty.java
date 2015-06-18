@@ -29,7 +29,7 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
   @Override
   protected synchronized Object createId(final List<Object> values) {
     try (
-        final Connection connection = this.recordStore.getJdbcConnection()) {
+      final Connection connection = this.recordStore.getJdbcConnection()) {
       Object id = loadId(values, false);
       boolean retry = true;
       while (id == null) {
@@ -95,8 +95,8 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
       }
       if (this.useAuditColumns) {
         if (this.recordStore.getClass()
-            .getName()
-            .equals("com.revolsys.gis.oracle.io.OracleDataObjectStore")) {
+          .getName()
+          .equals("com.revolsys.gis.oracle.io.OracleDataObjectStore")) {
           this.insertSql += ", USER, SYSDATE, USER, SYSDATE";
         } else {
           this.insertSql += ", current_user, current_timestamp, current_user, current_timestamp";

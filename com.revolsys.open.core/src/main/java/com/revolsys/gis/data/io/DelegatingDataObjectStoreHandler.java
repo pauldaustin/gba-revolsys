@@ -83,7 +83,7 @@ public class DelegatingDataObjectStoreHandler implements InvocationHandler {
 
   @Override
   public Object invoke(final Object proxy, final Method method, final Object[] args)
-      throws Throwable {
+    throws Throwable {
     int numArgs;
     if (args == null) {
       numArgs = 0;

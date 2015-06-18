@@ -51,15 +51,15 @@ public class CoordinateCoordinates extends AbstractCoordinates {
     switch (index) {
       case 0:
         this.coordinate.x = value;
-        break;
+      break;
       case 1:
         this.coordinate.y = value;
-        break;
+      break;
       case 2:
         this.coordinate.z = value;
-        break;
+      break;
       default:
-        break;
+      break;
     }
   }
 

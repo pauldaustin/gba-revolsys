@@ -237,7 +237,7 @@ public class BufferSubgraph implements Comparable {
        */
       // <FIX> - handle negative depths
       if (de.getDepth(Position.RIGHT) >= 1 && de.getDepth(Position.LEFT) <= 0
-          && !de.isInteriorAreaEdge()) {
+        && !de.isInteriorAreaEdge()) {
         de.setInResult(true);
         // Debug.print("in result "); Debug.println(de);
       }

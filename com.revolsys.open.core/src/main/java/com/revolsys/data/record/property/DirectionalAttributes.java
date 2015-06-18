@@ -31,7 +31,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = DirectionalAttributes.class.getName()
-      + ".propertyName";
+    + ".propertyName";
 
   private static final Logger LOG = LoggerFactory.getLogger(DirectionalAttributes.class);
 
@@ -165,11 +165,11 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
         namePairs.put(toAttributeName, fromAttributeName);
       } else if (toPair.equals(fromAttributeName)) {
         throw new IllegalArgumentException("Cannot override mapping " + toAttributeName + "="
-            + toPair + " to " + fromAttributeName);
+          + toPair + " to " + fromAttributeName);
       }
     } else if (fromPair.equals(toAttributeName)) {
       throw new IllegalArgumentException("Cannot override mapping " + fromAttributeName + "="
-          + fromPair + " to " + toAttributeName);
+        + fromPair + " to " + toAttributeName);
     }
   }
 
@@ -247,7 +247,7 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
       final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(metaData);
       for (final String attributeName : metaData.getFieldNames()) {
         if (!DataObjectEquals.isAttributeIgnored(metaData, equalExcludeAttributes, attributeName)
-            && !equalIgnore.isAttributeIgnored(attributeName)) {
+          && !equalIgnore.isAttributeIgnored(attributeName)) {
           if (!canMerge(attributeName, point, object1, object2, equalExcludeAttributes,
             forwardsIndicators)) {
             return false;
@@ -283,7 +283,7 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
           } else {
             if (LOG.isDebugEnabled()) {
               LOG.debug("Different values (" + attributeName + "=" + value1 + ") != ("
-                  + attributeName + " = " + value2 + ")");
+                + attributeName + " = " + value2 + ")");
               LOG.debug(object1.toString());
               LOG.debug(object2.toString());
             }
@@ -380,7 +380,7 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
     final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(metaData);
     for (final String attributeName : metaData.getFieldNames()) {
       if (!equalExcludeAttributes.contains(attributeName)
-          && !equalIgnore.isAttributeIgnored(attributeName)) {
+        && !equalIgnore.isAttributeIgnored(attributeName)) {
         if (!equals(attributeName, object1, object2, equalExcludeAttributes)) {
           return false;
         }
@@ -469,7 +469,7 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
       final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(metaData);
       for (final String attributeName : metaData.getFieldNames()) {
         if (!equalExcludeAttributes.contains(attributeName)
-            && !equalIgnore.isAttributeIgnored(attributeName)) {
+          && !equalIgnore.isAttributeIgnored(attributeName)) {
           if (!canMerge(attributeName, point, object1, object2, equalExcludeAttributes,
             forwardsIndicators)) {
             attributeNames.add(attributeName);
@@ -532,12 +532,12 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
       forwards[0] = false;
       forwards[1] = true;
     } else if (points1.equal(points1.size() - 1, points2, points2.size() - 1)
-        && points1.equal(lastPointIndex1, point, 2)) {
+      && points1.equal(lastPointIndex1, point, 2)) {
       // -->*<-- true false
       forwards[0] = true;
       forwards[1] = false;
     } else if (points1.equal(points1.size() - 1, points2, 0)
-        && points1.equal(lastPointIndex1, point, 2)) {
+      && points1.equal(lastPointIndex1, point, 2)) {
       // -->*--> true true
       forwards[0] = true;
       forwards[1] = true;
@@ -838,7 +838,7 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
     } else {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Both values not null (" + name1 + "=" + value1 + ") != (" + name2 + " = "
-            + value2 + ")");
+          + value2 + ")");
         LOG.debug(object1.toString());
         LOG.debug(object2.toString());
       }

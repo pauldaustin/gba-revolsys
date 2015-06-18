@@ -61,7 +61,7 @@ public abstract class AbstractIdObjectQuadTree<T> extends Quadtree implements Id
   @Override
   public void visit(final Envelope envelope, final Visitor<T> visitor) {
     final IdObjectIndexItemVisitor<T> itemVisitor = new IdObjectIndexItemVisitor<T>(this, envelope,
-        visitor);
+      visitor);
     this.query(envelope, itemVisitor);
   }
 

@@ -14,7 +14,7 @@ import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 import com.revolsys.util.Property;
 
 public class LayerRecordTableModel extends AbstractSingleRecordTableModel implements
-PropertyChangeListener {
+  PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 

@@ -21,7 +21,7 @@ public class LayerInitializer extends SwingWorker<Void, Void> {
   public static void initialize(final Layer layer) {
     synchronized (LAYERS_TO_INITIALIZE) {
       if (!LAYERS_CURRENTLY_INITIALIZING.contains(layer) && !LAYERS_TO_INITIALIZE.contains(layer)
-          && !layer.isInitialized()) {
+        && !layer.isInitialized()) {
         LAYERS_TO_INITIALIZE.add(layer);
         if (instanceCount < MAX_WORKERS) {
           instanceCount++;

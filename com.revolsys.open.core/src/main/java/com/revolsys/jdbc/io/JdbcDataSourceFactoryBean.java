@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 public class JdbcDataSourceFactoryBean extends AbstractFactoryBean<DataSource> implements
-ApplicationContextAware {
+  ApplicationContextAware {
 
   private Map<String, Object> config = new HashMap<String, Object>();
 
@@ -80,7 +80,7 @@ ApplicationContextAware {
 
   @Override
   public void setApplicationContext(final ApplicationContext applicationContext)
-      throws BeansException {
+    throws BeansException {
     this.applicationContext = applicationContext;
   }
 

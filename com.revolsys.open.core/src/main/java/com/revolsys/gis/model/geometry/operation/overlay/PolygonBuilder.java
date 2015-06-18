@@ -188,7 +188,7 @@ public class PolygonBuilder {
       }
       boolean isContained = false;
       if (tryEnv.contains(testEnv)
-          && RayCrossingCounter.locatePointInRing(testPt, tryRing) != Location.EXTERIOR) {
+        && RayCrossingCounter.locatePointInRing(testPt, tryRing) != Location.EXTERIOR) {
         isContained = true;
       }
       // check if this new containing ring is smaller than the current minimum

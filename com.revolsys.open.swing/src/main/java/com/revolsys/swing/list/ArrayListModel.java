@@ -14,7 +14,7 @@ import com.revolsys.util.Property;
 import com.revolsys.util.Reorderable;
 
 public class ArrayListModel<T> extends ArrayList<T> implements ListModel<T>, Serializable,
-Reorderable {
+  Reorderable {
   private static final long serialVersionUID = 1L;
 
   private final List<ListDataListener> listeners = new ArrayList<>();

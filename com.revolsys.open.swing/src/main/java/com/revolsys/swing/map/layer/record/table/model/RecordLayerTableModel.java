@@ -284,7 +284,7 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
         if (this.countLoaded) {
           int count = this.rowCount;
           if (!this.fieldFilterMode.equals(MODE_SELECTED)
-              && !this.fieldFilterMode.equals(MODE_EDITS)) {
+            && !this.fieldFilterMode.equals(MODE_EDITS)) {
             final AbstractRecordLayer layer = getLayer();
             final int newRecordCount = layer.getNewRecordCount();
             count += newRecordCount;
@@ -411,7 +411,7 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
     if (e.getSource() == this.layer) {
       final String propertyName = e.getPropertyName();
       if (Arrays.asList("query", "editable", "recordInserted", "recordsInserted", "recordDeleted",
-          "recordsChanged").contains(propertyName)) {
+        "recordsChanged").contains(propertyName)) {
         refresh();
       } else if ("recordUpdated".equals(propertyName)) {
         repaint();

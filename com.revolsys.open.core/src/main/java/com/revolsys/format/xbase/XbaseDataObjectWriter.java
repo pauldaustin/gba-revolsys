@@ -239,7 +239,7 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
         if (!writeField(object, field)) {
           final String attributeName = field.getFullName();
           log.warn("Unable to write attribute '" + attributeName + "' with value "
-              + object.getValue(attributeName));
+            + object.getValue(attributeName));
         }
       }
       this.numRecords++;

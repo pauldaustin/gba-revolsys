@@ -116,7 +116,7 @@ public class WktParser {
       skipWhitespace(text);
       if (text.length() > 0) {
         throw new IllegalArgumentException("Unexpected text at the end of an empty geometry: "
-            + text);
+          + text);
       }
       return true;
     } else {
@@ -335,10 +335,10 @@ public class WktParser {
         } else {
           throw new IllegalArgumentException("Expecting ) not" + text);
         }
-        break;
+      break;
       case ')':
         text.delete(0, 2);
-        break;
+      break;
 
       default:
         throw new IllegalArgumentException("Expecting ( not" + text);
@@ -362,10 +362,10 @@ public class WktParser {
         } else {
           throw new IllegalArgumentException("Expecting ) not" + text);
         }
-        break;
+      break;
       case ')':
         text.delete(0, 2);
-        break;
+      break;
 
       default:
         throw new IllegalArgumentException("Expecting ( not" + text);

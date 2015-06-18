@@ -74,7 +74,7 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
 
   private void createRecordDefinition(final String[] fieldNames) throws IOException {
     this.hasPointFields = Property.hasValue(this.pointXFieldName)
-        && Property.hasValue(this.pointYFieldName);
+      && Property.hasValue(this.pointYFieldName);
     if (this.hasPointFields) {
       this.geometryType = DataTypes.POINT;
     } else {
@@ -94,30 +94,30 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
           type = DataTypes.GEOMETRY;
           isGeometryField = true;
         } else if ("GEOMETRYCOLLECTION".equalsIgnoreCase(fieldName)
-            || "GEOMETRY_COLLECTION".equalsIgnoreCase(fieldName)) {
+          || "GEOMETRY_COLLECTION".equalsIgnoreCase(fieldName)) {
           type = DataTypes.GEOMETRY_COLLECTION;
           isGeometryField = true;
         } else if ("POINT".equalsIgnoreCase(fieldName)) {
           type = DataTypes.POINT;
           isGeometryField = true;
         } else if ("MULTI_POINT".equalsIgnoreCase(fieldName)
-            || "MULTIPOINT".equalsIgnoreCase(fieldName)) {
+          || "MULTIPOINT".equalsIgnoreCase(fieldName)) {
           type = DataTypes.MULTI_POINT;
           isGeometryField = true;
         } else if ("LINE_STRING".equalsIgnoreCase(fieldName)
-            || "LINESTRING".equalsIgnoreCase(fieldName) || "LINE".equalsIgnoreCase(fieldName)) {
+          || "LINESTRING".equalsIgnoreCase(fieldName) || "LINE".equalsIgnoreCase(fieldName)) {
           type = DataTypes.LINE_STRING;
           isGeometryField = true;
         } else if ("MULTI_LINESTRING".equalsIgnoreCase(fieldName)
-            || "MULTILINESTRING".equalsIgnoreCase(fieldName)
-            || "MULTILINE".equalsIgnoreCase(fieldName) || "MULTI_LINE".equalsIgnoreCase(fieldName)) {
+          || "MULTILINESTRING".equalsIgnoreCase(fieldName)
+          || "MULTILINE".equalsIgnoreCase(fieldName) || "MULTI_LINE".equalsIgnoreCase(fieldName)) {
           type = DataTypes.MULTI_LINE_STRING;
           isGeometryField = true;
         } else if ("POLYGON".equalsIgnoreCase(fieldName)) {
           type = DataTypes.POLYGON;
           isGeometryField = true;
         } else if ("MULTI_POLYGON".equalsIgnoreCase(fieldName)
-            || "MULTIPOLYGON".equalsIgnoreCase(fieldName)) {
+          || "MULTIPOLYGON".equalsIgnoreCase(fieldName)) {
           type = DataTypes.MULTI_POLYGON;
           isGeometryField = true;
         }
@@ -265,13 +265,13 @@ public class CsvRecordIterator extends AbstractIterator<Record> implements Recor
           if (c == CsvConstants.QUOTE_CHARACTER) {
             hadQuotes = true;
             if (inQuotes && line.length() > i + 1
-                && line.charAt(i + 1) == CsvConstants.QUOTE_CHARACTER) {
+              && line.charAt(i + 1) == CsvConstants.QUOTE_CHARACTER) {
               sb.append(line.charAt(i + 1));
               i++;
             } else {
               inQuotes = !inQuotes;
               if (i > 2 && line.charAt(i - 1) != this.fieldSeparator && line.length() > i + 1
-                  && line.charAt(i + 1) != this.fieldSeparator) {
+                && line.charAt(i + 1) != this.fieldSeparator) {
                 sb.append(c);
               }
             }

@@ -19,7 +19,7 @@ public final class CaseConverter {
       return Collections.emptyList();
     } else {
       final Pattern p = Pattern.compile("([\\p{Lu}\\d']+)$" + "|" + "([\\p{Lu}\\d']+)[ _]" + "|"
-          + "([\\p{L}\\d'][^\\p{Lu} _]*)");
+        + "([\\p{L}\\d'][^\\p{Lu} _]*)");
       final Matcher m = p.matcher(text);
       final List<String> words = new ArrayList<String>();
       while (m.find()) {

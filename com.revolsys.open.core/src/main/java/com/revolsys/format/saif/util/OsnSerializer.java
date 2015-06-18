@@ -100,12 +100,12 @@ public class OsnSerializer {
   }
 
   public void attribute(final String name, final double value, final boolean endLine)
-      throws IOException {
+    throws IOException {
     attribute(name, new BigDecimal(value), endLine);
   }
 
   public void attribute(final String name, final Object value, final boolean endLine)
-      throws IOException {
+    throws IOException {
     attributeName(name);
     attributeValue(value);
     if (endLine || this.indentEnabled) {
@@ -115,7 +115,7 @@ public class OsnSerializer {
   }
 
   public void attributeEnum(final String name, final String value, final boolean endLine)
-      throws IOException {
+    throws IOException {
     attributeName(name);
     write(value);
     endAttribute();
@@ -336,8 +336,8 @@ public class OsnSerializer {
               if (parent instanceof Record) {
                 final Record parentObject = (Record)parent;
                 if (parentObject.getRecordDefinition()
-                    .getName()
-                    .equals(SaifConstants.TEXT_ON_CURVE)) {
+                  .getName()
+                  .equals(SaifConstants.TEXT_ON_CURVE)) {
                   endLine();
                 }
               }
@@ -351,7 +351,7 @@ public class OsnSerializer {
   }
 
   private void serializeCollection(final String name, final Collection<Object> collection)
-      throws IOException {
+    throws IOException {
     startCollection(name);
     for (final Object value : collection) {
       serializeValue(value);

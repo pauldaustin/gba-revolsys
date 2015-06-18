@@ -66,7 +66,7 @@ public class ArcSdeSpatialReferenceCache {
 
   protected ArcSdeSpatialReference getSpatialReference(final String sql, final int esriSrid) {
     try (
-        final Connection connection = this.dataStore.getJdbcConnection()) {
+      final Connection connection = this.dataStore.getJdbcConnection()) {
       PreparedStatement statement = null;
       ResultSet resultSet = null;
       try {

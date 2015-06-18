@@ -94,7 +94,7 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
         return parsePolygon();
       } else {
         while (this.in.next() != XMLStreamConstants.START_ELEMENT
-            && this.in.getEventType() != XMLStreamConstants.END_DOCUMENT) {
+          && this.in.getEventType() != XMLStreamConstants.END_DOCUMENT) {
 
         }
       }
@@ -120,7 +120,7 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
     StaxUtils.requireLocalName(this.in, LINEAR_RING);
     CoordinatesList cooordinatesList = null;
     while (!StaxUtils.isEndElementLocalName(this.in, LINEAR_RING)
-        && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
+      && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (StaxUtils.matchElementLocalName(this.in, COORDINATES)) {
         cooordinatesList = parseCoordinates();
       } else {
@@ -136,7 +136,7 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
     StaxUtils.requireLocalName(this.in, LINE_STRING);
     CoordinatesList cooordinatesList = null;
     while (!StaxUtils.isEndElementLocalName(this.in, LINE_STRING)
-        && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
+      && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (StaxUtils.matchElementLocalName(this.in, COORDINATES)) {
         cooordinatesList = parseCoordinates();
       } else {
@@ -152,7 +152,7 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
     StaxUtils.requireLocalName(this.in, MULTI_GEOMETRY);
     final List<Geometry> geometries = new ArrayList<Geometry>();
     while (!StaxUtils.isEndElementLocalName(this.in, MULTI_GEOMETRY)
-        && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
+      && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       final Geometry geometry = parseGeometry();
       if (geometry != null) {
         geometries.add(geometry);
@@ -167,7 +167,7 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
     StaxUtils.requireLocalName(this.in, OUTER_BOUNDARY_IS);
     LinearRing ring = null;
     while (!StaxUtils.isEndElementLocalName(this.in, OUTER_BOUNDARY_IS)
-        && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
+      && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (ring == null && StaxUtils.matchElementLocalName(this.in, LINEAR_RING)) {
         ring = parseLinearRing();
       } else {
@@ -182,7 +182,7 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
     StaxUtils.requireLocalName(this.in, POINT);
     CoordinatesList cooordinatesList = null;
     while (!StaxUtils.isEndElementLocalName(this.in, POINT)
-        && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
+      && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (cooordinatesList == null && StaxUtils.matchElementLocalName(this.in, COORDINATES)) {
         cooordinatesList = parseCoordinates();
       } else {
@@ -198,7 +198,7 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
     StaxUtils.requireLocalName(this.in, POLYGON);
     final List<LinearRing> rings = new ArrayList<LinearRing>();
     while (!StaxUtils.isEndElementLocalName(this.in, POLYGON)
-        && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
+      && this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (rings.isEmpty()) {
         if (StaxUtils.matchElementLocalName(this.in, OUTER_BOUNDARY_IS)) {
           rings.add(parseOuterBoundary());

@@ -73,6 +73,10 @@ public class Invoke {
   public static void andWait(final Object object, final String methodName,
     final Object... parameters) {
     final InvokeMethodRunnable runnable = new InvokeMethodRunnable(object, methodName, parameters);
+    andWait(runnable);
+  }
+
+  public static void andWait(final Runnable runnable) {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();
     } else {
@@ -99,7 +103,7 @@ public class Invoke {
   public static SwingWorker<?, ?> background(final String description, final Object object,
     final String backgroundMethodName, final List<Object> parameters) {
     final SwingWorker<?, ?> worker = new InvokeMethodSwingWorker<Object, Object>(description,
-        object, backgroundMethodName, parameters);
+      object, backgroundMethodName, parameters);
     worker(worker);
     return worker;
   }
@@ -107,7 +111,7 @@ public class Invoke {
   public static SwingWorker<?, ?> background(final String description, final Object object,
     final String backgroundMethodName, final Object... parameters) {
     final SwingWorker<?, ?> worker = new InvokeMethodSwingWorker<Object, Object>(description,
-        object, backgroundMethodName, Arrays.asList(parameters));
+      object, backgroundMethodName, Arrays.asList(parameters));
     worker(worker);
     return worker;
   }
@@ -188,7 +192,7 @@ public class Invoke {
     final Collection<? extends Object> backgrounMethodParameters, final String doneMethodName,
     final Collection<? extends Object> doneMethodParameters) {
     final SwingWorker<?, ?> worker = new InvokeMethodSwingWorker<Object, Object>(description,
-        object, backgroundMethodName, backgrounMethodParameters, doneMethodName, doneMethodParameters);
+      object, backgroundMethodName, backgrounMethodParameters, doneMethodName, doneMethodParameters);
     worker(worker);
     return worker;
   }

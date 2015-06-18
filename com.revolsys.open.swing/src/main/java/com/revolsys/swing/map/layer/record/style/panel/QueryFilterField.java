@@ -39,7 +39,7 @@ public class QueryFilterField extends ValueField implements PropertyChangeListen
     final ToolBar toolBar = new ToolBar();
 
     toolBar.addButtonTitleIcon("search", "Advanced Search", "filter_edits", this,
-        "showAdvancedFilter");
+      "showAdvancedFilter");
 
     this.clearButton = toolBar.addButtonTitleIcon("search", "Clear Filter", "filter_delete",
       this.queryField, "setFieldValue", "");

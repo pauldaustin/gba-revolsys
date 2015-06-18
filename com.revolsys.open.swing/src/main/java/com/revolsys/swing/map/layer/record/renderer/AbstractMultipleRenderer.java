@@ -26,7 +26,7 @@ public abstract class AbstractMultipleRenderer extends AbstractRecordLayerRender
     final MenuFactory menu = MenuFactory.getMenu(AbstractMultipleRenderer.class);
 
     for (final String type : Arrays.asList("Geometry", "Text", "Marker", "Multiple", "Filter",
-        "Scale")) {
+      "Scale")) {
       final String iconName = ("style_" + type + "_add").toLowerCase();
       final ImageIcon icon = Icons.getIcon(iconName);
       final InvokeMethodAction action = MenuSourceRunnable.createAction("Add " + type + " Style",

@@ -50,25 +50,25 @@ public class Node<T> extends NodeBase<T> {
         maxX = this.centre.getX();
         minY = this.env.getMinY();
         maxY = this.centre.getY();
-        break;
+      break;
       case 1:
         minX = this.centre.getX();
         maxX = this.env.getMaxX();
         minY = this.env.getMinY();
         maxY = this.centre.getY();
-        break;
+      break;
       case 2:
         minX = this.env.getMinX();
         maxX = this.centre.getX();
         minY = this.centre.getY();
         maxY = this.env.getMaxY();
-        break;
+      break;
       case 3:
         minX = this.centre.getX();
         maxX = this.env.getMaxX();
         minY = this.centre.getY();
         maxY = this.env.getMaxY();
-        break;
+      break;
     }
     final Envelope envelope = new Envelope(minX, maxX, minY, maxY);
     final Node<T> node = new Node<T>(envelope, this.level - 1);

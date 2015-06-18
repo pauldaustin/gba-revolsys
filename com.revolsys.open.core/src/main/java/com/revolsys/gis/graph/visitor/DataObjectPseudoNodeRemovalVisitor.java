@@ -27,7 +27,7 @@ import com.revolsys.util.ObjectProcessor;
  * @author Paul Austin
  */
 public class DataObjectPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<Record>
-implements FilterProxy<Node<Record>>, ObjectProcessor<DataObjectGraph> {
+  implements FilterProxy<Node<Record>>, ObjectProcessor<DataObjectGraph> {
 
   private Filter<Node<Record>> filter;
 

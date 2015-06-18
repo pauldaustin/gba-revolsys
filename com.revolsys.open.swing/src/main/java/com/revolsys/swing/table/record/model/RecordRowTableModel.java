@@ -24,7 +24,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class RecordRowTableModel extends AbstractRecordTableModel implements
-SortableTableModel, CellEditorListener {
+  SortableTableModel, CellEditorListener {
 
   public static final String LOADING_VALUE = "\u2026";
 

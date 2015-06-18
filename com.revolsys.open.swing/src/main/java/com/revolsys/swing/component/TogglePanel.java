@@ -53,7 +53,7 @@ public class TogglePanel extends ValueField implements ItemListener {
       final Object actionCommand = action.getValue(Action.ACTION_COMMAND_KEY);
 
       if (value != null && actionCommand != null
-          && value.equalsIgnoreCase(actionCommand.toString())) {
+        && value.equalsIgnoreCase(actionCommand.toString())) {
         button.setSelected(true);
       }
       button.addItemListener(this);

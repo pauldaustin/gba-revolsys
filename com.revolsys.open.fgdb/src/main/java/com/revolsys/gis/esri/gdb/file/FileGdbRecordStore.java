@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -759,7 +759,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     // methods
     if (record.getState() == RecordState.Persisted || record.getState() == RecordState.Modified) {
       record.setState(RecordState.Deleted);
-      try (FileGdbWriter writer = createWriter()) {
+      try (
+        FileGdbWriter writer = createWriter()) {
         writer.write(record);
       }
     }
@@ -1209,7 +1210,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   public void insert(final Record record) {
     // Don't synchronize to avoid deadlock as that is done lower down in the
     // methods
-    try (FileGdbWriter writer = createWriter()) {
+    try (
+      FileGdbWriter writer = createWriter()) {
       writer.write(record);
     }
   }
@@ -1627,7 +1629,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   public void update(final Record record) {
     // Don't synchronize to avoid deadlock as that is done lower down in the
     // methods
-    try (FileGdbWriter writer = createWriter()) {
+    try (
+      FileGdbWriter writer = createWriter()) {
       writer.write(record);
     }
   }

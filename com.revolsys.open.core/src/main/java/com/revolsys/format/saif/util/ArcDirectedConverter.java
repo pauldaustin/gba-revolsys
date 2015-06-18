@@ -14,7 +14,7 @@ public class ArcDirectedConverter extends ArcConverter {
 
   @Override
   protected void writeAttributes(final OsnSerializer serializer, final Map<String, Object> values)
-      throws IOException {
+    throws IOException {
     writeEnumAttribute(serializer, values, "flowDirection");
     writeEnumAttribute(serializer, values, "qualifier");
   }

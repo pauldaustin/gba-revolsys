@@ -131,7 +131,7 @@ public class Label {
 
   public boolean isEqualOnSide(final Label lbl, final int side) {
     return this.elt[0].isEqualOnSide(lbl.elt[0], side)
-        && this.elt[1].isEqualOnSide(lbl.elt[1], side);
+      && this.elt[1].isEqualOnSide(lbl.elt[1], side);
   }
 
   public boolean isLine(final int geomIndex) {

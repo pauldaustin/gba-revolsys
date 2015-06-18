@@ -58,7 +58,7 @@ public class FileRecordLayer extends ListRecordLayer {
     if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final RecordReaderFactory factory = IoFactoryRegistry.getInstance()
-          .getFactoryByFileExtension(RecordReaderFactory.class, fileNameExtension);
+        .getFactoryByFileExtension(RecordReaderFactory.class, fileNameExtension);
       if (factory != null) {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }

@@ -582,7 +582,7 @@ public class XmlWriter extends Writer {
       final QName currentElement = currentTag.getElement();
       if (!element.equals(currentElement)) {
         throw new IllegalArgumentException("Cannot end tag " + element + " expecting "
-            + currentElement);
+          + currentElement);
       }
       if (this.writingStartTag) {
         writeNamespaces();
@@ -1131,32 +1131,32 @@ public class XmlWriter extends Writer {
       switch (ch) {
         case '&':
           escapeString = "&amp;";
-          break;
+        break;
         case '<':
           escapeString = "&lt;";
-          break;
+        break;
         case '>':
           escapeString = "&gt;";
-          break;
+        break;
         case '"':
           escapeString = "&quot;";
-          break;
+        break;
         case 9:
           escapeString = "&#9;";
-          break;
+        break;
         case 10:
           escapeString = "&#10;";
-          break;
+        break;
         case 13:
           escapeString = "&#13;";
-          break;
+        break;
         default:
           // Reject all other control characters
           if (ch < 32) {
             throw new IllegalStateException("character " + Integer.toString(ch)
               + " is not allowed in output");
           }
-          break;
+        break;
       }
       if (escapeString != null) {
         if (i > index) {
@@ -1202,25 +1202,25 @@ public class XmlWriter extends Writer {
       switch (ch) {
         case '&':
           escapeString = "&amp;";
-          break;
+        break;
         case '<':
           escapeString = "&lt;";
-          break;
+        break;
         case '>':
           escapeString = "&gt;";
-          break;
+        break;
         case 9:
         case 10:
         case 13:
-          // Accept these control characters
-          break;
+        // Accept these control characters
+        break;
         default:
           // Reject all other control characters
           if (ch < 32) {
             throw new IllegalStateException("character " + Integer.toString(ch)
               + " is not allowed in output");
           }
-          break;
+        break;
       }
       if (escapeString != null) {
         if (i > index) {

@@ -243,7 +243,7 @@ public class JmxUtil {
     final String objectNameString, final MBeanAttributeInfo attribute) {
     final String attributeName = attribute.getName();
     System.out.println("objectName=" + objectNameString + " " + attributeName + "="
-        + JmxUtil.getMBeanAttributeValue(connection, objectNameString, attributeName));
+      + JmxUtil.getMBeanAttributeValue(connection, objectNameString, attributeName));
 
   }
 }

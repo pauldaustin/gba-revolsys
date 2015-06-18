@@ -321,7 +321,7 @@ public final class EpsgCoordinateSystems {
         final ProjectedCoordinateSystem worldMercator = (ProjectedCoordinateSystem)coordinateSystemsById.get(3857);
         coordinateSystemsById.put(900913, worldMercator);
         coordinateSystems = Collections.unmodifiableSet(new LinkedHashSet<CoordinateSystem>(
-            coordinateSystemsById.values()));
+          coordinateSystemsById.values()));
         initialized = true;
       } catch (final Throwable t) {
         t.printStackTrace();

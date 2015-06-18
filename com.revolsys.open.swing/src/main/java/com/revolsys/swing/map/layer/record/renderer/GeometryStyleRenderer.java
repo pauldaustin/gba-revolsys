@@ -199,13 +199,13 @@ public class GeometryStyleRenderer extends AbstractRecordLayerRenderer {
       Shape shape = null;
       final DataType geometryDataType = layer.getGeometryType();
       if (DataTypes.POINT.equals(geometryDataType)
-          || DataTypes.MULTI_POINT.equals(geometryDataType)) {
+        || DataTypes.MULTI_POINT.equals(geometryDataType)) {
         return this.style.getMarker().getIcon(geometryStyle);
       } else if (DataTypes.LINE_STRING.equals(geometryDataType)
-          || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
+        || DataTypes.MULTI_LINE_STRING.equals(geometryDataType)) {
         shape = GeometryStylePreview.getLineShape(16);
       } else if (DataTypes.POLYGON.equals(geometryDataType)
-          || DataTypes.POLYGON.equals(geometryDataType)) {
+        || DataTypes.POLYGON.equals(geometryDataType)) {
         shape = getPolygonShape();
       } else {
         return super.getIcon();

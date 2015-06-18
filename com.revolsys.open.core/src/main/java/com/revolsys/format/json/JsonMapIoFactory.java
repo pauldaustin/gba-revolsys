@@ -56,7 +56,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWri
       try {
         final java.io.Reader reader = FileUtil.createUtf8Reader(in);
         try (
-            final JsonMapIterator iterator = new JsonMapIterator(reader, true)) {
+          final JsonMapIterator iterator = new JsonMapIterator(reader, true)) {
           if (iterator.hasNext()) {
             return iterator.next();
           } else {

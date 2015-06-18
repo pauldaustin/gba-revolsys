@@ -179,7 +179,7 @@ public class EWktWriter {
   }
 
   private static void write(final Writer out, final Geometry geometry, final int axisCount)
-      throws IOException {
+    throws IOException {
     if (geometry != null) {
       if (geometry instanceof Point) {
         final Point point = (Point)geometry;
@@ -248,7 +248,7 @@ public class EWktWriter {
   }
 
   private static void write(final Writer out, final LinearRing line, final int axisCount)
-      throws IOException {
+    throws IOException {
     writeGeometryType(out, "LINEARRING", axisCount);
     if (line.isEmpty()) {
       out.write(" EMPTY");
@@ -268,7 +268,7 @@ public class EWktWriter {
   }
 
   private static void write(final Writer out, final LineString line, final int axisCount)
-      throws IOException {
+    throws IOException {
     writeGeometryType(out, "LINESTRING", axisCount);
     if (line.isEmpty()) {
       out.write(" EMPTY");
@@ -326,7 +326,7 @@ public class EWktWriter {
   }
 
   private static void write(final Writer out, final MultiPoint multiPoint, final int axisCount)
-      throws IOException {
+    throws IOException {
     writeGeometryType(out, "MULTIPOINT", axisCount);
     if (multiPoint.isEmpty()) {
       out.write(" EMPTY");
@@ -353,7 +353,7 @@ public class EWktWriter {
   }
 
   private static void write(final Writer out, final MultiPolygon multiPolygon, final int axisCount)
-      throws IOException {
+    throws IOException {
     writeGeometryType(out, "MULTIPOLYGON", axisCount);
     if (multiPolygon.isEmpty()) {
       out.write(" EMPTY");
@@ -381,7 +381,7 @@ public class EWktWriter {
   }
 
   private static void write(final Writer out, final Point point, final int axisCount)
-      throws IOException {
+    throws IOException {
     writeGeometryType(out, "POINT", axisCount);
     if (point.isEmpty()) {
       out.write(" EMPTY");
@@ -402,7 +402,7 @@ public class EWktWriter {
   }
 
   private static void write(final Writer out, final Polygon polygon, final int axisCount)
-      throws IOException {
+    throws IOException {
     writeGeometryType(out, "POLYGON", axisCount);
     if (polygon.isEmpty()) {
       out.write(" EMPTY");
@@ -431,7 +431,7 @@ public class EWktWriter {
   }
 
   private static void writeCoordinates(final Writer out, final Point point, final int axisCount)
-      throws IOException {
+    throws IOException {
     writeOrdinate(out, point, 0);
     for (int j = 1; j < axisCount; j++) {
       out.write(' ');
@@ -470,7 +470,7 @@ public class EWktWriter {
   }
 
   private static void writePolygon(final Writer out, final Polygon polygon, final int axisCount)
-      throws IOException {
+    throws IOException {
     out.write('(');
     final LineString shell = polygon.getExteriorRing();
     final LineString coordinates = shell;

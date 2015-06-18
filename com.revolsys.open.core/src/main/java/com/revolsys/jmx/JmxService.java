@@ -163,7 +163,7 @@ public class JmxService {
    *           valid.
    */
   private ObjectName getObjectName(final String serverId, final String objectId)
-      throws MalformedObjectNameException {
+    throws MalformedObjectNameException {
     final Map<String, Object> object = getObjectParams(serverId, objectId);
     final String objectName = (String)object.get("objectName");
     return new ObjectName(objectName);

@@ -31,7 +31,7 @@ import com.revolsys.gis.model.geometry.Point;
 import com.revolsys.gis.model.geometry.Polygon;
 
 public class GeometryFactoryImpl extends SimpleCoordinatesPrecisionModel implements
-com.revolsys.gis.model.geometry.GeometryFactory {
+  com.revolsys.gis.model.geometry.GeometryFactory {
   private static Map<String, GeometryFactoryImpl> factories = new HashMap<String, GeometryFactoryImpl>();
 
   private static final long serialVersionUID = 4328651897279304108L;

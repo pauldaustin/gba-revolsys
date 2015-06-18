@@ -8,7 +8,7 @@ import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.io.AbstractObjectWithProperties;
 
 public class MoepDataObjectMetaDataFactory extends AbstractObjectWithProperties implements
-RecordDefinitionFactory {
+  RecordDefinitionFactory {
   private static final Map<String, RecordDefinition> META_DATA_CACHE = new HashMap<String, RecordDefinition>();
 
   @Override

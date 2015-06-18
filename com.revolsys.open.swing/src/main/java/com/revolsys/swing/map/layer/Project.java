@@ -55,7 +55,7 @@ public class Project extends LayerGroup {
 
   private LayerGroup baseMapLayers = new LayerGroup("Base Maps");
 
-  private RecordStoreConnectionRegistry dataStores = new RecordStoreConnectionRegistry("Project");
+  private RecordStoreConnectionRegistry recordStores = new RecordStoreConnectionRegistry("Project");
 
   private FolderConnectionRegistry folderConnections = new FolderConnectionRegistry("Project");
 
@@ -125,10 +125,6 @@ public class Project extends LayerGroup {
     return this.baseMapLayers;
   }
 
-  public RecordStoreConnectionRegistry getDataStores() {
-    return this.dataStores;
-  }
-
   @Override
   public File getDirectory() {
     final File directory = getProjectDirectory();
@@ -182,6 +178,10 @@ public class Project extends LayerGroup {
       }
     }
     return null;
+  }
+
+  public RecordStoreConnectionRegistry getRecordStores() {
+    return this.recordStores;
   }
 
   public BoundingBox getViewBoundingBox() {
@@ -239,7 +239,7 @@ public class Project extends LayerGroup {
         final boolean readOnly = isReadOnly();
         final RecordStoreConnectionRegistry dataStores = new RecordStoreConnectionRegistry(
           "Project", dataStoresDirectory, readOnly);
-        setDataStores(dataStores);
+        setRecordStores(dataStores);
         RecordStoreConnectionRegistry.setForThread(dataStores);
 
         final Resource folderConnectionsDirectory = SpringUtil.getResource(resource,
@@ -384,10 +384,6 @@ public class Project extends LayerGroup {
     return result;
   }
 
-  public void setDataStores(final RecordStoreConnectionRegistry dataStores) {
-    this.dataStores = dataStores;
-  }
-
   public void setFolderConnections(final FolderConnectionRegistry folderConnections) {
     this.folderConnections = folderConnections;
   }
@@ -420,6 +416,10 @@ public class Project extends LayerGroup {
     } else {
       super.setProperty(name, value);
     }
+  }
+
+  public void setRecordStores(final RecordStoreConnectionRegistry recordStores) {
+    this.recordStores = recordStores;
   }
 
   public void setSrid(final Number srid) {

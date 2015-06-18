@@ -90,7 +90,7 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
             final BoundingBox viewBoundingBox = viewport.getBoundingBox();
             final BoundingBox maxBoundingBox = getBoundingBox();
             final BoundingBox boundingBox = viewBoundingBox.convert(this.geometryFactory)
-                .intersection(maxBoundingBox);
+              .intersection(maxBoundingBox);
             final double minX = boundingBox.getMinX();
             final double minY = boundingBox.getMinY();
             final double maxX = boundingBox.getMaxX();

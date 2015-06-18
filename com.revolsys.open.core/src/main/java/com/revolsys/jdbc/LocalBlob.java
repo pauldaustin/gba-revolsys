@@ -86,7 +86,7 @@ public class LocalBlob implements Blob {
 
   @Override
   public int setBytes(final long pos, final byte[] bytes, final int offset, final int len)
-      throws SQLException {
+    throws SQLException {
     throw new UnsupportedOperationException();
   }
 

@@ -52,7 +52,7 @@ public class RecordStoreQueryField extends AbstractRecordQueryField {
   @Override
   protected List<Record> getRecords(final Query query) {
     try (
-        Reader<Record> reader = this.recordStore.query(query)) {
+      Reader<Record> reader = this.recordStore.query(query)) {
       return reader.read();
     }
   }

@@ -304,7 +304,7 @@ public class Graph<T> {
   public List<Node<T>> findNodes(final Coordinates point, final double distance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
     final Visitor<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(point, distance,
-        results);
+      results);
     BoundingBox envelope = new BoundingBox(point);
     envelope = envelope.expand(distance);
     getNodeIndex().visit(envelope, visitor);
@@ -343,7 +343,7 @@ public class Graph<T> {
   public List<Node<T>> findNodes(final Geometry geometry, final double distance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
     final Visitor<Node<T>> visitor = new NodeWithinDistanceOfGeometryVisitor<T>(geometry, distance,
-        results);
+      results);
     BoundingBox envelope = BoundingBox.getBoundingBox(geometry);
     envelope = envelope.expand(distance);
     getNodeIndex().visit(envelope, visitor);
@@ -832,7 +832,7 @@ public class Graph<T> {
     }
     final Node<Record> newNode = graph.getNode(midPoint);
     if (!Node.hasEdgesBetween(typePath, node1, newNode)
-        && !Node.hasEdgesBetween(typePath, node2, newNode)) {
+      && !Node.hasEdgesBetween(typePath, node2, newNode)) {
       if (node1.equals2d(newNode)) {
         moveNode(typePath, node2, node1, newPoint);
       } else if (node2.equals2d(newNode)) {

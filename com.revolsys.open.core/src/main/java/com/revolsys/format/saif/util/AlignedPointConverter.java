@@ -26,7 +26,7 @@ public class AlignedPointConverter extends PointConverter {
 
   @Override
   protected void writeAttributes(final OsnSerializer serializer, final Map<String, Object> values)
-      throws IOException {
+    throws IOException {
     writeAttribute(serializer, values, "alignment");
     writeAttribute(serializer, values, "directionIndicator");
     writeEnumAttribute(serializer, values, "north");

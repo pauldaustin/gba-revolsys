@@ -28,12 +28,12 @@ import java.io.RandomAccessFile;
 public class LittleEndianRandomAccessFile extends RandomAccessFile implements EndianInputOutput {
 
   public LittleEndianRandomAccessFile(final File file, final String mode)
-      throws FileNotFoundException {
+    throws FileNotFoundException {
     super(file, mode);
   }
 
   public LittleEndianRandomAccessFile(final String name, final String mode)
-      throws FileNotFoundException {
+    throws FileNotFoundException {
     super(name, mode);
   }
 

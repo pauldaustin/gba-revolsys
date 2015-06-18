@@ -38,19 +38,19 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcFieldAdder {
       ArcSdeConstants.ESRI_SRID_PROPERTY);
     if (esriSrid == -1) {
       LOG.error("Column not registered in SDE.ST_GEOMETRY table " + owner + "." + tableName + "."
-          + name);
+        + name);
     }
     final int numAxis = JdbcFieldAdder.getIntegerColumnProperty(schema, typePath, columnName,
       JdbcFieldAdder.AXIS_COUNT);
     if (numAxis == -1) {
       LOG.error("Column not found in SDE.GEOMETRY_COLUMNS table " + owner + "." + tableName + "."
-          + name);
+        + name);
     }
     final DataType dataType = JdbcFieldAdder.getColumnProperty(schema, typePath, columnName,
       JdbcFieldAdder.GEOMETRY_TYPE);
     if (dataType == null) {
       LOG.error("Column not found in SDE.GEOMETRY_COLUMNS table " + owner + "." + tableName + "."
-          + name);
+        + name);
     }
 
     final ArcSdeSpatialReference spatialReference = JdbcFieldAdder.getColumnProperty(schema,

@@ -538,11 +538,11 @@ public class OsnIterator implements Iterator<Object> {
 
   public Object nextValue() {
     if (this.eventType != OsnIterator.BOOLEAN_VALUE && this.eventType != OsnIterator.NUMERIC_VALUE
-        && this.eventType != OsnIterator.TEXT_VALUE && this.eventType != OsnIterator.ENUM_TAG) {
+      && this.eventType != OsnIterator.TEXT_VALUE && this.eventType != OsnIterator.ENUM_TAG) {
       if (this.eventType == END_OBJECT) {
         return null;
       } else if (next() != OsnIterator.TEXT_VALUE && this.eventType != OsnIterator.NUMERIC_VALUE
-          && this.eventType != OsnIterator.BOOLEAN_VALUE && this.eventType != OsnIterator.ENUM_TAG) {
+        && this.eventType != OsnIterator.BOOLEAN_VALUE && this.eventType != OsnIterator.ENUM_TAG) {
         throwParseError("Excepecting a value");
       }
     }

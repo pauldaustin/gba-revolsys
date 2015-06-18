@@ -101,7 +101,7 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
       valueSerializer);
     final Comparator<Integer> comparator = new ComparableComparator<Integer>();
     final BPlusTreeMap<Integer, V> map = new BPlusTreeMap<Integer, V>(pageManager, comparator,
-        keyManager, valueManager);
+      keyManager, valueManager);
     map.putAll(values);
     return map;
   }
@@ -123,7 +123,7 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
 
     final Comparator<K> comparator = new ComparableComparator<K>();
     final BPlusTreeMap<K, V> map = new BPlusTreeMap<K, V>(pageManager, comparator, keyManager,
-        valueManager);
+      valueManager);
     map.putAll(values);
     return map;
   }
@@ -145,7 +145,7 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
 
     final Comparator<K> comparator = new ComparableComparator<K>();
     final BPlusTreeMap<K, V> map = new BPlusTreeMap<K, V>(pageManager, comparator, keyManager,
-        valueManager);
+      valueManager);
     return map;
   }
 

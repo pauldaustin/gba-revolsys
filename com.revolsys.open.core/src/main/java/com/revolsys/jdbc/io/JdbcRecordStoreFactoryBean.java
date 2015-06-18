@@ -12,8 +12,8 @@ import org.springframework.context.ApplicationContextAware;
 
 import com.revolsys.util.Property;
 
-public class JdbcRecordStoreFactoryBean extends AbstractFactoryBean<JdbcRecordStore>
-implements ApplicationContextAware {
+public class JdbcRecordStoreFactoryBean extends AbstractFactoryBean<JdbcRecordStore> implements
+  ApplicationContextAware {
 
   private Map<String, Object> config = new LinkedHashMap<String, Object>();
 
@@ -67,7 +67,7 @@ implements ApplicationContextAware {
 
   @Override
   public void setApplicationContext(final ApplicationContext applicationContext)
-      throws BeansException {
+    throws BeansException {
     this.applicationContext = applicationContext;
   }
 

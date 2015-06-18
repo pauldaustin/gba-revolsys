@@ -16,7 +16,7 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class RecordStoreConnectionRegistry extends
-AbstractConnectionRegistry<RecordStoreConnection> {
+  AbstractConnectionRegistry<RecordStoreConnection> {
 
   private static final ThreadLocal<RecordStoreConnectionRegistry> threadRegistry = new ThreadLocal<RecordStoreConnectionRegistry>();
 
@@ -31,17 +31,15 @@ AbstractConnectionRegistry<RecordStoreConnection> {
     return oldValue;
   }
 
-  protected RecordStoreConnectionRegistry(
-    final RecordStoreConnectionManager connectionManager, final String name,
-    final boolean visible) {
+  protected RecordStoreConnectionRegistry(final RecordStoreConnectionManager connectionManager,
+    final String name, final boolean visible) {
     super(connectionManager, name);
     setVisible(visible);
     init();
   }
 
-  protected RecordStoreConnectionRegistry(
-    final RecordStoreConnectionManager connectionManager, final String name,
-    final Resource resource) {
+  protected RecordStoreConnectionRegistry(final RecordStoreConnectionManager connectionManager,
+    final String name, final Resource resource) {
     super(connectionManager, name);
     setDirectory(resource);
     init();
@@ -59,18 +57,17 @@ AbstractConnectionRegistry<RecordStoreConnection> {
     init();
   }
 
-  public void addConnection(final RecordStoreConnection connection) {
-    addConnection(connection.getName(), connection);
-  }
-
   public void addConnection(final Map<String, Object> config) {
     final RecordStoreConnection connection = new RecordStoreConnection(this, null, config);
     addConnection(connection);
   }
 
+  public void addConnection(final RecordStoreConnection connection) {
+    addConnection(connection.getName(), connection);
+  }
+
   public void addConnection(final String name, final RecordStore dataStore) {
-    final RecordStoreConnection connection = new RecordStoreConnection(this, name,
-      dataStore);
+    final RecordStoreConnection connection = new RecordStoreConnection(this, name, dataStore);
     addConnection(connection);
   }
 

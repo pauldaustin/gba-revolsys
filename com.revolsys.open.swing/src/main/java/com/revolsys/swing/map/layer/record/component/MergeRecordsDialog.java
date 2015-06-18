@@ -220,7 +220,7 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
   public void setMergedRecords(String errorMessage,
     final Map<Record, Set<LayerRecord>> mergedObjects) {
     final Set<Record> unMergeableRecords = new HashSet<Record>(
-        this.mergeableToOiginalRecordMap.keySet());
+      this.mergeableToOiginalRecordMap.keySet());
     unMergeableRecords.removeAll(mergedObjects.keySet());
     if (!mergedObjects.isEmpty()) {
       int i = 0;

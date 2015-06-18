@@ -192,8 +192,8 @@ public class ZoomOverlay extends AbstractOverlay {
       g.setColor(Color.DARK_GRAY);
       g.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2,
         new float[] {
-        6, 6
-      }, 0f));
+          6, 6
+        }, 0f));
       g.draw(this.zoomBox);
       g.setPaint(TRANS_BG);
       g.fill(this.zoomBox);
@@ -247,7 +247,7 @@ public class ZoomOverlay extends AbstractOverlay {
 
   public boolean panStart(final MouseEvent event) {
     if ((SwingUtilities.isLeftMouseButton(event) || SwingUtilities.isMiddleMouseButton(event))
-        && !SwingUtil.isModifierKeyDown(event)) {
+      && !SwingUtil.isModifierKeyDown(event)) {
       if (setOverlayAction(ACTION_PAN)) {
         setMapCursor(CURSOR_ZOOM_BOX);
         this.panModifiers = event.getModifiers();
@@ -277,7 +277,7 @@ public class ZoomOverlay extends AbstractOverlay {
 
   public void setZoomBoxCursor(final InputEvent event) {
     if (isOverlayAction(ACTION_ZOOM_BOX) || !hasOverlayAction() && SwingUtil.isShiftDown(event)
-        && !SwingUtil.isAltDown(event) && !SwingUtil.isControlOrMetaDown(event)) {
+      && !SwingUtil.isAltDown(event) && !SwingUtil.isControlOrMetaDown(event)) {
       setMapCursor(CURSOR_ZOOM_BOX);
     } else {
       clearMapCursor(CURSOR_ZOOM_BOX);

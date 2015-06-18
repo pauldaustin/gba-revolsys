@@ -69,7 +69,7 @@ public class BoundingBox implements Serializable {
   public static boolean intersects(final double p1X, final double p1Y, final double p2X,
     final double p2Y, final double qX, final double qY) {
     if (qX >= (p1X < p2X ? p1X : p2X) && qX <= (p1X > p2X ? p1X : p2X)
-        && qY >= (p1Y < p2Y ? p1Y : p2Y) && qY <= (p1Y > p2Y ? p1Y : p2Y)) {
+      && qY >= (p1Y < p2Y ? p1Y : p2Y) && qY <= (p1Y > p2Y ? p1Y : p2Y)) {
       return true;
     } else {
       return false;
@@ -264,7 +264,7 @@ public class BoundingBox implements Serializable {
       return false;
     }
     return other.getMinX() >= getMinX() && other.getMaxX() <= getMaxX()
-        && other.getMinY() >= getMinY() && other.getMaxY() <= getMaxY();
+      && other.getMinY() >= getMinY() && other.getMaxY() <= getMaxY();
   }
 
   public boolean covers(final Coordinates p) {
@@ -313,8 +313,8 @@ public class BoundingBox implements Serializable {
     if (other instanceof BoundingBox) {
       final BoundingBox boundingBox = (BoundingBox)other;
       return this.geometryFactory.equals(boundingBox.getGeometryFactory())
-          && getMaxX() == boundingBox.getMaxX() && getMaxY() == boundingBox.getMaxY()
-          && getMinX() == boundingBox.getMinX() && getMinY() == boundingBox.getMinY();
+        && getMaxX() == boundingBox.getMaxX() && getMaxY() == boundingBox.getMaxY()
+        && getMinX() == boundingBox.getMinX() && getMinY() == boundingBox.getMinY();
     } else {
       return false;
     }
@@ -462,7 +462,7 @@ public class BoundingBox implements Serializable {
 
   public String getId() {
     final String string = MathUtil.toString(getMinX()) + "_" + MathUtil.toString(getMinY()) + "_"
-        + MathUtil.toString(getMaxX()) + "_" + MathUtil.toString(getMaxY());
+      + MathUtil.toString(getMaxX()) + "_" + MathUtil.toString(getMaxY());
     if (this.geometryFactory == null) {
       return string;
     } else {
@@ -564,7 +564,7 @@ public class BoundingBox implements Serializable {
       return false;
     }
     return !(convertedBoundingBox.getMinX() > getMaxX()
-        || convertedBoundingBox.getMaxX() < getMinX() || convertedBoundingBox.getMinY() > getMaxY() || convertedBoundingBox.getMaxY() < getMinY());
+      || convertedBoundingBox.getMaxX() < getMinX() || convertedBoundingBox.getMinY() > getMaxY() || convertedBoundingBox.getMaxY() < getMinY());
   }
 
   public boolean intersects(final Coordinates point) {
@@ -794,7 +794,7 @@ public class BoundingBox implements Serializable {
       return "BBOX(" + getMinX() + "," + getMinY() + " " + getMaxX() + "," + getMaxY() + ")";
     } else {
       return "SRID=" + this.geometryFactory.getSrid() + ";BBOX(" + getMinX() + "," + getMinY()
-          + " " + getMaxX() + "," + getMaxY() + ")";
+        + " " + getMaxX() + "," + getMaxY() + ")";
     }
   }
 

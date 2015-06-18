@@ -14,7 +14,7 @@ import com.revolsys.parallel.process.BaseInOutProcess;
 public class SortByType extends BaseInOutProcess<Record, Record> {
 
   private final Map<RecordDefinition, Collection<Record>> objectsByType = new TreeMap<RecordDefinition, Collection<Record>>(
-      new DataObjectMetaDataNameComparator());
+    new DataObjectMetaDataNameComparator());
 
   @Override
   protected void postRun(final Channel<Record> in, final Channel<Record> out) {

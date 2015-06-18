@@ -25,7 +25,7 @@ import com.revolsys.util.Property;
 public class CodeTableProperty extends AbstractCodeTable implements RecordDefinitionProperty {
 
   private static final ArrayList<String> DEFAULT_FIELD_NAMES = new ArrayList<String>(
-      Arrays.asList("VALUE"));
+    Arrays.asList("VALUE"));
 
   public static final String PROPERTY_NAME = CodeTableProperty.class.getName();
 
@@ -134,11 +134,6 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
   }
 
   @Override
-  public List<String> getFieldAliases() {
-    return this.attributeAliases;
-  }
-
-  @Override
   public Map<Object, List<Object>> getCodes() {
     final Map<Object, List<Object>> codes = super.getCodes();
     if (codes.isEmpty() && isLoadAll()) {
@@ -151,6 +146,11 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
 
   public String getCreationTimestampAttributeName() {
     return this.creationTimestampAttributeName;
+  }
+
+  @Override
+  public List<String> getFieldAliases() {
+    return this.attributeAliases;
   }
 
   @Override
@@ -241,7 +241,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
             query.addOrderBy(order, true);
           }
           try (
-              Reader<Record> reader = this.dataStore.query(query)) {
+            Reader<Record> reader = this.dataStore.query(query)) {
             final List<Record> codes = reader.read();
             this.dataStore.getStatistics().getStatistics("query").add(this.typePath, -codes.size());
             Collections.sort(codes, new DataObjectAttributeComparator(this.orderBy));

@@ -254,13 +254,13 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     switch (this.numAxis) {
       case 3:
         coordinate = new DoubleCoordinates(point.x, point.y, point.z);
-        break;
+      break;
       case 4:
         coordinate = new DoubleCoordinates(point.x, point.y, point.z, point.m);
-        break;
+      break;
       default:
         coordinate = new DoubleCoordinates(point.x, point.y);
-        break;
+      break;
     }
     return factory.createPoint(coordinate);
   }
@@ -318,7 +318,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
           return toPgLineString(line);
         } else {
           throw new RuntimeException("GeometryCollection must contain a single LineString not a "
-              + firstGeometry.getClass());
+            + firstGeometry.getClass());
         }
       } else {
         throw new RuntimeException("MultiLineString has more than one geometry");
@@ -338,7 +338,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         pgLineStrings.add(pgLineString);
       } else {
         throw new RuntimeException("Geometry must contain only LineStrings not a "
-            + subGeometry.getClass());
+          + subGeometry.getClass());
       }
     }
     return toPgMultiLineString(geometry.getSRID(), pgLineStrings);
@@ -362,7 +362,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         pgPoints.add(pgPoint);
       } else {
         throw new RuntimeException("Geometry must contain only Points not a "
-            + subGeometry.getClass());
+          + subGeometry.getClass());
       }
     }
     return toPgMultiPoint(geometry.getSRID(), pgPoints);
@@ -386,7 +386,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         pgPolygons.add(pgPolygon);
       } else {
         throw new RuntimeException("Geometry must contain only Polygons not a "
-            + subGeometry.getClass());
+          + subGeometry.getClass());
       }
     }
     return toPgMultiPolygon(geometry.getSRID(), pgPolygons);
@@ -440,7 +440,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
           return toPgPoint(point);
         } else {
           throw new RuntimeException("GeometryCollection must contain a single Point not a "
-              + firstGeometry.getClass());
+            + firstGeometry.getClass());
         }
       } else {
         throw new RuntimeException("GeometryCollection has more than one geometry");
@@ -505,7 +505,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
           return toPgPolygon(polygon);
         } else {
           throw new RuntimeException("GeometryCollection must contain a single Polygon not a "
-              + firstGeometry.getClass());
+            + firstGeometry.getClass());
         }
       } else {
         throw new RuntimeException("Expecting a single Polygon not a " + object.getClass()

@@ -529,10 +529,10 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject, Ex
     switch (index) {
       case 0:
         this.x = value;
-        break;
+      break;
       case 1:
         this.y = value;
-        break;
+      break;
     }
   }
 

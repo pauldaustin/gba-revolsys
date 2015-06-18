@@ -175,8 +175,8 @@ public class UriTemplate implements Serializable {
     Assert.notNull(uriVariableValues, "'uriVariableValues' must not be null");
     if (uriVariableValues.length != this.variableNames.size()) {
       throw new IllegalArgumentException("Invalid amount of variables values in ["
-          + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
-          + uriVariableValues.length);
+        + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
+        + uriVariableValues.length);
     }
     final Matcher matcher = NAMES_PATTERN.matcher(this.uriTemplate);
     final StringBuffer buffer = new StringBuffer();
@@ -208,8 +208,8 @@ public class UriTemplate implements Serializable {
     Assert.notNull(uriVariableValues, "'uriVariableValues' must not be null");
     if (uriVariableValues.length != this.variableNames.size()) {
       throw new IllegalArgumentException("Invalid amount of variables values in ["
-          + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
-          + uriVariableValues.length);
+        + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
+        + uriVariableValues.length);
     }
     final Matcher matcher = NAMES_PATTERN.matcher(this.uriTemplate);
     final StringBuffer buffer = new StringBuffer();

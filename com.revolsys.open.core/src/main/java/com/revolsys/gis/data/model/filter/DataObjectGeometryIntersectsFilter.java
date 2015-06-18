@@ -65,7 +65,7 @@ public class DataObjectGeometryIntersectsFilter implements Filter<Record> {
       final Geometry matchGeometry = object.getGeometryValue();
       final Geometry convertedGeometry = this.geometryFactory.copy(matchGeometry);
       if (convertedGeometry != null && this.geometry != null
-          && convertedGeometry.intersects(this.geometry)) {
+        && convertedGeometry.intersects(this.geometry)) {
         return true;
       } else {
         return false;

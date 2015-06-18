@@ -7,7 +7,7 @@ import java.io.ObjectOutput;
 import java.lang.reflect.Method;
 
 public class InvokeMethodObjectAttributeProxy<T, O> extends AbstractObjectAttributeProxy<T, O>
-implements Externalizable {
+  implements Externalizable {
 
   private static final long serialVersionUID = 1L;
 
@@ -95,7 +95,7 @@ implements Externalizable {
     }
     if (this.method == null) {
       throw new IllegalArgumentException("Method could not be found " + this.clazz + "."
-          + this.methodName);
+        + this.methodName);
     }
   }
 

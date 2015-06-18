@@ -40,7 +40,7 @@ public class ExpressionMeasurable<Q extends Quantity> extends Measure<Q> {
 
   @Override
   public BigDecimal decimalValue(final Unit<Q> arg0, final MathContext arg1)
-      throws ArithmeticException {
+    throws ArithmeticException {
     throw new UnsupportedOperationException();
   }
 

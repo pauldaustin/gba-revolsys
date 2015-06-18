@@ -78,6 +78,6 @@ public class SimpleDataObjectConveter implements Converter<Record, Record> {
   @Override
   public String toString() {
     return this.dataObjectMetaData.getPath() + "\n  "
-        + CollectionUtil.toString("\n  ", this.processors);
+      + CollectionUtil.toString("\n  ", this.processors);
   }
 }

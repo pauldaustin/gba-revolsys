@@ -20,7 +20,7 @@ import com.revolsys.swing.parallel.RunnableSwingWorkerManager;
 import com.revolsys.util.Property;
 
 public class TiledImageLayerRenderer extends AbstractLayerRenderer<AbstractTiledImageLayer>
-implements PropertyChangeListener {
+  implements PropertyChangeListener {
 
   private static RunnableSwingWorkerManager tileLoaderManager = new RunnableSwingWorkerManager(
     "Load Map Tiles");
@@ -50,7 +50,7 @@ implements PropertyChangeListener {
           final BoundingBox boundingBox = mapTile.getBoundingBox();
           final GeometryFactory geometryFactory = boundingBox.getGeometryFactory();
           if (!geometryFactory.equals(newGeometryFactory)
-              || !newBoundingBox.intersects(boundingBox)) {
+            || !newBoundingBox.intersects(boundingBox)) {
             this.cachedTiles.remove(boundingBox);
           }
         }

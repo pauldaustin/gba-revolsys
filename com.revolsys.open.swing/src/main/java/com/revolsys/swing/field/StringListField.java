@@ -68,7 +68,7 @@ public class StringListField extends ValueField {
     this.valueEntry.addActionListener(this.addButton.getAction());
 
     this.toolBar.addButtonTitleIcon(SELECTED, "Remove Selected", "delete", this,
-        "removeSelectedValues");
+      "removeSelectedValues");
 
     this.valuesField = new JXList(this.values);
     this.valuesField.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

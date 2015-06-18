@@ -578,11 +578,11 @@ public final class CollectionUtil {
                 }
               }
             }
-            break;
+          break;
 
           default:
             buffer.append(c);
-            break;
+          break;
         }
       }
       return buffer.toString();

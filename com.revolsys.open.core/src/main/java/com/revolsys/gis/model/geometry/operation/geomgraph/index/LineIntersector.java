@@ -374,7 +374,7 @@ public abstract class LineIntersector {
   @Override
   public String toString() {
     return this.inputLines[0][0] + "," + this.inputLines[0][1] + " - " + this.inputLines[1][0]
-        + "," + this.inputLines[1][1] + " " + getTopologySummary();
+      + "," + this.inputLines[1][1] + " " + getTopologySummary();
   }
 
 }

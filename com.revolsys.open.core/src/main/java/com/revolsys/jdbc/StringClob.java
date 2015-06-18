@@ -73,7 +73,7 @@ public class StringClob implements Clob {
 
   @Override
   public int setString(final long pos, final String string, final int i, final int j)
-      throws SQLException {
+    throws SQLException {
     throw new UnsupportedOperationException("Cannot modify Clob");
   }
 

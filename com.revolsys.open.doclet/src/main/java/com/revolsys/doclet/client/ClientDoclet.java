@@ -36,8 +36,8 @@ public class ClientDoclet {
   public static int optionLength(String optionName) {
     optionName = optionName.toLowerCase();
     if (optionName.equals("-d") || optionName.equals("-doctitle") || optionName.equals("-docid")
-        || optionName.equals("-htmlfooter") || optionName.equals("-htmlheader")
-        || optionName.equals("-packagesOpen")) {
+      || optionName.equals("-htmlfooter") || optionName.equals("-htmlheader")
+      || optionName.equals("-packagesOpen")) {
       return 2;
     }
     return -1;

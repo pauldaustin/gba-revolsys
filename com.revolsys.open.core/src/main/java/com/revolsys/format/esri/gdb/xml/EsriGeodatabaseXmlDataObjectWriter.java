@@ -35,7 +35,7 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class EsriGeodatabaseXmlDataObjectWriter extends AbstractWriter<Record> implements
-EsriGeodatabaseXmlConstants {
+  EsriGeodatabaseXmlConstants {
   private static final Logger LOG = LoggerFactory.getLogger(EsriGeodatabaseXmlDataObjectWriter.class);
 
   private int datasetId = 1;

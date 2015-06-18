@@ -100,7 +100,7 @@ public class LayerRendererOverlay extends JComponent implements PropertyChangeLi
     if (!(e.getSource() instanceof MapPanel)) {
       final String propertyName = e.getPropertyName();
       if (!propertyName.equals("selectionCount") && !propertyName.equals("hasHighlightedRecords")
-          && !propertyName.equals("highlightedCount")) {
+        && !propertyName.equals("highlightedCount")) {
         redraw();
       }
     }

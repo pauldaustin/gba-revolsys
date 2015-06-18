@@ -44,10 +44,10 @@ public class CodedValueDomain extends Domain implements CodeTable {
     switch (getFieldType()) {
       case esriFieldTypeInteger:
         id = (int)++this.maxId;
-        break;
+      break;
       case esriFieldTypeSmallInteger:
         id = (short)++this.maxId;
-        break;
+      break;
 
       default:
         throw new RuntimeException("Cannot generate code for field type " + getFieldType());
@@ -69,11 +69,6 @@ public class CodedValueDomain extends Domain implements CodeTable {
     return clone;
   }
 
-  @Override
-  public List<String> getFieldAliases() {
-    return Collections.emptyList();
-  }
-
   public List<CodedValue> getCodedValues() {
     return this.codedValues;
   }
@@ -81,6 +76,11 @@ public class CodedValueDomain extends Domain implements CodeTable {
   @Override
   public Map<Object, List<Object>> getCodes() {
     return Collections.unmodifiableMap(this.idValueMap);
+  }
+
+  @Override
+  public List<String> getFieldAliases() {
+    return Collections.emptyList();
   }
 
   @Override

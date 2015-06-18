@@ -35,8 +35,8 @@ import com.vividsolutions.jts.geom.Point;
 public class SelectRecordsOverlay extends AbstractOverlay {
   protected static final BasicStroke BOX_STROKE = new BasicStroke(2, BasicStroke.CAP_SQUARE,
     BasicStroke.JOIN_MITER, 2, new float[] {
-    6, 6
-  }, 0f);
+      6, 6
+    }, 0f);
 
   private static final Color COLOR_BOX = WebColors.Green;
 

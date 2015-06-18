@@ -68,8 +68,8 @@ public class ScriptTool {
       return e;
     }
     while (cause instanceof BeanCreationException || cause instanceof MethodInvocationException
-        || cause instanceof PropertyAccessException || cause instanceof PropertyBatchUpdateException
-        || cause instanceof InvalidPropertyException) {
+      || cause instanceof PropertyAccessException || cause instanceof PropertyBatchUpdateException
+      || cause instanceof InvalidPropertyException) {
       Throwable newCause;
       if (cause instanceof PropertyBatchUpdateException) {
         final PropertyBatchUpdateException batchEx = (PropertyBatchUpdateException)cause;
@@ -116,17 +116,17 @@ public class ScriptTool {
 
   private void createOptions() {
     final Option script = new Option(SCRIPT_OPTION, SCRIPT, true,
-        "the script file that defines the processor pipeline");
+      "the script file that defines the processor pipeline");
     script.setRequired(false);
     this.options.addOption(script);
 
     final Option logFile = new Option(LOG_FILE_OPTION, LOG_FILE, true,
-        "The file to write log messages to");
+      "The file to write log messages to");
     logFile.setRequired(false);
     this.options.addOption(logFile);
 
     final Option properties = new Option(PROPERTIES_OPTION, PROPERTIES, true,
-        "The file to load properties from");
+      "The file to load properties from");
     properties.setRequired(false);
     this.options.addOption(properties);
 
@@ -148,7 +148,7 @@ public class ScriptTool {
     final String implementationTitle = System.getProperty("script.implementationTitle");
     if (implementationTitle != null) {
       final String build = ManifestUtil.getMainAttributeByImplementationTitle(implementationTitle,
-          "SCM-Revision");
+        "SCM-Revision");
       if (build != null) {
         System.out.println(implementationTitle + " (build " + build + ")");
       } else {
@@ -228,7 +228,7 @@ public class ScriptTool {
 
         } catch (final IOException e) {
           System.err.println("Properties file '" + this.propertiesName + "' could not be read:"
-              + e.getMessage());
+            + e.getMessage());
           return false;
         }
       }
@@ -344,7 +344,7 @@ public class ScriptTool {
 
       if (this.scriptFile != null) {
         new XmlBeanDefinitionReader(beans).loadBeanDefinitions("file:"
-            + this.scriptFile.getAbsolutePath());
+          + this.scriptFile.getAbsolutePath());
       } else {
         new XmlBeanDefinitionReader(beans).loadBeanDefinitions("classpath:" + this.scriptFileName);
       }

@@ -251,7 +251,7 @@ public class GeometryGraph extends Graph<LineSegment> {
   public Geometry getGeometry() {
     removeDuplicateLineEdges();
     final EdgeAttributeValueComparator<LineSegment> comparator = new EdgeAttributeValueComparator<LineSegment>(
-        "geometryIndex", "partIndex", "segmentIndex");
+      "geometryIndex", "partIndex", "segmentIndex");
     final List<Geometry> geometries = new ArrayList<Geometry>(this.points);
     final GeometryFactory geometryFactory = getGeometryFactory();
     final int numAxis = geometryFactory.getNumAxis();
@@ -388,9 +388,9 @@ public class GeometryGraph extends Graph<LineSegment> {
 
   public void removeDuplicateLineEdges() {
     final Visitor<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
-        "removeDuplicateLineEdges");
+      "removeDuplicateLineEdges");
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
-        "geometryIndex", "partIndex", "segmentIndex");
+      "geometryIndex", "partIndex", "segmentIndex");
     visitEdges(comparator, visitor);
   }
 

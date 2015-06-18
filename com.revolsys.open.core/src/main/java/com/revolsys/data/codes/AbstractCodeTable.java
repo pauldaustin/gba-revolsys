@@ -19,7 +19,7 @@ import com.revolsys.util.CaseConverter;
 import com.revolsys.util.MathUtil;
 
 public abstract class AbstractCodeTable implements Closeable, PropertyChangeSupportProxy,
-CodeTable, Cloneable {
+  CodeTable, Cloneable {
 
   private boolean capitalizeWords = false;
 
@@ -101,13 +101,13 @@ CodeTable, Cloneable {
   }
 
   @Override
-  public List<String> getFieldAliases() {
-    return Collections.emptyList();
+  public Map<Object, List<Object>> getCodes() {
+    return Collections.unmodifiableMap(this.idValueCache);
   }
 
   @Override
-  public Map<Object, List<Object>> getCodes() {
-    return Collections.unmodifiableMap(this.idValueCache);
+  public List<String> getFieldAliases() {
+    return Collections.emptyList();
   }
 
   @SuppressWarnings("unchecked")

@@ -32,14 +32,14 @@ public class DataObjectAccessor implements PropertyAccessor {
 
   @Override
   public boolean canRead(final EvaluationContext context, final Object target, final String name)
-      throws AccessException {
+    throws AccessException {
     final Record object = (Record)target;
     return object.hasAttribute(name);
   }
 
   @Override
   public boolean canWrite(final EvaluationContext context, final Object target, final String name)
-      throws AccessException {
+    throws AccessException {
     return true;
   }
 
@@ -53,7 +53,7 @@ public class DataObjectAccessor implements PropertyAccessor {
 
   @Override
   public TypedValue read(final EvaluationContext context, final Object target, final String name)
-      throws AccessException {
+    throws AccessException {
     final Record object = (Record)target;
     final Object value = object.getValue(name);
     if (value == null && !object.hasAttribute(name)) {

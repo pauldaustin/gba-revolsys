@@ -75,7 +75,7 @@ public class WikipediaBoundingBoxLayerWorker extends AbstractSwingWorker<DataObj
       String text;
       if (thumbnailImage != null) {
         text = "<html><b>" + title + "</b><br /><img src=\"" + thumbnailImage
-            + "\" /><br /></html>";
+          + "\" /><br /></html>";
       } else {
         text = "<html><b>" + title + "</b><br /></html>";
       }

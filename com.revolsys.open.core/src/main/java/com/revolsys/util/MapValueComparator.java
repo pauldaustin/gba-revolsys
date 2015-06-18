@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 public class MapValueComparator<K extends Comparable<K>, V extends Comparable<V>> implements
-Comparator<K> {
+  Comparator<K> {
 
   private final Map<K, V> map;
 

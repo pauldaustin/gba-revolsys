@@ -618,7 +618,7 @@ public abstract class BaseRecord extends AbstractRecord {
     switch (this.state) {
       case Persisted:
         this.state = RecordState.Modified;
-        break;
+      break;
       case Deleted:
         throw new IllegalStateException("Cannot modify an object which has been deleted");
     }

@@ -600,7 +600,7 @@ public class Viewport2D extends AbstractObjectWithProperties implements Property
   public Point toModelPoint(final GeometryFactory geometryFactory, final double... viewCoordinates) {
     final double[] coordinates = toModelCoordinates(viewCoordinates);
     if (Double.isInfinite(coordinates[0]) || Double.isInfinite(coordinates[1])
-        || Double.isNaN(coordinates[0]) || Double.isNaN(coordinates[1])) {
+      || Double.isNaN(coordinates[0]) || Double.isNaN(coordinates[1])) {
       return geometryFactory.createPoint();
     } else {
       final Point point = this.geometryFactory.point(coordinates);

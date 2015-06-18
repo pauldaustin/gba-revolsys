@@ -52,7 +52,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractRecordStore extends AbstractObjectWithProperties implements
-RecordStore {
+  RecordStore {
 
   private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 

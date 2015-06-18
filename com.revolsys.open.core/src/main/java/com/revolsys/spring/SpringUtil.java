@@ -173,7 +173,7 @@ public class SpringUtil {
   }
 
   public static OutputStream getFileOutputStream(final Resource resource) throws IOException,
-  FileNotFoundException {
+    FileNotFoundException {
     final File file = resource.getFile();
     return new BufferedOutputStream(new FileOutputStream(file));
   }

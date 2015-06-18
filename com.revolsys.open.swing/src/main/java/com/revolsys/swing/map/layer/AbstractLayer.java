@@ -61,7 +61,7 @@ import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
 public abstract class AbstractLayer extends AbstractObjectWithProperties implements Layer,
-PropertyChangeListener, PropertyChangeSupportProxy, EventsEnabler, ProjectFramePanel {
+  PropertyChangeListener, PropertyChangeSupportProxy, EventsEnabler, ProjectFramePanel {
   private static final AtomicLong ID_GEN = new AtomicLong();
 
   static {
@@ -151,12 +151,12 @@ PropertyChangeListener, PropertyChangeSupportProxy, EventsEnabler, ProjectFrameP
       } else {
         extentPanel.add(new JLabel(
           "<html><table cellspacing=\"3\" style=\"margin:0px\">"
-              + "<tr><td>&nbsp;</td><th style=\"text-align:left\">Top:</th><td style=\"text-align:right\">"
-              + boundingBox.getMaximumY() + "</td><td>&nbsp;</td></tr><tr>" + "<td><b>Left</b>: "
-              + boundingBox.getMinimumX() + "</td><td>&nbsp;</td><td>&nbsp;</td>"
-              + "<td><b>Right</b>: " + boundingBox.getMaximumX() + "</td></tr>"
-              + "<tr><td>&nbsp;</td><th>Bottom:</th><td style=\"text-align:right\">"
-              + boundingBox.getMinimumY() + "</td><td>&nbsp;</td></tr><tr>" + "</tr></table></html>"));
+            + "<tr><td>&nbsp;</td><th style=\"text-align:left\">Top:</th><td style=\"text-align:right\">"
+            + boundingBox.getMaximumY() + "</td><td>&nbsp;</td></tr><tr>" + "<td><b>Left</b>: "
+            + boundingBox.getMinimumX() + "</td><td>&nbsp;</td><td>&nbsp;</td>"
+            + "<td><b>Right</b>: " + boundingBox.getMaximumX() + "</td></tr>"
+            + "<tr><td>&nbsp;</td><th>Bottom:</th><td style=\"text-align:right\">"
+            + boundingBox.getMinimumY() + "</td><td>&nbsp;</td></tr><tr>" + "</tr></table></html>"));
 
       }
       GroupLayoutUtil.makeColumns(extentPanel, 1, true);
@@ -513,6 +513,16 @@ PropertyChangeListener, PropertyChangeSupportProxy, EventsEnabler, ProjectFrameP
   @Override
   public boolean isClonable() {
     return false;
+  }
+
+  @Override
+  public boolean isDeleted() {
+    final Project project = getProject();
+    if (project == null) {
+      return false;
+    } else {
+      return project.isDeleted();
+    }
   }
 
   @Override
@@ -921,8 +931,8 @@ PropertyChangeListener, PropertyChangeSupportProxy, EventsEnabler, ProjectFrameP
     final GeometryFactory geometryFactory = project.getGeometryFactory();
     final BoundingBox layerBoundingBox = getBoundingBox();
     final BoundingBox boundingBox = layerBoundingBox.convert(geometryFactory)
-        .expandPercent(0.1)
-        .clipToCoordinateSystem();
+      .expandPercent(0.1)
+      .clipToCoordinateSystem();
 
     project.setViewBoundingBox(boundingBox);
   }

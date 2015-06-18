@@ -15,7 +15,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 
 public class GmlIoFactory extends AbstractRecordAndGeometryWriterFactory implements
-GeometryReaderFactory {
+  GeometryReaderFactory {
   public GmlIoFactory() {
     super(GmlConstants.FORMAT_DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(GmlConstants.MEDIA_TYPE, GmlConstants.FILE_EXTENSION);

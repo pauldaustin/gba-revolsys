@@ -30,8 +30,8 @@ public class ScriptExecutorRunnable extends AbstractRunnable {
   private static Throwable getBeanExceptionCause(final BeanCreationException e) {
     Throwable cause = e.getCause();
     while (cause instanceof BeanCreationException || cause instanceof MethodInvocationException
-        || cause instanceof PropertyAccessException || cause instanceof PropertyBatchUpdateException
-        || cause instanceof InvalidPropertyException) {
+      || cause instanceof PropertyAccessException || cause instanceof PropertyBatchUpdateException
+      || cause instanceof InvalidPropertyException) {
       Throwable newCause;
       if (cause instanceof PropertyBatchUpdateException) {
         final PropertyBatchUpdateException batchEx = (PropertyBatchUpdateException)cause;

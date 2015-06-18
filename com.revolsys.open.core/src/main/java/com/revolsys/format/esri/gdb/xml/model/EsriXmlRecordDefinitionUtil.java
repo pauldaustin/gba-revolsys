@@ -71,16 +71,16 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
       switch (shapeType) {
         case esriGeometryPoint:
           dataType = DataTypes.POINT;
-          break;
+        break;
         case esriGeometryMultipoint:
           dataType = DataTypes.MULTI_POINT;
-          break;
+        break;
         case esriGeometryPolyline:
           dataType = DataTypes.MULTI_LINE_STRING;
-          break;
+        break;
         case esriGeometryPolygon:
           dataType = DataTypes.POLYGON;
-          break;
+        break;
 
         default:
           throw new RuntimeException("Unknown geometry type" + shapeType + " for " + tableName
@@ -88,7 +88,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
       }
 
     } else if (precision > 0
-        && (fieldType.equals(FieldType.esriFieldTypeSingle) || fieldType.equals(FieldType.esriFieldTypeDouble))) {
+      && (fieldType.equals(FieldType.esriFieldTypeSingle) || fieldType.equals(FieldType.esriFieldTypeDouble))) {
       dataType = DataTypes.DECIMAL;
     } else {
       dataType = EsriGeodatabaseXmlFieldTypeRegistry.INSTANCE.getDataType(fieldType);
@@ -99,7 +99,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
       length = precision;
     }
     final Boolean required = !field.isIsNullable()
-        || BooleanStringConverter.getBoolean(field.getRequired());
+      || BooleanStringConverter.getBoolean(field.getRequired());
     final FieldDefinition attribute = new FieldDefinition(fieldName, dataType, length, scale,
       required);
 
@@ -197,7 +197,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
     if (geometryAttribute != null) {
       if (spatialReference == null) {
         throw new IllegalArgumentException(
-            "A Geometry Factory with a coordinate system must be specified.");
+          "A Geometry Factory with a coordinate system must be specified.");
       }
       geometryDataType = geometryAttribute.getType();
       if (FIELD_TYPES.getFieldType(geometryDataType) != null) {

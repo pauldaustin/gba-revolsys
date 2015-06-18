@@ -203,12 +203,12 @@ public class ShapefileDataObjectWriter extends XbaseDataObjectWriter {
         case ShapefileConstants.POLYGON_ZM_SHAPE:
           out.writeLEDouble(this.zMin);
           out.writeLEDouble(this.zMax);
-          break;
+        break;
 
         default:
           out.writeLEDouble(0.0);
           out.writeLEDouble(0.0);
-          break;
+        break;
       }
       out.writeLEDouble(0.0);
       out.writeLEDouble(0.0);

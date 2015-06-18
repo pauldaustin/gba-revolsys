@@ -22,7 +22,7 @@ import com.revolsys.io.Writer;
 import com.revolsys.spring.SpringUtil;
 
 public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory implements
-MapWriterFactory, GeometryReaderFactory {
+  MapWriterFactory, GeometryReaderFactory {
 
   private final Set<CoordinateSystem> coordinateSystems = EpsgCoordinateSystems.getCoordinateSystems();
 

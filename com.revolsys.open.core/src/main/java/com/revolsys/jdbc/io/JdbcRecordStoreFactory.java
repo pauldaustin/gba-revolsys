@@ -25,8 +25,7 @@ public class JdbcRecordStoreFactory implements RecordStoreFactory {
   }
 
   @Override
-  public JdbcRecordStore createRecordStore(
-    final Map<String, ? extends Object> connectionProperties) {
+  public JdbcRecordStore createRecordStore(final Map<String, ? extends Object> connectionProperties) {
     final JdbcDatabaseFactory databaseFactory = JdbcFactoryRegistry.databaseFactory(connectionProperties);
     return databaseFactory.createRecordStore(connectionProperties);
   }

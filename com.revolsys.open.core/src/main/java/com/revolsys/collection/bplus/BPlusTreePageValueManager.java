@@ -44,7 +44,7 @@ public class BPlusTreePageValueManager<T> implements PageValueManager<T> {
       this.pageManager.releasePage(dataPage);
     } else {
       throw new IllegalArgumentException("Expecting a data page " + BPlusTreeMap.DATA + " not "
-          + pageType);
+        + pageType);
     }
   }
 
@@ -111,7 +111,7 @@ public class BPlusTreePageValueManager<T> implements PageValueManager<T> {
 
       } else {
         throw new IllegalArgumentException("Expecting a data page " + BPlusTreeMap.DATA + " not "
-            + pageType);
+          + pageType);
       }
       final byte[] valueBytes = new byte[size];
       int offset = 0;

@@ -140,15 +140,15 @@ public class SortableTableCellHeaderRenderer extends DefaultTableCellRenderer im
           switch (sortorder) {
             case ASCENDING:
               icon = (Icon)UIManager.get("Table.ascendingSortIcon");
-              break;
+            break;
 
             case DESCENDING:
               icon = (Icon)UIManager.get("Table.descendingSortIcon");
-              break;
+            break;
 
             case UNSORTED:
               icon = (Icon)UIManager.get("Table.naturalSortIcon");
-              break;
+            break;
           }
         }
       }

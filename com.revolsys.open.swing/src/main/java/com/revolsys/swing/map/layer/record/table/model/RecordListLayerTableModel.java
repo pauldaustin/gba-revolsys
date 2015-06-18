@@ -21,7 +21,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordListLayerTableModel extends RecordLayerTableModel implements
-PropertyChangeListener {
+  PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   public static RecordLayerTable createTable(final ListRecordLayer layer) {

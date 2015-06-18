@@ -19,7 +19,7 @@ import com.revolsys.util.OS;
 import com.revolsys.util.Property;
 
 public class RecordStoreConnectionManager extends
-AbstractConnectionRegistryManager<RecordStoreConnectionRegistry, RecordStoreConnection> {
+  AbstractConnectionRegistryManager<RecordStoreConnectionRegistry, RecordStoreConnection> {
 
   private static final RecordStoreConnectionManager INSTANCE;
 

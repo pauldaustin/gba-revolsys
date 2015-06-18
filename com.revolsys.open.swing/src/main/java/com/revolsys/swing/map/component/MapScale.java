@@ -22,7 +22,7 @@ public class MapScale extends JLabel implements PropertyChangeListener {
       final Number number = (Number)scale;
       scaleDouble = number.doubleValue();
       if (scaleDouble <= 0 || number.longValue() == Long.MAX_VALUE
-          || scaleDouble == Double.MAX_VALUE) {
+        || scaleDouble == Double.MAX_VALUE) {
         return "Unlimited";
       } else if (Double.isNaN(scaleDouble) || Double.isInfinite(scaleDouble)) {
         return "Unknown";

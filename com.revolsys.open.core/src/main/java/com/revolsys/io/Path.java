@@ -32,12 +32,12 @@ public final class Path {
               builder.append('/');
               slash = true;
             }
-            break;
+          break;
 
           default:
             builder.append(c);
             slash = false;
-            break;
+          break;
         }
 
       }

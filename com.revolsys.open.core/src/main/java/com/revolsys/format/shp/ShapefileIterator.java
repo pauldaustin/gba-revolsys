@@ -304,31 +304,31 @@ public class ShapefileIterator extends AbstractIterator<Record> implements Recor
           case ShapefileConstants.POINT_M_SHAPE:
           case ShapefileConstants.POINT_ZM_SHAPE:
             geometryType = DataTypes.POINT;
-            break;
+          break;
 
           case ShapefileConstants.POLYLINE_SHAPE:
           case ShapefileConstants.POLYLINE_Z_SHAPE:
           case ShapefileConstants.POLYLINE_M_SHAPE:
           case ShapefileConstants.POLYLINE_ZM_SHAPE:
             geometryType = DataTypes.MULTI_LINE_STRING;
-            break;
+          break;
 
           case ShapefileConstants.POLYGON_SHAPE:
           case ShapefileConstants.POLYGON_Z_SHAPE:
           case ShapefileConstants.POLYGON_M_SHAPE:
           case ShapefileConstants.POLYGON_ZM_SHAPE:
             geometryType = DataTypes.MULTI_POLYGON;
-            break;
+          break;
 
           case ShapefileConstants.MULTI_POINT_SHAPE:
           case ShapefileConstants.MULTI_POINT_Z_SHAPE:
           case ShapefileConstants.MULTI_POINT_M_SHAPE:
           case ShapefileConstants.MULTI_POINT_ZM_SHAPE:
             geometryType = DataTypes.MULTI_POINT;
-            break;
+          break;
 
           default:
-            break;
+          break;
         }
         metaData.addField("geometry", geometryType, true);
       }

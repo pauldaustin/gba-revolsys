@@ -119,7 +119,7 @@ public class ResultPagerComboBoxModel<T> extends AbstractListModel implements Co
   @Override
   public void setSelectedItem(final Object item) {
     if (this.selectedItem != null && !this.selectedItem.equals(item) || this.selectedItem == null
-        && item != null) {
+      && item != null) {
       this.selectedItem = item;
     }
   }

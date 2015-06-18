@@ -47,7 +47,7 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
     final String attributeName = PseudoNodeProperty.PROPERTY_NAME;
     if (!node.hasAttribute(attributeName)) {
       final ObjectAttributeProxy<PseudoNodeAttribute, Node<Record>> proxy = new InvokeMethodObjectAttributeProxy<PseudoNodeAttribute, Node<Record>>(
-          this, "createAttribute", Node.class);
+        this, "createAttribute", Node.class);
       node.setAttribute(attributeName, proxy);
     }
     final PseudoNodeAttribute value = node.getAttribute(attributeName);

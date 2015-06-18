@@ -49,7 +49,7 @@ public class TiePointsPanel extends TablePanel {
 
     final MenuFactory menu = getMenu();
     menu.addMenuItemTitleIcon("zoom", "Zoom to Tie Point", "magnifier_zoom_selected", this,
-        "zoomToTiePoint");
+      "zoomToTiePoint");
 
     menu.addMenuItemTitleIcon("record", "Delete Tie Point", "table_row_delete",
       editableEnableCheck, this, "deleteTiePoint");
@@ -68,7 +68,7 @@ public class TiePointsPanel extends TablePanel {
     toolBar.addButton("zoom", "Zoom to Layer", "magnifier", (EnableCheck)null, layer, "zoomToLayer");
 
     toolBar.addButton("edit", "Fit to Screen", "arrow_out", editableEnableCheck, layer,
-        "fitToViewport");
+      "fitToViewport");
 
   }
 
@@ -105,8 +105,8 @@ public class TiePointsPanel extends TablePanel {
       final Project project = Project.get();
       final GeometryFactory geometryFactory = project.getGeometryFactory();
       final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry)
-          .convert(geometryFactory)
-          .expand(200);
+        .convert(geometryFactory)
+        .expand(200);
       project.setViewBoundingBox(boundingBox);
 
     }

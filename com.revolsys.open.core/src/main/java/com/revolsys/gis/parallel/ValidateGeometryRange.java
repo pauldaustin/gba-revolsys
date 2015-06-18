@@ -75,8 +75,8 @@ public class ValidateGeometryRange extends BaseInOutProcess<Record, Record> {
 
   private boolean isValid(final String type, final Coordinate coordinate) {
     if (!isValid(this.minX, this.maxY, coordinate.x)
-        || !isValid(this.minY, this.maxY, coordinate.y)
-        || !isValid(this.minZ, this.maxZ, coordinate.z)) {
+      || !isValid(this.minY, this.maxY, coordinate.y)
+      || !isValid(this.minZ, this.maxZ, coordinate.z)) {
       LOG.warn(type + " has invalid coordinate at " + coordinate);
       return false;
     } else {

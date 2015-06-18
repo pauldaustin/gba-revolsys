@@ -111,28 +111,28 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
     switch (fileName.charAt(fileName.length() - 5)) {
       case 'd':
         this.originalFileType = "dem";
-        break;
+      break;
       case 'm':
         this.originalFileType = "contours";
-        break;
+      break;
       case 'n':
         this.originalFileType = "nonPositional";
-        break;
+      break;
       case 'p':
         this.originalFileType = "planimetric";
-        break;
+      break;
       case 'g':
         this.originalFileType = "toponymy";
-        break;
+      break;
       case 'w':
         this.originalFileType = "woodedArea";
-        break;
+      break;
       case 's':
         this.originalFileType = "supplimentary";
-        break;
+      break;
       default:
         this.originalFileType = "unknown";
-        break;
+      break;
     }
     this.in = new BufferedInputStream(in, 10000);
     this.mapsheet = getMapsheetFromFileName(fileName);
@@ -208,17 +208,17 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
             final int angle = angleInt / 10000;
             object.setValue(MoepConstants.ANGLE, angle);
           }
-          break;
+        break;
         case CONSTRUCTION_LINE:
         case CONSTRUCTION_COMPLEX_LINE:
           object.setValue(MoepConstants.DISPLAY_TYPE, "constructionLine");
           readLineString(extraParams, object);
-          break;
+        break;
         case SIMPLE_LINE:
         case COMPLEX_LINE:
           object.setValue(MoepConstants.DISPLAY_TYPE, "primaryLine");
           readLineString(extraParams, object);
-          break;
+        break;
         case TEXT:
           object.setValue(MoepConstants.DISPLAY_TYPE, "primary");
           final Point textPoint = readPoint(this.in);
@@ -253,25 +253,25 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
           object.setValue(MoepConstants.TEXT, text);
 
           setGeometryProperties(object);
-          break;
+        break;
       }
 
       switch (this.actionName) {
         case 'W':
           setAdmissionHistory(object, this.actionName);
-          break;
+        break;
         case 'Z':
           setAdmissionHistory(object, this.actionName);
-          break;
+        break;
         case 'X':
           setRetirementHistory(object, this.actionName);
-          break;
+        break;
         case 'Y':
           setRetirementHistory(object, this.actionName);
-          break;
+        break;
         default:
           setAdmissionHistory(object, 'W');
-          break;
+        break;
       }
       this.currentDataObject = object;
       this.loadNextObject = false;
@@ -346,7 +346,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
   }
 
   private void readCoordinate(final InputStream in, final CoordinatesList coords, final int index)
-      throws IOException {
+    throws IOException {
     for (int i = 0; i < 2; i++) {
       int coordinate;
       if (this.coordinateBytes == 2) {

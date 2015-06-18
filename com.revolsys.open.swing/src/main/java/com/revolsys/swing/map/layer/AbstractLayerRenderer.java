@@ -22,7 +22,7 @@ import com.revolsys.util.CaseConverter;
 import com.revolsys.util.Property;
 
 public abstract class AbstractLayerRenderer<T extends Layer> extends AbstractPropertyChangeObject
-implements LayerRenderer<T>, PropertyChangeListener, Cloneable {
+  implements LayerRenderer<T>, PropertyChangeListener, Cloneable {
 
   private static final Icon ICON = Icons.getIcon("palette");
 

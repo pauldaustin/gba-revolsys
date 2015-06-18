@@ -266,7 +266,7 @@ public class PlanarGraph {
     }
 
     if (CoordinatesUtil.orientationIndex(p0, p1, ep1) == CGAlgorithms.COLLINEAR
-        && Quadrant.quadrant(p0, p1) == Quadrant.quadrant(ep0, ep1)) {
+      && Quadrant.quadrant(p0, p1) == Quadrant.quadrant(ep0, ep1)) {
       return true;
     }
     return false;

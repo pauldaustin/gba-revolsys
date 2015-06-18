@@ -16,9 +16,9 @@ import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jdbc.JdbcUtils;
-import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcQueryIterator;
 import com.revolsys.jdbc.io.JdbcQueryResultPager;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 
 public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
 
@@ -44,7 +44,7 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
           final int startRowNum = (pageNumber - 1) * pageSize + 1;
           final int endRowNum = startRowNum + pageSize - 1;
           sql = "SELECT * FROM ( SELECT  T2.*, ROWNUM TROWNUM FROM ( " + sql
-              + ") T2 ) WHERE TROWNUM BETWEEN " + startRowNum + " AND " + endRowNum;
+            + ") T2 ) WHERE TROWNUM BETWEEN " + startRowNum + " AND " + endRowNum;
 
           final DataSource dataSource = getDataSource();
           Connection connection = getConnection();

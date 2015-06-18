@@ -13,7 +13,7 @@ import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
 public abstract class AbstractGeometryReaderFactory extends AbstractIoFactory implements
-GeometryReaderFactory {
+  GeometryReaderFactory {
   public static GeometryReader geometryReader(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     final GeometryReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(

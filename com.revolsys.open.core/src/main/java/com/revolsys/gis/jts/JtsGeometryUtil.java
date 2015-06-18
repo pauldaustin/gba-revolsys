@@ -583,7 +583,7 @@ public final class JtsGeometryUtil {
             for (int i = 0; i < numIntersections; i++) {
               final Coordinate intersection = intersector.getIntersection(i);
               if (!Arrays.asList(currentCoord1, previousCoord1, currentCoord2, previousCoord2)
-                  .contains(intersection)) {
+                .contains(intersection)) {
                 return intersection;
               }
             }
@@ -1379,9 +1379,9 @@ public final class JtsGeometryUtil {
     final List<Geometry> geometries = new ArrayList<Geometry>();
 
     final List<Coordinate> coords1 = new LinkedList<Coordinate>(
-        Arrays.asList(line1.getCoordinates()));
+      Arrays.asList(line1.getCoordinates()));
     final List<Coordinate> coords2 = new LinkedList<Coordinate>(
-        Arrays.asList(line2.getCoordinates()));
+      Arrays.asList(line2.getCoordinates()));
     final Set<Coordinate> intersectCoords = new LinkedHashSet<Coordinate>();
     final ListIterator<Coordinate> iterator1 = coords1.listIterator();
     Coordinate previousCoord1 = iterator1.next();

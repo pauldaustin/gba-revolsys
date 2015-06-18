@@ -518,7 +518,8 @@ public class FieldFilterPanel extends JComponent implements ActionListener, Item
         }
         this.codeTable = null;
       } else {
-        searchField = QueryWhereConditionField.createSearchField(layer, this.fieldDefinition, this.codeTable);
+        searchField = QueryWhereConditionField.createSearchField(this.layer, this.fieldDefinition,
+          this.codeTable);
       }
 
       setSearchField(searchField);

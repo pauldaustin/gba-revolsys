@@ -31,7 +31,7 @@ public final class XMLNodeType {
 
   public static XMLNodeType swigToEnum(final int swigValue) {
     if (swigValue < swigValues.length && swigValue >= 0
-        && swigValues[swigValue].swigValue == swigValue) {
+      && swigValues[swigValue].swigValue == swigValue) {
       return swigValues[swigValue];
     }
     for (final XMLNodeType swigValue2 : swigValues) {

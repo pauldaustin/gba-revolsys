@@ -55,7 +55,7 @@ public abstract class QueryValue implements Cloneable {
   public static Condition parseWhere(final RecordDefinition metaData, final String whereClause) {
     try {
       final StatementNode statement = new SQLParser().parseStatement("SELECT * FROM "
-          + metaData.getName() + " WHERE " + whereClause);
+        + metaData.getName() + " WHERE " + whereClause);
       if (statement instanceof CursorNode) {
         final CursorNode selectStatement = (CursorNode)statement;
         final ResultSetNode resultSetNode = selectStatement.getResultSetNode();
@@ -83,16 +83,16 @@ public abstract class QueryValue implements Cloneable {
       final ValueNode betweenExpressionEnd = rightOperandList.get(1);
       if (!(leftValueNode instanceof ColumnReference)) {
         throw new IllegalArgumentException("Between operator must use a column name not: "
-            + leftValueNode);
+          + leftValueNode);
       }
 
       if (!(betweenExpressionStart instanceof NumericConstantNode)) {
         throw new IllegalArgumentException("Between min value must be a number not: "
-            + betweenExpressionStart);
+          + betweenExpressionStart);
       }
       if (!(betweenExpressionEnd instanceof NumericConstantNode)) {
         throw new IllegalArgumentException("Between max value must be a number not: "
-            + betweenExpressionEnd);
+          + betweenExpressionEnd);
       }
       final Column column = toQueryValue(metaData, leftValueNode);
       final Value min = toQueryValue(metaData, betweenExpressionStart);
@@ -265,7 +265,7 @@ public abstract class QueryValue implements Cloneable {
       return null;
     } else {
       throw new IllegalArgumentException("Unsupported expression" + expression.getClass() + " "
-          + expression);
+        + expression);
     }
   }
 

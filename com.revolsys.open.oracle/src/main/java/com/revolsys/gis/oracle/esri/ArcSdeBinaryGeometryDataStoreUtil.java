@@ -31,8 +31,8 @@ import com.revolsys.gis.oracle.io.OracleRecordStore;
 import com.revolsys.io.FileUtil;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
-import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
 import com.revolsys.jdbc.io.JdbcRecordStore;
+import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.PasswordUtil;
@@ -45,7 +45,7 @@ import com.vividsolutions.jts.geom.Polygon;
 public class ArcSdeBinaryGeometryDataStoreUtil {
 
   private final RecordStoreIteratorFactory iteratorFactory = new RecordStoreIteratorFactory(this,
-      "createIterator");
+    "createIterator");
 
   private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 
@@ -123,7 +123,7 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
 
     if (!Property.hasValue(server)) {
       throw new IllegalArgumentException(
-          "The connection properties must include a sdeServer to support ESRI ArcSDE SDEBINARY columns");
+        "The connection properties must include a sdeServer to support ESRI ArcSDE SDEBINARY columns");
     }
     String instance = (String)this.connectionProperties.get("sdeInstance");
     if (!Property.hasValue(instance)) {
@@ -179,62 +179,62 @@ public class ArcSdeBinaryGeometryDataStoreUtil {
           switch (type) {
             case SeColumnDefinition.TYPE_INT16:
               value = row.getShort(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_INT32:
               value = row.getInteger(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_INT64:
               value = row.getLong(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_FLOAT32:
               value = row.getFloat(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_FLOAT64:
               value = row.getDouble(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_STRING:
               value = row.getString(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_NSTRING:
               value = row.getNString(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_CLOB:
               final ByteArrayInputStream clob = row.getClob(columnIndex);
               value = FileUtil.getString(clob);
-              break;
+            break;
             case SeColumnDefinition.TYPE_NCLOB:
               final ByteArrayInputStream nClob = row.getNClob(columnIndex);
               value = FileUtil.getString(nClob);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_XML:
               value = row.getXml(columnIndex).getText();
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_UUID:
               value = row.getUuid(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_DATE:
               value = row.getTime(columnIndex);
-              break;
+            break;
 
             case SeColumnDefinition.TYPE_SHAPE:
               final SeShape shape = row.getShape(columnIndex);
               value = toGeometry(shape);
-              break;
+            break;
 
             default:
               LoggerFactory.getLogger(ArcSdeBinaryGeometryDataStoreUtil.class).error(
                 "Unsupported column type: " + object.getRecordDefinition() + "." + name);
-              break;
+            break;
           }
           object.setValue(name, value);
         }

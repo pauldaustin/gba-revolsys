@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcDatabaseFactory;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.PasswordUtil;
 
@@ -91,8 +91,7 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcRecordStore createRecordStore(
-    final Map<String, ? extends Object> connectionProperties) {
+  public JdbcRecordStore createRecordStore(final Map<String, ? extends Object> connectionProperties) {
     return new PostgreSQLRecordStore(this, connectionProperties);
   }
 

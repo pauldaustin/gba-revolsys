@@ -62,7 +62,7 @@ public class OutputStreamResource extends AbstractResource {
   public OutputStream getOutputStream() {
     if (this.read) {
       throw new IllegalStateException("OutputStream has already been read - "
-          + "do not use OutputStreamResource if a stream needs to be read multiple times");
+        + "do not use OutputStreamResource if a stream needs to be read multiple times");
     }
     this.read = true;
     return this.outputStream;

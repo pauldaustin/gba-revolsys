@@ -78,7 +78,7 @@ public class RightmostEdgeFinder {
      * incident edges is rightmost.
      */
     Assert.isTrue(this.minIndex != 0 || this.minCoord.equals(this.minDe.getCoordinate()),
-        "inconsistency in rightmost processing");
+      "inconsistency in rightmost processing");
     if (this.minIndex == 0) {
       findRightmostEdgeAtNode();
     } else {
@@ -116,17 +116,17 @@ public class RightmostEdgeFinder {
      */
     final CoordinatesList pts = this.minDe.getEdge().getCoordinates();
     Assert.isTrue(this.minIndex > 0 && this.minIndex < pts.size(),
-        "rightmost point expected to be interior vertex of edge");
+      "rightmost point expected to be interior vertex of edge");
     final Coordinates pPrev = pts.get(this.minIndex - 1);
     final Coordinates pNext = pts.get(this.minIndex + 1);
     final int orientation = CoordinatesUtil.orientationIndex(this.minCoord, pNext, pPrev);
     boolean usePrev = false;
     // both segments are below min point
     if (pPrev.getY() < this.minCoord.getY() && pNext.getY() < this.minCoord.getY()
-        && orientation == CGAlgorithms.COUNTERCLOCKWISE) {
+      && orientation == CGAlgorithms.COUNTERCLOCKWISE) {
       usePrev = true;
     } else if (pPrev.getY() > this.minCoord.getY() && pNext.getY() > this.minCoord.getY()
-        && orientation == CGAlgorithms.CLOCKWISE) {
+      && orientation == CGAlgorithms.CLOCKWISE) {
       usePrev = true;
     }
     // if both segments are on the same side, do nothing - either is safe

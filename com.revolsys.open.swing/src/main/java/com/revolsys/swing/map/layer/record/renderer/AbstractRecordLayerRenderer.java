@@ -35,7 +35,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.TopologyException;
 
 public abstract class AbstractRecordLayerRenderer extends
-AbstractLayerRenderer<AbstractRecordLayer> {
+  AbstractLayerRenderer<AbstractRecordLayer> {
 
   static {
     final MenuFactory menu = MenuFactory.getMenu(AbstractRecordLayerRenderer.class);
@@ -111,7 +111,7 @@ AbstractLayerRenderer<AbstractRecordLayer> {
       return new FilterMultipleRenderer(layer, parent, style);
     }
     LoggerFactory.getLogger(AbstractRecordLayerRenderer.class)
-    .error("Unknown style type: " + style);
+      .error("Unknown style type: " + style);
     return null;
   }
 
@@ -180,8 +180,10 @@ AbstractLayerRenderer<AbstractRecordLayer> {
       final boolean saved = viewport.setUseModelCoordinates(true, graphics);
       try {
         final BoundingBox boundingBox = viewport.getBoundingBox();
-        final List<LayerRecord> dataObjects = layer.queryBackground(boundingBox);
-        renderRecords(viewport, graphics, layer, dataObjects);
+        final List<LayerRecord> records = layer.queryBackground(boundingBox);
+        if (!layer.isDeleted()) {
+          renderRecords(viewport, graphics, layer, records);
+        }
       } finally {
         viewport.setUseModelCoordinates(saved, graphics);
       }

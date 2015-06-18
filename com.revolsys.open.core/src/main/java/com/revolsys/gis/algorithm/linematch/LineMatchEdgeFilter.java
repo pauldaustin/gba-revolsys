@@ -123,7 +123,7 @@ public class LineMatchEdgeFilter implements Filter<Edge<LineSegmentMatch>> {
     final double from2Distance, final double to2Distance) {
     if (from1Distance < this.tolerance) {
       if (to1Distance < this.tolerance || from2Distance < this.tolerance
-          || to2Distance < this.tolerance) {
+        || to2Distance < this.tolerance) {
         return true;
       } else {
         return false;

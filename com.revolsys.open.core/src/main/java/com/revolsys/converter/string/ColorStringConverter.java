@@ -158,7 +158,7 @@ public class ColorStringConverter implements StringConverter<Color> {
           return "rgb(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ")";
         } else {
           return "rgba(" + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ","
-              + alpha / 255.0 + ")";
+            + alpha / 255.0 + ")";
         }
       }
     } else {

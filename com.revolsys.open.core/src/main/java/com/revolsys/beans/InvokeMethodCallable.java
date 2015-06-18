@@ -19,7 +19,7 @@ public class InvokeMethodCallable<T> implements Callable<T> {
   public static <V> V invokeAndWait(final Object object, final String methodName,
     final Object... parameters) {
     final InvokeMethodCallable<V> callable = new InvokeMethodCallable<V>(object, methodName,
-        parameters);
+      parameters);
     return RunnableCallable.invokeAndWait(callable);
   }
 

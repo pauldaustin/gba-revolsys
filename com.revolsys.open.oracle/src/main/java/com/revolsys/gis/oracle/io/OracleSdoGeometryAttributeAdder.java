@@ -147,7 +147,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
       sqlType, required, description, null, geometryFactory, numAxis);
     metaData.addField(attribute);
     attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction("SDO_RELATE(",
-        ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));
+      ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));
     attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("SDO_GEOM.SDO_BUFFER(",
       "," + 1 / geometryFactory.getScaleXY() + ")"));
     attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction("SDO_EQUAL(", ") = 'TRUE'"));
@@ -178,9 +178,9 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
       try {
         final String schemaName = this.dataStore.getDatabaseSchemaName(schema);
         final String sridSql = "select M.TABLE_NAME, M.COLUMN_NAME, M.SRID, M.DIMINFO, C.GEOMETRY_TYPE "
-            + "from ALL_SDO_GEOM_METADATA M "
-            + "LEFT OUTER JOIN ALL_GEOMETRY_COLUMNS C ON (M.OWNER = C.F_TABLE_SCHEMA AND M.TABLE_NAME = C.F_TABLE_NAME AND M.COLUMN_NAME = C.F_GEOMETRY_COLUMN) "
-            + "where OWNER = ?";
+          + "from ALL_SDO_GEOM_METADATA M "
+          + "LEFT OUTER JOIN ALL_GEOMETRY_COLUMNS C ON (M.OWNER = C.F_TABLE_SCHEMA AND M.TABLE_NAME = C.F_TABLE_NAME AND M.COLUMN_NAME = C.F_GEOMETRY_COLUMN) "
+          + "where OWNER = ?";
         final PreparedStatement statement = connection.prepareStatement(sridSql);
         try {
           statement.setString(1, schemaName);

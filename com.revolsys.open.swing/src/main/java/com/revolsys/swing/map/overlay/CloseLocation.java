@@ -99,7 +99,7 @@ public class CloseLocation {
       return "Edge";
     } else {
       if (GeometryEditUtil.isFromPoint(this.geometry, this.vertexIndex)
-          || GeometryEditUtil.isToPoint(this.geometry, this.vertexIndex)) {
+        || GeometryEditUtil.isToPoint(this.geometry, this.vertexIndex)) {
         return "End-Vertex";
       } else {
         return "Vertex";

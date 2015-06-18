@@ -18,7 +18,7 @@ public class ExcludeSavedObjectsInOutProcess extends BaseInOutProcess<Record, Re
   private Set<String> originalIds = new HashSet<String>();
 
   private StatisticsMap statistics = new StatisticsMap(
-      "Excluded as already loaded from previous area");
+    "Excluded as already loaded from previous area");
 
   @Override
   protected void destroy() {

@@ -52,7 +52,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Point;
 
 public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeObject implements
-GeoreferencedImage {
+  GeoreferencedImage {
 
   private static double[] calculateLSM(final BoundingBox boundingBox, final int imageWidth,
     final int imageHeight, final List<MappedLocation> mappings) {

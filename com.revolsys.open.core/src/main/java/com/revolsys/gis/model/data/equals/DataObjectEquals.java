@@ -8,7 +8,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 
 public class DataObjectEquals implements Equals<Record> {
   public static final String EXCLUDE_GEOMETRY = DataObjectEquals.class.getName()
-      + ".excludeGeometry";
+    + ".excludeGeometry";
 
   public static final String EXCLUDE_ID = DataObjectEquals.class.getName() + ".excludeId";
 
@@ -53,10 +53,10 @@ public class DataObjectEquals implements Equals<Record> {
     if (excludedAttributes.contains(attributeName)) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_ID)
-        && attributeName.equals(metaData.getIdFieldName())) {
+      && attributeName.equals(metaData.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
-        && attributeName.equals(metaData.getGeometryFieldName())) {
+      && attributeName.equals(metaData.getGeometryFieldName())) {
       return true;
     } else {
       final Object value1 = object1.getValue(attributeName);
@@ -77,10 +77,10 @@ public class DataObjectEquals implements Equals<Record> {
     if (excludedAttributes.contains(attributeName)) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_ID)
-        && attributeName.equals(metaData.getIdFieldName())) {
+      && attributeName.equals(metaData.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
-        && attributeName.equals(metaData.getGeometryFieldName())) {
+      && attributeName.equals(metaData.getGeometryFieldName())) {
       return true;
     } else {
       return false;

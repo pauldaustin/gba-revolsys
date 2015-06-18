@@ -89,7 +89,7 @@ public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
         required, description, null, srid, numAxis, geometryFactory);
       metaData.addField(attribute);
       attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction("st_intersects(",
-          ")"));
+        ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("st_buffer(", ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction("st_equals(", ")"));
       attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);

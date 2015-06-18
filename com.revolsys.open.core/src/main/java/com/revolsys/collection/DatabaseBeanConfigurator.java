@@ -61,7 +61,7 @@ public class DatabaseBeanConfigurator extends BeanConfigurrer {
 
   @Override
   public void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory)
-      throws BeansException {
+    throws BeansException {
     try {
       final boolean hasTypeColumnName = Property.hasValue(this.typeColumnName);
       String sql = "SELECT " + this.propertyColumnName + ", " + this.valueColumnName;
@@ -90,7 +90,7 @@ public class DatabaseBeanConfigurator extends BeanConfigurrer {
               if (dataType != null) {
                 final Class<?> dataTypeClass = dataType.getJavaClass();
                 final StringConverter<?> converter = StringConverterRegistry.getInstance()
-                    .getConverter(dataTypeClass);
+                  .getConverter(dataTypeClass);
                 if (converter != null) {
                   value = converter.toObject(valueString);
                 }

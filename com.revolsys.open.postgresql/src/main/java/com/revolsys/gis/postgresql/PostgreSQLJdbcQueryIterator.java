@@ -8,8 +8,8 @@ import org.postgis.Point;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcQueryIterator;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 

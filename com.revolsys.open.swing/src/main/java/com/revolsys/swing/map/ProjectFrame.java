@@ -135,7 +135,7 @@ public class ProjectFrame extends BaseFrame {
 
     final ActionMap actionMap = component.getActionMap();
     actionMap.put(SAVE_PROJECT_KEY, new InvokeMethodAction(SAVE_PROJECT_KEY, project,
-        "saveAllSettings"));
+      "saveAllSettings"));
     actionMap.put(SAVE_CHANGES_KEY,
       new InvokeMethodAction(SAVE_CHANGES_KEY, project, "saveChanges"));
   }
@@ -178,7 +178,7 @@ public class ProjectFrame extends BaseFrame {
   public ProjectFrame(final String title, final File projectDirectory) {
     this(title);
     if (projectDirectory != null) {
-      Invoke.background("Load project", this, "loadProject", projectDirectory);
+      Invoke.background("Load project: " + projectDirectory, () -> loadProject(projectDirectory));
     }
   }
 
@@ -225,7 +225,7 @@ public class ProjectFrame extends BaseFrame {
 
     final FolderConnectionsTreeNode folderConnections = new FolderConnectionsTreeNode();
 
-    final ListTreeNode root = new ListTreeNode(recordStores, fileSystems, folderConnections);
+    final ListTreeNode root = new ListTreeNode("/", recordStores, fileSystems, folderConnections);
 
     final BaseTree tree = new BaseTree(root);
     tree.setRootVisible(false);
@@ -305,7 +305,7 @@ public class ProjectFrame extends BaseFrame {
 
     if (OS.isWindows()) {
       tools.addMenuItem("options", "Options...", "Options...", null, null, PreferencesDialog.get(),
-          "showPanel");
+        "showPanel");
     }
     addMenu(menuBar, tools);
     WindowManager.addMenu(menuBar);
@@ -325,19 +325,22 @@ public class ProjectFrame extends BaseFrame {
     final MenuFactory tools = new MenuFactory("Tools");
 
     tools.addMenuItem("script", "Run Script...", "Run Script", Icons.getIcon("script_go"), this,
-        "runScript");
+      "runScript");
     return tools;
   }
 
   @Override
   public void dispose() {
-    if (SwingUtilities.isEventDispatchThread()) {
+    Invoke.later(() -> {
+      Property.removeAllListeners(this);
       setVisible(false);
       super.dispose();
-      Property.removeAllListeners(this);
+      setRootPane(new JRootPane());
+      removeAll();
+      setMenuBar(null);
       if (this.project != null) {
-        final RecordStoreConnectionRegistry dataStores = this.project.getDataStores();
-        RecordStoreConnectionManager.get().removeConnectionRegistry(dataStores);
+        final RecordStoreConnectionRegistry recordStores = this.project.getRecordStores();
+        RecordStoreConnectionManager.get().removeConnectionRegistry(recordStores);
         if (Project.get() == this.project) {
           Project.set(null);
         }
@@ -354,16 +357,10 @@ public class ProjectFrame extends BaseFrame {
         this.mapPanel.destroy();
         this.mapPanel = null;
       }
-      setMenuBar(null);
       final ActionMap actionMap = getRootPane().getActionMap();
       actionMap.put(SAVE_PROJECT_KEY, null);
       actionMap.put(SAVE_CHANGES_KEY, null);
-
-      setRootPane(new JRootPane());
-      removeAll();
-    } else {
-      Invoke.later(this, "dispose");
-    }
+    });
   }
 
   public void exit() {
@@ -489,7 +486,7 @@ public class ProjectFrame extends BaseFrame {
 
     final RecordStoreConnectionManager dataStoreConnectionManager = RecordStoreConnectionManager.get();
     dataStoreConnectionManager.removeConnectionRegistry("Project");
-    dataStoreConnectionManager.addConnectionRegistry(this.project.getDataStores());
+    dataStoreConnectionManager.addConnectionRegistry(this.project.getRecordStores());
 
     final FolderConnectionManager folderConnectionManager = FolderConnectionManager.get();
     folderConnectionManager.removeConnectionRegistry("Project");
@@ -518,7 +515,7 @@ public class ProjectFrame extends BaseFrame {
     final JFileChooser fileChooser = SwingUtil.createFileChooser("Select Script",
       "com.revolsys.swing.tools.script", "directory");
     final FileNameExtensionFilter groovyFilter = new FileNameExtensionFilter("Groovy Script",
-        "groovy");
+      "groovy");
     fileChooser.addChoosableFileFilter(groovyFilter);
     fileChooser.setMultiSelectionEnabled(false);
     final int returnVal = fileChooser.showOpenDialog(this);

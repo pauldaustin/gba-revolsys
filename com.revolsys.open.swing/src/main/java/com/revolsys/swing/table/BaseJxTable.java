@@ -107,7 +107,7 @@ public class BaseJxTable extends JXTable {
   public void editCell(final int rowIndex, final int columnIndex) {
 
     if (rowIndex >= 0 && rowIndex < getRowCount() && columnIndex >= 0
-        && columnIndex < getColumnCount()) {
+      && columnIndex < getColumnCount()) {
       requestFocusInWindow();
       changeSelection(rowIndex, columnIndex, false, false);
       editCellAt(rowIndex, columnIndex);

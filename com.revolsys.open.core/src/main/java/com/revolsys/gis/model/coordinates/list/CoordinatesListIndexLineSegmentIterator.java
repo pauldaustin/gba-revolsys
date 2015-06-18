@@ -7,7 +7,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 
 public class CoordinatesListIndexLineSegmentIterator implements Iterator<LineSegment>,
-Iterable<LineSegment> {
+  Iterable<LineSegment> {
   private static final GeometryFactory FACTORY = GeometryFactory.getFactory();
 
   private final GeometryFactory factory;

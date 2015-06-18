@@ -9,7 +9,7 @@ import java.util.Collection;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 
 public class PropertyChangeArrayList<T> extends ArrayList<T> implements PropertyChangeListener,
-PropertyChangeSupportProxy {
+  PropertyChangeSupportProxy {
   private static final long serialVersionUID = 1L;
 
   private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);

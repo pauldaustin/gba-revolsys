@@ -74,7 +74,7 @@ public class HCoordinate {
     final double yInt = y / w;
 
     if (Double.isNaN(xInt) || Double.isInfinite(xInt) || Double.isNaN(yInt)
-        || Double.isInfinite(yInt)) {
+      || Double.isInfinite(yInt)) {
       throw new NotRepresentableException();
     }
 

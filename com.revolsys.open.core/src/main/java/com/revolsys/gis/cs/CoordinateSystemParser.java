@@ -68,7 +68,7 @@ public class CoordinateSystemParser {
 
           final Map<String, Object> parameters = new LinkedHashMap<String, Object>();
           for (final String param : parameterString.substring(1, parameterString.length() - 1)
-              .split(",")) {
+            .split(",")) {
             final String[] paramValues = param.split("=");
             if (paramValues.length == 2) {
               final String key = new String(paramValues[0].trim());

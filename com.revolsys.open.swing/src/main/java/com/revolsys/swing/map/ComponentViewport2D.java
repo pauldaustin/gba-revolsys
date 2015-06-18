@@ -109,7 +109,7 @@ public class ComponentViewport2D extends Viewport2D implements PropertyChangeLis
 
   public double getMaxScale() {
     final BoundingBox areaBoundingBox = getGeometryFactory().getCoordinateSystem()
-        .getAreaBoundingBox();
+      .getAreaBoundingBox();
     final Measurable<Length> areaWidth = areaBoundingBox.getWidthLength();
     final Measurable<Length> areaHeight = areaBoundingBox.getHeightLength();
 

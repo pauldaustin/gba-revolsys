@@ -235,7 +235,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
       SwingUtil.addLabel(panel, "Folder Connections");
       final List<FolderConnectionRegistry> registries = new ArrayList<>();
       for (final FolderConnectionRegistry registry : FolderConnectionManager.get()
-          .getVisibleConnectionRegistries()) {
+        .getVisibleConnectionRegistries()) {
         if (!registry.isReadOnly()) {
           registries.add(registry);
         }

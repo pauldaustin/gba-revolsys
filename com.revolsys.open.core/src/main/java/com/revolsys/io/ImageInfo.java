@@ -271,12 +271,12 @@ public class ImageInfo {
 
   private static int getIntBigEndian(final byte[] a, final int offs) {
     return (a[offs] & 0xff) << 24 | (a[offs + 1] & 0xff) << 16 | (a[offs + 2] & 0xff) << 8
-        | a[offs + 3] & 0xff;
+      | a[offs + 3] & 0xff;
   }
 
   private static int getIntLittleEndian(final byte[] a, final int offs) {
     return (a[offs + 3] & 0xff) << 24 | (a[offs + 2] & 0xff) << 16 | (a[offs + 1] & 0xff) << 8
-        | a[offs] & 0xff;
+      | a[offs] & 0xff;
   }
 
   private static int getShortBigEndian(final byte[] a, final int offs) {
@@ -506,7 +506,7 @@ public class ImageInfo {
     }
     this.bitsPerPixel = getShortLittleEndian(a, 26);
     if (this.bitsPerPixel != 1 && this.bitsPerPixel != 4 && this.bitsPerPixel != 8
-        && this.bitsPerPixel != 16 && this.bitsPerPixel != 24 && this.bitsPerPixel != 32) {
+      && this.bitsPerPixel != 16 && this.bitsPerPixel != 24 && this.bitsPerPixel != 32) {
       return false;
     }
     final int x = (int)(getIntLittleEndian(a, 36) * 0.0254);
@@ -648,7 +648,7 @@ public class ImageInfo {
     }
     final int type = getIntBigEndian(a, 6);
     if (type != 0x494c424d && // type must be ILBM...
-        type != 0x50424d20) { // ...or PBM
+      type != 0x50424d20) { // ...or PBM
       return false;
     }
     // loop chunks to find BMHD chunk
@@ -728,7 +728,7 @@ public class ImageInfo {
         this.format = FORMAT_JPEG;
         this.bitsPerPixel = (data[0] & 0xff) * (data[5] & 0xff);
         this.progressive = marker == 0xffc2 || marker == 0xffc6 || marker == 0xffca
-            || marker == 0xffce;
+          || marker == 0xffce;
         this.width = getShortBigEndian(data, 3);
         this.height = getShortBigEndian(data, 1);
         return true;

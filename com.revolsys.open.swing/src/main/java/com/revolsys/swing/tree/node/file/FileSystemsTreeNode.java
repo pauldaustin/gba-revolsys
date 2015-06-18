@@ -12,9 +12,9 @@ import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeNodeRunnable;
 import com.revolsys.swing.tree.node.BaseTreeNode;
-import com.revolsys.swing.tree.node.ListTreeNode;
+import com.revolsys.swing.tree.node.LazyLoadTreeNode;
 
-public class FileSystemsTreeNode extends ListTreeNode {
+public class FileSystemsTreeNode extends LazyLoadTreeNode {
 
   public static final Icon ICON_FOLDER_DRIVE = Icons.getIcon("folder_drive");
 
@@ -29,6 +29,7 @@ public class FileSystemsTreeNode extends ListTreeNode {
   }
 
   public FileSystemsTreeNode() {
+    super(null);
     setType("File Systems");
     setName("File Systems");
     setIcon(FileSystemsTreeNode.ICON_FOLDER_DRIVE);
@@ -45,10 +46,5 @@ public class FileSystemsTreeNode extends ListTreeNode {
   @Override
   public MenuFactory getMenu() {
     return MENU;
-  }
-
-  @Override
-  public Icon getOpenIcon() {
-    return ICON_FOLDER_DRIVE_OPEN;
   }
 }

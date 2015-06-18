@@ -149,7 +149,7 @@ public class Spheroid implements Serializable {
     final double t1 = this.semiMajorAxis * this.semiMajorAxis;
     final double t2 = t1 * Math.cos(latitude) * Math.cos(latitude);
     final double t3 = this.semiMinorAxis * this.semiMinorAxis * Math.sin(latitude)
-        * Math.sin(latitude);
+      * Math.sin(latitude);
     final double n0 = t1 / Math.sqrt(t2 + t3);
     return n0;
   }

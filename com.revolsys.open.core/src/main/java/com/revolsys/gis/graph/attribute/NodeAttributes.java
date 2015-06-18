@@ -169,7 +169,7 @@ public class NodeAttributes {
     final String attributeName = NodeAttributes.class.getName() + "." + name;
     if (!node.hasAttribute(attributeName)) {
       final ObjectAttributeProxy<T, V> proxy = new InvokeMethodObjectAttributeProxy<T, V>(
-          Methods.class, name, Node.class);
+        Methods.class, name, Node.class);
       node.setAttribute(attributeName, proxy);
     }
     final V value = (V)node.getAttribute(attributeName);

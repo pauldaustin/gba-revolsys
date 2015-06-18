@@ -21,8 +21,8 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcDatabaseFactory;
+import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.PasswordUtil;
 
@@ -118,8 +118,7 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcRecordStore createRecordStore(
-    final Map<String, ? extends Object> connectionProperties) {
+  public JdbcRecordStore createRecordStore(final Map<String, ? extends Object> connectionProperties) {
     return new OracleRecordStore(this, connectionProperties);
   }
 

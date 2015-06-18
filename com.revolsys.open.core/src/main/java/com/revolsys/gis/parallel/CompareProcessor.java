@@ -248,7 +248,7 @@ public class CompareProcessor extends AbstractMergeProcess {
 
       final LineIntersectsFilter intersectsFilter = new LineIntersectsFilter(sourceLine);
       final Filter<Record> geometryFilter = new DataObjectGeometryFilter<LineString>(
-          intersectsFilter);
+        intersectsFilter);
       final Filter<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
       final Filter<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);
       final List<Record> otherObjects = this.otherIndex.queryList(sourceGeometry, filter);
@@ -265,7 +265,7 @@ public class CompareProcessor extends AbstractMergeProcess {
         } else {
           removeObject(sourceObject);
           if (nonMatchedLines.getNumGeometries() == 1
-              && nonMatchedLines.getGeometryN(0).getLength() == 1) {
+            && nonMatchedLines.getGeometryN(0).getLength() == 1) {
           } else {
             for (int j = 0; j < nonMatchedLines.getNumGeometries(); j++) {
               final Geometry newGeometry = nonMatchedLines.getGeometryN(j);

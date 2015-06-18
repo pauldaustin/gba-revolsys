@@ -59,8 +59,8 @@ public class MethodPageValueManager<T> implements PageValueManager<T> {
     final int b7 = bytes[6] & 0xFF;
     final int b8 = bytes[7] & 0xFF;
     return ((long)b1 << 56) + ((long)(b2 & 255) << 48) + ((long)(b3 & 255) << 40)
-        + ((long)(b4 & 255) << 32) + ((long)(b5 & 255) << 24) + ((b6 & 255) << 16)
-        + ((b7 & 255) << 8) + ((b8 & 255) << 0);
+      + ((long)(b4 & 255) << 32) + ((long)(b5 & 255) << 24) + ((b6 & 255) << 16)
+      + ((b7 & 255) << 8) + ((b8 & 255) << 0);
   }
 
   public static byte[] getShortBytes(final Page page) {

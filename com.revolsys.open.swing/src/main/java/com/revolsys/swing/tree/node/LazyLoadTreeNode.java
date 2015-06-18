@@ -1,6 +1,5 @@
 package com.revolsys.swing.tree.node;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,27 +9,17 @@ import javax.swing.SwingUtilities;
 
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.tree.BaseTreeNodeLoadingIcon;
-import com.revolsys.util.ExceptionUtil;
 
 public abstract class LazyLoadTreeNode extends BaseTreeNode {
-
-  private static Method setChildrenMethod;
-
-  static {
-    try {
-      final Class<LazyLoadTreeNode> clazz = LazyLoadTreeNode.class;
-      setChildrenMethod = clazz.getDeclaredMethod("setChildren", Integer.TYPE, List.class);
-      setChildrenMethod.setAccessible(true);
-    } catch (final Throwable e) {
-      ExceptionUtil.log(LazyLoadTreeNode.class, e);
-    }
-  }
-
   private final AtomicInteger updateIndicies = new AtomicInteger();
 
   private List<BaseTreeNode> children = Collections.emptyList();
 
   private final Object sync = new Object();
+
+  public LazyLoadTreeNode() {
+    this(null);
+  }
 
   public LazyLoadTreeNode(final Object userObject) {
     super(userObject, true);
@@ -87,21 +76,20 @@ public abstract class LazyLoadTreeNode extends BaseTreeNode {
   }
 
   public void loadChildren() {
-    if (SwingUtilities.isEventDispatchThread()) {
-      if (!isLoaded()) {
-        Invoke.background("Load tree node " + this.getName(), this, "loadChildren");
-      }
-    } else {
-      synchronized (this.sync) {
-        if (!isLoaded()) {
-          final int updateIndex = getUpdateIndex();
-          List<BaseTreeNode> children = doLoadChildren();
-          if (children == null) {
-            children = Collections.emptyList();
+    if (!isLoaded()) {
+      Invoke.background("Load tree node " + this.getName(), () -> {
+        synchronized (this.sync) {
+          if (!isLoaded()) {
+            final int updateIndex = getUpdateIndex();
+            List<BaseTreeNode> children = doLoadChildren();
+            if (children == null) {
+              children = Collections.emptyList();
+            }
+            final List<BaseTreeNode> childNodes = children;
+            Invoke.later(() -> setChildren(updateIndex, childNodes));
           }
-          Invoke.later(this, setChildrenMethod, updateIndex, children);
         }
-      }
+      });
     }
   }
 
@@ -124,7 +112,8 @@ public abstract class LazyLoadTreeNode extends BaseTreeNode {
         if (children == null) {
           children = Collections.emptyList();
         }
-        Invoke.later(this, setChildrenMethod, updateIndex, children);
+        final List<BaseTreeNode> childNodes = children;
+        Invoke.later(() -> setChildren(updateIndex, childNodes));
       }
     }
   }

@@ -98,6 +98,6 @@ public class BinaryCondition extends Condition {
   @Override
   public String toString() {
     return StringConverterRegistry.toString(this.left) + " " + this.operator + " "
-        + StringConverterRegistry.toString(this.right);
+      + StringConverterRegistry.toString(this.right);
   }
 }

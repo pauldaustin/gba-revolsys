@@ -530,7 +530,7 @@ public final class LineStringUtil {
             for (int i = 0; i < numIntersections; i++) {
               final Coordinate intersection = intersector.getIntersection(i);
               if (!Arrays.asList(currentCoord1, previousCoord1, currentCoord2, previousCoord2)
-                  .contains(intersection)) {
+                .contains(intersection)) {
                 return CoordinatesUtil.get(intersection);
               }
             }
@@ -1138,7 +1138,7 @@ public final class LineStringUtil {
       final double coordinateDistance = geometryFactory.makeXyPrecise(CollectionUtil.getDouble(
         result, "coordinateDistance"));
       final double segmentDistance = geometryFactory.makeXyPrecise(CollectionUtil.getDouble(result,
-          "segmentDistance"));
+        "segmentDistance"));
       if (coordinateIndex == 0) {
         if (coordinateDistance == 0) {
           return Collections.singletonList(line);

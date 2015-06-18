@@ -11,7 +11,6 @@ import com.revolsys.collection.map.Maps;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistry;
-import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class FolderConnectionRegistry extends AbstractConnectionRegistry<FolderConnection> {

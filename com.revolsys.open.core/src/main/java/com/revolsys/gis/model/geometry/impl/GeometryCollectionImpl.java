@@ -23,7 +23,7 @@ public class GeometryCollectionImpl extends GeometryImpl implements GeometryColl
       final Class<? extends Geometry> clazz = geometry.getClass();
       if (!geometryClass.isAssignableFrom(clazz)) {
         throw new IllegalArgumentException("Expecting instance of class " + geometryClass + " not"
-            + clazz);
+          + clazz);
       }
       geometryList.add(geometry);
     }

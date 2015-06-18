@@ -24,7 +24,7 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Point;
 
 public class MapPointerLocation extends JLabel implements MouseMotionListener,
-PropertyChangeListener {
+  PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private static NumberFormat getFormat() {
@@ -68,10 +68,10 @@ PropertyChangeListener {
       final double projectedY = mapPoint.getY();
       if (this.geometryFactory.getCoordinateSystem() instanceof GeographicCoordinateSystem) {
         setText(this.title + ": " + getFormat().format(projectedY) + ", "
-            + getFormat().format(projectedX));
+          + getFormat().format(projectedX));
       } else {
         setText(this.title + ": " + getFormat().format(projectedX) + ", "
-            + getFormat().format(projectedY));
+          + getFormat().format(projectedY));
       }
     }
   }

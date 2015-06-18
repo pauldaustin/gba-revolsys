@@ -174,7 +174,7 @@ public class Nts1000000RectangularMapGrid extends AbstractRectangularMapGrid {
     if (numX > max || numY > max) {
       LoggerFactory.getLogger(getClass()).error(
         "Request would return too many tiles width=" + numX + " (max=" + max + ") height=" + numY
-        + "(max=" + max + ").");
+          + "(max=" + max + ").");
       return tiles;
     }
     for (int y = 0; y < numY; y++) {

@@ -9,7 +9,7 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 
 public abstract class AbstractRecord extends AbstractMap<String, Object> implements Record,
-Cloneable, Serializable {
+  Cloneable, Serializable {
   private static final long serialVersionUID = 1L;
 
   /**

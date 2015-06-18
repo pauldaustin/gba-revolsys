@@ -67,10 +67,10 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     "middle", "bottom");
 
   public static final List<Action> LINE_JOIN_ACTIONS = getLineActions("join", "MITER", "ROUND",
-      "BEVEL");
+    "BEVEL");
 
   public static final List<Action> LINE_CAP_ACTIONS = getLineActions("cap", "BUTT", "ROUND",
-      "SQUARE");
+    "SQUARE");
 
   public static List<Action> getLineActions(final String type, final String... alignmentTypes) {
     final List<Action> actions = new ArrayList<Action>();
@@ -89,7 +89,7 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     for (final String alignmentType : alignmentTypes) {
       final I18nAction action = new I18nAction(alignmentType, null,
         CaseConverter.toCapitalizedWords(alignmentType), Icons.getIcon("text_align_"
-            + alignmentType));
+          + alignmentType));
       actions.add(action);
     }
     return actions;
@@ -288,7 +288,7 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     scales.add(Long.MAX_VALUE);
     scales.addAll(MapPanel.SCALES);
     final InvokeMethodStringConverter converter = new InvokeMethodStringConverter(MapScale.class,
-        "formatScale");
+      "formatScale");
     converter.setHorizontalAlignment(SwingConstants.RIGHT);
     final ComboBox field = new ComboBox(fieldName, new DefaultComboBoxModel(scales), converter,
       converter);

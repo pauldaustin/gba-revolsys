@@ -26,6 +26,7 @@ public class EdgeEnd implements Comparable {
   private Coordinates p0, p1; // points of initial line segment
 
   private double dx, dy; // the direction vector for this edge from its starting
+
   // point
 
   private int quadrant;
