@@ -3,11 +3,11 @@ package com.revolsys.gis.model.geometry.impl;
 import java.util.Collections;
 import java.util.List;
 
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.gis.model.geometry.Point;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.Dimension;

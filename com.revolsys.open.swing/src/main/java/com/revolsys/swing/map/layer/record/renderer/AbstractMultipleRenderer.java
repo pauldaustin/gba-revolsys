@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;

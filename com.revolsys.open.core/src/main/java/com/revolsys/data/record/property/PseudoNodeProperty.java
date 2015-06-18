@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.revolsys.data.equals.DataObjectEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.graph.attribute.InvokeMethodObjectAttributeProxy;
 import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
 import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
-import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
 public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
   protected static final List<String> DEFAULT_EXCLUDE = Arrays.asList(DataObjectEquals.EXCLUDE_ID,

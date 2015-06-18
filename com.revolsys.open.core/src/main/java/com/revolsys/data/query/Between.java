@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.util.CompareUtil;
 import com.revolsys.util.JavaBeanUtil;
 

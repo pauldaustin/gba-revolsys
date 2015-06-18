@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 
 public abstract class BinaryArithmatic extends QueryValue {
 

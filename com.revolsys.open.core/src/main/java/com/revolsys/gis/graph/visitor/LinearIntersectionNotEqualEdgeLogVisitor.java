@@ -2,6 +2,7 @@ package com.revolsys.gis.graph.visitor;
 
 import java.util.List;
 
+import com.revolsys.data.equals.Geometry3DExactEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.filter.AndFilter;
@@ -16,7 +17,6 @@ import com.revolsys.gis.graph.filter.EdgeTypeNameFilter;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.jts.filter.EqualFilter;
 import com.revolsys.gis.jts.filter.LinearIntersectionFilter;
-import com.revolsys.gis.model.data.equals.Geometry3DExactEquals;
 import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;

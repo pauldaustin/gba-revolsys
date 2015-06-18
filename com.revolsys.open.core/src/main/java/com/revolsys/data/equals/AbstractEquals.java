@@ -1,4 +1,4 @@
-package com.revolsys.gis.model.data.equals;
+package com.revolsys.data.equals;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;

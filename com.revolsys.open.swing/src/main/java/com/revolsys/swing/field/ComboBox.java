@@ -18,7 +18,7 @@ import javax.swing.ListCellRenderer;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.Property;

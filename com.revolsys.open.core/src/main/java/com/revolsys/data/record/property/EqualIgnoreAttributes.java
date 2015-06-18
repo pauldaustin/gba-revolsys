@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.revolsys.data.equals.DataObjectEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.model.data.equals.DataObjectEquals;
 
 public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = EqualIgnoreAttributes.class.getName()

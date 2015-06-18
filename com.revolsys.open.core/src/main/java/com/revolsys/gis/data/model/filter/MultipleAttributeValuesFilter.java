@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.data.model.DataObjectUtil;
-import com.revolsys.gis.model.data.equals.EqualsInstance;
 
 /**
  * Filter DataObjects by the value of the property.

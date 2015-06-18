@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.revolsys.collection.Visitor;
+import com.revolsys.data.equals.Geometry3DExactEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterUtil;
@@ -18,7 +19,6 @@ import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.jts.filter.EqualFilter;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
-import com.revolsys.gis.model.data.equals.Geometry3DExactEquals;
 import com.revolsys.gis.model.geometry.LineSegment;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;

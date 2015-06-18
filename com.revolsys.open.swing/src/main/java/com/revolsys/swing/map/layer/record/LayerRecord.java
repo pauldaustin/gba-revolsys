@@ -4,12 +4,12 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.model.data.equals.EqualsInstance;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.util.Property;
 
 public class LayerRecord extends ArrayRecord {

@@ -1,4 +1,4 @@
-package com.revolsys.gis.model.data.equals;
+package com.revolsys.data.equals;
 
 import java.util.Collection;
 import java.util.Map;

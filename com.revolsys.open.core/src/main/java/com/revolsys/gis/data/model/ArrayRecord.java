@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.model.data.equals.EqualsInstance;
 
 /**
  * The ArrayRecord is an implementation of {@link Record} which uses an

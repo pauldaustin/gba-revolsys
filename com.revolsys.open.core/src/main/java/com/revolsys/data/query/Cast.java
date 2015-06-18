@@ -3,7 +3,7 @@ package com.revolsys.data.query;
 import java.sql.PreparedStatement;
 import java.util.Map;
 
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 
 public class Cast extends QueryValue {
   private final QueryValue value;

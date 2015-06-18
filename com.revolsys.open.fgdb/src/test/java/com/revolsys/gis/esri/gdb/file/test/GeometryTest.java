@@ -2,6 +2,7 @@ package com.revolsys.gis.esri.gdb.file.test;
 
 import java.io.File;
 
+import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -15,7 +16,6 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.InPlaceIterator;
-import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.io.FileUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;

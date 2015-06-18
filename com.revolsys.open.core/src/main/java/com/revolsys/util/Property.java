@@ -26,8 +26,8 @@ import com.revolsys.beans.NonWeakListener;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.beans.WeakPropertyChangeListener;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.revolsys.io.ObjectWithProperties;
 
 public final class Property {

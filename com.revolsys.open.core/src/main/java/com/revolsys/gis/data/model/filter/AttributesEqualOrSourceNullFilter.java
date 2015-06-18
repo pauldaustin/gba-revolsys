@@ -3,10 +3,10 @@ package com.revolsys.gis.data.model.filter;
 import java.util.Arrays;
 import java.util.Collection;
 
+import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
 import com.revolsys.gis.data.model.DataObjectUtil;
-import com.revolsys.gis.model.data.equals.EqualsInstance;
 
 public class AttributesEqualOrSourceNullFilter implements Filter<Record> {
   public static boolean accept(final Record object1, final Record object2,

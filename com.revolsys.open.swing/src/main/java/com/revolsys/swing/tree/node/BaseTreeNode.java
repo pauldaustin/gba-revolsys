@@ -26,7 +26,7 @@ import javax.swing.tree.TreePath;
 
 import com.revolsys.collection.iterator.IteratorEnumeration;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.menu.MenuFactory;
@@ -225,10 +225,12 @@ public class BaseTreeNode implements TreeNode, Iterable<BaseTreeNode>, PropertyC
   }
 
   public void expandChildren() {
-    expand();
-    for (final BaseTreeNode child : getChildren()) {
-      child.expand();
-    }
+    Invoke.andWait(() -> {
+      expand();
+      for (final BaseTreeNode child : getChildren()) {
+        child.expand();
+      }
+    });
   }
 
   @Override

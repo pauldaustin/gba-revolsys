@@ -5,12 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.SwingUtilities;
-
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.tree.BaseTreeNodeLoadingIcon;
 
 public abstract class LazyLoadTreeNode extends BaseTreeNode {
+
   private final AtomicInteger updateIndicies = new AtomicInteger();
 
   private List<BaseTreeNode> children = Collections.emptyList();
@@ -76,21 +75,19 @@ public abstract class LazyLoadTreeNode extends BaseTreeNode {
   }
 
   public void loadChildren() {
-    if (!isLoaded()) {
-      Invoke.background("Load tree node " + this.getName(), () -> {
-        synchronized (this.sync) {
-          if (!isLoaded()) {
-            final int updateIndex = getUpdateIndex();
-            List<BaseTreeNode> children = doLoadChildren();
-            if (children == null) {
-              children = Collections.emptyList();
-            }
-            final List<BaseTreeNode> childNodes = children;
-            Invoke.later(() -> setChildren(updateIndex, childNodes));
+    Invoke.background("Load tree node " + this.getName(), () -> {
+      synchronized (this.sync) {
+        if (!isLoaded()) {
+          final int updateIndex = getUpdateIndex();
+          List<BaseTreeNode> children = doLoadChildren();
+          if (children == null) {
+            children = Collections.emptyList();
           }
+          final List<BaseTreeNode> childNodes = children;
+          Invoke.later(() -> setChildren(updateIndex, childNodes));
         }
-      });
-    }
+      }
+    });
   }
 
   @Override
@@ -103,9 +100,7 @@ public abstract class LazyLoadTreeNode extends BaseTreeNode {
   }
 
   public void refresh() {
-    if (SwingUtilities.isEventDispatchThread()) {
-      Invoke.background("Refresh tree nodes " + this.getName(), this, "refresh");
-    } else {
+    Invoke.background("Refresh tree nodes " + this.getName(), () -> {
       synchronized (this.sync) {
         final int updateIndex = getUpdateIndex();
         List<BaseTreeNode> children = doLoadChildren();
@@ -115,7 +110,7 @@ public abstract class LazyLoadTreeNode extends BaseTreeNode {
         final List<BaseTreeNode> childNodes = children;
         Invoke.later(() -> setChildren(updateIndex, childNodes));
       }
-    }
+    });
   }
 
   public final void removeNode(final BaseTreeNode node) {

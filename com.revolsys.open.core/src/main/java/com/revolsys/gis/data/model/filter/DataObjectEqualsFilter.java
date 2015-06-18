@@ -3,10 +3,10 @@ package com.revolsys.gis.data.model.filter;
 import java.util.Collection;
 import java.util.HashSet;
 
+import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.model.data.equals.EqualsInstance;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DataObjectEqualsFilter implements Filter<Record> {

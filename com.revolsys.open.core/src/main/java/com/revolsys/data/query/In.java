@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
 
 public class In extends Condition {
 

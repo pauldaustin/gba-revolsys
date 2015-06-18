@@ -4,8 +4,8 @@ import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.List;
 
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.query.QueryValue;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
 
 public abstract class UnaryFunction extends QueryValue {
 

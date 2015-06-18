@@ -3,9 +3,9 @@ package com.revolsys.gis.data.model.comparator;
 import java.util.Comparator;
 import java.util.List;
 
+import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.model.data.equals.EqualsInstance;
 import com.revolsys.util.CompareUtil;
 
 /**

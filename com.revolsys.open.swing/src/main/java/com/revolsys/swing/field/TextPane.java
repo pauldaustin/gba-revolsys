@@ -11,7 +11,7 @@ import javax.swing.text.Element;
 import jsyntaxpane.DefaultSyntaxKit;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.gis.model.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.undo.CascadingUndoManager;
