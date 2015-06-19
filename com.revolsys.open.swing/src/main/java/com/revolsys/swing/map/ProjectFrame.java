@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -71,6 +73,7 @@ import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.node.BaseTreeNode;
 import com.revolsys.swing.tree.node.ListTreeNode;
 import com.revolsys.swing.tree.node.file.FileSystemsTreeNode;
+import com.revolsys.swing.tree.node.file.FileTreeNode;
 import com.revolsys.swing.tree.node.file.FolderConnectionsTreeNode;
 import com.revolsys.swing.tree.node.layer.ProjectTreeNode;
 import com.revolsys.swing.tree.node.record.RecordStoreConnectionsTreeNode;
@@ -236,7 +239,8 @@ public class ProjectFrame extends BaseFrame {
 
     this.catalogTree = tree;
 
-    addTabIcon(this.leftTabs, "tree_catalog", "Catalog", this.catalogTree, true);
+    addTab(this.leftTabs, Icons.getIconWithBadge(FileTreeNode.ICON_FOLDER, "tree"), "Catalog",
+      this.catalogTree, true);
   }
 
   protected void addLogPanel() {
@@ -258,19 +262,25 @@ public class ProjectFrame extends BaseFrame {
     menuBar.add(fileMenu);
   }
 
-  public int addTabIcon(final JTabbedPane tabs, final String iconName, final String toolTipText,
+  public int addTab(final JTabbedPane tabs, final Icon icon, final String toolTipText,
     Component component, final boolean useScrollPane) {
-
     if (useScrollPane) {
       final JScrollPane scrollPane = new JScrollPane(component);
       scrollPane.setBorder(BorderFactory.createEmptyBorder());
       component = scrollPane;
     }
 
-    tabs.addTab(null, Icons.getIcon(iconName), component);
+    tabs.addTab(null, icon, component);
     final int tabIndex = tabs.getTabCount() - 1;
     tabs.setToolTipTextAt(tabIndex, toolTipText);
     return tabIndex;
+  }
+
+  public int addTabIcon(final JTabbedPane tabs, final String iconName, final String toolTipText,
+    final Component component, final boolean useScrollPane) {
+    final ImageIcon icon = Icons.getIcon(iconName);
+
+    return addTab(tabs, icon, toolTipText, component, useScrollPane);
   }
 
   protected void addTableOfContents() {
