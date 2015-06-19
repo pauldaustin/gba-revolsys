@@ -52,7 +52,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
 
   private static final UIDefaults DEFAULTS = UIManager.getDefaults();
 
-  public static final Icon ICON_FILE = DEFAULTS.getIcon("Tree.leafIcon");
+  public static final Icon ICON_FILE = DEFAULTS.getIcon("FileView.fileIcon");
 
   public static final Icon ICON_FILE_DATABASE = Icons.getIconWithBadge(ICON_FILE, "database");
 
@@ -222,7 +222,7 @@ public class FileTreeNode extends LazyLoadTreeNode implements UrlProxy {
       SwingUtil.addLabel(panel, "Folder Connections");
       final List<FolderConnectionRegistry> registries = new ArrayList<>();
       for (final FolderConnectionRegistry registry : FolderConnectionManager.get()
-        .getVisibleConnectionRegistries()) {
+          .getVisibleConnectionRegistries()) {
         if (!registry.isReadOnly()) {
           registries.add(registry);
         }
