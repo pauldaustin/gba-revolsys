@@ -779,14 +779,9 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   @Override
   public void delete(final Record record) {
-    // Don't synchronize to avoid deadlock as that is done lower down in the
-    // methods
-    if (record.getState() == RecordState.Persisted || record.getState() == RecordState.Modified) {
-      record.setState(RecordState.Deleted);
-      try (
-        FileGdbWriter writer = createWriter()) {
-        delete(writer, record);
-      }
+    try (
+      FileGdbWriter writer = createWriter()) {
+      delete(writer, record);
     }
   }
 
