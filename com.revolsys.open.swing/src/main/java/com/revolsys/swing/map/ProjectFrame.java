@@ -1,8 +1,5 @@
 package com.revolsys.swing.map;
 
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -82,6 +79,9 @@ import com.revolsys.util.OS;
 import com.revolsys.util.PreferencesUtil;
 import com.revolsys.util.Property;
 
+import groovy.lang.Binding;
+import groovy.lang.GroovyShell;
+
 public class ProjectFrame extends BaseFrame {
   public static final String SAVE_PROJECT_KEY = "Save Project";
 
@@ -126,8 +126,10 @@ public class ProjectFrame extends BaseFrame {
 
   public static void addSaveActions(final JComponent component, final Project project) {
     final InputMap inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), SAVE_PROJECT_KEY);
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK), SAVE_PROJECT_KEY);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK),
+      SAVE_PROJECT_KEY);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK),
+      SAVE_PROJECT_KEY);
 
     inputMap.put(
       KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK),
@@ -137,8 +139,8 @@ public class ProjectFrame extends BaseFrame {
       SAVE_CHANGES_KEY);
 
     final ActionMap actionMap = component.getActionMap();
-    actionMap.put(SAVE_PROJECT_KEY, new InvokeMethodAction(SAVE_PROJECT_KEY, project,
-      "saveAllSettings"));
+    actionMap.put(SAVE_PROJECT_KEY,
+      new InvokeMethodAction(SAVE_PROJECT_KEY, project, "saveAllSettings"));
     actionMap.put(SAVE_CHANGES_KEY,
       new InvokeMethodAction(SAVE_CHANGES_KEY, project, "saveChanges"));
   }
@@ -494,7 +496,8 @@ public class ProjectFrame extends BaseFrame {
     final Object frameBoundsObject = this.project.getProperty("frameBounds");
     setBounds(frameBoundsObject, true);
 
-    final RecordStoreConnectionManager dataStoreConnectionManager = RecordStoreConnectionManager.get();
+    final RecordStoreConnectionManager dataStoreConnectionManager = RecordStoreConnectionManager
+      .get();
     dataStoreConnectionManager.removeConnectionRegistry("Project");
     dataStoreConnectionManager.addConnectionRegistry(this.project.getRecordStores());
 
@@ -512,12 +515,15 @@ public class ProjectFrame extends BaseFrame {
 
   public void removeBottomTab(final ProjectFramePanel panel) {
     final JTabbedPane tabs = getBottomTabs();
-    final Component component = panel.getProperty("bottomTab");
-    if (component != null) {
-      if (tabs != null) {
-        tabs.remove(component);
+    final Object property = panel.getProperty("bottomTab");
+    if (property instanceof Component) {
+      final Component component = (Component)property;
+      if (component != null) {
+        if (tabs != null) {
+          tabs.remove(component);
+        }
+        panel.setProperty("bottomTab", null);
       }
-      panel.setProperty("bottomTab", null);
     }
   }
 
