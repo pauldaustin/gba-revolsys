@@ -84,6 +84,7 @@ import com.revolsys.gis.esri.gdb.file.capi.type.XmlFieldDefinition;
 import com.revolsys.gis.util.NoOp;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Path;
+import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jts.geom.BoundingBox;
@@ -123,7 +124,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   private static void addFieldTypeConstructor(final FieldType fieldType,
     final Class<? extends AbstractFileGdbFieldDefinition> fieldClass) {
     try {
-      final Constructor<? extends AbstractFileGdbFieldDefinition> constructor = fieldClass.getConstructor(Field.class);
+      final Constructor<? extends AbstractFileGdbFieldDefinition> constructor = fieldClass
+        .getConstructor(Field.class);
       ESRI_FIELD_TYPE_ATTRIBUTE_MAP.put(fieldType, constructor);
     } catch (final SecurityException e) {
       LOG.error("No public constructor for ESRI type " + fieldType, e);
@@ -353,7 +355,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   protected void closeEnumRows() {
     synchronized (this.apiSync) {
-      for (final Iterator<EnumRows> iterator = this.enumRowsToClose.iterator(); iterator.hasNext();) {
+      for (final Iterator<EnumRows> iterator = this.enumRowsToClose.iterator(); iterator
+        .hasNext();) {
         final EnumRows rows = iterator.next();
         try {
           rows.Close();
@@ -529,9 +532,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     StringBuffer sql = new StringBuffer();
     if (orderBy.isEmpty() || boundingBox != null) {
       if (!orderBy.isEmpty()) {
-        LoggerFactory.getLogger(getClass()).error(
-          "Unable to sort on " + recordDefinition.getPath() + " " + orderBy.keySet()
-            + " as the ESRI library can't sort with a bounding box query");
+        LoggerFactory.getLogger(getClass()).error("Unable to sort on " + recordDefinition.getPath()
+          + " " + orderBy.keySet() + " as the ESRI library can't sort with a bounding box query");
       }
       sql = whereClause;
     } else {
@@ -567,8 +569,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           }
 
         } else {
-          LoggerFactory.getLogger(getClass()).error(
-            "Unable to sort on " + recordDefinition.getPath() + "." + column
+          LoggerFactory.getLogger(getClass())
+            .error("Unable to sort on " + recordDefinition.getPath() + "." + column
               + " as the ESRI library can't sort on " + dataType + " columns");
         }
       }
@@ -643,8 +645,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                 if (!hasChildDataset(getGeodatabase(), parentCatalogPath, "Feature Dataset",
                   childCatalogPath)) {
                   if (spatialReference != null) {
-                    final DEFeatureDataset dataset = EsriXmlRecordDefinitionUtil.createDEFeatureDataset(
-                      childCatalogPath, spatialReference);
+                    final DEFeatureDataset dataset = EsriXmlRecordDefinitionUtil
+                      .createDEFeatureDataset(childCatalogPath, spatialReference);
                     final String datasetDefinition = EsriGdbXmlSerializer.toString(dataset);
                     try {
                       geodatabase.createFeatureDataset(datasetDefinition);
@@ -652,8 +654,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                       if (LOG.isDebugEnabled()) {
                         LOG.debug(datasetDefinition);
                       }
-                      throw new RuntimeException("Unable to create feature dataset "
-                        + childCatalogPath, t);
+                      throw new RuntimeException(
+                        "Unable to create feature dataset " + childCatalogPath, t);
                     }
                   }
                 }
@@ -753,6 +755,30 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     return new FileGdbWriter(this);
   }
 
+  private void delete(final FileGdbWriter writer, final Record record) {
+    // Don't synchronize to avoid deadlock as that is done lower down in the
+    // methods
+    if (record.getState() == RecordState.Persisted || record.getState() == RecordState.Modified) {
+      record.setState(RecordState.Deleted);
+      writer.write(record);
+    }
+  }
+
+  @Override
+  public int delete(final Query query) {
+    int i = 0;
+
+    try (
+      final Reader<Record> reader = query(query);
+      FileGdbWriter writer = createWriter();) {
+      for (final Record record : reader) {
+        delete(writer, record);
+        i++;
+      }
+    }
+    return i;
+  }
+
   @Override
   public void delete(final Record record) {
     // Don't synchronize to avoid deadlock as that is done lower down in the
@@ -761,7 +787,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       record.setState(RecordState.Deleted);
       try (
         FileGdbWriter writer = createWriter()) {
-        writer.write(record);
+        delete(writer, record);
       }
     }
   }
@@ -925,11 +951,12 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           for (final Field field : deTable.getFields()) {
             final String fieldName = field.getName();
             final FieldType type = field.getType();
-            final Constructor<? extends AbstractFileGdbFieldDefinition> fieldConstructor = ESRI_FIELD_TYPE_ATTRIBUTE_MAP.get(type);
+            final Constructor<? extends AbstractFileGdbFieldDefinition> fieldConstructor = ESRI_FIELD_TYPE_ATTRIBUTE_MAP
+              .get(type);
             if (fieldConstructor != null) {
               try {
-                final AbstractFileGdbFieldDefinition fieldDefinition = JavaBeanUtil.invokeConstructor(
-                  fieldConstructor, field);
+                final AbstractFileGdbFieldDefinition fieldDefinition = JavaBeanUtil
+                  .invokeConstructor(fieldConstructor, field);
                 fieldDefinition.setRecordStore(this);
                 recordDefinition.addField(fieldDefinition);
                 if (fieldDefinition instanceof GlobalIdFieldDefinition) {
@@ -1026,7 +1053,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                 }
               }
             } else {
-              final GeometryFieldDefinition geometryField = (GeometryFieldDefinition)recordDefinition.getGeometryField();
+              final GeometryFieldDefinition geometryField = (GeometryFieldDefinition)recordDefinition
+                .getGeometryField();
               if (geometryField == null || boundingBox.isEmpty()) {
                 return 0;
               } else {
@@ -1174,18 +1202,19 @@ public class FileGdbRecordStore extends AbstractRecordStore {
             if (file.exists()) {
               if (file.isDirectory()) {
                 if (!new File(this.fileName, "gdb").exists()) {
-                  throw new IllegalArgumentException(FileUtil.getCanonicalPath(file)
-                    + " is not a valid ESRI File Geodatabase");
+                  throw new IllegalArgumentException(
+                    FileUtil.getCanonicalPath(file) + " is not a valid ESRI File Geodatabase");
                 }
                 geodatabase = openGeodatabase();
               } else {
-                throw new IllegalArgumentException(FileUtil.getCanonicalPath(file)
-                  + " ESRI File Geodatabase must be a directory");
+                throw new IllegalArgumentException(
+                  FileUtil.getCanonicalPath(file) + " ESRI File Geodatabase must be a directory");
               }
             } else if (this.createMissingRecordStore) {
               geodatabase = createGeodatabase();
             } else {
-              throw new IllegalArgumentException("ESRI file geodatabase not found " + this.fileName);
+              throw new IllegalArgumentException(
+                "ESRI file geodatabase not found " + this.fileName);
             }
             final VectorOfWString domainNames = geodatabase.getDomains();
             for (int i = 0; i < domainNames.size(); i++) {
@@ -1291,7 +1320,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           currentPath = path.substring(0, nextIndex);
         }
         boolean found = false;
-        final VectorOfWString children = geodatabase.getChildDatasets(parentPath, "Feature Dataset");
+        final VectorOfWString children = geodatabase.getChildDatasets(parentPath,
+          "Feature Dataset");
         for (int i = 0; i < children.size(); i++) {
           final String childPath = children.get(i);
           if (childPath.equals(currentPath)) {
@@ -1452,8 +1482,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
           try {
             final boolean pathExists = isPathExists(geodatabase, catalogPath);
             if (pathExists) {
-              final VectorOfWString childFeatureClasses = getChildDatasets(geodatabase,
-                catalogPath, datasetType);
+              final VectorOfWString childFeatureClasses = getChildDatasets(geodatabase, catalogPath,
+                datasetType);
               if (childFeatureClasses != null) {
                 for (int i = 0; i < childFeatureClasses.size(); i++) {
                   final String childCatalogPath = childFeatureClasses.get(i);
@@ -1536,8 +1566,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                 table.setLoadOnlyMode(false);
                 table.freeWriteLock();
               } catch (final Exception e) {
-                LoggerFactory.getLogger(getClass()).error(
-                  "Unable to free write lock for table: " + typePath, e);
+                LoggerFactory.getLogger(getClass())
+                  .error("Unable to free write lock for table: " + typePath, e);
               }
             }
           }

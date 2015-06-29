@@ -112,8 +112,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
-public abstract class AbstractRecordLayer extends AbstractLayer implements RecordFactory,
-AddGeometryCompleteAction {
+public abstract class AbstractRecordLayer extends AbstractLayer
+  implements RecordFactory, AddGeometryCompleteAction {
 
   public static final String FORM_FACTORY_EXPRESSION = "formFactoryExpression";
 
@@ -133,9 +133,9 @@ AddGeometryCompleteAction {
 
     final EnableCheck hasSelectedRecords = new MenuSourcePropertyEnableCheck("hasSelectedRecords");
     final EnableCheck hasGeometry = new MenuSourcePropertyEnableCheck("hasGeometry");
-    menu.addMenuItem("zoom", MenuSourceRunnable.createAction("Zoom to Selected",
-      "magnifier_zoom_selected", new AndEnableCheck(exists, hasGeometry, hasSelectedRecords),
-        "zoomToSelected"));
+    menu.addMenuItem("zoom",
+      MenuSourceRunnable.createAction("Zoom to Selected", "magnifier_zoom_selected",
+        new AndEnableCheck(exists, hasGeometry, hasSelectedRecords), "zoomToSelected"));
 
     final EnableCheck editable = new MenuSourcePropertyEnableCheck("editable");
     final EnableCheck readonly = new MenuSourcePropertyEnableCheck("readOnly", false);
@@ -151,16 +151,15 @@ AddGeometryCompleteAction {
     menu.addMenuItem("edit",
       MenuSourceRunnable.createAction("Save Changes", "table_save", hasChanges, "saveChanges"));
 
-    menu.addMenuItem(
-      "edit",
-      MenuSourceRunnable.createAction("Cancel Changes", "table_cancel", hasChanges, "cancelChanges"));
+    menu.addMenuItem("edit", MenuSourceRunnable.createAction("Cancel Changes", "table_cancel",
+      hasChanges, "cancelChanges"));
+
+    menu.addMenuItem("edit", MenuSourceRunnable.createAction("Add New Record", "table_row_insert",
+      canAdd, "addNewRecord"));
 
     menu.addMenuItem("edit",
-      MenuSourceRunnable.createAction("Add New Record", "table_row_insert", canAdd, "addNewRecord"));
-
-    menu.addMenuItem("edit", MenuSourceRunnable.createAction("Delete Selected Records",
-      "table_row_delete", new AndEnableCheck(hasSelectedRecords, canDelete),
-        "deleteSelectedRecords"));
+      MenuSourceRunnable.createAction("Delete Selected Records", "table_row_delete",
+        new AndEnableCheck(hasSelectedRecords, canDelete), "deleteSelectedRecords"));
 
     menu.addMenuItem("edit", MenuSourceRunnable.createAction("Merge Selected Records",
       "shape_group", canMergeRecords, "mergeSelectedRecords"));
@@ -179,7 +178,8 @@ AddGeometryCompleteAction {
     // "exportRecords"));
   }
 
-  public static void addVisibleLayers(final List<AbstractRecordLayer> layers, final LayerGroup group) {
+  public static void addVisibleLayers(final List<AbstractRecordLayer> layers,
+    final LayerGroup group) {
     if (group.isExists() && group.isVisible()) {
       for (final Layer layer : group) {
         if (layer instanceof LayerGroup) {
@@ -462,8 +462,8 @@ AddGeometryCompleteAction {
       if (!cancelled) {
         JOptionPane.showMessageDialog(MapPanel.get(this),
           "<html><p>There was an error cancelling changes for one or more records.</p>" + "<p>"
-              + getPath() + "</p>" + "<p>Check the logging panel for details.</html>",
-              "Error Cancelling Changes", JOptionPane.ERROR_MESSAGE);
+            + getPath() + "</p>" + "<p>Check the logging panel for details.</html>",
+          "Error Cancelling Changes", JOptionPane.ERROR_MESSAGE);
       }
 
     }
@@ -773,7 +773,8 @@ AddGeometryCompleteAction {
     return saved;
   }
 
-  protected boolean doSaveChanges(final RecordSaveErrorTableModel errors, final LayerRecord record) {
+  protected boolean doSaveChanges(final RecordSaveErrorTableModel errors,
+    final LayerRecord record) {
     return false;
   }
 
@@ -978,7 +979,8 @@ AddGeometryCompleteAction {
 
   public List<LayerRecord> getMergeableSelectedRecords() {
     final List<LayerRecord> selectedRecords = getSelectedRecords();
-    for (final ListIterator<LayerRecord> iterator = selectedRecords.listIterator(); iterator.hasNext();) {
+    for (final ListIterator<LayerRecord> iterator = selectedRecords.listIterator(); iterator
+      .hasNext();) {
       final LayerRecord record = iterator.next();
       if (record.isDeleted()) {
         iterator.remove();
@@ -997,7 +999,8 @@ AddGeometryCompleteAction {
    * @param record2
    * @return
    */
-  public Record getMergedRecord(final Coordinates point, final Record record1, final Record record2) {
+  public Record getMergedRecord(final Coordinates point, final Record record1,
+    final Record record2) {
     if (record1 == record2) {
       return record1;
     } else {
@@ -1028,7 +1031,8 @@ AddGeometryCompleteAction {
       if (compare > 0) {
         return getMergedRecord(point, record2, record1);
       } else {
-        final DirectionalAttributes property = DirectionalAttributes.getProperty(getRecordDefinition());
+        final DirectionalAttributes property = DirectionalAttributes
+          .getProperty(getRecordDefinition());
         final Map<String, Object> newValues = property.getMergedMap(point, record1, record2);
         newValues.remove(getIdFieldName());
         return new ArrayRecord(getRecordDefinition(), newValues);
@@ -1055,7 +1059,8 @@ AddGeometryCompleteAction {
       if (record == null) {
         return null;
       } else {
-        RecordReader reader = ClipboardUtil.getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
+        RecordReader reader = ClipboardUtil
+          .getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
         if (reader == null) {
           final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
           if (Property.hasValue(string)) {
@@ -1093,8 +1098,8 @@ AddGeometryCompleteAction {
                   if (alert) {
                     JOptionPane.showMessageDialog(parentComponent,
                       "Clipboard should contain a record with a " + geometryDataType + " not a "
-                          + sourceGeometry.getGeometryType() + ".", "Paste Geometry",
-                          JOptionPane.ERROR_MESSAGE);
+                        + sourceGeometry.getGeometryType() + ".",
+                      "Paste Geometry", JOptionPane.ERROR_MESSAGE);
                   }
                   return null;
                 }
@@ -1348,8 +1353,9 @@ AddGeometryCompleteAction {
   }
 
   public boolean isCanPaste() {
-    return ClipboardUtil.isDataFlavorAvailable(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR)
-        || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
+    return ClipboardUtil
+      .isDataFlavorAvailable(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR)
+      || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
   }
 
   public boolean isDeleted(final LayerRecord record) {
@@ -1491,8 +1497,9 @@ AddGeometryCompleteAction {
   public void pasteRecords() {
     final List<LayerRecord> newRecords = new ArrayList<>();
     try (
-        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
-      RecordReader reader = ClipboardUtil.getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
+      EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+      RecordReader reader = ClipboardUtil
+        .getContents(DataObjectReaderTransferable.DATA_OBJECT_READER_FLAVOR);
       if (reader == null) {
         final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
         if (Property.hasValue(string)) {
@@ -1524,7 +1531,8 @@ AddGeometryCompleteAction {
           final Map<String, Object> newValues = new LinkedHashMap<String, Object>(sourceRecord);
 
           Geometry sourceGeometry = sourceRecord.getGeometryValue();
-          for (final Iterator<String> iterator = newValues.keySet().iterator(); iterator.hasNext();) {
+          for (final Iterator<String> iterator = newValues.keySet().iterator(); iterator
+            .hasNext();) {
             final String attributeName = iterator.next();
             final FieldDefinition attribute = recordDefinition.getField(attributeName);
             if (attribute == null) {
@@ -1599,15 +1607,17 @@ AddGeometryCompleteAction {
   }
 
   protected boolean postSaveNewRecord(final LayerRecord record) {
+    boolean removed;
     synchronized (this.newRecords) {
-      if (this.newRecords.remove(record)) {
-        addToIndex(record);
-        if (isSelected(record)) {
-          unSelectRecords(record);
-          addSelectedRecords(record);
-        }
-        return true;
+      removed = this.newRecords.remove(record);
+    }
+    if (removed) {
+      addToIndex(record);
+      if (isSelected(record)) {
+        unSelectRecords(record);
+        addSelectedRecords(record);
       }
+      return true;
     }
     return false;
   }
@@ -1740,7 +1750,8 @@ AddGeometryCompleteAction {
 
   protected void removeHighlightedRecord(final LayerRecord record) {
     synchronized (this.highlightedRecords) {
-      for (final Iterator<LayerRecord> iterator = this.highlightedRecords.iterator(); iterator.hasNext();) {
+      for (final Iterator<LayerRecord> iterator = this.highlightedRecords.iterator(); iterator
+        .hasNext();) {
         final LayerRecord highlightedRecord = iterator.next();
         if (highlightedRecord.isSame(record)) {
           iterator.remove();
@@ -1751,7 +1762,8 @@ AddGeometryCompleteAction {
 
   protected void removeSelectedRecord(final LayerRecord record) {
     synchronized (this.selectedRecords) {
-      for (final Iterator<LayerRecord> iterator = this.selectedRecords.iterator(); iterator.hasNext();) {
+      for (final Iterator<LayerRecord> iterator = this.selectedRecords.iterator(); iterator
+        .hasNext();) {
         final LayerRecord selectedRecord = iterator.next();
         if (selectedRecord != null && selectedRecord.isSame(record)) {
           iterator.remove();
@@ -1770,7 +1782,8 @@ AddGeometryCompleteAction {
       if (isLayerRecord(record)) {
         postSaveModifiedRecord(record);
         synchronized (this.deletedRecords) {
-          for (final Iterator<LayerRecord> iterator = this.deletedRecords.iterator(); iterator.hasNext();) {
+          for (final Iterator<LayerRecord> iterator = this.deletedRecords.iterator(); iterator
+            .hasNext();) {
             final LayerRecord deletedRecord = iterator.next();
             if (deletedRecord.isSame(deletedRecord)) {
               iterator.remove();
@@ -1788,7 +1801,7 @@ AddGeometryCompleteAction {
       if (isHasChanges()) {
         final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
         try (
-            EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
           doSaveChanges(errors);
         } finally {
           fireRecordsChanged();
@@ -1804,7 +1817,7 @@ AddGeometryCompleteAction {
       boolean allSaved;
       final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
       try (
-          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
         for (final LayerRecord record : records) {
           try {
             if (isLayerRecord(record)) {
@@ -1829,7 +1842,7 @@ AddGeometryCompleteAction {
       boolean allSaved;
       final RecordSaveErrorTableModel errors = new RecordSaveErrorTableModel(this);
       try (
-          EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
+        EventsEnabledState eventsEnabled = EventsEnabledState.disabled(this)) {
         try {
           final boolean saved = internalSaveChanges(errors, record);
           if (!saved) {
@@ -1883,10 +1896,8 @@ AddGeometryCompleteAction {
         if (editable == false) {
           firePropertyChange("preEditable", false, true);
           if (isHasChanges()) {
-            final Integer result = InvokeMethodCallable.invokeAndWait(
-              JOptionPane.class,
-              "showConfirmDialog",
-              JOptionPane.getRootFrame(),
+            final Integer result = InvokeMethodCallable.invokeAndWait(JOptionPane.class,
+              "showConfirmDialog", JOptionPane.getRootFrame(),
               "The layer has unsaved changes. Click Yes to save changes. Click No to discard changes. Click Cancel to continue editing.",
               "Save Changes", JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -1945,8 +1956,8 @@ AddGeometryCompleteAction {
       if (value instanceof Map) {
         @SuppressWarnings("unchecked")
         final Map<String, Object> style = (Map<String, Object>)value;
-        final LayerRenderer<AbstractRecordLayer> renderer = AbstractRecordLayerRenderer.getRenderer(
-          this, style);
+        final LayerRenderer<AbstractRecordLayer> renderer = AbstractRecordLayerRenderer
+          .getRenderer(this, style);
         if (renderer != null) {
           setRenderer(renderer);
         }
@@ -2081,9 +2092,10 @@ AddGeometryCompleteAction {
       }
     } else {
       final Window window = SwingUtil.getActiveWindow();
-      JOptionPane.showMessageDialog(window, "Adding records is not enabled for the " + getPath()
-        + " layer. If possible make the layer editable", "Cannot Add Record",
-        JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(window,
+        "Adding records is not enabled for the " + getPath()
+          + " layer. If possible make the layer editable",
+        "Cannot Add Record", JOptionPane.ERROR_MESSAGE);
       return null;
     }
 
@@ -2180,7 +2192,8 @@ AddGeometryCompleteAction {
     });
   }
 
-  public List<LayerRecord> splitRecord(final LayerRecord record, final CloseLocation mouseLocation) {
+  public List<LayerRecord> splitRecord(final LayerRecord record,
+    final CloseLocation mouseLocation) {
 
     final Geometry geometry = mouseLocation.getGeometry();
     if (geometry instanceof LineString) {
@@ -2196,15 +2209,16 @@ AddGeometryCompleteAction {
       if (vertexIndex == null) {
         final int pointIndex = mouseLocation.getSegmentIndex()[0];
         line1 = LineStringUtil.subLineString(line, null, 0, pointIndex + 1, coordinates);
-        line2 = LineStringUtil.subLineString(line, coordinates, pointIndex + 1, numPoints
-          - pointIndex - 1, null);
+        line2 = LineStringUtil.subLineString(line, coordinates, pointIndex + 1,
+          numPoints - pointIndex - 1, null);
       } else {
         final int pointIndex = vertexIndex[0];
         if (numPoints - pointIndex < 2) {
           return Collections.singletonList(record);
         } else {
           line1 = LineStringUtil.subLineString(line, pointIndex + 1);
-          line2 = LineStringUtil.subLineString(line, null, pointIndex, numPoints - pointIndex, null);
+          line2 = LineStringUtil.subLineString(line, null, pointIndex, numPoints - pointIndex,
+            null);
         }
 
       }
@@ -2375,7 +2389,7 @@ AddGeometryCompleteAction {
     final Project project = getProject();
     final GeometryFactory geometryFactory = project.getGeometryFactory();
     final BoundingBox boundingBox = getSelectedBoundingBox().convert(geometryFactory)
-        .expandPercent(0.1);
+      .expandPercent(0.1);
     project.setViewBoundingBox(boundingBox);
   }
 }
