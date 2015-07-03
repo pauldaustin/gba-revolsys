@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectUtil;
 
 public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
   private String sourceAttributeName;
@@ -48,7 +48,7 @@ public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
 
   @Override
   public void process(final Record source, final Record target) {
-    final Object sourceValue = DataObjectUtil.getAttributeByPath(source, this.sourceAttributeName);
+    final Object sourceValue = Records.getAttributeByPath(source, this.sourceAttributeName);
     if (sourceValue != null) {
       final Object targetValue = this.valueMap.get(sourceValue);
       if (targetValue != null) {

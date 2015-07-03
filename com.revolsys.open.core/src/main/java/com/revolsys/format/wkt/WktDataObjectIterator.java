@@ -7,13 +7,13 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.iterator.AbstractIterator;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -33,7 +33,7 @@ public class WktDataObjectIterator extends AbstractIterator<Record> implements R
     throws IOException {
     this.factory = factory;
     this.in = new BufferedReader(FileUtil.createUtf8Reader(resource.getInputStream()));
-    this.metaData = DataObjectUtil.createGeometryMetaData();
+    this.metaData = Records.createGeometryMetaData();
   }
 
   @Override

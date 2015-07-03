@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.revolsys.converter.string.BooleanStringConverter;
+import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -17,7 +18,6 @@ import com.revolsys.format.esri.gdb.xml.model.enums.FieldType;
 import com.revolsys.format.esri.gdb.xml.model.enums.GeometryType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldType;
 import com.revolsys.format.esri.gdb.xml.type.EsriGeodatabaseXmlFieldTypeRegistry;
-import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.Path;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.CollectionUtil;

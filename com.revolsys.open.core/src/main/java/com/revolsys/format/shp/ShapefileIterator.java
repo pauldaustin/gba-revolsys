@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.iterator.AbstractIterator;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.RecordIterator;
@@ -20,7 +21,6 @@ import com.revolsys.data.types.DataTypes;
 import com.revolsys.format.xbase.XbaseIterator;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
-import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.io.EndianInputStream;
 import com.revolsys.gis.io.EndianMappedByteBuffer;
 import com.revolsys.gis.io.LittleEndianRandomAccessFile;
@@ -141,7 +141,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements Recor
           this.xbaseIterator.hasNext();
         }
         if (this.metaData == null) {
-          this.metaData = DataObjectUtil.createGeometryMetaData();
+          this.metaData = Records.createGeometryMetaData();
         }
         this.metaData.setGeometryFactory(this.geometryFactory);
       } catch (final IOException e) {

@@ -5,10 +5,10 @@ import java.nio.charset.Charset;
 
 import org.springframework.core.io.Resource;
 
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.DataObjectWriterGeometryWriter;
-import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.gis.geometry.io.GeometryWriterFactory;
 import com.revolsys.io.Writer;
 import com.vividsolutions.jts.geom.Geometry;
@@ -23,14 +23,14 @@ public abstract class AbstractRecordAndGeometryWriterFactory extends AbstractRec
 
   @Override
   public Writer<Geometry> createGeometryWriter(final Resource resource) {
-    final RecordDefinition metaData = DataObjectUtil.createGeometryMetaData();
+    final RecordDefinition metaData = Records.createGeometryMetaData();
     final Writer<Record> dataObjectWriter = createRecordWriter(metaData, resource);
     return createGeometryWriter(dataObjectWriter);
   }
 
   @Override
   public Writer<Geometry> createGeometryWriter(final String baseName, final OutputStream out) {
-    final RecordDefinition metaData = DataObjectUtil.createGeometryMetaData();
+    final RecordDefinition metaData = Records.createGeometryMetaData();
     final Writer<Record> dataObjectWriter = createRecordWriter(baseName, metaData, out);
     return createGeometryWriter(dataObjectWriter);
   }
@@ -38,7 +38,7 @@ public abstract class AbstractRecordAndGeometryWriterFactory extends AbstractRec
   @Override
   public Writer<Geometry> createGeometryWriter(final String baseName, final OutputStream out,
     final Charset charset) {
-    final RecordDefinition metaData = DataObjectUtil.createGeometryMetaData();
+    final RecordDefinition metaData = Records.createGeometryMetaData();
     final Writer<Record> dataObjectWriter = createRecordWriter(baseName, metaData, out, charset);
     return createGeometryWriter(dataObjectWriter);
   }

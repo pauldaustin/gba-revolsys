@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.RecordMapEntry;
 
 public class DataObjectMap extends AbstractMap<String, Object> {
   private Record object;
@@ -50,7 +51,7 @@ public class DataObjectMap extends AbstractMap<String, Object> {
     if (this.entries == null) {
       this.entries = new LinkedHashSet<Entry<String, Object>>();
       for (int i = 0; i < size(); i++) {
-        final DataObjectMapEntry entry = new DataObjectMapEntry(this.object, i);
+        final RecordMapEntry entry = new RecordMapEntry(this.object, i);
         this.entries.add(entry);
       }
     }

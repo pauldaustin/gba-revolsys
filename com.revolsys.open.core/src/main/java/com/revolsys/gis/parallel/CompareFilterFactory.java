@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.filter.AttributesEqualFilter;
+import com.revolsys.data.record.filter.AttributesEqualOrNullFilter;
 import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Factory;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.filter.AttributesEqualFilter;
-import com.revolsys.gis.data.model.filter.AttributesEqualOrNullFilter;
 
 public class CompareFilterFactory implements Factory<Filter<Record>, Record> {
   private List<String> equalAttributeNames = new ArrayList<String>();

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
@@ -11,7 +12,6 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
-import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.gis.esri.gdb.file.test.field.BinaryField;
 import com.revolsys.gis.esri.gdb.file.test.field.DoubleField;
 import com.revolsys.gis.esri.gdb.file.test.field.FgdbField;

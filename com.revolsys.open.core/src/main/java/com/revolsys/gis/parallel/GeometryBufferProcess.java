@@ -1,7 +1,7 @@
 package com.revolsys.gis.parallel;
 
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 import com.vividsolutions.jts.geom.Geometry;
@@ -21,7 +21,7 @@ public class GeometryBufferProcess extends BaseInOutProcess<Record, Record> {
       out.write(object);
     } else {
       final Geometry bufferedGeometry = geometry.buffer(this.buffer);
-      final Record newObject = DataObjectUtil.copy(object, bufferedGeometry);
+      final Record newObject = Records.copy(object, bufferedGeometry);
       out.write(newObject);
     }
   }

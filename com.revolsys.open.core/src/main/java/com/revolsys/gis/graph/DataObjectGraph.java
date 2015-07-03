@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.revolsys.data.record.Records;
+import com.revolsys.data.record.filter.DataObjectGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.DirectionalAttributes;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.data.model.DataObjectUtil;
-import com.revolsys.gis.data.model.filter.DataObjectGeometryFilter;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
@@ -62,7 +62,7 @@ public class DataObjectGraph extends Graph<Record> {
     if (object == null) {
       return null;
     } else {
-      return DataObjectUtil.copy(object, line);
+      return Records.copy(object, line);
     }
   }
 

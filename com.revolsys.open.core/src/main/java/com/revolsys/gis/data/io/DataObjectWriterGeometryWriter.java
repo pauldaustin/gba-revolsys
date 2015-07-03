@@ -2,10 +2,10 @@ package com.revolsys.gis.data.io;
 
 import java.util.Map;
 
+import com.revolsys.data.record.ArrayRecord;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.ArrayRecord;
-import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.Writer;
 import com.vividsolutions.jts.geom.Geometry;
@@ -44,7 +44,7 @@ public class DataObjectWriterGeometryWriter extends AbstractWriter<Geometry> {
 
   @Override
   public void write(final Geometry geometry) {
-    final RecordDefinition metaData = DataObjectUtil.createGeometryMetaData();
+    final RecordDefinition metaData = Records.createGeometryMetaData();
     final Record object = new ArrayRecord(metaData);
     object.setGeometryValue(geometry);
     this.writer.write(object);

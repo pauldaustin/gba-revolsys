@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.DataObjectUtil;
 import com.revolsys.util.CompareUtil;
 
 public class DataObjectAttributeComparator implements Comparator<Record> {
@@ -44,8 +44,8 @@ public class DataObjectAttributeComparator implements Comparator<Record> {
   }
 
   public int compare(final Record object1, final Record object2, final String attributeName) {
-    final Comparable<Object> value1 = DataObjectUtil.getAttributeByPath(object1, attributeName);
-    final Comparable<Object> value2 = DataObjectUtil.getAttributeByPath(object2, attributeName);
+    final Comparable<Object> value1 = Records.getAttributeByPath(object1, attributeName);
+    final Comparable<Object> value2 = Records.getAttributeByPath(object2, attributeName);
     if (value1 == null) {
       if (value2 == null) {
         return 0;

@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.Reader;
 

@@ -11,7 +11,6 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.data.model.ArrayRecord;
 import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
 

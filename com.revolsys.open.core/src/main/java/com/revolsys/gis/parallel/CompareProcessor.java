@@ -5,6 +5,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.revolsys.data.record.Records;
+import com.revolsys.data.record.filter.DataObjectGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -15,8 +17,6 @@ import com.revolsys.filter.FilterUtil;
 import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
 import com.revolsys.gis.algorithm.index.PointDataObjectMap;
 import com.revolsys.gis.algorithm.linematch.LineMatchGraph;
-import com.revolsys.gis.data.model.DataObjectUtil;
-import com.revolsys.gis.data.model.filter.DataObjectGeometryFilter;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.filter.LineEqualIgnoreDirectionFilter;
 import com.revolsys.gis.jts.filter.LineIntersectsFilter;
@@ -269,7 +269,7 @@ public class CompareProcessor extends AbstractMergeProcess {
           } else {
             for (int j = 0; j < nonMatchedLines.getNumGeometries(); j++) {
               final Geometry newGeometry = nonMatchedLines.getGeometryN(j);
-              final Record newObject = DataObjectUtil.copy(sourceObject, newGeometry);
+              final Record newObject = Records.copy(sourceObject, newGeometry);
               addSourceObject(newObject);
             }
           }
@@ -279,7 +279,7 @@ public class CompareProcessor extends AbstractMergeProcess {
           final MultiLineString otherNonMatched = graph.getNonMatchedLines(i + 1, 0);
           for (int j = 0; j < otherNonMatched.getNumGeometries(); j++) {
             final Geometry newGeometry = otherNonMatched.getGeometryN(j);
-            final Record newOtherObject = DataObjectUtil.copy(otherObject, newGeometry);
+            final Record newOtherObject = Records.copy(otherObject, newGeometry);
             addOtherObject(newOtherObject);
           }
           removeOtherObject(otherObject);
