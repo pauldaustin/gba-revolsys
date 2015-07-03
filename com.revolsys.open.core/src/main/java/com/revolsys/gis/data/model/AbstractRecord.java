@@ -8,8 +8,8 @@ import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 
-public abstract class AbstractRecord extends AbstractMap<String, Object> implements Record,
-  Cloneable, Serializable {
+public abstract class AbstractRecord extends AbstractMap<String, Object>
+  implements Record, Cloneable, Serializable {
   private static final long serialVersionUID = 1L;
 
   /**
@@ -20,9 +20,9 @@ public abstract class AbstractRecord extends AbstractMap<String, Object> impleme
   @Override
   public AbstractRecord clone() {
     try {
-      final AbstractRecord newObject = (AbstractRecord)super.clone();
-      newObject.setState(RecordState.New);
-      return newObject;
+      final AbstractRecord newRecord = (AbstractRecord)super.clone();
+      newRecord.setState(RecordState.New);
+      return newRecord;
     } catch (final CloneNotSupportedException e) {
       throw new RuntimeException("Unable to clone", e);
     }

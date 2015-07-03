@@ -54,7 +54,7 @@ public class MergedRecordsTableModel extends RecordListTableModel implements Sor
     }
   }
 
-  public Record getMergedObject() {
+  public Record getMergedRecord() {
     return this.mergedObject;
   }
 

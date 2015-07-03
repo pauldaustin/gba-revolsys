@@ -286,8 +286,8 @@ public abstract class BaseRecord extends AbstractRecord {
       final int index = this.recordDefinition.getFieldIndex(name);
       return (T)getValue(index);
     } catch (final NullPointerException e) {
-      LoggerFactory.getLogger(getClass()).warn(
-        "Attribute " + this.recordDefinition.getPath() + "." + name + " does not exist");
+      LoggerFactory.getLogger(getClass())
+        .warn("Attribute " + this.recordDefinition.getPath() + "." + name + " does not exist");
       return null;
     }
   }
@@ -472,7 +472,8 @@ public abstract class BaseRecord extends AbstractRecord {
           if (attributeType != null) {
             if (attributeType.getJavaClass() == Record.class) {
               final String typePath = attributeType.getName();
-              final RecordDefinitionFactory metaDataFactory = this.recordDefinition.getRecordDefinitionFactory();
+              final RecordDefinitionFactory metaDataFactory = this.recordDefinition
+                .getRecordDefinitionFactory();
               final RecordDefinition subMetaData = metaDataFactory.getRecordDefinition(typePath);
               final RecordFactory dataObjectFactory = subMetaData.getRecordFactory();
               final Record subObject = dataObjectFactory.createRecord(subMetaData);
@@ -512,11 +513,12 @@ public abstract class BaseRecord extends AbstractRecord {
       codeTableAttributeName = name.substring(0, dotIndex);
       codeTableValueName = name.substring(dotIndex + 1);
     }
-    final CodeTable codeTable = this.recordDefinition.getCodeTableByFieldName(codeTableAttributeName);
+    final CodeTable codeTable = this.recordDefinition
+      .getCodeTableByFieldName(codeTableAttributeName);
     if (codeTable == null) {
       if (dotIndex != -1) {
-        LoggerFactory.getLogger(getClass()).debug(
-          "Cannot get code table for " + this.recordDefinition.getPath() + "." + name);
+        LoggerFactory.getLogger(getClass())
+          .debug("Cannot get code table for " + this.recordDefinition.getPath() + "." + name);
         return;
       }
       setValue(name, value);
@@ -551,9 +553,10 @@ public abstract class BaseRecord extends AbstractRecord {
   }
 
   @Override
-  public void setValues(final Map<String, ? extends Object> values) {
+  public void setValues(final Map<? extends String, ? extends Object> values) {
     if (values != null) {
-      for (final Entry<String, Object> entry : new LinkedHashMap<String, Object>(values).entrySet()) {
+      for (final Entry<? extends String, ? extends Object> entry : new ArrayList<>(
+        values.entrySet())) {
         final String name = entry.getKey();
         final Object value = entry.getValue();
         setValue(name, value);
@@ -562,19 +565,19 @@ public abstract class BaseRecord extends AbstractRecord {
   }
 
   @Override
-  public void setValues(final Record object) {
+  public void setValues(final Record record) {
     for (final String name : this.recordDefinition.getFieldNames()) {
-      final Object value = JavaBeanUtil.clone(object.getValue(name));
+      final Object value = JavaBeanUtil.clone(record.getValue(name));
       setValue(name, value);
     }
-    setGeometryValue(JavaBeanUtil.clone(object.getGeometryValue()));
+    setGeometryValue(JavaBeanUtil.clone(record.getGeometryValue()));
   }
 
   @Override
-  public void setValues(final Record object, final Collection<String> attributesNames) {
-    for (final String attributeName : attributesNames) {
+  public void setValues(final Record record, final Collection<String> fieldNames) {
+    for (final String attributeName : fieldNames) {
       final Object oldValue = getValue(attributeName);
-      Object newValue = object.getValue(attributeName);
+      Object newValue = record.getValue(attributeName);
       if (!EqualsInstance.INSTANCE.equals(oldValue, newValue)) {
         newValue = JavaBeanUtil.clone(newValue);
         setValue(attributeName, newValue);
@@ -585,7 +588,8 @@ public abstract class BaseRecord extends AbstractRecord {
   @Override
   public void setValuesByPath(final Map<String, ? extends Object> values) {
     if (values != null) {
-      for (final Entry<String, Object> defaultValue : new LinkedHashMap<String, Object>(values).entrySet()) {
+      for (final Entry<String, Object> defaultValue : new LinkedHashMap<String, Object>(values)
+        .entrySet()) {
         final String name = defaultValue.getKey();
         final Object value = defaultValue.getValue();
         setValueByPath(name, value);

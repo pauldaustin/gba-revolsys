@@ -9,9 +9,9 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public interface Record extends Map<String, Object>, Comparable<Record> {
   /**
-   * Create a clone of the data object.
+   * Create a clone of the data record.
    *
-   * @return The data object.
+   * @return The data record.
    */
   Record clone();
 
@@ -145,14 +145,14 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   <T> T setValueByPath(CharSequence attributePath, Record source, String sourceAttributePath);
 
-  void setValues(Map<String, ? extends Object> values);
+  void setValues(Map<? extends String, ? extends Object> values);
 
-  void setValues(final Record object);
+  void setValues(final Record record);
 
-  void setValues(Record object, Collection<String> attributeNames);
+  void setValues(Record record, Collection<String> fieldNames);
 
   /**
-   * Set the values on the object based on the values in the map.
+   * Set the values on the record based on the values in the map.
    *
    * @param values The values to set.
    */

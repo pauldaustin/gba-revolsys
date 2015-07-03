@@ -29,7 +29,6 @@ import org.jdesktop.swingx.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.beans.EventsEnabler;
 import com.revolsys.beans.KeyedPropertyChangeEvent;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.BooleanStringConverter;
@@ -59,9 +58,11 @@ import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
+import com.revolsys.util.enableable.Enabled;
+import com.revolsys.util.enableable.ThreadEnableable;
 
-public abstract class AbstractLayer extends AbstractObjectWithProperties implements Layer,
-  PropertyChangeListener, PropertyChangeSupportProxy, EventsEnabler, ProjectFramePanel {
+public abstract class AbstractLayer extends AbstractObjectWithProperties
+  implements Layer, PropertyChangeListener, PropertyChangeSupportProxy, ProjectFramePanel {
   private static final AtomicLong ID_GEN = new AtomicLong();
 
   static {
@@ -99,7 +100,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
 
   private boolean queryable = true;
 
-  private final ThreadLocal<Boolean> eventsEnabled = new ThreadLocal<Boolean>();
+  private final ThreadEnableable eventsEnabled = new ThreadEnableable();
 
   private boolean querySupported = true;
 
@@ -149,14 +150,13 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
         extentPanel.add(new JLabel("Unknown"));
 
       } else {
-        extentPanel.add(new JLabel(
-          "<html><table cellspacing=\"3\" style=\"margin:0px\">"
-            + "<tr><td>&nbsp;</td><th style=\"text-align:left\">Top:</th><td style=\"text-align:right\">"
-            + boundingBox.getMaximumY() + "</td><td>&nbsp;</td></tr><tr>" + "<td><b>Left</b>: "
-            + boundingBox.getMinimumX() + "</td><td>&nbsp;</td><td>&nbsp;</td>"
-            + "<td><b>Right</b>: " + boundingBox.getMaximumX() + "</td></tr>"
-            + "<tr><td>&nbsp;</td><th>Bottom:</th><td style=\"text-align:right\">"
-            + boundingBox.getMinimumY() + "</td><td>&nbsp;</td></tr><tr>" + "</tr></table></html>"));
+        extentPanel.add(new JLabel("<html><table cellspacing=\"3\" style=\"margin:0px\">"
+          + "<tr><td>&nbsp;</td><th style=\"text-align:left\">Top:</th><td style=\"text-align:right\">"
+          + boundingBox.getMaximumY() + "</td><td>&nbsp;</td></tr><tr>" + "<td><b>Left</b>: "
+          + boundingBox.getMinimumX() + "</td><td>&nbsp;</td><td>&nbsp;</td>" + "<td><b>Right</b>: "
+          + boundingBox.getMaximumX() + "</td></tr>"
+          + "<tr><td>&nbsp;</td><th>Bottom:</th><td style=\"text-align:right\">"
+          + boundingBox.getMinimumY() + "</td><td>&nbsp;</td></tr><tr>" + "</tr></table></html>"));
 
       }
       GroupLayoutUtil.makeColumns(extentPanel, 1, true);
@@ -188,7 +188,8 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
           }
         }
 
-        final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
+        final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems
+          .getCoordinateSystem(coordinateSystem);
         SwingUtil.addLabel(coordinateSystemPanel, "ESRI WKT");
         final TextArea wktTextArea = new TextArea(EsriCsWktWriter.toString(esriCoordinateSystem),
           10, 80);
@@ -310,7 +311,7 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
       projectFrame.removeBottomTab(this);
     }
     firePropertyChange("deleted", false, true);
-    setEventsEnabled(false);
+    this.eventsEnabled.disabled();
     final LayerGroup layerGroup = getLayerGroup();
     if (layerGroup != null) {
       layerGroup.remove(this);
@@ -344,6 +345,14 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
     final File settingsFile = new File(directory, settingsFileName);
     MapObjectFactoryRegistry.write(settingsFile, this);
     return true;
+  }
+
+  public Enabled eventsDisabled() {
+    return this.eventsEnabled.disabled();
+  }
+
+  public Enabled eventsEnabled() {
+    return this.eventsEnabled.enabled();
   }
 
   protected void fireIndexedPropertyChange(final String propertyName, final int index,
@@ -535,18 +544,8 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
     return isVisible(scale) && isEditable();
   }
 
-  @Override
   public boolean isEventsEnabled() {
-    if (this.eventsEnabled.get() != Boolean.FALSE) {
-      final LayerGroup layerGroup = getLayerGroup();
-      if (layerGroup == null || layerGroup == this) {
-        return true;
-      } else {
-        return layerGroup.isEventsEnabled();
-      }
-    } else {
-      return false;
-    }
+    return this.eventsEnabled.isEnabled();
   }
 
   @Override
@@ -663,17 +662,6 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
     final boolean old = isEditable();
     this.editable = editable;
     firePropertyChange("editable", old, isEditable());
-  }
-
-  @Override
-  public boolean setEventsEnabled(final boolean eventsEnabled) {
-    final boolean oldValue = this.eventsEnabled.get() != Boolean.FALSE;
-    if (eventsEnabled) {
-      this.eventsEnabled.set(null);
-    } else {
-      this.eventsEnabled.set(Boolean.FALSE);
-    }
-    return oldValue;
   }
 
   public void setExists(final boolean exists) {
@@ -906,7 +894,8 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties impleme
     MapSerializerUtil.add(map, "maximumScale", this.maximumScale);
     MapSerializerUtil.add(map, "minimumScale", this.minimumScale);
     MapSerializerUtil.add(map, "style", this.renderer);
-    final Map<String, Object> properties = (Map<String, Object>)MapSerializerUtil.getValue(getProperties());
+    final Map<String, Object> properties = (Map<String, Object>)MapSerializerUtil
+      .getValue(getProperties());
     if (properties != null) {
       for (final Entry<String, Object> entry : properties.entrySet()) {
         final String name = entry.getKey();

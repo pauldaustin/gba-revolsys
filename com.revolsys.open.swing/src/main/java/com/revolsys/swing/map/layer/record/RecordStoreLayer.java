@@ -48,6 +48,7 @@ import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
 import com.revolsys.util.Property;
+import com.revolsys.util.enableable.Enabled;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
@@ -83,7 +84,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     setType("dataStore");
   }
 
-  public RecordStoreLayer(final RecordStore dataStore, final String typePath, final boolean exists) {
+  public RecordStoreLayer(final RecordStore dataStore, final String typePath,
+    final boolean exists) {
     this.recordStore = dataStore;
     setExists(exists);
     setType("dataStore");
@@ -291,10 +293,9 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     if (dataStore == null) {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties == null) {
-        LoggerFactory.getLogger(getClass())
-          .error(
-            "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
-              + getPath());
+        LoggerFactory.getLogger(getClass()).error(
+          "A data store layer requires a connectionProperties entry with a name or url, username, and password: "
+            + getPath());
         return false;
       } else {
         final Map<String, Object> config = new HashMap<String, Object>();
@@ -302,8 +303,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
         dataStore = RecordStoreConnectionManager.getRecordStore(config);
 
         if (dataStore == null) {
-          LoggerFactory.getLogger(getClass()).error(
-            "Unable to create data store for layer: " + getPath());
+          LoggerFactory.getLogger(getClass())
+            .error("Unable to create data store for layer: " + getPath());
           return false;
         } else {
           try {
@@ -320,8 +321,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     if (metaData == null) {
       metaData = dataStore.getRecordDefinition(this.typePath);
       if (metaData == null) {
-        LoggerFactory.getLogger(getClass()).error(
-          "Cannot find table " + this.typePath + " for layer " + getPath());
+        LoggerFactory.getLogger(getClass())
+          .error("Cannot find table " + this.typePath + " for layer " + getPath());
         return false;
       } else {
         setRecordDefinition(metaData);
@@ -338,8 +339,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   })
   @Override
   protected List<LayerRecord> doQuery(final BoundingBox boundingBox) {
-    final boolean enabled = setEventsEnabled(false);
-    try {
+    try (
+      Enabled enabled = eventsDisabled()) {
       final GeometryFactory geometryFactory = getGeometryFactory();
       final BoundingBox queryBoundingBox = boundingBox.convert(geometryFactory);
       if (this.boundingBox.contains(queryBoundingBox)) {
@@ -349,8 +350,6 @@ public class RecordStoreLayer extends AbstractRecordLayer {
         final List<LayerRecord> records = getCachedRecords(readRecords);
         return records;
       }
-    } finally {
-      setEventsEnabled(enabled);
     }
   }
 
@@ -359,8 +358,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   })
   @Override
   public List<LayerRecord> doQuery(final Geometry geometry, final double distance) {
-    final boolean enabled = setEventsEnabled(false);
-    try {
+    try (
+      Enabled enabled = eventsDisabled()) {
       final GeometryFactory geometryFactory = getGeometryFactory();
       final Geometry queryGeometry = geometryFactory.copy(geometry);
       BoundingBox boundingBox = BoundingBox.getBoundingBox(queryGeometry);
@@ -375,8 +374,6 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       } finally {
         reader.close();
       }
-    } finally {
-      setEventsEnabled(enabled);
     }
   }
 
@@ -388,8 +385,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     if (isExists()) {
       final RecordStore dataStore = getRecordStore();
       if (dataStore != null) {
-        final boolean enabled = setEventsEnabled(false);
-        try {
+        try (
+          Enabled enabled = eventsDisabled()) {
           final Statistics statistics = query.getProperty("statistics");
           query.setProperty("recordFactory", this);
           final Reader<LayerRecord> reader = (Reader)dataStore.query(query);
@@ -406,8 +403,6 @@ public class RecordStoreLayer extends AbstractRecordLayer {
           } finally {
             reader.close();
           }
-        } finally {
-          setEventsEnabled(enabled);
         }
       }
     }
@@ -456,11 +451,13 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   }
 
   @Override
-  protected boolean doSaveChanges(final RecordSaveErrorTableModel errors, final LayerRecord record) {
+  protected boolean doSaveChanges(final RecordSaveErrorTableModel errors,
+    final LayerRecord record) {
     final boolean deleted = isDeleted(record);
 
     if (isExists()) {
-      final PlatformTransactionManager transactionManager = this.recordStore.getTransactionManager();
+      final PlatformTransactionManager transactionManager = this.recordStore
+        .getTransactionManager();
       try (
         Transaction transaction = new Transaction(transactionManager, Propagation.REQUIRES_NEW)) {
         try {
@@ -521,7 +518,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     }
   }
 
-  protected <V extends LayerRecord> List<V> getCachedRecords(final Collection<? extends V> records) {
+  protected <V extends LayerRecord> List<V> getCachedRecords(
+    final Collection<? extends V> records) {
     final List<V> cachedRecords = new ArrayList<V>();
     for (final V record : records) {
       addCachedRecord(cachedRecords, record);
