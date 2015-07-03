@@ -12,11 +12,11 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
 
-public class DataObjectLayerTableRowSorter extends TableSortController<RecordLayerTableModel> {
+public class RecordLayerTableRowSorter extends TableSortController<RecordLayerTableModel> {
 
   private final AbstractRecordLayer layer;
 
-  public DataObjectLayerTableRowSorter(final AbstractRecordLayer layer,
+  public RecordLayerTableRowSorter(final AbstractRecordLayer layer,
     final RecordLayerTableModel model) {
     super(model);
     this.layer = layer;

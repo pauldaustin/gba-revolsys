@@ -24,7 +24,7 @@ public class RecordLayerTable extends RecordRowTable {
   protected RowSorter<? extends TableModel> createDefaultRowSorter() {
     final AbstractRecordLayer layer = getLayer();
     final RecordLayerTableModel model = (RecordLayerTableModel)getTableModel();
-    return new DataObjectLayerTableRowSorter(layer, model);
+    return new RecordLayerTableRowSorter(layer, model);
   }
 
   @SuppressWarnings("unchecked")

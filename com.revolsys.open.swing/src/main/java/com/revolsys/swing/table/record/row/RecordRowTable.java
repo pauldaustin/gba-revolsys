@@ -60,7 +60,7 @@ public class RecordRowTable extends BaseJxTable implements MouseListener {
 
   }
 
-  public RecordDefinition getMetaData() {
+  public RecordDefinition getRecordDefinition() {
     final RecordRowTableModel model = (RecordRowTableModel)getModel();
     return model.getRecordDefinition();
   }
@@ -118,11 +118,11 @@ public class RecordRowTable extends BaseJxTable implements MouseListener {
   public void mouseClicked(final MouseEvent e) {
     if (e.getSource() == getTableHeader()) {
       final RecordRowTableModel model = (RecordRowTableModel)getModel();
-      final RecordDefinition metaData = model.getRecordDefinition();
+      final RecordDefinition recordDefinition = model.getRecordDefinition();
       final int column = columnAtPoint(e.getPoint());
       if (column > -1 && SwingUtilities.isLeftMouseButton(e)) {
         final int index = convertColumnIndexToModel(column);
-        final Class<?> attributeClass = metaData.getFieldClass(index);
+        final Class<?> attributeClass = recordDefinition.getFieldClass(index);
         if (!Geometry.class.isAssignableFrom(attributeClass)) {
           model.setSortOrder(index);
         }

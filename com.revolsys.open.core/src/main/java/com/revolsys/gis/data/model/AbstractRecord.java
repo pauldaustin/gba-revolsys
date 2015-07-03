@@ -2,10 +2,11 @@ package com.revolsys.gis.data.model;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
-import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 
 public abstract class AbstractRecord extends AbstractMap<String, Object>
@@ -28,18 +29,51 @@ public abstract class AbstractRecord extends AbstractMap<String, Object>
     }
   }
 
-  public FieldDefinition getFieldDefinition(final int fieldIndex) {
+  @Override
+  public Set<Entry<String, Object>> entrySet() {
     final RecordDefinition recordDefinition = getRecordDefinition();
-    return recordDefinition.getField(fieldIndex);
+    final Set<Entry<String, Object>> entries = new LinkedHashSet<Entry<String, Object>>();
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+      entries.add(new RecordEntry(this, i));
+    }
+    return entries;
   }
 
   @Override
-  public void validateField(final int fieldIndex) {
-    final FieldDefinition field = getFieldDefinition(fieldIndex);
-    if (field != null) {
-      final Object value = getValue(fieldIndex);
-      field.validate(this, value);
-    }
+  public boolean equals(final Object o) {
+    return this == o;
   }
 
+  /**
+   * Return a String representation of the Object. There is no guarantee as to
+   * the format of this string.
+   *
+   * @return The string value.
+   */
+  @Override
+  public String toString() {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final StringBuffer s = new StringBuffer();
+    s.append(recordDefinition.getPath()).append("(\n");
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+      final Object value = getValue(i);
+      if (value != null) {
+        String fieldName = recordDefinition.getFieldName(i);
+        s.append(fieldName).append('=').append(value).append('\n');
+      }
+    }
+    s.append(')');
+    return s.toString();
+  }
+
+  @SuppressWarnings("incomplete-switch")
+  protected void updateState() {
+    switch (getState()) {
+      case Persisted:
+        setState(RecordState.Modified);
+      break;
+      case Deleted:
+        throw new IllegalStateException("Cannot modify a record which has been deleted");
+    }
+  }
 }

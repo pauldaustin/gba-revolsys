@@ -20,12 +20,12 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class AbstractRecordTableModel extends AbstractTableModel implements
-  PropertyChangeSupportProxy {
+public abstract class AbstractRecordTableModel extends AbstractTableModel
+  implements PropertyChangeSupportProxy {
 
   private static final long serialVersionUID = 1L;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
   private Set<String> readOnlyFieldNames = new HashSet<String>();
 
@@ -37,8 +37,8 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel implem
     this(null);
   }
 
-  public AbstractRecordTableModel(final RecordDefinition metaData) {
-    this.metaData = metaData;
+  public AbstractRecordTableModel(final RecordDefinition recordDefinition) {
+    this.recordDefinition = recordDefinition;
   }
 
   public void addPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
@@ -53,7 +53,7 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel implem
 
   @PreDestroy
   public void dispose() {
-    this.metaData = null;
+    this.recordDefinition = null;
   }
 
   protected void firePropertyChange(final PropertyChangeEvent event) {
@@ -87,7 +87,7 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel implem
   }
 
   public RecordDefinition getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 
   public boolean isEditable() {
@@ -109,8 +109,8 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel implem
   }
 
   protected void setMetaData(final RecordDefinition metaData) {
-    if (metaData != this.metaData) {
-      this.metaData = metaData;
+    if (metaData != this.recordDefinition) {
+      this.recordDefinition = metaData;
       fireTableStructureChanged();
     }
   }

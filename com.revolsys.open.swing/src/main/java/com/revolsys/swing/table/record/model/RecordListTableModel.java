@@ -36,23 +36,24 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
     return createPanel(layer.getRecordDefinition(), objects, layer.getFieldNames());
   }
 
-  public static TablePanel createPanel(final RecordDefinition metaData,
+  public static TablePanel createPanel(final RecordDefinition recordDefinition,
     final Collection<LayerRecord> objects, final Collection<String> attributeNames) {
-    final RecordListTableModel model = new RecordListTableModel(metaData, objects, attributeNames);
+    final RecordListTableModel model = new RecordListTableModel(recordDefinition, objects,
+      attributeNames);
     final JTable table = new RecordRowTable(model);
     return new TablePanel(table);
   }
 
-  public static TablePanel createPanel(final RecordDefinition metaData,
+  public static TablePanel createPanel(final RecordDefinition recordDefinition,
     final List<LayerRecord> objects, final String... attributeNames) {
-    return createPanel(metaData, objects, Arrays.asList(attributeNames));
+    return createPanel(recordDefinition, objects, Arrays.asList(attributeNames));
   }
 
   private final List<LayerRecord> records = new ArrayList<LayerRecord>();
 
-  public RecordListTableModel(final RecordDefinition metaData,
+  public RecordListTableModel(final RecordDefinition recordDefinition,
     final Collection<LayerRecord> objects, final Collection<String> columnNames) {
-    super(metaData, columnNames);
+    super(recordDefinition, columnNames);
     if (objects != null) {
       this.records.addAll(objects);
     }
@@ -117,8 +118,8 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
       if (isReadOnly(attributeName)) {
         return false;
       } else {
-        final RecordDefinition metaData = getRecordDefinition();
-        final DataType dataType = metaData.getFieldType(attributeName);
+        final RecordDefinition recordDefinition = getRecordDefinition();
+        final DataType dataType = recordDefinition.getFieldType(attributeName);
         if (dataType == null) {
           return false;
         } else if (Geometry.class.isAssignableFrom(dataType.getJavaClass())) {
