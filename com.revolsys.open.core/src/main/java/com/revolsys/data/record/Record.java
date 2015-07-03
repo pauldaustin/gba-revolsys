@@ -35,14 +35,13 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   @Override
   @SuppressWarnings("unchecked")
-
   default int compareTo(final Record other) {
     if (this == other) {
       return 0;
     } else {
-      final int recordDefinitionompare = getRecordDefinition()
+      final int recordDefinitionCompare = getRecordDefinition()
         .compareTo(other.getRecordDefinition());
-      if (recordDefinitionompare == 0) {
+      if (recordDefinitionCompare == 0) {
         final Object id1 = getIdValue();
         final Object id2 = other.getIdValue();
         if (id1 instanceof Comparable<?>) {
@@ -67,7 +66,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
         }
         return -1;
       } else {
-        return recordDefinitionompare;
+        return recordDefinitionCompare;
       }
     }
 
@@ -75,16 +74,6 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   default void delete() {
     getRecordDefinition().delete(this);
-  }
-
-  @Override
-  default Object get(final Object key) {
-    if (key instanceof String) {
-      final String name = (String)key;
-      return getValue(name);
-    } else {
-      return null;
-    }
   }
 
   default String getAttributeTitle(final String name) {
@@ -366,13 +355,6 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
 
   default boolean isValid(final String attributeName) {
     return true;
-  }
-
-  @Override
-  default Object put(final String key, final Object value) {
-    final Object oldValue = getValue(key);
-    setValue(key, value);
-    return oldValue;
   }
 
   /**

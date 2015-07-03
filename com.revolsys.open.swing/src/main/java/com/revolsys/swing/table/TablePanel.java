@@ -1,7 +1,6 @@
 package com.revolsys.swing.table;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -87,11 +86,10 @@ public class TablePanel extends JPanel implements MouseListener {
       final TableCellEditor cellEditor = this.table.getCellEditor();
       if (cellEditor == null || cellEditor.stopCellEditing()) {
         popupMouseEvent = new WeakReference<MouseEvent>(e);
-        final int x = e.getX();
-        final int y = e.getY();
+        final int x = e.getXOnScreen() - getX();
+        final int y = e.getYOnScreen() - getY();
         final JPopupMenu popupMenu = this.menu.createJPopupMenu();
-        final Component component = e.getComponent();
-        popupMenu.show(component, x + 5, y);
+        popupMenu.show(this, x + 5, y);
       }
     }
   }

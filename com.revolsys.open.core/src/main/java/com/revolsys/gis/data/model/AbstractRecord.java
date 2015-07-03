@@ -44,6 +44,23 @@ public abstract class AbstractRecord extends AbstractMap<String, Object>
     return this == o;
   }
 
+  @Override
+  public Object get(final Object key) {
+    if (key instanceof String) {
+      final String name = (String)key;
+      return getValue(name);
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public Object put(final String key, final Object value) {
+    final Object oldValue = getValue(key);
+    setValue(key, value);
+    return oldValue;
+  }
+
   /**
    * Return a String representation of the Object. There is no guarantee as to
    * the format of this string.
@@ -58,7 +75,7 @@ public abstract class AbstractRecord extends AbstractMap<String, Object>
     for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
       final Object value = getValue(i);
       if (value != null) {
-        String fieldName = recordDefinition.getFieldName(i);
+        final String fieldName = recordDefinition.getFieldName(i);
         s.append(fieldName).append('=').append(value).append('\n');
       }
     }
