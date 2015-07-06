@@ -84,10 +84,17 @@ public class TablePanel extends JPanel implements MouseListener {
     if (eventRow > -1 && e.isPopupTrigger()) {
       e.consume();
       final TableCellEditor cellEditor = this.table.getCellEditor();
+      final int x;
+      final int y;
+      if (cellEditor == null) {
+        x = e.getX();
+        y = e.getY();
+      } else {
+        x = e.getXOnScreen() - getX();
+        y = e.getYOnScreen() - getY();
+      }
       if (cellEditor == null || cellEditor.stopCellEditing()) {
         popupMouseEvent = new WeakReference<MouseEvent>(e);
-        final int x = e.getXOnScreen() - getX();
-        final int y = e.getYOnScreen() - getY();
         final JPopupMenu popupMenu = this.menu.createJPopupMenu();
         popupMenu.show(this, x + 5, y);
       }
