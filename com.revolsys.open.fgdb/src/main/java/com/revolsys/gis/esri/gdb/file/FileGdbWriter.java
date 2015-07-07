@@ -131,8 +131,8 @@ public class FileGdbWriter extends AbstractRecordWriter {
               throw new ObjectPropertyException(record, field.getName(), e);
             }
           }
+          record.setState(RecordState.Persisted);
         }
-        record.setState(RecordState.Persisted);
       } finally {
         this.recordStore.closeRow(row);
         this.recordStore.addStatistic("Insert", record);
