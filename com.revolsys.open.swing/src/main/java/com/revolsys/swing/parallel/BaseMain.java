@@ -70,20 +70,30 @@ public class BaseMain implements UncaughtExceptionHandler {
     ToolTipManager.sharedInstance().setInitialDelay(100);
   }
 
+  public void logError(final Throwable e) {
+    final Logger logger = Logger.getLogger(getClass());
+    final LoggingEvent event = new LoggingEvent(logger.getClass().getName(), logger, Level.ERROR,
+      "Unable to start application", e);
+
+    LoggingEventPanel.showDialog(null, event);
+    ExceptionUtil.log(getClass(), "Unable to start application " + this.name, e);
+  }
+
   public void processArguments(final String[] args) {
   }
 
   public void run() {
     try {
       doPreRun();
-      Invoke.later(this, "doRun");
+      Invoke.later(() -> {
+        try {
+          doRun();
+        } catch (final Throwable e) {
+          logError(e);
+        }
+      });
     } catch (final Throwable e) {
-      final Logger logger = Logger.getLogger(getClass());
-      final LoggingEvent event = new LoggingEvent(logger.getClass().getName(), logger, Level.ERROR,
-        "Unable to start application", e);
-
-      LoggingEventPanel.showDialog(null, event);
-      ExceptionUtil.log(getClass(), "Unable to start application " + this.name, e);
+      logError(e);
     }
   }
 
