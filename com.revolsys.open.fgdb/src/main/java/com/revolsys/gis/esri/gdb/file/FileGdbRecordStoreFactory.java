@@ -1,6 +1,7 @@
 package com.revolsys.gis.esri.gdb.file;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,6 +14,7 @@ import com.revolsys.data.record.io.RecordStoreFactory;
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.FileUtil;
+import com.revolsys.io.Paths;
 
 public class FileGdbRecordStoreFactory implements RecordStoreFactory {
 
@@ -66,6 +68,16 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
         }
       }
     }
+  }
+
+  @Override
+  public boolean canOpen(final Path path) {
+    if (RecordStoreFactory.super.canOpen(path)) {
+      if (Paths.exists(Paths.getPath(path, "timestamps"))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override

@@ -118,11 +118,6 @@ public class PathRecordStoreTreeNode extends PathTreeNode
   }
 
   @Override
-  public Path getPath() {
-    return getUserData();
-  }
-
-  @Override
   @SuppressWarnings("unchecked")
   public <V extends RecordStore> V getRecordStore() {
     final Path path = getPath();

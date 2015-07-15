@@ -1,5 +1,6 @@
 package com.revolsys.data.record.io;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.io.Paths;
 
 public class RecordStoreFactoryRegistry {
 
@@ -68,7 +70,8 @@ public class RecordStoreFactoryRegistry {
     if (url == null) {
       throw new IllegalArgumentException("The url parameter must be specified");
     } else {
-      for (final Entry<Pattern, RecordStoreFactory> entry : recordStoreFactoryUrlPatterns.entrySet()) {
+      for (final Entry<Pattern, RecordStoreFactory> entry : recordStoreFactoryUrlPatterns
+        .entrySet()) {
         final Pattern pattern = entry.getKey();
         final RecordStoreFactory factory = entry.getValue();
         if (pattern.matcher(url).matches()) {
@@ -88,6 +91,18 @@ public class RecordStoreFactoryRegistry {
     } else {
       return factory.getRecordStoreInterfaceClass(connectionProperties);
     }
+  }
+
+  public static boolean isRecordStore(final Path path) {
+    final String fileExtension = Paths.getFileNameExtension(path);
+    if (fileExtensions.contains(fileExtension)) {
+      for (final RecordStoreFactory recordStoreFactory : fileRecordStoreFactories) {
+        if (recordStoreFactory.canOpen(path)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public static RecordStoreFactory register(final RecordStoreFactory factory) {
