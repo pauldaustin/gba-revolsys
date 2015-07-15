@@ -24,13 +24,15 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.io.FileNames;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.file.UrlResource;
 import com.revolsys.spring.config.AttributesBeanConfigurer;
 
 public class SpringUtil {
 
-  public static final Pattern KEY_PATTERN = Pattern.compile("(\\w[\\w\\d]*)(?:(?:\\[([\\w\\d]+)\\])|(?:\\.([\\w\\d]+)))?");
+  public static final Pattern KEY_PATTERN = Pattern
+    .compile("(\\w[\\w\\d]*)(?:(?:\\[([\\w\\d]+)\\])|(?:\\.([\\w\\d]+)))?");
 
   private static final ThreadLocal<Resource> BASE_RESOURCE = new ThreadLocal<Resource>();
 
@@ -154,7 +156,7 @@ public class SpringUtil {
   }
 
   public static String getFileNameExtension(final Resource resource) {
-    return FileUtil.getFileNameExtension(resource.getFilename());
+    return FileNames.getFileNameExtension(resource.getFilename());
   }
 
   public static File getFileOrCreateTempFile(final Resource resource) {
@@ -164,7 +166,7 @@ public class SpringUtil {
       } else {
         final String filename = resource.getFilename();
         final String baseName = FileUtil.getBaseName(filename);
-        final String fileExtension = FileUtil.getFileNameExtension(filename);
+        final String fileExtension = FileNames.getFileNameExtension(filename);
         return File.createTempFile(baseName, fileExtension);
       }
     } catch (final IOException e) {
@@ -172,8 +174,8 @@ public class SpringUtil {
     }
   }
 
-  public static OutputStream getFileOutputStream(final Resource resource) throws IOException,
-    FileNotFoundException {
+  public static OutputStream getFileOutputStream(final Resource resource)
+    throws IOException, FileNotFoundException {
     final File file = resource.getFile();
     return new BufferedOutputStream(new FileOutputStream(file));
   }

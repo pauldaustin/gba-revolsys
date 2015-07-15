@@ -40,7 +40,7 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlPro
   }
 
   public void deleteConnection() {
-    final FolderConnection connection = getUserData();
+    final FolderConnection connection = getConnection();
     final int confirm = JOptionPane.showConfirmDialog(SwingUtil.getActiveWindow(),
       "Delete folder connection '" + connection.getName() + "'? This action cannot be undone.",
       "Delete Layer", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -55,13 +55,17 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlPro
     return PathTreeNode.getPathNodes(this, path);
   }
 
+  public FolderConnection getConnection() {
+    return getUserData();
+  }
+
   @Override
   public MenuFactory getMenu() {
     return MENU;
   }
 
   public Path getPath() {
-    final FolderConnection connection = getUserData();
+    final FolderConnection connection = getConnection();
     return connection.getPath();
   }
 
@@ -84,7 +88,7 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlPro
   }
 
   public boolean isReadOnly() {
-    final FolderConnection connection = getUserData();
+    final FolderConnection connection = getConnection();
     return connection.isReadOnly();
   }
 

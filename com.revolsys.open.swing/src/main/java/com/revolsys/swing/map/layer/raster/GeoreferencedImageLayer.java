@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
-import com.revolsys.io.FileUtil;
+import com.revolsys.io.FileNames;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
@@ -68,8 +68,10 @@ public class GeoreferencedImageLayer extends AbstractLayer {
     menu.addMenuItem("edit",
       MenuSourceRunnable.createAction("Cancel Changes", "map_cancel", "cancelChanges"));
 
-    menu.addCheckboxMenuItem("edit", MenuSourceRunnable.createAction("Show Original Image",
-      (String)null, new AndEnableCheck(editable, hasTransform), "toggleShowOriginalImage"),
+    menu
+      .addCheckboxMenuItem("edit",
+        MenuSourceRunnable.createAction("Show Original Image", (String)null,
+          new AndEnableCheck(editable, hasTransform), "toggleShowOriginalImage"),
       showOriginalImage);
 
     menu.addMenuItem("edit",
@@ -109,7 +111,7 @@ public class GeoreferencedImageLayer extends AbstractLayer {
     } else {
       SwingUtil.addReadOnlyTextField(panel, "URL", this.url);
     }
-    final String fileNameExtension = FileUtil.getFileNameExtension(this.url);
+    final String fileNameExtension = FileNames.getFileNameExtension(this.url);
     if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final GeoreferencedImageFactory factory = IoFactoryRegistry.getInstance()
@@ -130,16 +132,16 @@ public class GeoreferencedImageLayer extends AbstractLayer {
         try {
           image = AbstractGeoreferencedImageFactory.loadGeoreferencedImage(imageResource);
           if (image == null) {
-            LoggerFactory.getLogger(GeoreferencedImageLayer.class).error(
-              "Cannot load image: " + this.url);
+            LoggerFactory.getLogger(GeoreferencedImageLayer.class)
+              .error("Cannot load image: " + this.url);
           }
         } catch (final RuntimeException e) {
-          LoggerFactory.getLogger(GeoreferencedImageLayer.class).error(
-            "Unable to load image: " + this.url, e);
+          LoggerFactory.getLogger(GeoreferencedImageLayer.class)
+            .error("Unable to load image: " + this.url, e);
         }
       } else {
-        LoggerFactory.getLogger(GeoreferencedImageLayer.class).error(
-          "Image does not exist: " + this.url);
+        LoggerFactory.getLogger(GeoreferencedImageLayer.class)
+          .error("Image does not exist: " + this.url);
       }
       setImage(image);
     } else {
@@ -172,8 +174,8 @@ public class GeoreferencedImageLayer extends AbstractLayer {
       cancelChanges();
       return true;
     } else {
-      LoggerFactory.getLogger(getClass()).error(
-        "Layer definition does not contain a 'url' property");
+      LoggerFactory.getLogger(getClass())
+        .error("Layer definition does not contain a 'url' property");
       return false;
     }
   }

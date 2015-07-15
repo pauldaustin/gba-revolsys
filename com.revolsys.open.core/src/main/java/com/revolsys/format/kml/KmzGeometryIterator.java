@@ -9,6 +9,7 @@ import java.util.zip.ZipInputStream;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.iterator.AbstractIterator;
+import com.revolsys.io.FileNames;
 import com.revolsys.io.FileUtil;
 import com.revolsys.spring.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
@@ -38,9 +39,10 @@ public class KmzGeometryIterator extends AbstractIterator<Geometry> {
   @Override
   protected void doInit() {
     try {
-      for (ZipEntry entry = this.zipIn.getNextEntry(); entry != null; entry = this.zipIn.getNextEntry()) {
+      for (ZipEntry entry = this.zipIn.getNextEntry(); entry != null; entry = this.zipIn
+        .getNextEntry()) {
         final String name = entry.getName();
-        final String extension = FileUtil.getFileNameExtension(name);
+        final String extension = FileNames.getFileNameExtension(name);
         if ("kml".equals(extension)) {
           this.kmlIterator = new KmlGeometryIterator(this.zipIn);
           return;

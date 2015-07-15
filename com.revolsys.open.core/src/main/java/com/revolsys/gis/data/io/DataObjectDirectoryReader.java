@@ -12,12 +12,12 @@ import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.gis.io.Statistics;
-import com.revolsys.io.FileUtil;
+import com.revolsys.io.FileNames;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
 
-public class DataObjectDirectoryReader extends AbstractDirectoryReader<Record> implements
-  RecordDefinitionFactory {
+public class DataObjectDirectoryReader extends AbstractDirectoryReader<Record>
+  implements RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
 
@@ -38,9 +38,9 @@ public class DataObjectDirectoryReader extends AbstractDirectoryReader<Record> i
   protected Reader<Record> createReader(final Resource resource) {
     final IoFactoryRegistry registry = IoFactoryRegistry.getInstance();
     final String filename = resource.getFilename();
-    final String extension = FileUtil.getFileNameExtension(filename);
-    final RecordReaderFactory factory = registry.getFactoryByFileExtension(
-      RecordReaderFactory.class, extension);
+    final String extension = FileNames.getFileNameExtension(filename);
+    final RecordReaderFactory factory = registry
+      .getFactoryByFileExtension(RecordReaderFactory.class, extension);
     final RecordReader reader = factory.createRecordReader(resource);
     addMetaData(reader);
     return reader;

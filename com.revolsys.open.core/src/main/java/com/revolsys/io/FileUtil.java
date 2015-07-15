@@ -630,7 +630,7 @@ public final class FileUtil {
       return fileResource.getFile();
     } else {
       final String fileName = resource.getFilename();
-      final String ext = getFileNameExtension(fileName);
+      final String ext = FileNames.getFileNameExtension(fileName);
       final File file = File.createTempFile(fileName, "." + ext);
       copy(resource.getInputStream(), file);
       file.deleteOnExit();

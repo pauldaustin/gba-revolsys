@@ -15,7 +15,7 @@ import com.revolsys.swing.listener.InvokeMethodActionListener;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.Property;
 
-public class DirectoryNameField extends JPanel implements Field {
+public class FileField extends JPanel implements Field {
   private static final long serialVersionUID = -8433151755294925911L;
 
   private final TextField directoryName = new TextField(70);
@@ -28,9 +28,11 @@ public class DirectoryNameField extends JPanel implements Field {
 
   private String originalToolTip;
 
-  public DirectoryNameField() {
-    super(new SpringLayout());
+  private final int fileSelectionMode;
 
+  public FileField(final int fileSelectionMode) {
+    super(new SpringLayout());
+    this.fileSelectionMode = fileSelectionMode;
     add(this.directoryName);
     this.browseButton.setText("Browse...");
     this.browseButton.addActionListener(new InvokeMethodActionListener(this, "browseClick"));
@@ -42,7 +44,7 @@ public class DirectoryNameField extends JPanel implements Field {
     try {
       final JFileChooser fileChooser = new JFileChooser();
 
-      fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      fileChooser.setFileSelectionMode(this.fileSelectionMode);
 
       final String directoryPath = getDirectoryPath();
       final File initialFile = new File(directoryPath);
@@ -53,7 +55,8 @@ public class DirectoryNameField extends JPanel implements Field {
 
       fileChooser.setMultiSelectionEnabled(false);
 
-      if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(SwingUtilities.windowForComponent(this))) {
+      if (JFileChooser.APPROVE_OPTION == fileChooser
+        .showOpenDialog(SwingUtilities.windowForComponent(this))) {
         final File file = fileChooser.getSelectedFile();
         if (file != null) {
           this.directoryName.setText(file.getCanonicalPath());
@@ -65,8 +68,8 @@ public class DirectoryNameField extends JPanel implements Field {
   }
 
   @Override
-  public DirectoryNameField clone() {
-    final DirectoryNameField field = new DirectoryNameField();
+  public FileField clone() {
+    final FileField field = new FileField(JFileChooser.DIRECTORIES_ONLY);
     return field;
   }
 

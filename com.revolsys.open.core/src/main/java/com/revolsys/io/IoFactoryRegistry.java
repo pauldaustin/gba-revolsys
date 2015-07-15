@@ -239,7 +239,7 @@ public class IoFactoryRegistry {
 
   public <F extends IoFactory> F getFactoryByFileName(final Class<F> factoryClass,
     final String fileName) {
-    final String fileExtension = FileUtil.getFileNameExtension(fileName);
+    final String fileExtension = FileNames.getFileNameExtension(fileName);
     return getFactoryByFileExtension(factoryClass, fileExtension);
   }
 

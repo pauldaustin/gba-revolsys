@@ -10,7 +10,7 @@ import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.io.FileUtil;
+import com.revolsys.io.FileNames;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
@@ -54,7 +54,7 @@ public class FileRecordLayer extends ListRecordLayer {
     } else {
       SwingUtil.addReadOnlyTextField(panel, "URL", url);
     }
-    final String fileNameExtension = FileUtil.getFileNameExtension(url);
+    final String fileNameExtension = FileNames.getFileNameExtension(url);
     if (Property.hasValue(fileNameExtension)) {
       SwingUtil.addReadOnlyTextField(panel, "File Extension", fileNameExtension);
       final RecordReaderFactory factory = IoFactoryRegistry.getInstance()
@@ -74,8 +74,8 @@ public class FileRecordLayer extends ListRecordLayer {
       this.resource = SpringUtil.getResource(this.url);
       return revert();
     } else {
-      LoggerFactory.getLogger(getClass()).error(
-        "Layer definition does not contain a 'url' property: " + getName());
+      LoggerFactory.getLogger(getClass())
+        .error("Layer definition does not contain a 'url' property: " + getName());
       return false;
     }
 
