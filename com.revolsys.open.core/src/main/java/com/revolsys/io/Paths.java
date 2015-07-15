@@ -132,4 +132,8 @@ public class Paths {
       throw new WrappedException(e);
     }
   }
+
+  public static String toUrlString(final Path path) {
+    return toUrl(path).toString();
+  }
 }

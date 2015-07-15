@@ -1,6 +1,7 @@
 package com.revolsys.data.record.io;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,19 +14,21 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.FileUtil;
+import com.revolsys.io.Paths;
 import com.revolsys.io.connection.AbstractConnectionRegistryManager;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.OS;
 import com.revolsys.util.Property;
 
-public class RecordStoreConnectionManager extends
-  AbstractConnectionRegistryManager<RecordStoreConnectionRegistry, RecordStoreConnection> {
+public class RecordStoreConnectionManager
+  extends AbstractConnectionRegistryManager<RecordStoreConnectionRegistry, RecordStoreConnection> {
 
   private static final RecordStoreConnectionManager INSTANCE;
 
   static {
     INSTANCE = new RecordStoreConnectionManager();
-    final File recordStoresDirectory = OS.getApplicationDataDirectory("com.revolsys.gis/Data Stores");
+    final File recordStoresDirectory = OS
+      .getApplicationDataDirectory("com.revolsys.gis/Data Stores");
     INSTANCE.addConnectionRegistry("User", new FileSystemResource(recordStoresDirectory));
   }
 
@@ -52,13 +55,15 @@ public class RecordStoreConnectionManager extends
    * @return
    */
   @SuppressWarnings("unchecked")
-  public static <T extends RecordStore> T getRecordStore(final Map<String, ? extends Object> config) {
+  public static <T extends RecordStore> T getRecordStore(
+    final Map<String, ? extends Object> config) {
     @SuppressWarnings("rawtypes")
     final Map<String, Object> configClone = (Map)JavaBeanUtil.clone(config);
     synchronized (recordStoreByConfig) {
       RecordStore recordStore = recordStoreByConfig.get(configClone);
       if (recordStore == null) {
-        final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone.get("connection");
+        final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone
+          .get("connection");
         final String name = (String)connectionProperties.get("name");
         if (Property.hasValue(name)) {
           recordStore = getRecordStore(name);
@@ -81,11 +86,20 @@ public class RecordStoreConnectionManager extends
     }
   }
 
+  public static <V extends RecordStore> V getRecordStore(final Path path) {
+    final Map<String, String> connectionProperties = Collections.singletonMap("url",
+      Paths.toUrlString(path));
+    final Map<String, Object> config = Collections.<String, Object> singletonMap("connection",
+      connectionProperties);
+    return getRecordStore(config);
+  }
+
   public static RecordStore getRecordStore(final String name) {
     final RecordStoreConnectionManager connectionManager = get();
     final List<RecordStoreConnectionRegistry> registries = new ArrayList<>();
     registries.addAll(connectionManager.getConnectionRegistries());
-    final RecordStoreConnectionRegistry threadRegistry = RecordStoreConnectionRegistry.getForThread();
+    final RecordStoreConnectionRegistry threadRegistry = RecordStoreConnectionRegistry
+      .getForThread();
     if (threadRegistry != null) {
       registries.add(threadRegistry);
     }
@@ -108,7 +122,8 @@ public class RecordStoreConnectionManager extends
       if (recordStore != null) {
         final AtomicInteger count = recordStoreCounts.get(configClone);
         if (count.decrementAndGet() == 0) {
-          final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone.get("connection");
+          final Map<String, ? extends Object> connectionProperties = (Map<String, ? extends Object>)configClone
+            .get("connection");
           final String name = (String)connectionProperties.get("name");
           if (!Property.hasValue(name)) {
             // TODO release for connections from connection registries
