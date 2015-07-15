@@ -86,12 +86,12 @@ public final class FileUtil {
   public static final ExtensionFilenameFilter IMAGE_FILENAME_FILTER = new ExtensionFilenameFilter(
     Arrays.asList(new String[] {
       "gif", "jpg", "png", "tif", "tiff", "bmp"
-    }));
+  }));
 
   public static final ExtensionFilenameFilter VIDEO_FILENAME_FILTER = new ExtensionFilenameFilter(
     Arrays.asList(new String[] {
       "avi", "wmv", "flv", "mpg"
-    }));
+  }));
 
   /**
    * Close the writer without throwing an I/O exception if the close failed. The
@@ -136,8 +136,8 @@ public final class FileUtil {
     } else if (separator == UNIX_FILE_SEPARATOR) {
       return path.replace(WINDOWS_FILE_SEPARATOR, separator);
     } else {
-      return path.replace(UNIX_FILE_SEPARATOR, separator)
-        .replace(WINDOWS_FILE_SEPARATOR, separator);
+      return path.replace(UNIX_FILE_SEPARATOR, separator).replace(WINDOWS_FILE_SEPARATOR,
+        separator);
     }
   }
 
@@ -233,7 +233,8 @@ public final class FileUtil {
    * @param sz file size
    * @throws IOException if an i/o error
    */
-  public static void copy(final InputStream zin, final File file, final long sz) throws IOException {
+  public static void copy(final InputStream zin, final File file, final long sz)
+    throws IOException {
 
     ReadableByteChannel rc = null;
     FileOutputStream out = null;
@@ -542,17 +543,12 @@ public final class FileUtil {
 
   public static String getBaseName(final File file) {
     final String fileName = getFileName(file);
-    return getBaseName(fileName);
+    return FileNames.getBaseName(fileName);
   }
 
   public static String getBaseName(final String name) {
     final String fileName = getFileName(name);
-    final int dotIndex = fileName.lastIndexOf('.');
-    if (dotIndex != -1) {
-      return fileName.substring(0, dotIndex);
-    } else {
-      return fileName;
-    }
+    return FileNames.getBaseName(fileName);
   }
 
   public static String getCanonicalPath(final File file) {
@@ -736,16 +732,7 @@ public final class FileUtil {
 
   public static String getFileNameExtension(final File file) {
     final String fileName = getFileName(file);
-    return getFileNameExtension(fileName);
-  }
-
-  public static String getFileNameExtension(final String fileName) {
-    final int dotIndex = fileName.lastIndexOf('.');
-    if (dotIndex != -1) {
-      return fileName.substring(dotIndex + 1);
-    } else {
-      return "";
-    }
+    return FileNames.getFileNameExtension(fileName);
   }
 
   public static List<String> getFileNameExtensions(final File file) {
@@ -759,8 +746,8 @@ public final class FileUtil {
     if (startIndex == -1) {
       startIndex = 0;
     }
-    for (int dotIndex = fileName.indexOf('.', startIndex); dotIndex > 0; dotIndex = fileName.indexOf(
-      '.', startIndex)) {
+    for (int dotIndex = fileName.indexOf('.', startIndex); dotIndex > 0; dotIndex = fileName
+      .indexOf('.', startIndex)) {
       dotIndex++;
       final String extension = fileName.substring(dotIndex);
       extensions.add(extension);
@@ -774,7 +761,8 @@ public final class FileUtil {
     return getBaseName(fileName);
   }
 
-  public static List<String> getFileNames(final File directory, final ExtensionFilenameFilter filter) {
+  public static List<String> getFileNames(final File directory,
+    final ExtensionFilenameFilter filter) {
     final List<String> names = new ArrayList<String>();
     final File[] files = directory.listFiles(filter);
     if (files != null) {

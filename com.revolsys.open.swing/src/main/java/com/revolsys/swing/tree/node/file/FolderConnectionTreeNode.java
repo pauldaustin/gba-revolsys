@@ -1,11 +1,12 @@
 package com.revolsys.swing.tree.node.file;
 
-import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import com.revolsys.io.Paths;
 import com.revolsys.io.file.FolderConnection;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
@@ -35,7 +36,7 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlPro
     super(connection);
     setType("Folder Connection");
     setName(connection.getName());
-    setIcon(FileTreeNode.ICON_FOLDER_LINK);
+    setIcon(PathTreeNode.ICON_FOLDER_LINK);
   }
 
   public void deleteConnection() {
@@ -50,19 +51,18 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlPro
 
   @Override
   protected List<BaseTreeNode> doLoadChildren() {
-    final FolderConnection connection = getUserData();
-    return FileTreeNode.getFileNodes(this, connection.getFile());
-  }
-
-  protected File getFile() {
-    final FolderConnection connection = getUserData();
-    final File file = connection.getFile();
-    return file;
+    final Path path = getPath();
+    return PathTreeNode.getPathNodes(this, path);
   }
 
   @Override
   public MenuFactory getMenu() {
     return MENU;
+  }
+
+  public Path getPath() {
+    final FolderConnection connection = getUserData();
+    return connection.getPath();
   }
 
   @Override
@@ -79,8 +79,8 @@ public class FolderConnectionTreeNode extends LazyLoadTreeNode implements UrlPro
 
   @Override
   public boolean isExists() {
-    final File file = getFile();
-    return file != null && file.exists() && super.isExists();
+    final Path path = getPath();
+    return Paths.exists(path) && super.isExists();
   }
 
   public boolean isReadOnly() {

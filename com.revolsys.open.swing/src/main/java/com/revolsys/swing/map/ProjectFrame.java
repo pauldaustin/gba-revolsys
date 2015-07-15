@@ -70,7 +70,7 @@ import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.node.BaseTreeNode;
 import com.revolsys.swing.tree.node.ListTreeNode;
 import com.revolsys.swing.tree.node.file.FileSystemsTreeNode;
-import com.revolsys.swing.tree.node.file.FileTreeNode;
+import com.revolsys.swing.tree.node.file.PathTreeNode;
 import com.revolsys.swing.tree.node.file.FolderConnectionsTreeNode;
 import com.revolsys.swing.tree.node.layer.ProjectTreeNode;
 import com.revolsys.swing.tree.node.record.RecordStoreConnectionsTreeNode;
@@ -241,7 +241,7 @@ public class ProjectFrame extends BaseFrame {
 
     this.catalogTree = tree;
 
-    addTab(this.leftTabs, Icons.getIconWithBadge(FileTreeNode.ICON_FOLDER, "tree"), "Catalog",
+    addTab(this.leftTabs, Icons.getIconWithBadge(PathTreeNode.ICON_FOLDER, "tree"), "Catalog",
       this.catalogTree, true);
   }
 

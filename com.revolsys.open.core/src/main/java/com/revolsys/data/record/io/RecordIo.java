@@ -1,6 +1,7 @@
 package com.revolsys.data.record.io;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -10,12 +11,22 @@ import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
+import com.revolsys.io.Paths;
 import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
 
 public class RecordIo {
   public static boolean canReadRecords(final File file) {
     for (final String fileNameExtension : FileUtil.getFileNameExtensions(file)) {
+      if (canReadRecords(fileNameExtension)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean canReadRecords(final Path path) {
+    for (final String fileNameExtension : Paths.getFileNameExtensions(path)) {
       if (canReadRecords(fileNameExtension)) {
         return true;
       }
@@ -139,19 +150,20 @@ public class RecordIo {
 
   public static RecordReaderFactory recordReaderFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final RecordReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
-      RecordReaderFactory.class, resource);
+    final RecordReaderFactory readerFactory = ioFactoryRegistry
+      .getFactoryByResource(RecordReaderFactory.class, resource);
     return readerFactory;
   }
 
   public static RecordReaderFactory recordReaderFactory(final String fileName) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final RecordReaderFactory readerFactory = ioFactoryRegistry.getFactoryByFileName(
-      RecordReaderFactory.class, fileName);
+    final RecordReaderFactory readerFactory = ioFactoryRegistry
+      .getFactoryByFileName(RecordReaderFactory.class, fileName);
     return readerFactory;
   }
 
-  public static Writer<Record> recordWriter(final RecordDefinition recordDefinition, final File file) {
+  public static Writer<Record> recordWriter(final RecordDefinition recordDefinition,
+    final File file) {
     return recordWriter(recordDefinition, new FileSystemResource(file));
   }
 
@@ -168,8 +180,8 @@ public class RecordIo {
 
   public static RecordWriterFactory recordWriterFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final RecordWriterFactory writerFactory = ioFactoryRegistry.getFactoryByResource(
-      RecordWriterFactory.class, resource);
+    final RecordWriterFactory writerFactory = ioFactoryRegistry
+      .getFactoryByResource(RecordWriterFactory.class, resource);
     return writerFactory;
   }
 
