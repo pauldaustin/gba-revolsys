@@ -166,8 +166,7 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
 
   public static List<BaseTreeNode> getPathNodes(final BaseTreeNode parent, final Path path) {
     if (Files.isDirectory(path)) {
-      try (
-        final DirectoryStream<Path> children = Files.newDirectoryStream(path)) {
+      try (final DirectoryStream<Path> children = Files.newDirectoryStream(path)) {
         return getPathNodes(parent, children);
       } catch (final IOException e) {
         LoggerFactory.getLogger(PathTreeNode.class).debug("Unable to get children " + path);
@@ -215,19 +214,15 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
       fileNameExtension);
   }
 
-  private boolean hasFile = false;
+  private boolean hasFile;
+
+  private boolean exists;
 
   public PathTreeNode(final Path path) {
     super(path);
     final String fileName = Paths.getFileName(path);
     setName(fileName);
-    final Icon icon = getIcon(path);
-    setIcon(icon);
-    try {
-      path.toFile();
-      this.hasFile = true;
-    } catch (final UnsupportedOperationException e) {
-    }
+    refreshFields();
   }
 
   public void addFolderConnection() {
@@ -256,16 +251,15 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
           registries.add(registry);
         }
       }
-      final JComboBox registryField = new JComboBox(
-        new Vector<FolderConnectionRegistry>(registries));
+      final JComboBox<FolderConnectionRegistry> registryField = new JComboBox<FolderConnectionRegistry>(
+        new Vector<>(registries));
 
       panel.add(registryField);
 
       GroupLayoutUtil.makeColumns(panel, 2, true);
       panel.showDialog();
       if (panel.isSaved()) {
-        final FolderConnectionRegistry registry = (FolderConnectionRegistry)registryField
-          .getSelectedItem();
+        final FolderConnectionRegistry registry = (FolderConnectionRegistry)registryField.getSelectedItem();
         String connectionName = nameField.getText();
         if (!Property.hasValue(connectionName)) {
           connectionName = fileName;
@@ -294,16 +288,25 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
   }
 
   @Override
+  protected void doRefresh() {
+    refreshFields();
+
+    super.doRefresh();
+  }
+
+  @Override
   public boolean equals(final Object other) {
     if (other == this) {
       return true;
     } else if (other instanceof PathTreeNode) {
       if (getClass() == other.getClass()) {
         final PathTreeNode fileNode = (PathTreeNode)other;
-        final Path path = getPath();
-        final Path otherPath = fileNode.getPath();
-        final boolean equal = EqualsRegistry.equal(path, otherPath);
-        return equal;
+        if (isExists() == fileNode.isExists()) {
+          final Path path = getPath();
+          final Path otherPath = fileNode.getPath();
+          final boolean equal = EqualsRegistry.equal(path, otherPath);
+          return equal;
+        }
       }
     }
     return false;
@@ -339,8 +342,8 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
     } else if (Files.exists(path)) {
       final String extension = Paths.getFileNameExtension(path);
       if (Property.hasValue(extension)) {
-        final IoFactory factory = IoFactoryRegistry.getInstance()
-          .getFactoryByFileExtension(IoFactory.class, extension);
+        final IoFactory factory = IoFactoryRegistry.getInstance().getFactoryByFileExtension(
+          IoFactory.class, extension);
         if (factory != null) {
           return factory.getName();
         }
@@ -381,12 +384,7 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
 
   @Override
   public boolean isExists() {
-    final Path path = getPath();
-    if (path == null) {
-      return false;
-    } else {
-      return Files.exists(path) && super.isExists();
-    }
+    return this.exists;
   }
 
   public boolean isFileLayer() {
@@ -406,9 +404,15 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
     return this.hasFile;
   }
 
-  @Override
-  public void refresh() {
-    setIcon(null);
-    super.refresh();
+  private void refreshFields() {
+    final Path path = getPath();
+    this.exists = Paths.exists(path);
+    final Icon icon = getIcon(path);
+    setIcon(icon);
+    try {
+      path.toFile();
+      this.hasFile = true;
+    } catch (final UnsupportedOperationException e) {
+    }
   }
 }
