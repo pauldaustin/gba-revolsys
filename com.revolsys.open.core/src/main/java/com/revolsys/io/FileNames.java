@@ -6,29 +6,31 @@ import java.util.List;
 public class FileNames {
 
   public static String getBaseName(final String fileName) {
-    int startIndex = fileName.lastIndexOf("/");
-    if (startIndex == -1) {
-      startIndex = 0;
+    final int slashIndex = fileName.lastIndexOf("/");
+    final int dotIndex = fileName.lastIndexOf('.');
+    if (slashIndex > dotIndex) {
+      return fileName.substring(slashIndex + 1);
     }
-    final int dotIndex = fileName.lastIndexOf('.', startIndex);
     if (dotIndex != -1) {
-      return fileName.substring(0, dotIndex);
+      return fileName.substring(slashIndex + 1, dotIndex);
     } else {
       return fileName;
     }
   }
 
   public static String getFileNameExtension(final String fileName) {
+    int slashIndex = fileName.lastIndexOf("/");
     final int dotIndex = fileName.lastIndexOf('.');
-    if (dotIndex != -1) {
-      final int startIndex = fileName.lastIndexOf("/");
-      if (startIndex == -1) {
-        return fileName.substring(dotIndex + 1);
-      } else if (dotIndex > startIndex) {
-        return fileName.substring(dotIndex + 1);
-      }
+    if (slashIndex == -1) {
+      slashIndex = 0;
+    } else if (slashIndex > dotIndex) {
+      return "";
     }
-    return "";
+    if (dotIndex != -1) {
+      return fileName.substring(dotIndex + 1);
+    } else {
+      return "";
+    }
   }
 
   public static List<String> getFileNameExtensions(final String fileName) {

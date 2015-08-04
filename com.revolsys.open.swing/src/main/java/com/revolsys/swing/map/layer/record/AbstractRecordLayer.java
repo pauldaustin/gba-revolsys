@@ -66,7 +66,7 @@ import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.spring.ByteArrayResource;
+import com.revolsys.spring.resource.ByteArrayResource;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
 import com.revolsys.swing.action.enablecheck.EnableCheck;

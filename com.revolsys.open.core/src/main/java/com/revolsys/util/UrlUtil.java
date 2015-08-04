@@ -50,8 +50,8 @@ public final class UrlUtil {
 
   private static final String WORD_CHARACTERS = "a-zA-Z0-9\\+!#$%&'*+-/=?^_`{}|~";
 
-  private static final String LOCAL_PART = "[" + WORD_CHARACTERS + "][" + WORD_CHARACTERS
-    + "\\.]*[" + WORD_CHARACTERS + "]?";
+  private static final String LOCAL_PART = "[" + WORD_CHARACTERS + "][" + WORD_CHARACTERS + "\\.]*["
+    + WORD_CHARACTERS + "]?";
 
   private static final String EMAIL_RE = "^(" + LOCAL_PART + ")@(" + DOMAIN + ")$";
 
@@ -64,9 +64,8 @@ public final class UrlUtil {
    * @return
    */
   public static String cleanPath(final String url) {
-    return url.replaceAll("/+", "/")
-      .replaceAll("^((\\w)+:)/", "$1//")
-      .replaceAll("^file://", "file:///");
+    return url.replaceAll("/+", "/").replaceAll("^((\\w)+:)/", "$1//").replaceAll("^file://",
+      "file:///");
   }
 
   public static String getContent(final String urlString) {
@@ -130,7 +129,7 @@ public final class UrlUtil {
     final String urlString = url.toString();
     final int index = urlString.lastIndexOf('/');
     if (index != -1) {
-      final String parentPath = urlString.substring(0, index);
+      final String parentPath = urlString.substring(0, index + 1);
       return getUrl(parentPath);
     } else {
       return url;
@@ -166,7 +165,8 @@ public final class UrlUtil {
    * @param parameters The additional parameters to add to the query string.
    * @return The new URL.
    */
-  public static String getUrl(final Object baseUrl, final Map<String, ? extends Object> parameters) {
+  public static String getUrl(final Object baseUrl,
+    final Map<String, ? extends Object> parameters) {
     return getUrl(baseUrl.toString(), parameters);
   }
 
@@ -294,7 +294,8 @@ public final class UrlUtil {
     return params;
   }
 
-  public static void parseMatrixParams(final String matrixParams, final Map<String, String> params) {
+  public static void parseMatrixParams(final String matrixParams,
+    final Map<String, String> params) {
     for (final String param : matrixParams.split(";")) {
       final String[] paramParts = param.split("=");
       final String key = paramParts[0];

@@ -20,7 +20,7 @@ import com.revolsys.format.csv.CsvRecordWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 public class Tsv extends AbstractRecordAndGeometryIoFactory implements MapWriterFactory {
   public static final String DESCRIPTION = "Tab-Separated Values";

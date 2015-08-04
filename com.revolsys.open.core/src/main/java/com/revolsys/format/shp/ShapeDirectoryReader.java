@@ -15,7 +15,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
 import com.revolsys.gis.data.io.DataObjectDirectoryReader;
 import com.revolsys.io.Reader;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 /**
  * <p>

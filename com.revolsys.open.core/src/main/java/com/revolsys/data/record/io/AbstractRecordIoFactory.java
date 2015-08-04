@@ -18,7 +18,7 @@ import com.revolsys.gis.data.io.AbstractRecordReaderFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactory implements
   RecordWriterFactory {

@@ -1,4 +1,4 @@
-package com.revolsys.spring;
+package com.revolsys.spring.resource;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -12,7 +12,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Pattern;
@@ -26,7 +25,6 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.io.FileNames;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.file.UrlResource;
 import com.revolsys.spring.config.AttributesBeanConfigurer;
 
 public class SpringUtil {
@@ -282,20 +280,20 @@ public class SpringUtil {
   }
 
   public static Resource getResource(final String url) {
-    try {
-      return new UrlResource(url);
-    } catch (final MalformedURLException e) {
-      throw new RuntimeException("URL not valid " + url, e);
-    }
+    return new UrlResource(url);
   }
 
   public static Resource getResourceWithExtension(final Resource resource, final String extension) {
-    final String baseName = getBaseName(resource);
-    final String newFileName = baseName + "." + extension;
-    try {
-      return resource.createRelative(newFileName);
-    } catch (final IOException e) {
-      throw new RuntimeException("Unable to get resource " + newFileName, e);
+    if (resource instanceof com.revolsys.spring.resource.Resource) {
+      return ((com.revolsys.spring.resource.Resource)resource).getResourceWithExtension(extension);
+    } else {
+      final String baseName = getBaseName(resource);
+      final String newFileName = baseName + "." + extension;
+      try {
+        return resource.createRelative(newFileName);
+      } catch (final IOException e) {
+        throw new RuntimeException("Unable to get resource " + newFileName, e);
+      }
     }
   }
 

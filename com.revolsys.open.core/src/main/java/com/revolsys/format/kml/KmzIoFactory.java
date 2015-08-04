@@ -17,7 +17,7 @@ import com.revolsys.gis.geometry.io.GeometryReaderFactory;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory implements
   MapWriterFactory, GeometryReaderFactory {

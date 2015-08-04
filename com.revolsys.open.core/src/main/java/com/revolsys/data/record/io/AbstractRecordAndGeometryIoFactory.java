@@ -18,7 +18,7 @@ import com.revolsys.gis.data.io.DataObjectWriterGeometryWriter;
 import com.revolsys.gis.geometry.io.GeometryWriterFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public abstract class AbstractRecordAndGeometryIoFactory extends

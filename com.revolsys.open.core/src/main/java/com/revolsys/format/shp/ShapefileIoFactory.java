@@ -18,7 +18,7 @@ import com.revolsys.data.record.io.RecordStoreFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.OutputStreamResource;
+import com.revolsys.spring.resource.OutputStreamResource;
 
 public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory implements
   RecordStoreFactory {

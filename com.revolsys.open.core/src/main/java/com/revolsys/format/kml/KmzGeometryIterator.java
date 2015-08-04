@@ -11,7 +11,7 @@ import org.springframework.core.io.Resource;
 import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.io.FileNames;
 import com.revolsys.io.FileUtil;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class KmzGeometryIterator extends AbstractIterator<Geometry> {

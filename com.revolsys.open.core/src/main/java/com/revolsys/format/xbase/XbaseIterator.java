@@ -27,12 +27,11 @@ import com.revolsys.gis.io.EndianMappedByteBuffer;
 import com.revolsys.gis.io.LittleEndianRandomAccessFile;
 import com.revolsys.io.EndianInput;
 import com.revolsys.io.FileUtil;
-import com.revolsys.spring.NonExistingResource;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.DateUtil;
 import com.revolsys.util.ExceptionUtil;
 
-public class XbaseIterator extends AbstractIterator<Record> implements RecordIterator {
+public class XbaseIterator extends AbstractIterator<Record>implements RecordIterator {
   public static final char CHARACTER_TYPE = 'C';
 
   private static final Map<Character, DataType> DATA_TYPES = new HashMap<Character, DataType>();
@@ -99,13 +98,13 @@ public class XbaseIterator extends AbstractIterator<Record> implements RecordIte
 
     this.dataObjectFactory = dataObjectFactory;
     final Resource codePageResource = SpringUtil.getResourceWithExtension(resource, "cpg");
-    if (!(codePageResource instanceof NonExistingResource) && codePageResource.exists()) {
+    if (codePageResource != null && codePageResource.exists()) {
       final String charsetName = SpringUtil.getContents(codePageResource);
       try {
         this.charset = Charset.forName(charsetName);
       } catch (final Exception e) {
-        LoggerFactory.getLogger(getClass()).debug(
-          "Charset " + charsetName + " not supported for " + resource, e);
+        LoggerFactory.getLogger(getClass())
+          .debug("Charset " + charsetName + " not supported for " + resource, e);
       }
     }
   }
@@ -203,10 +202,9 @@ public class XbaseIterator extends AbstractIterator<Record> implements RecordIte
      * Integer.parseInt(memoIndexString.trim()); if (memoIn == null) { File
      * memoFile = new File(mappedFile.getParentFile(), typePath + ".dbt"); if
      * (memoFile.exists()) { if (log.isInfoEnabled()) { log.info("Opening memo
-     * mappedFile:
-     * " + memoFile); } memoIn = new RandomAccessFile(memoFile, "r"); } else {
-     * return null; } } memoIn.seek(memoIndex 512); StringBuffer memo = new
-     * StringBuffer(512); byte[] memoBuffer = new byte[512]; while
+     * mappedFile: " + memoFile); } memoIn = new RandomAccessFile(memoFile, "
+     * r"); } else { return null; } } memoIn.seek(memoIndex 512); StringBuffer
+     * memo = new StringBuffer(512); byte[] memoBuffer = new byte[512]; while
      * (memoIn.read(memoBuffer) != -1) { int i = 0; while (i <
      * memoBuffer.length) { if (memoBuffer[i] == 0x1A) { return memo.toString();
      * } memo.append((char)memoBuffer[i]); i++; } } return memo.toString(); }

@@ -22,7 +22,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Reader;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.Property;
 
 public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWriterFactory {

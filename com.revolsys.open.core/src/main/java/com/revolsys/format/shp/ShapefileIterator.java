@@ -10,9 +10,9 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.iterator.AbstractIterator;
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
@@ -29,11 +29,11 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.parallel.process.InvokeMethodRunnable;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class ShapefileIterator extends AbstractIterator<Record> implements RecordIterator {
+public class ShapefileIterator extends AbstractIterator<Record>implements RecordIterator {
 
   private boolean closeFile = true;
 
@@ -63,7 +63,8 @@ public class ShapefileIterator extends AbstractIterator<Record> implements Recor
 
   private RecordDefinition returnMetaData;
 
-  public ShapefileIterator(final Resource resource, final RecordFactory factory) throws IOException {
+  public ShapefileIterator(final Resource resource, final RecordFactory factory)
+    throws IOException {
     this.dataObjectFactory = factory;
     final String baseName = FileUtil.getBaseName(resource.getFilename());
     this.name = baseName;
@@ -99,7 +100,7 @@ public class ShapefileIterator extends AbstractIterator<Record> implements Recor
           this.in = new EndianInputStream(this.resource.getInputStream());
         }
 
-        final Resource xbaseResource = this.resource.createRelative(this.name + ".dbf");
+        final Resource xbaseResource = SpringUtil.getResourceWithExtension(this.resource, "dbf");
         if (xbaseResource.exists()) {
           this.xbaseIterator = new XbaseIterator(xbaseResource, this.dataObjectFactory,
             new InvokeMethodRunnable(this, "updateMetaData"));
@@ -120,10 +121,11 @@ public class ShapefileIterator extends AbstractIterator<Record> implements Recor
           numAxis = 4;
         }
         this.geometryFactory = getProperty(IoConstants.GEOMETRY_FACTORY);
-        final Resource projResource = this.resource.createRelative(this.name + ".prj");
+        final Resource projResource = SpringUtil.getResourceWithExtension(this.resource, "prj");
         if (projResource.exists()) {
           try {
-            final CoordinateSystem coordinateSystem = EsriCoordinateSystems.getCoordinateSystem(projResource);
+            final CoordinateSystem coordinateSystem = EsriCoordinateSystems
+              .getCoordinateSystem(projResource);
             srid = EsriCoordinateSystems.getCrsId(coordinateSystem);
             setProperty(IoConstants.GEOMETRY_FACTORY, this.geometryFactory);
           } catch (final Exception e) {

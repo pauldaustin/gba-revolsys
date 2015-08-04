@@ -11,7 +11,7 @@ import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 public class XhtmlMapIoFactory extends AbstractIoFactory implements MapWriterFactory {
   public XhtmlMapIoFactory() {

@@ -17,7 +17,7 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 public class OracleJdbcBlobAttribute extends JdbcFieldDefinition {
   public OracleJdbcBlobAttribute(final String dbName, final String name, final int sqlType,

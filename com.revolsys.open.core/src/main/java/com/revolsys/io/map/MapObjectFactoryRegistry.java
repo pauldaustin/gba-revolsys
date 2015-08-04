@@ -18,7 +18,7 @@ import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.format.json.JsonParser;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 

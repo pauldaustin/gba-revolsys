@@ -13,7 +13,7 @@ import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.OutputStreamResource;
+import com.revolsys.spring.resource.OutputStreamResource;
 
 public class XBaseDataObjectIoFactory extends AbstractRecordIoFactory {
   public XBaseDataObjectIoFactory() {

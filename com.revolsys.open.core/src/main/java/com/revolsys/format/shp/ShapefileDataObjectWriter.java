@@ -46,8 +46,7 @@ import com.revolsys.gis.io.ResourceEndianOutput;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.spring.NonExistingResource;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -129,11 +128,11 @@ public class ShapefileDataObjectWriter extends XbaseDataObjectWriter {
       if (coordinateSystem != null) {
         final int srid = coordinateSystem.getId();
         final Resource prjResource = SpringUtil.getResourceWithExtension(this.resource, "prj");
-        if (!(prjResource instanceof NonExistingResource)) {
+        if (prjResource != null) {
           final OutputStream out = SpringUtil.getOutputStream(prjResource);
           final PrintWriter writer = new PrintWriter(FileUtil.createUtf8Writer(out));
-          final CoordinateSystem esriCoordinateSystem = CoordinateSystems.getCoordinateSystem(new QName(
-            "ESRI", String.valueOf(srid)));
+          final CoordinateSystem esriCoordinateSystem = CoordinateSystems
+            .getCoordinateSystem(new QName("ESRI", String.valueOf(srid)));
           EsriCsWktWriter.write(writer, esriCoordinateSystem, -1);
           writer.close();
         }
@@ -157,7 +156,7 @@ public class ShapefileDataObjectWriter extends XbaseDataObjectWriter {
         }
 
         final Resource indexResource = SpringUtil.getResourceWithExtension(this.resource, "shx");
-        if (!(indexResource instanceof NonExistingResource)) {
+        if (indexResource != null) {
           this.indexOut = new ResourceEndianOutput(indexResource);
           writeHeader(this.indexOut);
         }
@@ -217,7 +216,8 @@ public class ShapefileDataObjectWriter extends XbaseDataObjectWriter {
   }
 
   @Override
-  protected boolean writeField(final Record object, final FieldDefinition field) throws IOException {
+  protected boolean writeField(final Record object, final FieldDefinition field)
+    throws IOException {
     if (field.getFullName().equals(this.geometryPropertyName)) {
       final long recordIndex = this.out.getFilePointer();
       Geometry geometry = object.getGeometryValue();

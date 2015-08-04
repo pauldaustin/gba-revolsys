@@ -19,7 +19,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory implements
   MapWriterFactory, GeometryReaderFactory {

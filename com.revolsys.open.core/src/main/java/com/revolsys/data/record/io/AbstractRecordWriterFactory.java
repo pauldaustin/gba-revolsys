@@ -15,7 +15,7 @@ import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 
 public abstract class AbstractRecordWriterFactory extends AbstractIoFactory implements
   RecordWriterFactory {

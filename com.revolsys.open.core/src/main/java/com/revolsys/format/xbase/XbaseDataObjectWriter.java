@@ -24,8 +24,7 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.io.ResourceEndianOutput;
 import com.revolsys.io.AbstractWriter;
-import com.revolsys.spring.NonExistingResource;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.DateUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.PrecisionModel;
@@ -181,7 +180,7 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
   protected void init() throws IOException {
     if (!this.initialized) {
       this.initialized = true;
-      if (!(this.resource instanceof NonExistingResource)) {
+      if (this.resource != null) {
         final Map<String, String> shortNames = getProperty("shortNames");
         if (shortNames != null) {
           this.shortNames = shortNames;
@@ -190,7 +189,7 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
         writeHeader();
       }
       final Resource codePageResource = SpringUtil.getResourceWithExtension(this.resource, "cpg");
-      if (!(codePageResource instanceof NonExistingResource)) {
+      if (codePageResource != null) {
         final PrintWriter writer = SpringUtil.getPrintWriter(codePageResource);
         try {
           writer.print(this.charset.name());
@@ -248,7 +247,8 @@ public class XbaseDataObjectWriter extends AbstractWriter<Record> {
     }
   }
 
-  protected boolean writeField(final Record object, final FieldDefinition field) throws IOException {
+  protected boolean writeField(final Record object, final FieldDefinition field)
+    throws IOException {
     if (this.out == null) {
       return true;
     } else {

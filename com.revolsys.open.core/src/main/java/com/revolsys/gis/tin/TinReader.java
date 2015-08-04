@@ -12,7 +12,7 @@ import com.revolsys.gis.model.geometry.Triangle;
 import com.revolsys.io.FileUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.spring.SpringUtil;
+import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.MathUtil;
 
 public class TinReader {
