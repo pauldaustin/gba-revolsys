@@ -20,24 +20,21 @@
 			<artifactId>tools</artifactId>
 			<version>1.7.0</version>
 			<scope>system</scope>
-			<systemPath>${toolsJar}</systemPath>
+			<systemPath>${com.sun.tools.path}</systemPath>
 		</dependency>
 	</dependencies>
-
 	<profiles>
 		<profile>
+			<id>sun-tools</id>
 			<activation>
-				<file>
-					<exists>${java.home}/lib/tools.jar</exists>
-				</file>
+			<file><exists>C:\Program Files\Java\jdk1.8.0\lib\tools.jar</exists></file>
 			</activation>
 			<properties>
-				<toolsJar>${java.home}/lib/tools.jar</toolsJar>
+				<com.sun.tools.path>C:\Program Files\Java\jdk1.8.0\lib\tools.jar</com.sun.tools.path>
 			</properties>
 		</profile>
 	</profiles>
-
 	<properties>
-		<toolsJar>${java.home}/../lib/tools.jar</toolsJar>
+		<com.sun.tools.path>${java.home}/../lib/tools.jar</com.sun.tools.path>
 	</properties>
 </project>
