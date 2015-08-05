@@ -911,9 +911,15 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       if (getGeometryFactory() == null) {
         setGeometryFactory(sourceRecordDefinition.getGeometryFactory());
       }
-      RecordDefinition recordDefinition = super.getRecordDefinition(sourceRecordDefinition);
-      if (this.createMissingTables && recordDefinition == null) {
-        recordDefinition = createTable(sourceRecordDefinition);
+      final String typePath = sourceRecordDefinition.getPath();
+      RecordDefinition recordDefinition = getRecordDefinition(typePath);
+      if (recordDefinition == null) {
+        if (!sourceRecordDefinition.hasGeometryField()) {
+          recordDefinition = getRecordDefinition(Path.getName(typePath));
+        }
+        if (this.createMissingTables && recordDefinition == null) {
+          recordDefinition = createTable(sourceRecordDefinition);
+        }
       }
       return recordDefinition;
     }

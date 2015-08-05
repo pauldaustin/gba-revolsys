@@ -15,7 +15,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.util.MathUtil;
 
-public class JsonDataObjectWriter extends AbstractWriter<Record> {
+public class JsonRecordWriter extends AbstractWriter<Record> {
 
   private RecordDefinition metaData;
 
@@ -31,7 +31,7 @@ public class JsonDataObjectWriter extends AbstractWriter<Record> {
 
   private boolean written;
 
-  public JsonDataObjectWriter(final RecordDefinition metaData, final java.io.Writer out) {
+  public JsonRecordWriter(final RecordDefinition metaData, final java.io.Writer out) {
     this.metaData = metaData;
     if (out instanceof PrintWriter) {
       this.out = (PrintWriter)out;

@@ -17,21 +17,21 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.io.FileUtil;
 
-public class JsonDataObjectIterator extends AbstractIterator<Record> implements RecordIterator {
+public class JsonRecordIterator extends AbstractIterator<Record> implements RecordIterator {
 
   private RecordDefinition metaData;
 
   private JsonMapIterator iterator;
 
-  public JsonDataObjectIterator(final RecordDefinition metaData, final InputStream in) {
+  public JsonRecordIterator(final RecordDefinition metaData, final InputStream in) {
     this(metaData, FileUtil.createUtf8Reader(in));
   }
 
-  public JsonDataObjectIterator(final RecordDefinition metaData, final Reader in) {
+  public JsonRecordIterator(final RecordDefinition metaData, final Reader in) {
     this(metaData, in, false);
   }
 
-  public JsonDataObjectIterator(final RecordDefinition metaData, final Reader in,
+  public JsonRecordIterator(final RecordDefinition metaData, final Reader in,
     final boolean single) {
     this.metaData = metaData;
     try {

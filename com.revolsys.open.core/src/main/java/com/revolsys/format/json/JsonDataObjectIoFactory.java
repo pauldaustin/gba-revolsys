@@ -20,7 +20,7 @@ import com.revolsys.io.Writer;
 public class JsonDataObjectIoFactory extends AbstractRecordAndGeometryWriterFactory {
   public static final Record toDataObject(final RecordDefinition metaData, final String string) {
     final StringReader in = new StringReader(string);
-    final JsonDataObjectIterator iterator = new JsonDataObjectIterator(metaData, in, true);
+    final JsonRecordIterator iterator = new JsonRecordIterator(metaData, in, true);
     try {
       if (iterator.hasNext()) {
         return iterator.next();
@@ -34,7 +34,7 @@ public class JsonDataObjectIoFactory extends AbstractRecordAndGeometryWriterFact
 
   public static List<Record> toDataObjectList(final RecordDefinition metaData, final String string) {
     final StringReader in = new StringReader(string);
-    final JsonDataObjectIterator iterator = new JsonDataObjectIterator(metaData, in);
+    final JsonRecordIterator iterator = new JsonRecordIterator(metaData, in);
     try {
       final List<Record> objects = new ArrayList<Record>();
       while (iterator.hasNext()) {
@@ -47,20 +47,20 @@ public class JsonDataObjectIoFactory extends AbstractRecordAndGeometryWriterFact
     }
   }
 
-  public static final String toString(final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
+  public static final String toString(final Record record) {
+    final RecordDefinition recordDefinition = record.getRecordDefinition();
     final StringWriter writer = new StringWriter();
-    final JsonDataObjectWriter dataObjectWriter = new JsonDataObjectWriter(metaData, writer);
-    dataObjectWriter.setProperty(IoConstants.SINGLE_OBJECT_PROPERTY, Boolean.TRUE);
-    dataObjectWriter.write(object);
-    dataObjectWriter.close();
+    final JsonRecordWriter recordWriter = new JsonRecordWriter(recordDefinition, writer);
+    recordWriter.setProperty(IoConstants.SINGLE_OBJECT_PROPERTY, Boolean.TRUE);
+    recordWriter.write(record);
+    recordWriter.close();
     return writer.toString();
   }
 
   public static String toString(final RecordDefinition metaData,
     final List<? extends Map<String, Object>> list) {
     final StringWriter writer = new StringWriter();
-    final JsonDataObjectWriter dataObjectWriter = new JsonDataObjectWriter(metaData, writer);
+    final JsonRecordWriter dataObjectWriter = new JsonRecordWriter(metaData, writer);
     for (final Map<String, Object> map : list) {
       final Record object = new ArrayRecord(metaData);
       object.setValues(map);
@@ -86,7 +86,7 @@ public class JsonDataObjectIoFactory extends AbstractRecordAndGeometryWriterFact
   public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new JsonDataObjectWriter(metaData, writer);
+    return new JsonRecordWriter(metaData, writer);
   }
 
 }
