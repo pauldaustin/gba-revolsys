@@ -84,7 +84,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
       RecordDefinition newMetaData;
       PreparedGeometry preparedGeometry;
       for (final Record object : this.geometryObjects) {
-        Geometry geometry = object.getGeometryValue();
+        Geometry geometry = object.getGeometry();
         if (geometry != null) {
           final JexlContext context = new HashMapContext();
           final Map<String, Object> vars = new HashMap<String, Object>(this.attributes);
@@ -136,7 +136,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
       out.write(object);
     }
     final RecordDefinition metaData = object.getRecordDefinition();
-    final Geometry geometryValue = object.getGeometryValue();
+    final Geometry geometryValue = object.getGeometry();
     final Map<RecordDefinition, PreparedGeometry> metaDataGeometries = getMetaDataGeometries(metaData);
     for (final Entry<RecordDefinition, PreparedGeometry> metaDataGeometry : metaDataGeometries.entrySet()) {
       final RecordDefinition newMetaData = metaDataGeometry.getKey();

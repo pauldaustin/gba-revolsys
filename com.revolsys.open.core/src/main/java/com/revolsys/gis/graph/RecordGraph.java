@@ -37,7 +37,7 @@ public class RecordGraph extends Graph<Record> {
   }
 
   public Edge<Record> addEdge(final Record object) {
-    final LineString line = object.getGeometryValue();
+    final LineString line = object.getGeometry();
     return addEdge(object, line);
   }
 
@@ -72,7 +72,7 @@ public class RecordGraph extends Graph<Record> {
     if (object == null) {
       return null;
     } else {
-      final LineString line = object.getGeometryValue();
+      final LineString line = object.getGeometry();
       return line;
     }
   }
@@ -110,7 +110,7 @@ public class RecordGraph extends Graph<Record> {
   }
 
   public boolean hasEdge(final Record object) {
-    final LineString line = object.getGeometryValue();
+    final LineString line = object.getGeometry();
     final Coordinates fromPoint = LineStringUtil.getFromCoordinates(line);
     final Coordinates toPoint = LineStringUtil.getToCoordinates(line);
     final Node<Record> fromNode = findNode(fromPoint);

@@ -228,7 +228,7 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
   protected CloseLocation findCloseLocation(final LayerRecord object, final BoundingBox boundingBox) {
     if (object.isGeometryEditable()) {
       final AbstractRecordLayer layer = object.getLayer();
-      final Geometry geometryValue = object.getGeometryValue();
+      final Geometry geometryValue = object.getGeometry();
       return findCloseLocation(layer, object, geometryValue, boundingBox);
 
     }

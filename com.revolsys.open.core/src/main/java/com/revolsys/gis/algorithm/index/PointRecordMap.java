@@ -43,7 +43,7 @@ public class PointRecordMap {
    * @param object The object to add.
    */
   public void add(final Record object) {
-    final Point point = object.getGeometryValue();
+    final Point point = object.getGeometry();
     final List<Record> objects = getOrCreateObjects(point);
     objects.add(object);
     if (this.comparator != null) {
@@ -136,7 +136,7 @@ public class PointRecordMap {
   }
 
   public List<Record> getObjects(final Record object) {
-    final Point point = object.getGeometryValue();
+    final Point point = object.getGeometry();
     final List<Record> objects = getObjects(point);
     return objects;
   }
@@ -162,7 +162,7 @@ public class PointRecordMap {
   }
 
   public void remove(final Record object) {
-    final Geometry geometry = object.getGeometryValue();
+    final Geometry geometry = object.getGeometry();
     final Coordinates coordinates = getCoordinates(geometry);
     final List<Record> objects = this.objectMap.get(coordinates);
     if (objects != null) {

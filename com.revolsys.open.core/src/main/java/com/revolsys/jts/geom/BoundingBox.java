@@ -125,7 +125,7 @@ public class BoundingBox extends Envelope implements Cloneable {
     if (object == null) {
       return new BoundingBox();
     } else {
-      final Geometry geometry = object.getGeometryValue();
+      final Geometry geometry = object.getGeometry();
       return getBoundingBox(geometry);
     }
   }
@@ -673,7 +673,7 @@ public class BoundingBox extends Envelope implements Cloneable {
 
   public BoundingBox expandToInclude(final Record object) {
     if (object != null) {
-      final Geometry geometry = object.getGeometryValue();
+      final Geometry geometry = object.getGeometry();
       return expandToInclude(geometry);
     }
     return this;

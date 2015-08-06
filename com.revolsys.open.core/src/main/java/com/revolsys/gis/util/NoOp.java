@@ -49,12 +49,12 @@ public class NoOp {
   }
 
   public static void equals(final Record object, final double x, final double y) {
-    final Geometry geometry = object.getGeometryValue();
+    final Geometry geometry = object.getGeometry();
     equals(geometry, x, y);
   }
 
   public static void equals(final Record object, final Double x, final Double y) {
-    final Geometry geometry = object.getGeometryValue();
+    final Geometry geometry = object.getGeometry();
     equals(geometry, x, y);
   }
 

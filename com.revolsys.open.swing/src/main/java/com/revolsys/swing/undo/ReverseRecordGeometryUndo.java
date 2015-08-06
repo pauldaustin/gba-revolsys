@@ -18,13 +18,13 @@ public class ReverseRecordGeometryUndo extends AbstractUndoableEdit {
 
   public ReverseRecordGeometryUndo(final Record object) {
     this.object = object;
-    this.oldValue = object.getGeometryValue();
+    this.oldValue = object.getGeometry();
   }
 
   @Override
   public boolean canRedo() {
     if (super.canRedo()) {
-      final Geometry value = this.object.getGeometryValue();
+      final Geometry value = this.object.getGeometry();
       if (EqualsRegistry.equal(value, this.oldValue)) {
         return true;
       }
@@ -35,7 +35,7 @@ public class ReverseRecordGeometryUndo extends AbstractUndoableEdit {
   @Override
   public boolean canUndo() {
     if (super.canUndo()) {
-      final Geometry value = this.object.getGeometryValue();
+      final Geometry value = this.object.getGeometry();
       if (EqualsRegistry.equal(value.reverse(), this.oldValue)) {
         return true;
       }

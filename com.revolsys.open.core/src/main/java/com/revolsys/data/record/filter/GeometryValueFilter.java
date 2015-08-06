@@ -12,12 +12,12 @@ public class GeometryValueFilter implements Filter<Record> {
   }
 
   public GeometryValueFilter(final Record object) {
-    this(object.<Geometry> getGeometryValue());
+    this(object.<Geometry> getGeometry());
   }
 
   @Override
   public boolean accept(final Record object) {
-    final Geometry value = object.getGeometryValue();
+    final Geometry value = object.getGeometry();
     if (value == this.geometry) {
       return true;
     } else if (value != null && this.geometry != null) {

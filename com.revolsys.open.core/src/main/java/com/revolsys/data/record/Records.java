@@ -40,7 +40,7 @@ public final class Records {
    */
   @SuppressWarnings("unchecked")
   public static <T extends Record> T copy(final T record, final Geometry geometry) {
-    final Geometry oldGeometry = record.getGeometryValue();
+    final Geometry oldGeometry = record.getGeometry();
     final T newObject = (T)record.clone();
     newObject.setGeometryValue(geometry);
     JtsGeometryUtil.copyUserData(oldGeometry, geometry);
@@ -57,7 +57,7 @@ public final class Records {
     final Geometry geometry, final double maxDistance) {
     final List<D> results = new ArrayList<D>();
     for (final D record : records) {
-      final Geometry recordGeometry = record.getGeometryValue();
+      final Geometry recordGeometry = record.getGeometry();
       final double distance = recordGeometry.distance(geometry);
       if (distance < maxDistance) {
         results.add(record);
@@ -77,7 +77,7 @@ public final class Records {
       if (propertyValue instanceof Record) {
         final Record recordValue = (Record)propertyValue;
 
-        if (recordValue.hasAttribute(propertyName)) {
+        if (recordValue.hasField(propertyName)) {
           propertyValue = recordValue.getValue(propertyName);
           if (propertyValue == null) {
             return null;

@@ -104,7 +104,7 @@ public class FileRecordLayer extends ListRecordLayer {
             final GeometryFactory geometryFactory = metaData.getGeometryFactory();
             BoundingBox boundingBox = new BoundingBox(geometryFactory);
             for (final Record record : reader) {
-              final Geometry geometry = record.getGeometryValue();
+              final Geometry geometry = record.getGeometry();
               boundingBox = boundingBox.expandToInclude(geometry);
 
               createRecordInternal(record);

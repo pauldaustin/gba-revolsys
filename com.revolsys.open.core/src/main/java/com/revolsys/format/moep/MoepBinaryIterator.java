@@ -52,25 +52,25 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
   }
 
   public static void setGeometryProperties(final Record object) {
-    final Geometry geometry = object.getGeometryValue();
+    final Geometry geometry = object.getGeometry();
     final Number angle = object.getValue(MoepConstants.ANGLE);
     if (angle != null) {
       final double orientation = getAngle(angle.doubleValue());
       JtsGeometryUtil.setGeometryProperty(geometry, "orientation", orientation);
     }
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), MoepConstants.TEXT_GROUP,
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), MoepConstants.TEXT_GROUP,
       object.getValue(MoepConstants.TEXT_GROUP));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), MoepConstants.TEXT_INDEX,
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), MoepConstants.TEXT_INDEX,
       object.getValue(MoepConstants.TEXT_INDEX));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "text",
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "text",
       object.getValue(MoepConstants.TEXT));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "textType",
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "textType",
       SaifConstants.TEXT_LINE);
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "fontName",
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "fontName",
       object.getValue(MoepConstants.FONT_NAME));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "characterHeight",
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "characterHeight",
       object.getValue(MoepConstants.FONT_SIZE));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometryValue(), "other",
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "other",
       object.getValue(MoepConstants.FONT_WEIGHT));
   }
 

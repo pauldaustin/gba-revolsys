@@ -101,7 +101,7 @@ public class GpxWriter extends AbstractWriter<Record> {
   @Override
   public void write(final Record object) {
     try {
-      final Geometry geometry = object.getGeometryValue();
+      final Geometry geometry = object.getGeometry();
       if (geometry instanceof Point) {
         writeWaypoint(object);
       } else if (geometry instanceof LineString) {
@@ -137,7 +137,7 @@ public class GpxWriter extends AbstractWriter<Record> {
 
   private void writeTrack(final Record object) throws IOException {
     this.out.startTag(GpxConstants.TRACK_ELEMENT);
-    final LineString line = object.getGeometryValue();
+    final LineString line = object.getGeometry();
     final int srid = line.getSRID();
     final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
     final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory.getToGeographicsCoordinatesOperation(coordinateSystem);
@@ -165,7 +165,7 @@ public class GpxWriter extends AbstractWriter<Record> {
 
   private void writeWaypoint(final Record wayPoint) throws IOException {
     this.out.startTag(GpxConstants.WAYPOINT_ELEMENT);
-    final Point point = wayPoint.getGeometryValue();
+    final Point point = wayPoint.getGeometry();
     final Coordinate coordinate = point.getCoordinate();
     final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(point.getSRID());
     final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory.getToGeographicsCoordinatesOperation(coordinateSystem);

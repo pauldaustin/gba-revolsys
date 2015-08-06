@@ -50,8 +50,8 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
             return idCompare;
           }
         }
-        final Geometry geometry1 = getGeometryValue();
-        final Geometry geometry2 = other.getGeometryValue();
+        final Geometry geometry1 = getGeometry();
+        final Geometry geometry2 = other.getGeometry();
         if (geometry1 != null && geometry2 != null) {
           final int geometryComparison = geometry1.compareTo(geometry2);
           if (geometryComparison != 0) {
@@ -76,9 +76,9 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
     getRecordDefinition().delete(this);
   }
 
-  default String getAttributeTitle(final String name) {
-    final RecordDefinition metaData = getRecordDefinition();
-    return metaData.getFieldTitle(name);
+  default String getFieldTitle(final String name) {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    return recordDefinition.getFieldTitle(name);
   }
 
   default Byte getByte(final CharSequence name) {
@@ -135,7 +135,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
    */
 
   @SuppressWarnings("unchecked")
-  default <T extends Geometry> T getGeometryValue() {
+  default <T extends Geometry> T getGeometry() {
     final RecordDefinition recordDefinition = getRecordDefinition();
     final int index = recordDefinition.getGeometryFieldIndex();
     return (T)getValue(index);
@@ -262,7 +262,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
       if (propertyValue instanceof Record) {
         final Record record = (Record)propertyValue;
 
-        if (record.hasAttribute(propertyName)) {
+        if (record.hasField(propertyName)) {
           propertyValue = record.getValue(propertyName);
           if (propertyValue == null) {
             return null;
@@ -327,16 +327,44 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
   }
 
   /**
-   * Checks to see if the metadata for this record has an attribute with the
+   * Checks to see if the definition for this record has a field with the
    * specified name.
    *
-   * @param name The name of the attribute.
-   * @return True if the record has an attribute with the specified name.
+   * @param name The name of the field.
+   * @return True if the record has field with the specified name.
    */
 
-  default boolean hasAttribute(final CharSequence name) {
+  default boolean hasField(final CharSequence name) {
     final RecordDefinition recordDefinition = getRecordDefinition();
     return recordDefinition.hasField(name);
+  }
+
+  default boolean hasValue(final CharSequence name) {
+    final Object value = getValue(name);
+    return Property.hasValue(value);
+  }
+
+  default boolean hasValuesAll(final String... fieldNames) {
+    for (final String fieldName : fieldNames) {
+      if (!hasValue(fieldName)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Check if any of the fields have a value.
+   * @param fieldNames
+   * @return True if any of the fields have a value, false otherwise.
+   */
+  default boolean hasValuesAny(final String... fieldNames) {
+    for (final String fieldName : fieldNames) {
+      if (hasValue(fieldName)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   default boolean isModified() {
@@ -522,7 +550,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
       final Object value = JavaBeanUtil.clone(record.getValue(name));
       setValue(name, value);
     }
-    setGeometryValue(JavaBeanUtil.clone(record.getGeometryValue()));
+    setGeometryValue(JavaBeanUtil.clone(record.getGeometry()));
   }
 
   default void setValues(final Record record, final Collection<String> fieldNames) {

@@ -25,7 +25,7 @@ public class MapGridGeometrySheetFilter implements Filter<Record> {
   @Override
   public boolean accept(final Record object) {
     if (this.sheet != null && this.grid != null) {
-      final Geometry geometry = object.getGeometryValue();
+      final Geometry geometry = object.getGeometry();
       if (geometry != null) {
         final Geometry geographicsGeometry = GeometryProjectionUtil.perform(geometry, 4326);
         final Coordinate centroid = geographicsGeometry.getCentroid().getCoordinate();

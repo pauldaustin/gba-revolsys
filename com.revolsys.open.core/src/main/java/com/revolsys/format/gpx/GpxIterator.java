@@ -283,7 +283,7 @@ public class GpxIterator implements RecordIterator {
         final double pointIndex = this.index + (pointObjects.size() + 1.0) / 10000;
         final Record pointObject = parseRoutPoint(pointIndex);
         pointObjects.add(pointObject);
-        final Point point = pointObject.getGeometryValue();
+        final Point point = pointObject.getGeometry();
         final Coordinates coordinates = CoordinatesUtil.get(point);
         numAxis = Math.max(numAxis, coordinates.getNumAxis());
       } else {
@@ -293,7 +293,7 @@ public class GpxIterator implements RecordIterator {
     final CoordinatesList points = new DoubleCoordinatesList(pointObjects.size(), numAxis);
     for (int i = 0; i < points.size(); i++) {
       final Record pointObject = pointObjects.get(i);
-      final Point point = pointObject.getGeometryValue();
+      final Point point = pointObject.getGeometry();
       final Coordinates coordinates = CoordinatesUtil.get(point);
       for (int j = 0; j < numAxis; j++) {
         final double value = coordinates.getValue(j);

@@ -169,7 +169,7 @@ public class ShapefileRecordWriter extends XbaseRecordWriter {
   protected void preFirstWrite(final Record object) throws IOException {
     if (this.geometryPropertyName != null) {
       if (this.geometryFactory == null) {
-        final Geometry geometry = object.getGeometryValue();
+        final Geometry geometry = object.getGeometry();
         if (geometry != null) {
           this.geometryFactory = GeometryFactory.getFactory(geometry);
         }
@@ -220,7 +220,7 @@ public class ShapefileRecordWriter extends XbaseRecordWriter {
     throws IOException {
     if (field.getFullName().equals(this.geometryPropertyName)) {
       final long recordIndex = this.out.getFilePointer();
-      Geometry geometry = object.getGeometryValue();
+      Geometry geometry = object.getGeometry();
       geometry = GeometryProjectionUtil.performCopy(geometry, this.geometryFactory);
       this.envelope.expandToInclude(geometry.getEnvelopeInternal());
       if (geometry == null || geometry.isEmpty()) {

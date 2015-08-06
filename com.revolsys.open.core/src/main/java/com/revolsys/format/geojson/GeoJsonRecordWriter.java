@@ -304,7 +304,7 @@ public class GeoJsonRecordWriter extends AbstractWriter<Record> implements GeoJs
     }
     this.out.startObject();
     type(FEATURE);
-    final Geometry mainGeometry = object.getGeometryValue();
+    final Geometry mainGeometry = object.getGeometry();
     writeSrid(mainGeometry);
     final RecordDefinition metaData = object.getRecordDefinition();
     final int geometryIndex = metaData.getGeometryFieldIndex();

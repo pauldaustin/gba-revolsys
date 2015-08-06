@@ -879,7 +879,7 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
 
   public void zoomTo(final Record object) {
     if (object != null) {
-      final Geometry geometry = object.getGeometryValue();
+      final Geometry geometry = object.getGeometry();
       zoomTo(geometry);
     }
   }

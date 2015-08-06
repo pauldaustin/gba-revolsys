@@ -236,7 +236,7 @@ public class GeometryStyleRenderer extends AbstractRecordLayerRenderer {
   @Override
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
     final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord object) {
-    final Geometry geometry = object.getGeometryValue();
+    final Geometry geometry = object.getGeometry();
     graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     renderGeometry(viewport, graphics, geometry, this.style);
   }

@@ -69,7 +69,7 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends AbstractVisitor<Ed
         JtsGeometryUtil.setGeometryProperty(line, PROCESSED, Boolean.TRUE);
         for (final Edge<Record> intersectingEdge : intersectingEdges) {
           final Record intersectingObject = intersectingEdge.getObject();
-          final LineString intersectingLine = intersectingObject.getGeometryValue();
+          final LineString intersectingLine = intersectingObject.getGeometry();
           if (JtsGeometryUtil.getGeometryProperty(intersectingLine, PROCESSED) != Boolean.TRUE) {
             JtsGeometryUtil.setGeometryProperty(intersectingLine, PROCESSED, Boolean.TRUE);
           }

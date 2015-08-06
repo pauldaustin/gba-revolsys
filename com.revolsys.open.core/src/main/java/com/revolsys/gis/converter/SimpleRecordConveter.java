@@ -47,7 +47,7 @@ public class SimpleRecordConveter implements Converter<Record, Record> {
   @Override
   public Record convert(final Record sourceObject) {
     final Record targetObject = this.factory.createRecord(this.recordDefinition);
-    final Geometry sourceGeometry = sourceObject.getGeometryValue();
+    final Geometry sourceGeometry = sourceObject.getGeometry();
     final GeometryFactory geometryFactory = GeometryFactory.getFactory(sourceGeometry);
     final Geometry targetGeometry = geometryFactory.createGeometry(sourceGeometry);
     JtsGeometryUtil.copyUserData(sourceGeometry, targetGeometry);

@@ -51,7 +51,7 @@ public class WktRecordWriter extends AbstractWriter<Record> {
     if (!this.open) {
       this.open = true;
     }
-    final Geometry geometry = object.getGeometryValue();
+    final Geometry geometry = object.getGeometry();
     final int srid = geometry.getSRID();
     if (srid > 0) {
       this.out.print("SRID=");

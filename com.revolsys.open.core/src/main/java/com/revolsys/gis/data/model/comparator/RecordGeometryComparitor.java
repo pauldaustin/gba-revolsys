@@ -28,8 +28,8 @@ public class RecordGeometryComparitor implements Comparator<Record> {
     if (object1 == object2) {
       return 0;
     } else {
-      final Geometry geometry1 = object1.getGeometryValue();
-      final Geometry geometry2 = object2.getGeometryValue();
+      final Geometry geometry1 = object1.getGeometry();
+      final Geometry geometry2 = object2.getGeometry();
       int compare = CompareUtil.compare(GEOMETRYC_COMPARATOR, geometry1, geometry2);
       if (compare == 0) {
         compare = geometry1.compareTo(geometry2);

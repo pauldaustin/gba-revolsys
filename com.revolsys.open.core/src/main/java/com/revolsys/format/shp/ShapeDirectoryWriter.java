@@ -114,7 +114,7 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
       final File file = new File(directory, getFileName(metaData) + this.nameSuffix + ".shp");
       writer = RecordIo.recordWriter(metaData, new FileSystemResource(file));
       ((XbaseRecordWriter)writer).setUseZeroForNull(this.useZeroForNull);
-      final Geometry geometry = object.getGeometryValue();
+      final Geometry geometry = object.getGeometry();
       if (geometry != null) {
         setProperty(IoConstants.GEOMETRY_FACTORY, GeometryFactory.getFactory(geometry));
       }

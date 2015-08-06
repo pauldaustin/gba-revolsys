@@ -44,7 +44,7 @@ public class RecordGeometryDistanceFilter implements Filter<Record> {
 
   @Override
   public boolean accept(final Record object) {
-    final Geometry matchGeometry = object.getGeometryValue();
+    final Geometry matchGeometry = object.getGeometry();
     final double distance = matchGeometry.distance(this.geometry);
     if (distance <= this.maxDistance) {
       return true;

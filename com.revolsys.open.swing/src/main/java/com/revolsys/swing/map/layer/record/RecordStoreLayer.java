@@ -631,7 +631,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       try {
         for (final LayerRecord record : queryObjects) {
           if (!record.getState().equals(RecordState.Deleted)) {
-            final Geometry geometry = record.getGeometryValue();
+            final Geometry geometry = record.getGeometry();
             if (geometry.intersects(polygon)) {
               allObjects.add(record);
             }

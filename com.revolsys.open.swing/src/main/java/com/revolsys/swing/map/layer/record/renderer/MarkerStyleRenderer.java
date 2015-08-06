@@ -384,7 +384,7 @@ public class MarkerStyleRenderer extends AbstractRecordLayerRenderer {
   public void renderRecord(final Viewport2D viewport, final Graphics2D graphics,
     final BoundingBox visibleArea, final AbstractRecordLayer layer, final LayerRecord object) {
     if (isVisible(object)) {
-      final Geometry geometry = object.getGeometryValue();
+      final Geometry geometry = object.getGeometry();
       renderMarker(viewport, graphics, geometry, this.style);
     }
   }
