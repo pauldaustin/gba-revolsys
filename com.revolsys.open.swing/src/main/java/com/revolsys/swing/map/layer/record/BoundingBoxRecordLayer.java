@@ -10,7 +10,7 @@ import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.query.Query;
 import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.cs.projection.GeometryOperation;
@@ -102,7 +102,7 @@ public class BoundingBoxRecordLayer extends AbstractRecordLayer {
 
   public void setIndex(final BoundingBox boundingBox, final RecordQuadTree index) {
     synchronized (this.sync) {
-      if (EqualsRegistry.equal(this.boundingBox, boundingBox)) {
+      if (Equals.equal(this.boundingBox, boundingBox)) {
         setIndex(index);
         this.worker = null;
         this.loading = false;

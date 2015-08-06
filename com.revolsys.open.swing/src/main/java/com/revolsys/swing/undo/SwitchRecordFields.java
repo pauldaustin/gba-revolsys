@@ -3,7 +3,7 @@ package com.revolsys.swing.undo;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.Record;
 
 public class SwitchRecordFields extends AbstractUndoableEdit {
@@ -42,9 +42,9 @@ public class SwitchRecordFields extends AbstractUndoableEdit {
     if (super.canRedo()) {
       final Object value1 = this.record.getValue(this.fieldName1);
       final Object value2 = this.record.getValue(this.fieldName2);
-      if (!EqualsRegistry.equal(value1, value2)) {
-        if (EqualsRegistry.equal(this.value1, value1)) {
-          if (EqualsRegistry.equal(this.value2, value2)) {
+      if (!Equals.equal(value1, value2)) {
+        if (Equals.equal(this.value1, value1)) {
+          if (Equals.equal(this.value2, value2)) {
             return true;
           }
         }
@@ -58,8 +58,8 @@ public class SwitchRecordFields extends AbstractUndoableEdit {
     if (super.canUndo()) {
       final Object value1 = this.record.getValue(this.fieldName1);
       final Object value2 = this.record.getValue(this.fieldName2);
-      if (EqualsRegistry.equal(this.value1, value2)) {
-        if (EqualsRegistry.equal(this.value2, value1)) {
+      if (Equals.equal(this.value1, value2)) {
+        if (Equals.equal(this.value2, value1)) {
           return true;
         }
       }

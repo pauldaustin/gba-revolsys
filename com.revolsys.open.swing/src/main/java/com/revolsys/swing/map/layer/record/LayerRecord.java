@@ -4,8 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -114,7 +114,7 @@ public class LayerRecord extends ArrayRecord {
         final Object otherId = record.getIdValue();
         if (id == null || otherId == null) {
           return false;
-        } else if (EqualsRegistry.equal(id, otherId)) {
+        } else if (Equals.equal(id, otherId)) {
           return true;
         } else {
           return false;
@@ -196,7 +196,7 @@ public class LayerRecord extends ArrayRecord {
       } else {
         if (layer.isCanEditRecords()) {
           final Object originalValue = getOriginalValue(attributeName);
-          if (EqualsRegistry.equal(value, originalValue)) {
+          if (Equals.equal(value, originalValue)) {
             if (this.originalValues != null) {
               this.originalValues.remove(attributeName);
               if (this.originalValues.isEmpty()) {

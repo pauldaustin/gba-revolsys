@@ -13,7 +13,7 @@ import javax.measure.quantity.Length;
 
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.swing.map.Viewport2D;
@@ -356,7 +356,7 @@ public class TextStyle implements MapSerializer, Cloneable {
       if (DEFAULT_VALUES.containsKey(name)) {
         Object defaultValue = DEFAULT_VALUES.get(name);
         defaultValue = getValue(name, defaultValue);
-        defaultEqual = EqualsRegistry.equal(defaultValue, value);
+        defaultEqual = Equals.equal(defaultValue, value);
       }
       if (!defaultEqual) {
 

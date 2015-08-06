@@ -14,7 +14,7 @@ import javax.swing.event.DocumentListener;
 import org.jdesktop.swingx.JXTextField;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.types.DataType;
 import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.menu.PopupMenu;
@@ -329,7 +329,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
     }
     if (SwingUtilities.isEventDispatchThread()) {
       final Object newValue = getTypedValue(value);
-      if (!EqualsRegistry.equal(this.fieldValue, newValue)) {
+      if (!Equals.equal(this.fieldValue, newValue)) {
         this.undoManager.discardAllEdits();
         String newText = StringConverterRegistry.toString(newValue);
         if (newValue == null) {
@@ -343,7 +343,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
         } else {
           newText = StringConverterRegistry.toString(newValue);
         }
-        if (!EqualsRegistry.equal(newText, getText())) {
+        if (!Equals.equal(newText, getText())) {
           setText(newText);
         }
         final Object oldValue = this.fieldValue;

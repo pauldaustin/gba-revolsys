@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
@@ -99,7 +99,7 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     final String attributeName = getFieldName(rowIndex);
     final Object originalValue = this.object.getOriginalValue(attributeName);
     final Object value = this.object.getValue(attributeName);
-    return !EqualsRegistry.equal(originalValue, value);
+    return !Equals.equal(originalValue, value);
   }
 
   @Override

@@ -23,7 +23,7 @@ import javax.swing.SwingWorker;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.collection.map.LruMap;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.Cast;
 import com.revolsys.data.query.Column;
@@ -482,7 +482,7 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
   }
 
   public boolean setFilter(final Condition filter) {
-    if (EqualsRegistry.equal(filter, this.filter)) {
+    if (Equals.equal(filter, this.filter)) {
       return false;
     } else {
       final Object oldValue = this.filter;

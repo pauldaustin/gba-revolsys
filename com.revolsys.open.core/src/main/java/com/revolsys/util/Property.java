@@ -26,7 +26,7 @@ import com.revolsys.beans.NonWeakListener;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.beans.WeakPropertyChangeListener;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.Record;
 import com.revolsys.io.ObjectWithProperties;
 
@@ -86,7 +86,7 @@ public final class Property {
     } else if (object1 != null && object2 != null) {
       final Object value1 = getSimple(object1, propertyName);
       final Object value2 = getSimple(object2, propertyName);
-      return EqualsRegistry.equal(value1, value2);
+      return Equals.equal(value1, value2);
     }
     return false;
   }
@@ -379,7 +379,7 @@ public final class Property {
     final boolean newHasValue = Property.hasValue(newValue);
     if (oldHasValue) {
       if (newHasValue) {
-        if (EqualsRegistry.equal(oldValue.trim(), newValue.trim())) {
+        if (Equals.equal(oldValue.trim(), newValue.trim())) {
           return true;
         } else {
           return false;

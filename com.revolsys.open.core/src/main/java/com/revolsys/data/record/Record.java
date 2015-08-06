@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
@@ -412,7 +412,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
       setValue(index, id);
     } else {
       final Object oldId = getValue(index);
-      if (oldId != null && !EqualsRegistry.equal(id, oldId)) {
+      if (oldId != null && !Equals.equal(id, oldId)) {
         throw new IllegalStateException("Cannot change the ID on a persisted object");
       }
     }

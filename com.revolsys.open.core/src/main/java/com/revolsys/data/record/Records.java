@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
@@ -252,7 +252,7 @@ public final class Records {
       value = value2;
     } else if (!Property.hasValue(value2)) {
       value = value1;
-    } else if (EqualsRegistry.equal(value1, value2)) {
+    } else if (Equals.equal(value1, value2)) {
       value = value1;
     } else {
       value = value1 + separator + value2;

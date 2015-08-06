@@ -1,6 +1,6 @@
 package com.revolsys.swing.undo;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.DirectionalAttributes;
 import com.vividsolutions.jts.geom.Geometry;
@@ -25,7 +25,7 @@ public class ReverseRecordAttributesUndo extends AbstractUndoableEdit {
   public boolean canRedo() {
     if (super.canRedo()) {
       final Geometry value = this.object.getGeometry();
-      if (EqualsRegistry.equal(value, this.oldValue)) {
+      if (Equals.equal(value, this.oldValue)) {
         return true;
       }
     }
@@ -36,7 +36,7 @@ public class ReverseRecordAttributesUndo extends AbstractUndoableEdit {
   public boolean canUndo() {
     if (super.canUndo()) {
       final Geometry value = this.object.getGeometry();
-      if (EqualsRegistry.equal(value, this.oldValue)) {
+      if (Equals.equal(value, this.oldValue)) {
         return true;
       }
     }

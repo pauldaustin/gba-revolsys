@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.schema.FieldDefinition;
 
 public class Column extends QueryValue {
@@ -41,7 +41,7 @@ public class Column extends QueryValue {
   public boolean equals(final Object obj) {
     if (obj instanceof Column) {
       final Column value = (Column)obj;
-      return EqualsRegistry.equal(value.getName(), this.getName());
+      return Equals.equal(value.getName(), this.getName());
     } else {
       return false;
     }

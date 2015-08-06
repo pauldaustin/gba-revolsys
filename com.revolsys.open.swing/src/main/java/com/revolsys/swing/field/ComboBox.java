@@ -18,7 +18,7 @@ import javax.swing.ListCellRenderer;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.Property;
@@ -200,10 +200,10 @@ public class ComboBox extends JComboBox implements Field {
   @Override
   public synchronized void setFieldValue(final Object value) {
     final Object oldValue = this.fieldValue;
-    if (!EqualsRegistry.equal(getSelectedItem(), value)) {
+    if (!Equals.equal(getSelectedItem(), value)) {
       setSelectedItem(value);
     }
-    if (!EqualsRegistry.equal(oldValue, value)) {
+    if (!Equals.equal(oldValue, value)) {
       this.fieldValue = value;
       firePropertyChange(this.fieldName, oldValue, value);
       SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, value);

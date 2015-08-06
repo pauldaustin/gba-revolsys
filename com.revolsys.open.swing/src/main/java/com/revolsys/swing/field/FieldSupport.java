@@ -9,7 +9,7 @@ import javax.swing.text.JTextComponent;
 
 import org.jdesktop.swingx.border.IconBorder;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.Property;
@@ -145,7 +145,7 @@ public class FieldSupport {
 
   public void setValue(final Object value) {
     final Object oldValue = this.value;
-    if (!EqualsRegistry.equal(oldValue, value)) {
+    if (!Equals.equal(oldValue, value)) {
       this.value = value;
       this.field.firePropertyChange(this.name, oldValue, value);
       SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this.field, oldValue, value);

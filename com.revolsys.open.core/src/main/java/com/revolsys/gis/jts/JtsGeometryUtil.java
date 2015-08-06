@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.Geometry3DExactEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
@@ -1148,7 +1148,7 @@ public final class JtsGeometryUtil {
 
   public static boolean isFromPoint(final Geometry geometry, final Point point) {
     final Point fromPoint = JtsGeometryUtil.getFromPoint(geometry);
-    return EqualsRegistry.equal(point, fromPoint);
+    return Equals.equal(point, fromPoint);
   }
 
   public static boolean isLessThanDistance(final Coordinate coordinate, final LineString line,
@@ -1173,7 +1173,7 @@ public final class JtsGeometryUtil {
 
   public static boolean isToPoint(final Geometry geometry, final Point point) {
     final Point toPoint = getToPoint(geometry);
-    return EqualsRegistry.equal(point, toPoint);
+    return Equals.equal(point, toPoint);
   }
 
   public static boolean isWithinDistance(final Coordinate coordinate, final LineString line,

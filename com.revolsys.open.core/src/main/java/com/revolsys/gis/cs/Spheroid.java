@@ -2,7 +2,7 @@ package com.revolsys.gis.cs;
 
 import java.io.Serializable;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class Spheroid implements Serializable {
@@ -76,7 +76,7 @@ public class Spheroid implements Serializable {
   }
 
   public boolean equalsExact(final Spheroid spheroid) {
-    if (!EqualsRegistry.equal(this.authority, spheroid.authority)) {
+    if (!Equals.equal(this.authority, spheroid.authority)) {
       return false;
       // } else if (deprecated != spheroid.deprecated) {
       // return false;

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.schema.FieldDefinition;
 
 public class In extends Condition {
@@ -53,7 +53,7 @@ public class In extends Condition {
     final List<Object> allowedValues = right.getValues();
 
     for (final Object allowedValue : allowedValues) {
-      if (EqualsRegistry.equal(value, allowedValue)) {
+      if (Equals.equal(value, allowedValue)) {
         return true;
       }
     }
@@ -95,8 +95,8 @@ public class In extends Condition {
   public boolean equals(final Object obj) {
     if (obj instanceof In) {
       final In in = (In)obj;
-      if (EqualsRegistry.equal(in.getLeft(), this.getLeft())) {
-        if (EqualsRegistry.equal(in.getValues(), this.getValues())) {
+      if (Equals.equal(in.getLeft(), this.getLeft())) {
+        if (Equals.equal(in.getValues(), this.getValues())) {
           return true;
         }
       }

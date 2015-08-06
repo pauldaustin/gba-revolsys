@@ -3,7 +3,7 @@ package com.revolsys.gis.model.geometry.impl;
 import java.util.Collections;
 import java.util.List;
 
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -129,9 +129,9 @@ public class PointImpl extends GeometryImpl implements Point {
 
   @Override
   public boolean equals3d(final Coordinates coordinates) {
-    if (EqualsRegistry.equal(getX(), coordinates.getX())) {
-      if (EqualsRegistry.equal(getY(), coordinates.getY())) {
-        if (EqualsRegistry.equal(getZ(), coordinates.getZ())) {
+    if (Equals.equal(getX(), coordinates.getX())) {
+      if (Equals.equal(getY(), coordinates.getY())) {
+        if (Equals.equal(getZ(), coordinates.getZ())) {
           return true;
         }
       }

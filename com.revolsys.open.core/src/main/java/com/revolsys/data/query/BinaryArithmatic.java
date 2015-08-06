@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 
 public abstract class BinaryArithmatic extends QueryValue {
 
@@ -65,9 +65,9 @@ public abstract class BinaryArithmatic extends QueryValue {
   public boolean equals(final Object obj) {
     if (obj instanceof BinaryArithmatic) {
       final BinaryArithmatic condition = (BinaryArithmatic)obj;
-      if (EqualsRegistry.equal(condition.getLeft(), this.getLeft())) {
-        if (EqualsRegistry.equal(condition.getRight(), this.getRight())) {
-          if (EqualsRegistry.equal(condition.getOperator(), this.getOperator())) {
+      if (Equals.equal(condition.getLeft(), this.getLeft())) {
+        if (Equals.equal(condition.getRight(), this.getRight())) {
+          if (Equals.equal(condition.getOperator(), this.getOperator())) {
             return true;
           }
         }

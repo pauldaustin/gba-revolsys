@@ -60,7 +60,7 @@ import com.revolsys.awt.WebColors;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
-import com.revolsys.data.equals.EqualsRegistry;
+import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.property.DirectionalAttributes;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -965,7 +965,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
           final String fieldName = field.getFieldName();
           final Object fieldValue = field.getFieldValue();
           final Object objectValue = this.object.getValue(fieldName);
-          if (!EqualsRegistry.equal(objectValue, fieldValue)) {
+          if (!Equals.equal(objectValue, fieldValue)) {
             boolean equal = false;
             if (fieldValue instanceof String) {
               final String string = (String)fieldValue;
@@ -1049,7 +1049,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     if (message == null) {
       message = "Invalid value";
     }
-    if (!EqualsRegistry.equal(message, this.fieldInValidMessage.equals(message))) {
+    if (!Equals.equal(message, this.fieldInValidMessage.equals(message))) {
       if (SwingUtilities.isEventDispatchThread()) {
         this.fieldInValidMessage.put(fieldName, message);
         this.fieldsValid = false;
@@ -1129,11 +1129,11 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     }
     this.fieldValues.put(fieldName, value);
     final JComponent field = (JComponent)getField(fieldName);
-    if (oldValue == null & value != null || !EqualsRegistry.equal(value, oldValue)) {
+    if (oldValue == null & value != null || !Equals.equal(value, oldValue)) {
       changed = true;
     }
     final Object objectValue = this.object.getValue(fieldName);
-    if (!EqualsRegistry.equal(value, objectValue)) {
+    if (!Equals.equal(value, objectValue)) {
       this.object.setValueByPath(fieldName, value);
       changed = true;
     }
