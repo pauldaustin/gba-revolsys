@@ -18,18 +18,19 @@ import com.revolsys.jts.geom.GeometryFactory;
 
 public class ArcSdeSpatialReferenceCache {
 
-  public static ArcSdeSpatialReferenceCache get(final AbstractJdbcRecordStore dataStore) {
-    ArcSdeSpatialReferenceCache spatialReferences = dataStore.getProperty("esriSpatialReferences");
+  public static ArcSdeSpatialReferenceCache get(final AbstractJdbcRecordStore recordStore) {
+    ArcSdeSpatialReferenceCache spatialReferences = recordStore
+      .getProperty("esriSpatialReferences");
     if (spatialReferences == null) {
-      spatialReferences = new ArcSdeSpatialReferenceCache(dataStore);
-      dataStore.setProperty("esriSpatialReferences", spatialReferences);
+      spatialReferences = new ArcSdeSpatialReferenceCache(recordStore);
+      recordStore.setProperty("esriSpatialReferences", spatialReferences);
     }
     return spatialReferences;
   }
 
   public static ArcSdeSpatialReferenceCache get(final RecordStoreSchema schema) {
-    final AbstractJdbcRecordStore dataStore = (AbstractJdbcRecordStore)schema.getRecordStore();
-    return get(dataStore);
+    final AbstractJdbcRecordStore recordStore = (AbstractJdbcRecordStore)schema.getRecordStore();
+    return get(recordStore);
 
   }
 
@@ -40,13 +41,13 @@ public class ArcSdeSpatialReferenceCache {
 
   private final Map<Integer, ArcSdeSpatialReference> spatialReferences = new HashMap<Integer, ArcSdeSpatialReference>();
 
-  private AbstractJdbcRecordStore dataStore;
+  private AbstractJdbcRecordStore recordStore;
 
   public ArcSdeSpatialReferenceCache() {
   }
 
-  public ArcSdeSpatialReferenceCache(final AbstractJdbcRecordStore dataStore) {
-    this.dataStore = dataStore;
+  public ArcSdeSpatialReferenceCache(final AbstractJdbcRecordStore recordStore) {
+    this.recordStore = recordStore;
   }
 
   public synchronized ArcSdeSpatialReference getSpatialReference(final int esriSrid) {
@@ -66,7 +67,7 @@ public class ArcSdeSpatialReferenceCache {
 
   protected ArcSdeSpatialReference getSpatialReference(final String sql, final int esriSrid) {
     try (
-      final Connection connection = this.dataStore.getJdbcConnection()) {
+      final Connection connection = this.recordStore.getJdbcConnection()) {
       PreparedStatement statement = null;
       ResultSet resultSet = null;
       try {
@@ -88,7 +89,8 @@ public class ArcSdeSpatialReferenceCache {
           final GeometryFactory geometryFactory;
           if (srid <= 0) {
             final CoordinateSystem coordinateSystem = new WktCsParser(wkt).parse();
-            final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
+            final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems
+              .getCoordinateSystem(coordinateSystem);
             srid = esriCoordinateSystem.getId();
             if (srid <= 0) {
               geometryFactory = GeometryFactory.fixed(coordinateSystem, 3, scale.doubleValue(),

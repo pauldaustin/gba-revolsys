@@ -104,10 +104,6 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     return this.dataSource;
   }
 
-  public JdbcRecordStore getDataStore() {
-    return this.recordStore;
-  }
-
   /**
    * Get the index of the last object in the current page.
    *
@@ -207,6 +203,10 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     return this.recordFactory;
   }
 
+  public JdbcRecordStore getRecordStore() {
+    return this.recordStore;
+  }
+
   protected String getSql() {
     return this.sql;
   }
@@ -248,8 +248,8 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
   private void initResultSet() {
     if (this.resultSet == null) {
       try {
-        this.statement = this.connection.prepareStatement(this.sql,
-          ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        this.statement = this.connection.prepareStatement(this.sql, ResultSet.TYPE_SCROLL_SENSITIVE,
+          ResultSet.CONCUR_READ_ONLY);
         this.statement.setFetchSize(this.pageSize);
 
         this.resultSet = JdbcQueryIterator.getResultSet(this.metaData, this.statement, this.query);

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.revolsys.data.record.Records;
-import com.revolsys.data.record.filter.DataObjectGeometryFilter;
+import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -14,8 +14,8 @@ import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Factory;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterUtil;
-import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
-import com.revolsys.gis.algorithm.index.PointDataObjectMap;
+import com.revolsys.gis.algorithm.index.RecordQuadTree;
+import com.revolsys.gis.algorithm.index.PointRecordMap;
 import com.revolsys.gis.algorithm.linematch.LineMatchGraph;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.filter.LineEqualIgnoreDirectionFilter;
@@ -51,13 +51,13 @@ public class CompareProcessor extends AbstractMergeProcess {
 
   private Statistics notEqualSourceStatistics = new Statistics("Not Equal Source");
 
-  private DataObjectQuadTree otherIndex = new DataObjectQuadTree();
+  private RecordQuadTree otherIndex = new RecordQuadTree();
 
-  private PointDataObjectMap otherPointMap = new PointDataObjectMap();
+  private PointRecordMap otherPointMap = new PointRecordMap();
 
   private Set<Record> sourceObjects = new LinkedHashSet<Record>();
 
-  private final PointDataObjectMap sourcePointMap = new PointDataObjectMap();
+  private final PointRecordMap sourcePointMap = new PointRecordMap();
 
   private boolean logNotEqualSource = true;
 
@@ -170,7 +170,7 @@ public class CompareProcessor extends AbstractMergeProcess {
     final LineString sourceLine = sourceObject.getGeometryValue();
     final LineEqualIgnoreDirectionFilter lineEqualFilter = new LineEqualIgnoreDirectionFilter(
       sourceLine, 3);
-    final Filter<Record> geometryFilter = new DataObjectGeometryFilter<LineString>(lineEqualFilter);
+    final Filter<Record> geometryFilter = new RecordGeometryFilter<LineString>(lineEqualFilter);
     final Filter<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
     final Filter<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);
 
@@ -237,7 +237,7 @@ public class CompareProcessor extends AbstractMergeProcess {
       }
     }
     this.sourceObjects.clear();
-    this.otherIndex = new DataObjectQuadTree();
+    this.otherIndex = new RecordQuadTree();
     this.otherPointMap.clear();
   }
 
@@ -247,7 +247,7 @@ public class CompareProcessor extends AbstractMergeProcess {
       final LineString sourceLine = (LineString)sourceGeometry;
 
       final LineIntersectsFilter intersectsFilter = new LineIntersectsFilter(sourceLine);
-      final Filter<Record> geometryFilter = new DataObjectGeometryFilter<LineString>(
+      final Filter<Record> geometryFilter = new RecordGeometryFilter<LineString>(
         intersectsFilter);
       final Filter<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
       final Filter<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);

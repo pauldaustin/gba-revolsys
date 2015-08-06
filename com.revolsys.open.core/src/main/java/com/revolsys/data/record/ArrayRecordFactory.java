@@ -12,13 +12,13 @@ import com.revolsys.data.record.schema.RecordDefinition;
 public class ArrayRecordFactory implements RecordFactory {
 
   /**
-   * Create an instance of ArrayDataObject using the metadata
+   * Create an instance of ArrayRecord using the recordDefinition
    *
-   * @param metaData The metadata used to create the instance.
-   * @return The DataObject instance.
+   * @param recordDefinition The recordDefinition used to create the instance.
+   * @return The record instance.
    */
   @Override
-  public ArrayRecord createRecord(final RecordDefinition metaData) {
-    return new ArrayRecord(metaData);
+  public ArrayRecord createRecord(final RecordDefinition recordDefinition) {
+    return new ArrayRecord(recordDefinition);
   }
 }

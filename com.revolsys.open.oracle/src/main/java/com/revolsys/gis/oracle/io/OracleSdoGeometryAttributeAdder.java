@@ -9,10 +9,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import oracle.sql.ARRAY;
-import oracle.sql.Datum;
-import oracle.sql.STRUCT;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +25,10 @@ import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
 import com.revolsys.jdbc.io.JdbcConstants;
 import com.revolsys.jdbc.io.SqlFunction;
 import com.revolsys.jts.geom.GeometryFactory;
+
+import oracle.sql.ARRAY;
+import oracle.sql.Datum;
+import oracle.sql.STRUCT;
 
 public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
   private static final Map<Integer, String> ID_TO_GEOMETRY_TYPE = new HashMap<Integer, String>();
@@ -86,7 +86,8 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
     addGeometryType(null, "POLYHEDRALSURFACEZM", 3015);
   }
 
-  private static void addGeometryType(final DataType dataType, final String name, final Integer id) {
+  private static void addGeometryType(final DataType dataType, final String name,
+    final Integer id) {
     ID_TO_GEOMETRY_TYPE.put(id, name);
     GEOMETRY_TYPE_TO_ID.put(name, id);
     ID_TO_DATA_TYPE.put(id, dataType);
@@ -110,11 +111,11 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
 
   private final Logger LOG = LoggerFactory.getLogger(OracleSdoGeometryAttributeAdder.class);
 
-  private final AbstractJdbcRecordStore dataStore;
+  private final AbstractJdbcRecordStore recordStore;
 
-  public OracleSdoGeometryAttributeAdder(final AbstractJdbcRecordStore dataStore,
+  public OracleSdoGeometryAttributeAdder(final AbstractJdbcRecordStore recordStore,
     final DataSource dataSource) {
-    this.dataStore = dataStore;
+    this.recordStore = recordStore;
     this.dataSource = dataSource;
   }
 
@@ -146,11 +147,12 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
     final FieldDefinition attribute = new OracleSdoGeometryJdbcAttribute(dbName, name, dataType,
       sqlType, required, description, null, geometryFactory, numAxis);
     metaData.addField(attribute);
-    attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction("SDO_RELATE(",
-      ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));
-    attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("SDO_GEOM.SDO_BUFFER(",
-      "," + 1 / geometryFactory.getScaleXY() + ")"));
-    attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction("SDO_EQUAL(", ") = 'TRUE'"));
+    attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS,
+      new SqlFunction("SDO_RELATE(", ",'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'"));
+    attribute.setProperty(JdbcConstants.FUNCTION_BUFFER,
+      new SqlFunction("SDO_GEOM.SDO_BUFFER(", "," + 1 / geometryFactory.getScaleXY() + ")"));
+    attribute.setProperty(JdbcConstants.FUNCTION_EQUAL,
+      new SqlFunction("SDO_EQUAL(", ") = 'TRUE'"));
     attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     return attribute;
 
@@ -176,7 +178,7 @@ public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
     try {
       final Connection connection = JdbcUtils.getConnection(this.dataSource);
       try {
-        final String schemaName = this.dataStore.getDatabaseSchemaName(schema);
+        final String schemaName = this.recordStore.getDatabaseSchemaName(schema);
         final String sridSql = "select M.TABLE_NAME, M.COLUMN_NAME, M.SRID, M.DIMINFO, C.GEOMETRY_TYPE "
           + "from ALL_SDO_GEOM_METADATA M "
           + "LEFT OUTER JOIN ALL_GEOMETRY_COLUMNS C ON (M.OWNER = C.F_TABLE_SCHEMA AND M.TABLE_NAME = C.F_TABLE_NAME AND M.COLUMN_NAME = C.F_GEOMETRY_COLUMN) "

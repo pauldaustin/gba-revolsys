@@ -16,7 +16,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.data.equals.DataObjectEquals;
+import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
@@ -248,7 +248,7 @@ public class DirectionalAttributes extends AbstractRecordDefinitionProperty {
       final RecordDefinition metaData = getRecordDefinition();
       final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(metaData);
       for (final String attributeName : metaData.getFieldNames()) {
-        if (!DataObjectEquals.isAttributeIgnored(metaData, equalExcludeAttributes, attributeName)
+        if (!RecordEquals.isAttributeIgnored(metaData, equalExcludeAttributes, attributeName)
           && !equalIgnore.isAttributeIgnored(attributeName)) {
           if (!canMerge(attributeName, point, record1, record2, equalExcludeAttributes,
             forwardsIndicators)) {

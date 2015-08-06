@@ -34,9 +34,9 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
 
   private SeConnection connection;
 
-  private RecordFactory dataObjectFactory;
+  private RecordFactory recordFactory;
 
-  private JdbcRecordStore dataStore;
+  private JdbcRecordStore recordStore;
 
   private RecordDefinition metaData;
 
@@ -48,16 +48,16 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
 
   private Statistics statistics;
 
-  private ArcSdeBinaryGeometryDataStoreUtil sdeUtil;
+  private ArcSdeBinaryGeometryRecordUtil sdeUtil;
 
-  public ArcSdeBinaryGeometryQueryIterator(final ArcSdeBinaryGeometryDataStoreUtil sdeUtil,
-    final JdbcRecordStore dataStore, final Query query, final Map<String, Object> properties) {
+  public ArcSdeBinaryGeometryQueryIterator(final ArcSdeBinaryGeometryRecordUtil sdeUtil,
+    final JdbcRecordStore recordStore, final Query query, final Map<String, Object> properties) {
     this.sdeUtil = sdeUtil;
-    this.dataObjectFactory = query.getProperty("recordFactory");
-    if (this.dataObjectFactory == null) {
-      this.dataObjectFactory = dataStore.getRecordFactory();
+    this.recordFactory = query.getProperty("recordFactory");
+    if (this.recordFactory == null) {
+      this.recordFactory = recordStore.getRecordFactory();
     }
-    this.dataStore = dataStore;
+    this.recordStore = recordStore;
     this.query = query;
     this.statistics = (Statistics)properties.get(Statistics.class.getName());
   }
@@ -74,8 +74,8 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
     }
     this.sdeUtil = null;
     this.attributes = null;
-    this.dataObjectFactory = null;
-    this.dataStore = null;
+    this.recordFactory = null;
+    this.recordStore = null;
     this.metaData = null;
     this.query = null;
     this.seQuery = null;
@@ -84,11 +84,11 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
 
   @Override
   protected void doInit() {
-    String tableName = this.dataStore.getDatabaseQualifiedTableName(this.query.getTypeName());
+    String tableName = this.recordStore.getDatabaseQualifiedTableName(this.query.getTypeName());
     this.metaData = this.query.getRecordDefinition();
     if (this.metaData == null) {
       if (tableName != null) {
-        this.metaData = this.dataStore.getRecordDefinition(tableName);
+        this.metaData = this.recordStore.getRecordDefinition(tableName);
         this.query.setRecordDefinition(this.metaData);
 
       }
@@ -145,7 +145,8 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
 
       final String typePath = this.query.getTypeNameAlias();
       if (typePath != null) {
-        final RecordDefinitionImpl newRecordDefinition = ((RecordDefinitionImpl)this.metaData).rename(typePath);
+        final RecordDefinitionImpl newRecordDefinition = ((RecordDefinitionImpl)this.metaData)
+          .rename(typePath);
         this.metaData = newRecordDefinition;
       }
     } catch (final SeException e) {
@@ -189,14 +190,14 @@ public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> 
   }
 
   private Record getNextRecord(final RecordDefinition metaData, final SeRow row) {
-    final Record object = this.dataObjectFactory.createRecord(metaData);
+    final Record object = this.recordFactory.createRecord(metaData);
     if (object != null) {
       object.setState(RecordState.Initalizing);
       for (int columnIndex = 0; columnIndex < this.attributes.size(); columnIndex++) {
         this.sdeUtil.setValueFromRow(object, row, columnIndex);
       }
       object.setState(RecordState.Persisted);
-      this.dataStore.addStatistic("query", object);
+      this.recordStore.addStatistic("query", object);
     }
     return object;
   }

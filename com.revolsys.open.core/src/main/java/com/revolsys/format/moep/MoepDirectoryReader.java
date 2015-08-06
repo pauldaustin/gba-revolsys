@@ -11,12 +11,12 @@ import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
-import com.revolsys.gis.data.io.DataObjectDirectoryReader;
+import com.revolsys.gis.data.io.RecordDirectoryReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
 import com.revolsys.util.DateUtil;
 
-public class MoepDirectoryReader extends DataObjectDirectoryReader implements
+public class MoepDirectoryReader extends RecordDirectoryReader implements
   RecordDefinitionFactory {
 
   private Date integrationDate;

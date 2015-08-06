@@ -36,7 +36,7 @@ public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory impleme
   @Override
   public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
-    return new KmzDataObjectWriter(outputStream, charset);
+    return new KmzRecordWriter(outputStream, charset);
   }
 
   @Override

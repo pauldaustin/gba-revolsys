@@ -56,22 +56,21 @@ public class AddFileLayerAction extends AbstractAction {
     final Set<String> allImageExtensions = new TreeSet<String>();
     getFilters(imageFileFilters, allImageExtensions, GeoreferencedImageFactory.class);
 
-    final List<FileFilter> dataObjectFileFilters = new ArrayList<FileFilter>();
-    final Set<String> allDataObjectExtensions = new TreeSet<String>();
-    getFilters(dataObjectFileFilters, allDataObjectExtensions, RecordReaderFactory.class);
+    final List<FileFilter> recordFileFilters = new ArrayList<FileFilter>();
+    final Set<String> allRecordExtensions = new TreeSet<String>();
+    getFilters(recordFileFilters, allRecordExtensions, RecordReaderFactory.class);
 
     final Set<String> allExtensions = new TreeSet<String>();
-    allExtensions.addAll(allDataObjectExtensions);
+    allExtensions.addAll(allRecordExtensions);
     allExtensions.addAll(allImageExtensions);
     final FileNameExtensionFilter allFilter = createFilter("All Supported files", allExtensions);
     fileChooser.addChoosableFileFilter(allFilter);
 
-    fileChooser.addChoosableFileFilter(createFilter("All Vector/Data files",
-      allDataObjectExtensions));
+    fileChooser.addChoosableFileFilter(createFilter("All Vector/Data files", allRecordExtensions));
 
     fileChooser.addChoosableFileFilter(createFilter("All Image files", allImageExtensions));
 
-    for (final FileFilter fileFilter : dataObjectFileFilters) {
+    for (final FileFilter fileFilter : recordFileFilters) {
       fileChooser.addChoosableFileFilter(fileFilter);
     }
 

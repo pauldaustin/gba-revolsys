@@ -30,8 +30,8 @@ import com.vividsolutions.jts.geom.Geometry;
 public class DelegatingRecordStore extends AbstractRecordStore {
   private final AbstractRecordStore recordStore;
 
-  public DelegatingRecordStore(final AbstractRecordStore dataStore) {
-    this.recordStore = dataStore;
+  public DelegatingRecordStore(final AbstractRecordStore recordStore) {
+    this.recordStore = recordStore;
   }
 
   @Override
@@ -141,10 +141,6 @@ public class DelegatingRecordStore extends AbstractRecordStore {
     return this.recordStore.getCodeTableColumNames();
   }
 
-  public AbstractRecordStore getDataStore() {
-    return this.recordStore;
-  }
-
   @Override
   public GeometryFactory getGeometryFactory() {
     return this.recordStore.getGeometryFactory();
@@ -183,6 +179,10 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   @Override
   public RecordFactory getRecordFactory() {
     return this.recordStore.getRecordFactory();
+  }
+
+  public AbstractRecordStore getRecordStore() {
+    return this.recordStore;
   }
 
   @Override
@@ -247,8 +247,8 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   }
 
   @Override
-  public void insert(final Record dataObject) {
-    this.recordStore.insert(dataObject);
+  public void insert(final Record record) {
+    this.recordStore.insert(record);
   }
 
   @Override

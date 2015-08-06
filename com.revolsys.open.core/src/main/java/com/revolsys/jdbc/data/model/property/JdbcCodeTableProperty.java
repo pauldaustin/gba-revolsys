@@ -96,7 +96,7 @@ public class JdbcCodeTableProperty extends CodeTableProperty {
       if (this.useAuditColumns) {
         if (this.recordStore.getClass()
           .getName()
-          .equals("com.revolsys.gis.oracle.io.OracleDataObjectStore")) {
+          .equals("com.revolsys.gis.oracle.io.OracleRecordStore")) {
           this.insertSql += ", USER, SYSDATE, USER, SYSDATE";
         } else {
           this.insertSql += ", current_user, current_timestamp, current_user, current_timestamp";

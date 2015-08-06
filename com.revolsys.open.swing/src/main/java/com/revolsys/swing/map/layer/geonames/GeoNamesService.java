@@ -47,8 +47,8 @@ public class GeoNamesService {
     meta.addField("geometry", DataTypes.POINT, false);
     NAME_METADATA = meta;
 
-    final RecordDefinitionImpl wikipediaMetaData = new RecordDefinitionImpl(Path.toPath(
-      "/geoname.org", "wikipedia"));
+    final RecordDefinitionImpl wikipediaMetaData = new RecordDefinitionImpl(
+      Path.toPath("/geoname.org", "wikipedia"));
     wikipediaMetaData.addField("summary", DataTypes.STRING, false);
     wikipediaMetaData.addField("title", DataTypes.STRING, false);
     wikipediaMetaData.addField("wikipediaUrl", DataTypes.STRING, false);
@@ -83,7 +83,8 @@ public class GeoNamesService {
 
   public List<Record> getNames(final BoundingBox boundingBox) {
     final GeometryFactory geometryFactory = GeometryFactory.floating3(4326);
-    final GeographicCoordinateSystem cs = (GeographicCoordinateSystem)geometryFactory.getCoordinateSystem();
+    final GeographicCoordinateSystem cs = (GeographicCoordinateSystem)geometryFactory
+      .getCoordinateSystem();
     final BoundingBox geographicBoundingBox = boundingBox.convert(geometryFactory);
     final Map<String, Object> params = new HashMap<String, Object>();
 
@@ -142,11 +143,11 @@ public class GeoNamesService {
     final List<Record> results = new ArrayList<Record>();
     final List<Map<String, Object>> names = (List<Map<String, Object>>)result.get("geonames");
     for (final Map<String, Object> name : names) {
-      final Record dataObject = metaData.createRecord();
+      final Record record = metaData.createRecord();
       for (final String attributeName : metaData.getFieldNames()) {
         final Object value = name.get(attributeName);
         if (value != null) {
-          dataObject.setValue(attributeName, value);
+          record.setValue(attributeName, value);
         }
       }
       final double lat = ((Number)name.get("lat")).doubleValue();
@@ -157,8 +158,8 @@ public class GeoNamesService {
       if (elevation != null) {
         coordinate.z = elevation.doubleValue();
       }
-      dataObject.setGeometryValue(GeometryFactory.getFactory().createPoint(coordinate));
-      results.add(dataObject);
+      record.setGeometryValue(GeometryFactory.getFactory().createPoint(coordinate));
+      results.add(record);
     }
     return results;
   }

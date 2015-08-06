@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.revolsys.data.equals.DataObjectEquals;
+import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.graph.Node;
@@ -15,8 +15,8 @@ import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
 import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
 
 public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
-  protected static final List<String> DEFAULT_EXCLUDE = Arrays.asList(DataObjectEquals.EXCLUDE_ID,
-    DataObjectEquals.EXCLUDE_GEOMETRY);
+  protected static final List<String> DEFAULT_EXCLUDE = Arrays.asList(RecordEquals.EXCLUDE_ID,
+    RecordEquals.EXCLUDE_GEOMETRY);
 
   public static final String PROPERTY_NAME = PseudoNodeProperty.class.getName() + ".propertyName";
 

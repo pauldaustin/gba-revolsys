@@ -6,13 +6,13 @@ import java.util.concurrent.CancellationException;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.query.Query;
-import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
+import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.map.layer.AbstractLayer;
 import com.revolsys.swing.parallel.AbstractSwingWorker;
 
-public class LoadingWorker extends AbstractSwingWorker<DataObjectQuadTree, Void> {
+public class LoadingWorker extends AbstractSwingWorker<RecordQuadTree, Void> {
   private final BoundingBox viewportBoundingBox;
 
   private final RecordStoreLayer layer;
@@ -24,9 +24,9 @@ public class LoadingWorker extends AbstractSwingWorker<DataObjectQuadTree, Void>
   }
 
   @Override
-  protected DataObjectQuadTree doInBackground() throws Exception {
+  protected RecordQuadTree doInBackground() throws Exception {
     try {
-      final DataObjectQuadTree index = new DataObjectQuadTree();
+      final RecordQuadTree index = new RecordQuadTree();
       final GeometryFactory geometryFactory = this.layer.getGeometryFactory();
       final BoundingBox queryBoundingBox = this.viewportBoundingBox.convert(geometryFactory);
       Query query = this.layer.getQuery();
@@ -66,7 +66,7 @@ public class LoadingWorker extends AbstractSwingWorker<DataObjectQuadTree, Void>
   protected void uiTask() {
     try {
       if (!isCancelled()) {
-        final DataObjectQuadTree index = get();
+        final RecordQuadTree index = get();
 
         this.layer.setIndex(this.viewportBoundingBox, index);
       }

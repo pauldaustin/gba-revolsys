@@ -4,7 +4,7 @@ import javax.xml.namespace.QName;
 
 import com.revolsys.data.types.DataType;
 import com.revolsys.format.gml.GmlConstants;
-import com.revolsys.format.gml.GmlDataObjectWriter;
+import com.revolsys.format.gml.GmlRecordWriter;
 import com.revolsys.format.xml.XmlWriter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
@@ -153,7 +153,7 @@ public class GmlGeometryFieldType extends AbstractGmlFieldType {
   private void srsName(final XmlWriter out, final Geometry geometry, final boolean writeSrsName) {
     if (writeSrsName) {
       final GeometryFactory factory = GeometryFactory.getFactory(geometry);
-      GmlDataObjectWriter.srsName(out, factory);
+      GmlRecordWriter.srsName(out, factory);
     }
   }
 

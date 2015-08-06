@@ -12,7 +12,7 @@ import com.revolsys.parallel.process.AbstractProcess;
 
 public class RecordStoreQueryTask extends AbstractProcess {
 
-  private final RecordStore dataStore;
+  private final RecordStore recordStore;
 
   private final BoundingBox boundingBox;
 
@@ -20,9 +20,9 @@ public class RecordStoreQueryTask extends AbstractProcess {
 
   private final String path;
 
-  public RecordStoreQueryTask(final RecordStore dataStore, final String path,
+  public RecordStoreQueryTask(final RecordStore recordStore, final String path,
     final BoundingBox boundingBox) {
-    this.dataStore = dataStore;
+    this.recordStore = recordStore;
     this.path = path;
     this.boundingBox = boundingBox;
   }
@@ -41,7 +41,7 @@ public class RecordStoreQueryTask extends AbstractProcess {
     this.objects = new ArrayList<Record>();
     final Query query = new Query(this.path);
     query.setBoundingBox(this.boundingBox);
-    final Reader<Record> reader = this.dataStore.query(query);
+    final Reader<Record> reader = this.recordStore.query(query);
     try {
       for (final Record object : reader) {
         try {

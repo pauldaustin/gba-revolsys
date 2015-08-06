@@ -8,7 +8,7 @@ import com.revolsys.comparator.NumericComparator;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
-import com.revolsys.swing.table.record.renderer.SingleDataObjectTableCellRenderer;
+import com.revolsys.swing.table.record.renderer.SingleRecordTableCellRenderer;
 
 public abstract class AbstractSingleRecordTableModel extends AbstractRecordTableModel {
   private static final long serialVersionUID = 1L;
@@ -23,7 +23,7 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     table.setAutoCreateColumnsFromModel(false);
     table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-    final SingleDataObjectTableCellRenderer cellRenderer = new SingleDataObjectTableCellRenderer();
+    final SingleRecordTableCellRenderer cellRenderer = new SingleRecordTableCellRenderer();
     final RecordTableCellEditor cellEditor = new RecordTableCellEditor(table);
 
     final RecordDefinition metaData = model.getRecordDefinition();

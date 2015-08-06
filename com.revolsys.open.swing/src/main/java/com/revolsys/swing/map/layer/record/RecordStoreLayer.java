@@ -23,12 +23,12 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
-import com.revolsys.data.record.filter.DataObjectGeometryIntersectsFilter;
+import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.data.record.io.RecordStoreConnectionManager;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
+import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
@@ -54,8 +54,10 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class RecordStoreLayer extends AbstractRecordLayer {
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("dataStore",
-    "Data Store", RecordStoreLayer.class, "create");
+  public static final String DATA_STORE = "dataStore";
+
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(DATA_STORE,
+    "Record Store", RecordStoreLayer.class, "create");
 
   public static AbstractRecordLayer create(final Map<String, Object> properties) {
     return new RecordStoreLayer(properties);
@@ -69,7 +71,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
   private BoundingBox loadingBoundingBox = new BoundingBox();
 
-  private SwingWorker<DataObjectQuadTree, Void> loadingWorker;
+  private SwingWorker<RecordQuadTree, Void> loadingWorker;
 
   private final Object sync = new Object();
 
@@ -81,17 +83,17 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
   public RecordStoreLayer(final Map<String, ? extends Object> properties) {
     super(properties);
-    setType("dataStore");
+    setType(DATA_STORE);
   }
 
-  public RecordStoreLayer(final RecordStore dataStore, final String typePath,
+  public RecordStoreLayer(final RecordStore recordStore, final String typePath,
     final boolean exists) {
-    this.recordStore = dataStore;
+    this.recordStore = recordStore;
     setExists(exists);
-    setType("dataStore");
+    setType(DATA_STORE);
 
     setTypePath(typePath);
-    setRecordDefinition(dataStore.getRecordDefinition(typePath));
+    setRecordDefinition(recordStore.getRecordDefinition(typePath));
   }
 
   @SuppressWarnings("unchecked")
@@ -143,9 +145,9 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     String url = null;
     String username = null;
     if (isExists()) {
-      final RecordStore dataStore = getRecordStore();
-      url = dataStore.getUrl();
-      username = dataStore.getUsername();
+      final RecordStore recordStore = getRecordStore();
+      url = recordStore.getUrl();
+      username = recordStore.getUsername();
     }
     if (connectionProperties != null) {
       connectionName = connectionProperties.get("name");
@@ -256,7 +258,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       }
       this.recordStore = null;
     }
-    final SwingWorker<DataObjectQuadTree, Void> loadingWorker = this.loadingWorker;
+    final SwingWorker<RecordQuadTree, Void> loadingWorker = this.loadingWorker;
     this.boundingBox = new BoundingBox();
     this.cachedRecords = new HashMap<String, LayerRecord>();
     this.loadingBoundingBox = new BoundingBox();
@@ -289,8 +291,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
   @Override
   protected boolean doInitialize() {
-    RecordStore dataStore = this.recordStore;
-    if (dataStore == null) {
+    RecordStore recordStore = this.recordStore;
+    if (recordStore == null) {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties == null) {
         LoggerFactory.getLogger(getClass()).error(
@@ -300,26 +302,26 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       } else {
         final Map<String, Object> config = new HashMap<String, Object>();
         config.put("connection", connectionProperties);
-        dataStore = RecordStoreConnectionManager.getRecordStore(config);
+        recordStore = RecordStoreConnectionManager.getRecordStore(config);
 
-        if (dataStore == null) {
+        if (recordStore == null) {
           LoggerFactory.getLogger(getClass())
             .error("Unable to create data store for layer: " + getPath());
           return false;
         } else {
           try {
-            dataStore.initialize();
+            recordStore.initialize();
           } catch (final Throwable e) {
             throw new RuntimeException("Unable to iniaitlize data store for layer " + getPath(), e);
           }
 
-          setDataStore(dataStore);
+          setRecordStore(recordStore);
         }
       }
     }
     RecordDefinition metaData = this.getRecordDefinition();
     if (metaData == null) {
-      metaData = dataStore.getRecordDefinition(this.typePath);
+      metaData = recordStore.getRecordDefinition(this.typePath);
       if (metaData == null) {
         LoggerFactory.getLogger(getClass())
           .error("Cannot find table " + this.typePath + " for layer " + getPath());
@@ -346,7 +348,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       if (this.boundingBox.contains(queryBoundingBox)) {
         return (List)getIndex().queryIntersects(queryBoundingBox);
       } else {
-        final List<LayerRecord> readRecords = getRecordsFromDataStore(queryBoundingBox);
+        final List<LayerRecord> readRecords = getRecordsFromRecordStore(queryBoundingBox);
         final List<LayerRecord> records = getCachedRecords(readRecords);
         return records;
       }
@@ -365,8 +367,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       BoundingBox boundingBox = BoundingBox.getBoundingBox(queryGeometry);
       boundingBox = boundingBox.expand(distance);
       final String typePath = getTypePath();
-      final RecordStore dataStore = getRecordStore();
-      final Reader reader = dataStore.query(this, typePath, queryGeometry, distance);
+      final RecordStore recordStore = getRecordStore();
+      final Reader reader = recordStore.query(this, typePath, queryGeometry, distance);
       try {
         final List<LayerRecord> results = reader.read();
         final List<LayerRecord> records = getCachedRecords(results);
@@ -383,13 +385,13 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   @Override
   protected List<LayerRecord> doQuery(final Query query) {
     if (isExists()) {
-      final RecordStore dataStore = getRecordStore();
-      if (dataStore != null) {
+      final RecordStore recordStore = getRecordStore();
+      if (recordStore != null) {
         try (
           Enabled enabled = eventsDisabled()) {
           final Statistics statistics = query.getProperty("statistics");
           query.setProperty("recordFactory", this);
-          final Reader<LayerRecord> reader = (Reader)dataStore.query(query);
+          final Reader<LayerRecord> reader = (Reader)recordStore.query(query);
           try {
             final List<LayerRecord> records = new ArrayList<LayerRecord>();
             for (final LayerRecord record : reader) {
@@ -432,11 +434,11 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       final GeometryFactory geometryFactory = getGeometryFactory();
       final Polygon polygon = boundingBox.toPolygon(geometryFactory, 10, 10);
 
-      final DataObjectQuadTree index = getIndex();
+      final RecordQuadTree index = getIndex();
 
       final List<LayerRecord> records = (List)index.queryIntersects(polygon);
 
-      final Filter filter = new DataObjectGeometryIntersectsFilter(boundingBox);
+      final Filter filter = new RecordGeometryIntersectsFilter(boundingBox);
       for (final ListIterator<LayerRecord> iterator = records.listIterator(); iterator.hasNext();) {
         final LayerRecord record = iterator.next();
         final LayerRecord cachedRecord = getCacheRecord(record);
@@ -597,8 +599,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       if (record == null) {
         final Query query = Query.equal(metaData, idFieldName, id);
         query.setProperty("recordFactory", this);
-        final RecordStore dataStore = getRecordStore();
-        return (LayerRecord)dataStore.queryFirst(query);
+        final RecordStore recordStore = getRecordStore();
+        return (LayerRecord)recordStore.queryFirst(query);
       } else {
         return record;
       }
@@ -612,7 +614,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   protected List<LayerRecord> getRecords(final BoundingBox boundingBox) {
     final BoundingBox convertedBoundingBox = boundingBox.convert(getGeometryFactory());
     BoundingBox loadedBoundingBox;
-    DataObjectQuadTree index;
+    RecordQuadTree index;
     synchronized (this.sync) {
       loadedBoundingBox = this.boundingBox;
       index = getIndex();
@@ -621,7 +623,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     if (loadedBoundingBox.contains(boundingBox)) {
       queryObjects = (List)index.query(convertedBoundingBox);
     } else {
-      queryObjects = getRecordsFromDataStore(convertedBoundingBox);
+      queryObjects = getRecordsFromRecordStore(convertedBoundingBox);
     }
     final List<LayerRecord> allObjects = new ArrayList<LayerRecord>();
     if (!queryObjects.isEmpty()) {
@@ -646,14 +648,14 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   @SuppressWarnings({
     "rawtypes", "unchecked"
   })
-  protected List<LayerRecord> getRecordsFromDataStore(final BoundingBox boundingBox) {
+  protected List<LayerRecord> getRecordsFromRecordStore(final BoundingBox boundingBox) {
     if (isExists()) {
-      final RecordStore dataStore = getRecordStore();
-      if (dataStore != null) {
+      final RecordStore recordStore = getRecordStore();
+      if (recordStore != null) {
         final Query query = new Query(getTypePath());
         query.setBoundingBox(boundingBox);
         query.setProperty("recordFactory", this);
-        final Reader reader = dataStore.query(query);
+        final Reader reader = recordStore.query(query);
         try {
           return reader.read();
         } finally {
@@ -672,9 +674,9 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   @Override
   public int getRowCount(final Query query) {
     if (isExists()) {
-      final RecordStore dataStore = getRecordStore();
-      if (dataStore != null) {
-        return dataStore.getRowCount(query);
+      final RecordStore recordStore = getRecordStore();
+      if (recordStore != null) {
+        return recordStore.getRowCount(query);
       }
     }
     return 0;
@@ -743,9 +745,9 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       setIndex(null);
       cleanCachedRecords();
     }
-    final RecordStore dataStore = getRecordStore();
+    final RecordStore recordStore = getRecordStore();
     final String typePath = getTypePath();
-    final CodeTable codeTable = dataStore.getCodeTable(typePath);
+    final CodeTable codeTable = recordStore.getCodeTable(typePath);
     if (codeTable != null) {
       codeTable.refresh();
     }
@@ -800,11 +802,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     super.revertChanges(record);
   }
 
-  protected void setDataStore(final RecordStore dataStore) {
-    this.recordStore = dataStore;
-  }
-
-  protected void setIndex(final BoundingBox loadedBoundingBox, final DataObjectQuadTree index) {
+  protected void setIndex(final BoundingBox loadedBoundingBox, final RecordQuadTree index) {
     if (this.sync != null) {
       synchronized (this.sync) {
         if (loadedBoundingBox == this.loadingBoundingBox) {
@@ -817,6 +815,10 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       }
       firePropertyChange("refresh", false, true);
     }
+  }
+
+  protected void setRecordStore(final RecordStore recordStore) {
+    this.recordStore = recordStore;
   }
 
   @Override
@@ -849,9 +851,9 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     }
     if (Property.hasValue(typePath)) {
       if (isExists()) {
-        final RecordStore dataStore = getRecordStore();
-        if (dataStore != null) {
-          final RecordDefinition metaData = dataStore.getRecordDefinition(typePath);
+        final RecordStore recordStore = getRecordStore();
+        if (recordStore != null) {
+          final RecordDefinition metaData = recordStore.getRecordDefinition(typePath);
           if (metaData != null) {
 
             setRecordDefinition(metaData);

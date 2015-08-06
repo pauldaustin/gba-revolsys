@@ -14,7 +14,7 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
-public class MoepBinaryReader extends AbstractReader<Record> implements RecordReader {
+public class MoepBinaryReader extends AbstractReader<Record>implements RecordReader {
 
   private MoepBinaryIterator iterator;
 
@@ -23,7 +23,7 @@ public class MoepBinaryReader extends AbstractReader<Record> implements RecordRe
    *
    * @param moepDirectoryReader
    * @param file The the file.
-   * @param factory The factory used to create DataObject instances.
+   * @param factory The factory used to create record instances.
    */
   public MoepBinaryReader(final MoepDirectoryReader moepDirectoryReader, final Resource resource,
     final RecordFactory factory) {
@@ -39,7 +39,7 @@ public class MoepBinaryReader extends AbstractReader<Record> implements RecordRe
    * Construct a new MoepBinaryReader.
    *
    * @param url The url to the file.
-   * @param factory The factory used to create DataObject instances.
+   * @param factory The factory used to create record instances.
    */
   public MoepBinaryReader(final URL url, final RecordFactory factory) {
     try {

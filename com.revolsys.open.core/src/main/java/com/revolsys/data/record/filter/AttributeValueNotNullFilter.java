@@ -1,11 +1,11 @@
 package com.revolsys.data.record.filter;
 
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.filter.Filter;
 
 /**
- * Filter DataObjects by the the attribute not having a null value.
+ * Filter records by the the attribute not having a null value.
  *
  * @author Paul Austin
  */

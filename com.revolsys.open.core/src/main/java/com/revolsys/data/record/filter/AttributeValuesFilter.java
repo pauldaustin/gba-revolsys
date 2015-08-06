@@ -5,12 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.filter.Filter;
 
 /**
- * Filter DataObjects by the value of the attributeName.
+ * Filter records by the value of the attributeName.
  *
  * @author Paul Austin
  */

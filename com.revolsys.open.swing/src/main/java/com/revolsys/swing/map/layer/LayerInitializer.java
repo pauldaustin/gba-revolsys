@@ -32,18 +32,18 @@ public class LayerInitializer extends SwingWorker<Void, Void> {
     }
   }
 
-  private final RecordStoreConnectionRegistry dataStoreRegistry;
+  private final RecordStoreConnectionRegistry recordStoreRegistry;
 
   private Layer layer;
 
   public LayerInitializer() {
-    this.dataStoreRegistry = RecordStoreConnectionRegistry.getForThread();
+    this.recordStoreRegistry = RecordStoreConnectionRegistry.getForThread();
   }
 
   @Override
   protected Void doInBackground() throws Exception {
     try {
-      RecordStoreConnectionRegistry.setForThread(this.dataStoreRegistry);
+      RecordStoreConnectionRegistry.setForThread(this.recordStoreRegistry);
       while (true) {
         synchronized (LAYERS_TO_INITIALIZE) {
           if (LAYERS_TO_INITIALIZE.isEmpty()) {

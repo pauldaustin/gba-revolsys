@@ -44,7 +44,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
 
-public abstract class AbstractDirectoryReader<T> extends AbstractReader<T> implements Iterator<T> {
+public abstract class AbstractDirectoryReader<T> extends AbstractReader<T>implements Iterator<T> {
   /** The list of base file names to read. */
   private final List<String> baseFileNames = new ArrayList<String>();
 
@@ -209,7 +209,7 @@ public abstract class AbstractDirectoryReader<T> extends AbstractReader<T> imple
   /**
    * Get the next data object read by this reader.
    *
-   * @return The next DataObject.
+   * @return The next record.
    * @exception NoSuchElementException If the reader has no more data objects.
    */
   @Override

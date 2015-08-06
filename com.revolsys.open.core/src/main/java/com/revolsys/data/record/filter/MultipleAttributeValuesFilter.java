@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.filter.Filter;
 
 /**
- * Filter DataObjects by the value of the property.
+ * Filter records by the value of the property.
  *
  * @author Paul Austin
  */

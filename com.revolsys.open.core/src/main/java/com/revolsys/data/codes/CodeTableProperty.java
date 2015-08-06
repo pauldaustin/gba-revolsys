@@ -17,7 +17,7 @@ import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
+import com.revolsys.gis.data.model.comparator.RecordAttributeComparator;
 import com.revolsys.io.Path;
 import com.revolsys.io.Reader;
 import com.revolsys.util.Property;
@@ -40,7 +40,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
 
   private List<String> attributeAliases = new ArrayList<String>();
 
-  private RecordStore dataStore;
+  private RecordStore recordStore;
 
   private boolean loadAll = true;
 
@@ -97,9 +97,9 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
   protected synchronized Object createId(final List<Object> values) {
     if (this.createMissingCodes) {
       // TODO prevent duplicates from other threads/processes
-      final Record code = this.dataStore.create(this.typePath);
+      final Record code = this.recordStore.create(this.typePath);
       final RecordDefinition metaData = code.getRecordDefinition();
-      Object id = this.dataStore.createPrimaryIdValue(this.typePath);
+      Object id = this.recordStore.createPrimaryIdValue(this.typePath);
       if (id == null) {
         final FieldDefinition idAttribute = metaData.getIdField();
         if (idAttribute != null) {
@@ -125,7 +125,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
         code.setValue(this.modificationTimestampAttributeName, now);
       }
 
-      this.dataStore.insert(code);
+      this.recordStore.insert(code);
       id = code.getIdValue();
       return id;
     } else {
@@ -200,7 +200,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
   }
 
   public RecordStore getRecordStore() {
-    return this.dataStore;
+    return this.recordStore;
   }
 
   public String getTypeName() {
@@ -234,17 +234,18 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
         this.threadLoading.set(Boolean.TRUE);
         this.loading = true;
         try {
-          final RecordDefinition metaData = this.dataStore.getRecordDefinition(this.typePath);
+          final RecordDefinition metaData = this.recordStore.getRecordDefinition(this.typePath);
           final Query query = new Query(this.typePath);
           query.setFieldNames(metaData.getFieldNames());
           for (final String order : this.orderBy) {
             query.addOrderBy(order, true);
           }
           try (
-            Reader<Record> reader = this.dataStore.query(query)) {
+            Reader<Record> reader = this.recordStore.query(query)) {
             final List<Record> codes = reader.read();
-            this.dataStore.getStatistics().getStatistics("query").add(this.typePath, -codes.size());
-            Collections.sort(codes, new DataObjectAttributeComparator(this.orderBy));
+            this.recordStore.getStatistics().getStatistics("query").add(this.typePath,
+              -codes.size());
+            Collections.sort(codes, new RecordAttributeComparator(this.orderBy));
             addValues(codes);
           }
           Property.firePropertyChange(this, "valuesChanged", false, true);
@@ -282,10 +283,10 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
         }
       }
       query.setWhereCondition(and);
-      final Reader<Record> reader = this.dataStore.query(query);
+      final Reader<Record> reader = this.recordStore.query(query);
       try {
         final List<Record> codes = reader.read();
-        this.dataStore.getStatistics().getStatistics("query").add(this.typePath, -codes.size());
+        this.recordStore.getStatistics().getStatistics("query").add(this.typePath, -codes.size());
         addValues(codes);
         id = getIdByValue(values);
         Property.firePropertyChange(this, "valuesChanged", false, true);
@@ -306,7 +307,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
       loadAll();
     } else {
       try {
-        final Record code = this.dataStore.load(this.typePath, id);
+        final Record code = this.recordStore.load(this.typePath, id);
         if (code != null) {
           addValue(code);
         }
@@ -349,7 +350,8 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
     this.loadMissingCodes = loadMissingCodes;
   }
 
-  public void setModificationTimestampAttributeName(final String modificationTimestampAttributeName) {
+  public void setModificationTimestampAttributeName(
+    final String modificationTimestampAttributeName) {
     this.modificationTimestampAttributeName = modificationTimestampAttributeName;
   }
 
@@ -365,14 +367,14 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
       }
       this.recordDefinition = metaData;
       if (metaData == null) {
-        this.dataStore = null;
+        this.recordStore = null;
         this.typePath = null;
       } else {
         this.typePath = metaData.getPath();
         setName(Path.getName(this.typePath));
-        this.dataStore = this.recordDefinition.getRecordStore();
+        this.recordStore = this.recordDefinition.getRecordStore();
         metaData.setProperty(getPropertyName(), this);
-        this.dataStore.addCodeTable(this);
+        this.recordStore.addCodeTable(this);
       }
     }
   }

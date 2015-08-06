@@ -30,9 +30,9 @@ public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory imple
 
   @Override
   public RecordReader createRecordReader(final Resource resource,
-    final RecordFactory dataObjectFactory) {
+    final RecordFactory recordFactory) {
     try {
-      final ShapefileIterator iterator = new ShapefileIterator(resource, dataObjectFactory);
+      final ShapefileIterator iterator = new ShapefileIterator(resource, recordFactory);
       return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
@@ -46,7 +46,7 @@ public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory imple
 
   @Override
   public Writer<Record> createRecordWriter(final RecordDefinition metaData, final Resource resource) {
-    return new ShapefileDataObjectWriter(metaData, resource);
+    return new ShapefileRecordWriter(metaData, resource);
   }
 
   @Override

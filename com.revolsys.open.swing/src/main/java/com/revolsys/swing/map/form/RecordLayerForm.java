@@ -72,7 +72,7 @@ import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.action.enablecheck.ObjectPropertyEnableCheck;
-import com.revolsys.swing.dnd.transferhandler.DataObjectLayerFormTransferHandler;
+import com.revolsys.swing.dnd.transferhandler.RecordLayerFormTransferHandler;
 import com.revolsys.swing.field.ComboBox;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.field.NumberTextField;
@@ -93,9 +93,9 @@ import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
 import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 import com.revolsys.swing.toolbar.ToolBar;
-import com.revolsys.swing.undo.ReverseDataObjectAttributesUndo;
-import com.revolsys.swing.undo.ReverseDataObjectGeometryUndo;
-import com.revolsys.swing.undo.ReverseDataObjectUndo;
+import com.revolsys.swing.undo.ReverseRecordAttributesUndo;
+import com.revolsys.swing.undo.ReverseRecordGeometryUndo;
+import com.revolsys.swing.undo.ReverseRecordUndo;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
@@ -121,7 +121,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   private LayerRecordTableModel allAttributes;
 
-  private RecordStore dataStore;
+  private RecordStore recordStore;
 
   private boolean editable = true;
 
@@ -165,7 +165,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   private ToolBar toolBar;
 
-  private UndoManager undoManager = new DataObjectLayerFormUndoManager(this);
+  private UndoManager undoManager = new RecordLayerFormUndoManager(this);
 
   private String focussedFieldName;
 
@@ -182,8 +182,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     map.put("copy", TransferHandler.getCopyAction());
     map.put("paste", TransferHandler.getPasteAction());
 
-    final DataObjectLayerFormTransferHandler transferHandler = new DataObjectLayerFormTransferHandler(
-      this);
+    final RecordLayerFormTransferHandler transferHandler = new RecordLayerFormTransferHandler(this);
     setTransferHandler(transferHandler);
     setFont(SwingUtil.FONT);
 
@@ -226,8 +225,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   }
 
   protected ObjectLabelField addCodeTableLabelField(final String fieldName) {
-    final RecordStore dataStore = getDataStore();
-    final CodeTable codeTable = dataStore.getCodeTableByFieldName(fieldName);
+    final RecordStore recordStore = getRecordStore();
+    final CodeTable codeTable = recordStore.getCodeTableByFieldName(fieldName);
     final ObjectLabelField field = new ObjectLabelField(fieldName, codeTable);
     field.setFont(SwingUtil.FONT);
     addField(fieldName, field);
@@ -312,7 +311,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     addField(fieldName, field);
   }
 
-  protected void addPanel(final JPanel container, final String title, final List<String> fieldNames) {
+  protected void addPanel(final JPanel container, final String title,
+    final List<String> fieldNames) {
     final JPanel panel = createPanel(container, title);
 
     for (final String fieldName : fieldNames) {
@@ -487,8 +487,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
         if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
           this.toolBar.addButton("geometry", FLIP_RECORD_NAME, FLIP_RECORD_ICON, editable, this,
             "flipRecordOrientation");
-          this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME,
-            FLIP_LINE_ORIENTATION_ICON, editable, this, "flipLineOrientation");
+          this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME, FLIP_LINE_ORIENTATION_ICON,
+            editable, this, "flipLineOrientation");
           this.toolBar.addButton("geometry", FLIP_FIELDS_NAME, FLIP_FIELDS_ICON, editable, this,
             "flipFields");
         } else {
@@ -563,7 +563,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   public void destroy() {
     this.addOkButton = null;
     this.allAttributes = null;
-    this.dataStore = null;
+    this.recordStore = null;
     this.fieldInValidMessage.clear();
     for (final Field field : this.fields.values()) {
       Property.removeAllListeners(field);
@@ -615,15 +615,15 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   }
 
   public void flipFields() {
-    addUndo(new ReverseDataObjectAttributesUndo(this.object));
+    addUndo(new ReverseRecordAttributesUndo(this.object));
   }
 
   public void flipLineOrientation() {
-    addUndo(new ReverseDataObjectGeometryUndo(this.object));
+    addUndo(new ReverseRecordGeometryUndo(this.object));
   }
 
   public void flipRecordOrientation() {
-    addUndo(new ReverseDataObjectUndo(this.object));
+    addUndo(new ReverseRecordUndo(this.object));
   }
 
   @Override
@@ -677,18 +677,6 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
       string = "-";
     }
     return string;
-  }
-
-  public RecordStore getDataStore() {
-    if (this.dataStore == null) {
-      if (this.metaData == null) {
-        return null;
-      } else {
-        return this.metaData.getRecordStore();
-      }
-    } else {
-      return this.dataStore;
-    }
   }
 
   public Color getErrorForegroundColor() {
@@ -806,6 +794,18 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   public Set<String> getReadOnlyFieldNames() {
     return this.readOnlyFieldNames;
+  }
+
+  public RecordStore getRecordStore() {
+    if (this.recordStore == null) {
+      if (this.metaData == null) {
+        return null;
+      } else {
+        return this.metaData.getRecordStore();
+      }
+    } else {
+      return this.recordStore;
+    }
   }
 
   public Set<String> getRequiredFieldNames() {
@@ -1024,10 +1024,6 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     }
   }
 
-  protected void setDataStore(final RecordStore dataStore) {
-    this.dataStore = dataStore;
-  }
-
   public void setEditable(final boolean editable) {
     this.editable = editable;
     for (final String fieldName : getFieldNames()) {
@@ -1156,7 +1152,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   public void setMetaData(final RecordDefinition metaData) {
     this.metaData = metaData;
-    setDataStore(metaData.getRecordStore());
+    setRecordStore(metaData.getRecordStore());
     final String idFieldName = metaData.getIdFieldName();
     if (Property.hasValue(idFieldName)) {
       this.readOnlyFieldNames.add(idFieldName);
@@ -1191,6 +1187,10 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   public void setReadOnlyFieldNames(final String... readOnlyFieldNames) {
     setReadOnlyFieldNames(Arrays.asList(readOnlyFieldNames));
+  }
+
+  protected void setRecordStore(final RecordStore recordStore) {
+    this.recordStore = recordStore;
   }
 
   public void setRequiredFieldNames(final Collection<String> requiredFieldNames) {

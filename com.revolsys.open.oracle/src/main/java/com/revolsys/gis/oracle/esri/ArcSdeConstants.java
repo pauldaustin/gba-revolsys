@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import oracle.sql.SQLName;
-
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.data.types.DataType;
@@ -19,6 +17,8 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+
+import oracle.sql.SQLName;
 
 public final class ArcSdeConstants {
 
@@ -116,18 +116,18 @@ public final class ArcSdeConstants {
     }
   }
 
-  public static boolean isSdeAvailable(final RecordStore dataStore) {
-    if (dataStore instanceof OracleRecordStore) {
-      final OracleRecordStore oracleDataStore = (OracleRecordStore)dataStore;
-      final Set<String> allSchemaNames = oracleDataStore.getAllSchemaNames();
+  public static boolean isSdeAvailable(final RecordStore recordStore) {
+    if (recordStore instanceof OracleRecordStore) {
+      final OracleRecordStore oracleRecordStore = (OracleRecordStore)recordStore;
+      final Set<String> allSchemaNames = oracleRecordStore.getAllSchemaNames();
       return allSchemaNames.contains("SDE");
     }
     return false;
   }
 
   public static boolean isSdeAvailable(final RecordStoreSchema schema) {
-    final RecordStore dataStore = schema.getRecordStore();
+    final RecordStore recordStore = schema.getRecordStore();
 
-    return isSdeAvailable(dataStore);
+    return isSdeAvailable(recordStore);
   }
 }

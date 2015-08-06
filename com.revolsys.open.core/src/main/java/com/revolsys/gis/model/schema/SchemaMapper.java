@@ -19,7 +19,7 @@ public class SchemaMapper {
   }
 
   /**
-   * Add a forward and reverse mapping from one DataObjectMetaData to another.
+   * Add a forward and reverse mapping from one RecordDefinition to another.
    *
    * @param from The type.
    * @param to The mapped type.
@@ -53,7 +53,7 @@ public class SchemaMapper {
   }
 
   /**
-   * Add a forward and reverse mapping from one DataObjectMetaData to another.
+   * Add a forward and reverse mapping from one RecordDefinition to another.
    *
    * @param from The type.
    * @param to The mapped type.
@@ -94,7 +94,7 @@ public class SchemaMapper {
   }
 
   /**
-   * Get the DataObjectMetaData that the specified class maps to.
+   * Get the RecordDefinition that the specified class maps to.
    *
    * @param type The class to map.
    * @return The mapped class.
@@ -114,7 +114,7 @@ public class SchemaMapper {
   }
 
   /**
-   * Get the DataObjectMetaData that the specified type maps to.
+   * Get the RecordDefinition that the specified type maps to.
    *
    * @param type The type to map.
    * @return The mapped type.

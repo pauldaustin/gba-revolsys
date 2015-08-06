@@ -51,7 +51,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.record.schema.RecordDefinitionFactoryImpl;
 import com.revolsys.format.saif.util.PathCache;
-import com.revolsys.gis.io.DataObjectIterator;
+import com.revolsys.gis.io.RecordIterator;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Path;
@@ -66,13 +66,13 @@ import com.revolsys.spring.resource.SpringUtil;
  * @author Paul Austin
  * @see SaifWriter
  */
-public class SaifReader extends AbstractReader<Record> implements DataObjectIterator,
-  RecordDefinitionFactory, com.revolsys.data.record.io.RecordReader {
+public class SaifReader extends AbstractReader<Record>
+  implements RecordIterator, RecordDefinitionFactory, com.revolsys.data.record.io.RecordReader {
   /** The logging instance. */
   private static final Logger log = Logger.getLogger(SaifReader.class);
 
   /** The current data object that was read. */
-  private Record currentDataObject;
+  private Record currentRecord;
 
   /** The schema definition declared in the SAIF archive. */
   private RecordDefinitionFactory declaredMetaDataFactory;
@@ -365,7 +365,7 @@ public class SaifReader extends AbstractReader<Record> implements DataObjectIter
   @Override
   public boolean hasNext() {
     if (this.loadNewObject) {
-      return loadNextDataObject();
+      return loadNextRecord();
     }
     return this.hasNext;
   }
@@ -476,7 +476,7 @@ public class SaifReader extends AbstractReader<Record> implements DataObjectIter
    *
    * @return True if an object was loaded.
    */
-  private boolean loadNextDataObject() {
+  private boolean loadNextRecord() {
     boolean useCurrentFile = true;
     if (this.osnReader == null) {
       useCurrentFile = false;
@@ -485,14 +485,14 @@ public class SaifReader extends AbstractReader<Record> implements DataObjectIter
     }
     if (!useCurrentFile) {
       if (!openNextObjectSet()) {
-        this.currentDataObject = null;
+        this.currentRecord = null;
         this.hasNext = false;
         return false;
       }
     }
     do {
       try {
-        this.currentDataObject = this.osnReader.next();
+        this.currentRecord = this.osnReader.next();
         this.hasNext = true;
         this.loadNewObject = false;
         return true;
@@ -500,7 +500,7 @@ public class SaifReader extends AbstractReader<Record> implements DataObjectIter
         log.error(e.getMessage(), e);
       }
     } while (openNextObjectSet());
-    this.currentDataObject = null;
+    this.currentRecord = null;
     this.hasNext = false;
     return false;
   }
@@ -543,14 +543,14 @@ public class SaifReader extends AbstractReader<Record> implements DataObjectIter
   /**
    * Get the next data object read by this reader. .
    *
-   * @return The next DataObject.
+   * @return The next record.
    * @exception NoSuchElementException If the reader has no more data objects.
    */
   @Override
   public Record next() {
     if (hasNext()) {
       this.loadNewObject = true;
-      return this.currentDataObject;
+      return this.currentRecord;
     } else {
       throw new NoSuchElementException();
     }
@@ -583,7 +583,8 @@ public class SaifReader extends AbstractReader<Record> implements DataObjectIter
         loadSrid();
         final GeometryFactory geometryFactory = GeometryFactory.getFactory(this.srid, 1.0, 1.0);
 
-        for (final RecordDefinition metaData : ((RecordDefinitionFactoryImpl)this.metaDataFactory).getTypes()) {
+        for (final RecordDefinition metaData : ((RecordDefinitionFactoryImpl)this.metaDataFactory)
+          .getTypes()) {
           final FieldDefinition geometryAttribute = metaData.getGeometryField();
           if (geometryAttribute != null) {
             geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);

@@ -73,7 +73,7 @@ public class CopyRecords extends AbstractProcess {
 
       try (
         final Reader<Record> reader = this.sourceRecordStore.query(query);
-        final Writer<Record> targetWriter = this.targetRecordStore.createWriter();) {
+        final Writer<Record> targetWriter = this.targetRecordStore.createWriter()) {
         final RecordDefinition targetRecordDefinition = this.targetRecordStore
           .getRecordDefinition(this.typePath);
         if (targetRecordDefinition == null) {

@@ -175,11 +175,11 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   private boolean initialized;
 
-  private final Map<String, Table> tableByPath = new HashMap<>();
+  private final Map<String, Table> tableByCatalogPath = new HashMap<>();
 
-  private final Map<String, Integer> tableReferenceCountsByTypePath = new HashMap<>();
+  private final Map<String, Integer> tableReferenceCountsByCatalogPath = new HashMap<>();
 
-  private final Map<String, Integer> tableWriteLockCountsByTypePath = new HashMap<>();
+  private final Map<String, Integer> tableWriteLockCountsByCatalogPath = new HashMap<>();
 
   protected FileGdbRecordStore(final File file) {
     this.fileName = file.getAbsolutePath();
@@ -404,11 +404,12 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   public boolean closeTable(final String typePath) {
     synchronized (this.apiSync) {
-      int count = Maps.getInteger(this.tableReferenceCountsByTypePath, typePath, 0);
+      final String path = getCatalogPath(typePath);
+      int count = Maps.getInteger(this.tableReferenceCountsByCatalogPath, path, 0);
       count--;
       if (count <= 0) {
-        this.tableReferenceCountsByTypePath.remove(typePath);
-        final Table table = this.tableByPath.remove(typePath);
+        this.tableReferenceCountsByCatalogPath.remove(path);
+        final Table table = this.tableByCatalogPath.remove(path);
         synchronized (API_SYNC) {
           if (table != null) {
             try {
@@ -432,7 +433,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         }
         return true;
       } else {
-        this.tableReferenceCountsByTypePath.put(typePath, count);
+        this.tableReferenceCountsByCatalogPath.put(path, count);
         return false;
       }
     }
@@ -440,12 +441,11 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   private void closeTables() {
     synchronized (this.apiSync) {
-      if (!this.tableByPath.isEmpty()) {
+      if (!this.tableByCatalogPath.isEmpty()) {
         final Geodatabase geodatabase = getGeodatabase();
         if (geodatabase != null) {
           try {
-            for (final Entry<String, Table> entry : this.tableByPath.entrySet()) {
-              final Table table = entry.getValue();
+            for (final Table table : this.tableByCatalogPath.values()) {
               try {
                 table.setLoadOnlyMode(false);
                 table.freeWriteLock();
@@ -458,9 +458,9 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                 }
               }
             }
-            this.tableByPath.clear();
-            this.tableReferenceCountsByTypePath.clear();
-            this.tableWriteLockCountsByTypePath.clear();
+            this.tableByCatalogPath.clear();
+            this.tableReferenceCountsByCatalogPath.clear();
+            this.tableWriteLockCountsByCatalogPath.clear();
           } finally {
             releaseGeodatabase();
           }
@@ -516,7 +516,6 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     String typePath = query.getTypeName();
     RecordDefinition recordDefinition = query.getRecordDefinition();
     if (recordDefinition == null) {
-      typePath = query.getTypeName();
       recordDefinition = getRecordDefinition(typePath);
       if (recordDefinition == null) {
         throw new IllegalArgumentException("Type name does not exist " + typePath);
@@ -524,14 +523,15 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     } else {
       typePath = recordDefinition.getPath();
     }
+    final String catalogPath = getCatalogPath(typePath);
     final BoundingBox boundingBox = query.getBoundingBox();
     final Map<String, Boolean> orderBy = query.getOrderBy();
     final StringBuffer whereClause = getWhereClause(query);
     StringBuffer sql = new StringBuffer();
     if (orderBy.isEmpty() || boundingBox != null) {
       if (!orderBy.isEmpty()) {
-        LoggerFactory.getLogger(getClass()).error("Unable to sort on " + recordDefinition.getPath()
-          + " " + orderBy.keySet() + " as the ESRI library can't sort with a bounding box query");
+        LoggerFactory.getLogger(getClass()).error("Unable to sort on " + catalogPath + " "
+          + orderBy.keySet() + " as the ESRI library can't sort with a bounding box query");
       }
       sql = whereClause;
     } else {
@@ -544,7 +544,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         CollectionUtil.append(sql, fieldNames);
       }
       sql.append(" FROM ");
-      sql.append(JdbcUtils.getTableName(typePath));
+      sql.append(JdbcUtils.getTableName(catalogPath));
       if (whereClause.length() > 0) {
         sql.append(" WHERE ");
         sql.append(whereClause);
@@ -574,8 +574,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       }
     }
 
-    final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this, typePath, sql.toString(),
-      boundingBox, query, query.getOffset(), query.getLimit());
+    final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this, catalogPath,
+      sql.toString(), boundingBox, query, query.getOffset(), query.getLimit());
     return iterator;
   }
 
@@ -911,9 +911,15 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       if (getGeometryFactory() == null) {
         setGeometryFactory(sourceRecordDefinition.getGeometryFactory());
       }
-      RecordDefinition recordDefinition = super.getRecordDefinition(sourceRecordDefinition);
-      if (this.createMissingTables && recordDefinition == null) {
-        recordDefinition = createTable(sourceRecordDefinition);
+      final String typePath = sourceRecordDefinition.getPath();
+      RecordDefinition recordDefinition = getRecordDefinition(typePath);
+      if (recordDefinition == null) {
+        if (!sourceRecordDefinition.hasGeometryField()) {
+          recordDefinition = getRecordDefinition(Path.getName(typePath));
+        }
+        if (this.createMissingTables && recordDefinition == null) {
+          recordDefinition = createTable(sourceRecordDefinition);
+        }
       }
       return recordDefinition;
     }
@@ -946,7 +952,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                 }
               } catch (final Throwable e) {
                 LOG.error(tableDefinition);
-                throw new RuntimeException("Error creating field definition for " + typePath + "."
+                throw new RuntimeException("Error creating field for " + typePath + "."
                   + field.getName() + " : " + field.getType(), e);
               }
             } else {
@@ -1073,35 +1079,34 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     }
   }
 
-  protected Table getTable(final String typePath) {
+  protected Table getTable(final String catalogPath) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
-        if (!isExists() || getRecordDefinition(typePath) == null) {
+        if (!isExists() || getRecordDefinition(catalogPath) == null) {
           return null;
         } else {
-          final String path = typePath.replaceAll("/", "\\\\");
           try {
             final Geodatabase geodatabase = getGeodatabase();
             if (geodatabase == null) {
               return null;
             } else {
               try {
-                Table table = this.tableByPath.get(typePath);
+                Table table = this.tableByCatalogPath.get(catalogPath);
                 if (table == null) {
-                  table = this.geodatabase.openTable(path);
+                  table = this.geodatabase.openTable(catalogPath);
                   if (table != null) {
-                    if (this.tableByPath.isEmpty()) {
+                    if (this.tableByCatalogPath.isEmpty()) {
                       this.geodatabaseReferenceCount++;
                     }
-                    Maps.addCount(this.tableReferenceCountsByTypePath, typePath);
-                    this.tableByPath.put(typePath, table);
+                    Maps.addCount(this.tableReferenceCountsByCatalogPath, catalogPath);
+                    this.tableByCatalogPath.put(catalogPath, table);
                   }
                 } else {
-                  Maps.addCount(this.tableReferenceCountsByTypePath, typePath);
+                  Maps.addCount(this.tableReferenceCountsByCatalogPath, catalogPath);
                 }
                 return table;
               } catch (final RuntimeException e) {
-                throw new RuntimeException("Unable to open table " + typePath, e);
+                throw new RuntimeException("Unable to open table " + catalogPath, e);
               }
             }
           } finally {
@@ -1112,11 +1117,11 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     }
   }
 
-  protected Table getTableWithWriteLock(final String typePath) {
+  protected Table getTableWithWriteLock(final String catalogPath) {
     synchronized (this.apiSync) {
-      final Table table = getTable(typePath);
+      final Table table = getTable(catalogPath);
       if (table != null) {
-        final Integer count = Maps.addCount(this.tableWriteLockCountsByTypePath, typePath);
+        final Integer count = Maps.addCount(this.tableWriteLockCountsByCatalogPath, catalogPath);
         if (count == 1) {
           table.setWriteLock();
           table.setLoadOnlyMode(true);
@@ -1275,7 +1280,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       if (table == null) {
         return false;
       } else {
-        final boolean open = this.tableByPath.containsValue(table);
+        final boolean open = this.tableByCatalogPath.containsValue(table);
         return open;
       }
     }
@@ -1320,7 +1325,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   }
 
   private boolean isTableLocked(final String typePath) {
-    return Maps.getCount(this.tableWriteLockCountsByTypePath, typePath) > 0;
+    final String path = getCatalogPath(typePath);
+    return Maps.getCount(this.tableWriteLockCountsByCatalogPath, path) > 0;
   }
 
   @Override
@@ -1330,7 +1336,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       if (recordDefinition == null) {
         throw new IllegalArgumentException("Unknown type " + typePath);
       } else {
-        final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this, typePath,
+        final String catalogPath = getCatalogPath(typePath);
+        final FileGdbQueryIterator iterator = new FileGdbQueryIterator(this, catalogPath,
           recordDefinition.getIdFieldName() + " = " + id[0]);
         try {
           if (iterator.hasNext()) {
@@ -1511,24 +1518,25 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     }
   }
 
-  protected void releaseTable(final String typePath) {
+  protected void releaseTable(final String catalogPath) {
     synchronized (this.apiSync) {
       final Geodatabase geodatabase = getGeodatabase();
       if (geodatabase != null) {
         try {
-          final Table table = this.tableByPath.get(typePath);
+          final Table table = this.tableByCatalogPath.get(catalogPath);
           if (table != null) {
-            final Integer count = Maps.decrementCount(this.tableReferenceCountsByTypePath,
-              typePath);
+            final Integer count = Maps.decrementCount(this.tableReferenceCountsByCatalogPath,
+              catalogPath);
             if (count == 0) {
               try {
-                this.tableByPath.remove(typePath);
-                this.tableWriteLockCountsByTypePath.remove(typePath);
+                this.tableByCatalogPath.remove(catalogPath);
+                this.tableWriteLockCountsByCatalogPath.remove(catalogPath);
                 geodatabase.closeTable(table);
               } catch (final Exception e) {
-                LoggerFactory.getLogger(getClass()).error("Unable to close table: " + typePath, e);
+                LoggerFactory.getLogger(getClass()).error("Unable to close table: " + catalogPath,
+                  e);
               } finally {
-                if (this.tableByPath.isEmpty()) {
+                if (this.tableByCatalogPath.isEmpty()) {
                   this.geodatabaseReferenceCount--;
                 }
                 table.delete();
@@ -1542,26 +1550,26 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     }
   }
 
-  protected void releaseTableAndWriteLock(final String typePath) {
+  protected void releaseTableAndWriteLock(final String catalogPath) {
     synchronized (this.apiSync) {
       final Geodatabase geodatabase = getGeodatabase();
       if (geodatabase != null) {
         try {
-          final Table table = this.tableByPath.get(typePath);
+          final Table table = this.tableByCatalogPath.get(catalogPath);
           if (table != null) {
-            final Integer count = Maps.decrementCount(this.tableWriteLockCountsByTypePath,
-              typePath);
+            final Integer count = Maps.decrementCount(this.tableWriteLockCountsByCatalogPath,
+              catalogPath);
             if (count == 0) {
               try {
                 table.setLoadOnlyMode(false);
                 table.freeWriteLock();
               } catch (final Exception e) {
                 LoggerFactory.getLogger(getClass())
-                  .error("Unable to free write lock for table: " + typePath, e);
+                  .error("Unable to free write lock for table: " + catalogPath, e);
               }
             }
           }
-          releaseTable(typePath);
+          releaseTable(catalogPath);
         } finally {
           releaseGeodatabase();
         }

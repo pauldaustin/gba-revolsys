@@ -18,9 +18,9 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.util.Property;
 
-public class RecordStoreQueryReader extends IteratorReader<Record> implements RecordReader {
+public class RecordStoreQueryReader extends IteratorReader<Record>implements RecordReader {
 
-  private AbstractRecordStore dataStore;
+  private AbstractRecordStore recordStore;
 
   private List<Query> queries = new ArrayList<Query>();
 
@@ -34,9 +34,9 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
     setIterator(new RecordStoreMultipleQueryIterator(this));
   }
 
-  public RecordStoreQueryReader(final AbstractRecordStore dataStore) {
+  public RecordStoreQueryReader(final AbstractRecordStore recordStore) {
     this();
-    setDataStore(dataStore);
+    setRecordStore(recordStore);
   }
 
   public void addQuery(final Query query) {
@@ -48,7 +48,7 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
   public void close() {
     super.close();
     this.boundingBox = null;
-    this.dataStore = null;
+    this.recordStore = null;
     this.queries = null;
     this.typePaths = null;
     this.whereClause = null;
@@ -64,7 +64,7 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
         query.setBoundingBox(this.boundingBox);
       }
 
-      final AbstractIterator<Record> iterator = this.dataStore.createIterator(query,
+      final AbstractIterator<Record> iterator = this.recordStore.createIterator(query,
         getProperties());
       return iterator;
     }
@@ -73,10 +73,6 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
 
   public BoundingBox getBoundingBox() {
     return this.boundingBox;
-  }
-
-  public AbstractRecordStore getDataStore() {
-    return this.dataStore;
   }
 
   public List<Query> getQueries() {
@@ -88,6 +84,10 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
     return ((RecordIterator)iterator()).getRecordDefinition();
   }
 
+  public AbstractRecordStore getRecordStore() {
+    return this.recordStore;
+  }
+
   public String getWhereClause() {
     return this.whereClause;
   }
@@ -97,7 +97,7 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
   public void open() {
     if (this.typePaths != null) {
       for (final String tableName : this.typePaths) {
-        final RecordDefinition metaData = this.dataStore.getRecordDefinition(tableName);
+        final RecordDefinition metaData = this.recordStore.getRecordDefinition(tableName);
         if (metaData != null) {
           Query query;
           if (this.boundingBox == null) {
@@ -118,10 +118,6 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
     this.boundingBox = boundingBox;
   }
 
-  public void setDataStore(final AbstractRecordStore dataStore) {
-    this.dataStore = dataStore;
-  }
-
   /**
    * @param queries the queries to set
    */
@@ -137,6 +133,10 @@ public class RecordStoreQueryReader extends IteratorReader<Record> implements Re
     for (final Query query : queries) {
       addQuery(query);
     }
+  }
+
+  public void setRecordStore(final AbstractRecordStore recordStore) {
+    this.recordStore = recordStore;
   }
 
   /**

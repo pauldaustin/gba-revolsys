@@ -37,7 +37,7 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
 
   private boolean closeFile = true;
 
-  private RecordFactory dataObjectFactory;
+  private RecordFactory recordFactory;
 
   private GeometryFactory geometryFactory;
 
@@ -65,7 +65,7 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
 
   public ShapefileIterator(final Resource resource, final RecordFactory factory)
     throws IOException {
-    this.dataObjectFactory = factory;
+    this.recordFactory = factory;
     final String baseName = FileUtil.getBaseName(resource.getFilename());
     this.name = baseName;
     this.typeName = "/" + this.name;
@@ -102,7 +102,7 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
 
         final Resource xbaseResource = SpringUtil.getResourceWithExtension(this.resource, "dbf");
         if (xbaseResource.exists()) {
-          this.xbaseIterator = new XbaseIterator(xbaseResource, this.dataObjectFactory,
+          this.xbaseIterator = new XbaseIterator(xbaseResource, this.recordFactory,
             new InvokeMethodRunnable(this, "updateMetaData"));
           this.xbaseIterator.setTypeName(this.typeName);
           this.xbaseIterator.setProperty("memoryMapped", memoryMapped);
@@ -157,7 +157,7 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
     if (this.xbaseIterator != null) {
       this.xbaseIterator.forceClose();
     }
-    this.dataObjectFactory = null;
+    this.recordFactory = null;
     this.geometryFactory = null;
     this.in = null;
     this.indexIn = null;
@@ -166,8 +166,8 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
     this.xbaseIterator = null;
   }
 
-  public RecordFactory getDataObjectFactory() {
-    return this.dataObjectFactory;
+  public RecordFactory getRecordFactory() {
+    return this.recordFactory;
   }
 
   @Override
@@ -185,7 +185,7 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
           throw new NoSuchElementException();
         }
       } else {
-        record = this.dataObjectFactory.createRecord(this.metaData);
+        record = this.recordFactory.createRecord(this.metaData);
       }
 
       final Geometry geometry = readGeometry();
@@ -198,7 +198,7 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
     if (this.returnMetaData == null) {
       return record;
     } else {
-      final Record copy = this.dataObjectFactory.createRecord(this.returnMetaData);
+      final Record copy = this.recordFactory.createRecord(this.returnMetaData);
       copy.setValues(record);
       return copy;
     }

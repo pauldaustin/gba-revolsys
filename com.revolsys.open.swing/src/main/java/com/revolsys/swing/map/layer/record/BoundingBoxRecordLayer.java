@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.query.Query;
-import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
+import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.cs.projection.GeometryOperation;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.jts.geom.BoundingBox;
@@ -100,7 +100,7 @@ public class BoundingBoxRecordLayer extends AbstractRecordLayer {
     return !this.loading && super.isVisible();
   }
 
-  public void setIndex(final BoundingBox boundingBox, final DataObjectQuadTree index) {
+  public void setIndex(final BoundingBox boundingBox, final RecordQuadTree index) {
     synchronized (this.sync) {
       if (EqualsRegistry.equal(this.boundingBox, boundingBox)) {
         setIndex(index);

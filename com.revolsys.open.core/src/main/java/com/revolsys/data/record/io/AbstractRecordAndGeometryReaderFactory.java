@@ -10,9 +10,9 @@ import org.springframework.core.io.Resource;
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
-import com.revolsys.gis.data.io.DataObjectDirectoryReader;
-import com.revolsys.gis.data.io.DataObjectGeometryIterator;
 import com.revolsys.gis.data.io.GeometryReader;
+import com.revolsys.gis.data.io.RecordDirectoryReader;
+import com.revolsys.gis.data.io.RecordGeometryIterator;
 import com.revolsys.gis.geometry.io.AbstractGeometryReaderFactory;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.MapReaderFactory;
@@ -21,9 +21,16 @@ import com.revolsys.io.Reader;
 public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeometryReaderFactory
   implements RecordReaderFactory, MapReaderFactory {
 
-  public static RecordReader dataObjectReader(final FileSystemResource resource,
+  public static RecordReaderFactory getRecordReaderFactory(final Resource resource) {
+    final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
+    final RecordReaderFactory readerFactory = ioFactoryRegistry
+      .getFactoryByResource(RecordReaderFactory.class, resource);
+    return readerFactory;
+  }
+
+  public static RecordReader recordReader(final FileSystemResource resource,
     final RecordFactory factory) {
-    final RecordReaderFactory readerFactory = getDataObjectReaderFactory(resource);
+    final RecordReaderFactory readerFactory = getRecordReaderFactory(resource);
     if (readerFactory == null) {
       return null;
     } else {
@@ -32,8 +39,8 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
     }
   }
 
-  public static RecordReader dataObjectReader(final Resource resource) {
-    final RecordReaderFactory readerFactory = getDataObjectReaderFactory(resource);
+  public static RecordReader recordReader(final Resource resource) {
+    final RecordReaderFactory readerFactory = getRecordReaderFactory(resource);
     if (readerFactory == null) {
       return null;
     } else {
@@ -42,14 +49,7 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
     }
   }
 
-  public static RecordReaderFactory getDataObjectReaderFactory(final Resource resource) {
-    final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final RecordReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
-      RecordReaderFactory.class, resource);
-    return readerFactory;
-  }
-
-  private final ArrayRecordFactory dataObjectFactory = new ArrayRecordFactory();
+  private final ArrayRecordFactory recordFactory = new ArrayRecordFactory();
 
   private boolean singleFile = true;
 
@@ -66,7 +66,7 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
    */
   @Override
   public Reader<Record> createDirectoryRecordReader() {
-    final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
+    final RecordDirectoryReader directoryReader = new RecordDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
     return directoryReader;
   }
@@ -80,21 +80,21 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
    */
   @Override
   public Reader<Record> createDirectoryRecordReader(final File directory) {
-    return createDirectoryRecordReader(directory, this.dataObjectFactory);
+    return createDirectoryRecordReader(directory, this.recordFactory);
   }
 
   /**
    * Create a reader for the directory using the specified data object
-   * dataObjectFactory.
+   * recordFactory.
    *
    * @param directory directory file to read.
-   * @param dataObjectFactory The dataObjectFactory used to create data objects.
+   * @param recordFactory The recordFactory used to create data objects.
    * @return The reader for the file.
    */
   @Override
   public Reader<Record> createDirectoryRecordReader(final File directory,
-    final RecordFactory dataObjectFactory) {
-    final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
+    final RecordFactory recordFactory) {
+    final RecordDirectoryReader directoryReader = new RecordDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
     directoryReader.setDirectory(directory);
     return directoryReader;
@@ -102,9 +102,9 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
 
   @Override
   public GeometryReader createGeometryReader(final Resource resource) {
-    final Reader<Record> dataObjectReader = createRecordReader(resource);
-    final Iterator<Record> dataObjectIterator = dataObjectReader.iterator();
-    final DataObjectGeometryIterator iterator = new DataObjectGeometryIterator(dataObjectIterator);
+    final Reader<Record> recordReader = createRecordReader(resource);
+    final Iterator<Record> recordIterator = recordReader.iterator();
+    final RecordGeometryIterator iterator = new RecordGeometryIterator(recordIterator);
     final GeometryReader geometryReader = new GeometryReader(iterator);
     return geometryReader;
   }
@@ -127,7 +127,7 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
    */
   @Override
   public RecordReader createRecordReader(final Resource resource) {
-    return createRecordReader(resource, this.dataObjectFactory);
+    return createRecordReader(resource, this.recordFactory);
 
   }
 

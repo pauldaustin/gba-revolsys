@@ -139,9 +139,9 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   Reader<Record> query(Query... queries);
 
-  Reader<Record> query(RecordFactory dataObjectFactory, String typePath, Geometry geometry);
+  Reader<Record> query(RecordFactory recordFactory, String typePath, Geometry geometry);
 
-  Reader<Record> query(RecordFactory dataObjectFactory, String typePath, Geometry geometry,
+  Reader<Record> query(RecordFactory recordFactory, String typePath, Geometry geometry,
     double distance);
 
   Reader<Record> query(String typePath);

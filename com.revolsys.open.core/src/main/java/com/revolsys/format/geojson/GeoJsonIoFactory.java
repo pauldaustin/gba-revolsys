@@ -37,7 +37,7 @@ public class GeoJsonIoFactory extends AbstractRecordAndGeometryWriterFactory imp
   public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new GeoJsonDataObjectWriter(writer);
+    return new GeoJsonRecordWriter(writer);
   }
 
   @Override

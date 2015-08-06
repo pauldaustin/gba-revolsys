@@ -11,7 +11,7 @@ public class JdbcWriterSynchronization extends TransactionSynchronizationAdapter
 
   private boolean holderActive = true;
 
-  public JdbcWriterSynchronization(final AbstractJdbcRecordStore dataStore,
+  public JdbcWriterSynchronization(final AbstractJdbcRecordStore recordStore,
     final JdbcWriterResourceHolder writerHolder, final Object key) {
     this.writerHolder = writerHolder;
     this.key = key;

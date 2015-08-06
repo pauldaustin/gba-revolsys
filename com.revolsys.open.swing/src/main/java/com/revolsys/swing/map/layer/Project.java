@@ -232,26 +232,27 @@ public class Project extends LayerGroup {
     if (resource.exists()) {
       final Resource layersDir = SpringUtil.getResource(resource, "Layers");
       readProperties(layersDir);
-      final RecordStoreConnectionRegistry oldDataStoreConnections = RecordStoreConnectionRegistry.getForThread();
+      final RecordStoreConnectionRegistry oldRecordStoreConnections = RecordStoreConnectionRegistry
+        .getForThread();
       try {
-        final Resource dataStoresDirectory = SpringUtil.getResource(resource, "Data Stores");
+        final Resource recordStoresDirectory = SpringUtil.getResource(resource, "Data Stores");
 
         final boolean readOnly = isReadOnly();
-        final RecordStoreConnectionRegistry dataStores = new RecordStoreConnectionRegistry(
-          "Project", dataStoresDirectory, readOnly);
-        setRecordStores(dataStores);
-        RecordStoreConnectionRegistry.setForThread(dataStores);
+        final RecordStoreConnectionRegistry recordStores = new RecordStoreConnectionRegistry(
+          "Project", recordStoresDirectory, readOnly);
+        setRecordStores(recordStores);
+        RecordStoreConnectionRegistry.setForThread(recordStores);
 
         final Resource folderConnectionsDirectory = SpringUtil.getResource(resource,
           "Folder Connections");
-        this.folderConnections = new FolderConnectionRegistry("Project",
-          folderConnectionsDirectory, readOnly);
+        this.folderConnections = new FolderConnectionRegistry("Project", folderConnectionsDirectory,
+          readOnly);
 
         readLayers(layersDir);
 
         readBaseMapsLayers(resource);
       } finally {
-        RecordStoreConnectionRegistry.setForThread(oldDataStoreConnections);
+        RecordStoreConnectionRegistry.setForThread(oldRecordStoreConnections);
       }
     }
   }

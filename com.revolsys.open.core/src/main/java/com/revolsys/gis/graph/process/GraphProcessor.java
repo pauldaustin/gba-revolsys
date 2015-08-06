@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.graph.DataObjectGraph;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.model.coordinates.CoordinatesPrecisionModel;
 import com.revolsys.parallel.channel.Channel;
@@ -19,24 +19,24 @@ import com.vividsolutions.jts.geom.LineString;
 public class GraphProcessor extends BaseInOutProcess<Record, Record> {
   private static final Logger LOG = LoggerFactory.getLogger(GraphProcessor.class);
 
-  private DataObjectGraph graph;
+  private RecordGraph graph;
 
   private CoordinatesPrecisionModel precisionModel;
 
-  private List<ObjectProcessor<DataObjectGraph>> processors = new ArrayList<ObjectProcessor<DataObjectGraph>>();
+  private List<ObjectProcessor<RecordGraph>> processors = new ArrayList<ObjectProcessor<RecordGraph>>();
 
   public CoordinatesPrecisionModel getPrecisionModel() {
     return this.precisionModel;
   }
 
-  public List<ObjectProcessor<DataObjectGraph>> getProcessors() {
+  public List<ObjectProcessor<RecordGraph>> getProcessors() {
     return this.processors;
   }
 
   @Override
   protected void init() {
     super.init();
-    this.graph = new DataObjectGraph();
+    this.graph = new RecordGraph();
     if (this.precisionModel != null) {
       this.graph.setPrecisionModel(this.precisionModel);
     }
@@ -68,7 +68,7 @@ public class GraphProcessor extends BaseInOutProcess<Record, Record> {
 
   private void processGraph() {
     if (this.graph != null) {
-      for (final ObjectProcessor<DataObjectGraph> processor : this.processors) {
+      for (final ObjectProcessor<RecordGraph> processor : this.processors) {
         LOG.info(processor.getClass().getName());
         processor.process(this.graph);
       }
@@ -79,7 +79,7 @@ public class GraphProcessor extends BaseInOutProcess<Record, Record> {
     this.precisionModel = precisionModel;
   }
 
-  public void setProcessors(final List<ObjectProcessor<DataObjectGraph>> processors) {
+  public void setProcessors(final List<ObjectProcessor<RecordGraph>> processors) {
     this.processors = processors;
   }
 }

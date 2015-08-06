@@ -33,8 +33,8 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
     final DataType dataType = attribute.getType();
     final EsriGeodatabaseXmlFieldType fieldType = FIELD_TYPES.getFieldType(dataType);
     if (fieldType == null) {
-      throw new RuntimeException("Data type not supported " + dataType + " for " + table.getName()
-        + "." + fieldName);
+      throw new RuntimeException(
+        "Data type not supported " + dataType + " for " + table.getName() + "." + fieldName);
     } else {
       final Field field = new Field();
       field.setName(fieldName);
@@ -83,12 +83,12 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
         break;
 
         default:
-          throw new RuntimeException("Unknown geometry type" + shapeType + " for " + tableName
-            + "." + fieldName);
+          throw new RuntimeException(
+            "Unknown geometry type" + shapeType + " for " + tableName + "." + fieldName);
       }
 
-    } else if (precision > 0
-      && (fieldType.equals(FieldType.esriFieldTypeSingle) || fieldType.equals(FieldType.esriFieldTypeDouble))) {
+    } else if (precision > 0 && (fieldType.equals(FieldType.esriFieldTypeSingle)
+      || fieldType.equals(FieldType.esriFieldTypeDouble))) {
       dataType = DataTypes.DECIMAL;
     } else {
       dataType = EsriGeodatabaseXmlFieldTypeRegistry.INSTANCE.getDataType(fieldType);
@@ -187,7 +187,7 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
     return createDETable(schemaPath, metaData, spatialReference);
   }
 
-  public static DETable createDETable(final String schemaPath, final RecordDefinition metaData,
+  public static DETable createDETable(String schemaPath, final RecordDefinition metaData,
     final SpatialReference spatialReference) {
     DETable table;
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
@@ -237,9 +237,11 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
 
     } else {
       table = new DETable();
+      schemaPath = "\\";
     }
 
-    String oidFieldName = metaData.getProperty(EsriGeodatabaseXmlConstants.ESRI_OBJECT_ID_FIELD_NAME);
+    String oidFieldName = metaData
+      .getProperty(EsriGeodatabaseXmlConstants.ESRI_OBJECT_ID_FIELD_NAME);
     if (!Property.hasValue(oidFieldName)) {
       oidFieldName = "OBJECTID";
     }
@@ -282,8 +284,8 @@ public class EsriXmlRecordDefinitionUtil implements EsriGeodatabaseXmlConstants 
     return table;
   }
 
-  public static RecordDefinition getMetaData(final String schemaName,
-    final CodedValueDomain domain, final boolean appendIdToName) {
+  public static RecordDefinition getMetaData(final String schemaName, final CodedValueDomain domain,
+    final boolean appendIdToName) {
     final String tableName;
     if (appendIdToName) {
       tableName = domain.getName() + "_ID";

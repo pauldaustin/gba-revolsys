@@ -18,7 +18,7 @@
   <bean
     id="csvDirectoryReader"
     factory-bean="csvReaderFactory"
-    factory-method="createDirectoryDataObjectReader"
+    factory-method="createDirectoryRecordReader"
     p:directory="."
   >
     <property name="baseFileNames">
