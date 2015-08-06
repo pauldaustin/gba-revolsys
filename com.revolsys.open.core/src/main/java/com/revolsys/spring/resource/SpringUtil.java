@@ -20,12 +20,12 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.io.FileNames;
 import com.revolsys.io.FileUtil;
 import com.revolsys.spring.config.AttributesBeanConfigurer;
+import com.revolsys.util.Property;
 
 public class SpringUtil {
 
@@ -153,6 +153,14 @@ public class SpringUtil {
     }
   }
 
+  public static String getFileName(final Resource resource) {
+    if (resource instanceof UrlResource) {
+      final UrlResource urlResoure = (UrlResource)resource;
+      return urlResoure.getURL().getPath();
+    }
+    return resource.getFilename();
+  }
+
   public static String getFileNameExtension(final Resource resource) {
     return FileNames.getFileNameExtension(resource.getFilename());
   }
@@ -163,7 +171,7 @@ public class SpringUtil {
         return resource.getFile();
       } else {
         final String filename = resource.getFilename();
-        final String baseName = FileUtil.getBaseName(filename);
+        final String baseName = FileNames.getBaseName(filename);
         final String fileExtension = FileNames.getFileNameExtension(filename);
         return File.createTempFile(baseName, fileExtension);
       }
@@ -279,8 +287,15 @@ public class SpringUtil {
     }
   }
 
-  public static Resource getResource(final String url) {
-    return new UrlResource(url);
+  public static com.revolsys.spring.resource.Resource getResource(final String location) {
+    if (Property.hasValue(location)) {
+      if (location.charAt(0) == '/' || location.length() > 1 && location.charAt(1) == ':') {
+        return new FileSystemResource(location);
+      } else {
+        return new UrlResource(location);
+      }
+    }
+    return null;
   }
 
   public static Resource getResourceWithExtension(final Resource resource, final String extension) {

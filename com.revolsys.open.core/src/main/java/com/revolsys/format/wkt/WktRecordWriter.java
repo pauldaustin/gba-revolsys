@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.PrintWriter;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -12,7 +13,7 @@ import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class WktRecordWriter extends AbstractWriter<Record> {
+public class WktRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
   private final RecordDefinition metaData;
 
@@ -25,7 +26,8 @@ public class WktRecordWriter extends AbstractWriter<Record> {
     this.out = new PrintWriter(new BufferedWriter(out));
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute
+        .getProperty(FieldProperties.GEOMETRY_FACTORY);
       setProperty(IoConstants.GEOMETRY_FACTORY, geometryFactory);
     }
 

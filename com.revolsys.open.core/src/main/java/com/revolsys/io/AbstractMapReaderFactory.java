@@ -8,7 +8,7 @@ public abstract class AbstractMapReaderFactory extends AbstractIoFactory impleme
   MapReaderFactory {
   public static MapReaderFactory getMapReaderFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final MapReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
+    final MapReaderFactory readerFactory = ioFactoryRegistry.getFactory(
       MapReaderFactory.class, resource);
     return readerFactory;
   }

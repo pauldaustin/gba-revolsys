@@ -1064,7 +1064,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
           final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
           if (Property.hasValue(string)) {
             final Resource resource = new ByteArrayResource("t.csv", string);
-            reader = RecordIo.recordReader(resource);
+            reader = RecordReader.create(resource);
           } else {
             return null;
           }
@@ -1503,10 +1503,10 @@ public abstract class AbstractRecordLayer extends AbstractLayer
         if (Property.hasValue(string)) {
           if (string.contains("\t")) {
             final Resource tsvResource = new ByteArrayResource("t.tsv", string);
-            reader = RecordIo.recordReader(tsvResource);
+            reader = RecordReader.create(tsvResource);
           } else {
             final Resource resource = new ByteArrayResource("t.csv", string);
-            reader = RecordIo.recordReader(resource);
+            reader = RecordReader.create(resource);
           }
         }
       }

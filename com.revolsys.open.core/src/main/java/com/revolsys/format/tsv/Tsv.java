@@ -8,11 +8,11 @@ import java.nio.charset.Charset;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
 import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.csv.CsvMapWriter;
 import com.revolsys.format.csv.CsvRecordIterator;
@@ -59,7 +59,7 @@ public class Tsv extends AbstractRecordAndGeometryIoFactory implements MapWriter
   }
 
   @Override
-  public com.revolsys.io.Writer<Record> createRecordWriter(final String baseName,
+  public RecordWriter createRecordWriter(final String baseName,
     final RecordDefinition recordDefinition, final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = new OutputStreamWriter(outputStream, charset);
 

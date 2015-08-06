@@ -4,11 +4,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
-import com.revolsys.io.Writer;
 
 public class EsriGeodatabaseXmlRecordWriterFactory extends
   AbstractRecordAndGeometryWriterFactory {
@@ -20,7 +19,7 @@ public class EsriGeodatabaseXmlRecordWriterFactory extends
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = new OutputStreamWriter(outputStream, charset);
     return new EsriGeodatabaseXmlRecordWriter(metaData, writer);

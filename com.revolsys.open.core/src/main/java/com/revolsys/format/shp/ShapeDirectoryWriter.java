@@ -10,6 +10,7 @@ import org.springframework.core.io.FileSystemResource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordIo;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.xbase.XbaseRecordWriter;
 import com.revolsys.gis.io.Statistics;
@@ -112,7 +113,7 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
       final File directory = getDirectory(metaData);
       directory.mkdirs();
       final File file = new File(directory, getFileName(metaData) + this.nameSuffix + ".shp");
-      writer = RecordIo.recordWriter(metaData, new FileSystemResource(file));
+      writer = RecordWriter.create(metaData, new FileSystemResource(file));
       ((XbaseRecordWriter)writer).setUseZeroForNull(this.useZeroForNull);
       final Geometry geometry = object.getGeometry();
       if (geometry != null) {

@@ -93,7 +93,7 @@ public class FileRecordLayer extends ListRecordLayer {
     } else {
       if (this.resource.exists()) {
         final Resource resource1 = this.resource;
-        final RecordReader reader = RecordIo.recordReader(resource1);
+        final RecordReader reader = RecordReader.create(resource1);
         if (reader == null) {
           LoggerFactory.getLogger(getClass()).error("Cannot find reader for: " + this.resource);
           return false;

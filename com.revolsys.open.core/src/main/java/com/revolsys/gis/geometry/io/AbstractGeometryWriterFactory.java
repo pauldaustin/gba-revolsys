@@ -17,7 +17,7 @@ public abstract class AbstractGeometryWriterFactory extends AbstractIoFactory im
 
   public static Writer<Geometry> createWriter(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final GeometryWriterFactory writerFactory = ioFactoryRegistry.getFactoryByResource(
+    final GeometryWriterFactory writerFactory = ioFactoryRegistry.getFactory(
       GeometryWriterFactory.class, resource);
     if (writerFactory == null) {
       return null;

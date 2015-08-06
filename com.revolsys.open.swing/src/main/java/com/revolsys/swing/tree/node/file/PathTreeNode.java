@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.io.RecordIo;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.io.FileUtil;
@@ -123,7 +124,7 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
     } else {
       if (isImage(path)) {
         return ICON_FILE_IMAGE;
-      } else if (RecordIo.canReadRecords(path)) {
+      } else if (RecordReader.isReadable(path)) {
         return ICON_FILE_TABLE;
       }
       File file;

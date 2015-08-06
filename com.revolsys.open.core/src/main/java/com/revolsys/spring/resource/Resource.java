@@ -1,8 +1,33 @@
 package com.revolsys.spring.resource;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+
 import com.revolsys.io.FileNames;
 
 public interface Resource extends org.springframework.core.io.Resource {
+
+  static Resource getResource(final Object source) {
+    Resource resource;
+    if (source instanceof Resource) {
+      resource = (Resource)source;
+    } else if (source instanceof Path) {
+      resource = new PathResource((Path)source);
+    } else if (source instanceof File) {
+      resource = new FileSystemResource((File)source);
+    } else if (source instanceof URL) {
+      resource = new UrlResource((URL)source);
+    } else if (source instanceof URI) {
+      resource = new UrlResource((URI)source);
+    } else if (source instanceof String) {
+      return SpringUtil.getResource((String)source);
+    } else {
+      throw new IllegalArgumentException(source.getClass() + " is not supported");
+    }
+    return resource;
+  }
 
   @Override
   Resource createRelative(String relativePath);

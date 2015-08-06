@@ -6,13 +6,12 @@ import java.nio.charset.Charset;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordIoFactory;
 import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.io.Writer;
 import com.revolsys.spring.resource.OutputStreamResource;
 
 public class XBaseRecordIoFactory extends AbstractRecordIoFactory {
@@ -35,12 +34,12 @@ public class XBaseRecordIoFactory extends AbstractRecordIoFactory {
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final RecordDefinition metaData, final Resource resource) {
+  public RecordWriter createRecordWriter(final RecordDefinition metaData, final Resource resource) {
     return new XbaseRecordWriter(metaData, resource);
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     return createRecordWriter(metaData, new OutputStreamResource(baseName, outputStream));
   }

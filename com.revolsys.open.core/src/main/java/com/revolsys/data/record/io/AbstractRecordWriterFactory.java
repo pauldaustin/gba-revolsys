@@ -8,13 +8,11 @@ import java.util.Set;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.Writer;
 import com.revolsys.spring.resource.SpringUtil;
 
 public abstract class AbstractRecordWriterFactory extends AbstractIoFactory implements
@@ -43,7 +41,7 @@ public abstract class AbstractRecordWriterFactory extends AbstractIoFactory impl
    * @return The writer.
    */
   @Override
-  public Writer<Record> createRecordWriter(final RecordDefinition recordDefinition,
+  public RecordWriter createRecordWriter(final RecordDefinition recordDefinition,
     final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
@@ -52,7 +50,7 @@ public abstract class AbstractRecordWriterFactory extends AbstractIoFactory impl
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
+  public RecordWriter createRecordWriter(final String baseName,
     final RecordDefinition recordDefinition, final OutputStream outputStream) {
     return createRecordWriter(baseName, recordDefinition, outputStream, StandardCharsets.UTF_8);
   }

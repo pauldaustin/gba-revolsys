@@ -91,6 +91,10 @@ public abstract class AbstractIoFactory implements IoFactory {
   }
 
   @Override
+  public void init() {
+  }
+
+  @Override
   public boolean isAvailable() {
     return true;
   }

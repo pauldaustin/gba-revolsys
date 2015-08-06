@@ -8,7 +8,6 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.AbstractRecordAndGeometryReaderFactory;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
@@ -59,7 +58,7 @@ public class ZipRecordReader extends DelegatingReader<Record>implements RecordRe
     final File file = new File(this.directory, zipEntryName);
     if (file.exists()) {
       final FileSystemResource fileResource = new FileSystemResource(file);
-      this.reader = AbstractRecordAndGeometryReaderFactory.recordReader(fileResource, factory);
+      this.reader = RecordReader.create(fileResource, factory);
       if (this.reader == null) {
         close();
         throw new IllegalArgumentException(

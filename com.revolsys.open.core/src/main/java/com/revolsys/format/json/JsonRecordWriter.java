@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.io.AbstractWriter;
@@ -15,7 +16,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.util.MathUtil;
 
-public class JsonRecordWriter extends AbstractWriter<Record> {
+public class JsonRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
   private RecordDefinition metaData;
 
@@ -151,6 +152,7 @@ public class JsonRecordWriter extends AbstractWriter<Record> {
     endList();
   }
 
+  @Override
   public void setIndent(final boolean indent) {
     this.indent = indent;
   }

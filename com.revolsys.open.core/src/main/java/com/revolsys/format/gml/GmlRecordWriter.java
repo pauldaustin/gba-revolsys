@@ -5,6 +5,7 @@ import java.io.Writer;
 import javax.xml.namespace.QName;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.property.RecordProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -19,7 +20,7 @@ import com.revolsys.io.Path;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 
-public class GmlRecordWriter extends AbstractWriter<Record> implements GmlConstants {
+public class GmlRecordWriter extends AbstractWriter<Record>implements GmlConstants, RecordWriter {
   public static final void srsName(final XmlWriter out, final GeometryFactory geometryFactory) {
     final CoordinateSystem coordinateSystem = geometryFactory.getCoordinateSystem();
     final int csId = coordinateSystem.getId();

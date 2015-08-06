@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -34,8 +35,8 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record> implements
-  EsriGeodatabaseXmlConstants {
+public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
+  implements RecordWriter, EsriGeodatabaseXmlConstants {
   private static final Logger LOG = LoggerFactory.getLogger(EsriGeodatabaseXmlRecordWriter.class);
 
   private int datasetId = 1;
@@ -213,7 +214,8 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record> imple
       this.out.element(FEATURE_TYPE, FEATURE_TYPE_SIMPLE);
       this.out.element(SHAPE_TYPE, this.geometryType);
       this.out.element(SHAPE_FIELD_NAME, geometryAttribute.getName());
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute
+        .getProperty(FieldProperties.GEOMETRY_FACTORY);
       this.out.element(HAS_M, false);
       this.out.element(HAS_Z, geometryFactory.hasZ());
       this.out.element(HAS_SPATIAL_INDEX, false);
@@ -275,7 +277,8 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record> imple
         this.out.element(PRECISION, precision);
         this.out.element(SCALE, attribute.getScale());
 
-        final GeometryFactory geometryFactory = attribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+        final GeometryFactory geometryFactory = attribute
+          .getProperty(FieldProperties.GEOMETRY_FACTORY);
         if (geometryFactory != null) {
           this.out.startTag(GEOMETRY_DEF);
           this.out.attribute(XsiConstants.TYPE, GEOMETRY_DEF_TYPE);
@@ -362,7 +365,8 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record> imple
     if (geometryFactory != null) {
       final CoordinateSystem coordinateSystem = geometryFactory.getCoordinateSystem();
       if (coordinateSystem != null) {
-        final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems.getCoordinateSystem(coordinateSystem);
+        final CoordinateSystem esriCoordinateSystem = EsriCoordinateSystems
+          .getCoordinateSystem(coordinateSystem);
         if (esriCoordinateSystem != null) {
           this.out.startTag(SPATIAL_REFERENCE);
           if (esriCoordinateSystem instanceof ProjectedCoordinateSystem) {

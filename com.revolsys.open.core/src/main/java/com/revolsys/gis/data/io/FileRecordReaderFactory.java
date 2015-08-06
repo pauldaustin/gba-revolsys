@@ -19,7 +19,7 @@ public class FileRecordReaderFactory extends AbstractFactoryBean<RecordReader> {
   protected static RecordReaderFactory getRecordReaderFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     final RecordReaderFactory readerFactory = ioFactoryRegistry
-      .getFactoryByResource(RecordReaderFactory.class, resource);
+      .getFactory(RecordReaderFactory.class, resource);
     return readerFactory;
   }
 
@@ -56,7 +56,7 @@ public class FileRecordReaderFactory extends AbstractFactoryBean<RecordReader> {
   public RecordReader createInstance() throws Exception {
     final Resource resource1 = this.resource;
     final RecordFactory factory1 = this.factory;
-    return RecordIo.recordReader(resource1, factory1);
+    return RecordReader.create(resource1, factory1);
   }
 
   @Override

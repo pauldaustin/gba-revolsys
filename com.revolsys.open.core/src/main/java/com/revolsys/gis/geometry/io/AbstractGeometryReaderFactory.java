@@ -12,12 +12,12 @@ import com.revolsys.gis.data.io.GeometryReader;
 import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
-public abstract class AbstractGeometryReaderFactory extends AbstractIoFactory implements
-  GeometryReaderFactory {
+public abstract class AbstractGeometryReaderFactory extends AbstractIoFactory
+  implements GeometryReaderFactory {
   public static GeometryReader geometryReader(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final GeometryReaderFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
-      GeometryReaderFactory.class, resource);
+    final GeometryReaderFactory readerFactory = ioFactoryRegistry
+      .getFactory(GeometryReaderFactory.class, resource);
     if (readerFactory == null) {
       return null;
     } else {

@@ -26,7 +26,7 @@ public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactor
   protected static RecordWriterFactory getRecordWriterFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     final RecordWriterFactory readerFactory = ioFactoryRegistry
-      .getFactoryByResource(RecordWriterFactory.class, resource);
+      .getFactory(RecordWriterFactory.class, resource);
     return readerFactory;
   }
 
@@ -60,7 +60,7 @@ public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactor
    * @return The writer.
    */
   @Override
-  public Writer<Record> createRecordWriter(final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final RecordDefinition metaData,
     final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
@@ -69,7 +69,7 @@ public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactor
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream) {
     return createRecordWriter(baseName, metaData, outputStream, StandardCharsets.UTF_8);
   }

@@ -10,7 +10,7 @@ public abstract class AbstractGeoreferencedImageFactory extends AbstractIoFactor
 
   public static GeoreferencedImageFactory getGeoreferencedImageFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final GeoreferencedImageFactory factory = ioFactoryRegistry.getFactoryByResource(
+    final GeoreferencedImageFactory factory = ioFactoryRegistry.getFactory(
       GeoreferencedImageFactory.class, resource);
     return factory;
   }

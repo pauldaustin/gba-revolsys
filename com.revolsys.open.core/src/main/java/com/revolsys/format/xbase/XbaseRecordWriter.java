@@ -19,6 +19,7 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
@@ -29,7 +30,7 @@ import com.revolsys.util.DateUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-public class XbaseRecordWriter extends AbstractWriter<Record> {
+public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWriter {
   private static final Logger log = Logger.getLogger(XbaseRecordWriter.class);
 
   private final List<FieldDefinition> fields = new ArrayList<FieldDefinition>();

@@ -8,6 +8,7 @@ import javax.xml.namespace.QName;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.property.RecordProperties;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
@@ -16,7 +17,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.io.NamedObject;
 
-public class XmlRecordWriter extends AbstractWriter<Record> {
+public class XmlRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
   private final RecordDefinition metaData;
 

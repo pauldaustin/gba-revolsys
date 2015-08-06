@@ -67,7 +67,7 @@ public abstract class AbstractRecordAndGeometryIoFactory extends
    * @return The writer.
    */
   @Override
-  public Writer<Record> createRecordWriter(final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final RecordDefinition metaData,
     final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
@@ -76,7 +76,7 @@ public abstract class AbstractRecordAndGeometryIoFactory extends
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream) {
     return createRecordWriter(baseName, metaData, outputStream, StandardCharsets.UTF_8);
   }

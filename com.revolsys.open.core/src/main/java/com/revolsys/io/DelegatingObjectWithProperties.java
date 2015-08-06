@@ -29,7 +29,8 @@ public class DelegatingObjectWithProperties implements ObjectWithProperties {
     }
   }
 
-  protected void close() {
+  @Override
+  public void close() {
     this.properties = null;
     this.object = null;
   }

@@ -22,17 +22,16 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.io.IteratorReader;
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
 import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
 import com.revolsys.io.Reader;
-import com.revolsys.io.Writer;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.WrappedException;
@@ -168,7 +167,7 @@ public class Csv extends AbstractRecordAndGeometryIoFactory implements MapWriter
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName,
+  public RecordWriter createRecordWriter(final String baseName,
     final RecordDefinition recordDefinition, final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = new OutputStreamWriter(outputStream, charset);
 

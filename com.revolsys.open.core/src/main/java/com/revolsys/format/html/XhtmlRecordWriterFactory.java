@@ -4,11 +4,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.Writer;
 
 public class XhtmlRecordWriterFactory extends AbstractRecordAndGeometryWriterFactory {
   public XhtmlRecordWriterFactory() {
@@ -19,7 +18,7 @@ public class XhtmlRecordWriterFactory extends AbstractRecordAndGeometryWriterFac
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
     return new XhtmlRecordWriter(metaData, writer);

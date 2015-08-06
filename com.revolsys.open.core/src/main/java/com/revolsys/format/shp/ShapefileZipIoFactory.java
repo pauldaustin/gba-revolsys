@@ -7,15 +7,14 @@ import java.nio.charset.Charset;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
 import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.ZipRecordReader;
 import com.revolsys.io.FileUtil;
-import com.revolsys.io.Writer;
-import com.revolsys.io.ZipWriter;
+import com.revolsys.io.ZipRecordWriter;
 
 public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
 
@@ -30,7 +29,7 @@ public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
   }
 
   @Override
-  public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
+  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     File directory;
     try {
@@ -39,8 +38,8 @@ public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
       throw new RuntimeException("Unable to create temporary directory", e);
     }
     final Resource tempResource = new FileSystemResource(new File(directory, baseName + ".shp"));
-    final Writer<Record> shapeWriter = new ShapefileRecordWriter(metaData, tempResource);
-    return new ZipWriter<Record>(directory, shapeWriter, outputStream);
+    final RecordWriter shapeWriter = new ShapefileRecordWriter(metaData, tempResource);
+    return new ZipRecordWriter(directory, shapeWriter, outputStream);
   }
 
 }

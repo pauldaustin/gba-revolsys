@@ -7,6 +7,7 @@ import java.util.List;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.format.xml.XmlWriter;
@@ -17,7 +18,7 @@ import com.revolsys.util.CaseConverter;
 import com.revolsys.util.HtmlUtil;
 import com.revolsys.util.Property;
 
-public class XhtmlRecordWriter extends AbstractWriter<Record> {
+public class XhtmlRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
   private String cssClass;
 
@@ -205,8 +206,8 @@ public class XhtmlRecordWriter extends AbstractWriter<Record> {
 
     @SuppressWarnings("unchecked")
     final Class<Object> dataTypeClass = (Class<Object>)dataType.getJavaClass();
-    final StringConverter<Object> converter = StringConverterRegistry.getInstance().getConverter(
-      dataTypeClass);
+    final StringConverter<Object> converter = StringConverterRegistry.getInstance()
+      .getConverter(dataTypeClass);
     if (converter == null) {
       this.out.text(value);
     } else {

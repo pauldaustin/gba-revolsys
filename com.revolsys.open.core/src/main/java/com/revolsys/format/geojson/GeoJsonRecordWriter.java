@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.Writer;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.json.JsonWriter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -21,7 +22,8 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class GeoJsonRecordWriter extends AbstractWriter<Record> implements GeoJsonConstants {
+public class GeoJsonRecordWriter extends AbstractWriter<Record>
+  implements RecordWriter, GeoJsonConstants {
 
   boolean initialized = false;
 

@@ -20,8 +20,10 @@ import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.Parent;
 import com.revolsys.data.record.io.RecordIo;
+import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
+import com.revolsys.io.IoFactory;
 import com.revolsys.io.Path;
 import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
@@ -619,7 +621,7 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
     Layer layer;
     if (AbstractGeoreferencedImageFactory.hasGeoreferencedImageFactory(urlString)) {
       layer = new GeoreferencedImageLayer(properties);
-    } else if (RecordIo.hasRecordReaderFactory(urlString)) {
+    } else if (IoFactory.hasFactory(RecordReaderFactory.class, urlString)) {
       final FileRecordLayer recordLayer = new FileRecordLayer(properties);
       final GeometryStyleRenderer renderer = recordLayer.getRenderer();
       renderer.setStyle(GeometryStyle.createStyle());

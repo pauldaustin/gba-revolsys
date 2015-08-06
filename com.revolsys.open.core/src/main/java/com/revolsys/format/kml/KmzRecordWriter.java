@@ -9,10 +9,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
 
-public class KmzRecordWriter extends AbstractWriter<Record> {
+public class KmzRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
   private final KmlRecordWriter kmlWriter;
 

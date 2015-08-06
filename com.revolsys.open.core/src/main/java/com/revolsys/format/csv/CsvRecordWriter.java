@@ -7,6 +7,7 @@ import java.io.Writer;
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.format.wkt.EWktWriter;
@@ -15,7 +16,7 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.util.WrappedException;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class CsvRecordWriter extends AbstractRecordWriter {
+public class CsvRecordWriter extends AbstractRecordWriter implements RecordWriter {
   private final char fieldSeparator;
 
   /** The writer */
