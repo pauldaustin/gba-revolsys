@@ -196,11 +196,6 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   }
 
   @Override
-  public List<RecordStoreSchema> getSchemas() {
-    return this.recordStore.getSchemas();
-  }
-
-  @Override
   public StatisticsMap getStatistics() {
     return this.recordStore.getStatistics();
   }

@@ -106,16 +106,23 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties
   public void addCodeTable(final String columnName, final CodeTable codeTable) {
     if (columnName != null && !columnName.equalsIgnoreCase("ID")) {
       this.columnToTableMap.put(columnName, codeTable);
-      for (final RecordStoreSchema schema : getSchemas()) {
-        if (schema.isInitialized()) {
-          for (final RecordDefinition recordDefinition : schema.getRecordDefinitions()) {
-            final String idFieldName = recordDefinition.getIdFieldName();
-            for (final FieldDefinition field : recordDefinition.getFields()) {
-              final String fieldName = field.getName();
-              if (fieldName.equals(columnName) && !fieldName.equals(idFieldName)) {
-                field.setCodeTable(codeTable);
-              }
-            }
+      final RecordStoreSchema rootSchema = getRootSchema();
+      addCodeTableColumns(rootSchema, codeTable, columnName);
+    }
+  }
+
+  protected void addCodeTableColumns(final RecordStoreSchema schema, final CodeTable codeTable,
+    final String columnName) {
+    if (schema.isInitialized()) {
+      for (final RecordStoreSchema childSchema : schema.getSchemas()) {
+        addCodeTableColumns(childSchema, codeTable, columnName);
+      }
+      for (final RecordDefinition recordDefinition : schema.getRecordDefinitions()) {
+        final String idFieldName = recordDefinition.getIdFieldName();
+        for (final FieldDefinition field : recordDefinition.getFields()) {
+          final String fieldName = field.getName();
+          if (fieldName.equals(columnName) && !fieldName.equals(idFieldName)) {
+            field.setCodeTable(codeTable);
           }
         }
       }
@@ -443,12 +450,6 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties
   public RecordStoreSchema getSchema(final String path) {
     final RecordStoreSchema rootSchema = getRootSchema();
     return rootSchema.getSchema(path);
-  }
-
-  @Override
-  public List<RecordStoreSchema> getSchemas() {
-    final RecordStoreSchema rootSchema = getRootSchema();
-    return rootSchema.getSchemas();
   }
 
   @SuppressWarnings("unchecked")
