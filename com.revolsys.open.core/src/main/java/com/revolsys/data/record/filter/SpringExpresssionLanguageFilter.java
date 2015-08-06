@@ -35,7 +35,7 @@ public class SpringExpresssionLanguageFilter implements Filter<Record>, MapSeria
     final Map<String, ? extends Object> variables) {
     this.query = query;
     this.expression = EXPRESSION_PARSER.parseExpression(query);
-    this.context.addPropertyAccessor(new DataObjectAccessor());
+    this.context.addPropertyAccessor(new RecordAccessor());
     this.context.setVariable("systemProperties", System.getProperties());
     this.context.setVariables((Map<String, Object>)variables);
   }

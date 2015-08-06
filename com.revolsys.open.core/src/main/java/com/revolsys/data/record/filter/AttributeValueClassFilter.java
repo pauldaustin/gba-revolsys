@@ -1,11 +1,11 @@
 package com.revolsys.data.record.filter;
 
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.filter.Filter;
 
 /**
- * Filter DataObjects by the type (Java class) of the attributeName value.
+ * Filter records by the type (Java class) of the attributeName value.
  *
  * @author Paul Austin
  */

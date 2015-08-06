@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.algorithm.index.DataObjectQuadTree;
+import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
@@ -21,7 +21,7 @@ import com.revolsys.swing.map.layer.record.style.marker.ImageMarker;
 import com.revolsys.swing.parallel.AbstractSwingWorker;
 import com.vividsolutions.jts.geom.Point;
 
-public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObjectQuadTree, Void> {
+public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<RecordQuadTree, Void> {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("geoname",
     "Geoname.org", GeoNamesBoundingBoxLayerWorker.class, "create");
@@ -56,7 +56,7 @@ public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObje
   }
 
   @Override
-  protected DataObjectQuadTree doInBackground() throws Exception {
+  protected RecordQuadTree doInBackground() throws Exception {
     BoundingBox boundingBox = this.boundingBox;
     GeometryFactory geometryFactory = this.geometryFactory;
     final CoordinateSystem coordinateSystem = geometryFactory.getCoordinateSystem();
@@ -67,9 +67,9 @@ public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObje
       boundingBox = new BoundingBox(geometryFactory, boundingBox);
     }
     final List<Record> results = this.geoNamesService.getNames(boundingBox);
-    for (final Record dataObject : results) {
-      final String name = dataObject.getValue("name");
-      final Point point = dataObject.getGeometryValue();
+    for (final Record record : results) {
+      final String name = record.getValue("name");
+      final Point point = record.getGeometryValue();
       final String text = "<html><b>" + name + "</b><br /></html>";
 
       // if (viewport instanceof ComponentViewport2D) {
@@ -78,7 +78,7 @@ public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObje
       // componentViewport.addHotSpot(geometryFactory, point, text, null);
       // }
     }
-    final DataObjectQuadTree index = new DataObjectQuadTree(results);
+    final RecordQuadTree index = new RecordQuadTree(results);
     return index;
   }
 
@@ -90,7 +90,7 @@ public class GeoNamesBoundingBoxLayerWorker extends AbstractSwingWorker<DataObje
   @Override
   protected void uiTask() {
     try {
-      final DataObjectQuadTree index = get();
+      final RecordQuadTree index = get();
       this.layer.setIndex(this.boundingBox, index);
     } catch (final Throwable e) {
       this.layer.setIndex(this.boundingBox, null);

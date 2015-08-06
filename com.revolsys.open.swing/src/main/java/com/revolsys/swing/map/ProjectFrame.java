@@ -70,8 +70,8 @@ import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.node.BaseTreeNode;
 import com.revolsys.swing.tree.node.ListTreeNode;
 import com.revolsys.swing.tree.node.file.FileSystemsTreeNode;
-import com.revolsys.swing.tree.node.file.PathTreeNode;
 import com.revolsys.swing.tree.node.file.FolderConnectionsTreeNode;
+import com.revolsys.swing.tree.node.file.PathTreeNode;
 import com.revolsys.swing.tree.node.layer.ProjectTreeNode;
 import com.revolsys.swing.tree.node.record.RecordStoreConnectionsTreeNode;
 import com.revolsys.util.ExceptionUtil;
@@ -496,10 +496,10 @@ public class ProjectFrame extends BaseFrame {
     final Object frameBoundsObject = this.project.getProperty("frameBounds");
     setBounds(frameBoundsObject, true);
 
-    final RecordStoreConnectionManager dataStoreConnectionManager = RecordStoreConnectionManager
+    final RecordStoreConnectionManager recordStoreConnectionManager = RecordStoreConnectionManager
       .get();
-    dataStoreConnectionManager.removeConnectionRegistry("Project");
-    dataStoreConnectionManager.addConnectionRegistry(this.project.getRecordStores());
+    recordStoreConnectionManager.removeConnectionRegistry("Project");
+    recordStoreConnectionManager.addConnectionRegistry(this.project.getRecordStores());
 
     final FolderConnectionManager folderConnectionManager = FolderConnectionManager.get();
     folderConnectionManager.removeConnectionRegistry("Project");

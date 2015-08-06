@@ -31,7 +31,7 @@ public class GmlIoFactory extends AbstractRecordAndGeometryWriterFactory impleme
   public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new GmlDataObjectWriter(metaData, writer);
+    return new GmlRecordWriter(metaData, writer);
   }
 
   @Override

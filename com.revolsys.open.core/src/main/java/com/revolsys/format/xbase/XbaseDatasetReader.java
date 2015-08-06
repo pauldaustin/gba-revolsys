@@ -24,7 +24,7 @@ import java.io.File;
 
 import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
-import com.revolsys.gis.data.io.DataObjectDirectoryReader;
+import com.revolsys.gis.data.io.RecordDirectoryReader;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ import com.revolsys.gis.data.io.DataObjectDirectoryReader;
  * @author Paul Austin
  * @see AbstractDirectoryReader
  */
-public class XbaseDatasetReader extends DataObjectDirectoryReader {
+public class XbaseDatasetReader extends RecordDirectoryReader {
   /**
    * Construct a new XbaseDatasetReader to read .dbf files from the specified
    * directory.

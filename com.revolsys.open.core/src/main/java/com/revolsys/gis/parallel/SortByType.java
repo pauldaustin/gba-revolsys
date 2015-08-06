@@ -7,14 +7,14 @@ import java.util.TreeMap;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.comparator.DataObjectMetaDataNameComparator;
+import com.revolsys.gis.data.model.comparator.RecordDefinitionNameComparator;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 
 public class SortByType extends BaseInOutProcess<Record, Record> {
 
   private final Map<RecordDefinition, Collection<Record>> objectsByType = new TreeMap<RecordDefinition, Collection<Record>>(
-    new DataObjectMetaDataNameComparator());
+    new RecordDefinitionNameComparator());
 
   @Override
   protected void postRun(final Channel<Record> in, final Channel<Record> out) {

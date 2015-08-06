@@ -15,8 +15,8 @@ import com.revolsys.io.connection.AbstractConnectionRegistry;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class RecordStoreConnectionRegistry extends
-  AbstractConnectionRegistry<RecordStoreConnection> {
+public class RecordStoreConnectionRegistry
+  extends AbstractConnectionRegistry<RecordStoreConnection> {
 
   private static final ThreadLocal<RecordStoreConnectionRegistry> threadRegistry = new ThreadLocal<RecordStoreConnectionRegistry>();
 
@@ -66,34 +66,34 @@ public class RecordStoreConnectionRegistry extends
     addConnection(connection.getName(), connection);
   }
 
-  public void addConnection(final String name, final RecordStore dataStore) {
-    final RecordStoreConnection connection = new RecordStoreConnection(this, name, dataStore);
+  public void addConnection(final String name, final RecordStore recordStore) {
+    final RecordStoreConnection connection = new RecordStoreConnection(this, name, recordStore);
     addConnection(connection);
   }
 
   @Override
-  protected RecordStoreConnection loadConnection(final File dataStoreFile) {
-    final Map<String, ? extends Object> config = JsonMapIoFactory.toMap(dataStoreFile);
+  protected RecordStoreConnection loadConnection(final File recordStoreFile) {
+    final Map<String, ? extends Object> config = JsonMapIoFactory.toMap(recordStoreFile);
     String name = Maps.getString(config, "name");
     if (!Property.hasValue(name)) {
-      name = FileUtil.getBaseName(dataStoreFile);
+      name = FileUtil.getBaseName(recordStoreFile);
     }
     try {
       final Map<String, Object> connectionProperties = CollectionUtil.get(config, "connection",
         Collections.<String, Object> emptyMap());
       if (connectionProperties.isEmpty()) {
-        LoggerFactory.getLogger(getClass()).error(
-          "Data store must include a 'connection' map property: " + dataStoreFile);
+        LoggerFactory.getLogger(getClass())
+          .error("Data store must include a 'connection' map property: " + recordStoreFile);
         return null;
       } else {
-        final RecordStoreConnection dataStoreConnection = new RecordStoreConnection(this,
-          dataStoreFile.toString(), config);
-        addConnection(name, dataStoreConnection);
-        return dataStoreConnection;
+        final RecordStoreConnection recordStoreConnection = new RecordStoreConnection(this,
+          recordStoreFile.toString(), config);
+        addConnection(name, recordStoreConnection);
+        return recordStoreConnection;
       }
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(getClass()).error("Error creating data store from: " + dataStoreFile,
-        e);
+      LoggerFactory.getLogger(getClass())
+        .error("Error creating data store from: " + recordStoreFile, e);
       return null;
     }
   }

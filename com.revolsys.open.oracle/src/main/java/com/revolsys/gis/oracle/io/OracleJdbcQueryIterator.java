@@ -8,15 +8,15 @@ import com.revolsys.jdbc.io.JdbcQueryIterator;
 
 public class OracleJdbcQueryIterator extends JdbcQueryIterator {
 
-  public OracleJdbcQueryIterator(final AbstractJdbcRecordStore dataStore, final Query query,
+  public OracleJdbcQueryIterator(final AbstractJdbcRecordStore recordStore, final Query query,
     final Map<String, Object> properties) {
-    super(dataStore, query, properties);
+    super(recordStore, query, properties);
   }
 
   @Override
   protected String getSql(Query query) {
-    final OracleRecordStore dataStore = (OracleRecordStore)getDataStore();
-    query = dataStore.addBoundingBoxFilter(query);
+    final OracleRecordStore recordStore = (OracleRecordStore)getRecordStore();
+    query = recordStore.addBoundingBoxFilter(query);
     setQuery(query);
     String sql = super.getSql(query);
 

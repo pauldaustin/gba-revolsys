@@ -27,7 +27,9 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class FileRecordLayer extends ListRecordLayer {
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("dataObjectFile",
+  public static final String DATA_OBJECT_FILE = "dataObjectFile";
+
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(DATA_OBJECT_FILE,
     "File", FileRecordLayer.class, "create");
 
   public static FileRecordLayer create(final Map<String, Object> properties) {
@@ -40,7 +42,7 @@ public class FileRecordLayer extends ListRecordLayer {
 
   public FileRecordLayer(final Map<String, ? extends Object> properties) {
     super(properties);
-    setType("dataObjectFile");
+    setType(DATA_OBJECT_FILE);
   }
 
   @Override

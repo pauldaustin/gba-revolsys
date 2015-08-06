@@ -55,8 +55,8 @@ public class NodeAttributes {
       for (final Edge<?> edge : node.getEdges()) {
         final Object object = edge.getObject();
         if (object instanceof Record) {
-          final Record dataObject = (Record)object;
-          final RecordDefinition metaData = dataObject.getRecordDefinition();
+          final Record record = (Record)object;
+          final RecordDefinition metaData = record.getRecordDefinition();
           metaDatas.add(metaData);
         }
       }

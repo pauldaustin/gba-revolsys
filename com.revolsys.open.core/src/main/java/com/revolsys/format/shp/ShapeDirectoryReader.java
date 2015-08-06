@@ -13,7 +13,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordIteratorReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
-import com.revolsys.gis.data.io.DataObjectDirectoryReader;
+import com.revolsys.gis.data.io.RecordDirectoryReader;
 import com.revolsys.io.Reader;
 import com.revolsys.spring.resource.SpringUtil;
 
@@ -31,7 +31,7 @@ import com.revolsys.spring.resource.SpringUtil;
  * @author Paul Austin
  * @see AbstractDirectoryReader
  */
-public class ShapeDirectoryReader extends DataObjectDirectoryReader {
+public class ShapeDirectoryReader extends RecordDirectoryReader {
   private final Map<String, String> fileNameTypeMap = new HashMap<String, String>();
 
   private Map<String, RecordDefinition> typeNameMetaDataMap = new HashMap<String, RecordDefinition>();

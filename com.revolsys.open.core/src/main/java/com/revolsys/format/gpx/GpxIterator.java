@@ -41,15 +41,16 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 
 public class GpxIterator implements RecordIterator {
-  private static final DateTimeFormatter XML_DATE_TIME_FORMAT = ISODateTimeFormat.dateTimeNoMillis();
+  private static final DateTimeFormatter XML_DATE_TIME_FORMAT = ISODateTimeFormat
+    .dateTimeNoMillis();
 
   private static final XMLInputFactory FACTORY = XMLInputFactory.newInstance();
 
   private static final Logger log = Logger.getLogger(GpxIterator.class);
 
-  private Record currentDataObject;
+  private Record currentRecord;
 
-  private RecordFactory dataObjectFactory;
+  private RecordFactory recordFactory;
 
   private File file;
 
@@ -79,16 +80,16 @@ public class GpxIterator implements RecordIterator {
     this(StaxUtils.createXmlReader(in));
   }
 
-  public GpxIterator(final Reader in, final RecordFactory dataObjectFactory, final String path) {
+  public GpxIterator(final Reader in, final RecordFactory recordFactory, final String path) {
     this(StaxUtils.createXmlReader(in));
-    this.dataObjectFactory = dataObjectFactory;
+    this.recordFactory = recordFactory;
     this.typePath = path;
   }
 
-  public GpxIterator(final Resource resource, final RecordFactory dataObjectFactory,
-    final String path) throws IOException {
+  public GpxIterator(final Resource resource, final RecordFactory recordFactory, final String path)
+    throws IOException {
     this(StaxUtils.createXmlReader(resource));
-    this.dataObjectFactory = dataObjectFactory;
+    this.recordFactory = recordFactory;
     this.typePath = path;
     this.baseName = FileUtil.getBaseName(resource.getFilename());
   }
@@ -135,11 +136,11 @@ public class GpxIterator implements RecordIterator {
   protected boolean loadNextRecord() {
     try {
       do {
-        this.currentDataObject = parseDataObject();
-      } while (this.currentDataObject != null && this.typePath != null
-        && !this.currentDataObject.getRecordDefinition().getPath().equals(this.typePath));
+        this.currentRecord = parseRecord();
+      } while (this.currentRecord != null && this.typePath != null
+        && !this.currentRecord.getRecordDefinition().getPath().equals(this.typePath));
       this.loadNextObject = false;
-      if (this.currentDataObject == null) {
+      if (this.currentRecord == null) {
         close();
         this.hasNext = false;
       }
@@ -153,13 +154,13 @@ public class GpxIterator implements RecordIterator {
   public Record next() {
     if (hasNext()) {
       this.loadNextObject = true;
-      return this.currentDataObject;
+      return this.currentRecord;
     } else {
       throw new NoSuchElementException();
     }
   }
 
-  protected Object parseAttribute(final Record dataObject) {
+  protected Object parseAttribute(final Record record) {
     final String attributeName = this.in.getLocalName();
     final String stringValue = StaxUtils.getElementText(this.in);
     Object value;
@@ -171,7 +172,7 @@ public class GpxIterator implements RecordIterator {
       value = stringValue;
     }
     if (value != null) {
-      dataObject.setValue(attributeName, value);
+      record.setValue(attributeName, value);
     }
     return value;
   }
@@ -211,7 +212,39 @@ public class GpxIterator implements RecordIterator {
   // return attribute;
   // }
 
-  private Record parseDataObject() throws XMLStreamException {
+  protected Record parsePoint(final String featureType, final double index)
+    throws XMLStreamException {
+    final Record record = this.recordFactory.createRecord(GpxConstants.GPX_TYPE);
+    record.setValue("dataset_name", this.baseName);
+    record.setValue("index", index);
+    record.setValue("feature_type", featureType);
+    final double lat = Double.parseDouble(this.in.getAttributeValue("", "lat"));
+    final double lon = Double.parseDouble(this.in.getAttributeValue("", "lon"));
+    double elevation = Double.NaN;
+
+    while (this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
+      if (this.in.getName().equals(GpxConstants.EXTENSION_ELEMENT)) {
+        StaxUtils.skipSubTree(this.in);
+      } else if (this.in.getName().equals(GpxConstants.ELEVATION_ELEMENT)) {
+        elevation = Double.parseDouble(StaxUtils.getElementText(this.in));
+      } else {
+        parseAttribute(record);
+      }
+    }
+
+    Coordinate coord = null;
+    if (Double.isNaN(elevation)) {
+      coord = new Coordinate(lon, lat);
+    } else {
+      coord = new Coordinate(lon, lat, elevation);
+    }
+
+    final Point point = this.geometryFactory.createPoint(coord);
+    record.setValue("location", point);
+    return record;
+  }
+
+  private Record parseRecord() throws XMLStreamException {
     if (!this.objects.isEmpty()) {
       return this.objects.remove();
     } else {
@@ -235,44 +268,12 @@ public class GpxIterator implements RecordIterator {
     }
   }
 
-  protected Record parsePoint(final String featureType, final double index)
-    throws XMLStreamException {
-    final Record dataObject = this.dataObjectFactory.createRecord(GpxConstants.GPX_TYPE);
-    dataObject.setValue("dataset_name", this.baseName);
-    dataObject.setValue("index", index);
-    dataObject.setValue("feature_type", featureType);
-    final double lat = Double.parseDouble(this.in.getAttributeValue("", "lat"));
-    final double lon = Double.parseDouble(this.in.getAttributeValue("", "lon"));
-    double elevation = Double.NaN;
-
-    while (this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
-      if (this.in.getName().equals(GpxConstants.EXTENSION_ELEMENT)) {
-        StaxUtils.skipSubTree(this.in);
-      } else if (this.in.getName().equals(GpxConstants.ELEVATION_ELEMENT)) {
-        elevation = Double.parseDouble(StaxUtils.getElementText(this.in));
-      } else {
-        parseAttribute(dataObject);
-      }
-    }
-
-    Coordinate coord = null;
-    if (Double.isNaN(elevation)) {
-      coord = new Coordinate(lon, lat);
-    } else {
-      coord = new Coordinate(lon, lat, elevation);
-    }
-
-    final Point point = this.geometryFactory.createPoint(coord);
-    dataObject.setValue("location", point);
-    return dataObject;
-  }
-
   private Record parseRoute() throws XMLStreamException {
     this.index++;
-    final Record dataObject = this.dataObjectFactory.createRecord(GpxConstants.GPX_TYPE);
-    dataObject.setValue("dataset_name", this.baseName);
-    dataObject.setValue("index", this.index);
-    dataObject.setValue("feature_type", "rte");
+    final Record record = this.recordFactory.createRecord(GpxConstants.GPX_TYPE);
+    record.setValue("dataset_name", this.baseName);
+    record.setValue("index", this.index);
+    record.setValue("feature_type", "rte");
     final List<Record> pointObjects = new ArrayList<Record>();
     int numAxis = 2;
     while (this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
@@ -286,7 +287,7 @@ public class GpxIterator implements RecordIterator {
         final Coordinates coordinates = CoordinatesUtil.get(point);
         numAxis = Math.max(numAxis, coordinates.getNumAxis());
       } else {
-        parseAttribute(dataObject);
+        parseAttribute(record);
       }
     }
     final CoordinatesList points = new DoubleCoordinatesList(pointObjects.size(), numAxis);
@@ -306,9 +307,9 @@ public class GpxIterator implements RecordIterator {
       line = this.geometryFactory.createLineString((CoordinatesList)null);
     }
 
-    dataObject.setGeometryValue(line);
+    record.setGeometryValue(line);
     this.objects.addAll(pointObjects);
-    return dataObject;
+    return record;
   }
 
   private Record parseRoutPoint(final double index) throws XMLStreamException {
@@ -318,10 +319,10 @@ public class GpxIterator implements RecordIterator {
 
   private Record parseTrack() throws XMLStreamException {
     this.index++;
-    final Record dataObject = this.dataObjectFactory.createRecord(GpxConstants.GPX_TYPE);
-    dataObject.setValue("dataset_name", this.baseName);
-    dataObject.setValue("index", this.index);
-    dataObject.setValue("feature_type", "trk");
+    final Record record = this.recordFactory.createRecord(GpxConstants.GPX_TYPE);
+    record.setValue("dataset_name", this.baseName);
+    record.setValue("index", this.index);
+    record.setValue("feature_type", "trk");
     final List<CoordinatesList> segments = new ArrayList<CoordinatesList>();
     while (this.in.nextTag() == XMLStreamConstants.START_ELEMENT) {
       if (this.in.getName().equals(GpxConstants.EXTENSION_ELEMENT)) {
@@ -332,12 +333,12 @@ public class GpxIterator implements RecordIterator {
           segments.add(points);
         }
       } else {
-        parseAttribute(dataObject);
+        parseAttribute(record);
       }
     }
     final MultiLineString lines = this.geometryFactory.createMultiLineString(segments);
-    dataObject.setGeometryValue(lines);
-    return dataObject;
+    record.setGeometryValue(lines);
+    return record;
   }
 
   private int parseTrackPoint(final CoordinatesList points) throws XMLStreamException {

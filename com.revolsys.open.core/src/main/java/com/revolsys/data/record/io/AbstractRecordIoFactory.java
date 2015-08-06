@@ -20,25 +20,25 @@ import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.resource.SpringUtil;
 
-public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactory implements
-  RecordWriterFactory {
+public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactory
+  implements RecordWriterFactory {
 
-  public static Writer<Record> dataObjectWriter(final RecordDefinition metaData,
+  protected static RecordWriterFactory getRecordWriterFactory(final Resource resource) {
+    final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
+    final RecordWriterFactory readerFactory = ioFactoryRegistry
+      .getFactoryByResource(RecordWriterFactory.class, resource);
+    return readerFactory;
+  }
+
+  public static Writer<Record> recordWriter(final RecordDefinition metaData,
     final Resource resource) {
-    final RecordWriterFactory writerFactory = getDataObjectWriterFactory(resource);
+    final RecordWriterFactory writerFactory = getRecordWriterFactory(resource);
     if (writerFactory == null) {
       return null;
     } else {
       final Writer<Record> writer = writerFactory.createRecordWriter(metaData, resource);
       return writer;
     }
-  }
-
-  protected static RecordWriterFactory getDataObjectWriterFactory(final Resource resource) {
-    final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final RecordWriterFactory readerFactory = ioFactoryRegistry.getFactoryByResource(
-      RecordWriterFactory.class, resource);
-    return readerFactory;
   }
 
   private final boolean geometrySupported;
@@ -60,7 +60,8 @@ public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactor
    * @return The writer.
    */
   @Override
-  public Writer<Record> createRecordWriter(final RecordDefinition metaData, final Resource resource) {
+  public Writer<Record> createRecordWriter(final RecordDefinition metaData,
+    final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
     final String baseName = FileUtil.getBaseName(fileName);

@@ -12,7 +12,7 @@ import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.io.ZipDataObjectReader;
+import com.revolsys.gis.data.io.ZipRecordReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
 import com.revolsys.io.ZipWriter;
@@ -26,7 +26,7 @@ public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
 
   @Override
   public RecordReader createRecordReader(final Resource resource, final RecordFactory factory) {
-    return new ZipDataObjectReader(resource, ShapefileConstants.FILE_EXTENSION, factory);
+    return new ZipRecordReader(resource, ShapefileConstants.FILE_EXTENSION, factory);
   }
 
   @Override
@@ -39,7 +39,7 @@ public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
       throw new RuntimeException("Unable to create temporary directory", e);
     }
     final Resource tempResource = new FileSystemResource(new File(directory, baseName + ".shp"));
-    final Writer<Record> shapeWriter = new ShapefileDataObjectWriter(metaData, tempResource);
+    final Writer<Record> shapeWriter = new ShapefileRecordWriter(metaData, tempResource);
     return new ZipWriter<Record>(directory, shapeWriter, outputStream);
   }
 

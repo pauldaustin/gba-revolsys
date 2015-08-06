@@ -15,9 +15,9 @@ import com.revolsys.jts.geom.GeometryFactory;
 
 public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
 
-  public PostgreSQLJdbcQueryIterator(final JdbcRecordStore dataStore, final Query query,
+  public PostgreSQLJdbcQueryIterator(final JdbcRecordStore recordStore, final Query query,
     final Map<String, Object> properties) {
-    super(dataStore, query, properties);
+    super(recordStore, query, properties);
   }
 
   @Override

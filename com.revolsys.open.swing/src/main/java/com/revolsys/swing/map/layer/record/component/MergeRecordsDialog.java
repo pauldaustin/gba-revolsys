@@ -31,7 +31,7 @@ import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.graph.DataObjectGraph;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.swing.SwingUtil;
@@ -158,7 +158,7 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
       } else if (!DataTypes.LINE_STRING.equals(geometryType)) {
         errorMessage = "Merging " + geometryType + " not currently supported";
       } else {
-        final DataObjectGraph graph = new DataObjectGraph();
+        final RecordGraph graph = new RecordGraph();
         for (final LayerRecord originalRecord : originalRecords) {
           final Record mergeableRecord = new ArrayRecord(originalRecord);
           this.mergeableToOiginalRecordMap.put(mergeableRecord, originalRecord);

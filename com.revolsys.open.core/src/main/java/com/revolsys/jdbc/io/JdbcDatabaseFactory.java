@@ -14,7 +14,7 @@ public interface JdbcDatabaseFactory extends RecordStoreFactory {
 
   void closeDataSource(DataSource dataSource);
 
-  JdbcRecordStore createDataObjectStore(DataSource dataSource);
+  JdbcRecordStore createRecordStore(DataSource dataSource);
 
   DataSource createDataSource(Map<String, ? extends Object> connectionProperties);
 

@@ -41,11 +41,11 @@ public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
 
   private final DataSource dataSource;
 
-  private final PostgreSQLRecordStore dataStore;
+  private final PostgreSQLRecordStore recordStore;
 
-  public PostgreSQLGeometryFieldAdder(final PostgreSQLRecordStore dataStore,
+  public PostgreSQLGeometryFieldAdder(final PostgreSQLRecordStore recordStore,
     final DataSource dataSource) {
-    this.dataStore = dataStore;
+    this.recordStore = recordStore;
     this.dataSource = dataSource;
   }
 
@@ -55,11 +55,11 @@ public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
     final String dataTypeName, final int sqlType, final int length, final int scale,
     final boolean required, final String description) {
     final String typePath = metaData.getPath();
-    String owner = this.dataStore.getDatabaseSchemaName(Path.getPath(typePath));
+    String owner = this.recordStore.getDatabaseSchemaName(Path.getPath(typePath));
     if (!Property.hasValue(owner)) {
       owner = "public";
     }
-    final String tableName = this.dataStore.getDatabaseTableName(typePath);
+    final String tableName = this.recordStore.getDatabaseTableName(typePath);
     final String columnName = name.toLowerCase();
     try {
       int srid = 0;
@@ -77,7 +77,7 @@ public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
       }
 
       final DataType dataType = DATA_TYPE_MAP.get(type);
-      final GeometryFactory storeGeometryFactory = this.dataStore.getGeometryFactory();
+      final GeometryFactory storeGeometryFactory = this.recordStore.getGeometryFactory();
       final GeometryFactory geometryFactory;
       if (storeGeometryFactory == null) {
         geometryFactory = GeometryFactory.getFactory(srid, numAxis, 0, 0);
@@ -88,15 +88,16 @@ public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
       final FieldDefinition attribute = new PostgreSQLGeometryJdbcAttribute(dbName, name, dataType,
         required, description, null, srid, numAxis, geometryFactory);
       metaData.addField(attribute);
-      attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS, new SqlFunction("st_intersects(",
-        ")"));
+      attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS,
+        new SqlFunction("st_intersects(", ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("st_buffer(", ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_EQUAL, new SqlFunction("st_equals(", ")"));
       attribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
       return attribute;
     } catch (final SQLException e) {
-      LOG.error("Attribute not registered in GEOMETRY_COLUMN table " + owner + "." + tableName
-        + "." + name, e);
+      LOG.error(
+        "Attribute not registered in GEOMETRY_COLUMN table " + owner + "." + tableName + "." + name,
+        e);
       return null;
     } catch (final Throwable e) {
       LOG.error("Error registering attribute " + name, e);

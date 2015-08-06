@@ -48,7 +48,8 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
 
   private final Map<RecordDefinition, Map<String, Object>> typeDefaultValues = new HashMap<RecordDefinition, Map<String, Object>>();
 
-  private void addDefaultValues(final Map<String, Object> defaultValues, final RecordDefinition type) {
+  private void addDefaultValues(final Map<String, Object> defaultValues,
+    final RecordDefinition type) {
     if (Path.getPath(type.getPath()).equals(this.schemaName)) {
       defaultValues.putAll(type.getDefaultValues());
     }
@@ -91,8 +92,8 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
     return this.schemaName;
   }
 
-  private void process(final Record dataObject) {
-    final RecordDefinition type = dataObject.getRecordDefinition();
+  private void process(final Record record) {
+    final RecordDefinition type = record.getRecordDefinition();
 
     boolean process = true;
     if (this.schemaName != null) {
@@ -101,64 +102,65 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
       }
     }
     if (process) {
-      processDefaultValues(dataObject, getDefaultValues(type));
+      processDefaultValues(record, getDefaultValues(type));
     }
 
     for (int i = 0; i < type.getFieldCount(); i++) {
-      final Object value = dataObject.getValue(i);
+      final Object value = record.getValue(i);
       if (value instanceof Record) {
         process((Record)value);
       }
     }
   }
 
-  private void processDefaultValues(final Record dataObject, final Map<String, Object> defaultValues) {
+  private void processDefaultValues(final Record record, final Map<String, Object> defaultValues) {
     for (final Entry<String, Object> defaultValue : defaultValues.entrySet()) {
       final String key = defaultValue.getKey();
       final Object value = defaultValue.getValue();
-      setDefaultValue(dataObject, key, value);
+      setDefaultValue(record, key, value);
     }
   }
 
   @Override
   protected void run(final Channel<Record> in, final Channel<Record> out) {
-    for (Record dataObject = in.read(); dataObject != null; dataObject = in.read()) {
-      process(dataObject);
-      out.write(dataObject);
+    for (Record record = in.read(); record != null; record = in.read()) {
+      process(record);
+      out.write(record);
     }
   }
 
-  private void setDefaultValue(final Record dataObject, final String key, final Object value) {
+  private void setDefaultValue(final Record record, final String key, final Object value) {
     final int dotIndex = key.indexOf('.');
     if (dotIndex == -1) {
-      if (dataObject.getValue(key) == null && !this.excludedAttributeNames.contains(key)) {
+      if (record.getValue(key) == null && !this.excludedAttributeNames.contains(key)) {
         log.info("Adding attribute " + key + "=" + value);
-        dataObject.setValue(key, value);
+        record.setValue(key, value);
       }
     } else {
       final String attributeName = key.substring(0, dotIndex);
       NDC.push(" -> " + attributeName);
       try {
         final String subKey = key.substring(dotIndex + 1);
-        final Object attributeValue = dataObject.getValue(attributeName);
+        final Object attributeValue = record.getValue(attributeName);
         if (attributeValue == null) {
-          final RecordDefinition type = dataObject.getRecordDefinition();
+          final RecordDefinition type = record.getRecordDefinition();
           final int attrIndex = type.getFieldIndex(attributeName);
           final DataType dataType = type.getFieldType(attrIndex);
           final Class<?> typeClass = dataType.getJavaClass();
           if (typeClass == Record.class) {
 
-            final RecordDefinition subClass = this.metaDataFactory.getRecordDefinition(dataType.getName());
+            final RecordDefinition subClass = this.metaDataFactory
+              .getRecordDefinition(dataType.getName());
             final Record subObject = subClass.createRecord();
             setDefaultValue(subObject, subKey, value);
-            dataObject.setValue(attributeName, subObject);
+            record.setValue(attributeName, subObject);
             process(subObject);
           }
         } else if (attributeValue instanceof Record) {
           final Record subObject = (Record)attributeValue;
           setDefaultValue(subObject, subKey, value);
-        } else if (!attributeName.equals(dataObject.getRecordDefinition().getGeometryFieldName())) {
-          log.error("Attribute '" + attributeName + "' must be a DataObject");
+        } else if (!attributeName.equals(record.getRecordDefinition().getGeometryFieldName())) {
+          log.error("Attribute '" + attributeName + "' must be a Record");
         }
       } finally {
         NDC.pop();

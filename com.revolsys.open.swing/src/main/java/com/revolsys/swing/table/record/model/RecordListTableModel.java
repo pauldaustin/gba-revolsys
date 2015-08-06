@@ -15,7 +15,7 @@ import javax.swing.SortOrder;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.gis.data.model.comparator.DataObjectAttributeComparator;
+import com.revolsys.gis.data.model.comparator.RecordAttributeComparator;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.table.TablePanel;
@@ -183,7 +183,7 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
     final SortOrder sortOrder = super.setSortOrder(column);
     if (this.records != null) {
       final String attributeName = getFieldName(column);
-      final Comparator<Record> comparitor = new DataObjectAttributeComparator(
+      final Comparator<Record> comparitor = new RecordAttributeComparator(
         sortOrder == SortOrder.ASCENDING, attributeName);
       Collections.sort(this.records, comparitor);
       fireTableDataChanged();

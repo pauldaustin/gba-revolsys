@@ -26,9 +26,9 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
 
   private List<Record> results = null;
 
-  public OracleJdbcQueryResultPager(final JdbcRecordStore dataStore,
+  public OracleJdbcQueryResultPager(final JdbcRecordStore recordStore,
     final Map<String, Object> properties, final Query query) {
-    super(dataStore, properties, query);
+    super(recordStore, properties, query);
   }
 
   @Override
@@ -52,8 +52,8 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
             connection = JdbcUtils.getConnection(dataSource);
           }
           try {
-            final JdbcRecordStore dataStore = getDataStore();
-            final RecordFactory dataObjectFactory = getRecordFactory();
+            final JdbcRecordStore recordStore = getRecordStore();
+            final RecordFactory recordFactory = getRecordFactory();
             final RecordDefinition metaData = getMetaData();
             final List<FieldDefinition> attributes = metaData.getFields();
 
@@ -65,8 +65,8 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
                 if (resultSet.next()) {
                   int i = 0;
                   do {
-                    final Record object = JdbcQueryIterator.getNextObject(dataStore, metaData,
-                      attributes, dataObjectFactory, resultSet);
+                    final Record object = JdbcQueryIterator.getNextObject(recordStore, metaData,
+                      attributes, recordFactory, resultSet);
                     results.add(object);
                     i++;
                   } while (resultSet.next() && i < pageSize);
@@ -94,9 +94,9 @@ public class OracleJdbcQueryResultPager extends JdbcQueryResultPager {
   @Override
   public int getNumResults() {
     if (this.numResults == null) {
-      final JdbcRecordStore dataStore = getDataStore();
+      final JdbcRecordStore recordStore = getRecordStore();
       final Query query = getQuery();
-      this.numResults = dataStore.getRowCount(query);
+      this.numResults = recordStore.getRowCount(query);
       updateNumPages();
     }
     return this.numResults;

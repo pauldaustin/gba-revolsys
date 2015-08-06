@@ -15,7 +15,7 @@ import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.gis.data.model.DataObjectMap;
+import com.revolsys.gis.data.model.RecordMap;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 import com.revolsys.util.JexlUtil;
@@ -88,7 +88,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
         if (geometry != null) {
           final JexlContext context = new HashMapContext();
           final Map<String, Object> vars = new HashMap<String, Object>(this.attributes);
-          vars.putAll(new DataObjectMap(object));
+          vars.putAll(new RecordMap(object));
           vars.put("typePath", metaData.getPath());
           context.setVars(vars);
           final String typePath = (String)JexlUtil.evaluateExpression(context,

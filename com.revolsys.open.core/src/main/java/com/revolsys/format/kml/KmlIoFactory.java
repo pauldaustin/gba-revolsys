@@ -41,7 +41,7 @@ public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory impleme
   public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new KmlDataObjectWriter(writer);
+    return new KmlRecordWriter(writer);
   }
 
   @Override

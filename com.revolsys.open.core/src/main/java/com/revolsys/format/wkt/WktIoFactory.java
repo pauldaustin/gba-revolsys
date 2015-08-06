@@ -25,7 +25,7 @@ public class WktIoFactory extends AbstractRecordAndGeometryIoFactory implements 
   @Override
   public RecordReader createRecordReader(final Resource resource, final RecordFactory factory) {
     try {
-      final WktDataObjectIterator iterator = new WktDataObjectIterator(factory, resource);
+      final WktRecordIterator iterator = new WktRecordIterator(factory, resource);
 
       return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
@@ -37,6 +37,6 @@ public class WktIoFactory extends AbstractRecordAndGeometryIoFactory implements 
   public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new WktDataObjectWriter(metaData, writer);
+    return new WktRecordWriter(metaData, writer);
   }
 }

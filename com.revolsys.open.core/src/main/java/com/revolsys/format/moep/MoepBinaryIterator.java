@@ -82,9 +82,9 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
 
   private byte coordinateBytes;
 
-  private Record currentDataObject;
+  private Record currentRecord;
 
-  private final RecordFactory dataObjectFactory;
+  private final RecordFactory recordFactory;
 
   private final MoepDirectoryReader directoryReader;
 
@@ -105,9 +105,9 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
   private final String mapsheet;
 
   public MoepBinaryIterator(final MoepDirectoryReader directoryReader, final String fileName,
-    final InputStream in, final RecordFactory dataObjectFactory) {
+    final InputStream in, final RecordFactory recordFactory) {
     this.directoryReader = directoryReader;
-    this.dataObjectFactory = dataObjectFactory;
+    this.recordFactory = recordFactory;
     switch (fileName.charAt(fileName.length() - 5)) {
       case 'd':
         this.originalFileType = "dem";
@@ -171,7 +171,41 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
     }
   }
 
-  protected Record loadDataObject() throws IOException {
+  private void loadHeader() throws IOException {
+    this.fileType = (byte)read();
+    if (this.fileType / 100 == 0) {
+      this.coordinateBytes = 2;
+    } else {
+      this.fileType %= 100;
+      this.coordinateBytes = 4;
+    }
+    String mapsheet = readString(11);
+    mapsheet = mapsheet.replaceAll("\\.", "").toLowerCase();
+    final Bcgs20000RectangularMapGrid bcgsGrid = new Bcgs20000RectangularMapGrid();
+    final UtmRectangularMapGrid utmGrid = new UtmRectangularMapGrid();
+    final double latitude = bcgsGrid.getLatitude(mapsheet) + 0.05;
+    final double longitude = bcgsGrid.getLongitude(mapsheet) - 0.1;
+    final int crsId = utmGrid.getNad83Srid(longitude, latitude);
+    final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(crsId);
+
+    final String submissionDateString = readString(6);
+
+    final double centreX = readLEInt(this.in);
+    final double centreY = readLEInt(this.in);
+    this.center = new DoubleCoordinates(centreX, centreY);
+    this.factory = GeometryFactory.getFactory(coordinateSystem.getId(), 1.0, 1.0);
+    setProperty(IoConstants.GEOMETRY_FACTORY, this.factory);
+  }
+
+  protected Record loadNextRecord() {
+    try {
+      return loadRecord();
+    } catch (final IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
+  protected Record loadRecord() throws IOException {
     final int featureKey = read();
     if (featureKey != 255) {
 
@@ -190,7 +224,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
       final int extraParams = featureKey % 100 / 10;
       final int featureType = featureKey % 10;
       final byte numBytes = (byte)read();
-      final Record object = this.dataObjectFactory.createRecord(MoepConstants.META_DATA);
+      final Record object = this.recordFactory.createRecord(MoepConstants.META_DATA);
       object.setValue(MoepConstants.MAPSHEET_NAME, this.mapsheet);
       object.setValue(MoepConstants.FEATURE_CODE, this.featureCode);
       object.setValue(MoepConstants.ORIGINAL_FILE_TYPE, this.originalFileType);
@@ -238,8 +272,8 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
             final String fontName = new String(attribute.substring(0, 3).trim());
             object.setValue(MoepConstants.FONT_NAME, fontName);
             if (attribute.length() > 3) {
-              final String other = new String(attribute.substring(3,
-                Math.min(attribute.length(), 5)).trim());
+              final String other = new String(
+                attribute.substring(3, Math.min(attribute.length(), 5)).trim());
               object.setValue(MoepConstants.FONT_WEIGHT, other);
             } else {
               object.setValue(MoepConstants.FONT_WEIGHT, "0");
@@ -273,9 +307,9 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
           setAdmissionHistory(object, 'W');
         break;
       }
-      this.currentDataObject = object;
+      this.currentRecord = object;
       this.loadNextObject = false;
-      return this.currentDataObject;
+      return this.currentRecord;
     } else {
       close();
       this.hasNext = false;
@@ -283,51 +317,17 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
     }
   }
 
-  private void loadHeader() throws IOException {
-    this.fileType = (byte)read();
-    if (this.fileType / 100 == 0) {
-      this.coordinateBytes = 2;
-    } else {
-      this.fileType %= 100;
-      this.coordinateBytes = 4;
-    }
-    String mapsheet = readString(11);
-    mapsheet = mapsheet.replaceAll("\\.", "").toLowerCase();
-    final Bcgs20000RectangularMapGrid bcgsGrid = new Bcgs20000RectangularMapGrid();
-    final UtmRectangularMapGrid utmGrid = new UtmRectangularMapGrid();
-    final double latitude = bcgsGrid.getLatitude(mapsheet) + 0.05;
-    final double longitude = bcgsGrid.getLongitude(mapsheet) - 0.1;
-    final int crsId = utmGrid.getNad83Srid(longitude, latitude);
-    final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(crsId);
-
-    final String submissionDateString = readString(6);
-
-    final double centreX = readLEInt(this.in);
-    final double centreY = readLEInt(this.in);
-    this.center = new DoubleCoordinates(centreX, centreY);
-    this.factory = GeometryFactory.getFactory(coordinateSystem.getId(), 1.0, 1.0);
-    setProperty(IoConstants.GEOMETRY_FACTORY, this.factory);
-  }
-
-  protected Record loadNextRecord() {
-    try {
-      return loadDataObject();
-    } catch (final IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
   /**
    * Get the next data object read by this reader.
    *
-   * @return The next DataObject.
+   * @return The next record.
    * @exception NoSuchElementException If the reader has no more data objects.
    */
   @Override
   public Record next() {
     if (hasNext()) {
       this.loadNextObject = true;
-      return this.currentDataObject;
+      return this.currentRecord;
     } else {
       throw new NoSuchElementException();
     }

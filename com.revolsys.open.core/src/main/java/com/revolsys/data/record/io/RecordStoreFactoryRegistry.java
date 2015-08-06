@@ -26,7 +26,7 @@ public class RecordStoreFactoryRegistry {
   private static Set<String> fileExtensions = new TreeSet<>();
 
   static {
-    new ClassPathXmlApplicationContext("classpath*:META-INF/com.revolsys.gis.dataStore.sf.xml");
+    new ClassPathXmlApplicationContext("classpath*:META-INF/com.revolsys.gis.recordStore.sf.xml");
   }
 
   /**

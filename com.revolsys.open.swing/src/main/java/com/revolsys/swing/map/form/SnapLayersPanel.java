@@ -96,12 +96,12 @@ public class SnapLayersPanel extends ValueField implements ActionListener, ListS
     this.fieldsPanel = new JPanel(new HorizontalLayout(5));
     this.fieldsPanel.setOpaque(false);
 
-    final List<AbstractRecordLayer> dataObjectLayers = layer.getProject().getDescenants(
-      AbstractRecordLayer.class);
+    final List<AbstractRecordLayer> recordLayers = layer.getProject()
+      .getDescenants(AbstractRecordLayer.class);
 
     this.layerPathsModel = new BaseListModel<String>();
-    for (final AbstractRecordLayer dataObjectLayer : dataObjectLayers) {
-      final String layerPath = dataObjectLayer.getPath();
+    for (final AbstractRecordLayer recordLayer : recordLayers) {
+      final String layerPath = recordLayer.getPath();
       this.layerPathsModel.add(layerPath);
     }
     this.layerPathsField = new JXList(this.layerPathsModel);
@@ -139,8 +139,8 @@ public class SnapLayersPanel extends ValueField implements ActionListener, ListS
     add(this.fieldsPanel);
 
     this.layerPathsTextFilter = new StringContainsRowFilter();
-    final RowFilter<ListModel, Integer> layerPathsFilter = RowFilter.andFilter(Arrays.asList(
-      new CollectionRowFilter(this.snapLayerPathsModel, false), this.layerPathsTextFilter));
+    final RowFilter<ListModel, Integer> layerPathsFilter = RowFilter.andFilter(Arrays
+      .asList(new CollectionRowFilter(this.snapLayerPathsModel, false), this.layerPathsTextFilter));
     this.layerPathsField.setRowFilter(layerPathsFilter);
     updateEnabledState();
   }
@@ -175,7 +175,8 @@ public class SnapLayersPanel extends ValueField implements ActionListener, ListS
           final DefaultRowSorter<?, ?> sorter = (DefaultRowSorter<?, ?>)rowSorter;
           sorter.sort();
         }
-        final int index = this.snapLayerPathsField.convertIndexToView(this.snapLayerPathsModel.indexOf(layerPath));
+        final int index = this.snapLayerPathsField
+          .convertIndexToView(this.snapLayerPathsModel.indexOf(layerPath));
         this.snapLayerPathsField.addSelectionInterval(index, index);
       }
     }

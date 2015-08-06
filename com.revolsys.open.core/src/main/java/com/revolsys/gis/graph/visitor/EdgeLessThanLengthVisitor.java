@@ -2,12 +2,12 @@ package com.revolsys.gis.graph.visitor;
 
 import com.revolsys.collection.Visitor;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.graph.DataObjectGraph;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.util.ObjectProcessor;
 
 public class EdgeLessThanLengthVisitor extends AbstractEdgeListenerVisitor<Record> implements
-  ObjectProcessor<DataObjectGraph> {
+  ObjectProcessor<RecordGraph> {
 
   private double minLength;
 
@@ -30,7 +30,7 @@ public class EdgeLessThanLengthVisitor extends AbstractEdgeListenerVisitor<Recor
   }
 
   @Override
-  public void process(final DataObjectGraph graph) {
+  public void process(final RecordGraph graph) {
     graph.visitEdges(this);
   }
 

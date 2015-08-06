@@ -18,7 +18,7 @@ public class GpxReaderFactory extends AbstractRecordAndGeometryReaderFactory {
     setCustomAttributionSupported(false);
   }
 
-  public RecordReader createDataObjectReader(final RecordDefinition metaData,
+  public RecordReader createRecordReader(final RecordDefinition metaData,
     final Resource resource, final RecordFactory factory) {
     throw new UnsupportedOperationException();
   }
@@ -32,9 +32,9 @@ public class GpxReaderFactory extends AbstractRecordAndGeometryReaderFactory {
    */
   @Override
   public RecordReader createRecordReader(final Resource resource,
-    final RecordFactory dataObjectFactory) {
+    final RecordFactory recordFactory) {
     try {
-      final RecordIterator iterator = new GpxIterator(resource, dataObjectFactory, null);
+      final RecordIterator iterator = new GpxIterator(resource, recordFactory, null);
       return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new IllegalArgumentException("Unable to open resource " + resource, e);

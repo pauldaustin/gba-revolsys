@@ -25,23 +25,23 @@ public class JdbcRecordStoreFactoryBean extends AbstractFactoryBean<JdbcRecordSt
 
   @Override
   protected JdbcRecordStore createInstance() throws Exception {
-    JdbcRecordStore dataObjectStore;
+    JdbcRecordStore recordStore;
     final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry.getFactory(this.applicationContext);
     if (this.dataSource == null) {
       final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(this.config);
-      dataObjectStore = databaseFactory.createRecordStore(this.config);
+      recordStore = databaseFactory.createRecordStore(this.config);
     } else {
       final JdbcDatabaseFactory databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(this.dataSource);
-      dataObjectStore = databaseFactory.createDataObjectStore(this.dataSource);
+      recordStore = databaseFactory.createRecordStore(this.dataSource);
     }
-    Property.set(dataObjectStore, this.properties);
-    dataObjectStore.initialize();
-    return dataObjectStore;
+    Property.set(recordStore, this.properties);
+    recordStore.initialize();
+    return recordStore;
   }
 
   @Override
-  protected void destroyInstance(final JdbcRecordStore dataObjectStore) throws Exception {
-    dataObjectStore.close();
+  protected void destroyInstance(final JdbcRecordStore recordStore) throws Exception {
+    recordStore.close();
     this.config = null;
     this.dataSource = null;
     this.properties = null;

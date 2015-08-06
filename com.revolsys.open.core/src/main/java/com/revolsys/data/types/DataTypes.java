@@ -46,7 +46,7 @@ public final class DataTypes {
   public static final DataType COLLECTION = new CollectionDataType("Collection", Collection.class,
     OBJECT);
 
-  public static final DataType DATA_OBJECT = new SimpleDataType("DataObject", Record.class);
+  public static final DataType RECORD = new SimpleDataType("Record", Record.class);
 
   public static final DataType DATE = new SimpleDataType("date", java.util.Date.class);
 

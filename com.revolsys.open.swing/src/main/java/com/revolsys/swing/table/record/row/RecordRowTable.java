@@ -24,7 +24,7 @@ import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.table.BaseJxTable;
 import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
 import com.revolsys.swing.table.record.model.RecordRowTableModel;
-import com.revolsys.swing.table.record.renderer.DataObjectRowTableCellRenderer;
+import com.revolsys.swing.table.record.renderer.RecordRowTableCellRenderer;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordRowTable extends BaseJxTable implements MouseListener {
@@ -33,7 +33,7 @@ public class RecordRowTable extends BaseJxTable implements MouseListener {
   private final RecordTableCellEditor tableCellEditor;
 
   public RecordRowTable(final RecordRowTableModel model) {
-    this(model, new DataObjectRowTableCellRenderer());
+    this(model, new RecordRowTableCellRenderer());
   }
 
   public RecordRowTable(final RecordRowTableModel model, final TableCellRenderer cellRenderer) {

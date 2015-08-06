@@ -67,7 +67,7 @@ public class RecordStoreTableTreeNode extends BaseTreeNode {
     final String typePath = getTypePath();
     final Map<String, Object> connection = getConnectionMap();
     final Map<String, Object> layerConfig = new LinkedHashMap<String, Object>();
-    layerConfig.put("type", "dataStore");
+    layerConfig.put("type", RecordStoreLayer.DATA_STORE);
     layerConfig.put("name", getName());
     layerConfig.put("connection", connection);
     layerConfig.put("typePath", typePath);

@@ -19,9 +19,9 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class MultiCopyRecords implements Process {
-  private RecordStore targetDataStore;
+  private RecordStore targetRecordStore;
 
-  private RecordStore sourceDataStore;
+  private RecordStore sourceRecordStore;
 
   private Process process;
 
@@ -43,28 +43,30 @@ public class MultiCopyRecords implements Process {
           final boolean hasSequence = CollectionUtil.getBool(processDefinition, "hasSequence");
           final Map<String, Boolean> orderBy = CollectionUtil.get(processDefinition, "orderBy",
             Collections.<String, Boolean> emptyMap());
-          final CopyRecords copy = new CopyRecords(this.sourceDataStore, typePath, orderBy,
-            this.targetDataStore, hasSequence);
+          final CopyRecords copy = new CopyRecords(this.sourceRecordStore, typePath, orderBy,
+            this.targetRecordStore, hasSequence);
           return copy;
         } else {
-          LoggerFactory.getLogger(getClass()).error(
-            "Parameter 'typePath' required for type='copyRecords'");
+          LoggerFactory.getLogger(getClass())
+            .error("Parameter 'typePath' required for type='copyRecords'");
         }
       } else if ("sequential".equals(type)) {
-        final List<Map<String, Object>> processList = (List<Map<String, Object>>)processDefinition.get("processes");
+        final List<Map<String, Object>> processList = (List<Map<String, Object>>)processDefinition
+          .get("processes");
         if (processList == null) {
-          LoggerFactory.getLogger(getClass()).error(
-            "Parameter 'processes' required for type='sequential'");
+          LoggerFactory.getLogger(getClass())
+            .error("Parameter 'processes' required for type='sequential'");
         } else {
           final Sequential processes = new Sequential();
           createProcesses(processes, processList);
           return processes;
         }
       } else if ("parallel".equals(type)) {
-        final List<Map<String, Object>> processList = (List<Map<String, Object>>)processDefinition.get("processes");
+        final List<Map<String, Object>> processList = (List<Map<String, Object>>)processDefinition
+          .get("processes");
         if (processList == null) {
-          LoggerFactory.getLogger(getClass()).error(
-            "Parameter 'processes' required for type='parallel'");
+          LoggerFactory.getLogger(getClass())
+            .error("Parameter 'processes' required for type='parallel'");
         } else {
           final Parallel processes = new Parallel();
           createProcesses(processes, processList);
@@ -72,8 +74,8 @@ public class MultiCopyRecords implements Process {
         }
 
       } else {
-        LoggerFactory.getLogger(getClass()).error(
-          "Parameter type=" + type + " not in 'copyRecords', 'sequential', 'copyRecords'");
+        LoggerFactory.getLogger(getClass())
+          .error("Parameter type=" + type + " not in 'copyRecords', 'sequential', 'copyRecords'");
       }
       return null;
     }
@@ -99,12 +101,12 @@ public class MultiCopyRecords implements Process {
     return this.processNetwork;
   }
 
-  public RecordStore getSourceDataStore() {
-    return this.sourceDataStore;
+  public RecordStore getSourceRecordStore() {
+    return this.sourceRecordStore;
   }
 
-  public RecordStore getTargetDataStore() {
-    return this.targetDataStore;
+  public RecordStore getTargetRecordStore() {
+    return this.targetRecordStore;
   }
 
   @Override
@@ -141,11 +143,11 @@ public class MultiCopyRecords implements Process {
     }
   }
 
-  public void setSourceDataStore(final RecordStore sourceDataStore) {
-    this.sourceDataStore = sourceDataStore;
+  public void setSourceRecordStore(final RecordStore sourceRecordStore) {
+    this.sourceRecordStore = sourceRecordStore;
   }
 
-  public void setTargetDataStore(final RecordStore targetDataStore) {
-    this.targetDataStore = targetDataStore;
+  public void setTargetRecordStore(final RecordStore targetRecordStore) {
+    this.targetRecordStore = targetRecordStore;
   }
 }

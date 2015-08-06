@@ -4,7 +4,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.filter.Filter;
 
 /**
- * Filter DataObjects by the the attribute having a null value.
+ * Filter records by the the attribute having a null value.
  *
  * @author Paul Austin
  */

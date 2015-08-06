@@ -36,7 +36,7 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   protected static final BasicStroke BOX_STROKE = new BasicStroke(2, BasicStroke.CAP_SQUARE,
     BasicStroke.JOIN_MITER, 2, new float[] {
       6, 6
-    }, 0f);
+  }, 0f);
 
   private static final Color COLOR_BOX = WebColors.Green;
 
@@ -44,10 +44,11 @@ public class SelectRecordsOverlay extends AbstractOverlay {
 
   private static final Cursor CURSOR_SELECT_BOX = Icons.getCursor("cursor_select_box", 9, 9);
 
-  private static final Cursor CURSOR_SELECT_BOX_ADD = Icons.getCursor("cursor_select_box_add", 9, 9);
+  private static final Cursor CURSOR_SELECT_BOX_ADD = Icons.getCursor("cursor_select_box_add", 9,
+    9);
 
-  private static final Cursor CURSOR_SELECT_BOX_DELETE = Icons.getCursor(
-    "cursor_select_box_delete", 9, 9);
+  private static final Cursor CURSOR_SELECT_BOX_DELETE = Icons.getCursor("cursor_select_box_delete",
+    9, 9);
 
   public static final SelectedRecordsRenderer SELECT_RENDERER = new SelectedRecordsRenderer(
     WebColors.Black, WebColors.Lime);
@@ -90,9 +91,9 @@ public class SelectRecordsOverlay extends AbstractOverlay {
         final LayerGroup childGroup = (LayerGroup)layer;
         addSelectedRecords(childGroup, boundingBox);
       } else if (layer instanceof AbstractRecordLayer) {
-        final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
-        if (dataObjectLayer.isSelectable(scale)) {
-          dataObjectLayer.addSelectedRecords(boundingBox);
+        final AbstractRecordLayer recordLayer = (AbstractRecordLayer)layer;
+        if (recordLayer.isSelectable(scale)) {
+          recordLayer.addSelectedRecords(boundingBox);
         }
       }
     }
@@ -110,8 +111,8 @@ public class SelectRecordsOverlay extends AbstractOverlay {
     Invoke.background("Select records", this, methodName, boundingBox);
   }
 
-  protected boolean isSelectable(final AbstractRecordLayer dataObjectLayer) {
-    return dataObjectLayer.isSelectable();
+  protected boolean isSelectable(final AbstractRecordLayer recordLayer) {
+    return recordLayer.isSelectable();
   }
 
   public boolean isSelectEvent(final MouseEvent event) {
@@ -224,12 +225,12 @@ public class SelectRecordsOverlay extends AbstractOverlay {
           final LayerGroup childGroup = (LayerGroup)layer;
           paintHighlighted(graphics2d, childGroup);
         } else if (layer instanceof AbstractRecordLayer) {
-          final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
-          for (final LayerRecord record : dataObjectLayer.getHighlightedRecords()) {
-            if (record != null && dataObjectLayer.isVisible(record)) {
+          final AbstractRecordLayer recordLayer = (AbstractRecordLayer)layer;
+          for (final LayerRecord record : recordLayer.getHighlightedRecords()) {
+            if (record != null && recordLayer.isVisible(record)) {
               final Geometry geometry = record.getGeometryValue();
               final AbstractRecordLayerRenderer layerRenderer = layer.getRenderer();
-              layerRenderer.renderSelectedRecord(viewport, graphics2d, dataObjectLayer, record);
+              layerRenderer.renderSelectedRecord(viewport, graphics2d, recordLayer, record);
               HIGHLIGHT_RENDERER.paintSelected(viewport, viewportGeometryFactory, graphics2d,
                 geometry);
             }
@@ -261,16 +262,15 @@ public class SelectRecordsOverlay extends AbstractOverlay {
           final LayerGroup childGroup = (LayerGroup)layer;
           paintSelected(graphics2d, childGroup);
         } else if (layer instanceof AbstractRecordLayer) {
-          final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
+          final AbstractRecordLayer recordLayer = (AbstractRecordLayer)layer;
           final AbstractRecordLayerRenderer layerRenderer = layer.getRenderer();
-          if (dataObjectLayer.isSelectable()) {
-            for (final LayerRecord record : dataObjectLayer.getSelectedRecords()) {
-              if (record != null && dataObjectLayer.isVisible(record)) {
-                if (!dataObjectLayer.isHighlighted(record)) {
-                  if (!dataObjectLayer.isDeleted(record)) {
+          if (recordLayer.isSelectable()) {
+            for (final LayerRecord record : recordLayer.getSelectedRecords()) {
+              if (record != null && recordLayer.isVisible(record)) {
+                if (!recordLayer.isHighlighted(record)) {
+                  if (!recordLayer.isDeleted(record)) {
                     final Geometry geometry = record.getGeometryValue();
-                    layerRenderer.renderSelectedRecord(viewport, graphics2d, dataObjectLayer,
-                      record);
+                    layerRenderer.renderSelectedRecord(viewport, graphics2d, recordLayer, record);
                     SELECT_RENDERER.paintSelected(viewport, viewportGeometryFactory, graphics2d,
                       geometry);
                   }
@@ -399,11 +399,11 @@ public class SelectRecordsOverlay extends AbstractOverlay {
         final LayerGroup childGroup = (LayerGroup)layer;
         selectRecords(childGroup, boundingBox);
       } else if (layer instanceof AbstractRecordLayer) {
-        final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
-        if (dataObjectLayer.isSelectable(scale)) {
-          dataObjectLayer.setSelectedRecords(boundingBox);
+        final AbstractRecordLayer recordLayer = (AbstractRecordLayer)layer;
+        if (recordLayer.isSelectable(scale)) {
+          recordLayer.setSelectedRecords(boundingBox);
         } else {
-          dataObjectLayer.clearSelectedRecords();
+          recordLayer.clearSelectedRecords();
         }
       }
     }
@@ -447,9 +447,9 @@ public class SelectRecordsOverlay extends AbstractOverlay {
         final LayerGroup childGroup = (LayerGroup)layer;
         unSelectRecords(childGroup, boundingBox);
       } else if (layer instanceof AbstractRecordLayer) {
-        final AbstractRecordLayer dataObjectLayer = (AbstractRecordLayer)layer;
-        if (dataObjectLayer.isSelectable(scale)) {
-          dataObjectLayer.unSelectRecords(boundingBox);
+        final AbstractRecordLayer recordLayer = (AbstractRecordLayer)layer;
+        if (recordLayer.isSelectable(scale)) {
+          recordLayer.unSelectRecords(boundingBox);
         }
       }
     }

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.revolsys.data.equals.DataObjectEquals;
+import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 
@@ -76,11 +76,11 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
   @Override
   public void setRecordDefinition(final RecordDefinition metaData) {
     super.setRecordDefinition(metaData);
-    if (this.attributeNames.contains(DataObjectEquals.EXCLUDE_ID)) {
+    if (this.attributeNames.contains(RecordEquals.EXCLUDE_ID)) {
       final String idFieldName = metaData.getIdFieldName();
       this.attributeNames.add(idFieldName);
     }
-    if (this.attributeNames.contains(DataObjectEquals.EXCLUDE_GEOMETRY)) {
+    if (this.attributeNames.contains(RecordEquals.EXCLUDE_GEOMETRY)) {
       final String geometryAttributeName = metaData.getGeometryFieldName();
       this.attributeNames.add(geometryAttributeName);
     }

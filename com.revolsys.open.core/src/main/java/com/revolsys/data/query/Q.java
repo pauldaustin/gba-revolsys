@@ -56,7 +56,8 @@ public class Q {
 
   }
 
-  public static Between between(final FieldDefinition attribute, final Object min, final Object max) {
+  public static Between between(final FieldDefinition attribute, final Object min,
+    final Object max) {
     final Column column = new Column(attribute);
     final Value minCondition = new Value(attribute, min);
     final Value maxCondition = new Value(attribute, max);
@@ -89,7 +90,8 @@ public class Q {
     }
   }
 
-  public static Condition binary(final String fieldName, final String operator, final Object value) {
+  public static Condition binary(final String fieldName, final String operator,
+    final Object value) {
     final Column column = new Column(fieldName);
     final Value queryValue = new Value(value);
     return binary(column, operator, queryValue);
@@ -287,10 +289,10 @@ public class Q {
     return new Like(leftCondition, right);
   }
 
-  public static Condition likeRegEx(final RecordStore dataStore, final String fieldName,
+  public static Condition likeRegEx(final RecordStore recordStore, final String fieldName,
     final Object value) {
     QueryValue left;
-    if (dataStore.getClass().getName().contains("Oracle")) {
+    if (recordStore.getClass().getName().contains("Oracle")) {
       left = F.regexpReplace(F.upper(fieldName), "[^A-Z0-9]", "");
     } else {
       left = F.regexpReplace(F.upper(fieldName), "[^A-Z0-9]", "", "g");

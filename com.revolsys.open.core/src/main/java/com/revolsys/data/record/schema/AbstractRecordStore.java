@@ -30,7 +30,7 @@ import com.revolsys.data.query.Query;
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.filter.DataObjectGeometryIntersectsFilter;
+import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.data.record.io.RecordStoreExtension;
 import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
@@ -640,7 +640,7 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties
     query.setBoundingBox(boundingBox);
     query.setProperty("recordFactory", recordFactory);
     final Reader<Record> reader = query(query);
-    final Filter<Record> filter = new DataObjectGeometryIntersectsFilter(geometry);
+    final Filter<Record> filter = new RecordGeometryIntersectsFilter(geometry);
     return new FilterReader<Record>(filter, reader);
   }
 

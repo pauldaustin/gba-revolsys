@@ -50,6 +50,12 @@
       "methodName": "create"
     },
     {
+      "typeName": "recordStore",
+      "description": "Record Store Layer",
+      "typeClass": "com.revolsys.swing.map.layer.record.RecordStoreLayer",
+      "methodName": "create"
+    },
+    {
       "typeName": "recordFileLayer",
       "description": "File",
       "typeClass": "com.revolsys.swing.map.layer.record.FileRecordLayer",
@@ -57,6 +63,12 @@
     },
     {
       "typeName": "dataObjectFile",
+      "description": "File",
+      "typeClass": "com.revolsys.swing.map.layer.record.FileRecordLayer",
+      "methodName": "create"
+    },
+    {
+      "typeName": "recordFile",
       "description": "File",
       "typeClass": "com.revolsys.swing.map.layer.record.FileRecordLayer",
       "methodName": "create"

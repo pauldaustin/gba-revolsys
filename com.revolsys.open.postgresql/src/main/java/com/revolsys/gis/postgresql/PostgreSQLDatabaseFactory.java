@@ -45,7 +45,7 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcRecordStore createDataObjectStore(final DataSource dataSource) {
+  public JdbcRecordStore createRecordStore(final DataSource dataSource) {
     return new PostgreSQLRecordStore(dataSource);
   }
 

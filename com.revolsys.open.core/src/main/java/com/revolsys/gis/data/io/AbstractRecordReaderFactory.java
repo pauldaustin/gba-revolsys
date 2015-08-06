@@ -31,7 +31,7 @@ public abstract class AbstractRecordReaderFactory extends AbstractMapReaderFacto
    */
   @Override
   public Reader<Record> createDirectoryRecordReader() {
-    final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
+    final RecordDirectoryReader directoryReader = new RecordDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
     return directoryReader;
   }
@@ -59,8 +59,8 @@ public abstract class AbstractRecordReaderFactory extends AbstractMapReaderFacto
    */
   @Override
   public Reader<Record> createDirectoryRecordReader(final File directory,
-    final RecordFactory dataObjectFactory) {
-    final DataObjectDirectoryReader directoryReader = new DataObjectDirectoryReader();
+    final RecordFactory recordFactory) {
+    final RecordDirectoryReader directoryReader = new RecordDirectoryReader();
     directoryReader.setFileExtensions(getFileExtensions());
     directoryReader.setDirectory(directory);
     return directoryReader;

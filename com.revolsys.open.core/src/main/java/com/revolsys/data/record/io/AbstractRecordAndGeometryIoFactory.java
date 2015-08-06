@@ -9,12 +9,12 @@ import java.util.Set;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
-import com.revolsys.gis.data.io.DataObjectWriterGeometryWriter;
+import com.revolsys.gis.data.io.RecordWriterGeometryWriter;
 import com.revolsys.gis.geometry.io.GeometryWriterFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Writer;
@@ -35,27 +35,27 @@ public abstract class AbstractRecordAndGeometryIoFactory extends
   @Override
   public Writer<Geometry> createGeometryWriter(final Resource resource) {
     final RecordDefinition metaData = Records.createGeometryMetaData();
-    final Writer<Record> dataObjectWriter = createRecordWriter(metaData, resource);
-    return createGeometryWriter(dataObjectWriter);
+    final Writer<Record> recordWriter = createRecordWriter(metaData, resource);
+    return createGeometryWriter(recordWriter);
   }
 
   @Override
   public Writer<Geometry> createGeometryWriter(final String baseName, final OutputStream out) {
     final RecordDefinition metaData = Records.createGeometryMetaData();
-    final Writer<Record> dataObjectWriter = createRecordWriter(baseName, metaData, out);
-    return createGeometryWriter(dataObjectWriter);
+    final Writer<Record> recordWriter = createRecordWriter(baseName, metaData, out);
+    return createGeometryWriter(recordWriter);
   }
 
   @Override
   public Writer<Geometry> createGeometryWriter(final String baseName, final OutputStream out,
     final Charset charset) {
     final RecordDefinition metaData = Records.createGeometryMetaData();
-    final Writer<Record> dataObjectWriter = createRecordWriter(baseName, metaData, out, charset);
-    return createGeometryWriter(dataObjectWriter);
+    final Writer<Record> recordWriter = createRecordWriter(baseName, metaData, out, charset);
+    return createGeometryWriter(recordWriter);
   }
 
-  public Writer<Geometry> createGeometryWriter(final Writer<Record> dataObjectWriter) {
-    final Writer<Geometry> geometryWriter = new DataObjectWriterGeometryWriter(dataObjectWriter);
+  public Writer<Geometry> createGeometryWriter(final Writer<Record> recordWriter) {
+    final Writer<Geometry> geometryWriter = new RecordWriterGeometryWriter(recordWriter);
     return geometryWriter;
   }
 
@@ -67,7 +67,8 @@ public abstract class AbstractRecordAndGeometryIoFactory extends
    * @return The writer.
    */
   @Override
-  public Writer<Record> createRecordWriter(final RecordDefinition metaData, final Resource resource) {
+  public Writer<Record> createRecordWriter(final RecordDefinition metaData,
+    final Resource resource) {
     final OutputStream out = SpringUtil.getOutputStream(resource);
     final String fileName = resource.getFilename();
     final String baseName = FileUtil.getBaseName(fileName);

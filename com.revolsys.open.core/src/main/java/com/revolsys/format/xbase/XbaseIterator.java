@@ -63,7 +63,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
 
   private int currentDeletedCount = 0;
 
-  private RecordFactory dataObjectFactory;
+  private RecordFactory recordFactory;
 
   private int deletedCount = 0;
 
@@ -91,12 +91,12 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
 
   private String typeName;
 
-  public XbaseIterator(final Resource resource, final RecordFactory dataObjectFactory)
+  public XbaseIterator(final Resource resource, final RecordFactory recordFactory)
     throws IOException {
     this.typeName = "/" + this.typeName;
     this.resource = resource;
 
-    this.dataObjectFactory = dataObjectFactory;
+    this.recordFactory = recordFactory;
     final Resource codePageResource = SpringUtil.getResourceWithExtension(resource, "cpg");
     if (codePageResource != null && codePageResource.exists()) {
       final String charsetName = SpringUtil.getContents(codePageResource);
@@ -109,9 +109,9 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
     }
   }
 
-  public XbaseIterator(final Resource in, final RecordFactory dataObjectFactory,
+  public XbaseIterator(final Resource in, final RecordFactory recordFactory,
     final Runnable initCallback) throws IOException {
-    this(in, dataObjectFactory);
+    this(in, recordFactory);
     this.initCallback = initCallback;
   }
 
@@ -154,7 +154,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
 
   public void forceClose() {
     FileUtil.closeSilent(this.in);
-    this.dataObjectFactory = null;
+    this.recordFactory = null;
     this.in = null;
     this.initCallback = null;
     this.metaData = null;
@@ -224,7 +224,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
         if (deleteFlag == -1) {
           throw new NoSuchElementException();
         } else if (deleteFlag == ' ') {
-          object = loadDataObject();
+          object = loadRecord();
         } else if (deleteFlag != 0x1A) {
           this.currentDeletedCount++;
           this.in.read(this.recordBuffer);
@@ -279,11 +279,11 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
     return this.closeFile;
   }
 
-  protected Record loadDataObject() throws IOException {
+  protected Record loadRecord() throws IOException {
     if (this.in.read(this.recordBuffer) != this.recordBuffer.length) {
       throw new IllegalStateException("Unexpected end of mappedFile");
     }
-    final Record object = this.dataObjectFactory.createRecord(this.metaData);
+    final Record object = this.recordFactory.createRecord(this.metaData);
     int startIndex = 0;
     for (int i = 0; i < this.metaData.getFieldCount(); i++) {
       int len = this.metaData.getFieldLength(i);

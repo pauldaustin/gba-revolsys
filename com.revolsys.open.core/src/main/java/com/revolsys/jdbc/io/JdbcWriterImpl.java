@@ -138,7 +138,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   private void delete(final Record object) throws SQLException {
     final RecordDefinition objectType = object.getRecordDefinition();
     final String typePath = objectType.getPath();
-    final RecordDefinition metaData = getDataObjectMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     flushIfRequired(metaData);
     PreparedStatement statement = this.typeDeleteStatementMap.get(typePath);
     if (statement == null) {
@@ -255,7 +255,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
     return this.batchSize;
   }
 
-  private RecordDefinition getDataObjectMetaData(final String typePath) {
+  private RecordDefinition getRecordDefinition(final String typePath) {
     if (this.recordStore == null) {
       return null;
     } else {
@@ -445,7 +445,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   private void insert(final Record object) throws SQLException {
     final RecordDefinition objectType = object.getRecordDefinition();
     final String typePath = objectType.getPath();
-    final RecordDefinition metaData = getDataObjectMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     flushIfRequired(metaData);
     final String idFieldName = metaData.getIdFieldName();
     final boolean hasId = idFieldName != null;
@@ -621,7 +621,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   private void update(final Record object) throws SQLException {
     final RecordDefinition objectType = object.getRecordDefinition();
     final String typePath = objectType.getPath();
-    final RecordDefinition metaData = getDataObjectMetaData(typePath);
+    final RecordDefinition metaData = getRecordDefinition(typePath);
     flushIfRequired(metaData);
     PreparedStatement statement = this.typeUpdateStatementMap.get(typePath);
     if (statement == null) {

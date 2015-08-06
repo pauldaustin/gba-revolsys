@@ -23,7 +23,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 
 import com.revolsys.collection.map.ThreadSharedAttributes;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.DataObjectMap;
+import com.revolsys.gis.data.model.RecordMap;
 import com.revolsys.parallel.ThreadInterruptedException;
 import com.revolsys.parallel.ThreadUtil;
 import com.revolsys.parallel.channel.Channel;
@@ -72,7 +72,7 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements Bean
     try {
       final JexlContext context = new HashMapContext();
       final Map<String, Object> vars = new HashMap<String, Object>(this.attributes);
-      vars.putAll(new DataObjectMap(object));
+      vars.putAll(new RecordMap(object));
       context.setVars(vars);
       final Map<String, Object> scriptParams = new HashMap<String, Object>();
       scriptParams.putAll(this.attributes);

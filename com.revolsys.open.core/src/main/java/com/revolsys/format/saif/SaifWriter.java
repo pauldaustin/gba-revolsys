@@ -70,7 +70,7 @@ public class SaifWriter extends AbstractWriter<Record> {
 
   protected OsnConverterRegistry converters = new OsnConverterRegistry();
 
-  private RecordDefinitionFactory dataObjectMetaDataFactory;
+  private RecordDefinitionFactory recordDefinitionFactory;
 
   private final Set<String> exportedTypes = new LinkedHashSet<String>();
 
@@ -105,10 +105,10 @@ public class SaifWriter extends AbstractWriter<Record> {
     setFile(file);
   }
 
-  public SaifWriter(final File file, final RecordDefinitionFactory dataObjectMetaDataFactory)
+  public SaifWriter(final File file, final RecordDefinitionFactory recordDefinitionFactory)
     throws IOException {
     this(file);
-    setDataObjectMetaDataFactory(dataObjectMetaDataFactory);
+    setRecordDefinitionFactory(recordDefinitionFactory);
   }
 
   public SaifWriter(final String fileName) throws IOException {
@@ -223,7 +223,8 @@ public class SaifWriter extends AbstractWriter<Record> {
       try {
         addExport(GLOBAL_METADATA, GLOBAL_METADATA, "globmeta.osn");
         final File metaFile = new File(this.tempDirectory, "globmeta.osn");
-        final OsnSerializer serializer = createSerializer(GLOBAL_METADATA, metaFile, Long.MAX_VALUE);
+        final OsnSerializer serializer = createSerializer(GLOBAL_METADATA, metaFile,
+          Long.MAX_VALUE);
         serializer.startObject("/GlobalMetadata");
         serializer.attribute("objectIdentifier", "GlobalMetadata", true);
 
@@ -285,7 +286,8 @@ public class SaifWriter extends AbstractWriter<Record> {
     if (compositeTypeName == null) {
       compositeTypeName = typePath + "Composite";
     }
-    final RecordDefinition compisteType = this.dataObjectMetaDataFactory.getRecordDefinition(String.valueOf(compositeTypeName));
+    final RecordDefinition compisteType = this.recordDefinitionFactory
+      .getRecordDefinition(String.valueOf(compositeTypeName));
     return compisteType;
   }
 
@@ -385,16 +387,16 @@ public class SaifWriter extends AbstractWriter<Record> {
           addExport(typePath, compositeType.getPath(), objectSubsetName);
           this.serializers.put(typePath, serializer);
         } else if (typePath.equals("/ImportedObjects")) {
-          serializer = createSerializer("/ImportedObject", new File(this.tempDirectory,
-            "imports.dir"), Long.MAX_VALUE);
+          serializer = createSerializer("/ImportedObject",
+            new File(this.tempDirectory, "imports.dir"), Long.MAX_VALUE);
           this.serializers.put(typePath, serializer);
         } else if (Path.getName(typePath).endsWith("InternallyReferencedObjects")) {
-          serializer = createSerializer("/InternallyReferencedObject", new File(this.tempDirectory,
-            "internal.dir"), Long.MAX_VALUE);
+          serializer = createSerializer("/InternallyReferencedObject",
+            new File(this.tempDirectory, "internal.dir"), Long.MAX_VALUE);
           this.serializers.put(typePath, serializer);
         } else if (Path.getName(typePath).endsWith("GlobalMetadata")) {
-          serializer = createSerializer(GLOBAL_METADATA, new File(this.tempDirectory,
-            "globmeta.osn"), Long.MAX_VALUE);
+          serializer = createSerializer(GLOBAL_METADATA,
+            new File(this.tempDirectory, "globmeta.osn"), Long.MAX_VALUE);
           addExport(typePath, typePath, "globmeta.osn");
           this.serializers.put(typePath, serializer);
         }
@@ -426,7 +428,7 @@ public class SaifWriter extends AbstractWriter<Record> {
             for (final Resource resource : this.schemaFileNames) {
               final InputStream in = resource.getInputStream();
               final SaifSchemaReader reader = new SaifSchemaReader();
-              setDataObjectMetaDataFactory(reader.loadSchemas(this.schemaFileNames));
+              setRecordDefinitionFactory(reader.loadSchemas(this.schemaFileNames));
               try {
                 FileUtil.copy(in, out);
               } finally {
@@ -452,14 +454,6 @@ public class SaifWriter extends AbstractWriter<Record> {
       final String key = entry.getKey();
       final String value = entry.getValue();
       addCompositeTypeName(key, value);
-    }
-  }
-
-  public void setDataObjectMetaDataFactory(final RecordDefinitionFactory schema) {
-    this.dataObjectMetaDataFactory = schema;
-    if (schema != null) {
-      this.spatialDataSetType = schema.getRecordDefinition("/SpatialDataSet");
-      this.annotatedSpatialDataSetType = schema.getRecordDefinition("/AnnotatedSpatialDataSet");
     }
   }
 
@@ -540,6 +534,14 @@ public class SaifWriter extends AbstractWriter<Record> {
     }
   }
 
+  public void setRecordDefinitionFactory(final RecordDefinitionFactory schema) {
+    this.recordDefinitionFactory = schema;
+    if (schema != null) {
+      this.spatialDataSetType = schema.getRecordDefinition("/SpatialDataSet");
+      this.annotatedSpatialDataSetType = schema.getRecordDefinition("/AnnotatedSpatialDataSet");
+    }
+  }
+
   public void setSchemaFileNames(final List<Resource> schemaFileNames) {
     this.schemaFileNames = schemaFileNames;
 
@@ -555,19 +557,13 @@ public class SaifWriter extends AbstractWriter<Record> {
     return this.file.getAbsolutePath();
   }
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * com.revolsys.gis.format.saif.io.Writer<DataObject>#write(com.revolsys.gis
-   * .model.data.DataObject)
-   */
   @Override
   public void write(final Record object) {
     try {
       final RecordDefinition type = object.getRecordDefinition();
       final OsnSerializer serializer = getSerializer(type.getPath());
       if (serializer != null) {
-        serializer.serializeDataObject(object);
+        serializer.serializeRecord(object);
         if (this.indentEnabled) {
           serializer.endLine();
         }

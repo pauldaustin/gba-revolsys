@@ -186,7 +186,7 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
   }
 
   /**
-   * Get the meta data describing the DataObject and it's attributes.
+   * Get the meta data describing the record and it's attributes.
    *
    * @return The meta data.
    */
@@ -327,11 +327,11 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
   }
 
   /**
-   * Checks to see if the metadata for this DataObject has an attribute with the
+   * Checks to see if the metadata for this record has an attribute with the
    * specified name.
    *
    * @param name The name of the attribute.
-   * @return True if the DataObject has an attribute with the specified name.
+   * @return True if the record has an attribute with the specified name.
    */
 
   default boolean hasAttribute(final CharSequence name) {
@@ -421,8 +421,8 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
               final RecordDefinitionFactory metaDataFactory = recordDefinition
                 .getRecordDefinitionFactory();
               final RecordDefinition subMetaData = metaDataFactory.getRecordDefinition(typePath);
-              final RecordFactory dataObjectFactory = subMetaData.getRecordFactory();
-              final Record subObject = dataObjectFactory.createRecord(subMetaData);
+              final RecordFactory recordFactory = subMetaData.getRecordFactory();
+              final Record subObject = recordFactory.createRecord(subMetaData);
               subObject.setValue(subKey, value);
               setValue(key, subObject);
             }

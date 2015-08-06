@@ -11,7 +11,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.geojson.GeoJsonConstants;
-import com.revolsys.format.geojson.GeoJsonDataObjectWriter;
+import com.revolsys.format.geojson.GeoJsonRecordWriter;
 import com.revolsys.format.geojson.GeoJsonGeometryIterator;
 import com.revolsys.gis.data.io.GeometryReader;
 import com.revolsys.gis.geometry.io.GeometryReaderFactory;
@@ -41,7 +41,7 @@ public class CogoJsonIoFactory extends AbstractRecordAndGeometryWriterFactory im
   public Writer<Record> createRecordWriter(final String baseName, final RecordDefinition metaData,
     final OutputStream outputStream, final Charset charset) {
     final OutputStreamWriter writer = FileUtil.createUtf8Writer(outputStream);
-    return new GeoJsonDataObjectWriter(writer, true);
+    return new GeoJsonRecordWriter(writer, true);
   }
 
   @Override

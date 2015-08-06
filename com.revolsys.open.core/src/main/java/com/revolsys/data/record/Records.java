@@ -75,10 +75,10 @@ public final class Records {
     for (int i = 0; i < propertyPath.length && propertyValue != null; i++) {
       final String propertyName = propertyPath[i];
       if (propertyValue instanceof Record) {
-        final Record dataObject = (Record)propertyValue;
+        final Record recordValue = (Record)propertyValue;
 
-        if (dataObject.hasAttribute(propertyName)) {
-          propertyValue = dataObject.getValue(propertyName);
+        if (recordValue.hasAttribute(propertyName)) {
+          propertyValue = recordValue.getValue(propertyName);
           if (propertyValue == null) {
             return null;
           } else if (i + 1 < propertyPath.length) {
