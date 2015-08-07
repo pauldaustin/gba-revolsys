@@ -15,7 +15,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
+import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.Parent;

@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.FileSystemResource;
+import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.format.xml.XmlMapIoFactory;

@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
-import org.springframework.core.io.FileSystemResource;
+import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.ArrayRecordFactory;

@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.springframework.core.io.FileSystemResource;
+import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.io.FileUtil;

@@ -3,7 +3,7 @@ package com.revolsys.gis.data.io;
 import java.io.File;
 import java.io.IOException;
 
-import org.springframework.core.io.FileSystemResource;
+import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
