@@ -9,10 +9,10 @@ import com.revolsys.io.FileNames;
 
 public interface Resource extends org.springframework.core.io.Resource {
 
-  static Resource getResource(final Object source) {
-    Resource resource;
-    if (source instanceof Resource) {
-      resource = (Resource)source;
+  static org.springframework.core.io.Resource getResource(final Object source) {
+    org.springframework.core.io.Resource resource;
+    if (source instanceof org.springframework.core.io.Resource) {
+      resource = (org.springframework.core.io.Resource)source;
     } else if (source instanceof Path) {
       resource = new PathResource((Path)source);
     } else if (source instanceof File) {
