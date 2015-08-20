@@ -15,7 +15,7 @@ public interface MapWriterFactory extends IoFactory {
 
   MapWriter getMapWriter(final Writer out);
 
-  boolean isCustomAttributionSupported();
+  boolean isCustomFieldsSupported();
 
   boolean isGeometrySupported();
 }

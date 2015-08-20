@@ -32,7 +32,7 @@ public abstract class AbstractMapReaderFactory extends AbstractIoFactory impleme
   }
 
   @Override
-  public boolean isCustomAttributionSupported() {
+  public boolean isCustomFieldsSupported() {
     return this.customAttributionSupported;
   }
 

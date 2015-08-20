@@ -90,7 +90,7 @@ public class Tsv extends AbstractRecordAndGeometryIoFactory implements MapWriter
   }
 
   @Override
-  public boolean isCustomAttributionSupported() {
+  public boolean isCustomFieldsSupported() {
     return true;
   }
 

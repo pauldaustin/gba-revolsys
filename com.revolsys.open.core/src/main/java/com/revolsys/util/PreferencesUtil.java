@@ -45,6 +45,12 @@ public class PreferencesUtil {
     return preferences.get(preferenceName, "");
   }
 
+  public static String getUserString(final String preferencesGroup, final String preferenceName,
+    final String defaultValue) {
+    final Preferences preferences = getUserPreferences(preferencesGroup);
+    return preferences.get(preferenceName, defaultValue);
+  }
+
   public static void setBoolean(final Class<?> preferencesClass, final String preferenceName,
     final boolean value) {
     final Preferences preferences = getPreferences(preferencesClass);

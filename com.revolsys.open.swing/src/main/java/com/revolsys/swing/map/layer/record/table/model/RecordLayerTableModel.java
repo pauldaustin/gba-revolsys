@@ -34,7 +34,9 @@ import com.revolsys.data.query.Value;
 import com.revolsys.data.query.functions.Function;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.gis.data.io.ListRecordReader;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.swing.listener.InvokeMethodListener;
 import com.revolsys.swing.map.layer.Project;
@@ -53,8 +55,8 @@ import com.revolsys.swing.table.record.row.RecordRowTable;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
-public class RecordLayerTableModel extends RecordRowTableModel implements SortableTableModel,
-  PropertyChangeListener, PropertyChangeSupportProxy {
+public class RecordLayerTableModel extends RecordRowTableModel
+  implements SortableTableModel, PropertyChangeListener, PropertyChangeSupportProxy {
 
   private static final long serialVersionUID = 1L;
 
@@ -77,8 +79,8 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
       NewPredicate.add(table);
       DeletedPredicate.add(table);
 
-      Property.addListener(layer, "hasSelectedRecords", new InvokeMethodListener(
-        RecordLayerTableModel.class, "selectionChanged", table, model));
+      Property.addListener(layer, "hasSelectedRecords",
+        new InvokeMethodListener(RecordLayerTableModel.class, "selectionChanged", table, model));
       return table;
     }
   }
@@ -192,6 +194,11 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
     return this.layer.query(query);
   }
 
+  protected List<LayerRecord> getLayerRecords(final Query query) {
+    query.setOrderBy(this.orderBy);
+    return this.layer.query(query);
+  }
+
   protected int getLayerRowCount() {
     final Query query = getFilterQuery();
     if (query == null) {
@@ -257,6 +264,21 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
     return this.propertyChangeSupport;
   }
 
+  public RecordReader getReader() {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final List<LayerRecord> records;
+    if (this.fieldFilterMode.equals(MODE_SELECTED)) {
+      records = getSelectedRecords();
+    } else if (this.fieldFilterMode.equals(MODE_EDITS)) {
+      final AbstractRecordLayer layer = getLayer();
+      records = layer.getChanges();
+    } else {
+      final Query query = getFilterQuery();
+      records = getLayerRecords(query);
+    }
+    return new ListRecordReader(recordDefinition, records);
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public <V extends Record> V getRecord(final int row) {
@@ -293,8 +315,8 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
 
         } else {
           if (this.rowCountWorker == null) {
-            this.rowCountWorker = Invoke.background("Query row count " + this.layer.getName(),
-              this, "loadRowCount", this.refreshIndex);
+            this.rowCountWorker = Invoke.background("Query row count " + this.layer.getName(), this,
+              "loadRowCount", this.refreshIndex);
           }
           return 0;
         }
@@ -323,6 +345,10 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
         return null;
       }
     }
+  }
+
+  protected List<LayerRecord> getSelectedRecords() {
+    return this.selectedRecords;
   }
 
   public List<String> getSortableModes() {
@@ -454,7 +480,8 @@ public class RecordLayerTableModel extends RecordRowTableModel implements Sortab
   protected void replaceCachedObject(final LayerRecord oldObject, final LayerRecord newObject) {
     synchronized (this.pageCache) {
       for (final List<LayerRecord> objects : this.pageCache.values()) {
-        for (final ListIterator<LayerRecord> iterator = objects.listIterator(); iterator.hasNext();) {
+        for (final ListIterator<LayerRecord> iterator = objects.listIterator(); iterator
+          .hasNext();) {
           final LayerRecord object = iterator.next();
           if (object == oldObject) {
             iterator.set(newObject);

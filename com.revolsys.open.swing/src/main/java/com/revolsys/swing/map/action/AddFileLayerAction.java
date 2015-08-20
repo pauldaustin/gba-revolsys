@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,6 +35,29 @@ import com.revolsys.util.CollectionUtil;
 public class AddFileLayerAction extends AbstractAction {
 
   private static final long serialVersionUID = 1L;
+
+  public static FileNameExtensionFilter createFileFilter(final String description,
+    final Collection<String> fileExtensions) {
+    final String[] array = fileExtensions.toArray(new String[0]);
+    return new FileNameExtensionFilter(description, array);
+  }
+
+  public static FileNameExtensionFilter createFilter(final IoFactory factory) {
+    final List<String> fileExtensions = factory.getFileExtensions();
+    String description = factory.getName();
+    description += " (" + CollectionUtil.toString(fileExtensions) + ")";
+    return createFileFilter(description, fileExtensions);
+  }
+
+  public static void sortFilters(final List<FileNameExtensionFilter> filters) {
+    Collections.sort(filters, new Comparator<FileNameExtensionFilter>() {
+      @Override
+      public int compare(final FileNameExtensionFilter filter1,
+        final FileNameExtensionFilter filter2) {
+        return filter1.getDescription().compareTo(filter2.getDescription());
+      }
+    });
+  }
 
   public AddFileLayerAction() {
     putValue(NAME, "Open File Layer");

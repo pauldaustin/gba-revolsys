@@ -82,7 +82,7 @@ public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory impleme
   }
 
   @Override
-  public boolean isCustomAttributionSupported() {
+  public boolean isCustomFieldsSupported() {
     return true;
   }
 

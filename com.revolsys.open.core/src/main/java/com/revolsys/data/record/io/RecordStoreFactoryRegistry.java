@@ -1,5 +1,6 @@
 package com.revolsys.data.record.io;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.io.FileUtil;
 import com.revolsys.io.Paths;
 
 public class RecordStoreFactoryRegistry {
@@ -29,6 +31,10 @@ public class RecordStoreFactoryRegistry {
     new ClassPathXmlApplicationContext("classpath*:META-INF/com.revolsys.gis.recordStore.sf.xml");
   }
 
+  public static <T extends RecordStore> T createRecordStore(final File file) {
+    return createRecordStore(FileUtil.toUrlString(file));
+  }
+
   /**
    * Create an initialized record store.
    * @param connectionProperties
@@ -40,7 +46,7 @@ public class RecordStoreFactoryRegistry {
     final String url = (String)connectionProperties.get("url");
     final RecordStoreFactory factory = getRecordStoreFactory(url);
     if (factory == null) {
-      throw new IllegalArgumentException("Data Source Factory not found for " + url);
+      throw new IllegalArgumentException("Record Store Factory not found for " + url);
     } else {
       return (T)factory.createRecordStore(connectionProperties);
     }
@@ -50,7 +56,7 @@ public class RecordStoreFactoryRegistry {
   public static <T extends RecordStore> T createRecordStore(final String url) {
     final RecordStoreFactory factory = getRecordStoreFactory(url);
     if (factory == null) {
-      throw new IllegalArgumentException("Data Source Factory not found for " + url);
+      throw new IllegalArgumentException("Record Store Factory not found for " + url);
     } else {
       final Map<String, Object> connectionProperties = new HashMap<String, Object>();
       connectionProperties.put("url", url);

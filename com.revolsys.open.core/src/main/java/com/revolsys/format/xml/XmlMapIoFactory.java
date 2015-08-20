@@ -66,7 +66,7 @@ public class XmlMapIoFactory extends AbstractMapReaderFactory implements MapWrit
   }
 
   @Override
-  public boolean isCustomAttributionSupported() {
+  public boolean isCustomFieldsSupported() {
     return true;
   }
 

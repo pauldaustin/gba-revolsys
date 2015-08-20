@@ -12,8 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.revolsys.collection.map.Maps;
 import com.revolsys.data.record.io.RecordStoreFactory;
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
+import com.revolsys.data.record.io.RecordStoreRecordAndGeometryWriterFactory;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.FileUtil;
+import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Paths;
 
 public class FileGdbRecordStoreFactory implements RecordStoreFactory {
@@ -26,6 +28,12 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
 
   private static final List<String> URL_PATTERNS = Arrays.asList("file:/(//)?.*.gdb/?",
     "folderconnection:/(//)?.*.gdb/?");
+
+  static {
+    final RecordStoreRecordAndGeometryWriterFactory writerFactory = new RecordStoreRecordAndGeometryWriterFactory(
+      "ESRI File Geodatabase", "application/x-esri-gdb", true, true, "gdb");
+    IoFactoryRegistry.getInstance().addFactory(writerFactory);
+  }
 
   public static FileGdbRecordStore create(final File file) {
     if (file == null) {

@@ -219,7 +219,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWri
   }
 
   @Override
-  public boolean isCustomAttributionSupported() {
+  public boolean isCustomFieldsSupported() {
     return true;
   }
 

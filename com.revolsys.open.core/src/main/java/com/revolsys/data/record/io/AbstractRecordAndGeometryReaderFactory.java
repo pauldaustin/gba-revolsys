@@ -110,7 +110,7 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
   }
 
   @Override
-  public boolean isCustomAttributionSupported() {
+  public boolean isCustomFieldsSupported() {
     return this.customAttributionSupported;
   }
 

@@ -45,7 +45,7 @@ public class XhtmlMapIoFactory extends AbstractIoFactory implements MapWriterFac
   }
 
   @Override
-  public boolean isCustomAttributionSupported() {
+  public boolean isCustomFieldsSupported() {
     return true;
   }
 

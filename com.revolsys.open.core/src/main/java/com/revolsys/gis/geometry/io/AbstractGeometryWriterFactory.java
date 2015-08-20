@@ -5,20 +5,20 @@ import java.nio.charset.StandardCharsets;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.io.AbstractIoFactory;
+import com.revolsys.io.AbstractIoFactoryWithCoordinateSystem;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Writer;
 import com.revolsys.spring.resource.SpringUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class AbstractGeometryWriterFactory extends AbstractIoFactory implements
-  GeometryWriterFactory {
+public abstract class AbstractGeometryWriterFactory extends AbstractIoFactoryWithCoordinateSystem
+  implements GeometryWriterFactory {
 
   public static Writer<Geometry> createWriter(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final GeometryWriterFactory writerFactory = ioFactoryRegistry.getFactory(
-      GeometryWriterFactory.class, resource);
+    final GeometryWriterFactory writerFactory = ioFactoryRegistry
+      .getFactory(GeometryWriterFactory.class, resource);
     if (writerFactory == null) {
       return null;
     } else {

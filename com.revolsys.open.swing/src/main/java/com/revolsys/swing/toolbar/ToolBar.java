@@ -48,6 +48,17 @@ public class ToolBar extends JToolBar {
     return button;
   }
 
+  public JButton addButton(final String groupName, final int index, final String name,
+    final String title, final Icon icon, final EnableCheck enableCheck, final Runnable runnable) {
+    final RunnableAction action = new RunnableAction(name, title, icon, runnable);
+    action.setEnableCheck(enableCheck);
+
+    final JButton button = action.createButton();
+    button.setBorderPainted(false);
+    this.groups.addComponent(this, groupName, index, button);
+    return button;
+  }
+
   public JButton addButton(final String groupName, final String title, final Object object,
     final String methodName, final Object... parameters) {
     final InvokeMethodAction action = new InvokeMethodAction(title, object, methodName, parameters);
@@ -66,8 +77,8 @@ public class ToolBar extends JToolBar {
       title = null;
     }
 
-    final InvokeMethodAction action = new InvokeMethodAction(name, title, icon, enableCheck,
-      object, methodName, parameters);
+    final InvokeMethodAction action = new InvokeMethodAction(name, title, icon, enableCheck, object,
+      methodName, parameters);
 
     return addButton(groupName, action);
   }
@@ -81,9 +92,16 @@ public class ToolBar extends JToolBar {
   }
 
   public JButton addButtonTitleIcon(final String groupName, final String title,
-    final String iconName, final Object object, final String methodName, final Object... parameters) {
+    final String iconName, final Object object, final String methodName,
+    final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
     return addButton(groupName, iconName, title, icon, object, methodName, parameters);
+  }
+
+  public JButton addButtonTitleIcon(final String groupName, final String title,
+    final String iconName, final Runnable runnable) {
+    final ImageIcon icon = Icons.getIcon(iconName);
+    return addButton(groupName, -1, iconName, title, icon, null, runnable);
   }
 
   public void addComponent(final Component component) {
@@ -102,8 +120,8 @@ public class ToolBar extends JToolBar {
     final String iconName, final EnableCheck enableCheck, final Object object,
     final String methodName, final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
-    return addToggleButton(groupName, index, iconName, title, icon, enableCheck, object,
-      methodName, parameters);
+    return addToggleButton(groupName, index, iconName, title, icon, enableCheck, object, methodName,
+      parameters);
   }
 
   public JToggleButton addToggleButton(final String groupName, final int index, final String name,
@@ -154,8 +172,8 @@ public class ToolBar extends JToolBar {
 
   protected JButton createButton(final Action action) {
     final JButton button = new JButton(action);
-    if (action != null
-      && (action.getValue(Action.SMALL_ICON) != null || action.getValue(Action.LARGE_ICON_KEY) != null)) {
+    if (action != null && (action.getValue(Action.SMALL_ICON) != null
+      || action.getValue(Action.LARGE_ICON_KEY) != null)) {
       button.setHideActionText(true);
     }
     button.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -167,8 +185,8 @@ public class ToolBar extends JToolBar {
 
   protected JToggleButton createToggleButton(final Action action) {
     final JToggleButton button = new JToggleButton(action);
-    if (action != null
-      && (action.getValue(Action.SMALL_ICON) != null || action.getValue(Action.LARGE_ICON_KEY) != null)) {
+    if (action != null && (action.getValue(Action.SMALL_ICON) != null
+      || action.getValue(Action.LARGE_ICON_KEY) != null)) {
       button.setHideActionText(true);
     }
     button.setHorizontalTextPosition(SwingConstants.CENTER);
