@@ -24,7 +24,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordWriterFactory;
-import com.revolsys.data.record.property.DirectionalAttributes;
+import com.revolsys.data.record.property.DirectionalFields;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
@@ -137,7 +137,7 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
       final DataType geometryDataType = metaData.getGeometryField().getType();
       if (geometryDataType == DataTypes.LINE_STRING
         || geometryDataType == DataTypes.MULTI_LINE_STRING) {
-        if (DirectionalAttributes.getProperty(metaData).hasDirectionalAttributes()) {
+        if (DirectionalFields.getProperty(metaData).hasDirectionalFields()) {
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_RECORD_NAME,
             RecordLayerForm.FLIP_RECORD_ICON, editableEnableCheck, this, "flipRecordOrientation");
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_LINE_ORIENTATION_NAME,
@@ -326,19 +326,19 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
 
   public void flipFields() {
     final Record record = getEventRowObject();
-    final DirectionalAttributes property = DirectionalAttributes.getProperty(record);
+    final DirectionalFields property = DirectionalFields.getProperty(record);
     property.reverseAttributes(record);
   }
 
   public void flipLineOrientation() {
     final Record record = getEventRowObject();
-    final DirectionalAttributes property = DirectionalAttributes.getProperty(record);
+    final DirectionalFields property = DirectionalFields.getProperty(record);
     property.reverseGeometry(record);
   }
 
   public void flipRecordOrientation() {
     final Record record = getEventRowObject();
-    DirectionalAttributes.reverse(record);
+    DirectionalFields.reverse(record);
   }
 
   public Collection<? extends String> getColumnNames() {

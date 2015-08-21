@@ -4,14 +4,14 @@ import javax.swing.JComponent;
 import javax.swing.table.JTableHeader;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.swing.table.BaseJxTable;
+import com.revolsys.swing.table.BaseJTable;
 
 public class SingleRecordTableModel extends AbstractSingleRecordTableModel {
   private static final long serialVersionUID = 1L;
 
   public static JComponent create(final Record object, final boolean editable) {
     final SingleRecordTableModel model = new SingleRecordTableModel(object, editable);
-    final BaseJxTable table = createTable(model);
+    final BaseJTable table = createTable(model);
     final JTableHeader tableHeader = table.getTableHeader();
     tableHeader.setReorderingAllowed(false);
     return table;

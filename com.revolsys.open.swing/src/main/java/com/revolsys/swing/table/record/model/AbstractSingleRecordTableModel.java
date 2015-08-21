@@ -6,7 +6,7 @@ import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.revolsys.comparator.NumericComparator;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.swing.table.BaseJxTable;
+import com.revolsys.swing.table.BaseJTable;
 import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
 import com.revolsys.swing.table.record.renderer.SingleRecordTableCellRenderer;
 
@@ -17,8 +17,8 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
     "#", "Name", "Value"
   };
 
-  public static BaseJxTable createTable(final AbstractSingleRecordTableModel model) {
-    final BaseJxTable table = new BaseJxTable(model);
+  public static BaseJTable createTable(final AbstractSingleRecordTableModel model) {
+    final BaseJTable table = new BaseJTable(model);
     table.setModel(model);
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     table.setAutoCreateColumnsFromModel(false);

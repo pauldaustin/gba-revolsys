@@ -363,6 +363,28 @@ public final class Property {
     }
   }
 
+  public static boolean isChanged(final Object oldValue, final Object newValue) {
+    final boolean oldHasValue = Property.hasValue(oldValue);
+    final boolean newHasValue = Property.hasValue(newValue);
+    if (oldHasValue) {
+      if (newHasValue) {
+        if (Equals.equal(oldValue, newValue)) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      if (newHasValue) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   public static boolean isEmpty(final Object value) {
     if (value == null) {
       return true;

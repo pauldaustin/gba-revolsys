@@ -10,12 +10,12 @@ import org.jdesktop.swingx.decorator.HighlightPredicate;
 import com.revolsys.data.equals.Equals;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.layer.record.table.model.LayerRecordTableModel;
-import com.revolsys.swing.table.BaseJxTable;
+import com.revolsys.swing.table.BaseJTable;
 import com.revolsys.util.Property;
 
 public class FormAllFieldsModifiedPredicate implements HighlightPredicate {
 
-  public static void add(final RecordLayerForm form, final BaseJxTable table) {
+  public static void add(final RecordLayerForm form, final BaseJTable table) {
     final LayerRecordTableModel model = table.getTableModel();
     final FormAllFieldsModifiedPredicate predicate = new FormAllFieldsModifiedPredicate(form, model);
     ModifiedAttributePredicate.addModifiedHighlighters(table, predicate);

@@ -7,7 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.swing.table.BaseJxTable;
+import com.revolsys.swing.table.BaseJTable;
 
 public class RecordDefinitionTableModel extends AbstractTableModel {
   private static final long serialVersionUID = 1L;
@@ -19,12 +19,12 @@ public class RecordDefinitionTableModel extends AbstractTableModel {
     String.class, String.class, Integer.class, Integer.class, Object.class, Object.class,
     Boolean.class, String.class);
 
-  public static BaseJxTable createTable(final RecordDefinition metaData) {
+  public static BaseJTable createTable(final RecordDefinition metaData) {
     if (metaData == null) {
       return null;
     } else {
       final RecordDefinitionTableModel model = new RecordDefinitionTableModel(metaData);
-      final BaseJxTable table = new BaseJxTable(model);
+      final BaseJTable table = new BaseJTable(model);
       table.resizeColumnsToContent();
       return table;
     }

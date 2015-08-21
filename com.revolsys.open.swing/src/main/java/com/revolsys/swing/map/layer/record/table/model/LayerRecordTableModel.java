@@ -18,7 +18,7 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
 
   private static final long serialVersionUID = 1L;
 
-  private LayerRecord object;
+  private LayerRecord record;
 
   private final AbstractRecordLayer layer;
 
@@ -28,7 +28,7 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     super(form.getRecordDefinition(), true);
     this.form = new WeakReference<>(form);
     this.layer = form.getLayer();
-    this.object = form.getRecord();
+    this.record = form.getRecord();
     Property.addListener(this.layer, this);
   }
 
@@ -51,26 +51,26 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     return this.layer.getFieldTitle(fieldName);
   }
 
-  public LayerRecord getObject() {
-    return this.object;
+  public LayerRecord getRecord() {
+    return this.record;
   }
 
   @Override
   public Object getObjectValue(final int rowIndex) {
-    if (this.object == null) {
+    if (this.record == null) {
       return null;
     } else {
-      return this.object.getValue(rowIndex);
+      return this.record.getValue(rowIndex);
     }
   }
 
   @Override
   public Object getValueAt(final int rowIndex, final int columnIndex) {
-    if (this.object == null) {
+    if (this.record == null) {
       return null;
     } else if (columnIndex == 3) {
       final String attributeName = getFieldName(rowIndex);
-      return this.object.getOriginalValue(attributeName);
+      return this.record.getOriginalValue(attributeName);
     } else {
       return super.getValueAt(rowIndex, columnIndex);
     }
@@ -97,15 +97,15 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
 
   public boolean isModified(final int rowIndex) {
     final String attributeName = getFieldName(rowIndex);
-    final Object originalValue = this.object.getOriginalValue(attributeName);
-    final Object value = this.object.getValue(attributeName);
+    final Object originalValue = this.record.getOriginalValue(attributeName);
+    final Object value = this.record.getValue(attributeName);
     return !Equals.equal(originalValue, value);
   }
 
   @Override
   public void propertyChange(final PropertyChangeEvent event) {
     final Object source = event.getSource();
-    if (source == this.object) {
+    if (source == this.record) {
       final String propertyName = event.getPropertyName();
       final RecordDefinition metaData = getRecordDefinition();
       final int index = metaData.getFieldIndex(propertyName);
@@ -122,14 +122,14 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     Property.removeListener(this.layer, this);
   }
 
-  public void setObject(final LayerRecord object) {
-    this.object = object;
+  public void setRecord(final LayerRecord object) {
+    this.record = object;
   }
 
   @Override
   protected Object setObjectValue(final int rowIndex, final Object value) {
-    final Object oldValue = this.object.getValue(rowIndex);
-    this.object.setValue(rowIndex, value);
+    final Object oldValue = this.record.getValue(rowIndex);
+    this.record.setValue(rowIndex, value);
     return oldValue;
   }
 }

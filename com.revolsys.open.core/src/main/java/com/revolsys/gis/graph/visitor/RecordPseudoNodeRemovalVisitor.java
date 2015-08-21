@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.property.DirectionalAttributes;
+import com.revolsys.data.record.property.DirectionalFields;
 import com.revolsys.data.record.property.PseudoNodeProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
@@ -85,7 +85,7 @@ public class RecordPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<
   }
 
   protected Record mergeObjects(final Node<Record> node, final Record object1, final Record object2) {
-    return DirectionalAttributes.merge(node, object1, object2);
+    return DirectionalFields.merge(node, object1, object2);
   }
 
   @Override

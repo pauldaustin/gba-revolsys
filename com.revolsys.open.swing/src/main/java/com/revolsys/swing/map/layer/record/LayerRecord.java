@@ -6,7 +6,9 @@ import java.util.Map;
 
 import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.record.ArrayRecord;
+import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -102,7 +104,7 @@ public class LayerRecord extends ArrayRecord {
     }
   }
 
-  public boolean isSame(final LayerRecord record) {
+  public boolean isSame(final Record record) {
     if (record == null) {
       return false;
     } else if (this == record) {
@@ -110,8 +112,8 @@ public class LayerRecord extends ArrayRecord {
     } else {
       final AbstractRecordLayer layer = getLayer();
       if (layer.isLayerRecord(record)) {
-        final Object id = getIdValue();
-        final Object otherId = record.getIdValue();
+        final Identifier id = getIdentifier();
+        final Identifier otherId = record.getIdentifier();
         if (id == null || otherId == null) {
           return false;
         } else if (Equals.equal(id, otherId)) {

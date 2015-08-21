@@ -49,7 +49,7 @@ import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.filter.RecordGeometryDistanceFilter;
 import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.property.DirectionalAttributes;
+import com.revolsys.data.record.property.DirectionalFields;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -74,6 +74,7 @@ import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.TabbedValuePanel;
 import com.revolsys.swing.dnd.ClipboardUtil;
 import com.revolsys.swing.dnd.transferable.RecordReaderTransferable;
+import com.revolsys.swing.dnd.transferable.StringTransferable;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.form.SnapLayersPanel;
@@ -98,7 +99,7 @@ import com.revolsys.swing.map.overlay.CloseLocation;
 import com.revolsys.swing.map.overlay.EditGeometryOverlay;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
-import com.revolsys.swing.table.BaseJxTable;
+import com.revolsys.swing.table.BaseJTable;
 import com.revolsys.swing.tree.MenuSourcePropertyEnableCheck;
 import com.revolsys.swing.tree.MenuSourceRunnable;
 import com.revolsys.swing.tree.node.record.RecordStoreTableTreeNode;
@@ -494,6 +495,15 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     return (V)copy;
   }
 
+  public void copyRecordGeometry(final LayerRecord record) {
+    final Geometry geometry = record.getGeometry();
+    if (geometry != null) {
+      final StringTransferable transferable = new StringTransferable(DataFlavor.stringFlavor,
+        geometry.toString());
+      ClipboardUtil.setContents(transferable);
+    }
+  }
+
   public void copyRecordsToClipboard(final List<LayerRecord> records) {
     if (!records.isEmpty()) {
       final RecordDefinition recordDefinition = getRecordDefinition();
@@ -545,7 +555,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   protected void createPropertiesPanelFields(final TabbedValuePanel propertiesPanel) {
     final RecordDefinition recordDefinition = getRecordDefinition();
-    final BaseJxTable fieldTable = RecordDefinitionTableModel.createTable(recordDefinition);
+    final BaseJTable fieldTable = RecordDefinitionTableModel.createTable(recordDefinition);
 
     final BasePanel fieldPanel = new BasePanel(new BorderLayout());
     fieldPanel.setPreferredSize(new Dimension(500, 400));
@@ -1029,8 +1039,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       if (compare > 0) {
         return getMergedRecord(point, record2, record1);
       } else {
-        final DirectionalAttributes property = DirectionalAttributes
-          .getProperty(getRecordDefinition());
+        final DirectionalFields property = DirectionalFields.getProperty(getRecordDefinition());
         final Map<String, Object> newValues = property.getMergedMap(point, record1, record2);
         newValues.remove(getIdFieldName());
         return new ArrayRecord(getRecordDefinition(), newValues);
@@ -2235,7 +2244,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   /** Perform the actual split. */
   protected List<LayerRecord> splitRecord(final LayerRecord record, final LineString line,
     final Coordinates point, final LineString line1, final LineString line2) {
-    final DirectionalAttributes property = DirectionalAttributes.getProperty(record);
+    final DirectionalFields property = DirectionalFields.getProperty(record);
 
     final LayerRecord record1 = copyRecord(record);
     final LayerRecord record2 = copyRecord(record);
@@ -2372,10 +2381,11 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     zoomToBoundingBox(boundingBox);
   }
 
-  public void zoomToObject(final Record record) {
-    final Geometry geometry = record.getGeometry();
-
-    zoomTo(geometry);
+  public void zoomToRecord(final Record record) {
+    if (record != null) {
+      final Geometry geometry = record.getGeometry();
+      zoomTo(geometry);
+    }
   }
 
   public void zoomToRecords(final List<? extends LayerRecord> records) {

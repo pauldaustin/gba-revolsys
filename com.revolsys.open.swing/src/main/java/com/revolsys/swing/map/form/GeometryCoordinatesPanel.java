@@ -11,7 +11,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import com.revolsys.swing.component.ValueField;
-import com.revolsys.swing.table.BaseJxTable;
+import com.revolsys.swing.table.BaseJTable;
 import com.revolsys.swing.table.TablePanel;
 import com.revolsys.swing.table.geometry.GeometryCoordinatesTableModel;
 import com.vividsolutions.jts.geom.Geometry;
@@ -21,7 +21,7 @@ public class GeometryCoordinatesPanel extends ValueField implements TableModelLi
 
   private final GeometryCoordinatesTableModel model = new GeometryCoordinatesTableModel();
 
-  private final BaseJxTable table;
+  private final BaseJTable table;
 
   private final TablePanel tablePanel;
 
@@ -34,7 +34,7 @@ public class GeometryCoordinatesPanel extends ValueField implements TableModelLi
     this.form = new WeakReference<>(form);
     this.model.addTableModelListener(this);
     this.model.setForm(form);
-    this.table = new BaseJxTable(this.model);
+    this.table = new BaseJTable(this.model);
     this.table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
     this.tablePanel = new TablePanel(this.table);
@@ -46,7 +46,7 @@ public class GeometryCoordinatesPanel extends ValueField implements TableModelLi
     return this.form.get();
   }
 
-  public BaseJxTable getTable() {
+  public BaseJTable getTable() {
     return this.table;
   }
 
