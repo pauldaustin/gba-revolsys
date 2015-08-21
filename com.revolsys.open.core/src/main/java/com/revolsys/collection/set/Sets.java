@@ -1,21 +1,69 @@
 package com.revolsys.collection.set;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 
 public class Sets {
-  public static <V> Set<V> hash(final Iterable<V> values) {
-    final Set<V> set = new HashSet<>();
+  @SafeVarargs
+  public static <V> void addAll(final Set<V> set, final Collection<? extends V>... collections) {
+    for (final Collection<? extends V> collection : collections) {
+      if (collection != null) {
+        set.addAll(collection);
+      }
+    }
+  }
+
+  public static <V> void addAll(final Set<V> set, final Iterable<? extends V> values) {
+    if (set != null && values != null) {
+      for (final V value : values) {
+        set.add(value);
+      }
+    }
+  }
+
+  @SafeVarargs
+  public static <V> Set<V> all(final Supplier<Set<V>> factory,
+    final Collection<? extends V>... collections) {
+    final Set<V> set = factory.get();
+    addAll(set, collections);
+    return set;
+  }
+
+  public static <V> HashSet<V> hash(final Iterable<V> values) {
+    final HashSet<V> set = new HashSet<>();
     for (final V value : values) {
       set.add(value);
     }
     return set;
   }
 
-  public static <V> Set<V> hash(@SuppressWarnings("unchecked") final V... values) {
-    final Set<V> set = new HashSet<>();
+  public static <V> HashSet<V> hash(@SuppressWarnings("unchecked") final V... values) {
+    final HashSet<V> set = new HashSet<>();
+    for (final V value : values) {
+      set.add(value);
+    }
+    return set;
+  }
+
+  public static <V> Supplier<Set<V>> hashFactory() {
+    return () -> {
+      return new HashSet<V>();
+    };
+  }
+
+  public static <V> LinkedHashSet<V> linkedHash(final Iterable<V> values) {
+    final LinkedHashSet<V> set = new LinkedHashSet<>();
+    addAll(set, values);
+    return set;
+  }
+
+  public static <V> LinkedHashSet<V> linkedHash(@SuppressWarnings("unchecked") final V... values) {
+    final LinkedHashSet<V> set = new LinkedHashSet<>();
     for (final V value : values) {
       set.add(value);
     }
@@ -30,6 +78,18 @@ public class Sets {
     return set;
   }
 
+  public static <V> Supplier<Set<V>> linkedHashFactory() {
+    return () -> {
+      return new LinkedHashSet<V>();
+    };
+  }
+
+  public static <V> TreeSet<V> tree(final Comparator<V> comparator, final Iterable<V> values) {
+    final TreeSet<V> set = new TreeSet<>(comparator);
+    addAll(set, values);
+    return set;
+  }
+
   public static <V> TreeSet<V> tree(final V value) {
     final TreeSet<V> set = new TreeSet<>();
     if (value != null) {
@@ -38,4 +98,16 @@ public class Sets {
     return set;
   }
 
+  @SafeVarargs
+  public static <V> TreeSet<V> treeAll(final Collection<? extends V>... collections) {
+    final TreeSet<V> set = new TreeSet<>();
+    addAll(set, collections);
+    return set;
+  }
+
+  public static <V> Supplier<Set<V>> treeFactory() {
+    return () -> {
+      return new TreeSet<V>();
+    };
+  }
 }

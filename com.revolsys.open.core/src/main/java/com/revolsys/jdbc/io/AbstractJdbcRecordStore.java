@@ -40,6 +40,7 @@ import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordStoreExtension;
 import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.property.FieldProperties;
@@ -54,7 +55,6 @@ import com.revolsys.data.record.schema.RecordStoreSchemaElement;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.io.Path;
-import com.revolsys.io.Reader;
 import com.revolsys.jdbc.JdbcConnection;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
@@ -63,8 +63,8 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.transaction.Transaction;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implements
-  JdbcRecordStore, RecordStoreExtension {
+public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
+  implements JdbcRecordStore, RecordStoreExtension {
   public static final List<String> DEFAULT_PERMISSIONS = Arrays.asList("SELECT");
 
   public static final AbstractIterator<Record> createJdbcIterator(
@@ -138,8 +138,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
 
   public AbstractJdbcRecordStore(final RecordFactory recordFactory) {
     super(recordFactory);
-    setIteratorFactory(new RecordStoreIteratorFactory(AbstractJdbcRecordStore.class,
-      "createJdbcIterator"));
+    setIteratorFactory(
+      new RecordStoreIteratorFactory(AbstractJdbcRecordStore.class, "createJdbcIterator"));
     addRecordStoreExtension(this);
   }
 
@@ -170,8 +170,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
     final int length = resultSetMetaData.getPrecision(i);
     final int scale = resultSetMetaData.getScale(i);
     final boolean required = false;
-    addField(recordDefinition, name, name.toUpperCase(), dataType, sqlType, length, scale,
-      required, description);
+    addField(recordDefinition, name, name.toUpperCase(), dataType, sqlType, length, scale, required,
+      description);
   }
 
   public void addFieldAdder(final String sqlTypeName, final JdbcFieldAdder adder) {
@@ -419,8 +419,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
 
   @Override
   public String getGeneratePrimaryKeySql(final RecordDefinition recordDefinition) {
-    throw new UnsupportedOperationException("Cannot create SQL to generate Primary Key for "
-      + recordDefinition);
+    throw new UnsupportedOperationException(
+      "Cannot create SQL to generate Primary Key for " + recordDefinition);
   }
 
   public String getHints() {
@@ -569,7 +569,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
       writerKey = this.writerKey;
     }
     JdbcWriterImpl writer;
-    final JdbcWriterResourceHolder resourceHolder = (JdbcWriterResourceHolder)TransactionSynchronizationManager.getResource(writerKey);
+    final JdbcWriterResourceHolder resourceHolder = (JdbcWriterResourceHolder)TransactionSynchronizationManager
+      .getResource(writerKey);
     if (resourceHolder != null
       && (resourceHolder.hasWriter() || resourceHolder.isSynchronizedWithTransaction())) {
       resourceHolder.requested();
@@ -694,8 +695,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
     try {
       try (
         final Connection connection = getJdbcConnection();
-        final PreparedStatement statement = connection.prepareStatement(this.primaryKeySql
-          + this.primaryKeyTableCondition);) {
+        final PreparedStatement statement = connection
+          .prepareStatement(this.primaryKeySql + this.primaryKeyTableCondition);) {
         statement.setString(1, dbSchemaName);
         statement.setString(2, dbTableName);
         try (
@@ -707,8 +708,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
         }
       }
     } catch (final Throwable e) {
-      throw new IllegalArgumentException("Unable to primary keys for table " + dbSchemaName + "."
-        + dbTableName, e);
+      throw new IllegalArgumentException(
+        "Unable to primary keys for table " + dbSchemaName + "." + dbTableName, e);
     }
     return idFieldNames;
   }
@@ -718,7 +719,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
     final Map<String, String> tableDescriptionMap) {
     try (
       final Connection connection = getJdbcConnection();
-      final PreparedStatement statement = connection.prepareStatement(this.schemaTablePermissionsSql)) {
+      final PreparedStatement statement = connection
+        .prepareStatement(this.schemaTablePermissionsSql)) {
       statement.setString(1, schemaName);
       try (
         final ResultSet resultSet = statement.executeQuery()) {
@@ -773,8 +775,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
         }
       }
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(getClass()).error(
-        "Unable to get table permissions for " + schemaName + "." + tableName, e);
+      LoggerFactory.getLogger(getClass())
+        .error("Unable to get table permissions for " + schemaName + "." + tableName, e);
     }
   }
 
@@ -795,21 +797,24 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory recordFactory, final String typePath,
+  public RecordReader query(final RecordFactory recordFactory, final String typePath,
     Geometry geometry) {
     final RecordDefinition recordDefinition = getRecordDefinition(typePath);
-    final JdbcFieldDefinition geometryAttribute = (JdbcFieldDefinition)recordDefinition.getGeometryField();
-    final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+    final JdbcFieldDefinition geometryAttribute = (JdbcFieldDefinition)recordDefinition
+      .getGeometryField();
+    final GeometryFactory geometryFactory = geometryAttribute
+      .getProperty(FieldProperties.GEOMETRY_FACTORY);
     geometry = ProjectionFactory.convert(geometry, geometryFactory);
 
-    final SqlFunction intersectsFunction = geometryAttribute.getProperty(JdbcConstants.FUNCTION_INTERSECTS);
+    final SqlFunction intersectsFunction = geometryAttribute
+      .getProperty(JdbcConstants.FUNCTION_INTERSECTS);
     final StringBuffer qArg = new StringBuffer();
     geometryAttribute.addSelectStatementPlaceHolder(qArg);
 
     final Query query = new Query(recordDefinition);
     query.setProperty("recordFactory", recordFactory);
-    query.setWhereCondition(new SqlCondition(intersectsFunction.toSql(geometryAttribute.getName(),
-      qArg), geometryAttribute, geometry));
+    query.setWhereCondition(new SqlCondition(
+      intersectsFunction.toSql(geometryAttribute.getName(), qArg), geometryAttribute, geometry));
     final RecordStoreQueryReader reader = createReader();
     reader.addQuery(query);
     return reader;
@@ -840,12 +845,13 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
             final Connection connection = getJdbcConnection()) {
             final DatabaseMetaData databaseMetaData = connection.getMetaData();
             final List<String> idFieldNames = loadIdFieldNames(dbSchemaName, dbTableName);
-            final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(schema, typePath);
+            final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(schema,
+              typePath);
             recordDefinition.setDescription(tableDescription);
             recordDefinition.setProperty("permissions", tablePermissions);
             try (
-              final ResultSet columnsRs = databaseMetaData.getColumns(null, dbSchemaName,
-                tableName, "%")) {
+              final ResultSet columnsRs = databaseMetaData.getColumns(null, dbSchemaName, tableName,
+                "%")) {
               while (columnsRs.next()) {
                 final String dbColumnName = columnsRs.getString("COLUMN_NAME");
                 final String name = dbColumnName.toUpperCase();
@@ -916,7 +922,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
             final String typePath = Path.toPath(schemaName, tableName);
             removedPaths.remove(typePath);
             this.tableNameMap.put(typePath, dbTableName);
-            final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(schema, typePath);
+            final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(schema,
+              typePath);
             final String description = tableDescriptionMap.get(dbTableName);
             recordDefinition.setDescription(description);
             final List<String> permissions = Maps.get(tablePermissionsMap, dbTableName,
@@ -930,7 +937,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore implem
             while (columnsRs.next()) {
               final String tableName = columnsRs.getString("TABLE_NAME").toUpperCase();
               final String typePath = Path.toPath(schemaName, tableName);
-              final RecordDefinitionImpl recordDefinition = (RecordDefinitionImpl)recordDefinitionMap.get(typePath);
+              final RecordDefinitionImpl recordDefinition = (RecordDefinitionImpl)recordDefinitionMap
+                .get(typePath);
               if (recordDefinition != null) {
                 final String dbColumnName = columnsRs.getString("COLUMN_NAME");
                 final String name = dbColumnName.toUpperCase();

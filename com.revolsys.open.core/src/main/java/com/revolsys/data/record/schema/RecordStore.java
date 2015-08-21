@@ -11,9 +11,9 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
-import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -128,20 +128,20 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   ResultPager<Record> page(Query query);
 
-  Reader<Record> query(List<?> queries);
+  RecordReader query(List<?> queries);
 
-  Reader<Record> query(Query... queries);
+  RecordReader query(Query... queries);
 
-  Reader<Record> query(RecordFactory recordFactory, String typePath, Geometry geometry);
+  RecordReader query(RecordFactory recordFactory, String typePath, Geometry geometry);
 
-  Reader<Record> query(RecordFactory recordFactory, String typePath, Geometry geometry,
+  RecordReader query(RecordFactory recordFactory, String typePath, Geometry geometry,
     double distance);
 
-  Reader<Record> query(String typePath);
+  RecordReader query(String typePath);
 
-  Reader<Record> query(String typePath, Geometry geometry);
+  RecordReader query(String typePath, Geometry geometry);
 
-  Reader<Record> query(String typePath, Geometry geometry, double distance);
+  RecordReader query(String typePath, Geometry geometry, double distance);
 
   Record queryFirst(Query query);
 

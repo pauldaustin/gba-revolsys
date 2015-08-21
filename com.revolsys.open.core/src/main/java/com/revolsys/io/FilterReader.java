@@ -1,19 +1,23 @@
 package com.revolsys.io;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
 import com.revolsys.collection.FilterIterator;
+import com.revolsys.data.record.Record;
+import com.revolsys.data.record.io.RecordReader;
+import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
 
-public class FilterReader<T> extends AbstractReader<T> {
+public class FilterReader extends AbstractReader<Record>implements RecordReader {
 
-  private Filter<T> filter;
+  private Filter<Record> filter;
 
-  private Reader<T> reader;
+  private RecordReader reader;
 
-  public FilterReader(final Filter<T> filter, final Reader<T> reader) {
+  public FilterReader(final Filter<Record> filter, final RecordReader reader) {
     this.filter = filter;
     this.reader = reader;
   }
@@ -29,18 +33,28 @@ public class FilterReader<T> extends AbstractReader<T> {
     this.reader = null;
   }
 
-  protected Filter<T> getFilter() {
+  protected Filter<Record> getFilter() {
     return this.filter;
   }
 
-  protected Reader<T> getReader() {
+  @Override
+  public Map<String, Object> getProperties() {
+    return this.reader.getProperties();
+  }
+
+  protected RecordReader getReader() {
     return this.reader;
   }
 
   @Override
-  public Iterator<T> iterator() {
-    final Iterator<T> iterator = this.reader.iterator();
-    return new FilterIterator<T>(this.filter, iterator);
+  public RecordDefinition getRecordDefinition() {
+    return this.reader.getRecordDefinition();
+  }
+
+  @Override
+  public Iterator<Record> iterator() {
+    final Iterator<Record> iterator = this.reader.iterator();
+    return new FilterIterator<Record>(this.filter, iterator);
   }
 
   @Override

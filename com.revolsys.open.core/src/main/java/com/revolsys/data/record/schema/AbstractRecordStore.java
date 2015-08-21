@@ -31,6 +31,7 @@ import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordStoreExtension;
 import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
@@ -611,7 +612,7 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties
   }
 
   @Override
-  public Reader<Record> query(final List<?> queries) {
+  public RecordReader query(final List<?> queries) {
     final List<Query> queryObjects = new ArrayList<Query>();
     for (final Object queryObject : queries) {
       if (queryObject instanceof Query) {
@@ -629,24 +630,24 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties
   }
 
   @Override
-  public Reader<Record> query(final Query... queries) {
+  public RecordReader query(final Query... queries) {
     return query(Arrays.asList(queries));
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory recordFactory, final String typePath,
+  public RecordReader query(final RecordFactory recordFactory, final String typePath,
     final Geometry geometry) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     final Query query = new Query(typePath);
     query.setBoundingBox(boundingBox);
     query.setProperty("recordFactory", recordFactory);
-    final Reader<Record> reader = query(query);
+    final RecordReader reader = query(query);
     final Filter<Record> filter = new RecordGeometryIntersectsFilter(geometry);
-    return new FilterReader<Record>(filter, reader);
+    return new FilterReader(filter, reader);
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory recordFactory, final String typePath,
+  public RecordReader query(final RecordFactory recordFactory, final String typePath,
     final Geometry geometry, final double distance) {
     final Geometry searchGeometry;
     if (geometry == null || geometry.isEmpty() || distance <= 0) {
@@ -663,7 +664,7 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties
   }
 
   @Override
-  public Reader<Record> query(final String path) {
+  public RecordReader query(final String path) {
     final RecordStoreSchema schema = getSchema(path);
     if (schema == null) {
       final Query query = new Query(path);
@@ -678,14 +679,13 @@ public abstract class AbstractRecordStore extends AbstractObjectWithProperties
   }
 
   @Override
-  public Reader<Record> query(final String typePath, final Geometry geometry) {
+  public RecordReader query(final String typePath, final Geometry geometry) {
     final RecordFactory recordFactory = getRecordFactory();
     return query(recordFactory, typePath, geometry);
   }
 
   @Override
-  public Reader<Record> query(final String typePath, final Geometry geometry,
-    final double distance) {
+  public RecordReader query(final String typePath, final Geometry geometry, final double distance) {
     final RecordFactory recordFactory = getRecordFactory();
     return query(recordFactory, typePath, geometry, distance);
   }

@@ -14,6 +14,7 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.AbstractRecordStore;
@@ -21,7 +22,6 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
-import com.revolsys.io.Reader;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -272,23 +272,23 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   }
 
   @Override
-  public Reader<Record> query(final List<?> queries) {
+  public RecordReader query(final List<?> queries) {
     return this.recordStore.query(queries);
   }
 
   @Override
-  public Reader<Record> query(final Query... queries) {
+  public RecordReader query(final Query... queries) {
     return this.recordStore.query(queries);
   }
 
   @Override
-  public Reader<Record> query(final RecordFactory recordFactory, final String typePath,
+  public RecordReader query(final RecordFactory recordFactory, final String typePath,
     final Geometry geometry) {
     return this.recordStore.query(recordFactory, typePath, geometry);
   }
 
   @Override
-  public Reader<Record> query(final String path) {
+  public RecordReader query(final String path) {
     return this.recordStore.query(path);
   }
 
