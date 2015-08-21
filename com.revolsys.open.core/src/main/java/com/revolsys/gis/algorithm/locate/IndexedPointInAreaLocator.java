@@ -1,26 +1,24 @@
-package com.revolsys.gis.jts;
+package com.revolsys.gis.algorithm.locate;
 
 import com.revolsys.collection.Visitor;
-import com.revolsys.gis.algorithm.locate.Location;
-import com.revolsys.gis.algorithm.locate.PointOnGeometryLocator;
-import com.revolsys.gis.algorithm.locate.SortedPackedIntervalRTree;
 import com.revolsys.gis.model.coordinates.Coordinates;
-import com.revolsys.gis.model.coordinates.list.CoordinatesList;
-import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
+import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
 
   private static class IntervalIndexedGeometry {
     private final SortedPackedIntervalRTree<LineSegment> index = new SortedPackedIntervalRTree<LineSegment>();
 
-    public IntervalIndexedGeometry(final Geometry geom) {
+    public IntervalIndexedGeometry(final Polygon geom) {
       init(geom);
     }
 
-    private void addLine(final CoordinatesList points) {
+    private void addLine(final CoordinateSequence points) {
       final int size = points.size();
       if (size > 1) {
         for (int i = 1; i < size; i++) {
@@ -36,9 +34,11 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
       }
     }
 
-    private void init(final Geometry geometry) {
-      for (final CoordinatesList points : CoordinatesListUtil.getAll(geometry)) {
-        addLine(points);
+    private void init(final Polygon polygon) {
+      addLine(polygon.getExteriorRing().getCoordinateSequence());
+      for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
+        final LineString ring = polygon.getInteriorRingN(i);
+        addLine(ring.getCoordinateSequence());
       }
     }
 
@@ -47,37 +47,26 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
     }
   }
 
-  private static final String KEY = IndexedPointInAreaLocator.class.getName();
-
-  public static PointOnGeometryLocator get(final Geometry geometry) {
-    PointOnGeometryLocator locator = JtsGeometryUtil.getGeometryProperty(geometry, KEY);
-    if (locator == null) {
-      locator = new IndexedPointInAreaLocator(geometry);
-      JtsGeometryUtil.setGeometryProperty(geometry, KEY, locator);
-    }
-    return locator;
-  }
-
   private final IntervalIndexedGeometry index;
 
-  private final Geometry geometry;
+  private final Polygon geometry;
 
   /**
-   * Creates a new locator for a given {@link Geometry}
+   * Creates a netor for a given {@link Geometry}
    *
    * @param geometry the Geometry to locate in
    */
-  public IndexedPointInAreaLocator(final Geometry geometry) {
+  public IndexedPointInAreaLocator(final Polygon geometry) {
     this.geometry = geometry;
     this.index = new IntervalIndexedGeometry(geometry);
   }
 
-  public Geometry getGeometry() {
+  public Polygon getGeometry() {
     return this.geometry;
   }
 
   public GeometryFactory getGeometryFactory() {
-    return GeometryFactory.getFactory(this.geometry);
+    return GeometryFactory.get(this.geometry);
   }
 
   public IntervalIndexedGeometry getIndex() {
@@ -92,15 +81,8 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
   @Override
   public Location locate(final double x, final double y) {
     final GeometryFactory geometryFactory = getGeometryFactory();
-    double resolutionXy = geometryFactory.getScaleXY();
-    if (resolutionXy != 0) {
-      resolutionXy = 1 / resolutionXy;
-    }
-    final double minY = y - resolutionXy;
-    final double maxY = y + resolutionXy;
-
     final PointInArea visitor = new PointInArea(geometryFactory, x, y);
-    this.index.query(minY, maxY, visitor);
+    this.index.query(y, y, visitor);
 
     return visitor.getLocation();
   }

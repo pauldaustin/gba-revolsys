@@ -126,7 +126,8 @@ public final class JtsGeometryUtil {
     final List<Coordinate> coordinates) {
     if (coordinates.size() > 1) {
       boolean add = true;
-      final LineString line = factory.createLineString(DoubleCoordinatesListFactory.create(coordinates));
+      final LineString line = factory
+        .createLineString(DoubleCoordinatesListFactory.create(coordinates));
       if (line.getLength() < 1) {
         // Node<T> firstNode = findNode(coordinates.get(0));
         // if (firstNode != null && firstNode.getDegree() == 1) {
@@ -203,30 +204,6 @@ public final class JtsGeometryUtil {
       }
       newGeometry.setUserData(userData);
     }
-  }
-
-  public static <G extends com.revolsys.gis.model.geometry.Geometry> G createGeometry(
-    final Geometry jtsGeometry) {
-    final GeometryFactory jtsFactory = GeometryFactory.getFactory(jtsGeometry);
-    final int srid = jtsFactory.getSRID();
-    final int numAxis = jtsFactory.getNumAxis();
-    final double scaleXY = jtsFactory.getScaleXY();
-    final double scaleZ = jtsFactory.getScaleZ();
-    final com.revolsys.gis.model.geometry.impl.GeometryFactoryImpl factory = com.revolsys.gis.model.geometry.impl.GeometryFactoryImpl.getFactory(
-      srid, numAxis, scaleXY, scaleZ);
-    if (jtsGeometry instanceof Point) {
-      final Point point = (Point)jtsGeometry;
-      return (G)factory.createPoint(CoordinatesUtil.get(point));
-    } else if (jtsGeometry instanceof LineString) {
-      final LineString line = (LineString)jtsGeometry;
-      return (G)factory.createLineString(CoordinatesListUtil.get(line));
-    } else if (jtsGeometry instanceof Polygon) {
-      final Polygon polygon = (Polygon)jtsGeometry;
-      return (G)factory.createPolygon(CoordinatesListUtil.getAll(polygon));
-    } else {
-      throw new IllegalArgumentException("Not supported " + jtsGeometry.getClass());
-    }
-
   }
 
   public static LinearRing createLinearRing(final GeometryFactory factory,
@@ -573,7 +550,8 @@ public final class JtsGeometryUtil {
           } else if (numIntersections == 1) {
             final Coordinate intersection = intersector.getIntersection(0);
             if (i1 == 1 || i2 == 1 || i1 == numCoordinates1 - 1 || i2 == numCoordinates2 - 1) {
-              if (!((intersection.equals2D(firstCoord1) || intersection.equals2D(lastCoord1)) && (intersection.equals2D(firstCoord2) || intersection.equals2D(lastCoord2)))) {
+              if (!((intersection.equals2D(firstCoord1) || intersection.equals2D(lastCoord1))
+                && (intersection.equals2D(firstCoord2) || intersection.equals2D(lastCoord2)))) {
                 return intersection;
               }
             } else {
@@ -612,12 +590,6 @@ public final class JtsGeometryUtil {
     return getElevation(coordinate, c0, c1);
   }
 
-  public static Envelope getEnvelope(
-    final com.revolsys.gis.model.geometry.impl.BoundingBox boundingBox) {
-    return new Envelope(boundingBox.getMinX(), boundingBox.getMaxX(), boundingBox.getMinY(),
-      boundingBox.getMaxY());
-  }
-
   public static Point getFromPoint(final Geometry geometry) {
     if (geometry instanceof Point) {
       return (Point)geometry;
@@ -653,8 +625,8 @@ public final class JtsGeometryUtil {
     return parts;
   }
 
-  public static Geometry getGeometries(final GeometryFactory factory,
-    final List<Coordinate> coords, final Set<Coordinate> intersectCoords) {
+  public static Geometry getGeometries(final GeometryFactory factory, final List<Coordinate> coords,
+    final Set<Coordinate> intersectCoords) {
     final List<LineString> lines = new ArrayList<LineString>();
     final Iterator<Coordinate> iterator = coords.iterator();
     Coordinate previousCoordinate = iterator.next();
@@ -694,7 +666,8 @@ public final class JtsGeometryUtil {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T extends Object> T getGeometryProperty(final Geometry geometry, final String name) {
+  public static <T extends Object> T getGeometryProperty(final Geometry geometry,
+    final String name) {
     final Map<String, Object> map = getGeometryProperties(geometry);
     return (T)map.get(name);
   }
@@ -914,8 +887,8 @@ public final class JtsGeometryUtil {
     final double closestDistance = Double.MAX_VALUE;
     final GeometryFactory geometryFactory = GeometryFactory.getFactory(geometry);
     for (final LineString line : LineStringUtil.getAll(geometry)) {
-      final Coordinates closestPoint = LineStringUtil.getClosestCoordinateOnLineString(
-        geometryFactory, line, coordinates, maxDistance);
+      final Coordinates closestPoint = LineStringUtil
+        .getClosestCoordinateOnLineString(geometryFactory, line, coordinates, maxDistance);
       final double distance = coordinates.distance(closestPoint);
       if (distance < closestDistance) {
         pointOnLine = closestPoint;
@@ -1045,9 +1018,10 @@ public final class JtsGeometryUtil {
         final double distance = CGAlgorithms.distanceLineLine(previousCoordinate, coordinate,
           previousMatchCoordinate, matchCoordinate);
         if (distance <= maxDistance) {
-          final double angle1 = Angle.normalizePositive(Angle.angle(previousCoordinate, coordinate));
-          final double angle2 = Angle.normalizePositive(Angle.angle(previousMatchCoordinate,
-            matchCoordinate));
+          final double angle1 = Angle
+            .normalizePositive(Angle.angle(previousCoordinate, coordinate));
+          final double angle2 = Angle
+            .normalizePositive(Angle.angle(previousMatchCoordinate, matchCoordinate));
           final double angleDiff = Math.abs(angle1 - angle2);
           if (angleDiff <= Math.PI / 6) {
             return true;
@@ -1310,7 +1284,8 @@ public final class JtsGeometryUtil {
       iterator2.add(intersectCoord);
       intersectionFound = true;
     }
-    if (!((matchIndex1 == 0 || matchIndex1 == coords1.size() - 1) && (matchIndex2 == 0 || matchIndex2 == coords2.size() - 1))) {
+    if (!((matchIndex1 == 0 || matchIndex1 == coords1.size() - 1)
+      && (matchIndex2 == 0 || matchIndex2 == coords2.size() - 1))) {
       intersectCoords.add(intersectCoord);
     }
     if (intersectionFound) {
@@ -1348,7 +1323,8 @@ public final class JtsGeometryUtil {
       if (Double.isNaN(z)) {
         return convertedNewPoint;
       } else {
-        final Coordinates newCoordinates = geometryFactory.createCoordinates(CoordinatesUtil.get(newLocation));
+        final Coordinates newCoordinates = geometryFactory
+          .createCoordinates(CoordinatesUtil.get(newLocation));
         newCoordinates.setZ(z);
         return geometryFactory.createPoint(newCoordinates);
       }

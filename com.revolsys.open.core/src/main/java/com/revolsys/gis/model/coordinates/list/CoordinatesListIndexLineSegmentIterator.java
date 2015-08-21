@@ -2,8 +2,8 @@ package com.revolsys.gis.model.coordinates.list;
 
 import java.util.Iterator;
 
-import com.revolsys.gis.model.geometry.LineSegment;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 
 public class CoordinatesListIndexLineSegmentIterator implements Iterator<LineSegment>,

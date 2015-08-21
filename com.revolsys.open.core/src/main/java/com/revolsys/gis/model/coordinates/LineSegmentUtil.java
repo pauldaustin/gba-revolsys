@@ -8,11 +8,9 @@ import com.revolsys.gis.model.coordinates.comparator.CoordinatesDistanceComparat
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
-import com.revolsys.gis.model.geometry.LineSegment;
-import com.revolsys.gis.model.geometry.operation.geomgraph.index.LineIntersector;
-import com.revolsys.gis.model.geometry.operation.geomgraph.index.RobustLineIntersector;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.jts.geom.LineSegment;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.algorithm.RobustDeterminant;
 
@@ -79,22 +77,17 @@ public class LineSegmentUtil {
         - (line1ToY - line1FromY) * (line2ToX - line2FromX);
 
       if (r_bot == 0 || s_bot == 0) {
-        return Math.min(
-          distance(line1From, line2From, line2To),
-          Math.min(
-            distance(line1To, line2From, line2To),
-            Math.min(distance(line2From, line1From, line1To), distance(line2To, line1From, line1To))));
+        return Math.min(distance(line1From, line2From, line2To),
+          Math.min(distance(line1To, line2From, line2To), Math
+            .min(distance(line2From, line1From, line1To), distance(line2To, line1From, line1To))));
       } else {
         final double s = s_top / s_bot;
         final double r = r_top / r_bot;
 
         if (r < 0 || r > 1 || s < 0 || s > 1) {
-          return Math.min(
-            distance(line2From, line2To, line1From),
-            Math.min(
-              distance(line2From, line2To, line1To),
-              Math.min(distance(line1From, line1To, line2From),
-                distance(line1From, line1To, line2To))));
+          return Math.min(distance(line2From, line2To, line1From),
+            Math.min(distance(line2From, line2To, line1To), Math.min(
+              distance(line1From, line1To, line2From), distance(line1From, line1To, line2To))));
         } else {
           return 0.0;
         }
@@ -173,8 +166,8 @@ public class LineSegmentUtil {
    * @param line2End The point at the end of the second line.
    * @return True if the envelope of line intersects the envelope of line 2.
    */
-  public static boolean envelopeIntersects(final Coordinates line1Start,
-    final Coordinates line1End, final Coordinates line2Start, final Coordinates line2End) {
+  public static boolean envelopeIntersects(final Coordinates line1Start, final Coordinates line1End,
+    final Coordinates line2Start, final Coordinates line2End) {
     final double line1X1 = line1Start.getX();
     final double line1X2 = line1End.getX();
 

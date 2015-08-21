@@ -11,12 +11,12 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 import com.revolsys.gis.model.coordinates.Coordinates;
-import com.revolsys.gis.model.geometry.GeometryCollection;
-import com.revolsys.gis.model.geometry.util.GeometryEditUtil;
+import com.revolsys.jts.geom.GeometryEditUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.table.TablePanel;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;

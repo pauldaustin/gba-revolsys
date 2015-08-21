@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
-import com.revolsys.gis.model.geometry.LineSegment;
+import com.revolsys.jts.geom.LineSegment;
 import com.vividsolutions.jts.index.ItemVisitor;
 
 public class LineSegmentIntersectionVisitor implements ItemVisitor {

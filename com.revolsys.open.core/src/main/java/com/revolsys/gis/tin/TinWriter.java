@@ -9,7 +9,6 @@ import java.util.Set;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.gis.model.coordinates.Coordinates;
-import com.revolsys.gis.model.geometry.Triangle;
 import com.revolsys.spring.resource.SpringUtil;
 
 public class TinWriter {
