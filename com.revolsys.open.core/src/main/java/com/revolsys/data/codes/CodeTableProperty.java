@@ -62,6 +62,8 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
 
   private final ThreadLocal<Boolean> threadLoading = new ThreadLocal<Boolean>();
 
+  private boolean loaded;
+
   public CodeTableProperty() {
   }
 
@@ -220,6 +222,11 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
     return this.loadAll;
   }
 
+  @Override
+  public boolean isLoaded() {
+    return this.loaded;
+  }
+
   protected synchronized void loadAll() {
     if (this.threadLoading.get() != Boolean.TRUE) {
       if (this.loading) {
@@ -251,6 +258,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
           Property.firePropertyChange(this, "valuesChanged", false, true);
         } finally {
           this.loading = false;
+          this.loaded = true;
           this.threadLoading.set(null);
         }
       }
@@ -322,6 +330,13 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
   public synchronized void refresh() {
     super.refresh();
     if (isLoadAll()) {
+      this.loaded = false;
+      loadAll();
+    }
+  }
+
+  public void refreshIfNeeded() {
+    if (!isLoaded()) {
       loadAll();
     }
   }

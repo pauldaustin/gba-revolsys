@@ -18,8 +18,8 @@ import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.MathUtil;
 
-public abstract class AbstractCodeTable implements Closeable, PropertyChangeSupportProxy,
-  CodeTable, Cloneable {
+public abstract class AbstractCodeTable
+  implements Closeable, PropertyChangeSupportProxy, CodeTable, Cloneable {
 
   private boolean capitalizeWords = false;
 
@@ -175,6 +175,27 @@ public abstract class AbstractCodeTable implements Closeable, PropertyChangeSupp
       id = this.valueIdCache.get(normalizedValues);
     }
     return id;
+  }
+
+  public Object getIdExact(final List<Object> values) {
+    return getIdExact(values, true);
+  }
+
+  public Object getIdExact(final List<Object> values, final boolean loadValues) {
+    Object id = this.valueIdCache.get(values);
+    if (id == null && loadValues) {
+      synchronized (this) {
+        id = loadId(values, false);
+        return this.valueIdCache.get(values);
+      }
+    }
+    return id;
+  }
+
+  @Override
+  public Object getIdExact(final Object... values) {
+    final List<Object> valueList = Arrays.asList(values);
+    return getIdExact(valueList);
   }
 
   @Override

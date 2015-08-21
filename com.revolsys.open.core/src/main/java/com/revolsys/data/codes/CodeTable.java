@@ -14,6 +14,10 @@ public interface CodeTable extends Cloneable {
 
   <T> T getId(final Object... values);
 
+  default Object getIdExact(final Object... values) {
+    return getId(values);
+  }
+
   String getIdFieldName();
 
   Map<String, ? extends Object> getMap(final Object id);
@@ -27,6 +31,10 @@ public interface CodeTable extends Cloneable {
   List<String> getValueFieldNames();
 
   List<Object> getValues(final Object id);
+
+  default boolean isLoaded() {
+    return true;
+  }
 
   void refresh();
 }

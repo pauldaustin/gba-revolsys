@@ -3,6 +3,7 @@ package com.revolsys.data.record;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +17,9 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.data.identifier.Identifiable;
+import com.revolsys.data.identifier.Identifier;
+import com.revolsys.data.identifier.ListIdentifier;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
@@ -25,7 +29,7 @@ import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface Record extends Map<String, Object>, Comparable<Record> {
+public interface Record extends Map<String, Object>, Comparable<Record>, Identifiable {
   /**
    * Create a clone of the data record.
    *
@@ -76,11 +80,6 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
     getRecordDefinition().delete(this);
   }
 
-  default String getFieldTitle(final String name) {
-    final RecordDefinition recordDefinition = getRecordDefinition();
-    return recordDefinition.getFieldTitle(name);
-  }
-
   default Byte getByte(final CharSequence name) {
     final Number value = getValue(name);
     if (value == null) {
@@ -119,6 +118,11 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
     return recordDefinition.getField(fieldIndex);
   }
 
+  default String getFieldTitle(final String name) {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    return recordDefinition.getFieldTitle(name);
+  }
+
   default Float getFloat(final CharSequence name) {
     final Number value = getValue(name);
     if (value == null) {
@@ -139,6 +143,75 @@ public interface Record extends Map<String, Object>, Comparable<Record> {
     final RecordDefinition recordDefinition = getRecordDefinition();
     final int index = recordDefinition.getGeometryFieldIndex();
     return (T)getValue(index);
+  }
+
+  @Override
+  default Identifier getIdentifier() {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final List<Integer> idFieldIndexes = recordDefinition.getIdFieldIndexes();
+    final int idCount = idFieldIndexes.size();
+    if (idCount == 0) {
+      return null;
+    } else if (idCount == 1) {
+      final Integer idFieldIndex = idFieldIndexes.get(0);
+      final Object idValue = getValue(idFieldIndex);
+      if (idValue == null) {
+        return null;
+      } else {
+        return Identifier.create(idValue);
+      }
+    } else {
+      boolean notNull = false;
+      final Object[] idValues = new Object[idCount];
+      for (int i = 0; i < idValues.length; i++) {
+        final Integer idFieldIndex = idFieldIndexes.get(i);
+        final Object value = getValue(idFieldIndex);
+        if (value != null) {
+          notNull = true;
+        }
+        idValues[i] = value;
+      }
+      if (notNull) {
+        return new ListIdentifier(idValues);
+      } else {
+        return null;
+      }
+    }
+  }
+
+  default Identifier getIdentifier(final List<String> fieldNames) {
+    final int idCount = fieldNames.size();
+    if (idCount == 0) {
+      return null;
+    } else if (idCount == 1) {
+      final String idFieldName = fieldNames.get(0);
+      final Object idValue = getValue(idFieldName);
+      if (idValue == null) {
+        return null;
+      } else {
+        return Identifier.create(idValue);
+      }
+    } else {
+      boolean notNull = false;
+      final Object[] idValues = new Object[idCount];
+      for (int i = 0; i < idValues.length; i++) {
+        final String idFieldName = fieldNames.get(i);
+        final Object value = getValue(idFieldName);
+        if (value != null) {
+          notNull = true;
+        }
+        idValues[i] = value;
+      }
+      if (notNull) {
+        return new ListIdentifier(idValues);
+      } else {
+        return null;
+      }
+    }
+  }
+
+  default Identifier getIdentifier(final String... fieldNames) {
+    return getIdentifier(Arrays.asList(fieldNames));
   }
 
   default Integer getIdInteger() {

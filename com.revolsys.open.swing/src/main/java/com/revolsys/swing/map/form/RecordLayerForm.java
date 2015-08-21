@@ -123,6 +123,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   private RecordStore recordStore;
 
+  private LayerRecord addRecord;
+
   private boolean editable = true;
 
   private final Map<String, String> fieldInValidMessage = new HashMap<String, String>();
@@ -149,7 +151,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   private AbstractRecordLayer layer;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
   private LayerRecord record;
 
@@ -169,13 +171,17 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   private String focussedFieldName;
 
+  private boolean allowAddWithErrors;
+
+  private boolean cancelled;
+
   public RecordLayerForm(final AbstractRecordLayer layer) {
     ProjectFrame.addSaveActions(this, layer.getProject());
     setLayout(new BorderLayout());
     setName(layer.getName());
     this.layer = layer;
     final RecordDefinition metaData = layer.getRecordDefinition();
-    setMetaData(metaData);
+    setRecordDefinition(metaData);
     addToolBar(layer);
 
     final ActionMap map = getActionMap();
@@ -208,6 +214,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     final LayerRecord object = getRecord();
     layer.deleteRecords(object);
     this.record = null;
+    this.cancelled = true;
     closeWindow();
   }
 
@@ -413,7 +420,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   }
 
   protected void addTabGeometry() {
-    final String geometryAttributeName = this.metaData.getGeometryFieldName();
+    final String geometryAttributeName = this.recordDefinition.getGeometryFieldName();
     if (this.geometryCoordinatesPanel == null && geometryAttributeName != null) {
       this.geometryCoordinatesPanel = new GeometryCoordinatesPanel(this, geometryAttributeName);
       addField(geometryAttributeName, this.geometryCoordinatesPanel);
@@ -429,7 +436,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   public ToolBar addToolBar(final AbstractRecordLayer layer) {
     this.toolBar = new ToolBar();
     add(this.toolBar, BorderLayout.NORTH);
-    final RecordDefinition metaData = getMetaData();
+    final RecordDefinition metaData = getRecordDefinition();
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     final boolean hasGeometry = geometryAttribute != null;
     final EnableCheck editable = new ObjectPropertyEnableCheck(this, "editable");
@@ -573,7 +580,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     this.fieldToNameMap.clear();
     this.fieldValidMap.clear();
     this.geometryCoordinatesPanel = null;
-    this.metaData = null;
+    this.recordDefinition = null;
     this.record = null;
     this.propertyChangeSupport = null;
     this.readOnlyFieldNames.clear();
@@ -654,12 +661,16 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     }
   }
 
+  public LayerRecord getAddRecord() {
+    return this.addRecord;
+  }
+
   public LayerRecordTableModel getAllAttributes() {
     return this.allAttributes;
   }
 
   public String getCodeValue(final String fieldName, final Object value) {
-    final CodeTable codeTable = this.metaData.getCodeTableByFieldName(fieldName);
+    final CodeTable codeTable = this.recordDefinition.getCodeTableByFieldName(fieldName);
     String string;
     if (value == null) {
       return "-";
@@ -730,7 +741,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   @SuppressWarnings("unchecked")
   public <T> T getFieldValue(final String name) {
     final Object value = this.fieldValues.get(name);
-    final CodeTable codeTable = this.metaData.getCodeTableByFieldName(name);
+    final CodeTable codeTable = this.recordDefinition.getCodeTableByFieldName(name);
     if (codeTable == null) {
       if (value != null && name.endsWith("_IND")) {
         if ("Y".equals(value) || Boolean.TRUE.equals(value)) {
@@ -748,7 +759,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   }
 
   public String getGeometryAttributeName() {
-    return getMetaData().getGeometryFieldName();
+    return getRecordDefinition().getGeometryFieldName();
   }
 
   public GeometryCoordinatesPanel getGeometryCoordinatesPanel() {
@@ -774,10 +785,6 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     return this.layer;
   }
 
-  public RecordDefinition getMetaData() {
-    return this.metaData;
-  }
-
   public <T> T getOriginalValue(final String fieldName) {
     final LayerRecord object = getRecord();
     return object.getOriginalValue(fieldName);
@@ -796,12 +803,16 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     return this.record;
   }
 
+  public RecordDefinition getRecordDefinition() {
+    return this.recordDefinition;
+  }
+
   public RecordStore getRecordStore() {
     if (this.recordStore == null) {
-      if (this.metaData == null) {
+      if (this.recordDefinition == null) {
         return null;
       } else {
-        return this.metaData.getRecordStore();
+        return this.recordDefinition.getRecordStore();
       }
     } else {
       return this.recordStore;
@@ -858,8 +869,18 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     return values;
   }
 
+  public boolean hasFieldValue(final String fieldName) {
+    final Field field = getField(fieldName);
+    if (field == null) {
+      return false;
+    } else {
+      final Object value = field.getFieldValue();
+      return Property.hasValue(value);
+    }
+  }
+
   public boolean hasOriginalValue(final String name) {
-    return getMetaData().hasField(name);
+    return getRecordDefinition().hasField(name);
   }
 
   protected void invokeAction(final String actionName) {
@@ -868,6 +889,10 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
       final ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null);
       action.actionPerformed(event);
     }
+  }
+
+  public boolean isAllowAddWithErrors() {
+    return this.allowAddWithErrors;
   }
 
   public boolean isDeletable() {
@@ -913,6 +938,10 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     } else {
       return object.isDeleted() || object.isModified();
     }
+  }
+
+  public boolean isNewRecord(final LayerRecord record) {
+    return record.getState() == RecordState.New;
   }
 
   public boolean isReadOnly(final String fieldName) {
@@ -985,7 +1014,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
             }
             final String propertyName = event.getPropertyName();
             final Object value = event.getNewValue();
-            final RecordDefinition metaData = getMetaData();
+            final RecordDefinition metaData = getRecordDefinition();
             if ("errorsUpdated".equals(propertyName)) {
               updateErrors();
             } else if (metaData.hasField(propertyName)) {
@@ -1022,6 +1051,14 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     if (this.addOkButton != null) {
       this.addOkButton.setEnabled(enabled);
     }
+  }
+
+  public void setAddRecord(final LayerRecord addRecord) {
+    this.addRecord = addRecord;
+  }
+
+  public void setAllowAddWithErrors(final boolean allowAddWithErrors) {
+    this.allowAddWithErrors = allowAddWithErrors;
   }
 
   public void setEditable(final boolean editable) {
@@ -1119,7 +1156,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   public void setFieldValue(final String fieldName, Object value, final boolean validate) {
     boolean changed = false;
     final Object oldValue = getFieldValue(fieldName);
-    final RecordDefinition metaData = getMetaData();
+    final RecordDefinition metaData = getRecordDefinition();
     if (metaData != null) {
       try {
         final Class<?> attributeClass = metaData.getFieldClass(fieldName);
@@ -1150,22 +1187,6 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     }
   }
 
-  public void setMetaData(final RecordDefinition metaData) {
-    this.metaData = metaData;
-    setRecordStore(metaData.getRecordStore());
-    final String idFieldName = metaData.getIdFieldName();
-    if (Property.hasValue(idFieldName)) {
-      this.readOnlyFieldNames.add(idFieldName);
-    }
-    for (final FieldDefinition attribute : metaData.getFields()) {
-      if (attribute.isRequired()) {
-        final String name = attribute.getName();
-        addRequiredFieldNames(name);
-      }
-
-    }
-  }
-
   public void setReadOnlyFieldNames(final Collection<String> readOnlyFieldNames) {
     this.readOnlyFieldNames = new HashSet<String>(readOnlyFieldNames);
     updateReadOnlyFields();
@@ -1186,6 +1207,22 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     } finally {
       setFieldValidationEnabled(validate);
       this.undoManager.setEventsEnabled(undo);
+    }
+  }
+
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    this.recordDefinition = recordDefinition;
+    setRecordStore(recordDefinition.getRecordStore());
+    final String idFieldName = recordDefinition.getIdFieldName();
+    if (Property.hasValue(idFieldName)) {
+      this.readOnlyFieldNames.add(idFieldName);
+    }
+    for (final FieldDefinition field : recordDefinition.getFields()) {
+      if (field.isRequired()) {
+        final String name = field.getName();
+        addRequiredFieldNames(name);
+      }
+
     }
   }
 
@@ -1237,7 +1274,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   }
 
-  public LayerRecord showAddDialog() {
+  public boolean showAddDialog() {
     final String title = "Add New " + getName();
     final Window window = SwingUtil.getActiveWindow();
     final JDialog dialog = new JDialog(window, title, ModalityType.APPLICATION_MODAL);
@@ -1258,9 +1295,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     dialog.setLocation(50, 50);
     dialog.addWindowListener(this);
     dialog.setVisible(true);
-    final LayerRecord object = getRecord();
     dialog.dispose();
-    return object;
+    return !this.cancelled;
   }
 
   protected void updateErrors() {
@@ -1270,6 +1306,15 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     final Field field = this.fields.get(this.focussedFieldName);
     if (field != null) {
       field.updateFieldValue();
+    }
+  }
+
+  protected void updateInvalidFields(final boolean fieldsValid) {
+    if (isAllowAddWithErrors()) {
+      setAddOkButtonEnabled(true);
+    } else {
+      final boolean enabled = fieldsValid && isFieldsValid();
+      setAddOkButtonEnabled(enabled);
     }
   }
 
@@ -1322,7 +1367,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
       if (requiredFieldNames.contains(fieldName)) {
         boolean run = true;
         if (this.record.getState() == RecordState.New) {
-          final String idFieldName = getMetaData().getIdFieldName();
+          final String idFieldName = getRecordDefinition().getIdFieldName();
           if (fieldName.equals(idFieldName)) {
             run = false;
           }
@@ -1350,7 +1395,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
 
   public void validateFields() {
     final Set<String> fieldNames = getFieldNames();
-    validateFields(fieldNames);
+    final boolean fieldsValid = validateFields(fieldNames);
+    updateInvalidFields(fieldsValid);
   }
 
   protected boolean validateFields(final Collection<String> fieldNames) {

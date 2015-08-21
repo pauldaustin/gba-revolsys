@@ -48,7 +48,6 @@ import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
 import com.revolsys.data.record.filter.RecordGeometryDistanceFilter;
 import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
-import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.property.DirectionalAttributes;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -2085,8 +2084,12 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       if (form == null) {
         return null;
       } else {
-        final LayerRecord addedRecord = form.showAddDialog();
-        return addedRecord;
+        form.setAddRecord(newRecord);
+        if (form.showAddDialog()) {
+          return form.getAddRecord();
+        } else {
+          return null;
+        }
       }
     } else {
       final Window window = SwingUtil.getActiveWindow();

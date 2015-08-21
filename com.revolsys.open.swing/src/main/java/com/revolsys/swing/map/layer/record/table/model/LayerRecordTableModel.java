@@ -25,7 +25,7 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
   private final Reference<RecordLayerForm> form;
 
   public LayerRecordTableModel(final RecordLayerForm form) {
-    super(form.getMetaData(), true);
+    super(form.getRecordDefinition(), true);
     this.form = new WeakReference<>(form);
     this.layer = form.getLayer();
     this.object = form.getRecord();
