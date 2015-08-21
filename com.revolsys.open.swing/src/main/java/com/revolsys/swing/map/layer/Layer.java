@@ -87,6 +87,8 @@ public interface Layer extends PropertyChangeSupportProxy, ObjectWithProperties,
 
   void refresh();
 
+  void refreshAll();
+
   boolean saveChanges();
 
   boolean saveSettings(File directory);

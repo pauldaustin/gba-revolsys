@@ -55,6 +55,7 @@ import com.revolsys.swing.map.ProjectFrame;
 import com.revolsys.swing.map.ProjectFramePanel;
 import com.revolsys.swing.map.layer.record.style.panel.LayerStylePanel;
 import com.revolsys.swing.menu.MenuFactory;
+import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
@@ -334,6 +335,13 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
 
   protected boolean doInitialize() {
     return true;
+  }
+
+  protected void doRefresh() {
+  }
+
+  protected void doRefreshAll() {
+    doRefresh();
   }
 
   protected boolean doSaveChanges() {
@@ -631,8 +639,27 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
   }
 
   @Override
-  public void refresh() {
-    firePropertyChange("refresh", false, true);
+  public final void refresh() {
+    Invoke.background("Refresh " + getName(), () -> {
+      try {
+        doRefresh();
+      } catch (final Throwable e) {
+        LoggerFactory.getLogger(getClass()).error("Unable to refresh layer: " + getName(), e);
+      }
+      firePropertyChange("refresh", false, true);
+    });
+  }
+
+  @Override
+  public final void refreshAll() {
+    Invoke.background("Refresh " + getName(), () -> {
+      try {
+        doRefreshAll();
+      } catch (final Throwable e) {
+        LoggerFactory.getLogger(getClass()).error("Unable to refresh layer: " + getName(), e);
+      }
+      firePropertyChange("refresh", false, true);
+    });
   }
 
   @Override

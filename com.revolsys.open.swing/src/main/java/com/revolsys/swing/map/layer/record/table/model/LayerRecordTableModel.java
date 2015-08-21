@@ -28,7 +28,7 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     super(form.getMetaData(), true);
     this.form = new WeakReference<>(form);
     this.layer = form.getLayer();
-    this.object = form.getObject();
+    this.object = form.getRecord();
     Property.addListener(this.layer, this);
   }
 

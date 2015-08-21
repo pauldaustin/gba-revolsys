@@ -34,6 +34,12 @@ public abstract class AbstractTiledImageLayer extends AbstractLayer implements B
     setRenderer(new TiledImageLayerRenderer(this));
   }
 
+  @Override
+  protected void doRefresh() {
+    this.hasError = false;
+    super.doRefresh();
+  }
+
   public abstract List<MapTile> getOverlappingMapTiles(final Viewport2D viewport);
 
   public abstract double getResolution(final Viewport2D viewport);
@@ -46,18 +52,11 @@ public abstract class AbstractTiledImageLayer extends AbstractLayer implements B
     return this.hasError;
   }
 
-  @Override
-  public void refresh() {
-    this.hasError = false;
-    super.refresh();
-    firePropertyChange("refresh", false, true);
-  }
-
   public void setError(final Throwable e) {
     if (!this.hasError) {
       this.hasError = true;
-      LoggerFactory.getLogger(getClass()).error(
-        "Unable to get map tiles for " + this + " (" + getSourceLocation() + ")", e);
+      LoggerFactory.getLogger(getClass())
+        .error("Unable to get map tiles for " + this + " (" + getSourceLocation() + ")", e);
     }
   }
 

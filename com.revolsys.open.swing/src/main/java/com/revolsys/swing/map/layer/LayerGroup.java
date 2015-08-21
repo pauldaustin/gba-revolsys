@@ -15,11 +15,9 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.Parent;
-import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
@@ -30,6 +28,7 @@ import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.raster.AbstractGeoreferencedImageFactory;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.map.action.AddFileLayerAction;
@@ -246,8 +245,8 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
   }
 
   @SuppressWarnings("unchecked")
-  protected <V extends Layer> void addVisibleLayers(final List<V> layers,
-    final Class<V> layerClass, final double scale) {
+  protected <V extends Layer> void addVisibleLayers(final List<V> layers, final Class<V> layerClass,
+    final double scale) {
     for (final Layer layer : this.layers) {
       if (layer.isVisible(scale)) {
         if (layerClass.isAssignableFrom(layer.getClass())) {
@@ -293,6 +292,17 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
       }
       super.delete();
       this.layers.clear();
+    }
+  }
+
+  @Override
+  protected void doRefresh() {
+  }
+
+  @Override
+  protected void doRefreshAll() {
+    for (final Layer layer : this.layers) {
+      layer.refreshAll();
     }
   }
 
@@ -547,8 +557,8 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
   }
 
   protected void loadLayer(final File file) {
-    final Resource oldResource = SpringUtil.setBaseResource(new FileSystemResource(
-      file.getParentFile()));
+    final Resource oldResource = SpringUtil
+      .setBaseResource(new FileSystemResource(file.getParentFile()));
 
     try {
       final Map<String, Object> properties = JsonMapIoFactory.toMap(file);
@@ -579,8 +589,8 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
             final Layer layer = (Layer)object;
             add(layer);
           } else if (object != null) {
-            LoggerFactory.getLogger(LayerGroup.class).error(
-              "Unexpected object type " + object.getClass() + " in " + childResource);
+            LoggerFactory.getLogger(LayerGroup.class)
+              .error("Unexpected object type " + object.getClass() + " in " + childResource);
           }
         } else {
           LoggerFactory.getLogger(LayerGroup.class).error("Cannot find " + childResource);
@@ -652,13 +662,6 @@ public class LayerGroup extends AbstractLayer implements List<Layer>, Parent<Lay
 
   public void openFiles(final List<File> files) {
     openFiles(-1, files);
-  }
-
-  @Override
-  public void refresh() {
-    for (final Layer layer : this.layers) {
-      layer.refresh();
-    }
   }
 
   @Override

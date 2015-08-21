@@ -453,6 +453,26 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   }
 
   @Override
+  public void doRefresh() {
+    synchronized (this.sync) {
+      if (this.loadingWorker != null) {
+        this.loadingWorker.cancel(true);
+      }
+      this.boundingBox = new BoundingBox();
+      this.loadingBoundingBox = this.boundingBox;
+      setIndex(null);
+      cleanCachedRecords();
+    }
+    final RecordStore recordStore = getRecordStore();
+    final String typePath = getTypePath();
+    final CodeTable codeTable = recordStore.getCodeTable(typePath);
+    if (codeTable != null) {
+      codeTable.refresh();
+    }
+    fireRecordsChanged();
+  }
+
+  @Override
   protected boolean doSaveChanges(final RecordSaveErrorTableModel errors,
     final LayerRecord record) {
     final boolean deleted = isDeleted(record);
@@ -731,27 +751,6 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     final RecordDefinition metaData = getRecordDefinition();
     final Query query = Query.and(metaData, filter);
     return query(query);
-  }
-
-  @Override
-  public void refresh() {
-    super.refresh();
-    synchronized (this.sync) {
-      if (this.loadingWorker != null) {
-        this.loadingWorker.cancel(true);
-      }
-      this.boundingBox = new BoundingBox();
-      this.loadingBoundingBox = this.boundingBox;
-      setIndex(null);
-      cleanCachedRecords();
-    }
-    final RecordStore recordStore = getRecordStore();
-    final String typePath = getTypePath();
-    final CodeTable codeTable = recordStore.getCodeTable(typePath);
-    if (codeTable != null) {
-      codeTable.refresh();
-    }
-    fireRecordsChanged();
   }
 
   private LayerRecord removeCacheRecord(final String id, final LayerRecord record) {

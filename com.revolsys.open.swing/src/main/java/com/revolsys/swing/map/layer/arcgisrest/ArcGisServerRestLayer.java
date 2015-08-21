@@ -63,6 +63,12 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
   }
 
   @Override
+  protected void doRefresh() {
+    doInitialize();
+    super.doRefresh();
+  }
+
+  @Override
   public BoundingBox getBoundingBox() {
     final MapServer mapServer = getMapServer();
     if (mapServer == null) {
@@ -133,12 +139,6 @@ public class ArcGisServerRestLayer extends AbstractTiledImageLayer {
   @Override
   public String getSourceLocation() {
     return this.url;
-  }
-
-  @Override
-  public void refresh() {
-    doInitialize();
-    super.refresh();
   }
 
   @Override

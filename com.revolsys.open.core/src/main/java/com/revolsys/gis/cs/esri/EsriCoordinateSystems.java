@@ -23,20 +23,20 @@ public class EsriCoordinateSystems {
   private static Map<Integer, CoordinateSystem> coordinateSystemsById = new HashMap<Integer, CoordinateSystem>();
 
   private static Map<String, CoordinateSystem> coordinateSystemsByName = new HashMap<String, CoordinateSystem>();
+
   static {
-    final List<GeographicCoordinateSystem> geographicCoordinateSystems = CoordinateSystemParser.getGeographicCoordinateSystems(
-      "ESRI",
-      EsriCoordinateSystems.class.getResourceAsStream("/com/revolsys/gis/cs/esri/geographicCoordinateSystem.txt"));
+    final List<GeographicCoordinateSystem> geographicCoordinateSystems = CoordinateSystemParser
+      .getGeographicCoordinateSystems("ESRI", EsriCoordinateSystems.class
+        .getResourceAsStream("/com/revolsys/gis/cs/esri/geographicCoordinateSystem.txt"));
     for (final GeographicCoordinateSystem cs : geographicCoordinateSystems) {
       final int id = getCrsId(cs);
       coordinateSystemsById.put(id, cs);
       coordinateSystemsByName.put(cs.getName(), cs);
       coordinateSystems.put(cs, cs);
     }
-    final List<ProjectedCoordinateSystem> projectedCoordinateSystems = CoordinateSystemParser.getProjectedCoordinateSystems(
-      coordinateSystemsById,
-      "ESRI",
-      EsriCoordinateSystems.class.getResourceAsStream("/com/revolsys/gis/cs/esri/projectedCoordinateSystem.txt"));
+    final List<ProjectedCoordinateSystem> projectedCoordinateSystems = CoordinateSystemParser
+      .getProjectedCoordinateSystems(coordinateSystemsById, "ESRI", EsriCoordinateSystems.class
+        .getResourceAsStream("/com/revolsys/gis/cs/esri/projectedCoordinateSystem.txt"));
     for (final ProjectedCoordinateSystem cs : projectedCoordinateSystems) {
       final int id = getCrsId(cs);
       coordinateSystemsById.put(id, cs);
@@ -99,7 +99,7 @@ public class EsriCoordinateSystems {
    */
   public static GeometryFactory getGeometryFactory(final Resource resource) {
     final Resource projResource = SpringUtil.getResourceWithExtension(resource, "prj");
-    if (projResource.exists()) {
+    if (projResource != null && projResource.exists()) {
       try {
         final CoordinateSystem coordinateSystem = getCoordinateSystem(projResource);
         final int srid = EsriCoordinateSystems.getCrsId(coordinateSystem);
@@ -109,8 +109,8 @@ public class EsriCoordinateSystems {
           return GeometryFactory.fixed(coordinateSystem, 2, -1, -1);
         }
       } catch (final Exception e) {
-        LoggerFactory.getLogger(EsriCoordinateSystems.class).error(
-          "Unable to load projection from " + projResource);
+        LoggerFactory.getLogger(EsriCoordinateSystems.class)
+          .error("Unable to load projection from " + projResource);
       }
     }
     return null;
