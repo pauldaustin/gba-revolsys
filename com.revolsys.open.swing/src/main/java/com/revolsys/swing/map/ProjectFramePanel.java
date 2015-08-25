@@ -4,7 +4,7 @@ import java.awt.Component;
 
 import javax.swing.Icon;
 
-import com.revolsys.io.ObjectWithProperties;
+import com.revolsys.properties.ObjectWithProperties;
 
 public interface ProjectFramePanel extends ObjectWithProperties {
   Component createPanelComponent();

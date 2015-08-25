@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.beans.ClassRegistry;
 import com.revolsys.format.json.JsonParser;
-import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
+import com.revolsys.properties.AbstractObjectWithProperties;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.AbstractAction;
 import com.revolsys.swing.action.InvokeMethodAction;

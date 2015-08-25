@@ -1,4 +1,4 @@
-package com.revolsys.io;
+package com.revolsys.properties;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;

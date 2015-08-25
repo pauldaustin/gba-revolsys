@@ -4,8 +4,8 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
 import com.revolsys.collection.EmptyReference;
-import com.revolsys.io.AbstractObjectWithProperties;
 import com.revolsys.io.Path;
+import com.revolsys.properties.AbstractObjectWithProperties;
 import com.revolsys.util.Property;
 
 public abstract class AbstractRecordStoreSchemaElement extends AbstractObjectWithProperties

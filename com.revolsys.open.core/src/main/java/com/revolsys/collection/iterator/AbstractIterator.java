@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.io.AbstractObjectWithProperties;
+import com.revolsys.properties.AbstractObjectWithProperties;
 
 public abstract class AbstractIterator<T> extends AbstractObjectWithProperties implements
   Iterator<T>, Iterable<T>, AutoCloseable {

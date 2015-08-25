@@ -170,10 +170,10 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
   /**
    * @param records the records to set
    */
-  public void setRecords(final List<LayerRecord> objects) {
+  public void setRecords(final List<LayerRecord> records) {
     this.records.clear();
-    if (objects != null) {
-      this.records.addAll(objects);
+    if (records != null) {
+      this.records.addAll(records);
     }
     fireTableDataChanged();
   }

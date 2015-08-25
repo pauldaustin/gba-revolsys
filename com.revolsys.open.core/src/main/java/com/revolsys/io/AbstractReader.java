@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revolsys.collection.Visitor;
+import com.revolsys.properties.AbstractObjectWithProperties;
 
 /**
  * The AbstracteReader is an implementation of the {@link Reader} interface,

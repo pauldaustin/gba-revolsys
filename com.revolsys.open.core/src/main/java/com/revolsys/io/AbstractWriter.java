@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import com.revolsys.properties.AbstractObjectWithProperties;
+
 public abstract class AbstractWriter<T> extends AbstractObjectWithProperties implements Writer<T> {
 
   public static void close(final Collection<? extends Writer<?>> writers) {

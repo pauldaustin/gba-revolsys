@@ -13,6 +13,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,36 +29,40 @@ import com.revolsys.beans.WeakPropertyChangeListener;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.Record;
-import com.revolsys.io.ObjectWithProperties;
+import com.revolsys.properties.ObjectWithProperties;
 
 public final class Property {
   public static void addListener(final Object source, final Object listener) {
-    final PropertyChangeListener propertyChangeListener = getPropertyChangeListener(listener);
-    if (propertyChangeListener != null) {
-      final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
-      if (propertyChangeSupport == null) {
-        if (source instanceof JComponent) {
-          final JComponent component = (JComponent)source;
-          component.addPropertyChangeListener(propertyChangeListener);
+    if (source != null) {
+      final PropertyChangeListener propertyChangeListener = getPropertyChangeListener(listener);
+      if (propertyChangeListener != null) {
+        final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
+        if (propertyChangeSupport == null) {
+          if (source instanceof JComponent) {
+            final JComponent component = (JComponent)source;
+            component.addPropertyChangeListener(propertyChangeListener);
+          }
+        } else {
+          propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
         }
-      } else {
-        propertyChangeSupport.addPropertyChangeListener(propertyChangeListener);
       }
     }
   }
 
   public static void addListener(final Object source, final String propertyName,
     final Object listener) {
-    final PropertyChangeListener propertyChangeListener = getPropertyChangeListener(listener);
-    if (propertyChangeListener != null) {
-      final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
-      if (propertyChangeSupport == null) {
-        if (source instanceof JComponent) {
-          final JComponent component = (JComponent)source;
-          component.addPropertyChangeListener(propertyName, propertyChangeListener);
+    if (source != null) {
+      final PropertyChangeListener propertyChangeListener = getPropertyChangeListener(listener);
+      if (propertyChangeListener != null) {
+        final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
+        if (propertyChangeSupport == null) {
+          if (source instanceof JComponent) {
+            final JComponent component = (JComponent)source;
+            component.addPropertyChangeListener(propertyName, propertyChangeListener);
+          }
+        } else {
+          propertyChangeSupport.addPropertyChangeListener(propertyName, propertyChangeListener);
         }
-      } else {
-        propertyChangeSupport.addPropertyChangeListener(propertyName, propertyChangeListener);
       }
     }
   }
@@ -334,14 +339,73 @@ public final class Property {
     }
   }
 
+  public static boolean hasValue(final Collection<?> collection) {
+    if (collection == null || collection.isEmpty()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public static boolean hasValue(final Emptyable value) {
+    if (value == null) {
+      return false;
+    } else {
+      return !value.isEmpty();
+    }
+  }
+
   public static boolean hasValue(final Object value) {
     if (value == null) {
       return false;
     } else if (value instanceof CharSequence) {
       final CharSequence string = (CharSequence)value;
       return hasText(string);
+    } else if (value instanceof Collection<?>) {
+      final Collection<?> collection = (Collection<?>)value;
+      return !collection.isEmpty();
+    } else if (value instanceof Map<?, ?>) {
+      final Map<?, ?> map = (Map<?, ?>)value;
+      return !map.isEmpty();
+    } else if (value instanceof Emptyable) {
+      final Emptyable emptyable = (Emptyable)value;
+      return !emptyable.isEmpty();
     } else {
       return true;
+    }
+  }
+
+  public static boolean hasValue(final Object[] array) {
+    if (array == null || array.length > 1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  public static boolean hasValuesAll(final Object... values) {
+    if (values == null || values.length == 0) {
+      return false;
+    } else {
+      for (final Object value : values) {
+        if (!hasValue(value)) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+
+  public static boolean hasValuesAny(final Object... values) {
+    if (values == null || values.length == 0) {
+      return false;
+    } else {
+      for (final Object value : values) {
+        if (hasValue(value)) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 
@@ -385,36 +449,39 @@ public final class Property {
     }
   }
 
+  public static boolean isEmpty(final Emptyable value) {
+    if (value == null) {
+      return true;
+    } else {
+      return value.isEmpty();
+    }
+  }
+
   public static boolean isEmpty(final Object value) {
     if (value == null) {
       return true;
     } else if (value instanceof CharSequence) {
-      final CharSequence charSequence = (CharSequence)value;
-      return !Property.hasValue(charSequence);
+      final CharSequence string = (CharSequence)value;
+      return !hasText(string);
+    } else if (value instanceof Collection<?>) {
+      final Collection<?> collection = (Collection<?>)value;
+      return collection.isEmpty();
+    } else if (value instanceof Map<?, ?>) {
+      final Map<?, ?> map = (Map<?, ?>)value;
+      return map.isEmpty();
+    } else if (value instanceof Emptyable) {
+      final Emptyable emptyable = (Emptyable)value;
+      return emptyable.isEmpty();
     } else {
-      return false;
+      return true;
     }
   }
 
-  public static boolean isEqualTrim(final String oldValue, final String newValue) {
-    final boolean oldHasValue = Property.hasValue(oldValue);
-    final boolean newHasValue = Property.hasValue(newValue);
-    if (oldHasValue) {
-      if (newHasValue) {
-        if (Equals.equal(oldValue.trim(), newValue.trim())) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
+  public static boolean isEmpty(final Object[] value) {
+    if (value == null || value.length == 0) {
+      return true;
     } else {
-      if (newHasValue) {
-        return false;
-      } else {
-        return true;
-      }
+      return false;
     }
   }
 
@@ -488,7 +555,7 @@ public final class Property {
   }
 
   public static void removeListener(final Object source, final Object listener) {
-    if (listener instanceof PropertyChangeListener) {
+    if (source != null && listener instanceof PropertyChangeListener) {
       final PropertyChangeListener propertyChangeListener = (PropertyChangeListener)listener;
       final PropertyChangeSupport propertyChangeSupport = propertyChangeSupport(source);
       if (propertyChangeSupport != null) {
@@ -500,7 +567,7 @@ public final class Property {
             final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)otherListener;
             final PropertyChangeListener listenerReference = weakListener.getListener();
             if (listenerReference == null || listenerReference == propertyChangeListener) {
-              propertyChangeSupport.removePropertyChangeListener(propertyChangeListener);
+              propertyChangeSupport.removePropertyChangeListener(weakListener);
             }
           }
         }
@@ -514,7 +581,7 @@ public final class Property {
             final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)otherListener;
             final PropertyChangeListener listenerReference = weakListener.getListener();
             if (listenerReference == null || listenerReference == propertyChangeListener) {
-              component.removePropertyChangeListener(propertyChangeListener);
+              component.removePropertyChangeListener(weakListener);
             }
           }
         }
@@ -530,15 +597,32 @@ public final class Property {
       if (propertyChangeSupport != null) {
         for (final PropertyChangeListener otherListener : propertyChangeSupport
           .getPropertyChangeListeners()) {
-          if (otherListener == propertyChangeListener) {
-            propertyChangeSupport.removePropertyChangeListener(propertyName,
-              propertyChangeListener);
+          if (otherListener instanceof PropertyChangeListenerProxy) {
+            final PropertyChangeListenerProxy proxy = (PropertyChangeListenerProxy)otherListener;
+            final PropertyChangeListener proxyListener = proxy.getListener();
+
+            final String proxyPropertyName = proxy.getPropertyName();
+            if (proxyListener instanceof WeakPropertyChangeListener) {
+              final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)proxyListener;
+              final PropertyChangeListener listenerReference = weakListener.getListener();
+              if (listenerReference == null) {
+                propertyChangeSupport.removePropertyChangeListener(proxyPropertyName, weakListener);
+              } else if (proxyPropertyName.equals(propertyName)) {
+                if (listenerReference == propertyChangeListener) {
+                  propertyChangeSupport.removePropertyChangeListener(propertyName, weakListener);
+                }
+              }
+            } else if (propertyChangeListener == proxyListener) {
+              if (proxyPropertyName.equals(propertyName)) {
+                propertyChangeSupport.removePropertyChangeListener(propertyName,
+                  propertyChangeListener);
+              }
+            }
           } else if (otherListener instanceof WeakPropertyChangeListener) {
             final WeakPropertyChangeListener weakListener = (WeakPropertyChangeListener)otherListener;
             final PropertyChangeListener listenerReference = weakListener.getListener();
-            if (listenerReference == null || listenerReference == propertyChangeListener) {
-              propertyChangeSupport.removePropertyChangeListener(propertyName,
-                propertyChangeListener);
+            if (listenerReference == null) {
+              propertyChangeSupport.removePropertyChangeListener(weakListener);
             }
           }
         }
