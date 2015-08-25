@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,33 +13,31 @@ import java.util.Vector;
 
 import javax.swing.ComboBoxEditor;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 
 import com.revolsys.data.equals.Equals;
-import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
-import com.revolsys.util.Property;
+import com.revolsys.util.ExceptionUtil;
 
-public class ComboBox extends JComboBox implements Field {
+public class ComboBox extends JComboBox implements Field, KeyListener {
   private static final long serialVersionUID = 1L;
 
-  private String fieldName;
+  public static <V> DefaultComboBoxModel<V> model(final Collection<V> items) {
+    final Vector<V> vector = new Vector<V>(items);
+    return new DefaultComboBoxModel<>(vector);
+  }
 
-  private Object fieldValue;
-
-  private String errorMessage;
-
-  private String originalToolTip;
-
-  private final CascadingUndoManager undoManager = new CascadingUndoManager();
+  private final FieldSupport support;
 
   public ComboBox() {
-    this("fieldValue", null);
+    this("fieldValue");
   }
 
   public ComboBox(final boolean editable, final Object... items) {
@@ -65,6 +65,8 @@ public class ComboBox extends JComboBox implements Field {
       final ListCellRenderer renderer = (ListCellRenderer)converter;
       setRenderer(renderer);
     }
+    final JComponent editorComponent = (JComponent)getEditor().getEditorComponent();
+    this.support = new FieldSupport(this, editorComponent, "fieldValue", null);
   }
 
   public ComboBox(final ObjectToStringConverter converter, final boolean editable,
@@ -88,7 +90,11 @@ public class ComboBox extends JComboBox implements Field {
     if (renderer != null) {
       setRenderer(renderer);
     }
-    this.fieldName = fieldName;
+    if (converter != null) {
+      AutoCompleteDecorator.decorate(this, converter);
+    }
+    final JComponent editorComponent = (JComponent)getEditor().getEditorComponent();
+    this.support = new FieldSupport(this, editorComponent, fieldName, null);
     addActionListener(new ActionListener() {
 
       @Override
@@ -97,19 +103,19 @@ public class ComboBox extends JComboBox implements Field {
         setFieldValue(selectedItem);
       }
     });
-    if (converter != null) {
-      AutoCompleteDecorator.decorate(this, converter);
-    }
-    this.undoManager.addKeyMap(getEditor().getEditorComponent());
+  }
+
+  public ComboBox(final String fieldName, final Object... items) {
+    this(fieldName, new DefaultComboBoxModel(items),
+      ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
   }
 
   @Override
-  public ComboBox clone() {
+  public Field clone() {
     try {
-      final ComboBox clone = (ComboBox)super.clone();
-      return clone;
+      return (Field)super.clone();
     } catch (final CloneNotSupportedException e) {
-      return null;
+      return ExceptionUtil.throwUncheckedException(e);
     }
   }
 
@@ -130,12 +136,12 @@ public class ComboBox extends JComboBox implements Field {
 
   @Override
   public String getFieldName() {
-    return this.fieldName;
+    return this.support.getName();
   }
 
   @Override
   public String getFieldValidationMessage() {
-    return this.errorMessage;
+    return this.support.getErrorMessage();
   }
 
   @SuppressWarnings("unchecked")
@@ -150,9 +156,41 @@ public class ComboBox extends JComboBox implements Field {
   }
 
   @Override
+  public void keyPressed(final KeyEvent e) {
+  }
+
+  @Override
+  public void keyReleased(final KeyEvent e) {
+  }
+
+  @Override
+  public void keyTyped(final KeyEvent e) {
+    final char keyChar = e.getKeyChar();
+    if (keyChar == KeyEvent.VK_BACK_SPACE || keyChar == KeyEvent.VK_DELETE) {
+      final Component editorComponent = getEditor().getEditorComponent();
+      if (editorComponent instanceof JTextField) {
+        final JTextField textField = (JTextField)editorComponent;
+        if (textField.getSelectedText().equals(textField.getText())) {
+          setSelectedItem(null);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void setEditor(final ComboBoxEditor editor) {
+    final ComboBoxEditor oldEditor = getEditor();
+    super.setEditor(editor);
+    editor.getEditorComponent().addKeyListener(this);
+    if (oldEditor != null) {
+      oldEditor.getEditorComponent().removeKeyListener(this);
+    }
+  }
+
+  @Override
   public void setFieldBackgroundColor(Color color) {
     if (color == null) {
-      color = TextField.DEFAULT_BACKGROUND;
+      color = Field.DEFAULT_BACKGROUND;
     }
     final ComboBoxEditor editor = getEditor();
     final Component component = editor.getEditorComponent();
@@ -162,7 +200,7 @@ public class ComboBox extends JComboBox implements Field {
   @Override
   public void setFieldForegroundColor(Color color) {
     if (color == null) {
-      color = TextField.DEFAULT_FOREGROUND;
+      color = Field.DEFAULT_FOREGROUND;
     }
     final ComboBoxEditor editor = getEditor();
     final Component component = editor.getEditorComponent();
@@ -172,12 +210,7 @@ public class ComboBox extends JComboBox implements Field {
   @Override
   public void setFieldInvalid(final String message, final Color foregroundColor,
     final Color backgroundColor) {
-    final ComboBoxEditor editor = getEditor();
-    final Component component = editor.getEditorComponent();
-    component.setForeground(foregroundColor);
-    component.setBackground(backgroundColor);
-    this.errorMessage = message;
-    setFieldToolTip(this.errorMessage);
+    this.support.setFieldInvalid(message, foregroundColor, backgroundColor);
   }
 
   @Override
@@ -189,38 +222,27 @@ public class ComboBox extends JComboBox implements Field {
 
   @Override
   public void setFieldValid() {
-    final ComboBoxEditor editor = getEditor();
-    final JComponent component = (JComponent)editor.getEditorComponent();
-    component.setForeground(TextField.DEFAULT_FOREGROUND);
-    component.setBackground(TextField.DEFAULT_BACKGROUND);
-    this.errorMessage = null;
-    setFieldToolTip(this.originalToolTip);
+    this.support.setFieldValid();
   }
 
   @Override
   public synchronized void setFieldValue(final Object value) {
-    final Object oldValue = this.fieldValue;
     if (!Equals.equal(getSelectedItem(), value)) {
       setSelectedItem(value);
     }
-    if (!Equals.equal(oldValue, value)) {
-      this.fieldValue = value;
-      firePropertyChange(this.fieldName, oldValue, value);
-      SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue, value);
-    }
+    this.support.setValue(value);
   }
 
   @Override
   public void setToolTipText(final String text) {
-    this.originalToolTip = text;
-    if (!Property.hasValue(this.errorMessage)) {
+    if (this.support.setOriginalTooltipText(text)) {
       super.setToolTipText(text);
     }
   }
 
   @Override
   public void setUndoManager(final UndoManager undoManager) {
-    this.undoManager.setParent(undoManager);
+    this.support.setUndoManager(undoManager);
   }
 
   @Override
