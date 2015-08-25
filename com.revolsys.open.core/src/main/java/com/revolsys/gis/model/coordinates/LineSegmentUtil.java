@@ -134,6 +134,43 @@ public class LineSegmentUtil {
   }
 
   /**
+   * Calculate the distance between the line from x1,y1 to x2,y2 and the point
+   * x,y.
+   *
+   * @param x1 The x coordinate at the start of the line.
+   * @param y1 The y coordinate at the start of the line.
+   * @param x2 The x coordinate at the end of the line.
+   * @param y2 The y coordinate at the end of the line.
+   * @param x The x coordinate of the point.
+   * @param y The y coordinate of the point.
+   * @return The distance.
+   */
+  public static double distanceLinePoint(final double x1, final double y1, final double x2,
+    final double y2, final double x, final double y) {
+    if (x1 == x2 && y1 == y2) {
+      return MathUtil.distance(x, y, x1, y1);
+    } else {
+      final double dxx1 = x - x1;
+      final double dx2x1 = x2 - x1;
+      final double dyy1 = y - y1;
+      final double dy2y1 = y2 - y1;
+      final double r = (dxx1 * dx2x1 + dyy1 * dy2y1) / (dx2x1 * dx2x1 + dy2y1 * dy2y1);
+
+      if (r <= 0.0) {
+        return MathUtil.distance(x, y, x1, y1);
+      } else if (r >= 1.0) {
+        return MathUtil.distance(x, y, x2, y2);
+      } else {
+        final double dy1y = y1 - y;
+        final double dx1x = x1 - x;
+        final double s = (dy1y * dx2x1 - dx1x * dy2y1) / (dx2x1 * dx2x1 + dy2y1 * dy2y1);
+
+        return Math.abs(s) * Math.sqrt(dx2x1 * dx2x1 + dy2y1 * dy2y1);
+      }
+    }
+  }
+
+  /**
    * Check to see if the point intersects the envelope of the line from
    * lineStart to lineEnd.
    *
