@@ -1306,7 +1306,13 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   }
 
   protected boolean internalIsDeleted(final LayerRecord record) {
-    return containsSame(this.deletedRecords, record);
+    if (record == null) {
+      return true;
+    } else if (record.getState() == RecordState.Deleted) {
+      return true;
+    } else {
+      return containsSame(this.deletedRecords, record);
+    }
   }
 
   /**
