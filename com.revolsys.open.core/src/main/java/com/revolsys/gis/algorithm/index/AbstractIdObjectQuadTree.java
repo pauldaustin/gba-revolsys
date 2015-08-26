@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
@@ -59,7 +59,7 @@ public abstract class AbstractIdObjectQuadTree<T> extends Quadtree implements Id
   }
 
   @Override
-  public void visit(final Envelope envelope, final Visitor<T> visitor) {
+  public void visit(final Envelope envelope, final Consumer<T> visitor) {
     final IdObjectIndexItemVisitor<T> itemVisitor = new IdObjectIndexItemVisitor<T>(this, envelope,
       visitor);
     this.query(envelope, itemVisitor);

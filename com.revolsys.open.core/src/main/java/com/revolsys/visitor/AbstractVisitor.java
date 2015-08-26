@@ -2,13 +2,13 @@ package com.revolsys.visitor;
 
 import java.util.Comparator;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.comparator.ComparatorProxy;
-import com.revolsys.predicate.AndFilter;
-import com.revolsys.predicate.FilterProxy;
+import com.revolsys.predicate.AndPredicate;
+import com.revolsys.predicate.PredicateProxy;
 import java.util.function.Predicate;
 
-public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, ComparatorProxy<T> {
+public abstract class AbstractVisitor<T> implements Consumer<T>, PredicateProxy<T>, ComparatorProxy<T> {
   private Comparator<T> comparator;
 
   private Predicate<T> predicate;
@@ -35,7 +35,7 @@ public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, 
   }
 
   @Override
-  public Predicate<T> getFilter() {
+  public Predicate<T> getPredicate() {
     return this.predicate;
   }
 
@@ -48,6 +48,6 @@ public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, 
   }
 
   public void setFilters(final Predicate<T>... filters) {
-    this.predicate = new AndFilter<T>(filters);
+    this.predicate = new AndPredicate<T>(filters);
   }
 }

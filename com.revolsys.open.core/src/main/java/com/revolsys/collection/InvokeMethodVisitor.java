@@ -1,10 +1,11 @@
 package com.revolsys.collection;
 
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 import com.revolsys.util.ExceptionUtil;
 
-public class InvokeMethodVisitor<T> implements Visitor<T> {
+public class InvokeMethodVisitor<T> implements Consumer<T> {
 
   /** A constant for zero length parameters. */
   public static final Object[] PARAMETERS = new Object[0];
@@ -54,18 +55,17 @@ public class InvokeMethodVisitor<T> implements Visitor<T> {
   }
 
   @Override
-  public String toString() {
-    return this.object.getClass() + "." + this.methodName + this.parameters;
+  public void accept(final T item) {
+    try {
+      this.parameters[this.parameters.length - 1] = item;
+      this.method.invoke(this.object, this.parameters);
+    } catch (final Throwable e) {
+      ExceptionUtil.throwUncheckedException(e);
+    }
   }
 
   @Override
-  public boolean visit(final T item) {
-    try {
-      this.parameters[this.parameters.length - 1] = item;
-      return (Boolean)this.method.invoke(this.object, this.parameters);
-    } catch (final Throwable e) {
-      ExceptionUtil.throwUncheckedException(e);
-      return false;
-    }
+  public String toString() {
+    return this.object.getClass() + "." + this.methodName + this.parameters;
   }
 }

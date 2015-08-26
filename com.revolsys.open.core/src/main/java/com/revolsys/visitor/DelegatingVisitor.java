@@ -1,12 +1,11 @@
 package com.revolsys.visitor;
 
 import java.util.Comparator;
-
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class DelegatingVisitor<T> extends AbstractVisitor<T> {
-  private Visitor<T> visitor;
+  private Consumer<T> consumer;
 
   public DelegatingVisitor() {
   }
@@ -15,9 +14,13 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
     super(comparator);
   }
 
-  public DelegatingVisitor(final Comparator<T> comparator, final Visitor<T> visitor) {
+  public DelegatingVisitor(final Comparator<T> comparator, final Consumer<T> visitor) {
     super(comparator);
-    this.visitor = visitor;
+    this.consumer = visitor;
+  }
+
+  public DelegatingVisitor(final Consumer<T> visitor) {
+    this.consumer = visitor;
   }
 
   public DelegatingVisitor(final Predicate<T> filter) {
@@ -29,40 +32,34 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
   }
 
   public DelegatingVisitor(final Predicate<T> filter, final Comparator<T> comparator,
-    final Visitor<T> visitor) {
+    final Consumer<T> visitor) {
     super(filter, comparator);
-    this.visitor = visitor;
+    this.consumer = visitor;
   }
 
-  public DelegatingVisitor(final Predicate<T> filter, final Visitor<T> visitor) {
+  public DelegatingVisitor(final Predicate<T> filter, final Consumer<T> visitor) {
     super(filter);
-    this.visitor = visitor;
+    this.consumer = visitor;
   }
 
-  public DelegatingVisitor(final Visitor<T> visitor) {
-    this.visitor = visitor;
+  @Override
+  public void accept(final T item) {
+    final Predicate<T> filter = getPredicate();
+    if (filter == null || filter.test(item)) {
+      this.consumer.accept(item);
+    }
   }
 
-  public Visitor<T> getVisitor() {
-    return this.visitor;
+  public Consumer<T> getVisitor() {
+    return this.consumer;
   }
 
-  public void setVisitor(final Visitor<T> visitor) {
-    this.visitor = visitor;
+  public void setVisitor(final Consumer<T> visitor) {
+    this.consumer = visitor;
   }
 
   @Override
   public String toString() {
-    return this.visitor.toString();
-  }
-
-  @Override
-  public boolean visit(final T item) {
-    final Predicate<T> filter = getFilter();
-    if (filter == null || filter.test(item)) {
-      return this.visitor.visit(item);
-    } else {
-      return true;
-    }
+    return this.consumer.toString();
   }
 }

@@ -1,6 +1,7 @@
 package com.revolsys.gis.graph.visitor;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -16,8 +17,7 @@ import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.attribute.NodeAttributes;
 import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
 import com.revolsys.gis.io.Statistics;
-import com.revolsys.predicate.FilterProxy;
-import java.util.function.Predicate;
+import com.revolsys.predicate.PredicateProxy;
 import com.revolsys.util.ObjectProcessor;
 
 /**
@@ -27,13 +27,20 @@ import com.revolsys.util.ObjectProcessor;
  * @author Paul Austin
  */
 public class RecordPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<Record>
-  implements FilterProxy<Node<Record>>, ObjectProcessor<RecordGraph> {
+  implements PredicateProxy<Node<Record>>, ObjectProcessor<RecordGraph> {
 
   private Predicate<Node<Record>> predicate;
 
   private Statistics mergedStatistics;
 
   public RecordPseudoNodeRemovalVisitor() {
+  }
+
+  @Override
+  public void accept(final Node<Record> node) {
+    if (node.getEdges().size() > 1) {
+      processPseudoNodes(node);
+    }
   }
 
   @PreDestroy
@@ -45,7 +52,7 @@ public class RecordPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<
   }
 
   @Override
-  public Predicate<Node<Record>> getFilter() {
+  public Predicate<Node<Record>> getPredicate() {
     return this.predicate;
   }
 
@@ -114,13 +121,5 @@ public class RecordPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<
 
   public void setFilter(final Predicate<Node<Record>> filter) {
     this.predicate = filter;
-  }
-
-  @Override
-  public boolean visit(final Node<Record> node) {
-    if (node.getEdges().size() > 1) {
-      processPseudoNodes(node);
-    }
-    return true;
   }
 }

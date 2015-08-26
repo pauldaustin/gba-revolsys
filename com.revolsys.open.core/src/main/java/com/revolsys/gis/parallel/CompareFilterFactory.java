@@ -2,22 +2,22 @@ package com.revolsys.gis.parallel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.AttributesEqualFilter;
 import com.revolsys.data.record.filter.AttributesEqualOrNullFilter;
-import com.revolsys.predicate.AndFilter;
-import com.revolsys.predicate.Factory;
-import java.util.function.Predicate;
+import com.revolsys.predicate.AndPredicate;
 
-public class CompareFilterFactory implements Factory<Predicate<Record>, Record> {
+public class CompareFilterFactory implements Function<Record, Predicate<Record>> {
   private List<String> equalAttributeNames = new ArrayList<String>();
 
   private List<String> equalOrNullAttributeNames = new ArrayList<String>();
 
   @Override
-  public Predicate<Record> create(final Record object) {
-    final AndFilter<Record> filters = new AndFilter<Record>();
+  public Predicate<Record> apply(final Record object) {
+    final AndPredicate<Record> filters = new AndPredicate<Record>();
     if (!this.equalAttributeNames.isEmpty()) {
       final Predicate<Record> valuesFilter = new AttributesEqualFilter(object,
         this.equalAttributeNames);

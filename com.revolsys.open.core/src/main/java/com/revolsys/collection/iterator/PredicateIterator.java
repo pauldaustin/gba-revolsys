@@ -1,18 +1,16 @@
-package com.revolsys.collection;
+package com.revolsys.collection.iterator;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import com.revolsys.collection.iterator.AbstractIterator;
 import java.util.function.Predicate;
 
-public class FilterIterator<T> extends AbstractIterator<T> {
+public class PredicateIterator<T> extends AbstractIterator<T> {
 
   private Predicate<T> predicate;
 
   private Iterator<T> iterator;
 
-  public FilterIterator(final Predicate<T> filter, final Iterator<T> iterator) {
+  public PredicateIterator(final Predicate<T> filter, final Iterator<T> iterator) {
     this.predicate = filter;
     this.iterator = iterator;
   }

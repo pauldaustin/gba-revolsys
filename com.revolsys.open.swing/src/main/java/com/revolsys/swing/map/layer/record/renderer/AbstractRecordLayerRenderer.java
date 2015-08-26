@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import javax.swing.ImageIcon;
 
@@ -15,8 +16,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.MultipleAttributeValuesFilter;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
-import com.revolsys.predicate.AcceptAllFilter;
-import java.util.function.Predicate;
+import com.revolsys.predicate.Predicates;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.Viewport2D;
@@ -36,8 +36,6 @@ import com.vividsolutions.jts.geom.TopologyException;
 
 public abstract class AbstractRecordLayerRenderer
   extends AbstractLayerRenderer<AbstractRecordLayer> {
-
-  private static final AcceptAllFilter<Record> DEFAULT_FILTER = new AcceptAllFilter<Record>();
 
   static {
     final MenuFactory menu = MenuFactory.getMenu(AbstractRecordLayerRenderer.class);
@@ -91,7 +89,7 @@ public abstract class AbstractRecordLayerRenderer
           .error("Unknown filter type " + type);
       }
     }
-    return DEFAULT_FILTER;
+    return Predicates.all();
   }
 
   public static AbstractRecordLayerRenderer getRenderer(final AbstractRecordLayer layer,
@@ -120,7 +118,7 @@ public abstract class AbstractRecordLayerRenderer
     return getRenderer(layer, null, style);
   }
 
-  private Predicate<Record> predicate = DEFAULT_FILTER;
+  private Predicate<Record> predicate = Predicates.all();
 
   public AbstractRecordLayerRenderer(final String type, final String name,
     final AbstractRecordLayer layer, final LayerRenderer<?> parent) {
@@ -254,12 +252,12 @@ public abstract class AbstractRecordLayerRenderer
   }
 
   public void setQueryFilter(final String query) {
-    if (this.predicate instanceof SqlLayerFilter || this.predicate instanceof AcceptAllFilter) {
+    if (this.predicate instanceof SqlLayerFilter || this.predicate == Predicates.<Record> all()) {
       if (Property.hasValue(query)) {
         final AbstractRecordLayer layer = getLayer();
         this.predicate = new SqlLayerFilter(layer, query);
       } else {
-        this.predicate = new AcceptAllFilter<Record>();
+        this.predicate = Predicates.all();
       }
     }
   }
@@ -267,7 +265,7 @@ public abstract class AbstractRecordLayerRenderer
   @Override
   public Map<String, Object> toMap() {
     final Map<String, Object> map = super.toMap();
-    if (!(this.predicate instanceof AcceptAllFilter)) {
+    if (!(this.predicate == Predicates.<Record> all())) {
       MapSerializerUtil.add(map, "filter", this.predicate);
     }
     return map;

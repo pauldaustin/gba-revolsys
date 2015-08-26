@@ -1,12 +1,12 @@
 package com.revolsys.gis.algorithm.index.quadtree;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.predicate.InvokeMethodFilter;
-import java.util.function.Predicate;
+import com.revolsys.util.ExitLoopException;
 import com.revolsys.visitor.CreateListVisitor;
 import com.revolsys.visitor.SingleObjectVisitor;
 import com.vividsolutions.jts.geom.Envelope;
@@ -77,6 +77,14 @@ public class QuadTree<T> {
     return this.root.depth();
   }
 
+  public void forEach(BoundingBox boundingBox, final Consumer<T> visitor) {
+    boundingBox = convert(boundingBox);
+    try {
+      this.root.forEach(boundingBox, visitor);
+    } catch (final ExitLoopException e) {
+    }
+  }
+
   public GeometryFactory getGeometryFactory() {
     return this.geometryFactory;
   }
@@ -99,30 +107,22 @@ public class QuadTree<T> {
 
   public List<T> query(final BoundingBox boundingBox) {
     final CreateListVisitor<T> visitor = new CreateListVisitor<T>();
-    query(boundingBox, visitor);
+    forEach(boundingBox, visitor);
     return visitor.getList();
   }
 
   public List<T> query(final BoundingBox boundingBox, final Predicate<T> filter) {
     final CreateListVisitor<T> visitor = new CreateListVisitor<T>(filter);
-    query(boundingBox, visitor);
+    forEach(boundingBox, visitor);
     return visitor.getList();
-  }
-
-  public List<T> query(final BoundingBox boundingBox, final String methodName,
-    final Object... parameters) {
-    final InvokeMethodFilter<T> filter = new InvokeMethodFilter<T>(methodName, parameters);
-    return query(boundingBox, filter);
-  }
-
-  public void query(BoundingBox boundingBox, final Visitor<T> visitor) {
-    boundingBox = convert(boundingBox);
-    this.root.visit(boundingBox, visitor);
   }
 
   public List<T> queryAll() {
     final CreateListVisitor<T> visitor = new CreateListVisitor<T>();
-    this.root.visit(visitor);
+    try {
+      this.root.forEach(visitor);
+    } catch (final ExitLoopException e) {
+    }
     return visitor.getList();
   }
 
@@ -133,7 +133,7 @@ public class QuadTree<T> {
 
   public T queryFirst(final BoundingBox boundingBox, final Predicate<T> filter) {
     final SingleObjectVisitor<T> visitor = new SingleObjectVisitor<T>(filter);
-    query(boundingBox, visitor);
+    forEach(boundingBox, visitor);
     return visitor.getObject();
   }
 

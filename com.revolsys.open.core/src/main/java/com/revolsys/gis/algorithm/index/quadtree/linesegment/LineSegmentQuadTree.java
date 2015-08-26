@@ -1,8 +1,9 @@
 package com.revolsys.gis.algorithm.index.quadtree.linesegment;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
@@ -11,7 +12,7 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryEditUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
-import java.util.function.Predicate;
+import com.revolsys.util.ExitLoopException;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -117,7 +118,7 @@ public class LineSegmentQuadTree {
 
   public List<LineSegment> getAll() {
     final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>();
-    this.root.visit(this, visitor);
+    this.root.forEach(this, visitor);
     return visitor.getList();
   }
 
@@ -180,8 +181,12 @@ public class LineSegmentQuadTree {
     return getSize();
   }
 
-  public void visit(final BoundingBox boundingBox, final Visitor<LineSegment> visitor) {
-    this.root.visit(this, boundingBox, visitor);
+  public void visit(final BoundingBox boundingBox, final Consumer<LineSegment> visitor) {
+    try {
+      this.root.forEach(this, boundingBox, visitor);
+    } catch (final ExitLoopException e) {
+
+    }
   }
 
 }

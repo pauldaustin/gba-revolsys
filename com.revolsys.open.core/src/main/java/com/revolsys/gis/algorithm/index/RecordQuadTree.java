@@ -6,8 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.RecordEqualsFilter;
 import com.revolsys.data.record.filter.RecordGeometryDistanceFilter;
@@ -15,7 +16,6 @@ import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.gis.algorithm.index.quadtree.QuadTree;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import java.util.function.Predicate;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -73,9 +73,9 @@ public class RecordQuadTree extends QuadTree<Record> {
     return results;
   }
 
-  public void query(final Geometry geometry, final Visitor<Record> visitor) {
+  public void query(final Geometry geometry, final Consumer<Record> visitor) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
-    query(boundingBox, visitor);
+    forEach(boundingBox, visitor);
   }
 
   public List<Record> queryDistance(final Geometry geometry, final double distance) {
@@ -129,7 +129,7 @@ public class RecordQuadTree extends QuadTree<Record> {
   public List<Record> queryList(final BoundingBox boundingBox, final Predicate<Record> filter,
     final Comparator<Record> comparator) {
     final CreateListVisitor<Record> listVisitor = new CreateListVisitor<Record>(filter);
-    query(boundingBox, listVisitor);
+    forEach(boundingBox, listVisitor);
     final List<Record> list = listVisitor.getList();
     if (comparator != null) {
       Collections.sort(list, comparator);

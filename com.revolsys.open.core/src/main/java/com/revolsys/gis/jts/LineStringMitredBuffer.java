@@ -1,9 +1,11 @@
 package com.revolsys.gis.jts;
 
+import java.util.function.Consumer;
+
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class LineStringMitredBuffer implements LineSegmentVisitor {
+public class LineStringMitredBuffer implements Consumer<LineSegment> {
   private Polygon buffer;
 
   private final double distance;
@@ -12,22 +14,21 @@ public class LineStringMitredBuffer implements LineSegmentVisitor {
     this.distance = distance;
   }
 
-  /**
-   * @return the buffer
-   */
-  public Polygon getBuffer() {
-    return this.buffer;
-  }
-
   @Override
-  public boolean visit(final LineSegment segment) {
+  public void accept(final LineSegment segment) {
     final Polygon segmentBuffer = JtsGeometryUtil.getMitredBuffer(segment, this.distance);
     if (this.buffer == null) {
       this.buffer = segmentBuffer;
     } else {
       this.buffer = (Polygon)this.buffer.union(segmentBuffer);
     }
-    return true;
+  }
+
+  /**
+   * @return the buffer
+   */
+  public Polygon getBuffer() {
+    return this.buffer;
   }
 
 }

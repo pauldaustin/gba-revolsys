@@ -2,9 +2,10 @@ package com.revolsys.gis.algorithm.index;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import com.revolsys.util.ExitLoopException;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class RTree<T> extends AbstractSpatialIndex<T> {
@@ -128,18 +129,27 @@ public class RTree<T> extends AbstractSpatialIndex<T> {
   }
 
   @Override
-  public void visit(final Envelope envelope, final Predicate<T> filter, final Visitor<T> visitor) {
-    this.root.visit(envelope, filter, visitor);
+  public void visit(final Consumer<T> visitor) {
+    try {
+      this.root.forEachNode(visitor);
+    } catch (final ExitLoopException e) {
+    }
   }
 
   @Override
-  public void visit(final Envelope envelope, final Visitor<T> visitor) {
-    this.root.visit(envelope, visitor);
+  public void visit(final Envelope envelope, final Consumer<T> visitor) {
+    try {
+      this.root.forEach(envelope, visitor);
+    } catch (final ExitLoopException e) {
+    }
   }
 
   @Override
-  public void visit(final Visitor<T> visitor) {
-    this.root.visit(visitor);
+  public void visit(final Envelope envelope, final Predicate<T> filter, final Consumer<T> visitor) {
+    try {
+      this.root.forEach(envelope, filter, visitor);
+    } catch (final ExitLoopException e) {
+    }
   }
 
 }

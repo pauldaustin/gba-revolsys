@@ -1,12 +1,13 @@
 package com.revolsys.gis.algorithm.index;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
+
 import com.revolsys.data.record.Record;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
- * A {@link ItemVisitor} implementation which uses a {@link Visitor} to visit
+ * A {@link ItemVisitor} implementation which uses a {@link Consumer} to visit
  * each item.
  *
  * @author Paul Austin
@@ -15,11 +16,11 @@ import com.vividsolutions.jts.index.ItemVisitor;
 public class IndexItemVisitor implements ItemVisitor {
   private final Envelope envelope;
 
-  private final Visitor<Record> visitor;
+  private final Consumer<Record> consumer;
 
-  public IndexItemVisitor(final Envelope envelope, final Visitor<Record> visitor) {
+  public IndexItemVisitor(final Envelope envelope, final Consumer<Record> visitor) {
     this.envelope = envelope;
-    this.visitor = visitor;
+    this.consumer = visitor;
   }
 
   @Override
@@ -27,7 +28,7 @@ public class IndexItemVisitor implements ItemVisitor {
     final Record object = (Record)item;
     final Envelope envelope = object.getGeometry().getEnvelopeInternal();
     if (envelope.intersects(this.envelope)) {
-      this.visitor.visit(object);
+      this.consumer.accept(object);
     }
   }
 }

@@ -32,7 +32,7 @@
  */
 package com.revolsys.gis.algorithm.locate;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 
 public class IntervalRTreeBranchNode<V> extends IntervalRTreeNode<V> {
   private final IntervalRTreeNode<V> node1;
@@ -47,7 +47,7 @@ public class IntervalRTreeBranchNode<V> extends IntervalRTreeNode<V> {
   }
 
   @Override
-  public void query(final double queryMin, final double queryMax, final Visitor<V> visitor) {
+  public void query(final double queryMin, final double queryMax, final Consumer<V> visitor) {
     if (intersects(queryMin, queryMax)) {
       if (this.node1 != null) {
         this.node1.query(queryMin, queryMax, visitor);

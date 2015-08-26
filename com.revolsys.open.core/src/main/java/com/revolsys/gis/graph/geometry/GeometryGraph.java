@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.collection.InvokeMethodVisitor;
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
@@ -387,7 +387,7 @@ public class GeometryGraph extends Graph<LineSegment> {
   }
 
   public void removeDuplicateLineEdges() {
-    final Visitor<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
+    final Consumer<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
       "removeDuplicateLineEdges");
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
       "geometryIndex", "partIndex", "segmentIndex");

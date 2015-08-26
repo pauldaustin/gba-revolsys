@@ -31,6 +31,26 @@ public class SplitCrossingEdgesVisitor<T> extends AbstractEdgeListenerVisitor<T>
   }
 
   @Override
+  public void accept(final Edge<T> edge) {
+    final IdObjectIndex<Edge<T>> edgeIndex = this.graph.getEdgeIndex();
+    final LineString line = edge.getLine();
+    final List<Edge<T>> crossings = queryCrosses(edgeIndex, line);
+    crossings.remove(edge);
+
+    for (final Edge<T> crossEdge : crossings) {
+      if (!crossEdge.isRemoved()) {
+        final LineString crossLine = crossEdge.getLine();
+        final Coordinates intersection = LineStringUtil.getCrossingIntersection(line, crossLine);
+        if (intersection != null) {
+          this.graph.getPrecisionModel().makePrecise(intersection);
+          final Node<T> node = this.graph.getNode(intersection);
+          this.splitEdgesCloseToNodeVisitor.accept(node);
+        }
+      }
+    }
+  }
+
+  @Override
   public void addNodeListener(final NodeEventListener<T> listener) {
     this.splitEdgesCloseToNodeVisitor.addNodeListener(listener);
   }
@@ -64,26 +84,5 @@ public class SplitCrossingEdgesVisitor<T> extends AbstractEdgeListenerVisitor<T>
 
   public void setSplitObjects(final Collection<T> splitObjects) {
     this.splitEdgesCloseToNodeVisitor.setSplitObjects(splitObjects);
-  }
-
-  @Override
-  public boolean visit(final Edge<T> edge) {
-    final IdObjectIndex<Edge<T>> edgeIndex = this.graph.getEdgeIndex();
-    final LineString line = edge.getLine();
-    final List<Edge<T>> crossings = queryCrosses(edgeIndex, line);
-    crossings.remove(edge);
-
-    for (final Edge<T> crossEdge : crossings) {
-      if (!crossEdge.isRemoved()) {
-        final LineString crossLine = crossEdge.getLine();
-        final Coordinates intersection = LineStringUtil.getCrossingIntersection(line, crossLine);
-        if (intersection != null) {
-          this.graph.getPrecisionModel().makePrecise(intersection);
-          final Node<T> node = this.graph.getNode(intersection);
-          this.splitEdgesCloseToNodeVisitor.visit(node);
-        }
-      }
-    }
-    return true;
   }
 }

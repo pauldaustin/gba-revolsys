@@ -3,7 +3,6 @@ package com.revolsys.visitor;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 import java.util.function.Predicate;
 
 /**
@@ -31,9 +30,8 @@ public class CreateListVisitor<T> extends BaseVisitor<T> {
   }
 
   @Override
-  public boolean doVisit(final T item) {
+  public void doVisit(final T item) {
     this.list.add(item);
-    return true;
   }
 
   public List<T> getList() {

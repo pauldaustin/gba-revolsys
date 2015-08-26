@@ -253,8 +253,9 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
       final Coordinates coordinates = CoordinatesUtil.get(point);
 
       double closestDistance = Double.MAX_VALUE;
-      final List<IndexedLineSegment> segments = lineSegments.query(boundingBox, "isWithinDistance",
-        point, maxDistance);
+      final List<IndexedLineSegment> segments = lineSegments.query(boundingBox, (segment) -> {
+        return segment.isWithinDistance(point, maxDistance);
+      });
       IndexedLineSegment closestSegment = null;
       for (final IndexedLineSegment segment : segments) {
         final double distance = segment.distance(coordinates);

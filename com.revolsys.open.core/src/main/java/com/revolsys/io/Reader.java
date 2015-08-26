@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.properties.ObjectWithProperties;
 import com.revolsys.util.ExitLoopException;
 
@@ -35,7 +35,7 @@ import com.revolsys.util.ExitLoopException;
  * <p>
  * The Reader interface defines methods for reading objects of type T. Objects
  * can either by read as a {@link List} or using an {@link Iterator} or visited
- * using a {@link Visitor}.
+ * using a {@link Consumer}.
  * </p>
  * <p>
  * The simplest and most effecient way to loop through all objects in the reader
@@ -131,16 +131,7 @@ public interface Reader<T> extends Iterable<T>, ObjectWithProperties, AutoClosea
    *
    * @param visitor The visitor.
    */
-  default void visit(final Visitor<T> visitor) {
-    if (iterator() != null) {
-      try {
-        for (final T item : this) {
-          if (!visitor.visit(item)) {
-            return;
-          }
-        }
-      } catch (final ExitLoopException e) {
-      }
-    }
+  default void visit(final Consumer<T> visitor) {
+    forEach(visitor);
   }
 }

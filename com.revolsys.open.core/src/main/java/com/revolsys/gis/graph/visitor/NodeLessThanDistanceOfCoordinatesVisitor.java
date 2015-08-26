@@ -2,8 +2,8 @@ package com.revolsys.gis.graph.visitor;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.algorithm.index.IdObjectIndex;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
@@ -11,11 +11,11 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.visitor.CreateListVisitor;
 
-public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements Visitor<Node<T>> {
+public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements Consumer<Node<T>> {
   public static <T> List<Node<T>> getNodes(final Graph<T> graph, final Coordinates point,
     final double maxDistance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
-    final Visitor<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(point,
+    final Consumer<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(point,
       maxDistance, results);
     BoundingBox envelope = new BoundingBox(point);
     envelope = envelope.expand(maxDistance);
@@ -28,24 +28,23 @@ public class NodeLessThanDistanceOfCoordinatesVisitor<T> implements Visitor<Node
 
   private final Coordinates coordinates;
 
-  private final Visitor<Node<T>> matchVisitor;
+  private final Consumer<Node<T>> matchVisitor;
 
   private final double maxDistance;
 
   public NodeLessThanDistanceOfCoordinatesVisitor(final Coordinates coordinates,
-    final double maxDistance, final Visitor<Node<T>> matchVisitor) {
+    final double maxDistance, final Consumer<Node<T>> matchVisitor) {
     this.coordinates = coordinates;
     this.maxDistance = maxDistance;
     this.matchVisitor = matchVisitor;
   }
 
   @Override
-  public boolean visit(final Node<T> node) {
+  public void accept(final Node<T> node) {
     final double distance = this.coordinates.distance(node);
     if (distance < this.maxDistance) {
-      this.matchVisitor.visit(node);
+      this.matchVisitor.accept(node);
     }
-    return true;
   }
 
 }

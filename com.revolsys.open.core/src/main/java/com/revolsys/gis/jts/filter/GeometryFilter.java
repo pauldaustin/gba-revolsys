@@ -1,19 +1,17 @@
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.predicate.InvokeMethodFilter;
 import java.util.function.Predicate;
+
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 public class GeometryFilter {
-  public static boolean acceptEnvelopeIntersects(final Envelope envelope, final Geometry geometry) {
-    final Envelope geometryEnvelope = geometry.getEnvelopeInternal();
-    return envelope.intersects(geometryEnvelope);
-  }
-
   public static <T extends Geometry> Predicate<T> intersects(final Envelope envelope) {
-    return new InvokeMethodFilter<T>(GeometryFilter.class, "acceptEnvelopeIntersects", envelope);
+    return (geometry) -> {
+      final Envelope geometryEnvelope = geometry.getEnvelopeInternal();
+      return envelope.intersects(geometryEnvelope);
+    };
   }
 
   public static Predicate<LineString> lineContainedWithinTolerance(final LineString line,

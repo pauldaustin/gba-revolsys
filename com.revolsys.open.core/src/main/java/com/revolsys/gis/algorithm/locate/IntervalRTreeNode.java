@@ -1,6 +1,6 @@
 package com.revolsys.gis.algorithm.locate;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.io.WKTWriter;
 
@@ -33,7 +33,7 @@ public abstract class IntervalRTreeNode<V> {
     return true;
   }
 
-  public abstract void query(double queryMin, double queryMax, Visitor<V> visitor);
+  public abstract void query(double queryMin, double queryMax, Consumer<V> visitor);
 
   protected void setMax(final double max) {
     this.max = max;

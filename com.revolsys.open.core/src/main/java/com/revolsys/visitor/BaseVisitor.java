@@ -1,7 +1,6 @@
 package com.revolsys.visitor;
 
 import java.util.Comparator;
-
 import java.util.function.Predicate;
 
 public class BaseVisitor<T> extends AbstractVisitor<T> {
@@ -21,17 +20,14 @@ public class BaseVisitor<T> extends AbstractVisitor<T> {
     super(filter, comparator);
   }
 
-  protected boolean doVisit(final T object) {
-    return true;
+  @Override
+  public void accept(final T object) {
+    final Predicate<T> filter = getPredicate();
+    if (filter == null || filter.test(object)) {
+      doVisit(object);
+    }
   }
 
-  @Override
-  public boolean visit(final T object) {
-    final Predicate<T> filter = getFilter();
-    if (filter == null || filter.test(object)) {
-      return doVisit(object);
-    } else {
-      return true;
-    }
+  protected void doVisit(final T object) {
   }
 }

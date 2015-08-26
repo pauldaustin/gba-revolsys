@@ -1,8 +1,8 @@
 package com.revolsys.gis.graph.visitor;
 
 import java.util.LinkedHashSet;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.event.CoordinateEventListenerList;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
@@ -17,7 +17,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
+public class EdgeCleanCloseVerticesVisitor<T> implements Consumer<Edge<T>> {
 
   private final CoordinateEventListenerList coordinateListeners = new CoordinateEventListenerList();
 
@@ -33,33 +33,9 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
   }
 
   public EdgeCleanCloseVerticesVisitor(final Graph<T> graph, final double minDistance,
-    final Visitor<Edge<T>> visitor) {
+    final Consumer<Edge<T>> visitor) {
     this.graph = graph;
     this.minDistance = minDistance;
-  }
-
-  private double getAngle(final Edge<T> edge, final CoordinateSequenceCoordinatesIterator ordinates,
-    final int relativeIndex) {
-    final int index = ordinates.getIndex();
-    if (index + relativeIndex - 1 < 0 || index + relativeIndex + 1 >= ordinates.size()) {
-      return Double.NaN;
-    } else {
-      final double x1 = ordinates.getValue(relativeIndex - 1, 0);
-      final double y1 = ordinates.getValue(relativeIndex - 1, 1);
-      final double x2 = ordinates.getValue(relativeIndex, 0);
-      final double y2 = ordinates.getValue(relativeIndex, 1);
-      final double x3 = ordinates.getValue(relativeIndex + 1, 0);
-      final double y3 = ordinates.getValue(relativeIndex + 1, 1);
-      return MathUtil.angle(x1, y1, x2, y2, x3, y3);
-    }
-  }
-
-  public CoordinateEventListenerList getCoordinateListeners() {
-    return this.coordinateListeners;
-  }
-
-  public EdgeEventListenerList<T> getEdgeListeners() {
-    return this.edgeListeners;
   }
 
   // TODO look at the angles with the previous and next segments to decide
@@ -73,7 +49,7 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
    * @return true If further edges should be processed.
    */
   @Override
-  public boolean visit(final Edge<T> edge) {
+  public void accept(final Edge<T> edge) {
     final String typePath = edge.getTypeName();
     final LineString lineString = edge.getLine();
     final CoordinateSequence coordinates = lineString.getCoordinateSequence();
@@ -137,7 +113,30 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
         this.edgeListeners.edgeEvent(newEdge, "Edge close indicies", EdgeEvent.EDGE_CHANGED, null);
       }
     }
-    return true;
+  }
+
+  private double getAngle(final Edge<T> edge, final CoordinateSequenceCoordinatesIterator ordinates,
+    final int relativeIndex) {
+    final int index = ordinates.getIndex();
+    if (index + relativeIndex - 1 < 0 || index + relativeIndex + 1 >= ordinates.size()) {
+      return Double.NaN;
+    } else {
+      final double x1 = ordinates.getValue(relativeIndex - 1, 0);
+      final double y1 = ordinates.getValue(relativeIndex - 1, 1);
+      final double x2 = ordinates.getValue(relativeIndex, 0);
+      final double y2 = ordinates.getValue(relativeIndex, 1);
+      final double x3 = ordinates.getValue(relativeIndex + 1, 0);
+      final double y3 = ordinates.getValue(relativeIndex + 1, 1);
+      return MathUtil.angle(x1, y1, x2, y2, x3, y3);
+    }
+  }
+
+  public CoordinateEventListenerList getCoordinateListeners() {
+    return this.coordinateListeners;
+  }
+
+  public EdgeEventListenerList<T> getEdgeListeners() {
+    return this.edgeListeners;
   }
 
 }

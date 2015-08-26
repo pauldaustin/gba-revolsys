@@ -2,8 +2,8 @@ package com.revolsys.gis.algorithm.index.quadtree.linesegment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.LineSegment;
@@ -71,6 +71,39 @@ public abstract class NodeBase {
       }
     }
     return depth + 1;
+  }
+
+  public void forEach(final LineSegmentQuadTree tree, final BoundingBox boundingBox,
+    final Consumer<LineSegment> visitor) {
+    if (isSearchMatch(boundingBox)) {
+      for (final int[] segmentIndex : this.segmentIndexes) {
+        final LineSegment segment = tree.getLineSegment(segmentIndex);
+        if (segment.intersects(boundingBox)) {
+          visitor.accept(segment);
+        }
+      }
+
+      for (int i = 0; i < 4; i++) {
+        final Node node = getNode(i);
+        if (node != null) {
+          node.forEach(tree, boundingBox, visitor);
+        }
+      }
+    }
+  }
+
+  public void forEach(final LineSegmentQuadTree tree, final Consumer<LineSegment> visitor) {
+    for (final int[] segmentIndex : this.segmentIndexes) {
+      final LineSegment segment = tree.getLineSegment(segmentIndex);
+      visitor.accept(segment);
+    }
+
+    for (int i = 0; i < 4; i++) {
+      final Node node = getNode(i);
+      if (node != null) {
+        node.forEach(tree, visitor);
+      }
+    }
   }
 
   protected Node getNode(final int i) {
@@ -141,48 +174,5 @@ public abstract class NodeBase {
   @Override
   public String toString() {
     return this.nodes + "=" + this.segmentIndexes.size();
-  }
-
-  public boolean visit(final LineSegmentQuadTree tree, final BoundingBox boundingBox,
-    final Visitor<LineSegment> visitor) {
-    if (isSearchMatch(boundingBox)) {
-      for (final int[] segmentIndex : this.segmentIndexes) {
-        final LineSegment segment = tree.getLineSegment(segmentIndex);
-        if (segment.intersects(boundingBox)) {
-          if (!visitor.visit(segment)) {
-            return false;
-          }
-        }
-      }
-
-      for (int i = 0; i < 4; i++) {
-        final Node node = getNode(i);
-        if (node != null) {
-          if (!node.visit(tree, boundingBox, visitor)) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
-  }
-
-  public boolean visit(final LineSegmentQuadTree tree, final Visitor<LineSegment> visitor) {
-    for (final int[] segmentIndex : this.segmentIndexes) {
-      final LineSegment segment = tree.getLineSegment(segmentIndex);
-      if (!visitor.visit(segment)) {
-        return false;
-      }
-    }
-
-    for (int i = 0; i < 4; i++) {
-      final Node node = getNode(i);
-      if (node != null) {
-        if (!node.visit(tree, visitor)) {
-          return false;
-        }
-      }
-    }
-    return true;
   }
 }

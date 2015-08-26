@@ -1,6 +1,7 @@
 package com.revolsys.gis.algorithm.index;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
+
 import com.revolsys.gis.graph.AbstractItemVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -9,22 +10,21 @@ public final class IdObjectIndexItemVisitor<T> extends AbstractItemVisitor<Integ
 
   private final IdObjectIndex<T> index;
 
-  private final Visitor<T> visitor;
+  private final Consumer<T> consumer;
 
   public IdObjectIndexItemVisitor(final IdObjectIndex<T> index, final Envelope envelope,
-    final Visitor<T> visitor) {
+    final Consumer<T> visitor) {
     this.index = index;
     this.envelope = envelope;
-    this.visitor = visitor;
+    this.consumer = visitor;
   }
 
   @Override
-  public boolean visit(final Integer id) {
+  public void accept(final Integer id) {
     final T object = this.index.getObject(id);
     final Envelope e = this.index.getEnvelope(object);
     if (e.intersects(this.envelope)) {
-      this.visitor.visit(object);
+      this.consumer.accept(object);
     }
-    return true;
   }
 }

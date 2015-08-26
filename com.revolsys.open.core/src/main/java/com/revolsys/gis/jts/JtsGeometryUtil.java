@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
 import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.Geometry3DExactEquals;
@@ -1549,15 +1550,13 @@ public final class JtsGeometryUtil {
   }
 
   public static void visitLineSegments(final CoordinateSequence coords,
-    final LineSegmentVisitor visitor) {
+    final Consumer<LineSegment> visitor) {
     Coordinate previousCoordinate = coords.getCoordinate(0);
     for (int i = 1; i < coords.size(); i++) {
       final Coordinate coordinate = coords.getCoordinate(i);
       final LineSegment segment = new LineSegment(previousCoordinate, coordinate);
       if (segment.getLength() > 0) {
-        if (!visitor.visit(segment)) {
-          return;
-        }
+        visitor.accept(segment);
       }
       previousCoordinate = coordinate;
     }

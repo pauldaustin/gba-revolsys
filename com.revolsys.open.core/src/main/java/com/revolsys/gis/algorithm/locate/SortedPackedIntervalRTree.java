@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 
 /**
  * A static index on a set of 1-dimensional intervals,
@@ -135,7 +135,7 @@ public class SortedPackedIntervalRTree<V> {
    * @param max the upper bound of the query interval
    * @param visitor the visitor to pass any matched items to
    */
-  public void query(final double min, final double max, final Visitor<V> visitor) {
+  public void query(final double min, final double max, final Consumer<V> visitor) {
     init();
 
     this.root.query(min, max, visitor);

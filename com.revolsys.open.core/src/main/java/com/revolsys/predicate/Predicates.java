@@ -7,6 +7,21 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class Predicates {
+  public static <T> Predicate<T> all() {
+    return (t) -> {
+      return true;
+    };
+  }
+
+  public static <T> AndPredicate<T> and(final Iterable<Predicate<T>> filters) {
+    return new AndPredicate<>(filters);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> AndPredicate<T> and(final Predicate<T>... filters) {
+    return new AndPredicate<>(filters);
+  }
+
   public static <T> List<T> filter(final Collection<T> collection, final Predicate<T> filter) {
     final List<T> list = new ArrayList<T>();
     filterCopy(collection, list, filter);
@@ -55,6 +70,17 @@ public class Predicates {
         return false;
       }
     }
+  }
+
+  public static <T> Predicate<T> none() {
+    return (t) -> {
+      return false;
+    };
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T> OrPredicate<T> or(final Predicate<T>... filters) {
+    return new OrPredicate<T>(filters);
   }
 
   public static <T> void remove(final Collection<T> collection, final Predicate<T> filter) {

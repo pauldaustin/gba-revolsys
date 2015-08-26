@@ -1,6 +1,7 @@
 package com.revolsys.jts.geom;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
+
 import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesPrecisionModel;
@@ -20,7 +21,7 @@ public class LineSegment extends AbstractCoordinatesList implements Comparable<L
 
   private static final long serialVersionUID = 3905321662159212931L;
 
-  public static void visit(final LineString line, final Visitor<LineSegment> visitor) {
+  public static void visit(final LineString line, final Consumer<LineSegment> visitor) {
     final CoordinatesList coords = CoordinatesListUtil.get(line);
     Coordinates previousCoordinate = coords.get(0);
     for (int i = 1; i < coords.size(); i++) {
@@ -28,9 +29,7 @@ public class LineSegment extends AbstractCoordinatesList implements Comparable<L
       final GeometryFactory geometryFactory = GeometryFactory.getFactory(line);
       final LineSegment segment = new LineSegment(geometryFactory, previousCoordinate, coordinate);
       if (segment.getLength() > 0) {
-        if (!visitor.visit(segment)) {
-          return;
-        }
+        visitor.accept(segment);
       }
       previousCoordinate = coordinate;
     }

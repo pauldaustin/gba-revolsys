@@ -6,17 +6,17 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class OrFilter<T> implements Predicate<T> {
+public class OrPredicate<T> implements Predicate<T> {
   private List<Predicate<T>> predicates = new ArrayList<Predicate<T>>();
 
-  public OrFilter() {
+  public OrPredicate() {
   }
 
-  public OrFilter(final Collection<Predicate<T>> filters) {
+  public OrPredicate(final Collection<Predicate<T>> filters) {
     this.predicates.addAll(filters);
   }
 
-  public OrFilter(final Predicate<T>... filters) {
+  public OrPredicate(final Predicate<T>... filters) {
     this(Arrays.asList(filters));
   }
 

@@ -20,15 +20,13 @@
  */
 package com.revolsys.io;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.properties.BaseObjectWithProperties;
 
 /**
  * The AbstracteReader is an implementation of the {@link Reader} interface,
- * which provides implementations of {@link #read()} and {@link #visit(Visitor)}
+ * which provides implementations of {@link #read()} and {@link #visit(Consumer)}
  * which use the {@link Reader#iterator()} method which must be implemented by
  * subclasses.
  *
@@ -36,33 +34,4 @@ import com.revolsys.properties.BaseObjectWithProperties;
  * @param <T> The type of object being read.
  */
 public abstract class AbstractReader<T> extends BaseObjectWithProperties implements Reader<T> {
-
-  /**
-   * Read all items and return a List containing the items.
-   *
-   * @return The list of items.
-   */
-  @Override
-  public List<T> read() {
-    final List<T> items = new ArrayList<T>();
-    for (final T item : this) {
-      items.add(item);
-    }
-    return items;
-  }
-
-  /**
-   * Visit each item returned from the reader until all items have been visited
-   * or the visit method returns false.
-   *
-   * @param visitor The visitor.
-   */
-  @Override
-  public void visit(final Visitor<T> visitor) {
-    for (final T item : this) {
-      if (!visitor.visit(item)) {
-        return;
-      }
-    }
-  }
 }
