@@ -29,12 +29,12 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.SimpleCoordinatesPrecisionModel;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.revolsys.swing.map.layer.Project;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
-public class Viewport2D extends AbstractObjectWithProperties implements PropertyChangeSupportProxy {
+public class Viewport2D extends BaseObjectWithProperties implements PropertyChangeSupportProxy {
 
   public static final Geometry EMPTY_GEOMETRY = GeometryFactory.getFactory().createEmptyGeometry();
 

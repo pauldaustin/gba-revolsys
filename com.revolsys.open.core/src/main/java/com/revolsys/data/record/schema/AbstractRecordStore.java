@@ -45,14 +45,14 @@ import com.revolsys.io.Writer;
 import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public abstract class AbstractRecordStore extends AbstractObjectWithProperties
+public abstract class AbstractRecordStore extends BaseObjectWithProperties
   implements RecordStore {
 
   private Map<String, List<String>> codeTableColumNames = new HashMap<String, List<String>>();

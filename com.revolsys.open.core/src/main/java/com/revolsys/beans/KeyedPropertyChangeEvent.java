@@ -5,7 +5,7 @@ import java.beans.PropertyChangeEvent;
 /**
  * <p>
  * An KeyedPropertyChangeEvent gets delivered whenever a component that conforms
- * to the JavaBeans<TM> specification (a "bean") changes a bound keyed property.
+ * to the JavaBeans&trade; specification (a "bean") changes a bound keyed property.
  * This class is an extension of <code>PropertyChangeEvent</code> but contains
  * the key of the property that has changed.
  * </p>
@@ -19,7 +19,6 @@ import java.beans.PropertyChangeEvent;
  * values should also be null.
  * </p>
  */
-@SuppressWarnings("serial")
 public class KeyedPropertyChangeEvent extends PropertyChangeEvent {
   /**
    *

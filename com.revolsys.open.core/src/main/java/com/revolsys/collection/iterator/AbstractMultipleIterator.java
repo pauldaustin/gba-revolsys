@@ -18,6 +18,10 @@ public abstract class AbstractMultipleIterator<T> extends AbstractIterator<T> {
     }
   }
 
+  protected AbstractIterator<T> getIterator() {
+    return this.iterator;
+  }
+
   @Override
   protected T getNext() throws NoSuchElementException {
     try {
@@ -39,8 +43,6 @@ public abstract class AbstractMultipleIterator<T> extends AbstractIterator<T> {
    * Get the next iterator, if no iterators are available throw
    * {@link NoSuchElementException}. Don't not return null.
    *
-   * @return
-   * @throws NoSuchElementException
    */
   public abstract AbstractIterator<T> getNextIterator() throws NoSuchElementException;
 

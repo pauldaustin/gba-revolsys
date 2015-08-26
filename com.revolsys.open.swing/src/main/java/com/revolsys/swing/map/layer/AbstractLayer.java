@@ -41,7 +41,7 @@ import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.border.TitledBorder;
 import com.revolsys.swing.component.BasePanel;
@@ -62,7 +62,7 @@ import com.revolsys.util.Property;
 import com.revolsys.util.enableable.Enabled;
 import com.revolsys.util.enableable.ThreadEnableable;
 
-public abstract class AbstractLayer extends AbstractObjectWithProperties
+public abstract class AbstractLayer extends BaseObjectWithProperties
   implements Layer, PropertyChangeListener, PropertyChangeSupportProxy, ProjectFramePanel {
   private static final AtomicLong ID_GEN = new AtomicLong();
 

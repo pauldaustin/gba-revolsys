@@ -25,12 +25,12 @@ import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
-public class MoepBinaryIterator extends AbstractObjectWithProperties implements Iterator<Record> {
+public class MoepBinaryIterator extends BaseObjectWithProperties implements Iterator<Record> {
   private static final int COMPLEX_LINE = 3;
 
   private static final int CONSTRUCTION_COMPLEX_LINE = 5;

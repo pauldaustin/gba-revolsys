@@ -106,7 +106,7 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
     return map;
   }
 
-  public static <K extends Comparable<K>, V> Map<K, V> createTempDisk(final Map<K, V> values,
+  public static <K extends Comparable<?>, V> Map<K, V> createTempDisk(final Map<K, V> values,
     PageValueManager<K> keyManager, PageValueManager<V> valueManager) {
     final File file = FileUtil.createTempFile("temp", ".bplustree");
     final PageManager pageManager = new FilePageManager(file);
@@ -121,7 +121,7 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
       valueManager = BPlusTreePageValueManager.create(pageManager, serializeableManager);
     }
 
-    final Comparator<K> comparator = new ComparableComparator<K>();
+    final Comparator<K> comparator = new ComparableComparator();
     final BPlusTreeMap<K, V> map = new BPlusTreeMap<K, V>(pageManager, comparator, keyManager,
       valueManager);
     map.putAll(values);

@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 
-public class MoepRecordDefinitionFactory extends AbstractObjectWithProperties
+public class MoepRecordDefinitionFactory extends BaseObjectWithProperties
   implements RecordDefinitionFactory {
   private static final Map<String, RecordDefinition> META_DATA_CACHE = new HashMap<>();
 

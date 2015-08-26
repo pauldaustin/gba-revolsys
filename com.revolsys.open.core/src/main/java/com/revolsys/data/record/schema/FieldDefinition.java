@@ -21,7 +21,7 @@ import com.revolsys.io.map.InvokeMethodMapObjectFactory;
 import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.io.map.MapSerializerUtil;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.MathUtil;
@@ -35,7 +35,7 @@ import com.revolsys.util.Property;
  * @see Record
  * @see RecordDefinition
  */
-public class FieldDefinition extends AbstractObjectWithProperties
+public class FieldDefinition extends BaseObjectWithProperties
   implements Cloneable, MapSerializer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("field",
