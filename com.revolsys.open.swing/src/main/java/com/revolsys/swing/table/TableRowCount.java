@@ -21,9 +21,9 @@ public class TableRowCount extends JLabel implements TableModelListener {
 
   public TableRowCount(final TableModel model) {
     setToolTipText("Number of records");
-    setBorder(BorderFactory.createCompoundBorder(
-      BorderFactory.createBevelBorder(BevelBorder.LOWERED),
-      BorderFactory.createEmptyBorder(2, 5, 2, 5)));
+    setBorder(
+      BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED),
+        BorderFactory.createEmptyBorder(2, 5, 2, 5)));
     setHorizontalAlignment(RIGHT);
     this.model = model;
     model.addTableModelListener(this);

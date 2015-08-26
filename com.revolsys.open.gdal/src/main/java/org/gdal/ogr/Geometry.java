@@ -43,9 +43,9 @@ public class Geometry implements Cloneable {
     return getCPtr(obj);
   }
 
-  private final long swigCPtr;
-
   private GeometryNative nativeObject;
+
+  private final long swigCPtr;
 
   public Geometry(final int type) {
     this(ogrJNI.new_Geometry__SWIG_1(type), true);
@@ -99,8 +99,8 @@ public class Geometry implements Cloneable {
   }
 
   public void AssignSpatialReference(final SpatialReference reference) {
-    ogrJNI.Geometry_AssignSpatialReference(this.swigCPtr, this,
-      SpatialReference.getCPtr(reference), reference);
+    ogrJNI.Geometry_AssignSpatialReference(this.swigCPtr, this, SpatialReference.getCPtr(reference),
+      reference);
   }
 
   public Geometry Boundary() {

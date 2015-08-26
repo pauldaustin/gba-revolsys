@@ -18,17 +18,17 @@ import com.revolsys.util.Property;
 public class FileField extends JPanel implements Field {
   private static final long serialVersionUID = -8433151755294925911L;
 
-  private final TextField directoryName = new TextField(70);
-
   private final JButton browseButton = new JButton();
 
-  private final String fieldName = "fieldValue";
+  private final TextField directoryName = new TextField(70);
 
   private String errorMessage;
 
-  private String originalToolTip;
+  private final String fieldName = "fieldValue";
 
   private final int fileSelectionMode;
+
+  private String originalToolTip;
 
   public FileField(final int fileSelectionMode) {
     super(new SpringLayout());

@@ -66,9 +66,9 @@ public class Invoke {
   private static final PropertyChangeSupport PROPERTY_CHANGE_SUPPORT = new PropertyChangeSupport(
     Invoke.class);
 
-  private static final List<WeakReference<SwingWorker<?, ?>>> WORKERS = new ArrayList<WeakReference<SwingWorker<?, ?>>>();
-
   private static final List<WeakReference<SwingWorker<?, ?>>> RUNNING_WORKERS = new ArrayList<WeakReference<SwingWorker<?, ?>>>();
+
+  private static final List<WeakReference<SwingWorker<?, ?>>> WORKERS = new ArrayList<WeakReference<SwingWorker<?, ?>>>();
 
   public static void andWait(final Object object, final String methodName,
     final Object... parameters) {
@@ -167,14 +167,15 @@ public class Invoke {
             "Error invoking method " + method + " " + Arrays.toString(parameters),
             e.getTargetException());
         } catch (final Throwable e) {
-          LoggerFactory.getLogger(getClass()).error(
-            "Error invoking method " + method + " " + Arrays.toString(parameters), e);
+          LoggerFactory.getLogger(getClass())
+            .error("Error invoking method " + method + " " + Arrays.toString(parameters), e);
         }
       }
     });
   }
 
-  public static void later(final Object object, final String methodName, final Object... parameters) {
+  public static void later(final Object object, final String methodName,
+    final Object... parameters) {
     final InvokeMethodRunnable runnable = new InvokeMethodRunnable(object, methodName, parameters);
     later(runnable);
   }
@@ -188,11 +189,11 @@ public class Invoke {
   }
 
   public static SwingWorker<?, ?> worker(final String description, final Object object,
-    final String backgroundMethodName,
-    final Collection<? extends Object> backgrounMethodParameters, final String doneMethodName,
-    final Collection<? extends Object> doneMethodParameters) {
+    final String backgroundMethodName, final Collection<? extends Object> backgrounMethodParameters,
+    final String doneMethodName, final Collection<? extends Object> doneMethodParameters) {
     final SwingWorker<?, ?> worker = new InvokeMethodSwingWorker<Object, Object>(description,
-      object, backgroundMethodName, backgrounMethodParameters, doneMethodName, doneMethodParameters);
+      object, backgroundMethodName, backgrounMethodParameters, doneMethodName,
+      doneMethodParameters);
     worker(worker);
     return worker;
   }

@@ -7,7 +7,8 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class GeometryProjectionUtil {
   public static CoordinateSystem getCoordinateSystem(final Geometry geometry) {
-    final com.vividsolutions.jts.geom.GeometryFactory geometryFactory = GeometryFactory.getFactory(geometry);
+    final com.vividsolutions.jts.geom.GeometryFactory geometryFactory = GeometryFactory
+      .getFactory(geometry);
     if (geometryFactory instanceof GeometryFactory) {
       final GeometryFactory factory = (GeometryFactory)geometryFactory;
       return factory.getCoordinateSystem();
@@ -21,7 +22,8 @@ public class GeometryProjectionUtil {
     if (fromSrid == 0 || toCoordinateSystem == null) {
       return null;
     } else {
-      final CoordinateSystem fromCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(fromSrid);
+      final CoordinateSystem fromCoordinateSystem = EpsgCoordinateSystems
+        .getCoordinateSystem(fromSrid);
       return ProjectionFactory.getGeometryOperation(fromCoordinateSystem, toCoordinateSystem);
     }
   }
@@ -31,7 +33,8 @@ public class GeometryProjectionUtil {
     if (fromSrid == 0) {
       return null;
     } else {
-      final CoordinateSystem fromCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(fromSrid);
+      final CoordinateSystem fromCoordinateSystem = EpsgCoordinateSystems
+        .getCoordinateSystem(fromSrid);
       return ProjectionFactory.getGeometryOperation(fromCoordinateSystem, toGeometryFactory);
     }
   }
@@ -40,12 +43,14 @@ public class GeometryProjectionUtil {
     if (sourceSrid == 0 || targetSrid == 0) {
       return null;
     } else {
-      final CoordinateSystem toCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(targetSrid);
+      final CoordinateSystem toCoordinateSystem = EpsgCoordinateSystems
+        .getCoordinateSystem(targetSrid);
       return getGeometryOperation(sourceSrid, toCoordinateSystem);
     }
   }
 
-  public static <T extends Geometry> T perform(final GeometryOperation operation, final T geometry) {
+  public static <T extends Geometry> T perform(final GeometryOperation operation,
+    final T geometry) {
     if (operation == null) {
       return geometry;
     } else {
@@ -69,8 +74,8 @@ public class GeometryProjectionUtil {
     if (fromCoordinateSystem == null || toCoordinateSystem == null) {
       return geometry;
     } else {
-      final GeometryOperation operation = ProjectionFactory.getGeometryOperation(
-        fromCoordinateSystem, toCoordinateSystem);
+      final GeometryOperation operation = ProjectionFactory
+        .getGeometryOperation(fromCoordinateSystem, toCoordinateSystem);
       return perform(operation, geometry);
     }
   }

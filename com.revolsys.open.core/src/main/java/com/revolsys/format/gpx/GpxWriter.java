@@ -140,7 +140,8 @@ public class GpxWriter extends AbstractWriter<Record> {
     final LineString line = object.getGeometry();
     final int srid = line.getSRID();
     final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(srid);
-    final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory.getToGeographicsCoordinatesOperation(coordinateSystem);
+    final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory
+      .getToGeographicsCoordinatesOperation(coordinateSystem);
     final CoordinatesList coordinatesList = CoordinatesListUtil.get(line);
     writeAttributes(object);
     this.out.startTag(GpxConstants.TRACK_SEGMENT_ELEMENT);
@@ -167,8 +168,10 @@ public class GpxWriter extends AbstractWriter<Record> {
     this.out.startTag(GpxConstants.WAYPOINT_ELEMENT);
     final Point point = wayPoint.getGeometry();
     final Coordinate coordinate = point.getCoordinate();
-    final CoordinateSystem coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(point.getSRID());
-    final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory.getToGeographicsCoordinatesOperation(coordinateSystem);
+    final CoordinateSystem coordinateSystem = EpsgCoordinateSystems
+      .getCoordinateSystem(point.getSRID());
+    final CoordinatesOperation inverseCoordinatesOperation = ProjectionFactory
+      .getToGeographicsCoordinatesOperation(coordinateSystem);
     final Coordinate geoCoordinate = CoordinateProjectionUtil.perform(inverseCoordinatesOperation,
       coordinate);
     this.out.attribute(GpxConstants.LON_ATTRIBUTE, geoCoordinate.x);

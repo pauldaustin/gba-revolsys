@@ -299,8 +299,8 @@ public class GeometryEditUtil {
 
   public static QuadTree<IndexedLineSegment> getLineSegmentQuadTree(final Geometry geometry) {
     if (geometry != null && !geometry.isEmpty()) {
-      final Reference<QuadTree<IndexedLineSegment>> reference = JtsGeometryUtil.getGeometryProperty(
-        geometry, LINE_SEGMENT_QUAD_TREE);
+      final Reference<QuadTree<IndexedLineSegment>> reference = JtsGeometryUtil
+        .getGeometryProperty(geometry, LINE_SEGMENT_QUAD_TREE);
       QuadTree<IndexedLineSegment> index;
       if (reference == null) {
         index = null;
@@ -325,7 +325,8 @@ public class GeometryEditUtil {
           for (int ringIndex = 0; ringIndex < rings.size(); ringIndex++) {
             final CoordinatesList ring = rings.get(ringIndex);
             int segmentIndex = 0;
-            for (final LineSegment lineSegment : new CoordinatesListIndexLineSegmentIterator(ring)) {
+            for (final LineSegment lineSegment : new CoordinatesListIndexLineSegmentIterator(
+              ring)) {
               final IndexedLineSegment indexedSegment = new IndexedLineSegment(geometryFactory,
                 lineSegment, ringIndex, segmentIndex);
               index.insert(indexedSegment.getBoundingBox(), indexedSegment);
@@ -338,7 +339,8 @@ public class GeometryEditUtil {
             if (part instanceof LineString) {
               final LineString line = (LineString)part;
               int segmentIndex = 0;
-              for (final LineSegment lineSegment : new CoordinatesListIndexLineSegmentIterator(line)) {
+              for (final LineSegment lineSegment : new CoordinatesListIndexLineSegmentIterator(
+                line)) {
                 final IndexedLineSegment indexedSegment = new IndexedLineSegment(geometryFactory,
                   lineSegment, partIndex, segmentIndex);
                 index.insert(indexedSegment.getBoundingBox(), indexedSegment);
@@ -373,8 +375,8 @@ public class GeometryEditUtil {
     if (geometry == null || geometry.isEmpty()) {
       return new PointQuadTree<int[]>();
     } else {
-      final Reference<PointQuadTree<int[]>> reference = JtsGeometryUtil.getGeometryProperty(
-        geometry, POINT_QUAD_TREE);
+      final Reference<PointQuadTree<int[]>> reference = JtsGeometryUtil
+        .getGeometryProperty(geometry, POINT_QUAD_TREE);
       PointQuadTree<int[]> index;
       if (reference == null) {
         index = null;
@@ -842,8 +844,8 @@ public class GeometryEditUtil {
     return geometryFactory.createMultiPoint(points);
   }
 
-  public static Polygon moveVertex(final Polygon polygon, final int ringIndex,
-    final int pointIndex, final Coordinates newPoint) {
+  public static Polygon moveVertex(final Polygon polygon, final int ringIndex, final int pointIndex,
+    final Coordinates newPoint) {
     final List<CoordinatesList> rings = CoordinatesListUtil.getAll(polygon);
     final CoordinatesList points = rings.get(ringIndex).clone();
     setVertex(points, pointIndex, newPoint);
@@ -863,7 +865,8 @@ public class GeometryEditUtil {
     final Coordinates coordinates = getVertex(geometry, vertexId);
     CoordinatesUtil.setElevation(newLocation, originalLocation);
     if (coordinates.equals2d(originalLocation)) {
-      final Coordinates newCoordinates = CoordinatesUtil.setElevation(newLocation, originalLocation);
+      final Coordinates newCoordinates = CoordinatesUtil.setElevation(newLocation,
+        originalLocation);
       return (G)moveVertex(geometry, newCoordinates, vertexId);
     } else {
       return geometry;

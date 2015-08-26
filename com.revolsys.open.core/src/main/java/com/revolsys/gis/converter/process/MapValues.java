@@ -4,8 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.revolsys.data.codes.CodeTable;
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.schema.RecordDefinition;
 
 public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
@@ -53,7 +53,8 @@ public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
       final Object targetValue = this.valueMap.get(sourceValue);
       if (targetValue != null) {
         final RecordDefinition targetMetaData = target.getRecordDefinition();
-        final CodeTable codeTable = targetMetaData.getCodeTableByFieldName(this.targetAttributeName);
+        final CodeTable codeTable = targetMetaData
+          .getCodeTableByFieldName(this.targetAttributeName);
         if (codeTable == null) {
           target.setValue(this.targetAttributeName, targetValue);
         } else {

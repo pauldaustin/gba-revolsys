@@ -28,7 +28,6 @@ import org.gdal.ogr.ogr;
 import org.gdal.osr.SpatialReference;
 import org.gdal.osr.osr;
 import org.slf4j.LoggerFactory;
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.format.json.JsonMapIoFactory;
@@ -39,6 +38,7 @@ import com.revolsys.gis.cs.esri.EsriCsWktWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.OS;
@@ -46,6 +46,7 @@ import com.revolsys.util.Property;
 
 public class Gdal {
   private static boolean available = false;
+
   static {
     try {
 
@@ -75,7 +76,8 @@ public class Gdal {
     }
   }
 
-  private static void addGeoreferencedImageFactory(final GdalImageFactory georeferencedImageFactory) {
+  private static void addGeoreferencedImageFactory(
+    final GdalImageFactory georeferencedImageFactory) {
     if (georeferencedImageFactory.isAvailable()) {
 
       final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
@@ -83,8 +85,8 @@ public class Gdal {
     }
   }
 
-  private static void addGeoreferencedImageFactory(final String driverName,
-    final String formatName, final String fileExtension, final String mimeType) {
+  private static void addGeoreferencedImageFactory(final String driverName, final String formatName,
+    final String fileExtension, final String mimeType) {
     final GdalImageFactory readerSpi = new GdalImageFactory(driverName, formatName, fileExtension,
       mimeType);
     addGeoreferencedImageFactory(readerSpi);
@@ -148,7 +150,8 @@ public class Gdal {
    * @return The buffered image.
    */
   public static BufferedImage getBufferedImage(final Dataset dataset, final int overviewIndex,
-    final int sourceOffsetX, final int sourceOffsetY, final int sourceWidth, final int sourceHeight) {
+    final int sourceOffsetX, final int sourceOffsetY, final int sourceWidth,
+    final int sourceHeight) {
     return getBufferedImage(dataset, overviewIndex, sourceOffsetX, sourceOffsetY, sourceWidth,
       sourceHeight, -1, -1);
   }
@@ -286,8 +289,8 @@ public class Gdal {
         dataBufferType = DataBuffer.TYPE_BYTE;
         sampleModel = new BandedSampleModel(dataBufferType, targetWidth, targetHeight, targetWidth,
           banks, offsets);
-        dataType = rasterColorInterpretation == gdalconstConstants.GCI_PaletteIndex ? BufferedImage.TYPE_BYTE_INDEXED
-          : BufferedImage.TYPE_BYTE_GRAY;
+        dataType = rasterColorInterpretation == gdalconstConstants.GCI_PaletteIndex
+          ? BufferedImage.TYPE_BYTE_INDEXED : BufferedImage.TYPE_BYTE_GRAY;
       } else if (bandDataType == gdalconstConstants.GDT_Int16) {
         final short[][] shorts = new short[bandCount][];
         for (int bandIndex = 0; bandIndex < bandCount; bandIndex++) {
@@ -509,7 +512,8 @@ public class Gdal {
   public static void setProjectionFromPrjFile(final Dataset dataset, final Resource resource) {
     final Resource projectionFile = SpringUtil.getResourceWithExtension(resource, "prj");
     if (projectionFile.exists()) {
-      final CoordinateSystem coordinateSystem = EsriCoordinateSystems.getCoordinateSystem(projectionFile);
+      final CoordinateSystem coordinateSystem = EsriCoordinateSystems
+        .getCoordinateSystem(projectionFile);
       setSpatialReference(dataset, coordinateSystem);
     }
   }

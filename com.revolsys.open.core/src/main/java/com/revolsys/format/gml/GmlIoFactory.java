@@ -13,8 +13,8 @@ import com.revolsys.gis.data.io.GeometryReader;
 import com.revolsys.gis.geometry.io.GeometryReaderFactory;
 import com.revolsys.io.FileUtil;
 
-public class GmlIoFactory extends AbstractRecordAndGeometryWriterFactory implements
-  GeometryReaderFactory {
+public class GmlIoFactory extends AbstractRecordAndGeometryWriterFactory
+  implements GeometryReaderFactory {
   public GmlIoFactory() {
     super(GmlConstants.FORMAT_DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(GmlConstants.MEDIA_TYPE, GmlConstants.FILE_EXTENSION);

@@ -6,9 +6,9 @@ import com.vividsolutions.jts.geom.LineString;
 
 public class Intersection implements Filter<LineString> {
 
-  private final LineString line;
-
   private final LineStringGraph graph;
+
+  private final LineString line;
 
   public Intersection(final LineString line) {
     this.line = line;

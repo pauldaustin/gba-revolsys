@@ -13,9 +13,9 @@ public class LineEqualWithinDistance implements Filter<LineString> {
     return new RecordGeometryFilter<LineString>(lineFilter);
   }
 
-  private final double maxDistance;
-
   private final LineString line;
+
+  private final double maxDistance;
 
   public LineEqualWithinDistance(final LineString line, final double maxDistance) {
     this.line = line;

@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Paths;
 import com.revolsys.io.connection.AbstractConnectionRegistryManager;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.OS;
 import com.revolsys.util.Property;
@@ -25,17 +25,17 @@ public class RecordStoreConnectionManager
 
   private static final RecordStoreConnectionManager INSTANCE;
 
+  // TODO make this garbage collectable with reference counting.
+  private static Map<Map<String, Object>, RecordStore> recordStoreByConfig = new HashMap<>();
+
+  private static Map<Map<String, Object>, AtomicInteger> recordStoreCounts = new HashMap<>();
+
   static {
     INSTANCE = new RecordStoreConnectionManager();
     final File recordStoresDirectory = OS
       .getApplicationDataDirectory("com.revolsys.gis/Data Stores");
     INSTANCE.addConnectionRegistry("User", new FileSystemResource(recordStoresDirectory));
   }
-
-  // TODO make this garbage collectable with reference counting.
-  private static Map<Map<String, Object>, RecordStore> recordStoreByConfig = new HashMap<>();
-
-  private static Map<Map<String, Object>, AtomicInteger> recordStoreCounts = new HashMap<>();
 
   public static RecordStoreConnectionManager get() {
     return INSTANCE;

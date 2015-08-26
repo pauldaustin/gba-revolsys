@@ -59,35 +59,35 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
 
   }
 
+  private Charset charset = StandardCharsets.UTF_8;
+
   private boolean closeFile = true;
 
   private int currentDeletedCount = 0;
 
-  private RecordFactory recordFactory;
-
   private int deletedCount = 0;
+
+  private long firstIndex;
 
   private EndianInput in;
 
-  private RecordDefinitionImpl metaData;
-
-  private byte[] recordBuffer;
-
-  private short recordSize;
-
   private Runnable initCallback;
+
+  private boolean mappedFile;
+
+  private RecordDefinitionImpl metaData;
 
   private int numRecords;
 
   private int position = 0;
 
-  private long firstIndex;
+  private byte[] recordBuffer;
 
-  private boolean mappedFile;
+  private RecordFactory recordFactory;
+
+  private short recordSize;
 
   private Resource resource;
-
-  private Charset charset = StandardCharsets.UTF_8;
 
   private String typeName;
 
@@ -279,6 +279,25 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
     return this.closeFile;
   }
 
+  /**
+   * Load the header record from the shape mappedFile.
+   *
+   * @throws IOException If an I/O error occurs.
+   */
+  @SuppressWarnings("unused")
+  private void loadHeader() throws IOException {
+    final int version = this.in.read();
+    final int y = this.in.read();
+    final int m = this.in.read();
+    final int d = this.in.read();
+    // properties.put(new QName("date"), new Date(y, m - 1, d));
+    this.numRecords = this.in.readLEInt();
+    final short headerSize = this.in.readLEShort();
+
+    this.recordSize = (short)(this.in.readLEShort() - 1);
+    this.in.skipBytes(20);
+  }
+
   protected Record loadRecord() throws IOException {
     if (this.in.read(this.recordBuffer) != this.recordBuffer.length) {
       throw new IllegalStateException("Unexpected end of mappedFile");
@@ -308,25 +327,6 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
       object.setValue(i, value);
     }
     return object;
-  }
-
-  /**
-   * Load the header record from the shape mappedFile.
-   *
-   * @throws IOException If an I/O error occurs.
-   */
-  @SuppressWarnings("unused")
-  private void loadHeader() throws IOException {
-    final int version = this.in.read();
-    final int y = this.in.read();
-    final int m = this.in.read();
-    final int d = this.in.read();
-    // properties.put(new QName("date"), new Date(y, m - 1, d));
-    this.numRecords = this.in.readLEInt();
-    final short headerSize = this.in.readLEShort();
-
-    this.recordSize = (short)(this.in.readLEShort() - 1);
-    this.in.skipBytes(20);
   }
 
   private void readMetaData() throws IOException {

@@ -47,9 +47,9 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
     }
   }
 
-  private final IntervalIndexedGeometry index;
-
   private final Polygon geometry;
+
+  private final IntervalIndexedGeometry index;
 
   /**
    * Creates a netor for a given {@link Geometry}

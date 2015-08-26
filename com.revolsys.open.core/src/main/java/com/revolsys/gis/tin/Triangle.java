@@ -21,9 +21,9 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.WKTWriter;
 
 public class Triangle extends AbstractCoordinatesList {
-  private static final long serialVersionUID = -4513931832875328029L;
-
   private static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.getFactory(0, 2, 1.0, 1);
+
+  private static final long serialVersionUID = -4513931832875328029L;
 
   public static Triangle createClockwiseTriangle(final Coordinates c0, final Coordinates c1,
     final Coordinates c2) {
@@ -179,8 +179,8 @@ public class Triangle extends AbstractCoordinatesList {
   }
 
   public Polygon getPolygon(final GeometryFactory geometryFactory) {
-    final LinearRing shell = geometryFactory.createLinearRing(new DoubleCoordinatesList(
-      getNumAxis(), getP0(), getP1(), getP2(), getP0()));
+    final LinearRing shell = geometryFactory.createLinearRing(
+      new DoubleCoordinatesList(getNumAxis(), getP0(), getP1(), getP2(), getP0()));
     return geometryFactory.createPolygon(shell, null);
   }
 

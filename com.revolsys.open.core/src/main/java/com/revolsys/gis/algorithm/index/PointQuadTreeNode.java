@@ -12,19 +12,19 @@ import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class PointQuadTreeNode<T> {
-  private final double x;
-
-  private final double y;
-
-  private final T value;
+  private PointQuadTreeNode<T> northEast;
 
   private PointQuadTreeNode<T> northWest;
 
-  private PointQuadTreeNode<T> northEast;
+  private PointQuadTreeNode<T> southEast;
 
   private PointQuadTreeNode<T> southWest;
 
-  private PointQuadTreeNode<T> southEast;
+  private final T value;
+
+  private final double x;
+
+  private final double y;
 
   public PointQuadTreeNode(final T value, final double x, final double y) {
     this.value = value;
@@ -61,7 +61,8 @@ public class PointQuadTreeNode<T> {
     return false;
   }
 
-  public void findEntriesWithin(final List<Entry<Coordinates, T>> results, final Envelope envelope) {
+  public void findEntriesWithin(final List<Entry<Coordinates, T>> results,
+    final Envelope envelope) {
     final double minX = envelope.getMinX();
     final double maxX = envelope.getMaxX();
     final double minY = envelope.getMinY();

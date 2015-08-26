@@ -11,7 +11,7 @@ import com.revolsys.collection.Visitor;
 import com.revolsys.filter.Filter;
 import com.vividsolutions.jts.geom.Envelope;
 
-public class RTreeBranch<T> extends RTreeNode<T> implements Iterable<RTreeNode<T>> {
+public class RTreeBranch<T> extends RTreeNode<T>implements Iterable<RTreeNode<T>> {
 
   /**
    *
@@ -62,7 +62,8 @@ public class RTreeBranch<T> extends RTreeNode<T> implements Iterable<RTreeNode<T
   }
 
   @Override
-  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope, final T object) {
+  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope,
+    final T object) {
     for (int i = 0; i < this.size; i++) {
       final RTreeNode<T> node = this.nodes[i];
       if (node.contains(envelope)) {

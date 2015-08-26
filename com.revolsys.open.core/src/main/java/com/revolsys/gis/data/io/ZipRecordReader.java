@@ -3,7 +3,6 @@ package com.revolsys.gis.data.io;
 import java.io.File;
 import java.io.IOException;
 
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
@@ -13,11 +12,12 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipUtil;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
+import com.revolsys.spring.resource.FileSystemResource;
 
 public class ZipRecordReader extends DelegatingReader<Record>implements RecordReader {
-  private RecordReader reader;
-
   private File directory;
+
+  private RecordReader reader;
 
   public ZipRecordReader(final Resource resource, final String fileExtension,
     final RecordFactory factory) {

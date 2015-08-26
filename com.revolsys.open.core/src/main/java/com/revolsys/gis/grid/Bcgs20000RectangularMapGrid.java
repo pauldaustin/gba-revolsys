@@ -6,13 +6,13 @@ import java.util.regex.Pattern;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class Bcgs20000RectangularMapGrid extends Nts250000RectangularMapGrid {
-  private static final Pattern NAME_PATTERN = Pattern.compile("^" + BcgsConstants.REGEX_20000
-    + ".*");
-
-  private static final Pattern FIND_NAME_PATTERN = Pattern.compile(".*("
-    + BcgsConstants.REGEX_20000 + ").*");
+  private static final Pattern FIND_NAME_PATTERN = Pattern
+    .compile(".*(" + BcgsConstants.REGEX_20000 + ").*");
 
   public static final Bcgs20000RectangularMapGrid INSTANCE = new Bcgs20000RectangularMapGrid();
+
+  private static final Pattern NAME_PATTERN = Pattern
+    .compile("^" + BcgsConstants.REGEX_20000 + ".*");
 
   public static String getTileName(final String mapTileName) {
     final Matcher matcher = FIND_NAME_PATTERN.matcher(mapTileName);
@@ -52,8 +52,8 @@ public class Bcgs20000RectangularMapGrid extends Nts250000RectangularMapGrid {
       final double latitude = getLatitude(blockName, letter, numberString);
       return latitude;
     } else {
-      throw new IllegalArgumentException(mapTileName
-        + " does not start with a valid BCGS 1:20,000 tile name");
+      throw new IllegalArgumentException(
+        mapTileName + " does not start with a valid BCGS 1:20,000 tile name");
     }
   }
 
@@ -77,8 +77,8 @@ public class Bcgs20000RectangularMapGrid extends Nts250000RectangularMapGrid {
       final double longitude = getLongitude(blockName, letter, numberString);
       return longitude;
     } else {
-      throw new IllegalArgumentException(mapTileName
-        + " does not start with a valid BCGS 1:20,000 tile name");
+      throw new IllegalArgumentException(
+        mapTileName + " does not start with a valid BCGS 1:20,000 tile name");
     }
   }
 

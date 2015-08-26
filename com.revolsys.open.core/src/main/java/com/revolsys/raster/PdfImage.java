@@ -36,8 +36,8 @@ public class PdfImage extends JaiGeoreferencedImage {
         throw new RuntimeException("PDF file " + imageResource + " doesn't contain any pages");
       } else {
         if (pages.size() > 1) {
-          LoggerFactory.getLogger(getClass()).warn(
-            "PDF file " + imageResource + " doesn't contain any pages");
+          LoggerFactory.getLogger(getClass())
+            .warn("PDF file " + imageResource + " doesn't contain any pages");
         }
         final PDPage page = pages.get(0);
         final COSDictionary pageDictionary = page.getCOSDictionary();

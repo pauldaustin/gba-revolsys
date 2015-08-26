@@ -31,9 +31,9 @@ import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
-import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Node;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.MapPanel;
@@ -60,17 +60,17 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
     dialog.showDialog();
   }
 
-  private JButton okButton;
-
   private final AbstractRecordLayer layer;
 
   private final Map<Record, LayerRecord> mergeableToOiginalRecordMap = new HashMap<Record, LayerRecord>();
 
   private JPanel mergedObjectsPanel;
 
-  private final Set<LayerRecord> replacedOriginalRecords = new LinkedHashSet<LayerRecord>();
-
   private HashMap<Record, Set<LayerRecord>> mergedRecords;
+
+  private JButton okButton;
+
+  private final Set<LayerRecord> replacedOriginalRecords = new LinkedHashSet<LayerRecord>();
 
   private final UndoManager undoManager;
 
@@ -249,8 +249,8 @@ public class MergeRecordsDialog extends JDialog implements WindowListener {
       if (!Property.hasValue(errorMessage)) {
         errorMessage = "The following records could not be merged and will not be modified.";
       }
-      final JLabel unMergeLabel = new JLabel("<html><p style=\"color:red\">" + errorMessage
-        + "</p></html>");
+      final JLabel unMergeLabel = new JLabel(
+        "<html><p style=\"color:red\">" + errorMessage + "</p></html>");
       panel.add(unMergeLabel, BorderLayout.NORTH);
       panel.add(tablePanel, BorderLayout.SOUTH);
       SwingUtil.setTitledBorder(panel, unMergeableRecords.size() + " Un-Mergable Records");

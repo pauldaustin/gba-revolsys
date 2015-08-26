@@ -27,13 +27,13 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineContainsWithinToleranceFilter implements Filter<LineString> {
-  private final CoordinatesList points;
-
   private BoundingBox envelope;
 
-  private double tolerance;
-
   private boolean flip = false;
+
+  private final CoordinatesList points;
+
+  private double tolerance;
 
   public LineContainsWithinToleranceFilter(final LineString line) {
     this.points = CoordinatesListUtil.get(line);

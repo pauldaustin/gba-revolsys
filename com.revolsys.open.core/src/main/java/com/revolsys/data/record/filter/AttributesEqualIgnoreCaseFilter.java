@@ -3,8 +3,8 @@ package com.revolsys.data.record.filter;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.filter.Filter;
 
 public class AttributesEqualIgnoreCaseFilter implements Filter<Record> {

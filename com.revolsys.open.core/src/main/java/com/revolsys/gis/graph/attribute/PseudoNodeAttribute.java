@@ -17,9 +17,9 @@ import com.revolsys.gis.jts.LineStringUtil;
 import com.vividsolutions.jts.geom.LineString;
 
 public class PseudoNodeAttribute {
-  private final Set<String> equalExcludeAttributes = new HashSet<String>();
-
   private final List<EdgePair<Record>> edgePairs = new ArrayList<EdgePair<Record>>();
+
+  private final Set<String> equalExcludeAttributes = new HashSet<String>();
 
   private final List<EdgePair<Record>> reversedEdgePairs = new ArrayList<EdgePair<Record>>();
 
@@ -31,7 +31,8 @@ public class PseudoNodeAttribute {
     if (equalExcludeAttributes != null) {
       this.equalExcludeAttributes.addAll(equalExcludeAttributes);
     }
-    final Map<String, Map<LineString, Set<Edge<Record>>>> edgesByTypeNameAndLine = NodeAttributes.getEdgesByTypeNameAndLine(node);
+    final Map<String, Map<LineString, Set<Edge<Record>>>> edgesByTypeNameAndLine = NodeAttributes
+      .getEdgesByTypeNameAndLine(node);
     final Map<LineString, Set<Edge<Record>>> edgesByLine = edgesByTypeNameAndLine.get(typePath);
     init(node, edgesByLine);
   }

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
-import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.DirectionalFields;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;

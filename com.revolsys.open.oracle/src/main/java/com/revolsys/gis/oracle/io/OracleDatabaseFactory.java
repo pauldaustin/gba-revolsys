@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
-import oracle.jdbc.pool.OracleDataSource;
-
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.converter.string.StringConverterRegistry;
@@ -26,12 +24,14 @@ import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.PasswordUtil;
 
+import oracle.jdbc.pool.OracleDataSource;
+
 public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   public static final String URL_REGEX = "jdbc:oracle:thin:(.+)";
 
-  public static final List<String> URL_PATTERNS = Arrays.asList(URL_REGEX);
-
   private static final Pattern URL_PATTERN = Pattern.compile(URL_REGEX);
+
+  public static final List<String> URL_PATTERNS = Arrays.asList(URL_REGEX);
 
   protected void addCacheProperty(final Map<String, Object> config, final String key,
     final Properties cacheProperties, final String propertyName, final Object defaultValue,
@@ -70,11 +70,6 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcRecordStore createRecordStore(final DataSource dataSource) {
-    return new OracleRecordStore(dataSource);
-  }
-
-  @Override
   public DataSource createDataSource(final Map<String, ? extends Object> config) {
     try {
       final Map<String, Object> newConfig = new HashMap<String, Object>(config);
@@ -103,8 +98,8 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
         try {
           JavaBeanUtil.setProperty(dataSource, name, value);
         } catch (final Throwable e) {
-          LoggerFactory.getLogger(OracleDatabaseFactory.class).debug(
-            "Unable to set Oracle data source property " + name, e);
+          LoggerFactory.getLogger(OracleDatabaseFactory.class)
+            .debug("Unable to set Oracle data source property " + name, e);
         }
       }
       dataSource.setURL(url);
@@ -118,7 +113,13 @@ public class OracleDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcRecordStore createRecordStore(final Map<String, ? extends Object> connectionProperties) {
+  public JdbcRecordStore createRecordStore(final DataSource dataSource) {
+    return new OracleRecordStore(dataSource);
+  }
+
+  @Override
+  public JdbcRecordStore createRecordStore(
+    final Map<String, ? extends Object> connectionProperties) {
     return new OracleRecordStore(this, connectionProperties);
   }
 

@@ -39,9 +39,9 @@ public abstract class NodeBase {
     return subnodeIndex;
   }
 
-  private final List<int[]> segmentIndexes = new ArrayList<int[]>();
-
   private final List<Node> nodes = new ArrayList<Node>(4);
+
+  private final List<int[]> segmentIndexes = new ArrayList<int[]>();
 
   public NodeBase() {
     for (int i = 0; i < 4; i++) {

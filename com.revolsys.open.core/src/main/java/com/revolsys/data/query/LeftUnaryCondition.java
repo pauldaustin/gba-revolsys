@@ -8,9 +8,9 @@ import com.revolsys.data.equals.Equals;
 
 public class LeftUnaryCondition extends Condition {
 
-  private QueryValue value;
-
   private final String operator;
+
+  private QueryValue value;
 
   public LeftUnaryCondition(final String operator, final QueryValue value) {
     this.operator = operator;

@@ -14,10 +14,10 @@ import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.format.xml.XmlMapIoFactory;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
@@ -57,9 +57,9 @@ public class MavenRepository implements URLStreamHandlerFactory {
     return path.toString();
   }
 
-  private final URLStreamHandler urlHandler = new MavenUrlStreamHandler(this);
-
   private Resource root;
+
+  private final URLStreamHandler urlHandler = new MavenUrlStreamHandler(this);
 
   public MavenRepository() {
     this(null);
@@ -99,22 +99,21 @@ public class MavenRepository implements URLStreamHandlerFactory {
 
   public Map<String, Object> getMavenMetadata(final String groupId, final String artifactId,
     final String version) {
-    final String metaDataPath = "/"
-      + CollectionUtil.toString("/", groupId.replace('.', '/'), artifactId, version,
-        "maven-metadata.xml");
+    final String metaDataPath = "/" + CollectionUtil.toString("/", groupId.replace('.', '/'),
+      artifactId, version, "maven-metadata.xml");
     final Resource metaDataResource = SpringUtil.getResource(this.root, metaDataPath);
     if (metaDataResource.exists()) {
       try {
         return XmlMapIoFactory.toMap(metaDataResource);
       } catch (final RuntimeException e) {
-        LoggerFactory.getLogger(getClass()).error(
-          "Error loading maven resource" + metaDataResource, e);
+        LoggerFactory.getLogger(getClass()).error("Error loading maven resource" + metaDataResource,
+          e);
         if (metaDataResource instanceof FileSystemResource) {
           try {
             final File file = metaDataResource.getFile();
             if (file.delete()) {
-              LoggerFactory.getLogger(getClass()).error(
-                "Deleting corrupt maven resource" + metaDataResource, e);
+              LoggerFactory.getLogger(getClass())
+                .error("Deleting corrupt maven resource" + metaDataResource, e);
             }
           } catch (final IOException ioe) {
           }
@@ -155,9 +154,8 @@ public class MavenRepository implements URLStreamHandlerFactory {
   public MavenPom getPom(final String id) {
     final String[] parts = id.split(":");
     if (parts.length < 3) {
-      throw new IllegalArgumentException(
-        id
-          + " is not a valid Maven identifier. Should be in the format: <groupId>:<artifactId>:<version>.");
+      throw new IllegalArgumentException(id
+        + " is not a valid Maven identifier. Should be in the format: <groupId>:<artifactId>:<version>.");
     }
     final String groupId = parts[0];
     final String artifactId = parts[1];
@@ -179,8 +177,8 @@ public class MavenRepository implements URLStreamHandlerFactory {
       final Map<String, Object> map = XmlMapIoFactory.toMap(resource);
       return new MavenPom(this, map);
     } else {
-      throw new IllegalArgumentException("Pom does not exist for " + groupId + ":" + artifactId
-        + ":" + version + " at " + resource);
+      throw new IllegalArgumentException(
+        "Pom does not exist for " + groupId + ":" + artifactId + ":" + version + " at " + resource);
     }
   }
 
@@ -216,8 +214,8 @@ public class MavenRepository implements URLStreamHandlerFactory {
     final String path = getPath(groupId, artifactId, version, type, classifier, version, algorithm);
     final Resource artifactResource = SpringUtil.getResource(this.root, path);
     if (!artifactResource.exists()) {
-      return handleMissingResource(artifactResource, groupId, artifactId, type, classifier,
-        version, algorithm);
+      return handleMissingResource(artifactResource, groupId, artifactId, type, classifier, version,
+        algorithm);
     }
     return artifactResource;
   }
@@ -240,8 +238,8 @@ public class MavenRepository implements URLStreamHandlerFactory {
           if (digestContents == null) {
             LoggerFactory.getLogger(getClass()).error("Error downloading: " + digestResource, e);
           } else {
-            LoggerFactory.getLogger(getClass()).error(
-              "Error in SHA-1 checksum " + digestContents + " for " + digestResource, e);
+            LoggerFactory.getLogger(getClass())
+              .error("Error in SHA-1 checksum " + digestContents + " for " + digestResource, e);
           }
         }
       }

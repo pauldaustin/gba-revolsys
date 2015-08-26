@@ -27,6 +27,7 @@ public class AbstractObjectWithProperties implements ObjectWithProperties {
     }
   }
 
+  @Override
   @PreDestroy
   public void close() {
     this.properties = null;

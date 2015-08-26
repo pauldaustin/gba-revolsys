@@ -24,31 +24,31 @@ import com.revolsys.parallel.ThreadUtil;
 import com.revolsys.spring.TargetBeanFactoryBean;
 import com.revolsys.spring.TargetBeanProcess;
 
-public class ProcessNetwork implements BeanPostProcessor,
-  ApplicationListener<ContextRefreshedEvent> {
+public class ProcessNetwork
+  implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent> {
 
   public static void startAndWait(final Process... processes) {
     final ProcessNetwork processNetwork = new ProcessNetwork(processes);
     processNetwork.startAndWait();
   }
 
-  private int count = 0;
-
-  private final Map<Process, Thread> processes = new HashMap<Process, Thread>();
-
-  private boolean running = false;
-
-  private ThreadGroup threadGroup;
-
   private boolean autoStart;
+
+  private int count = 0;
 
   private String name = "processNetwork";
 
   private ProcessNetwork parent;
 
-  private final Object sync = new Object();
+  private final Map<Process, Thread> processes = new HashMap<Process, Thread>();
+
+  private boolean running = false;
 
   private boolean stopping = false;
+
+  private final Object sync = new Object();
+
+  private ThreadGroup threadGroup;
 
   public ProcessNetwork() {
   }

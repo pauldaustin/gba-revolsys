@@ -14,8 +14,6 @@ import org.jdesktop.swingx.autocomplete.ObjectToStringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
 
 public class FontChooserField extends ComboBox {
-  private static final long serialVersionUID = 1L;
-
   private static final ListCellRenderer RENDERER = new DefaultListCellRenderer() {
     /**
      *
@@ -34,6 +32,8 @@ public class FontChooserField extends ComboBox {
       return renderer;
     }
   };
+
+  private static final long serialVersionUID = 1L;
 
   public static String[] getFontNames() {
     return GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();

@@ -12,11 +12,11 @@ import com.revolsys.parallel.process.BaseInOutProcess;
 
 public class Sort extends BaseInOutProcess<Record, Record> {
 
+  private String attributeName;
+
   private Comparator<Record> comparator;
 
   private final List<Record> objects = new ArrayList<Record>();
-
-  private String attributeName;
 
   public String getAttributeName() {
     return this.attributeName;

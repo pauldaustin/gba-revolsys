@@ -177,13 +177,16 @@ public final class ProjectionFactory {
       final Projection projection = projectedCoordinateSystem.getProjection();
       final String projectionName = projection.getNormalizedName();
       synchronized (projectionClasses) {
-        final Class<? extends CoordinatesProjection> projectionClass = projectionClasses.get(projectionName);
+        final Class<? extends CoordinatesProjection> projectionClass = projectionClasses
+          .get(projectionName);
         if (projectionClass == null) {
           return null;
         } else {
           try {
-            final Constructor<? extends CoordinatesProjection> constructor = projectionClass.getConstructor(ProjectedCoordinateSystem.class);
-            final CoordinatesProjection coordinateProjection = constructor.newInstance(coordinateSystem);
+            final Constructor<? extends CoordinatesProjection> constructor = projectionClass
+              .getConstructor(ProjectedCoordinateSystem.class);
+            final CoordinatesProjection coordinateProjection = constructor
+              .newInstance(coordinateSystem);
             return coordinateProjection;
           } catch (final NoSuchMethodException e) {
             throw new IllegalArgumentException("Constructor " + projectionClass + "("
@@ -199,7 +202,8 @@ public final class ProjectionFactory {
             } else if (cause instanceof Error) {
               throw (Error)cause;
             } else {
-              throw new IllegalArgumentException(projectionClass + " cannot be instantiated", cause);
+              throw new IllegalArgumentException(projectionClass + " cannot be instantiated",
+                cause);
             }
           }
         }
@@ -317,7 +321,8 @@ public final class ProjectionFactory {
     if (coordinateSystem instanceof ProjectedCoordinateSystem) {
       final ProjectedCoordinateSystem projectedCs = (ProjectedCoordinateSystem)coordinateSystem;
       final CoordinatesOperation operation = getInverseCoordinatesOperation(projectedCs);
-      final GeographicCoordinateSystem geographicsCoordinateSystem = projectedCs.getGeographicCoordinateSystem();
+      final GeographicCoordinateSystem geographicsCoordinateSystem = projectedCs
+        .getGeographicCoordinateSystem();
 
       final Unit<Angle> angularUnit = geographicsCoordinateSystem.getUnit();
       if (angularUnit.equals(SI.RADIAN)) {

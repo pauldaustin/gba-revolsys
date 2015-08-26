@@ -26,6 +26,7 @@ import com.vividsolutions.jts.geom.LineString;
 public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
 
   public static final String MTACHED = "mtached";
+
   static {
     Geometry3DExactEquals.addExclude(MTACHED);
   }
@@ -63,7 +64,8 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
         boolean hasMatches = lineEdge.hasMatches(index);
         if (!hasMatches) {
           final Node<LineSegmentMatch> endNode = edge.getOppositeNode(currentNode);
-          for (final Edge<LineSegmentMatch> matchEdge : Node.getEdgesBetween(currentNode, endNode)) {
+          for (final Edge<LineSegmentMatch> matchEdge : Node.getEdgesBetween(currentNode,
+            endNode)) {
             if (matchEdge != edge) {
               final List<LineSegment> segments = matchEdge.getObject().getSegments();
               for (int i = 0; i < segments.size(); i++) {
@@ -141,8 +143,8 @@ public class SplitIntersectingEdgeVisitor implements Visitor<Edge<Record>> {
   @Override
   public boolean visit(final Edge<Record> edge) {
     final LineString line = edge.getLine();
-    final List<Edge<Record>> intersectEdges = EdgeIntersectsLinearlyEdgeVisitor.getEdges(
-      edge.getGraph(), edge);
+    final List<Edge<Record>> intersectEdges = EdgeIntersectsLinearlyEdgeVisitor
+      .getEdges(edge.getGraph(), edge);
     if (!intersectEdges.isEmpty()) {
       final Filter<Edge<Record>> edgeEqualFilter = new LineFilter<Record>(
         new EqualFilter<LineString>(line));

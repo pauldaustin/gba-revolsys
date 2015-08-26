@@ -21,11 +21,11 @@ import com.revolsys.io.Paths;
 
 public class RecordStoreFactoryRegistry {
 
-  private static Map<Pattern, RecordStoreFactory> recordStoreFactoryUrlPatterns = new HashMap<>();
+  private static Set<String> fileExtensions = new TreeSet<>();
 
   private static List<RecordStoreFactory> fileRecordStoreFactories = new ArrayList<>();
 
-  private static Set<String> fileExtensions = new TreeSet<>();
+  private static Map<Pattern, RecordStoreFactory> recordStoreFactoryUrlPatterns = new HashMap<>();
 
   static {
     new ClassPathXmlApplicationContext("classpath*:META-INF/com.revolsys.gis.recordStore.sf.xml");

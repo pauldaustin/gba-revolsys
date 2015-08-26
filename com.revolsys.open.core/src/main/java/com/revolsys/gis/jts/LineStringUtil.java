@@ -197,10 +197,8 @@ public final class LineStringUtil {
       final double sBottom = (aX2 - aX1) * (bY2 - bY1) - (aY2 - aY1) * (bX2 - bX1);
 
       if (rBottom == 0 || sBottom == 0) {
-        return Math.min(
-          LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX1, aY1),
-          Math.min(
-            LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX2, aY2),
+        return Math.min(LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX1, aY1),
+          Math.min(LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX2, aY2),
             Math.min(LineSegmentUtil.distance(aX1, aY1, aX2, aY2, bX1, bY1),
               LineSegmentUtil.distance(aX1, aY1, aX2, aY2, bX2, bY2))));
 
@@ -210,10 +208,8 @@ public final class LineStringUtil {
 
         if (r < 0 || r > 1 || s < 0 || s > 1) {
           // no intersection
-          return Math.min(
-            LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX1, aY1),
-            Math.min(
-              LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX2, aY2),
+          return Math.min(LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX1, aY1),
+            Math.min(LineSegmentUtil.distance(bX1, bY1, bX2, bY2, aX2, aY2),
               Math.min(LineSegmentUtil.distance(aX1, aY1, aX2, aY2, bX1, bY1),
                 LineSegmentUtil.distance(aX1, aY1, aX2, aY2, bX2, bY2))));
         }
@@ -263,8 +259,8 @@ public final class LineStringUtil {
 
   public static double distance(final LineString line1, final LineString line2,
     final double terminateDistance) {
-    final double envelopeDistance = line1.getEnvelopeInternal().distance(
-      line2.getEnvelopeInternal());
+    final double envelopeDistance = line1.getEnvelopeInternal()
+      .distance(line2.getEnvelopeInternal());
     if (envelopeDistance > terminateDistance) {
       return Double.MAX_VALUE;
     } else {
@@ -490,7 +486,8 @@ public final class LineStringUtil {
    * @param line2 The second line
    * @return The coordinate or null if they don't cross
    */
-  public static Coordinates getCrossingIntersection(final LineString line1, final LineString line2) {
+  public static Coordinates getCrossingIntersection(final LineString line1,
+    final LineString line2) {
     final RobustLineIntersector intersector = new RobustLineIntersector();
 
     final CoordinatesList coordinates1 = CoordinatesListUtil.get(line1);
@@ -520,7 +517,8 @@ public final class LineStringUtil {
           } else if (numIntersections == 1) {
             final Coordinate intersection = intersector.getIntersection(0);
             if (i1 == 1 || i2 == 1 || i1 == numCoordinates1 - 1 || i2 == numCoordinates2 - 1) {
-              if (!((intersection.equals2D(firstCoord1) || intersection.equals2D(lastCoord1)) && (intersection.equals2D(firstCoord2) || intersection.equals2D(lastCoord2)))) {
+              if (!((intersection.equals2D(firstCoord1) || intersection.equals2D(lastCoord1))
+                && (intersection.equals2D(firstCoord2) || intersection.equals2D(lastCoord2)))) {
                 return CoordinatesUtil.get(intersection);
               }
             } else {
@@ -723,7 +721,8 @@ public final class LineStringUtil {
       }
     }
     final int dimension = line.getCoordinateSequence().getDimension();
-    final CoordinatesList newCoordinates = new DoubleCoordinatesList(segments.size() + 1, dimension);
+    final CoordinatesList newCoordinates = new DoubleCoordinatesList(segments.size() + 1,
+      dimension);
     final LineSegment firstSegment = segments.get(0);
     newCoordinates.setPoint(0, firstSegment.get(0));
 
@@ -756,8 +755,8 @@ public final class LineStringUtil {
     Coordinates previousPoint = iterator.next();
     while (iterator.hasNext()) {
       final Coordinates nextPoint = iterator.next();
-      final CoordinatesList intersectionPoints = LineSegmentUtil.getIntersection(factory,
-        lineStart, lineEnd, previousPoint, nextPoint);
+      final CoordinatesList intersectionPoints = LineSegmentUtil.getIntersection(factory, lineStart,
+        lineEnd, previousPoint, nextPoint);
       if (intersectionPoints.size() > 0) {
         if (intersectionPoints.size() == 1 && !intersections.isEmpty()) {
           final Coordinates point = intersectionPoints.get(0);
@@ -989,7 +988,8 @@ public final class LineStringUtil {
     final LineString line2) {
     final CoordinatesList coordinates1 = CoordinatesListUtil.get(line1);
     final CoordinatesList coordinates2 = CoordinatesListUtil.get(line2);
-    final CoordinatesList coordinates = CoordinatesListUtil.merge(point, coordinates1, coordinates2);
+    final CoordinatesList coordinates = CoordinatesListUtil.merge(point, coordinates1,
+      coordinates2);
     final GeometryFactory factory = GeometryFactory.getFactory(line1);
     final LineString line = factory.createLineString(coordinates);
     JtsGeometryUtil.copyUserData(line1, line);
@@ -1057,8 +1057,8 @@ public final class LineStringUtil {
     return newLine;
   }
 
-  public static List<LineString> split(final GeometryFactory geometryFactory,
-    final LineString line, final LineSegmentIndex index, final double tolerance) {
+  public static List<LineString> split(final GeometryFactory geometryFactory, final LineString line,
+    final LineSegmentIndex index, final double tolerance) {
     final CoordinatesList points = CoordinatesListUtil.get(line);
     final Coordinates firstCoordinate = points.get(0);
     final int lastIndex = points.size() - 1;
@@ -1122,7 +1122,8 @@ public final class LineStringUtil {
     if (newLines.isEmpty()) {
       newLines.add(line);
     } else {
-      addLineString(geometryFactory, points, startCoordinate, startIndex, lastIndex, null, newLines);
+      addLineString(geometryFactory, points, startCoordinate, startIndex, lastIndex, null,
+        newLines);
     }
     return newLines;
   }
@@ -1135,10 +1136,10 @@ public final class LineStringUtil {
     if (segmentIndex != -1) {
       List<LineString> lines;
       final int coordinateIndex = CollectionUtil.getInteger(result, "coordinateIndex");
-      final double coordinateDistance = geometryFactory.makeXyPrecise(CollectionUtil.getDouble(
-        result, "coordinateDistance"));
-      final double segmentDistance = geometryFactory.makeXyPrecise(CollectionUtil.getDouble(result,
-        "segmentDistance"));
+      final double coordinateDistance = geometryFactory
+        .makeXyPrecise(CollectionUtil.getDouble(result, "coordinateDistance"));
+      final double segmentDistance = geometryFactory
+        .makeXyPrecise(CollectionUtil.getDouble(result, "segmentDistance"));
       if (coordinateIndex == 0) {
         if (coordinateDistance == 0) {
           return Collections.singletonList(line);

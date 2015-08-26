@@ -276,13 +276,13 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   private RecordQuadTree index = new RecordQuadTree();
 
-  private RecordDefinition recordDefinition;
-
   private final List<LayerRecord> modifiedRecords = new ArrayList<LayerRecord>();
 
   private final List<LayerRecord> newRecords = new ArrayList<LayerRecord>();
 
   private Query query;
+
+  private RecordDefinition recordDefinition;
 
   private final List<LayerRecord> selectedRecords = new ArrayList<LayerRecord>();
 

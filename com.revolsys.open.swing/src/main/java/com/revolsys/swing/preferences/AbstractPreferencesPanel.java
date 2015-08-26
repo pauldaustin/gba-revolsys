@@ -13,16 +13,16 @@ import com.revolsys.swing.layout.GroupLayoutUtil;
 public abstract class AbstractPreferencesPanel extends JPanel implements PreferencesPanel {
   private static final long serialVersionUID = 1L;
 
-  private final String title;
-
   private final JPanel fieldPanel = new JPanel();
+
+  private final String title;
 
   public AbstractPreferencesPanel(final String title, final String instructions) {
     super(new BorderLayout());
     this.title = title;
     if (instructions != null) {
-      final JLabel instructionsLabel = new JLabel("<html><p style=\"color:#666666\">"
-        + instructions + "</p></html>");
+      final JLabel instructionsLabel = new JLabel(
+        "<html><p style=\"color:#666666\">" + instructions + "</p></html>");
       add(instructionsLabel, BorderLayout.NORTH);
     }
     add(this.fieldPanel, BorderLayout.CENTER);

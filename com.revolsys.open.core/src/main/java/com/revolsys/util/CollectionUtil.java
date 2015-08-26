@@ -20,7 +20,8 @@ import java.util.prefs.Preferences;
 import com.revolsys.converter.string.StringConverterRegistry;
 
 public final class CollectionUtil {
-  public static <V> void addAllIfNotNull(final Collection<V> collection, final Collection<V> values) {
+  public static <V> void addAllIfNotNull(final Collection<V> collection,
+    final Collection<V> values) {
     if (collection != null && values != null) {
       collection.addAll(values);
     }
@@ -46,7 +47,8 @@ public final class CollectionUtil {
     }
   }
 
-  public static <K1, V> boolean addToList(final Map<K1, List<V>> map, final K1 key1, final V value) {
+  public static <K1, V> boolean addToList(final Map<K1, List<V>> map, final K1 key1,
+    final V value) {
     final List<V> values = getList(map, key1);
     return values.add(value);
   }
@@ -62,7 +64,8 @@ public final class CollectionUtil {
     return values.add(value);
   }
 
-  public static <K1, V> boolean addToTreeSet(final Map<K1, Set<V>> map, final K1 key1, final V value) {
+  public static <K1, V> boolean addToTreeSet(final Map<K1, Set<V>> map, final K1 key1,
+    final V value) {
     final Set<V> values = getTreeSet(map, key1);
     return values.add(value);
   }
@@ -487,8 +490,8 @@ public final class CollectionUtil {
     return values.put(key2, value);
   }
 
-  public static <K, V extends Comparable<V>> void putIfGreaterThan(final Map<K, V> map,
-    final K key, final V value) {
+  public static <K, V extends Comparable<V>> void putIfGreaterThan(final Map<K, V> map, final K key,
+    final V value) {
     synchronized (map) {
       final V lastValue = map.get(key);
       if (lastValue == null || value.compareTo(lastValue) > 1) {

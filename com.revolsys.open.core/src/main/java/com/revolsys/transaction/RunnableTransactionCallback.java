@@ -7,9 +7,9 @@ import com.revolsys.util.ExceptionUtil;
 
 public class RunnableTransactionCallback implements TransactionCallback<Void> {
 
-  private final Runnable runnable;
-
   private final boolean rollback;
+
+  private final Runnable runnable;
 
   public RunnableTransactionCallback(final Runnable runnable) {
     this(runnable, false);

@@ -14,24 +14,24 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.attribute.NodeAttributes;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 
-public class ItersectsNodeEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>> implements
-  ObjectProcessor<RecordGraph> {
+public class ItersectsNodeEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>>
+  implements ObjectProcessor<RecordGraph> {
 
   private static final Logger LOG = LoggerFactory.getLogger(ItersectsNodeEdgeCleanupVisitor.class);
 
-  private Statistics splitStatistics;
+  private final Set<String> equalExcludeAttributes = new HashSet<String>(
+    Arrays.asList(RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
 
-  private final Set<String> equalExcludeAttributes = new HashSet<String>(Arrays.asList(
-    RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
+  private Statistics splitStatistics;
 
   @PreDestroy
   public void destroy() {

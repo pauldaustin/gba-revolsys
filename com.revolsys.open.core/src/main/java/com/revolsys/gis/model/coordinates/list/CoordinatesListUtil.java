@@ -214,10 +214,10 @@ public class CoordinatesListUtil {
     graph2.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
       "movePointsWithinTolerance", null, graph1, tolerance));
 
-    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1.getPointsOnEdges(
-      graph2, tolerance);
-    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge2 = graph2.getPointsOnEdges(
-      graph1, tolerance);
+    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1
+      .getPointsOnEdges(graph2, tolerance);
+    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge2 = graph2
+      .getPointsOnEdges(graph1, tolerance);
     graph1.splitEdges(pointsOnEdge1);
     graph2.splitEdges(pointsOnEdge2);
     for (final Edge<LineSegment> edge : graph2.getEdges()) {
@@ -514,10 +514,10 @@ public class CoordinatesListUtil {
     graph2.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
       "movePointsWithinTolerance", movedNodes, graph1, maxDistance));
 
-    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1.getPointsOnEdges(
-      graph2, maxDistance);
-    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge2 = graph2.getPointsOnEdges(
-      graph1, maxDistance);
+    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1
+      .getPointsOnEdges(graph2, maxDistance);
+    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge2 = graph2
+      .getPointsOnEdges(graph1, maxDistance);
     graph1.splitEdges(pointsOnEdge1);
     graph2.splitEdges(pointsOnEdge2);
     Coordinates startPoint = points1.get(0);
@@ -737,7 +737,8 @@ public class CoordinatesListUtil {
       numCoords = append(coordinates1, coordinates, numCoords);
       numCoords = appendReversed(coordinates2, coordinates, numCoords);
     } else {
-      throw new IllegalArgumentException("lines don't touch\n" + coordinates1 + "\n" + coordinates2);
+      throw new IllegalArgumentException(
+        "lines don't touch\n" + coordinates1 + "\n" + coordinates2);
 
     }
     return trim(coordinates, numCoords);
@@ -767,7 +768,8 @@ public class CoordinatesListUtil {
       numCoords = append(coordinates1, coordinates, numCoords);
       numCoords = appendReversed(coordinates2, coordinates, numCoords);
     } else {
-      throw new IllegalArgumentException("lines don't touch\n" + coordinates1 + "\n" + coordinates2);
+      throw new IllegalArgumentException(
+        "lines don't touch\n" + coordinates1 + "\n" + coordinates2);
 
     }
     return trim(coordinates, numCoords);
@@ -796,8 +798,8 @@ public class CoordinatesListUtil {
    * @return
    */
   public static <T> boolean movePointsWithinTolerance(
-    final Map<Coordinates, Coordinates> movedNodes, final Graph<T> graph2,
-    final double maxDistance, final Node<T> node1) {
+    final Map<Coordinates, Coordinates> movedNodes, final Graph<T> graph2, final double maxDistance,
+    final Node<T> node1) {
     final Graph<T> graph1 = node1.getGraph();
     final List<Node<T>> nodes2 = graph2.findNodes(node1, maxDistance);
     if (nodes2.size() == 1) {
@@ -822,8 +824,8 @@ public class CoordinatesListUtil {
     return true;
   }
 
-  public static int orientationIndex(final CoordinatesList ring, final int index1,
-    final int index2, final int index) {
+  public static int orientationIndex(final CoordinatesList ring, final int index1, final int index2,
+    final int index) {
     return orientationIndex(ring.getX(index1), ring.getY(index1), ring.getX(index2),
       ring.getY(index2), ring.getX(index), ring.getY(index));
   }
@@ -1041,8 +1043,8 @@ public class CoordinatesListUtil {
             if (startIndex > index) {
               newPoints = CoordinatesListUtil.create(points.getNumAxis(), startPoint, point);
             } else {
-              newPoints = CoordinatesListUtil.subList(points, startPoint, startIndex, index
-                - startIndex + 1, point);
+              newPoints = CoordinatesListUtil.subList(points, startPoint, startIndex,
+                index - startIndex + 1, point);
             }
             final LineString newLine = geometryFactory.createLineString(newPoints);
             lines.add(newLine);
@@ -1128,7 +1130,8 @@ public class CoordinatesListUtil {
 
   public static CoordinatesList toCoordinateList(final int numAxis,
     final List<double[]> listOfCoordinateArrays) {
-    final CoordinatesList points = new DoubleCoordinatesList(listOfCoordinateArrays.size(), numAxis);
+    final CoordinatesList points = new DoubleCoordinatesList(listOfCoordinateArrays.size(),
+      numAxis);
     for (int i = 0; i < listOfCoordinateArrays.size(); i++) {
       final double[] coordinates = listOfCoordinateArrays.get(i);
       for (int j = 0; j < coordinates.length; j++) {

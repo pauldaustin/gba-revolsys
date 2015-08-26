@@ -24,9 +24,9 @@ public class Node<T> extends NodeBase<T> {
     return node;
   }
 
-  private final Envelope env;
-
   private final Coordinates centre;
+
+  private final Envelope env;
 
   private final int level;
 

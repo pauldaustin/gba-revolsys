@@ -15,11 +15,11 @@ public class Statistics {
 
   private final Logger log;
 
+  private boolean logCounts = true;
+
   private String message;
 
   private int providerCount = 0;
-
-  private boolean logCounts = true;
 
   public Statistics() {
     this(null);

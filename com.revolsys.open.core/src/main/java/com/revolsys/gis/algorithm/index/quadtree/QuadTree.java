@@ -35,9 +35,9 @@ public class QuadTree<T> {
 
   private GeometryFactory geometryFactory;
 
-  private Root<T> root = new Root<T>();
-
   private double minExtent = 1.0;
+
+  private Root<T> root = new Root<T>();
 
   private int size = 0;
 

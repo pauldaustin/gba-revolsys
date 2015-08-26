@@ -20,17 +20,17 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 
 public class LineStringRelate {
-  private final LineString line1;
-
-  private final LineString line2;
-
-  private final LineStringGraph graph1;
-
   private final Coordinates fromPoint1;
 
   private final Coordinates fromPoint2;
 
+  private final LineStringGraph graph1;
+
   private final LineStringGraph graph2;
+
+  private final LineString line1;
+
+  private final LineString line2;
 
   private final Coordinates toPoint1;
 
@@ -244,10 +244,10 @@ public class LineStringRelate {
   }
 
   public void splitEdgesCloseToNodes(final double maxDistance) {
-    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = this.graph1.getPointsOnEdges(
-      this.graph2, maxDistance);
-    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge2 = this.graph2.getPointsOnEdges(
-      this.graph1, maxDistance);
+    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = this.graph1
+      .getPointsOnEdges(this.graph2, maxDistance);
+    final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge2 = this.graph2
+      .getPointsOnEdges(this.graph1, maxDistance);
     this.graph1.splitEdges(pointsOnEdge1);
     this.graph2.splitEdges(pointsOnEdge2);
   }

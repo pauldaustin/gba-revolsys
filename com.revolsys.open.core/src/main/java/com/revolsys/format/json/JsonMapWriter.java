@@ -9,16 +9,16 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 
 public class JsonMapWriter extends AbstractMapWriter {
-  /** The writer */
-  private PrintWriter out;
-
-  boolean written = false;
-
-  private boolean singleObject;
+  private final boolean indent;
 
   private boolean listRoot;
 
-  private final boolean indent;
+  /** The writer */
+  private PrintWriter out;
+
+  private boolean singleObject;
+
+  boolean written = false;
 
   public JsonMapWriter(final Writer out) {
     this(out, true);

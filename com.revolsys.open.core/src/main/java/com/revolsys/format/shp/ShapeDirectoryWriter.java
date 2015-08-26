@@ -6,10 +6,7 @@ import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.spring.resource.FileSystemResource;
-
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.xbase.XbaseRecordWriter;
@@ -19,21 +16,22 @@ import com.revolsys.io.IoConstants;
 import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class ShapeDirectoryWriter extends AbstractWriter<Record> {
   private File directory;
 
-  private boolean useZeroForNull = true;
-
-  private Map<String, Writer<Record>> writers = new HashMap<String, Writer<Record>>();
-
-  private boolean useNamespaceAsSubDirectory;
+  private String nameSuffix = "";
 
   private Statistics statistics;
 
-  private String nameSuffix = "";
+  private boolean useNamespaceAsSubDirectory;
+
+  private boolean useZeroForNull = true;
+
+  private Map<String, Writer<Record>> writers = new HashMap<String, Writer<Record>>();
 
   public ShapeDirectoryWriter() {
   }

@@ -19,13 +19,13 @@ import com.vividsolutions.jts.geom.Geometry;
 public class GeometryCoordinatesPanel extends ValueField implements TableModelListener {
   private static final long serialVersionUID = 1L;
 
+  private final Reference<RecordLayerForm> form;
+
   private final GeometryCoordinatesTableModel model = new GeometryCoordinatesTableModel();
 
   private final BaseJTable table;
 
   private final TablePanel tablePanel;
-
-  private final Reference<RecordLayerForm> form;
 
   public GeometryCoordinatesPanel(final RecordLayerForm form, final String fieldName) {
     super(fieldName, null);

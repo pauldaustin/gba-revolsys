@@ -13,13 +13,13 @@ public interface GmlConstants {
 
   QName BOUNDED_BY = new QName(_NS_URI, "boundedBy", _NS_PREFIX);
 
+  QName BOX = new QName(_NS_URI, "Box", _NS_PREFIX);
+
   QName COORDINATES = new QName(_NS_URI, "coordinates", _NS_PREFIX);
 
   QName DIMENSION = new QName("dimension");
 
   QName ENVELOPE = new QName(_NS_URI, "Envelope", _NS_PREFIX);
-
-  QName BOX = new QName(_NS_URI, "Box", _NS_PREFIX);
 
   QName FEATURE_COLLECTION = new QName(_NS_URI, "FeatureCollection", _NS_PREFIX);
 
@@ -63,11 +63,11 @@ public interface GmlConstants {
 
   QName POS = new QName(_NS_URI, "pos", _NS_PREFIX);
 
-  QName POS_LIST = new QName(_NS_URI, "posList", _NS_PREFIX);
+  QName POS_LIST = new QName(_NS_URI, "posList", _NS_PREFIX);;
 
   QName SRS_NAME = new QName("srsName");
 
-  QName UPPER_CORNER = new QName(_NS_URI, "upperCorner", _NS_PREFIX);;
+  QName UPPER_CORNER = new QName(_NS_URI, "upperCorner", _NS_PREFIX);
 
   String VERSION_PROPERTY = "java:" + GmlConstants.class.getName() + ".version";
 

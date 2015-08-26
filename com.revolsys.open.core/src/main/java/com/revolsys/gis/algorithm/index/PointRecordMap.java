@@ -24,9 +24,9 @@ public class PointRecordMap {
 
   private Map<Coordinates, List<Record>> objectMap = new HashMap<Coordinates, List<Record>>();
 
-  private int size = 0;
-
   private boolean removeEmptyLists;
+
+  private int size = 0;
 
   public PointRecordMap() {
   }

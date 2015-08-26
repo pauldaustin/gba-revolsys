@@ -9,8 +9,7 @@ import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 
-public class EsriGeodatabaseXmlRecordWriterFactory extends
-  AbstractRecordAndGeometryWriterFactory {
+public class EsriGeodatabaseXmlRecordWriterFactory extends AbstractRecordAndGeometryWriterFactory {
   public EsriGeodatabaseXmlRecordWriterFactory() {
     super(EsriGeodatabaseXmlConstants.FORMAT_DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(EsriGeodatabaseXmlConstants.MEDIA_TYPE,

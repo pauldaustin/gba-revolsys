@@ -32,9 +32,9 @@ import com.revolsys.jts.geom.GeometryFactory;
 public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
   private final GeometryFactory geometryFactory;
 
-  private final int srid;
-
   private final int numAxis;
+
+  private final int srid;
 
   public PostgreSQLGeometryJdbcAttribute(final String dbName, final String name,
     final DataType type, final boolean required, final String description,
@@ -81,7 +81,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         geometry = toPgPoint(point);
       } else if (object instanceof Coordinates) {
         final Coordinates coordinates = (Coordinates)object;
-        final com.vividsolutions.jts.geom.Point point = this.geometryFactory.createPoint(coordinates);
+        final com.vividsolutions.jts.geom.Point point = this.geometryFactory
+          .createPoint(coordinates);
         geometry = toPgPoint(point);
       } else if (object instanceof com.vividsolutions.jts.geom.MultiPoint) {
         final com.vividsolutions.jts.geom.MultiPoint point = (com.vividsolutions.jts.geom.MultiPoint)object;
@@ -312,7 +313,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     } else if (object instanceof com.vividsolutions.jts.geom.GeometryCollection) {
       final com.vividsolutions.jts.geom.GeometryCollection geometryCollection = (com.vividsolutions.jts.geom.GeometryCollection)object;
       if (geometryCollection.getNumGeometries() == 1) {
-        final com.vividsolutions.jts.geom.Geometry firstGeometry = geometryCollection.getGeometryN(0);
+        final com.vividsolutions.jts.geom.Geometry firstGeometry = geometryCollection
+          .getGeometryN(0);
         if (firstGeometry instanceof com.vividsolutions.jts.geom.LineString) {
           final com.vividsolutions.jts.geom.LineString line = (com.vividsolutions.jts.geom.LineString)firstGeometry;
           return toPgLineString(line);
@@ -337,8 +339,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         final LineString pgLineString = toPgLineString(line);
         pgLineStrings.add(pgLineString);
       } else {
-        throw new RuntimeException("Geometry must contain only LineStrings not a "
-          + subGeometry.getClass());
+        throw new RuntimeException(
+          "Geometry must contain only LineStrings not a " + subGeometry.getClass());
       }
     }
     return toPgMultiLineString(geometry.getSRID(), pgLineStrings);
@@ -361,8 +363,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         final Point pgPoint = toPgPoint(point);
         pgPoints.add(pgPoint);
       } else {
-        throw new RuntimeException("Geometry must contain only Points not a "
-          + subGeometry.getClass());
+        throw new RuntimeException(
+          "Geometry must contain only Points not a " + subGeometry.getClass());
       }
     }
     return toPgMultiPoint(geometry.getSRID(), pgPoints);
@@ -385,8 +387,8 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
         final Polygon pgPolygon = toPgPolygon(line);
         pgPolygons.add(pgPolygon);
       } else {
-        throw new RuntimeException("Geometry must contain only Polygons not a "
-          + subGeometry.getClass());
+        throw new RuntimeException(
+          "Geometry must contain only Polygons not a " + subGeometry.getClass());
       }
     }
     return toPgMultiPolygon(geometry.getSRID(), pgPolygons);
@@ -434,13 +436,14 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     } else if (object instanceof com.vividsolutions.jts.geom.GeometryCollection) {
       final com.vividsolutions.jts.geom.GeometryCollection geometryCollection = (com.vividsolutions.jts.geom.GeometryCollection)object;
       if (geometryCollection.getNumGeometries() == 1) {
-        final com.vividsolutions.jts.geom.Geometry firstGeometry = geometryCollection.getGeometryN(0);
+        final com.vividsolutions.jts.geom.Geometry firstGeometry = geometryCollection
+          .getGeometryN(0);
         if (firstGeometry instanceof com.vividsolutions.jts.geom.Point) {
           final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point)firstGeometry;
           return toPgPoint(point);
         } else {
-          throw new RuntimeException("GeometryCollection must contain a single Point not a "
-            + firstGeometry.getClass());
+          throw new RuntimeException(
+            "GeometryCollection must contain a single Point not a " + firstGeometry.getClass());
         }
       } else {
         throw new RuntimeException("GeometryCollection has more than one geometry");
@@ -499,17 +502,18 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     } else if (object instanceof com.vividsolutions.jts.geom.GeometryCollection) {
       final com.vividsolutions.jts.geom.GeometryCollection geometryCollection = (com.vividsolutions.jts.geom.GeometryCollection)object;
       if (geometryCollection.getNumGeometries() == 1) {
-        final com.vividsolutions.jts.geom.Geometry firstGeometry = geometryCollection.getGeometryN(0);
+        final com.vividsolutions.jts.geom.Geometry firstGeometry = geometryCollection
+          .getGeometryN(0);
         if (firstGeometry instanceof com.vividsolutions.jts.geom.Polygon) {
           final com.vividsolutions.jts.geom.Polygon polygon = (com.vividsolutions.jts.geom.Polygon)firstGeometry;
           return toPgPolygon(polygon);
         } else {
-          throw new RuntimeException("GeometryCollection must contain a single Polygon not a "
-            + firstGeometry.getClass());
+          throw new RuntimeException(
+            "GeometryCollection must contain a single Polygon not a " + firstGeometry.getClass());
         }
       } else {
-        throw new RuntimeException("Expecting a single Polygon not a " + object.getClass()
-          + " with more than one geometry");
+        throw new RuntimeException(
+          "Expecting a single Polygon not a " + object.getClass() + " with more than one geometry");
       }
     } else if (object == null) {
       return null;

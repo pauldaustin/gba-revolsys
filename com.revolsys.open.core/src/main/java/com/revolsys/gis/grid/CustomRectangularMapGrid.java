@@ -13,13 +13,13 @@ public class CustomRectangularMapGrid extends AbstractRectangularMapGrid {
 
   private GeometryFactory geometryFactory;
 
-  private double tileHeight;
-
-  private double tileWidth;
-
   private double originX;
 
   private double originY;
+
+  private double tileHeight;
+
+  private double tileWidth;
 
   public BoundingBox getBoundingBox(final String name) {
     final double[] coordinates = MathUtil.toDoubleArraySplit(name, "_");

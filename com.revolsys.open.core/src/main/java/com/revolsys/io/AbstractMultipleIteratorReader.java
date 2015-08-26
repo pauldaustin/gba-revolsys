@@ -7,14 +7,14 @@ import javax.annotation.PreDestroy;
 
 import com.revolsys.collection.iterator.AbstractIterator;
 
-public abstract class AbstractMultipleIteratorReader<T> extends AbstractReader<T> implements
-  Iterator<T> {
+public abstract class AbstractMultipleIteratorReader<T> extends AbstractReader<T>
+  implements Iterator<T> {
 
   private AbstractIterator<T> iterator;
 
-  private boolean open;
-
   private boolean loadNext = true;
+
+  private boolean open;
 
   @Override
   @PreDestroy

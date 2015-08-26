@@ -15,8 +15,8 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class Nts1000000RectangularMapGrid extends AbstractRectangularMapGrid {
 
-  private static final Pattern NAME_PATTERN = Pattern.compile("^" + NtsConstants.REGEX_1000000
-    + ".*");
+  private static final Pattern NAME_PATTERN = Pattern
+    .compile("^" + NtsConstants.REGEX_1000000 + ".*");
 
   private final GeometryFactory geometryFactory = GeometryFactory.wgs84();
 
@@ -43,8 +43,8 @@ public class Nts1000000RectangularMapGrid extends AbstractRectangularMapGrid {
   public BoundingBox getBoundingBox(final String mapTileName) {
     final double lat = getLatitude(mapTileName);
     final double lon = getLongitude(mapTileName);
-    return new BoundingBox(getGeometryFactory(), lon, lat, lon - this.tileWidth, lat
-      + this.tileHeight);
+    return new BoundingBox(getGeometryFactory(), lon, lat, lon - this.tileWidth,
+      lat + this.tileHeight);
   }
 
   @Override
@@ -172,9 +172,8 @@ public class Nts1000000RectangularMapGrid extends AbstractRectangularMapGrid {
     final int numY = maxYCeil - minYFloor;
     final int max = 100;
     if (numX > max || numY > max) {
-      LoggerFactory.getLogger(getClass()).error(
-        "Request would return too many tiles width=" + numX + " (max=" + max + ") height=" + numY
-          + "(max=" + max + ").");
+      LoggerFactory.getLogger(getClass()).error("Request would return too many tiles width=" + numX
+        + " (max=" + max + ") height=" + numY + "(max=" + max + ").");
       return tiles;
     }
     for (int y = 0; y < numY; y++) {

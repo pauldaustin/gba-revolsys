@@ -13,9 +13,9 @@ public class Feature implements Cloneable {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private final long swigCPtr;
-
   private FeatureNative nativeObject;
+
+  private final long swigCPtr;
 
   public Feature(final FeatureDefn feature_def) {
     this(ogrJNI.new_Feature(FeatureDefn.getCPtr(feature_def), feature_def), true);
@@ -235,10 +235,10 @@ public class Feature implements Cloneable {
     ogrJNI.Feature_SetField__SWIG_2(this.swigCPtr, this, id, value);
   }
 
-  public void SetField(final int id, final int year, final int month, final int day,
-    final int hour, final int minute, final int second, final int tzflag) {
-    ogrJNI.Feature_SetField__SWIG_6(this.swigCPtr, this, id, year, month, day, hour, minute,
-      second, tzflag);
+  public void SetField(final int id, final int year, final int month, final int day, final int hour,
+    final int minute, final int second, final int tzflag) {
+    ogrJNI.Feature_SetField__SWIG_6(this.swigCPtr, this, id, year, month, day, hour, minute, second,
+      tzflag);
   }
 
   public void SetField(final int id, final String value) {

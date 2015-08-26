@@ -5,11 +5,11 @@ import com.revolsys.io.AbstractIoFactoryWithCoordinateSystem;
 public abstract class AbstractRecordWriterFactory extends AbstractIoFactoryWithCoordinateSystem
   implements RecordWriterFactory {
 
-  private boolean singleFile = true;
+  private final boolean customAttributionSupported;
 
   private final boolean geometrySupported;
 
-  private final boolean customAttributionSupported;
+  private boolean singleFile = true;
 
   public AbstractRecordWriterFactory(final String name, final boolean geometrySupported,
     final boolean customAttributionSupported) {

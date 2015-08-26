@@ -20,13 +20,13 @@ import com.revolsys.util.ExceptionUtil;
 
 public class ArcSdeBinaryGeometryAttribute extends JdbcFieldDefinition {
 
+  private String[] geometryColumns;
+
   private final GeometryFactory geometryFactory;
 
   private final ArcSdeBinaryGeometryRecordUtil sdeUtil;
 
   private String tableName;
-
-  private String[] geometryColumns;
 
   private boolean valid;
 

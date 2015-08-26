@@ -16,11 +16,11 @@ import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class SimpleRecordConveter implements Converter<Record, Record> {
-  private RecordDefinition recordDefinition;
-
   private RecordFactory factory;
 
   private List<SourceToTargetProcess<Record, Record>> processors = new ArrayList<SourceToTargetProcess<Record, Record>>();
+
+  private RecordDefinition recordDefinition;
 
   public SimpleRecordConveter() {
   }
@@ -58,12 +58,12 @@ public class SimpleRecordConveter implements Converter<Record, Record> {
     return targetObject;
   }
 
-  public RecordDefinition getRecordDefinition() {
-    return this.recordDefinition;
-  }
-
   public List<SourceToTargetProcess<Record, Record>> getProcessors() {
     return this.processors;
+  }
+
+  public RecordDefinition getRecordDefinition() {
+    return this.recordDefinition;
   }
 
   public void setProcessors(final List<SourceToTargetProcess<Record, Record>> processors) {

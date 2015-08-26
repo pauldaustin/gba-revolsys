@@ -108,8 +108,7 @@ public class RecordQuadTree extends QuadTree<Record> {
       return Arrays.asList();
     } else {
       final Geometry geometry = convertedBoundingBox.toPolygon(1, 1);
-      final RecordGeometryIntersectsFilter filter = new RecordGeometryIntersectsFilter(
-        geometry);
+      final RecordGeometryIntersectsFilter filter = new RecordGeometryIntersectsFilter(geometry);
       return queryList(geometry, filter);
     }
   }
@@ -119,8 +118,7 @@ public class RecordQuadTree extends QuadTree<Record> {
     if (geometryFactory != null) {
       geometry = geometryFactory.copy(geometry);
     }
-    final RecordGeometryIntersectsFilter filter = new RecordGeometryIntersectsFilter(
-      geometry);
+    final RecordGeometryIntersectsFilter filter = new RecordGeometryIntersectsFilter(geometry);
     return queryList(geometry, filter);
   }
 

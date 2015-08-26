@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.ArrayRecordFactory;
@@ -14,10 +13,10 @@ import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.gis.data.io.RecordDirectoryReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Reader;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.util.DateUtil;
 
-public class MoepDirectoryReader extends RecordDirectoryReader implements
-  RecordDefinitionFactory {
+public class MoepDirectoryReader extends RecordDirectoryReader implements RecordDefinitionFactory {
 
   private Date integrationDate;
 

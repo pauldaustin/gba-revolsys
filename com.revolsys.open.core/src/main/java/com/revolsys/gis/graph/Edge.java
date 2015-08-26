@@ -73,7 +73,8 @@ public class Edge<T> implements AttributedObject, Comparable<Edge<T>>, Externali
     return newEdges;
   }
 
-  public static <T> List<Edge<T>> getEdges(final List<Edge<T>> edges, final Filter<Edge<T>> filter) {
+  public static <T> List<Edge<T>> getEdges(final List<Edge<T>> edges,
+    final Filter<Edge<T>> filter) {
     final List<Edge<T>> filteredEdges = new ArrayList<Edge<T>>();
     for (final Edge<T> edge : edges) {
       if (filter.accept(edge)) {

@@ -22,7 +22,7 @@ import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class KmlGeometryIterator extends AbstractIterator<Geometry> implements Kml22Constants {
+public class KmlGeometryIterator extends AbstractIterator<Geometry>implements Kml22Constants {
   private GeometryFactory geometryFactory = GeometryFactory.floating3(COORDINATE_SYSTEM_ID);
 
   private XMLStreamReader in;
@@ -70,7 +70,8 @@ public class KmlGeometryIterator extends AbstractIterator<Geometry> implements K
     for (int i = 0; i < coordinatesListArray.length; i++) {
       final String coordinatesString = coordinatesListArray[i];
       final String[] coordinatesArray = coordinatesString.split(",");
-      for (int ordinateIndex = 0; ordinateIndex < coordinatesArray.length && ordinateIndex < 3; ordinateIndex++) {
+      for (int ordinateIndex = 0; ordinateIndex < coordinatesArray.length
+        && ordinateIndex < 3; ordinateIndex++) {
         final String coordinate = coordinatesArray[ordinateIndex];
         coordinatesList.setValue(i, ordinateIndex, Double.valueOf(coordinate));
       }

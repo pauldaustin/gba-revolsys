@@ -9,16 +9,16 @@ public class InvokeMethodVisitor<T> implements Visitor<T> {
   /** A constant for zero length parameters. */
   public static final Object[] PARAMETERS = new Object[0];
 
+  private Method method;
+
+  /** The name of the method to invoke. */
+  private final String methodName;
+
   /** The object to invoke the method on. */
   private final Object object;
 
   /** The parameters to pass to the method. */
   private final Object[] parameters;
-
-  /** The name of the method to invoke. */
-  private final String methodName;
-
-  private Method method;
 
   public InvokeMethodVisitor(final Class<?> clazz, final String methodName,
     final Object... parameters) {

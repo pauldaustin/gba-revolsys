@@ -21,13 +21,13 @@ public class Key {
     return level;
   }
 
-  // the fields which make up the key
-  private final Coordinate pt = new Coordinate();
+  // auxiliary data which is derived from the key for use in computation
+  private Envelope env = null;
 
   private int level = 0;
 
-  // auxiliary data which is derived from the key for use in computation
-  private Envelope env = null;
+  // the fields which make up the key
+  private final Coordinate pt = new Coordinate();
 
   public Key(final Envelope itemEnv) {
     computeKey(itemEnv);

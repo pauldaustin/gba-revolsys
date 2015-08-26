@@ -66,13 +66,13 @@ public class LineStringGraph extends Graph<LineSegment> {
     }
   }
 
-  private GeometryFactory geometryFactory;
-
-  private CoordinatesList points;
+  private BoundingBox envelope;
 
   private Coordinates fromPoint;
 
-  private BoundingBox envelope;
+  private GeometryFactory geometryFactory;
+
+  private CoordinatesList points;
 
   public LineStringGraph(final CoordinatesList points) {
     super(false);
@@ -319,8 +319,8 @@ public class LineStringGraph extends Graph<LineSegment> {
 
               if (point.equals(fromPoint) || point.equals(toPoint)) {
                 // Point intersection, make sure it's not at the start
-                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor.getNodes(
-                  this, point, maxDistance)) {
+                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor
+                  .getNodes(this, point, maxDistance)) {
                   final int degree = node.getDegree();
                   if (node.equals2d(this.fromPoint)) {
                     if (degree > 2) {
@@ -502,7 +502,8 @@ public class LineStringGraph extends Graph<LineSegment> {
     return newEdges;
   }
 
-  public <V extends Coordinates> void splitEdges(final Map<Edge<LineSegment>, List<V>> pointsOnEdge1) {
+  public <V extends Coordinates> void splitEdges(
+    final Map<Edge<LineSegment>, List<V>> pointsOnEdge1) {
     for (final Entry<Edge<LineSegment>, List<V>> entry : pointsOnEdge1.entrySet()) {
       final Edge<LineSegment> edge = entry.getKey();
       final List<V> nodes = entry.getValue();

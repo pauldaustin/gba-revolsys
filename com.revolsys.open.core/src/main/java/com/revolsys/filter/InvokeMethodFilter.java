@@ -6,14 +6,14 @@ import com.revolsys.util.ExceptionUtil;
 
 public class InvokeMethodFilter<T> implements Filter<T> {
 
+  /** The name of the method to invoke. */
+  private final String methodName;
+
   /** The object to invoke the method on. */
   private Object object;
 
   /** The parameters to pass to the method. */
   private final Object[] parameters;
-
-  /** The name of the method to invoke. */
-  private final String methodName;
 
   public InvokeMethodFilter(final Object object, final String methodName,
     final Object... parameters) {

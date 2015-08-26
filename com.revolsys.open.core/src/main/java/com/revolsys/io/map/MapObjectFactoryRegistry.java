@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.map.Maps;
@@ -18,6 +17,7 @@ import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.format.json.JsonParser;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
@@ -36,7 +36,8 @@ public class MapObjectFactoryRegistry {
         final URL resource = resources.nextElement();
         try {
           final Map<String, Object> config = JsonParser.getMap(resource.openStream());
-          final List<Map<String, Object>> factories = (List<Map<String, Object>>)config.get("factories");
+          final List<Map<String, Object>> factories = (List<Map<String, Object>>)config
+            .get("factories");
           for (final Map<String, Object> factoryConfig : factories) {
             try {
               final String name = (String)factoryConfig.get("typeName");
@@ -48,13 +49,13 @@ public class MapObjectFactoryRegistry {
                 description, factoryClass, methodName);
               addFactory(factory);
             } catch (final Throwable e) {
-              LoggerFactory.getLogger(MapObjectFactoryRegistry.class).error(
-                "Unable to add factory: " + factoryConfig, e);
+              LoggerFactory.getLogger(MapObjectFactoryRegistry.class)
+                .error("Unable to add factory: " + factoryConfig, e);
             }
           }
         } catch (final Throwable e) {
-          LoggerFactory.getLogger(MapObjectFactoryRegistry.class).error(
-            "Unable to read resource: " + resource, e);
+          LoggerFactory.getLogger(MapObjectFactoryRegistry.class)
+            .error("Unable to read resource: " + resource, e);
         }
       }
     } catch (final Throwable e) {
@@ -93,8 +94,8 @@ public class MapObjectFactoryRegistry {
       final String type = Maps.getString(map, "type");
       final MapObjectFactory objectFactory = TYPE_NAME_TO_FACTORY.get(type);
       if (objectFactory == null) {
-        LoggerFactory.getLogger(MapObjectFactoryRegistry.class).error(
-          "No layer factory for " + type);
+        LoggerFactory.getLogger(MapObjectFactoryRegistry.class)
+          .error("No layer factory for " + type);
         return null;
       } else {
         return (V)objectFactory.toObject(map);
@@ -110,8 +111,8 @@ public class MapObjectFactoryRegistry {
       final Map<String, Object> properties = JsonMapIoFactory.toMap(resource);
       return (V)MapObjectFactoryRegistry.toObject(properties);
     } catch (final Throwable t) {
-      LoggerFactory.getLogger(MapObjectFactoryRegistry.class).error(
-        "Cannot load object from " + resource, t);
+      LoggerFactory.getLogger(MapObjectFactoryRegistry.class)
+        .error("Cannot load object from " + resource, t);
       return null;
     } finally {
       SpringUtil.setBaseResource(oldResource);

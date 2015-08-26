@@ -67,19 +67,19 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
   private Map<String, LayerRecord> cachedRecords = new HashMap<String, LayerRecord>();
 
-  private RecordStore recordStore;
+  private final Set<String> deletedRecordIds = new LinkedHashSet<String>();
+
+  private final Set<String> formRecordIds = new LinkedHashSet<String>();
 
   private BoundingBox loadingBoundingBox = new BoundingBox();
 
   private SwingWorker<RecordQuadTree, Void> loadingWorker;
 
+  private RecordStore recordStore;
+
   private final Object sync = new Object();
 
   private String typePath;
-
-  private final Set<String> deletedRecordIds = new LinkedHashSet<String>();
-
-  private final Set<String> formRecordIds = new LinkedHashSet<String>();
 
   public RecordStoreLayer(final Map<String, ? extends Object> properties) {
     super(properties);

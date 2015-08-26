@@ -15,9 +15,9 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
    */
   private static final long serialVersionUID = 5073275000676209987L;
 
-  private Object[] objects;
-
   private Envelope[] envelopes;
+
+  private Object[] objects;
 
   private int size = 0;
 
@@ -46,7 +46,8 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
   }
 
   @Override
-  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope, final T object) {
+  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope,
+    final T object) {
     for (int i = 0; i < this.size; i++) {
       final Envelope envelope1 = this.envelopes[i];
       final T object1 = getObject(i);

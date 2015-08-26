@@ -10,11 +10,11 @@ public class SwitchRecordFields extends AbstractUndoableEdit {
 
   private static final long serialVersionUID = 1L;
 
-  private final Record record;
-
   private final String fieldName1;
 
   private final String fieldName2;
+
+  private final Record record;
 
   private final Object value1;
 

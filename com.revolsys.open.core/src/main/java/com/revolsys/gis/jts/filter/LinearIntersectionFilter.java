@@ -9,11 +9,11 @@ import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 
 public class LinearIntersectionFilter implements Filter<LineString> {
 
+  private final Envelope envelope;
+
   private final LineString line;
 
   private final PreparedGeometry preparedLine;
-
-  private final Envelope envelope;
 
   public LinearIntersectionFilter(final LineString line) {
     this.line = line;

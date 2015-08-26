@@ -28,7 +28,13 @@ import com.revolsys.util.OS;
 import com.vividsolutions.jts.geom.Point;
 
 public class ZoomOverlay extends AbstractOverlay {
+  private static final String ACTION_PAN = "pan";
+
+  private static final String ACTION_ZOOM_BOX = "zoomBox";
+
   private static final Cursor CURSOR_PAN = new Cursor(Cursor.HAND_CURSOR);
+
+  private static final Cursor CURSOR_ZOOM_BOX = Icons.getCursor("cursor_zoom_box", 9, 9);
 
   private static final long serialVersionUID = 1L;
 
@@ -39,23 +45,17 @@ public class ZoomOverlay extends AbstractOverlay {
       "wheelForwardsZoomIn", Boolean.class, true);
   }
 
-  private static final Cursor CURSOR_ZOOM_BOX = Icons.getCursor("cursor_zoom_box", 9, 9);
-
-  private static final String ACTION_ZOOM_BOX = "zoomBox";
-
-  private static final String ACTION_PAN = "pan";
-
-  private java.awt.Point zoomBoxFirstPoint;
-
   private java.awt.Point panFirstPoint;
-
-  private Rectangle2D zoomBox;
-
-  private boolean panning;
 
   private BufferedImage panImage;
 
   private int panModifiers;
+
+  private boolean panning;
+
+  private Rectangle2D zoomBox;
+
+  private java.awt.Point zoomBoxFirstPoint;
 
   public ZoomOverlay(final MapPanel map) {
     super(map);
@@ -190,10 +190,10 @@ public class ZoomOverlay extends AbstractOverlay {
     if (this.zoomBox != null) {
       final Graphics2D g = (Graphics2D)graphics;
       g.setColor(Color.DARK_GRAY);
-      g.setStroke(new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2,
-        new float[] {
+      g.setStroke(
+        new BasicStroke(2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2, new float[] {
           6, 6
-        }, 0f));
+      }, 0f));
       g.draw(this.zoomBox);
       g.setPaint(TRANS_BG);
       g.fill(this.zoomBox);

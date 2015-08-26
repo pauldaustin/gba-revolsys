@@ -69,11 +69,11 @@ public class MappedLocation extends AbstractPropertyChangeObject implements MapS
     return targetCoordinates;
   }
 
+  private GeometryFactory geometryFactory = GeometryFactory.floating(0, 2);
+
   private Coordinates sourcePixel;
 
   private Point targetPoint;
-
-  private GeometryFactory geometryFactory = GeometryFactory.floating(0, 2);
 
   public MappedLocation(final Coordinates sourcePixel, final Point targetPoint) {
     this.sourcePixel = sourcePixel;

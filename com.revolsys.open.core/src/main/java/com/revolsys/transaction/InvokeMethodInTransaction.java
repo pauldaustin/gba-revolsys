@@ -8,11 +8,11 @@ public class InvokeMethodInTransaction {
 
   private static final Object[] EMPTY_ARGS = new Object[0];
 
-  private final boolean throwExceptions;
-
   private int propagationBehavior = -1;
 
   private final boolean rollback;
+
+  private final boolean throwExceptions;
 
   private final PlatformTransactionManager transactionManager;
 
@@ -94,8 +94,8 @@ public class InvokeMethodInTransaction {
       if (this.propagationBehavior > -1) {
         template.setPropagationBehavior(this.propagationBehavior);
       }
-      return (T)template.execute(new InvokeMethodTransactionCallback(object, methodName,
-        this.rollback, args));
+      return (T)template
+        .execute(new InvokeMethodTransactionCallback(object, methodName, this.rollback, args));
     } catch (final RuntimeException e) {
       if (this.throwExceptions) {
         throw e;

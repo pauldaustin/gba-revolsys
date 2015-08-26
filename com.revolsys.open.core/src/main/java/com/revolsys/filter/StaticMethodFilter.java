@@ -5,13 +5,13 @@ import java.lang.reflect.Method;
 import javax.annotation.PostConstruct;
 
 public class StaticMethodFilter<T> implements Filter<T> {
+  private Object[] args;
+
   private Method method;
 
   private Class<?> methodClass;
 
   private String methodName;
-
-  private Object[] args;
 
   public StaticMethodFilter() {
   }
@@ -59,15 +59,15 @@ public class StaticMethodFilter<T> implements Filter<T> {
       if (method.getName().equals(this.methodName)
         && method.getParameterTypes().length == 1 + this.args.length) {
         if (this.method != null) {
-          throw new IllegalArgumentException("Multiple method match for " + this.methodClass + "."
-            + this.methodName);
+          throw new IllegalArgumentException(
+            "Multiple method match for " + this.methodClass + "." + this.methodName);
         }
         this.method = method;
       }
     }
     if (this.method == null) {
-      throw new IllegalArgumentException("Method could not be found " + this.methodClass + "."
-        + this.methodName);
+      throw new IllegalArgumentException(
+        "Method could not be found " + this.methodClass + "." + this.methodName);
     }
   }
 

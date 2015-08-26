@@ -60,19 +60,20 @@ public class FieldDefinition {
 
   private final int decimalPlaces;
 
+  private final String fullName;
+
   private final int length;
 
   private final String name;
 
-  private final String fullName;
-
   private DecimalFormat numberFormat;
-
-  private final char type;
 
   private PrecisionModel precisionModel;
 
-  public FieldDefinition(final String name, final String fullName, final char type, final int length) {
+  private final char type;
+
+  public FieldDefinition(final String name, final String fullName, final char type,
+    final int length) {
     this(name, fullName, type, length, 0);
   }
 

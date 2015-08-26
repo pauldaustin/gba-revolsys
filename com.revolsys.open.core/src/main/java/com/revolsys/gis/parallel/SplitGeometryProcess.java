@@ -3,8 +3,8 @@ package com.revolsys.gis.parallel;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.gis.algorithm.index.LineSegmentIndex;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -23,14 +23,14 @@ public class SplitGeometryProcess extends BaseInOutProcess<Record, Record> {
 
   private Geometry geometry;
 
+  private GeometryFactory geometryFactory;
+
   private LineSegmentIndex index = new LineSegmentIndex();
 
   /** The statistics to record the number of observations ignored. */
   private Statistics notWrittenStatistics;
 
   private double tolerance = 2.0;
-
-  private GeometryFactory geometryFactory;
 
   protected Record createSplitObject(final Record object, final LineString newLine) {
     return Records.copy(object, newLine);

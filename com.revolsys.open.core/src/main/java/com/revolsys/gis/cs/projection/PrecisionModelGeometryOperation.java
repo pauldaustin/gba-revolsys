@@ -74,7 +74,8 @@ public class PrecisionModelGeometryOperation implements GeometryOperation {
         addUserData(line, newLineString);
         newLineStrings[i] = newLineString;
       }
-      final MultiLineString newMultiLineString = this.geometryFactory.createMultiLineString(newLineStrings);
+      final MultiLineString newMultiLineString = this.geometryFactory
+        .createMultiLineString(newLineStrings);
       addUserData(multiLineString, newMultiLineString);
       return newMultiLineString;
     } else {

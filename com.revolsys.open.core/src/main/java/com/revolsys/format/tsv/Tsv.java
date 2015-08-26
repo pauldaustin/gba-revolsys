@@ -52,7 +52,8 @@ public class Tsv extends AbstractRecordAndGeometryIoFactory implements MapWriter
   }
 
   @Override
-  public RecordReader createRecordReader(final Resource resource, final RecordFactory recordFactory) {
+  public RecordReader createRecordReader(final Resource resource,
+    final RecordFactory recordFactory) {
     final CsvRecordIterator iterator = new CsvRecordIterator(resource, recordFactory,
       Tsv.FIELD_SEPARATOR);
     return new RecordIteratorReader(iterator);
@@ -60,7 +61,8 @@ public class Tsv extends AbstractRecordAndGeometryIoFactory implements MapWriter
 
   @Override
   public RecordWriter createRecordWriter(final String baseName,
-    final RecordDefinition recordDefinition, final OutputStream outputStream, final Charset charset) {
+    final RecordDefinition recordDefinition, final OutputStream outputStream,
+    final Charset charset) {
     final OutputStreamWriter writer = new OutputStreamWriter(outputStream, charset);
 
     return new CsvRecordWriter(recordDefinition, writer, Tsv.FIELD_SEPARATOR, true, true);

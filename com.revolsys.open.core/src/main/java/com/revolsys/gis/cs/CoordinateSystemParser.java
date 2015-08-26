@@ -29,7 +29,8 @@ public class CoordinateSystemParser {
         final String angularUnitName = fields[8];
         final double conversionFactor = Double.parseDouble(fields[9]);
 
-        final Spheroid spheroid = new Spheroid(spheroidName, semiMajorAxis, inverseFlattening, null);
+        final Spheroid spheroid = new Spheroid(spheroidName, semiMajorAxis, inverseFlattening,
+          null);
         final Datum datum = new Datum(datumName, spheroid, null);
         final PrimeMeridian primeMeridian = new PrimeMeridian(primeMeridianName, longitude, null);
         final AngularUnit angularUnit = new AngularUnit(angularUnitName, conversionFactor, null);
@@ -50,7 +51,8 @@ public class CoordinateSystemParser {
   }
 
   public static List<ProjectedCoordinateSystem> getProjectedCoordinateSystems(
-    final Map<Integer, CoordinateSystem> geoCsById, final String authorityName, final InputStream in) {
+    final Map<Integer, CoordinateSystem> geoCsById, final String authorityName,
+    final InputStream in) {
     final List<ProjectedCoordinateSystem> coordinateSystems = new ArrayList<ProjectedCoordinateSystem>();
     final BufferedReader reader = new BufferedReader(FileUtil.createUtf8Reader(in));
     try {
@@ -60,7 +62,8 @@ public class CoordinateSystemParser {
           final String id = fields[0];
           final String csName = fields[1];
           final int geoCsId = Integer.parseInt(fields[2]);
-          final GeographicCoordinateSystem geoCs = (GeographicCoordinateSystem)geoCsById.get(geoCsId);
+          final GeographicCoordinateSystem geoCs = (GeographicCoordinateSystem)geoCsById
+            .get(geoCsId);
           final String projectionName = fields[3];
           final String parameterString = fields[4];
           final String unitName = fields[5];

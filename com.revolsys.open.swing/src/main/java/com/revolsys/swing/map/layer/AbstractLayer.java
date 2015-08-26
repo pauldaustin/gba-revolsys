@@ -71,47 +71,47 @@ public abstract class AbstractLayer extends AbstractObjectWithProperties
       "DeleteLayer", "LayerProperties");
   }
 
-  private Icon icon;
-
-  private boolean exists = true;
-
   private PropertyChangeListener beanPropertyListener = new BeanPropertyListener(this);
 
   private boolean editable = false;
 
-  private Reference<LayerGroup> layerGroup;
+  private final ThreadEnableable eventsEnabled = new ThreadEnableable();
 
-  private String name;
-
-  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+  private boolean exists = true;
 
   private GeometryFactory geometryFactory;
 
-  private boolean readOnly = false;
+  private Icon icon;
 
-  private boolean selectable = true;
+  private final long id = ID_GEN.incrementAndGet();
 
-  private boolean selectSupported = true;
+  private boolean initialized;
+
+  private Reference<LayerGroup> layerGroup;
 
   private long maximumScale = 0;
 
   private long minimumScale = Long.MAX_VALUE;
 
-  private boolean visible = true;
+  private String name;
+
+  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private boolean queryable = true;
 
-  private final ThreadEnableable eventsEnabled = new ThreadEnableable();
-
   private boolean querySupported = true;
 
-  private final long id = ID_GEN.incrementAndGet();
+  private boolean readOnly = false;
 
   private LayerRenderer<AbstractLayer> renderer;
 
+  private boolean selectable = true;
+
+  private boolean selectSupported = true;
+
   private String type;
 
-  private boolean initialized;
+  private boolean visible = true;
 
   public AbstractLayer() {
   }

@@ -10,9 +10,9 @@ import com.revolsys.filter.Filter;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordEqualsFilter implements Filter<Record> {
-  private EqualsRegistry equalsRegistry = EqualsInstance.INSTANCE;
-
   private final Collection<String> equalExclude = new HashSet<String>();
+
+  private EqualsRegistry equalsRegistry = EqualsInstance.INSTANCE;
 
   private final Record searchObject;
 

@@ -43,8 +43,6 @@ public final class MathUtil {
   /** The number of cents in a dollar. */
   public static final BigDecimal CURRENCY_CENTS_PER_DOLLAR = getInteger(100);
 
-  private static final Random RANDOM = new Random();
-
   /** The scale for currency numbers. */
   public static final int CURRENCY_SCALE = 2;
 
@@ -74,6 +72,8 @@ public final class MathUtil {
   public static final double PI_OVER_4 = Math.PI / 4.0;
 
   public static final double PI_TIMES_2 = 2.0 * Math.PI;
+
+  private static final Random RANDOM = new Random();
 
   /**
    *
@@ -190,7 +190,8 @@ public final class MathUtil {
     return delAngle;
   }
 
-  public static double angleDiff(final double angle1, final double angle2, final boolean clockwise) {
+  public static double angleDiff(final double angle1, final double angle2,
+    final boolean clockwise) {
     if (clockwise) {
       if (angle2 < angle1) {
         final double angle = angle2 + Math.PI * 2 - angle1;
@@ -261,7 +262,8 @@ public final class MathUtil {
    * @param y2 The second y coordinate.
    * @return The distance.
    */
-  public static double distance(final double x1, final double y1, final double x2, final double y2) {
+  public static double distance(final double x1, final double y1, final double x2,
+    final double y2) {
     final double dx = x2 - x1;
     final double dy = y2 - y1;
 
@@ -564,8 +566,8 @@ public final class MathUtil {
       final DecimalFormat format = new DecimalFormat();
       format.setMinimumFractionDigits(0);
       format.setMaximumFractionDigits(scale);
-      final String string = format.format(decimalPercent.multiply(new BigDecimal(100)).setScale(
-        scale, BigDecimal.ROUND_HALF_UP))
+      final String string = format.format(
+        decimalPercent.multiply(new BigDecimal(100)).setScale(scale, BigDecimal.ROUND_HALF_UP))
         + "%";
 
       return string;
@@ -609,7 +611,8 @@ public final class MathUtil {
     return Math.abs(s) * Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
   }
 
-  public static boolean precisionEqual(final double value1, final double value2, final double scale) {
+  public static boolean precisionEqual(final double value1, final double value2,
+    final double scale) {
     if (Double.isNaN(value1) && Double.isNaN(value2)) {
       return true;
     } else if (Double.isInfinite(value1) || Double.isInfinite(value2)) {

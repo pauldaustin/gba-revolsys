@@ -47,14 +47,14 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
-public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory implements
-  CoordinatesPrecisionModel, MapSerializer {
+public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
+  implements CoordinatesPrecisionModel, MapSerializer {
 
   /** The cached geometry factories. */
   private static Map<String, GeometryFactory> factories = new HashMap<String, GeometryFactory>();
 
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory(
-    "geometryFactory", "Geometry Factory", GeometryFactory.class, "create");
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("geometryFactory",
+    "Geometry Factory", GeometryFactory.class, "create");
 
   private static final long serialVersionUID = 4328651897279304108L;
 
@@ -239,7 +239,8 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
    *          metres.
    * @return The geometry factory.
    */
-  public static GeometryFactory getFactory(final int srid, final double scaleXY, final double scaleZ) {
+  public static GeometryFactory getFactory(final int srid, final double scaleXY,
+    final double scaleZ) {
     return getFactory(srid, 3, scaleXY, scaleZ);
   }
 
@@ -271,13 +272,15 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
     if (esriCoordinateSystem == null) {
       return getFactory();
     } else {
-      final CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(esriCoordinateSystem);
+      final CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems
+        .getCoordinateSystem(esriCoordinateSystem);
       final int srid = epsgCoordinateSystem.getId();
       return getFactory(srid, 3, 0, 0);
     }
   }
 
-  private static Set<Class<?>> getGeometryClassSet(final Collection<? extends Geometry> geometries) {
+  private static Set<Class<?>> getGeometryClassSet(
+    final Collection<? extends Geometry> geometries) {
     final Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
     for (final Geometry geometry : geometries) {
       classes.add(geometry.getClass());
@@ -500,7 +503,8 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
           } else {
             final LineMerger merger = new LineMerger();
             merger.add(geometry);
-            final List<LineString> mergedLineStrings = (List<LineString>)merger.getMergedLineStrings();
+            final List<LineString> mergedLineStrings = (List<LineString>)merger
+              .getMergedLineStrings();
             if (mergedLineStrings.size() == 1) {
               return (V)mergedLineStrings.get(0);
             }
@@ -545,7 +549,8 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
       } else if (classes.equals(Collections.singleton(Polygon.class))) {
         return (V)createMultiPolygon(geometries);
       } else {
-        final Geometry[] geometryArray = com.vividsolutions.jts.geom.GeometryFactory.toGeometryArray(geometries);
+        final Geometry[] geometryArray = com.vividsolutions.jts.geom.GeometryFactory
+          .toGeometryArray(geometries);
         return (V)createGeometryCollection(geometryArray);
       }
     }
@@ -625,7 +630,8 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
       } else if (classes.equals(Collections.singleton(Polygon.class))) {
         return (V)createMultiPolygon(geometryList);
       } else {
-        final Geometry[] geometryArray = com.vividsolutions.jts.geom.GeometryFactory.toGeometryArray(geometryList);
+        final Geometry[] geometryArray = com.vividsolutions.jts.geom.GeometryFactory
+          .toGeometryArray(geometryList);
         return (V)super.createGeometryCollection(geometryArray);
       }
     }

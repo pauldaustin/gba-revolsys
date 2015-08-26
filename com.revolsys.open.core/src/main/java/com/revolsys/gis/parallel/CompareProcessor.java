@@ -5,17 +5,17 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.revolsys.data.record.Records;
-import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
+import com.revolsys.data.record.Records;
+import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Factory;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterUtil;
-import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.algorithm.index.PointRecordMap;
+import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.algorithm.linematch.LineMatchGraph;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.filter.LineEqualIgnoreDirectionFilter;
@@ -47,6 +47,8 @@ public class CompareProcessor extends AbstractMergeProcess {
 
   private String label;
 
+  private boolean logNotEqualSource = true;
+
   private Statistics notEqualOtherStatistics = new Statistics("Not Equal Other");
 
   private Statistics notEqualSourceStatistics = new Statistics("Not Equal Source");
@@ -58,8 +60,6 @@ public class CompareProcessor extends AbstractMergeProcess {
   private Set<Record> sourceObjects = new LinkedHashSet<Record>();
 
   private final PointRecordMap sourcePointMap = new PointRecordMap();
-
-  private boolean logNotEqualSource = true;
 
   @Override
   protected void addOtherObject(final Record object) {
@@ -247,8 +247,7 @@ public class CompareProcessor extends AbstractMergeProcess {
       final LineString sourceLine = (LineString)sourceGeometry;
 
       final LineIntersectsFilter intersectsFilter = new LineIntersectsFilter(sourceLine);
-      final Filter<Record> geometryFilter = new RecordGeometryFilter<LineString>(
-        intersectsFilter);
+      final Filter<Record> geometryFilter = new RecordGeometryFilter<LineString>(intersectsFilter);
       final Filter<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
       final Filter<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);
       final List<Record> otherObjects = this.otherIndex.queryList(sourceGeometry, filter);

@@ -7,8 +7,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 
 public class RecordEquals implements Equals<Record> {
-  public static final String EXCLUDE_GEOMETRY = RecordEquals.class.getName()
-    + ".excludeGeometry";
+  public static final String EXCLUDE_GEOMETRY = RecordEquals.class.getName() + ".excludeGeometry";
 
   public static final String EXCLUDE_ID = RecordEquals.class.getName() + ".excludeId";
 

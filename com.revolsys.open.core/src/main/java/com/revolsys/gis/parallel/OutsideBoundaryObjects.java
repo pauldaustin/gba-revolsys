@@ -14,9 +14,9 @@ import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 public class OutsideBoundaryObjects {
   private static final Logger LOG = LoggerFactory.getLogger(OutsideBoundaryObjects.class);
 
-  private Set<Record> objects = new LinkedHashSet<Record>();
-
   private Geometry boundary;
+
+  private Set<Record> objects = new LinkedHashSet<Record>();
 
   private PreparedGeometry preparedBoundary;
 

@@ -8,11 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import oracle.jdbc.OraclePreparedStatement;
-import oracle.spatial.geometry.JGeometry;
-import oracle.sql.ARRAY;
-import oracle.sql.STRUCT;
-
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.types.DataType;
@@ -35,17 +30,23 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
-public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
+import oracle.jdbc.OraclePreparedStatement;
+import oracle.spatial.geometry.JGeometry;
+import oracle.sql.ARRAY;
+import oracle.sql.STRUCT;
 
-  private final int numAxis;
+public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
 
   private final GeometryFactory geometryFactory;
 
+  private final int numAxis;
+
   private final PrecisionModel[] precisionModels;
 
-  public OracleSdoGeometryJdbcAttribute(final String dbName, final String name,
-    final DataType type, final int sqlType, final boolean required, final String description,
-    final Map<String, Object> properties, final GeometryFactory geometryFactory, final int numAxis) {
+  public OracleSdoGeometryJdbcAttribute(final String dbName, final String name, final DataType type,
+    final int sqlType, final boolean required, final String description,
+    final Map<String, Object> properties, final GeometryFactory geometryFactory,
+    final int numAxis) {
     super(dbName, name, type, sqlType, 0, 0, required, description, properties);
     this.geometryFactory = geometryFactory;
     this.numAxis = numAxis;
@@ -273,14 +274,15 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
         final MultiPolygon multiPolygon = (MultiPolygon)geometry;
         jGeometry = toJGeometry(multiPolygon, dimension);
       } else {
-        throw new IllegalArgumentException("Unable to convert to SDO_GEOMETRY " + object.getClass());
+        throw new IllegalArgumentException(
+          "Unable to convert to SDO_GEOMETRY " + object.getClass());
       }
       try {
         final STRUCT struct = JGeometry.store(jGeometry, connection);
         return struct;
       } catch (final SQLException e) {
-        throw new RuntimeException("Unable to convert Oracle JGeometry to STRUCT: "
-          + e.getMessage(), e);
+        throw new RuntimeException(
+          "Unable to convert Oracle JGeometry to STRUCT: " + e.getMessage(), e);
       }
     } else {
       throw new IllegalArgumentException("Unable to convert to SDO_GEOMETRY " + object.getClass());
@@ -425,8 +427,8 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
         final CoordinatesList points = new DoubleCoordinatesList(numAxis, ordinates);
         pointsList.add(points);
       } else {
-        throw new IllegalArgumentException("Unsupported geometry type " + type + " interpretation "
-          + interpretation);
+        throw new IllegalArgumentException(
+          "Unsupported geometry type " + type + " interpretation " + interpretation);
       }
     }
 
@@ -490,8 +492,8 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
             throw new IllegalArgumentException("Unsupported geometry type " + type);
         }
       } else {
-        throw new IllegalArgumentException("Unsupported geometry type " + type + " interpretation "
-          + interpretation);
+        throw new IllegalArgumentException(
+          "Unsupported geometry type " + type + " interpretation " + interpretation);
       }
     }
     if (exteriorRing != null) {
@@ -563,8 +565,8 @@ public class OracleSdoGeometryJdbcAttribute extends JdbcFieldDefinition {
             throw new IllegalArgumentException("Unsupported geometry type " + type);
         }
       } else {
-        throw new IllegalArgumentException("Unsupported geometry type " + type + " interpretation "
-          + interpretation);
+        throw new IllegalArgumentException(
+          "Unsupported geometry type " + type + " interpretation " + interpretation);
       }
     }
     final Polygon polygon = this.geometryFactory.createPolygon(exteriorRing, interiorRings);

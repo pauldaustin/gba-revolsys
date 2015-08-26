@@ -8,7 +8,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.Writer;
 
-public class StatisticsWriter extends AbstractWriter<Record> implements BeanNameAware {
+public class StatisticsWriter extends AbstractWriter<Record>implements BeanNameAware {
   private String beanName;
 
   private Statistics statistics;

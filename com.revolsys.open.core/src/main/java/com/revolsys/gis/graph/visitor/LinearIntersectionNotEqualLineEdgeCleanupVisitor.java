@@ -19,10 +19,10 @@ import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.NotFilter;
-import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.comparator.EdgeLengthComparator;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.gis.graph.filter.EdgeTypeNameFilter;
@@ -38,12 +38,13 @@ import com.vividsolutions.jts.geom.LineString;
 public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>>
   implements ObjectProcessor<RecordGraph> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(EqualTypeAndLineEdgeCleanupVisitor.class);
-
-  private Set<String> equalExcludeAttributes = new HashSet<String>(Arrays.asList(
-    RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
+  private static final Logger LOG = LoggerFactory
+    .getLogger(EqualTypeAndLineEdgeCleanupVisitor.class);
 
   private Statistics duplicateStatistics;
+
+  private Set<String> equalExcludeAttributes = new HashSet<String>(
+    Arrays.asList(RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
 
   private Comparator<Record> newerComparator;
 
@@ -135,8 +136,8 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVi
     final RecordGeometryFilter<LineString> linearIntersectionFilter = new RecordGeometryFilter<LineString>(
       new LinearIntersectionFilter(line));
 
-    attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(new AndFilter<Record>(
-      notEqualLineFilter, linearIntersectionFilter)));
+    attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(
+      new AndFilter<Record>(notEqualLineFilter, linearIntersectionFilter)));
 
     final List<Edge<Record>> intersectingEdges = graph.getEdges(attributeAndGeometryFilter, line);
 
@@ -158,7 +159,8 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVi
                 return true;
               }
             }
-            final boolean lastEqual = points.equal(points.size() - 1, points2, points.size() - 1, 2);
+            final boolean lastEqual = points.equal(points.size() - 1, points2, points.size() - 1,
+              2);
             if (!lastEqual) {
               final Node<Record> toNode1 = edge.getToNode();
               final Node<Record> toNode2 = edge2.getToNode();

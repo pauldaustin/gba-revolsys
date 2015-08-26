@@ -46,10 +46,12 @@ public class CoordinatesOperationGeometryOperation implements GeometryOperation 
     final int size = coordinates.size();
     final CoordinatesList newCoordinates = new DoubleCoordinatesList(size,
       this.geometryFactory.getNumAxis());
-    final CoordinatesListCoordinates sourceCoordinates = new CoordinatesListCoordinates(coordinates);
+    final CoordinatesListCoordinates sourceCoordinates = new CoordinatesListCoordinates(
+      coordinates);
     final CoordinatesListCoordinates targetCoordinates = new CoordinatesListCoordinates(
       newCoordinates);
-    final CoordinatesPrecisionModel precisionModel = this.geometryFactory.getCoordinatesPrecisionModel();
+    final CoordinatesPrecisionModel precisionModel = this.geometryFactory
+      .getCoordinatesPrecisionModel();
     for (int i = 0; i < size; i++) {
       sourceCoordinates.setIndex(i);
       targetCoordinates.setIndex(i);
@@ -90,7 +92,8 @@ public class CoordinatesOperationGeometryOperation implements GeometryOperation 
         addUserData(line, newLineString);
         newLineStrings[i] = newLineString;
       }
-      final MultiLineString newMultiLineString = this.geometryFactory.createMultiLineString(newLineStrings);
+      final MultiLineString newMultiLineString = this.geometryFactory
+        .createMultiLineString(newLineStrings);
       addUserData(multiLineString, newMultiLineString);
       return newMultiLineString;
     } else {

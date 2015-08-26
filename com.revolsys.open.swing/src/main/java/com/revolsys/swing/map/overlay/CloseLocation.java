@@ -12,17 +12,17 @@ import com.vividsolutions.jts.geom.Point;
 
 public class CloseLocation {
 
-  private final LayerRecord object;
-
-  private final int[] vertexIndex;
-
-  private final IndexedLineSegment segment;
+  private final Geometry geometry;
 
   private final AbstractRecordLayer layer;
 
-  private final Geometry geometry;
+  private final LayerRecord object;
 
   private final Point point;
+
+  private final IndexedLineSegment segment;
+
+  private final int[] vertexIndex;
 
   public CloseLocation(final AbstractRecordLayer layer, final LayerRecord object,
     final Geometry geometry, final int[] vertexIndex, final IndexedLineSegment segment,

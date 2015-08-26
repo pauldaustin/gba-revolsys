@@ -40,6 +40,9 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class BoundingBox extends Envelope implements Cloneable {
 
+  /** The serialization version. */
+  private static final long serialVersionUID = -810356856421113732L;
+
   static {
     ConvertUtils.register(new Converter() {
 
@@ -59,9 +62,6 @@ public class BoundingBox extends Envelope implements Cloneable {
       }
     }, BoundingBox.class);
   }
-
-  /** The serialization version. */
-  private static final long serialVersionUID = -810356856421113732L;
 
   public static BoundingBox create(final String wkt) {
     if (Property.hasValue(wkt)) {
@@ -227,16 +227,16 @@ public class BoundingBox extends Envelope implements Cloneable {
       final double y2 = Double.valueOf(args[3]);
       return new BoundingBox(GeometryFactory.floating3(4326), x1, y1, x2, y2);
     } else {
-      throw new IllegalArgumentException("BBOX must have match <minX>,<minY>,<maxX>,<maxY> not "
-        + bbox);
+      throw new IllegalArgumentException(
+        "BBOX must have match <minX>,<minY>,<maxX>,<maxY> not " + bbox);
     }
   }
+
+  private GeometryFactory geometryFactory = GeometryFactory.getFactory();
 
   private double maxZ;
 
   private double minZ;
-
-  private GeometryFactory geometryFactory = GeometryFactory.getFactory();
 
   public BoundingBox() {
     this(4326);
@@ -302,8 +302,8 @@ public class BoundingBox extends Envelope implements Cloneable {
       expandToInclude((Envelope)boundingBox);
     } else {
       final Polygon polygon = boundingBox.toPolygon();
-      final GeometryOperation operation = ProjectionFactory.getGeometryOperation(
-        boundingBox.geometryFactory, geometryFactory);
+      final GeometryOperation operation = ProjectionFactory
+        .getGeometryOperation(boundingBox.geometryFactory, geometryFactory);
       if (operation != null) {
         final Polygon projectedPolygon = operation.perform(polygon);
         final Envelope envelope = projectedPolygon.getEnvelopeInternal();
@@ -458,8 +458,8 @@ public class BoundingBox extends Envelope implements Cloneable {
       || this.geometryFactory.equals(geometryFactory) || isEmpty()) {
       return this;
     } else {
-      final CoordinatesOperation operation = ProjectionFactory.getCoordinatesOperation(
-        this.geometryFactory, geometryFactory);
+      final CoordinatesOperation operation = ProjectionFactory
+        .getCoordinatesOperation(this.geometryFactory, geometryFactory);
       if (operation != null) {
 
         double xStep = getWidth() / 10;
@@ -904,7 +904,8 @@ public class BoundingBox extends Envelope implements Cloneable {
 
   public BoundingBox intersection(final BoundingBox boundingBox) {
     final BoundingBox convertedBoundingBox = boundingBox.convert(this.geometryFactory);
-    if (isEmpty() || convertedBoundingBox.isEmpty() || !intersects((Envelope)convertedBoundingBox)) {
+    if (isEmpty() || convertedBoundingBox.isEmpty()
+      || !intersects((Envelope)convertedBoundingBox)) {
       return new BoundingBox(this.geometryFactory);
     } else {
       final double intMinX = Math.max(getMinX(), convertedBoundingBox.getMinX());
@@ -1006,11 +1007,11 @@ public class BoundingBox extends Envelope implements Cloneable {
     if (width == 0 && height == 0) {
       return this.geometryFactory.createPoint(new DoubleCoordinatesList(2, minX, minY));
     } else if (width == 0 || height == 0) {
-      return this.geometryFactory.createLineString(new DoubleCoordinatesList(2, minX, minY, maxX,
-        maxY));
+      return this.geometryFactory
+        .createLineString(new DoubleCoordinatesList(2, minX, minY, maxX, maxY));
     } else {
-      return this.geometryFactory.createPolygon(new DoubleCoordinatesList(2, minX, minY, minX,
-        maxY, maxX, maxY, maxX, minY, minX, minY));
+      return this.geometryFactory.createPolygon(
+        new DoubleCoordinatesList(2, minX, minY, minX, maxY, maxX, maxY, maxX, minY, minX, minY));
     }
   }
 

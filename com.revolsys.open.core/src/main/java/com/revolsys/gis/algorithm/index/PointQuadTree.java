@@ -14,9 +14,9 @@ import com.vividsolutions.jts.geom.Envelope;
 
 public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
 
-  private PointQuadTreeNode<T> root;
-
   private GeometryFactory geometryFactory;
+
+  private PointQuadTreeNode<T> root;
 
   public PointQuadTree() {
   }

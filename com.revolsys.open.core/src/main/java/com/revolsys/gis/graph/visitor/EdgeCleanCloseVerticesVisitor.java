@@ -38,8 +38,8 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
     this.minDistance = minDistance;
   }
 
-  private double getAngle(final Edge<T> edge,
-    final CoordinateSequenceCoordinatesIterator ordinates, final int relativeIndex) {
+  private double getAngle(final Edge<T> edge, final CoordinateSequenceCoordinatesIterator ordinates,
+    final int relativeIndex) {
     final int index = ordinates.getIndex();
     if (index + relativeIndex - 1 < 0 || index + relativeIndex + 1 >= ordinates.size()) {
       return Double.NaN;
@@ -107,9 +107,8 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
           }
           if (fixed) {
             this.coordinateListeners.coordinateEvent(new Coordinate(x2, y2), typePath,
-              "Short Segment", "Fixed",
-              distance + " " + Math.toDegrees(previousAngle) + " " + Math.toDegrees(angle) + " "
-                + Math.toDegrees(nextAngle));
+              "Short Segment", "Fixed", distance + " " + Math.toDegrees(previousAngle) + " "
+                + Math.toDegrees(angle) + " " + Math.toDegrees(nextAngle));
           } else {
             this.coordinateListeners.coordinateEvent(new Coordinate(x2, y2), typePath,
               "Short Segment", "Review", distance + " " + Math.toDegrees(previousAngle) + " "
@@ -121,8 +120,8 @@ public class EdgeCleanCloseVerticesVisitor<T> implements Visitor<Edge<T>> {
       }
       if (!removeIndicies.isEmpty()) {
         final int dimension = coordinates.getDimension();
-        final CoordinatesList newCoordinates = new DoubleCoordinatesList(numCoordinates
-          - removeIndicies.size(), dimension);
+        final CoordinatesList newCoordinates = new DoubleCoordinatesList(
+          numCoordinates - removeIndicies.size(), dimension);
         int k = 0;
         for (int j = 0; j < numCoordinates; j++) {
           if (!removeIndicies.contains(j)) {

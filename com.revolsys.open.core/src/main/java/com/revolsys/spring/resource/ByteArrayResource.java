@@ -7,11 +7,11 @@ import java.util.Arrays;
 
 public class ByteArrayResource extends AbstractResource {
 
-  private String filename;
-
   private final byte[] data;
 
   private final String description;
+
+  private String filename;
 
   /**
    * Create a new ByteArrayResource.

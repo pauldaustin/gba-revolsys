@@ -27,9 +27,9 @@ import com.vividsolutions.jts.geom.MultiLineString;
 public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
   private final GeometryFactory geometryFactory;
 
-  private final List<Set<Node<LineSegmentMatch>>> startNodes = new ArrayList<Set<Node<LineSegmentMatch>>>();
-
   private final List<T> objects = new ArrayList<T>();
+
+  private final List<Set<Node<LineSegmentMatch>>> startNodes = new ArrayList<Set<Node<LineSegmentMatch>>>();
 
   private final int tolerance = 1;
 
@@ -38,7 +38,8 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
     add(line, 0);
   }
 
-  public LineMatchGraph(final GeometryFactory geometryFactory, final T object, final LineString line) {
+  public LineMatchGraph(final GeometryFactory geometryFactory, final T object,
+    final LineString line) {
     this.geometryFactory = geometryFactory;
     addLine(object, line);
   }
@@ -462,8 +463,8 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
                       lineSegmentMatch.removeSegment(i);
                     } else {
                       final double matchLength = getMatchLength(currentNode, false, 0, i);
-                      final double duplicateMatchLength = getDuplicateMatchLength(currentNode,
-                        true, 0, i);
+                      final double duplicateMatchLength = getDuplicateMatchLength(currentNode, true,
+                        0, i);
                       if (matchLength + duplicateMatchLength <= 2) {
                         lineSegmentMatch.removeSegment(i);
                       }
@@ -598,8 +599,8 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
         if (!edge.isRemoved()) {
           final LineSegmentMatch lineSegmentMatch = edge.getObject();
           if (!lineSegmentMatch.hasMatches(index)) {
-            final List<Edge<LineSegmentMatch>> matchEdges = BoundingBoxIntersectsEdgeVisitor.getEdges(
-              this, edge, this.tolerance);
+            final List<Edge<LineSegmentMatch>> matchEdges = BoundingBoxIntersectsEdgeVisitor
+              .getEdges(this, edge, this.tolerance);
             if (!matchEdges.isEmpty()) {
               final boolean allowSplit = edge.getLength() >= 2 * this.tolerance;
               final Set<Node<LineSegmentMatch>> splitNodes = new TreeSet<Node<LineSegmentMatch>>(
@@ -607,7 +608,8 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
               final Node<LineSegmentMatch> lineStart = edge.getFromNode();
               final Node<LineSegmentMatch> lineEnd = edge.getToNode();
 
-              for (final ListIterator<Edge<LineSegmentMatch>> iterator = matchEdges.listIterator(); iterator.hasNext();) {
+              for (final ListIterator<Edge<LineSegmentMatch>> iterator = matchEdges
+                .listIterator(); iterator.hasNext();) {
                 final Edge<LineSegmentMatch> matchEdge = iterator.next();
                 iterator.remove();
                 final LineSegmentMatch matchLineSegmentMatch = matchEdge.getObject();

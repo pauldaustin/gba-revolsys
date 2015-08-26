@@ -272,19 +272,19 @@ public class JavaDoclet {
     return flag;
   }
 
+  private String destDir = ".";
+
   private String docId;
 
   private String docTitle;
 
-  private final RootDoc root;
-
-  private XmlWriter writer;
-
-  private String destDir = ".";
+  private String footer;
 
   private String header;
 
-  private String footer;
+  private final RootDoc root;
+
+  private XmlWriter writer;
 
   public JavaDoclet(final RootDoc root) {
     this.root = root;
@@ -346,10 +346,10 @@ public class JavaDoclet {
       this.writer = new XmlWriter(out, false);
       this.writer.setIndent(false);
       this.writer.setWriteNewLine(false);
-      FileUtil.copy(getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.css"), new File(
-        this.destDir, "javadoc.css"));
-      FileUtil.copy(getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.js"), new File(
-        this.destDir, "javadoc.js"));
+      FileUtil.copy(getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.css"),
+        new File(this.destDir, "javadoc.css"));
+      FileUtil.copy(getClass().getResourceAsStream("/com/revolsys/doclet/javadoc.js"),
+        new File(this.destDir, "javadoc.js"));
     } catch (final IOException e) {
       throw new IllegalArgumentException(e.fillInStackTrace().getMessage(), e);
     }

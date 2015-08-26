@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import com.revolsys.util.Property;
 
 public class RectangularMapGridFactory {
-  public static final List<String> gridNames;
-
   public static final Map<String, String> gridClassNamesByName = new LinkedHashMap<String, String>();
+
+  public static final List<String> gridNames;
 
   static {
     addGrid("NTS 1:1 000 000", Nts1000000RectangularMapGrid.class);
@@ -35,7 +35,8 @@ public class RectangularMapGridFactory {
     gridNames = Collections.unmodifiableList(new ArrayList<String>(gridClassNamesByName.keySet()));
   }
 
-  private static void addGrid(final String name, final Class<? extends RectangularMapGrid> gridClass) {
+  private static void addGrid(final String name,
+    final Class<? extends RectangularMapGrid> gridClass) {
     final String className = gridClass.getName();
     gridClassNamesByName.put(name, className);
 
@@ -48,8 +49,8 @@ public class RectangularMapGridFactory {
         return (RectangularMapGrid)Class.forName(className).newInstance();
       }
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(RectangularMapGridFactory.class).error(
-        "Unable to create grid for " + name, e);
+      LoggerFactory.getLogger(RectangularMapGridFactory.class)
+        .error("Unable to create grid for " + name, e);
     }
     return null;
   }

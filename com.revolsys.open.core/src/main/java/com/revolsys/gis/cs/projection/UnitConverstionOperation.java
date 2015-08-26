@@ -8,11 +8,11 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 public class UnitConverstionOperation implements CoordinatesOperation {
   private final UnitConverter converter;
 
+  private int numAxis = 0;
+
   private final Unit sourceUnit;
 
   private final Unit targetUnit;
-
-  private int numAxis = 0;
 
   public UnitConverstionOperation(final Unit sourceUnit, final Unit targetUnit) {
     this.sourceUnit = sourceUnit;

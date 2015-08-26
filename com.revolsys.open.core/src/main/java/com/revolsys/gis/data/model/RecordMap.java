@@ -10,9 +10,9 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordMapEntry;
 
 public class RecordMap extends AbstractMap<String, Object> {
-  private Record object;
-
   private LinkedHashSet<Entry<String, Object>> entries;
+
+  private Record object;
 
   public RecordMap() {
   }

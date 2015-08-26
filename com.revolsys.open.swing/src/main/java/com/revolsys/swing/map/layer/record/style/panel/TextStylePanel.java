@@ -24,11 +24,11 @@ import com.revolsys.util.Property;
 public class TextStylePanel extends BaseStylePanel implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
-  private final TextStyleRenderer textStyleRenderer;
+  private JPanel previews;
 
   private final TextStyle textStyle;
 
-  private JPanel previews;
+  private final TextStyleRenderer textStyleRenderer;
 
   public TextStylePanel(final TextStyleRenderer textStyleRenderer) {
     super(textStyleRenderer);
@@ -69,7 +69,8 @@ public class TextStylePanel extends BaseStylePanel implements PropertyChangeList
   }
 
   @Override
-  protected Field createField(final String fieldName, final Class<?> fieldClass, final Object value) {
+  protected Field createField(final String fieldName, final Class<?> fieldClass,
+    final Object value) {
     if (fieldName.equals("textName")) {
       final AbstractRecordLayer layer = getLayer();
       final TextNameField textNameField = new TextNameField(layer, fieldName, value);

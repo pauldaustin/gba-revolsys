@@ -44,10 +44,10 @@ import com.vividsolutions.jts.geom.Polygon;
 
 public class ArcSdeBinaryGeometryRecordUtil {
 
+  private Map<String, Object> connectionProperties = new HashMap<String, Object>();
+
   private final RecordStoreIteratorFactory iteratorFactory = new RecordStoreIteratorFactory(this,
     "createIterator");
-
-  private Map<String, Object> connectionProperties = new HashMap<String, Object>();
 
   private JdbcRecordStore recordStore;
 

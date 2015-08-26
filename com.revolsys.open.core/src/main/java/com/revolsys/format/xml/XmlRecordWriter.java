@@ -21,13 +21,13 @@ public class XmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
 
   private final RecordDefinition metaData;
 
-  private XmlWriter out;
+  private boolean opened;
 
-  boolean startAttribute;
+  private XmlWriter out;
 
   private boolean singleObject;
 
-  private boolean opened;
+  boolean startAttribute;
 
   public XmlRecordWriter(final RecordDefinition metaData, final java.io.Writer out) {
     this.metaData = metaData;

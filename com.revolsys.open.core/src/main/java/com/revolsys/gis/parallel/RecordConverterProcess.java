@@ -27,15 +27,15 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
 
   private Converter<Record, Record> defaultConverter;
 
-  private Map<String, Collection<FilterRecordConverter>> typeFilterConverterMap = new LinkedHashMap<String, Collection<FilterRecordConverter>>();
-
-  private Map<String, Converter<Record, Record>> typeConverterMap = new HashMap<String, Converter<Record, Record>>();
-
-  private RecordDefinitionFactory targetMetaDataFactory;
-
   private Map<Object, Map<String, Object>> simpleMapping;
 
   private Statistics statistics = new Statistics("Converted");
+
+  private RecordDefinitionFactory targetMetaDataFactory;
+
+  private Map<String, Converter<Record, Record>> typeConverterMap = new HashMap<String, Converter<Record, Record>>();
+
+  private Map<String, Collection<FilterRecordConverter>> typeFilterConverterMap = new LinkedHashMap<String, Collection<FilterRecordConverter>>();
 
   //
   // private Statistics ignoredStatistics = new Statistics("Ignored");
@@ -59,7 +59,8 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
     int matchCount = 0;
     final RecordDefinition sourceMetaData = source.getRecordDefinition();
     final String sourceTypeName = sourceMetaData.getPath();
-    final Collection<FilterRecordConverter> converters = this.typeFilterConverterMap.get(sourceTypeName);
+    final Collection<FilterRecordConverter> converters = this.typeFilterConverterMap
+      .get(sourceTypeName);
     Record target = null;
     if (converters != null && !converters.isEmpty()) {
       for (final FilterRecordConverter filterConverter : converters) {
@@ -158,7 +159,8 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
           targetTypeName = String.valueOf(targetName.toString());
         }
         @SuppressWarnings("unchecked")
-        final Map<String, String> attributeMapping = (Map<String, String>)map.get("attributeMapping");
+        final Map<String, String> attributeMapping = (Map<String, String>)map
+          .get("attributeMapping");
 
         final RecordDefinition targetMetaData = getTargetMetaData(targetTypeName);
         final SimpleRecordConveter converter = new SimpleRecordConveter(targetMetaData);

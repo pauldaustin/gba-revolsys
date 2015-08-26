@@ -33,14 +33,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
-import com.revolsys.spring.resource.FileSystemResource;
-
 import com.revolsys.data.record.io.RecordStoreConnectionManager;
 import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.io.file.FolderConnectionManager;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.net.urlcache.FileResponseCache;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.WindowManager;
@@ -83,9 +82,27 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 
 public class ProjectFrame extends BaseFrame {
-  public static final String SAVE_PROJECT_KEY = "Save Project";
+  // public void expandConnectionManagers(final PropertyChangeEvent event) {
+  // final Object newValue = event.getNewValue();
+  // if (newValue instanceof ConnectionRegistry) {
+  // final ConnectionRegistry<?> registry = (ConnectionRegistry<?>)newValue;
+  // final ConnectionRegistryManager<?> connectionManager =
+  // registry.getConnectionManager();
+  // if (connectionManager != null) {
+  // final List<?> connectionRegistries =
+  // connectionManager.getConnectionRegistries();
+  // if (connectionRegistries != null) {
+  // final ObjectTree tree = catalogPanel.getTree();
+  // tree.expandPath(connectionRegistries, connectionManager, registry);
+  // }
+  // }
+  // }
+  // }
+  public static final String PROJECT_FRAME = "projectFrame";
 
   public static final String SAVE_CHANGES_KEY = "Save Changes";
+
+  public static final String SAVE_PROJECT_KEY = "Save Project";
 
   private static final long serialVersionUID = 1L;
 
@@ -105,24 +122,6 @@ public class ProjectFrame extends BaseFrame {
     MapObjectFactoryRegistry.addFactory(GeoreferencedImageLayer.FACTORY);
 
   }
-
-  // public void expandConnectionManagers(final PropertyChangeEvent event) {
-  // final Object newValue = event.getNewValue();
-  // if (newValue instanceof ConnectionRegistry) {
-  // final ConnectionRegistry<?> registry = (ConnectionRegistry<?>)newValue;
-  // final ConnectionRegistryManager<?> connectionManager =
-  // registry.getConnectionManager();
-  // if (connectionManager != null) {
-  // final List<?> connectionRegistries =
-  // connectionManager.getConnectionRegistries();
-  // if (connectionRegistries != null) {
-  // final ObjectTree tree = catalogPanel.getTree();
-  // tree.expandPath(connectionRegistries, connectionManager, registry);
-  // }
-  // }
-  // }
-  // }
-  public static final String PROJECT_FRAME = "projectFrame";
 
   public static void addSaveActions(final JComponent component, final Project project) {
     final InputMap inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -158,23 +157,23 @@ public class ProjectFrame extends BaseFrame {
     }
   }
 
-  private Project project;
-
-  private MapPanel mapPanel;
+  private JTabbedPane bottomTabs = new JTabbedPane();
 
   private BaseTree catalogTree;
 
   private boolean exitOnClose = true;
 
-  private JTabbedPane leftTabs = new JTabbedPane();
-
-  private JTabbedPane bottomTabs = new JTabbedPane();
-
   private JSplitPane leftRightSplit;
 
-  private JSplitPane topBottomSplit;
+  private JTabbedPane leftTabs = new JTabbedPane();
+
+  private MapPanel mapPanel;
+
+  private Project project;
 
   private BaseTree tocTree;
+
+  private JSplitPane topBottomSplit;
 
   public ProjectFrame(final String title) {
     this(title, new Project());

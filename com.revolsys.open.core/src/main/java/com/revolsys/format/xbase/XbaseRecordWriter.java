@@ -33,11 +33,13 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWriter {
   private static final Logger log = Logger.getLogger(XbaseRecordWriter.class);
 
-  private final List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
+  private Charset charset = StandardCharsets.UTF_8;
 
   private final List<String> fieldNames = new ArrayList<String>();
 
-  private final Resource resource;
+  private final List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
+
+  private boolean initialized;
 
   private final RecordDefinition metaData;
 
@@ -45,13 +47,11 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
 
   private ResourceEndianOutput out;
 
-  private boolean useZeroForNull = true;
-
-  private boolean initialized;
+  private final Resource resource;
 
   private Map<String, String> shortNames = new HashMap<String, String>();
 
-  private Charset charset = StandardCharsets.UTF_8;
+  private boolean useZeroForNull = true;
 
   public XbaseRecordWriter(final RecordDefinition metaData, final Resource resource) {
     this.metaData = metaData;

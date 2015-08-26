@@ -18,8 +18,8 @@ import javax.swing.JLayeredPane;
 
 import com.revolsys.swing.SwingUtil;
 
-public class MouseOverlay extends JComponent implements MouseListener, MouseMotionListener,
-  MouseWheelListener, KeyListener {
+public class MouseOverlay extends JComponent
+  implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
   private static final long serialVersionUID = 1L;
 
   public MouseOverlay(final JLayeredPane pane) {

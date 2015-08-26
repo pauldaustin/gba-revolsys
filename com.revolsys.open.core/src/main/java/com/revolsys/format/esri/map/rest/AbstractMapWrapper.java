@@ -26,7 +26,8 @@ public class AbstractMapWrapper {
       final Double maxY = CollectionUtil.getDoubleValue(extent, "ymax");
 
       GeometryFactory geometryFactory;
-      final Map<String, Object> spatialReference = (Map<String, Object>)extent.get("spatialReference");
+      final Map<String, Object> spatialReference = (Map<String, Object>)extent
+        .get("spatialReference");
       if (spatialReference == null) {
         geometryFactory = GeometryFactory.getFactory();
       } else {

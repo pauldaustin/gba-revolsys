@@ -28,14 +28,12 @@ import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.transaction.Transaction;
 
-public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter {
+public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter {
   private static final Logger LOG = Logger.getLogger(JdbcWriterImpl.class);
 
   private int batchSize = 1;
 
   private Connection connection;
-
-  private JdbcRecordStore recordStore;
 
   private boolean flushBetweenTypes = false;
 
@@ -47,9 +45,15 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   private boolean quoteColumnNames = true;
 
+  private JdbcRecordStore recordStore;
+
   private String sqlPrefix;
 
   private String sqlSuffix;
+
+  private StatisticsMap statistics;
+
+  private boolean throwExceptions = false;
 
   private final Map<String, Integer> typeCountMap = new LinkedHashMap<String, Integer>();
 
@@ -76,10 +80,6 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
   private Map<String, String> typeUpdateSqlMap = new LinkedHashMap<String, String>();
 
   private Map<String, PreparedStatement> typeUpdateStatementMap = new LinkedHashMap<String, PreparedStatement>();
-
-  private StatisticsMap statistics;
-
-  private boolean throwExceptions = false;
 
   public JdbcWriterImpl(final JdbcRecordStore recordStore) {
     this(recordStore, recordStore.getStatistics());
@@ -255,15 +255,6 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
     return this.batchSize;
   }
 
-  private RecordDefinition getRecordDefinition(final String typePath) {
-    if (this.recordStore == null) {
-      return null;
-    } else {
-      final RecordDefinition metaData = this.recordStore.getRecordDefinition(typePath);
-      return metaData;
-    }
-  }
-
   private String getDeleteSql(final RecordDefinition type) {
     final String typePath = type.getPath();
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
@@ -381,6 +372,15 @@ public class JdbcWriterImpl extends AbstractWriter<Record> implements JdbcWriter
 
   public String getLabel() {
     return this.label;
+  }
+
+  private RecordDefinition getRecordDefinition(final String typePath) {
+    if (this.recordStore == null) {
+      return null;
+    } else {
+      final RecordDefinition metaData = this.recordStore.getRecordDefinition(typePath);
+      return metaData;
+    }
   }
 
   public String getSqlPrefix() {

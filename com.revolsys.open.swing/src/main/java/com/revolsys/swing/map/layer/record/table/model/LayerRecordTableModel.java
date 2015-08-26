@@ -13,16 +13,16 @@ import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 import com.revolsys.util.Property;
 
-public class LayerRecordTableModel extends AbstractSingleRecordTableModel implements
-  PropertyChangeListener {
+public class LayerRecordTableModel extends AbstractSingleRecordTableModel
+  implements PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
-  private LayerRecord record;
+  private final Reference<RecordLayerForm> form;
 
   private final AbstractRecordLayer layer;
 
-  private final Reference<RecordLayerForm> form;
+  private LayerRecord record;
 
   public LayerRecordTableModel(final RecordLayerForm form) {
     super(form.getRecordDefinition(), true);
@@ -51,10 +51,6 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     return this.layer.getFieldTitle(fieldName);
   }
 
-  public LayerRecord getRecord() {
-    return this.record;
-  }
-
   @Override
   public Object getObjectValue(final int rowIndex) {
     if (this.record == null) {
@@ -62,6 +58,10 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     } else {
       return this.record.getValue(rowIndex);
     }
+  }
+
+  public LayerRecord getRecord() {
+    return this.record;
   }
 
   @Override
@@ -122,14 +122,14 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel implem
     Property.removeListener(this.layer, this);
   }
 
-  public void setRecord(final LayerRecord object) {
-    this.record = object;
-  }
-
   @Override
   protected Object setObjectValue(final int rowIndex, final Object value) {
     final Object oldValue = this.record.getValue(rowIndex);
     this.record.setValue(rowIndex, value);
     return oldValue;
+  }
+
+  public void setRecord(final LayerRecord object) {
+    this.record = object;
   }
 }

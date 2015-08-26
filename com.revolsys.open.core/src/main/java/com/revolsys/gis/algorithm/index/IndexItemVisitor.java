@@ -13,9 +13,9 @@ import com.vividsolutions.jts.index.ItemVisitor;
  * @param <T> The type of item to visit.
  */
 public class IndexItemVisitor implements ItemVisitor {
-  private final Visitor<Record> visitor;
-
   private final Envelope envelope;
+
+  private final Visitor<Record> visitor;
 
   public IndexItemVisitor(final Envelope envelope, final Visitor<Record> visitor) {
     this.envelope = envelope;

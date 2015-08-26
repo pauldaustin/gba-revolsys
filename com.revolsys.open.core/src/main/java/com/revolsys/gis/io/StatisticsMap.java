@@ -12,13 +12,13 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.util.CollectionUtil;
 
 public class StatisticsMap {
-  private final Map<String, Statistics> statisticsMap = new TreeMap<String, Statistics>();
-
-  private int providerCount = 0;
+  private boolean logCounts;
 
   private String prefix;
 
-  private boolean logCounts;
+  private int providerCount = 0;
+
+  private final Map<String, Statistics> statisticsMap = new TreeMap<String, Statistics>();
 
   public StatisticsMap() {
   }

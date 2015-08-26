@@ -26,9 +26,9 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineEqualExactFilter implements Filter<LineString> {
-  private final CoordinatesList points;
-
   int numAxis = -1;
+
+  private final CoordinatesList points;
 
   public LineEqualExactFilter(final LineString line) {
     this.points = CoordinatesListUtil.get(line);

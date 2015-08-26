@@ -21,7 +21,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implements GeoJsonConstants {
+public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implements GeoJsonConstants {
 
   private GeometryFactory geometryFactory;
 
@@ -74,8 +74,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
   }
 
   private CoordinatesList readCoordinatesList() {
-    if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+    if (this.in.getEvent() == EventType.startArray
+      || this.in.hasNext() && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<Number> values = new ArrayList<Number>();
       int dimension = 0;
@@ -132,8 +132,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
    */
   private int readCoordinatesListCoordinates(final List<Number> values) {
     int dimension = 0;
-    if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+    if (this.in.getEvent() == EventType.startArray
+      || this.in.hasNext() && this.in.next() == EventType.startArray) {
       EventType event = this.in.getEvent();
       do {
         final Object value = JsonParser.getValue(this.in);
@@ -158,8 +158,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
   }
 
   private List<CoordinatesList> readCoordinatesListList(final boolean cogo, final boolean ring) {
-    if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+    if (this.in.getEvent() == EventType.startArray
+      || this.in.hasNext() && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<CoordinatesList> coordinatesLists = new ArrayList<CoordinatesList>();
       if (event != EventType.endArray) {
@@ -178,8 +178,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
   }
 
   private List<List<CoordinatesList>> readCoordinatesListListList(final boolean cogo) {
-    if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+    if (this.in.getEvent() == EventType.startArray
+      || this.in.hasNext() && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<List<CoordinatesList>> coordinatesLists = new ArrayList<List<CoordinatesList>>();
       if (event != EventType.endArray) {
@@ -265,8 +265,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
   }
 
   private List<Geometry> readGeometryList() {
-    if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+    if (this.in.getEvent() == EventType.startArray
+      || this.in.hasNext() && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<Geometry> geometries = new ArrayList<Geometry>();
       if (event != EventType.endArray) {
@@ -375,8 +375,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry> implemen
   }
 
   private List<CoordinatesList> readPointCoordinatesListList() {
-    if (this.in.getEvent() == EventType.startArray || this.in.hasNext()
-      && this.in.next() == EventType.startArray) {
+    if (this.in.getEvent() == EventType.startArray
+      || this.in.hasNext() && this.in.next() == EventType.startArray) {
       EventType event = this.in.next();
       final List<CoordinatesList> coordinatesLists = new ArrayList<CoordinatesList>();
       if (event != EventType.endArray) {

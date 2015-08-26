@@ -16,10 +16,10 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.record.Records;
+import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -30,10 +30,9 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 public class DirectionalFields extends AbstractRecordDefinitionProperty {
-  public static final String PROPERTY_NAME = DirectionalFields.class.getName()
-    + ".propertyName";
-
   private static final Logger LOG = LoggerFactory.getLogger(DirectionalFields.class);
+
+  public static final String PROPERTY_NAME = DirectionalFields.class.getName() + ".propertyName";
 
   public static boolean canMergeObjects(final Coordinates point, final Record record1,
     final Record record2) {
@@ -126,23 +125,23 @@ public class DirectionalFields extends AbstractRecordDefinitionProperty {
     property.reverseAttributesAndGeometry(record);
   }
 
-  private final Map<String, String> endAttributeNamePairs = new HashMap<String, String>();
-
-  private final Map<String, String> sideAttributeNamePairs = new HashMap<String, String>();
-
-  private final Map<String, String> reverseAttributeNameMap = new HashMap<String, String>();
-
-  private final Set<String> startAttributeNames = new HashSet<String>();
-
-  private final Set<String> sideAttributeNames = new HashSet<String>();
-
-  private final Set<String> endAttributeNames = new HashSet<String>();
-
   private final Map<String, Map<Object, Object>> directionalAttributeValues = new HashMap<String, Map<Object, Object>>();
 
   private final List<List<String>> endAndSideAttributeNamePairs = new ArrayList<List<String>>();
 
+  private final Map<String, String> endAttributeNamePairs = new HashMap<String, String>();
+
+  private final Set<String> endAttributeNames = new HashSet<String>();
+
   private final List<List<String>> endTurnAttributeNamePairs = new ArrayList<List<String>>();
+
+  private final Map<String, String> reverseAttributeNameMap = new HashMap<String, String>();
+
+  private final Map<String, String> sideAttributeNamePairs = new HashMap<String, String>();
+
+  private final Set<String> sideAttributeNames = new HashSet<String>();
+
+  private final Set<String> startAttributeNames = new HashSet<String>();
 
   public DirectionalFields() {
   }
@@ -822,12 +821,12 @@ public class DirectionalFields extends AbstractRecordDefinitionProperty {
     return this.startAttributeNames;
   }
 
-  public boolean hasDirectionalFields() {
-    return !this.directionalAttributeValues.isEmpty() || !this.reverseAttributeNameMap.isEmpty();
-  }
-
   public boolean hasDirectionalAttributeValues(final String attributeName) {
     return this.directionalAttributeValues.containsKey(attributeName);
+  }
+
+  public boolean hasDirectionalFields() {
+    return !this.directionalAttributeValues.isEmpty() || !this.reverseAttributeNameMap.isEmpty();
   }
 
   public boolean isEndAttribute(final String attributeName) {

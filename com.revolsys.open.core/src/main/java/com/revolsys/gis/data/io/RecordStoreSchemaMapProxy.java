@@ -39,8 +39,8 @@ public class RecordStoreSchemaMapProxy extends TreeMap<String, RecordStoreSchema
 
   @Override
   public RecordStoreSchema put(final String key, final RecordStoreSchema schema) {
-    final RecordStoreSchemaProxy schemaProxy = new RecordStoreSchemaProxy(
-      this.recordStore, key, schema);
+    final RecordStoreSchemaProxy schemaProxy = new RecordStoreSchemaProxy(this.recordStore, key,
+      schema);
     this.map.put(key, schema);
     return super.put(key, schemaProxy);
   }

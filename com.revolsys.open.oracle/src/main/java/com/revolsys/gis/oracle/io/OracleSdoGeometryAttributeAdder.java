@@ -31,13 +31,13 @@ import oracle.sql.Datum;
 import oracle.sql.STRUCT;
 
 public class OracleSdoGeometryAttributeAdder extends JdbcFieldAdder {
-  private static final Map<Integer, String> ID_TO_GEOMETRY_TYPE = new HashMap<Integer, String>();
-
-  private static final Map<Integer, DataType> ID_TO_DATA_TYPE = new HashMap<Integer, DataType>();
-
   private static final Map<DataType, Integer> DATA_TYPE_TO_2D_ID = new HashMap<DataType, Integer>();
 
   private static final Map<String, Integer> GEOMETRY_TYPE_TO_ID = new HashMap<String, Integer>();
+
+  private static final Map<Integer, DataType> ID_TO_DATA_TYPE = new HashMap<Integer, DataType>();
+
+  private static final Map<Integer, String> ID_TO_GEOMETRY_TYPE = new HashMap<Integer, String>();
 
   static {
     addGeometryType(DataTypes.GEOMETRY, "GEOMETRY", 0);

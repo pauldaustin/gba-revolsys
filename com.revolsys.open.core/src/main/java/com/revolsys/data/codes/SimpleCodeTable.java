@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 
 public class SimpleCodeTable extends AbstractCodeTable {

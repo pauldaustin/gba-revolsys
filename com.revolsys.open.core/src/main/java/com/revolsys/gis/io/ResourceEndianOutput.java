@@ -6,20 +6,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.io.FileUtil;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 
 public class ResourceEndianOutput implements EndianOutput {
-  private final Resource resource;
-
-  private OutputStream resourceOut;
-
   private final File file;
 
   private EndianOutput out;
+
+  private final Resource resource;
+
+  private OutputStream resourceOut;
 
   public ResourceEndianOutput(final Resource resource) throws IOException {
     this.resource = resource;

@@ -11,9 +11,9 @@ import com.revolsys.util.ExceptionUtil;
 
 public class InvokeMethodMapObjectFactory extends AbstractMapObjectFactory {
 
-  private final Reference<Object> object;
-
   private final String methodName;
+
+  private final Reference<Object> object;
 
   public InvokeMethodMapObjectFactory(final String typeName, final String description,
     final Object object, final String methodName) {

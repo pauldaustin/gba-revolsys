@@ -16,14 +16,14 @@ import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.properties.AbstractObjectWithProperties;
 
-public class JsonResourceRecordDefinitionFactory extends AbstractObjectWithProperties implements
-  ApplicationContextAware, RecordDefinitionFactory {
+public class JsonResourceRecordDefinitionFactory extends AbstractObjectWithProperties
+  implements ApplicationContextAware, RecordDefinitionFactory {
 
-  private final Map<String, RecordDefinition> metaDataMap = new HashMap<String, RecordDefinition>();
+  private ApplicationContext applicationContext;
 
   private String locationPattern;
 
-  private ApplicationContext applicationContext;
+  private final Map<String, RecordDefinition> metaDataMap = new HashMap<String, RecordDefinition>();
 
   public String getLocationPattern() {
     return this.locationPattern;

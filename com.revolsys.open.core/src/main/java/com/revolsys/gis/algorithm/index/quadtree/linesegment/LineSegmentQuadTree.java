@@ -43,9 +43,9 @@ public class LineSegmentQuadTree {
 
   private final Geometry geometry;
 
-  private final Root root = new Root();
-
   private double minExtent = 1.0;
+
+  private final Root root = new Root();
 
   private int size = 0;
 
@@ -154,7 +154,8 @@ public class LineSegmentQuadTree {
     return this.size;
   }
 
-  public List<LineSegment> getWithin(final BoundingBox boundingBox, final Filter<LineSegment> filter) {
+  public List<LineSegment> getWithin(final BoundingBox boundingBox,
+    final Filter<LineSegment> filter) {
     final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>(filter);
     visit(boundingBox, visitor);
     return visitor.getList();

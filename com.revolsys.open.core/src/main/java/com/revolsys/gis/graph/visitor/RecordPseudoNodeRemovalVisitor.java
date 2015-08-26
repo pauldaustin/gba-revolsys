@@ -11,10 +11,10 @@ import com.revolsys.data.record.property.PseudoNodeProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterProxy;
-import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.EdgePair;
 import com.revolsys.gis.graph.Node;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.attribute.NodeAttributes;
 import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
 import com.revolsys.gis.io.Statistics;
@@ -84,7 +84,8 @@ public class RecordPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<
     return newEdge;
   }
 
-  protected Record mergeObjects(final Node<Record> node, final Record object1, final Record object2) {
+  protected Record mergeObjects(final Node<Record> node, final Record object1,
+    final Record object2) {
     return DirectionalFields.merge(node, object1, object2);
   }
 

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -36,9 +35,9 @@ public class FileRecordLayer extends ListRecordLayer {
     return new FileRecordLayer(properties);
   }
 
-  private String url;
-
   private Resource resource;
+
+  private String url;
 
   public FileRecordLayer(final Map<String, ? extends Object> properties) {
     super(properties);

@@ -16,13 +16,13 @@ public class CodedValueDomain extends Domain implements CodeTable {
 
   private Map<Object, List<Object>> idValueMap = new HashMap<Object, List<Object>>();
 
-  private Map<String, Object> stringIdMap = new HashMap<String, Object>();
-
-  private Map<String, Object> valueIdMap = new HashMap<String, Object>();
-
   private int maxId = 0;
 
+  private Map<String, Object> stringIdMap = new HashMap<String, Object>();
+
   private JComponent swingEditor;
+
+  private Map<String, Object> valueIdMap = new HashMap<String, Object>();
 
   public synchronized void addCodedValue(final Object code, final String name) {
     final CodedValue value = new CodedValue(code, name);

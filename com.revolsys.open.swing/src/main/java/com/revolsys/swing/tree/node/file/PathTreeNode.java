@@ -24,7 +24,6 @@ import javax.swing.UIManager;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.equals.Equals;
-import com.revolsys.data.record.io.RecordIo;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
@@ -217,9 +216,9 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
       fileNameExtension);
   }
 
-  private boolean hasFile;
-
   private boolean exists;
+
+  private boolean hasFile;
 
   public PathTreeNode(final Path path) {
     super(path);

@@ -85,11 +85,9 @@ public class Graph<T> {
     }
   }
 
-  private final int id = GRAPH_IDS.incrementAndGet();
+  private Map<Integer, Map<String, Object>> edgeAttributesById = new IntHashMap<Map<String, Object>>();
 
-  private int maxEdgesInMemory = Integer.MAX_VALUE;
-
-  private boolean inMemory = true;
+  private final Map<Edge<T>, Integer> edgeIds = new TreeMap<Edge<T>, Integer>();
 
   private IdObjectIndex<Edge<T>> edgeIndex;
 
@@ -99,27 +97,29 @@ public class Graph<T> {
 
   private Map<Integer, T> edgeObjectsById = new IntHashMap<T>();
 
-  private Map<Integer, Map<String, Object>> edgeAttributesById = new IntHashMap<Map<String, Object>>();
-
-  private Map<Integer, Map<String, Object>> nodeAttributesById = new IntHashMap<Map<String, Object>>();
-
   private Map<Integer, Edge<T>> edgesById = new IntHashMap<Edge<T>>();
 
-  private final Map<Edge<T>, Integer> edgeIds = new TreeMap<Edge<T>, Integer>();
-
   private GeometryFactory geometryFactory = GeometryFactory.getFactory();
+
+  private final int id = GRAPH_IDS.incrementAndGet();
+
+  private boolean inMemory = true;
+
+  private int maxEdgesInMemory = Integer.MAX_VALUE;
 
   private int nextEdgeId;
 
   private int nextNodeId;
 
+  private Map<Integer, Map<String, Object>> nodeAttributesById = new IntHashMap<Map<String, Object>>();
+
   private IdObjectIndex<Node<T>> nodeIndex;
 
   private final NodeEventListenerList<T> nodeListeners = new NodeEventListenerList<T>();
 
-  private Map<Coordinates, Integer> nodesIdsByCoordinates = new TreeMap<Coordinates, Integer>();
-
   private Map<Integer, Node<T>> nodesById = new IntHashMap<Node<T>>();
+
+  private Map<Coordinates, Integer> nodesIdsByCoordinates = new TreeMap<Coordinates, Integer>();
 
   private CoordinatesPrecisionModel precisionModel = new SimpleCoordinatesPrecisionModel();
 
@@ -485,7 +485,8 @@ public class Graph<T> {
     return edges;
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator) {
+  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter,
+    final Comparator<Edge<T>> comparator) {
     final List<Edge<T>> targetEdges = getEdges(filter);
     if (comparator != null) {
       Collections.sort(targetEdges, comparator);
@@ -646,7 +647,8 @@ public class Graph<T> {
     }
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter, final Comparator<Node<T>> comparator) {
+  public List<Node<T>> getNodes(final Filter<Node<T>> filter,
+    final Comparator<Node<T>> comparator) {
     final List<Node<T>> targetNodes = getNodes(filter);
     if (comparator != null) {
       Collections.sort(targetNodes, comparator);
@@ -818,8 +820,8 @@ public class Graph<T> {
     final Coordinates point2 = node2.get3dCoordinates(typePath);
 
     final Graph<Record> graph = node1.getGraph();
-    final Coordinates midPoint = LineSegmentUtil.midPoint(new SimpleCoordinatesPrecisionModel(1000,
-      1), node2, node1);
+    final Coordinates midPoint = LineSegmentUtil
+      .midPoint(new SimpleCoordinatesPrecisionModel(1000, 1), node2, node1);
     final Coordinates newPoint = new DoubleCoordinates(3);
     newPoint.setX(midPoint.getX());
     newPoint.setY(midPoint.getY());
@@ -1108,7 +1110,8 @@ public class Graph<T> {
               nodeSegment.put(node, segmentIndex);
               nodeIter.remove();
             } else {
-              final double projectionFactor = LineSegmentUtil.projectionFactor(x1, y1, x2, y2, x, y);
+              final double projectionFactor = LineSegmentUtil.projectionFactor(x1, y1, x2, y2, x,
+                y);
               if (projectionFactor >= 0.0 && projectionFactor <= 1.0) {
                 final Double closestDistance = nodeDistanceMap.get(node);
                 if (closestDistance == null) {
@@ -1179,8 +1182,8 @@ public class Graph<T> {
               if (startIndex > index) {
                 newPoints = CoordinatesListUtil.create(points.getNumAxis(), startPoint, point);
               } else {
-                newPoints = CoordinatesListUtil.subList(points, startPoint, startIndex, index
-                  - startIndex + 1, point);
+                newPoints = CoordinatesListUtil.subList(points, startPoint, startIndex,
+                  index - startIndex + 1, point);
               }
               newLines.add(newPoints);
               startPoint = point;
@@ -1219,8 +1222,8 @@ public class Graph<T> {
       final LineString line = edge.getLine();
       final CoordinatesList points = CoordinatesListUtil.get(line);
 
-      final Map<String, Number> result = CoordinatesListUtil.findClosestSegmentAndCoordinate(
-        points, point);
+      final Map<String, Number> result = CoordinatesListUtil.findClosestSegmentAndCoordinate(points,
+        point);
       final int segmentIndex = result.get("segmentIndex").intValue();
       if (segmentIndex != -1) {
         List<LineString> lines;

@@ -10,14 +10,14 @@ import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.UrlUtil;
 
 public class ArcGisResponse extends AbstractMapWrapper {
-  public static final Map<String, ? extends Object> FORMAT_PARAMETER = Collections.singletonMap(
-    "f", "json");
+  public static final Map<String, ? extends Object> FORMAT_PARAMETER = Collections.singletonMap("f",
+    "json");
 
-  private String serviceUrl;
+  private Catalog catalog;
 
   private String path;
 
-  private Catalog catalog;
+  private String serviceUrl;
 
   public ArcGisResponse() {
   }
@@ -51,8 +51,8 @@ public class ArcGisResponse extends AbstractMapWrapper {
   public synchronized Map<String, Object> getValues() {
     Map<String, Object> values = super.getValues();
     if (values == null) {
-      final Resource resource = SpringUtil.getResource(UrlUtil.getUrl(this.serviceUrl + this.path,
-        FORMAT_PARAMETER));
+      final Resource resource = SpringUtil
+        .getResource(UrlUtil.getUrl(this.serviceUrl + this.path, FORMAT_PARAMETER));
       values = JsonMapIoFactory.toMap(resource);
       setValues(values);
     }

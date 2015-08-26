@@ -4,9 +4,9 @@ import com.revolsys.collection.Visitor;
 import com.vividsolutions.jts.geom.Envelope;
 
 public final class IdObjectIndexEnvelopeVisitor<T> implements Visitor<Integer> {
-  private final IdObjectIndex<T> index;
-
   private final Envelope envelope;
+
+  private final IdObjectIndex<T> index;
 
   private final Visitor<T> visitor;
 

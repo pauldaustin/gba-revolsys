@@ -71,9 +71,9 @@ public class CentralEndpointIntersector {
     return intor.getIntersection();
   }
 
-  private final Coordinates[] pts;
-
   private Coordinates intPt = null;
+
+  private final Coordinates[] pts;
 
   public CentralEndpointIntersector(final Coordinates p00, final Coordinates p01,
     final Coordinates p10, final Coordinates p11) {

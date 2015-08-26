@@ -13,7 +13,6 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.format.csv.Csv;
 
 public class RecordReaderTransferable implements Transferable {
-
   public static final DataFlavor DATA_OBJECT_READER_FLAVOR = new DataFlavor(RecordReader.class,
     "Record List");
 

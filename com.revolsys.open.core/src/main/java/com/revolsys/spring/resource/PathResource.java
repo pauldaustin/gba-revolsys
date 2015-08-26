@@ -27,7 +27,6 @@ import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.util.Assert;
 
 /**

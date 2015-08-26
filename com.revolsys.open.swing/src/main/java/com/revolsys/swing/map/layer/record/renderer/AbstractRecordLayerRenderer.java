@@ -34,8 +34,10 @@ import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.TopologyException;
 
-public abstract class AbstractRecordLayerRenderer extends
-  AbstractLayerRenderer<AbstractRecordLayer> {
+public abstract class AbstractRecordLayerRenderer
+  extends AbstractLayerRenderer<AbstractRecordLayer> {
+
+  private static final AcceptAllFilter<Record> DEFAULT_FILTER = new AcceptAllFilter<Record>();
 
   static {
     final MenuFactory menu = MenuFactory.getMenu(AbstractRecordLayerRenderer.class);
@@ -50,14 +52,12 @@ public abstract class AbstractRecordLayerRenderer extends
     for (final String type : Arrays.asList("Multiple", "Filter", "Scale")) {
       final String iconName = ("style_" + type + "_wrap").toLowerCase();
       final ImageIcon icon = Icons.getIcon(iconName);
-      final InvokeMethodAction action = MenuSourceRunnable.createAction("Wrap With " + type
-        + " Style", icon, null, "wrapWith" + type + "Style");
+      final InvokeMethodAction action = MenuSourceRunnable
+        .createAction("Wrap With " + type + " Style", icon, null, "wrapWith" + type + "Style");
       menu.addMenuItem("wrap", action);
     }
 
   }
-
-  private static final AcceptAllFilter<Record> DEFAULT_FILTER = new AcceptAllFilter<Record>();
 
   public static Filter<Record> getFilter(final AbstractRecordLayer layer,
     final Map<String, Object> style) {
@@ -87,8 +87,8 @@ public abstract class AbstractRecordLayerRenderer extends
           return new SqlLayerFilter(layer, query);
         }
       } else {
-        LoggerFactory.getLogger(AbstractRecordLayerRenderer.class).error(
-          "Unknown filter type " + type);
+        LoggerFactory.getLogger(AbstractRecordLayerRenderer.class)
+          .error("Unknown filter type " + type);
       }
     }
     return DEFAULT_FILTER;
@@ -128,7 +128,8 @@ public abstract class AbstractRecordLayerRenderer extends
   }
 
   public AbstractRecordLayerRenderer(final String type, final String name,
-    final AbstractRecordLayer layer, final LayerRenderer<?> parent, final Map<String, Object> style) {
+    final AbstractRecordLayer layer, final LayerRenderer<?> parent,
+    final Map<String, Object> style) {
     super(type, name, layer, parent, style);
     this.filter = getFilter(layer, style);
   }

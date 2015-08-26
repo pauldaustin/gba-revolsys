@@ -9,9 +9,9 @@ import com.revolsys.filter.Filter;
 import com.revolsys.filter.FilterProxy;
 
 public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, ComparatorProxy<T> {
-  private Filter<T> filter;
-
   private Comparator<T> comparator;
+
+  private Filter<T> filter;
 
   public AbstractVisitor() {
   }

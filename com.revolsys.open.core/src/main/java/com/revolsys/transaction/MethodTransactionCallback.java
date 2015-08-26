@@ -11,8 +11,8 @@ import com.revolsys.util.ExceptionUtil;
 public class MethodTransactionCallback<T> extends MethodInvoker implements TransactionCallback<T> {
   private final boolean rollback;
 
-  public MethodTransactionCallback(final boolean rollback, final Object object,
-    final Method method, final Object... parameters) {
+  public MethodTransactionCallback(final boolean rollback, final Object object, final Method method,
+    final Object... parameters) {
     super(method, object, parameters);
     this.rollback = rollback;
   }

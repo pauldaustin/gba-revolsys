@@ -28,13 +28,13 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LessThanDistanceFilter implements Filter<Geometry> {
+  /** The maximum distance the object can be from the source geometry. */
+  private double distance;
+
   private BoundingBox envelope;
 
   /** The geometry to compare the data objects to to. */
   private Geometry geometry;
-
-  /** The maximum distance the object can be from the source geometry. */
-  private double distance;
 
   public LessThanDistanceFilter() {
   }

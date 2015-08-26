@@ -40,16 +40,16 @@ import com.vividsolutions.jts.operation.relate.RelateNodeGraph;
  */
 public class ConsistentAreaTester {
 
-  private final LineIntersector li = new RobustLineIntersector();
-
   private final GeometryGraph geomGraph;
 
-  private final RelateNodeGraph nodeGraph = new RelateNodeGraph();
+  private final List<LineSegment> invalidLineSegments = new ArrayList<LineSegment>();
 
   // the intersection point found (if any)
   private final List<Coordinates> invalidPoints = new ArrayList<Coordinates>();
 
-  private final List<LineSegment> invalidLineSegments = new ArrayList<LineSegment>();
+  private final LineIntersector li = new RobustLineIntersector();
+
+  private final RelateNodeGraph nodeGraph = new RelateNodeGraph();
 
   /**
    * Creates a new tester for consistent areas.

@@ -37,9 +37,9 @@ public abstract class NodeBase<T> {
     return subnodeIndex;
   }
 
-  private final List<T> items = new ArrayList<T>();
-
   private final List<Envelope> envelopes = new ArrayList<Envelope>();
+
+  private final List<T> items = new ArrayList<T>();
 
   private final List<Node<T>> nodes = new ArrayList<Node<T>>(4);
 

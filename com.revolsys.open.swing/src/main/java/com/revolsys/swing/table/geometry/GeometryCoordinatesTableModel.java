@@ -34,25 +34,25 @@ public class GeometryCoordinatesTableModel extends AbstractTableModel {
 
   private List<String> axisNames = Arrays.asList("#", "X", "Y", "Z", "M");
 
+  private int columnCount = 0;
+
+  private Reference<RecordLayerForm> form;
+
   private Geometry geometry;
 
   private GeometryFactory geometryFactory;
-
-  private int columnCount = 0;
-
-  private Map<int[], Coordinates> vertexIndexMap = Collections.emptyMap();
-
-  private List<int[]> vertexIndices = Collections.emptyList();
 
   private int numAxis;
 
   private int numIndexItems;
 
-  private Reference<RecordLayerForm> form;
+  private int segmentIndexColumn;
 
   private int vertexIndexColumn;
 
-  private int segmentIndexColumn;
+  private Map<int[], Coordinates> vertexIndexMap = Collections.emptyMap();
+
+  private List<int[]> vertexIndices = Collections.emptyList();
 
   public GeometryCoordinatesTableModel() {
     this(null);

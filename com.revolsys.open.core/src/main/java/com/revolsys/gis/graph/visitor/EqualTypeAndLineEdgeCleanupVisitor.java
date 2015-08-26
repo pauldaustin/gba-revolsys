@@ -11,16 +11,16 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.filter.AndFilter;
 import com.revolsys.filter.Filter;
-import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.gis.graph.filter.EdgeTypeNameFilter;
 import com.revolsys.gis.io.Statistics;
@@ -31,8 +31,8 @@ import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>> implements
-  ObjectProcessor<RecordGraph> {
+public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>>
+  implements ObjectProcessor<RecordGraph> {
 
   /** Flag indicating that the edge has been processed. */
   private static final String EDGE_PROCESSED = EqualTypeAndLineEdgeCleanupVisitor.class.getName()
@@ -40,8 +40,8 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Rec
 
   private Statistics duplicateStatistics;
 
-  private Set<String> equalExcludeAttributes = new HashSet<String>(Arrays.asList(
-    RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
+  private Set<String> equalExcludeAttributes = new HashSet<String>(
+    Arrays.asList(RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
 
   @PreDestroy
   public void destroy() {

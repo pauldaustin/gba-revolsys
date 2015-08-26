@@ -11,20 +11,20 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-public class JdbcDataSourceFactoryBean extends AbstractFactoryBean<DataSource> implements
-  ApplicationContextAware {
+public class JdbcDataSourceFactoryBean extends AbstractFactoryBean<DataSource>
+  implements ApplicationContextAware {
+
+  private ApplicationContext applicationContext;
 
   private Map<String, Object> config = new HashMap<String, Object>();
+
+  private JdbcDatabaseFactory databaseFactory;
+
+  private String password;
 
   private String url;
 
   private String username;
-
-  private String password;
-
-  private JdbcDatabaseFactory databaseFactory;
-
-  private ApplicationContext applicationContext;
 
   @Override
   protected DataSource createInstance() throws Exception {
@@ -32,7 +32,8 @@ public class JdbcDataSourceFactoryBean extends AbstractFactoryBean<DataSource> i
     config.put("url", this.url);
     config.put("username", this.username);
     config.put("password", this.password);
-    final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry.getFactory(this.applicationContext);
+    final JdbcFactoryRegistry jdbcFactoryRegistry = JdbcFactoryRegistry
+      .getFactory(this.applicationContext);
     this.databaseFactory = jdbcFactoryRegistry.getDatabaseFactory(config);
     final DataSource dataSource = this.databaseFactory.createDataSource(config);
     return dataSource;

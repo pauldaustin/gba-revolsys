@@ -313,7 +313,8 @@ public class KmlXmlWriter extends XmlWriter implements Kml22Constants {
 
   }
 
-  public void writePlacemarkPoint(final Envelope envelope, final String name, final String styleUrl) {
+  public void writePlacemarkPoint(final Envelope envelope, final String name,
+    final String styleUrl) {
 
     startTag(PLACEMARK);
     if (name != null) {
@@ -334,7 +335,8 @@ public class KmlXmlWriter extends XmlWriter implements Kml22Constants {
     endTag();
   }
 
-  public void writePlacemarkPolygon(final Polygon polygon, final String name, final String styleUrl) {
+  public void writePlacemarkPolygon(final Polygon polygon, final String name,
+    final String styleUrl) {
 
     startTag(PLACEMARK);
     if (name != null) {
@@ -390,7 +392,8 @@ public class KmlXmlWriter extends XmlWriter implements Kml22Constants {
     endTag();
   }
 
-  public void writeWmsGroundOverlay(final Envelope envelope, final String baseUrl, final String name) {
+  public void writeWmsGroundOverlay(final Envelope envelope, final String baseUrl,
+    final String name) {
 
     startTag(GROUND_OVERLAY);
     if (name != null) {
@@ -398,8 +401,8 @@ public class KmlXmlWriter extends XmlWriter implements Kml22Constants {
     }
     writeLatLonBox(envelope);
     startTag(ICON);
-    final Map<String, String> parameters = Collections.singletonMap("BBOX", envelope.getMinX()
-      + "," + envelope.getMinY() + "," + envelope.getMaxX() + "," + envelope.getMaxY());
+    final Map<String, String> parameters = Collections.singletonMap("BBOX", envelope.getMinX() + ","
+      + envelope.getMinY() + "," + envelope.getMaxX() + "," + envelope.getMaxY());
     element(HREF, UrlUtil.getUrl(baseUrl, parameters));
 
     endTag();

@@ -28,11 +28,12 @@ public class SetFieldValueUndoableEdit extends AbstractUndoableEdit {
 
   private final Field field;
 
-  private final Object oldValue;
-
   private final Object newValue;
 
-  public SetFieldValueUndoableEdit(final Field field, final Object oldValue, final Object newValue) {
+  private final Object oldValue;
+
+  public SetFieldValueUndoableEdit(final Field field, final Object oldValue,
+    final Object newValue) {
     this.field = field;
     this.oldValue = oldValue;
     this.newValue = newValue;

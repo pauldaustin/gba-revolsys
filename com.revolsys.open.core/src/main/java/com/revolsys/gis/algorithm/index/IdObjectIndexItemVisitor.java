@@ -5,9 +5,9 @@ import com.revolsys.gis.graph.AbstractItemVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 
 public final class IdObjectIndexItemVisitor<T> extends AbstractItemVisitor<Integer> {
-  private final IdObjectIndex<T> index;
-
   private final Envelope envelope;
+
+  private final IdObjectIndex<T> index;
 
   private final Visitor<T> visitor;
 

@@ -32,13 +32,13 @@ public class NodeOnEdgeVisitor<T> extends DelegatingVisitor<Edge<T>> {
 
   }
 
-  private final Node<T> node;
-
-  private final Coordinates point;
-
   private final BoundingBox boundingBox;
 
   private final double maxDistance;
+
+  private final Node<T> node;
+
+  private final Coordinates point;
 
   public NodeOnEdgeVisitor(final Node<T> node, final BoundingBox boundingBox,
     final double maxDistance, final Visitor<Edge<T>> matchVisitor) {

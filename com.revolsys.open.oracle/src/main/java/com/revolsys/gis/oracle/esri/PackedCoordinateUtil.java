@@ -175,8 +175,8 @@ public class PackedCoordinateUtil {
     final GeometryFactory geometryFactory, final int numPoints, final Double xOffset,
     final Double yOffset, final Double xyScale, final Double zOffset, final Double zScale,
     final Double mOffset, final Double mScale) {
-    final CoordinatesList points = getCoordinatesList(numPoints, xOffset, yOffset, xyScale,
-      zOffset, zScale, mOffset, mScale, pointsIn);
+    final CoordinatesList points = getCoordinatesList(numPoints, xOffset, yOffset, xyScale, zOffset,
+      zScale, mOffset, mScale, pointsIn);
     return geometryFactory.createLineString(points);
   }
 
@@ -363,8 +363,8 @@ public class PackedCoordinateUtil {
   private static Point getPoint(final InputStream pointsIn, final GeometryFactory geometryFactory,
     final int numPoints, final Double xOffset, final Double yOffset, final Double xyScale,
     final Double zOffset, final Double zScale, final Double mOffset, final Double mScale) {
-    final CoordinatesList points = getCoordinatesList(numPoints, xOffset, yOffset, xyScale,
-      zOffset, zScale, mOffset, mScale, pointsIn);
+    final CoordinatesList points = getCoordinatesList(numPoints, xOffset, yOffset, xyScale, zOffset,
+      zScale, mOffset, mScale, pointsIn);
     return geometryFactory.createPoint(points);
   }
 
@@ -372,8 +372,8 @@ public class PackedCoordinateUtil {
     final GeometryFactory geometryFactory, final int numPoints, final Double xOffset,
     final Double yOffset, final Double xyScale, final Double zOffset, final Double zScale,
     final Double mOffset, final Double mScale) {
-    final List<CoordinatesList> pointsList = getPolygonCoordinatesLists(numPoints, xOffset,
-      yOffset, xyScale, zOffset, zScale, mOffset, mScale, pointsIn);
+    final List<CoordinatesList> pointsList = getPolygonCoordinatesLists(numPoints, xOffset, yOffset,
+      xyScale, zOffset, zScale, mOffset, mScale, pointsIn);
     try {
       return geometryFactory.createPolygon(pointsList);
     } catch (final IllegalArgumentException e) {
@@ -476,8 +476,8 @@ public class PackedCoordinateUtil {
     return value;
   }
 
-  private static double readOordinate(final PackedIntegerInputStream in,
-    final double previousValue, final double scale) throws IOException {
+  private static double readOordinate(final PackedIntegerInputStream in, final double previousValue,
+    final double scale) throws IOException {
     final long deltaValueLong = in.readLong();
     final double deltaValue = deltaValueLong / scale;
     final double value = Math.round((previousValue + deltaValue) * scale) / scale;
@@ -486,7 +486,7 @@ public class PackedCoordinateUtil {
 
   private static void readOordinates(final PackedIntegerInputStream in,
     final CoordinatesList points, final int axisIndex, final double offset, final double scale)
-    throws IOException {
+      throws IOException {
 
     double previousValue = offset;
     final int numPoints = points.size();

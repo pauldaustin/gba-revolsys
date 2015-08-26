@@ -14,9 +14,9 @@ public class MultiInputSelector {
 
   private long maxWait;
 
-  private boolean scheduled;
-
   private final Object monitor = new Object();
+
+  private boolean scheduled;
 
   void closeChannel() {
     synchronized (this.monitor) {
@@ -125,7 +125,8 @@ public class MultiInputSelector {
     return select(Long.MAX_VALUE, channels);
   }
 
-  public synchronized int select(final List<? extends SelectableInput> channels, final boolean skip) {
+  public synchronized int select(final List<? extends SelectableInput> channels,
+    final boolean skip) {
     if (skip) {
       enableChannels(channels);
       return disableChannels(channels);

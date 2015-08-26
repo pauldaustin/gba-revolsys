@@ -16,9 +16,9 @@ import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 public class LineSegment extends AbstractCoordinatesList implements Comparable<LineSegment> {
-  private static final long serialVersionUID = 3905321662159212931L;
-
   private static final GeometryFactory FACTORY = GeometryFactory.getFactory();
+
+  private static final long serialVersionUID = 3905321662159212931L;
 
   public static void visit(final LineString line, final Visitor<LineSegment> visitor) {
     final CoordinatesList coords = CoordinatesListUtil.get(line);
@@ -36,9 +36,9 @@ public class LineSegment extends AbstractCoordinatesList implements Comparable<L
     }
   }
 
-  private final double[] points;
-
   private GeometryFactory geometryFactory;
+
+  private final double[] points;
 
   public LineSegment() {
     this.points = new double[6];
@@ -85,8 +85,8 @@ public class LineSegment extends AbstractCoordinatesList implements Comparable<L
   }
 
   public double angle() {
-    return Math.atan2(getCoordinates2().getY() - getCoordinates1().getY(), getCoordinates2().getX()
-      - getCoordinates1().getX());
+    return Math.atan2(getCoordinates2().getY() - getCoordinates1().getY(),
+      getCoordinates2().getX() - getCoordinates1().getX());
   }
 
   @Override
@@ -239,13 +239,14 @@ public class LineSegment extends AbstractCoordinatesList implements Comparable<L
     for (int i = 0; i < 4; i++) {
       final Coordinates ringC1 = points.get(i);
       final Coordinates ringC2 = points.get(i);
-      final CoordinatesList currentIntersections = LineSegmentUtil.getIntersection(
-        this.geometryFactory, coordinates1, coordinates2, ringC1, ringC2);
+      final CoordinatesList currentIntersections = LineSegmentUtil
+        .getIntersection(this.geometryFactory, coordinates1, coordinates2, ringC1, ringC2);
       if (currentIntersections.size() == 1) {
         final Coordinates currentIntersection = currentIntersections.get(0);
         if (intersection == null) {
           intersection = currentIntersection;
-        } else if (coordinates1.distance(currentIntersection) < coordinates1.distance(intersection)) {
+        } else
+          if (coordinates1.distance(currentIntersection) < coordinates1.distance(intersection)) {
           intersection = currentIntersection;
         }
       }

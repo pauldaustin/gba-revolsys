@@ -31,13 +31,13 @@ public class GmlRecordWriter extends AbstractWriter<Record>implements GmlConstan
 
   private GeometryFactory geometryFactory;
 
+  private final String namespaceUri;
+
   private boolean opened;
 
   private final XmlWriter out;
 
   private QName qualifiedName;
-
-  private final String namespaceUri;
 
   public GmlRecordWriter(final RecordDefinition metaData, final Writer out) {
     this.out = new XmlWriter(out);

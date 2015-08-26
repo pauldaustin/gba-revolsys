@@ -11,7 +11,7 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractReader;
 
-public class ListRecordReader extends AbstractReader<Record> implements RecordReader {
+public class ListRecordReader extends AbstractReader<Record>implements RecordReader {
   private RecordDefinition metaData;
 
   private List<Record> objects = new ArrayList<Record>();

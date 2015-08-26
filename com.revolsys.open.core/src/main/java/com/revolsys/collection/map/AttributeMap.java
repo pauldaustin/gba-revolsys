@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 public class AttributeMap extends LinkedHashMap<String, Object> {
-  private static final long serialVersionUID = 1L;
-
   private static final Logger LOG = LoggerFactory.getLogger(AttributeMap.class);
+
+  private static final long serialVersionUID = 1L;
 
   public AttributeMap() {
   }
@@ -25,7 +25,8 @@ public class AttributeMap extends LinkedHashMap<String, Object> {
     super(initialCapacity, loadFactor);
   }
 
-  public AttributeMap(final int initialCapacity, final float loadFactor, final boolean accessOrder) {
+  public AttributeMap(final int initialCapacity, final float loadFactor,
+    final boolean accessOrder) {
     super(initialCapacity, loadFactor, accessOrder);
   }
 

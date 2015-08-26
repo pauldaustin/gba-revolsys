@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.Records;
 import com.revolsys.filter.Filter;
 
 public class AttributesEqualFilter implements Filter<Record> {
@@ -47,9 +47,9 @@ public class AttributesEqualFilter implements Filter<Record> {
 
   private final Collection<String> attributeNames;
 
-  private final Record object;
-
   private boolean nullEqualsEmptyString;
+
+  private final Record object;
 
   public AttributesEqualFilter(final Record object, final Collection<String> attributeNames) {
     this.attributeNames = attributeNames;

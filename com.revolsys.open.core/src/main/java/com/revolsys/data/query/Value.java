@@ -20,13 +20,13 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.DateUtil;
 
 public class Value extends QueryValue {
-  private JdbcFieldDefinition jdbcAttribute;
-
-  private Object queryValue;
+  private FieldDefinition attribute;
 
   private Object displayValue;
 
-  private FieldDefinition attribute;
+  private JdbcFieldDefinition jdbcAttribute;
+
+  private Object queryValue;
 
   public Value(final FieldDefinition attribute, final Object value) {
     this.queryValue = value;

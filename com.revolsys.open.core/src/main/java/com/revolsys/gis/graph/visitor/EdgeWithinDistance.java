@@ -15,17 +15,17 @@ import com.revolsys.visitor.DelegatingVisitor;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EdgeWithinDistance<T> extends DelegatingVisitor<Edge<T>> implements Filter<Edge<T>> {
-  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph,
-    final Coordinates point, final double maxDistance) {
+public class EdgeWithinDistance<T> extends DelegatingVisitor<Edge<T>>implements Filter<Edge<T>> {
+  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph, final Coordinates point,
+    final double maxDistance) {
     final GeometryFactory geometryFactory = GeometryFactory.getFactory();
     final Geometry geometry = geometryFactory.createPoint(point);
     return edgesWithinDistance(graph, geometry, maxDistance);
 
   }
 
-  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph,
-    final Geometry geometry, final double maxDistance) {
+  public static <T> List<Edge<T>> edgesWithinDistance(final Graph<T> graph, final Geometry geometry,
+    final double maxDistance) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
     BoundingBox env = BoundingBox.getBoundingBox(geometry);
     env = env.expand(maxDistance);

@@ -71,14 +71,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class MapPanel extends JPanel implements PropertyChangeListener {
-  private static final long serialVersionUID = 1L;
-
-  public static final List<Long> SCALES = Arrays.asList(500000000L, 250000000L, 100000000L,
-    50000000L, 25000000L, 10000000L, 5000000L, 2500000L, 1000000L, 500000L, 250000L, 100000L,
-    50000L, 25000L, 10000L, 5000L, 2500L, 1000L, 500L, 250L, 100L, 50L, 25L, 10L, 5L);
-
-  public static final BoundingBox BC_ENVELOPE = new BoundingBox(GeometryFactory.getFactory(3005, 3,
-    1000, 1000), 25000, 340000, 1900000, 1750000);
+  public static final BoundingBox BC_ENVELOPE = new BoundingBox(
+    GeometryFactory.getFactory(3005, 3, 1000, 1000), 25000, 340000, 1900000, 1750000);
 
   public static final String MAP_CONTROLS_WORKING_AREA = "mapControlsCWorkingArea";
 
@@ -87,6 +81,12 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
   public static final String MAP_TABLE_WORKING_AREA = "mapTablesCWorkingArea";
 
   private static final PrecisionModel SCALE_PRECISION_MODEL = new PrecisionModel(10);
+
+  public static final List<Long> SCALES = Arrays.asList(500000000L, 250000000L, 100000000L,
+    50000000L, 25000000L, 10000000L, 5000000L, 2500000L, 1000000L, 500000L, 250000L, 100000L,
+    50000L, 25000L, 10000L, 5000L, 2500L, 1000L, 500L, 250L, 100L, 50L, 25L, 10L, 5L);
+
+  private static final long serialVersionUID = 1L;
 
   public static MapPanel get(final Layer layer) {
     if (layer == null) {
@@ -101,59 +101,59 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     }
   }
 
-  private String overlayAction;
-
-  private List<Long> scales = new ArrayList<Long>();
+  private ComboBox baseMapLayerField;
 
   private LayerGroup baseMapLayers;
 
   private LayerRendererOverlay baseMapOverlay;
 
+  private FileDropTargetListener fileDropListener;
+
   private final JLayeredPane layeredPane;
 
   private LayerRendererOverlay layerOverlay;
 
+  private BasePanel leftStatusBar = new BasePanel(new FlowLayout(FlowLayout.LEFT));
+
   private MouseOverlay mouseOverlay;
+
+  private String overlayAction;
+
+  private JLabel overlayActionLabel;
 
   private int overlayIndex = 1;
 
+  private SwingWorkerProgressBar progressBar;
+
   private Project project;
-
-  private double scale = 500000000;
-
-  private final UndoManager undoManager = new UndoManager();
-
-  private BasePanel leftStatusBar = new BasePanel(new FlowLayout(FlowLayout.LEFT));
 
   private BasePanel rightStatusBar = new BasePanel(new FlowLayout(FlowLayout.RIGHT));
 
-  private final ToolBar toolBar = new ToolBar();
+  private double scale = 500000000;
 
-  private Viewport2D viewport;
-
-  private final LinkedList<BoundingBox> zoomHistory = new LinkedList<BoundingBox>();
-
-  private int zoomHistoryIndex = -1;
-
-  private FileDropTargetListener fileDropListener;
-
-  private boolean updateZoomHistory = true;
-
-  private ToolTipOverlay toolTipOverlay;
-
-  private SwingWorkerProgressBar progressBar;
-
-  private JButton zoomBookmarkButton;
-
-  private JPanel statusBarPanel;
+  private List<Long> scales = new ArrayList<Long>();
 
   private boolean settingBoundingBox = false;
 
   private boolean settingScale;
 
-  private ComboBox baseMapLayerField;
+  private JPanel statusBarPanel;
 
-  private JLabel overlayActionLabel;
+  private final ToolBar toolBar = new ToolBar();
+
+  private ToolTipOverlay toolTipOverlay;
+
+  private final UndoManager undoManager = new UndoManager();
+
+  private boolean updateZoomHistory = true;
+
+  private Viewport2D viewport;
+
+  private JButton zoomBookmarkButton;
+
+  private final LinkedList<BoundingBox> zoomHistory = new LinkedList<BoundingBox>();
+
+  private int zoomHistoryIndex = -1;
 
   public MapPanel() {
     this(new Project());
@@ -221,11 +221,12 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     final SelectMapCoordinateSystem selectCoordinateSystem = new SelectMapCoordinateSystem(this);
     this.toolBar.addComponent("layers", selectCoordinateSystem);
 
-    final LayerGroupListModel baseMapLayersModel = new LayerGroupListModel(this.baseMapLayers, true);
+    final LayerGroupListModel baseMapLayersModel = new LayerGroupListModel(this.baseMapLayers,
+      true);
     this.baseMapLayerField = new ComboBox(baseMapLayersModel);
     this.baseMapLayerField.setMaximumSize(new Dimension(200, 22));
-    this.baseMapLayerField.addItemListener(new InvokeMethodSelectedItemListener(this,
-      "setBaseMapLayer"));
+    this.baseMapLayerField
+      .addItemListener(new InvokeMethodSelectedItemListener(this, "setBaseMapLayer"));
     if (this.baseMapLayers.size() > 0) {
       this.baseMapLayerField.setSelectedIndex(1);
     }
@@ -277,9 +278,9 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     addPointerLocation(true);
 
     this.overlayActionLabel = new JLabel();
-    this.overlayActionLabel.setBorder(BorderFactory.createCompoundBorder(
-      BorderFactory.createBevelBorder(BevelBorder.LOWERED),
-      BorderFactory.createEmptyBorder(1, 3, 1, 3)));
+    this.overlayActionLabel.setBorder(
+      BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED),
+        BorderFactory.createEmptyBorder(1, 3, 1, 3)));
     this.overlayActionLabel.setMinimumSize(new Dimension(20, 30));
     this.overlayActionLabel.setVisible(false);
     this.overlayActionLabel.setForeground(WebColors.Green);
@@ -338,8 +339,8 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     final JButton zoomPreviousButton = this.toolBar.addButtonTitleIcon("zoom", "Zoom Previous",
       "magnifier_zoom_left", this, "zoomPrevious");
     zoomPreviousButton.setEnabled(false);
-    Property.addListener(this, "zoomPreviousEnabled", new EnableComponentListener(
-      zoomPreviousButton));
+    Property.addListener(this, "zoomPreviousEnabled",
+      new EnableComponentListener(zoomPreviousButton));
 
     final JButton zoomNextButton = this.toolBar.addButtonTitleIcon("zoom", "Zoom Next",
       "magnifier_zoom_right", this, "zoomNext");
@@ -601,8 +602,8 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
       }
     } else if (source == this.baseMapLayers) {
       if ("layers".equals(propertyName)) {
-        if (this.baseMapOverlay != null
-          && (this.baseMapOverlay.getLayer() == null || NullLayer.INSTANCE.equals(this.baseMapOverlay.getLayer()))) {
+        if (this.baseMapOverlay != null && (this.baseMapOverlay.getLayer() == null
+          || NullLayer.INSTANCE.equals(this.baseMapOverlay.getLayer()))) {
           final Layer layer = (Layer)event.getNewValue();
           if (layer != null && layer.isVisible()) {
             this.baseMapOverlay.setLayer(layer);
@@ -826,8 +827,8 @@ public class MapPanel extends JPanel implements PropertyChangeListener {
     final double newY1 = y - newDeltaY;
 
     final GeometryFactory newGeometryFactory = extent.getGeometryFactory();
-    final BoundingBox newBoundingBox = new BoundingBox(newGeometryFactory, newX1, newY1, newX1
-      + newWidth, newY1 + newHeight);
+    final BoundingBox newBoundingBox = new BoundingBox(newGeometryFactory, newX1, newY1,
+      newX1 + newWidth, newY1 + newHeight);
     setBoundingBox(newBoundingBox);
   }
 

@@ -52,25 +52,25 @@ public class BaseTreeNode implements TreeNode, Iterable<BaseTreeNode>, PropertyC
     return (V)value;
   }
 
-  private boolean visible = true;
-
   private boolean allowsChildren;
-
-  private Object userObject;
-
-  private Reference<BaseTreeNode> parent;
-
-  private String name;
-
-  private Icon icon;
 
   private Icon disabledIcon;
 
-  private String type;
+  private Icon icon;
+
+  private String name;
+
+  private Reference<BaseTreeNode> parent;
 
   private JTree tree;
 
+  private String type;
+
+  private Object userObject;
+
   private boolean userObjectInitialized = true;
+
+  private boolean visible = true;
 
   public BaseTreeNode(final boolean allowsChildren) {
     this(null, allowsChildren);
@@ -143,8 +143,8 @@ public class BaseTreeNode implements TreeNode, Iterable<BaseTreeNode>, PropertyC
     }
   }
 
-  public boolean dndImportData(final TransferSupport support, int index) throws IOException,
-    UnsupportedFlavorException {
+  public boolean dndImportData(final TransferSupport support, int index)
+    throws IOException, UnsupportedFlavorException {
     if (!TreeTransferHandler.isDndNoneAction(support)) {
       final Transferable transferable = support.getTransferable();
       if (support.isDataFlavorSupported(TreePathListTransferable.FLAVOR)) {

@@ -77,7 +77,8 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
 
   private final Map<RecordDefinition, PreparedGeometry> getMetaDataGeometries(
     final RecordDefinition metaData) {
-    Map<RecordDefinition, PreparedGeometry> metaDataGeometries = this.metaDataGeometryMap.get(metaData);
+    Map<RecordDefinition, PreparedGeometry> metaDataGeometries = this.metaDataGeometryMap
+      .get(metaData);
     if (metaDataGeometries == null) {
       final PreparedGeometryFactory preparedGeometryFactory = new PreparedGeometryFactory();
       metaDataGeometries = new LinkedHashMap<RecordDefinition, PreparedGeometry>();
@@ -137,8 +138,10 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
     }
     final RecordDefinition metaData = object.getRecordDefinition();
     final Geometry geometryValue = object.getGeometry();
-    final Map<RecordDefinition, PreparedGeometry> metaDataGeometries = getMetaDataGeometries(metaData);
-    for (final Entry<RecordDefinition, PreparedGeometry> metaDataGeometry : metaDataGeometries.entrySet()) {
+    final Map<RecordDefinition, PreparedGeometry> metaDataGeometries = getMetaDataGeometries(
+      metaData);
+    for (final Entry<RecordDefinition, PreparedGeometry> metaDataGeometry : metaDataGeometries
+      .entrySet()) {
       final RecordDefinition newMetaData = metaDataGeometry.getKey();
       final PreparedGeometry intersectsGeometry = metaDataGeometry.getValue();
       if (intersectsGeometry.intersects(geometryValue)) {

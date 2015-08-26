@@ -92,6 +92,8 @@ public class TextStyle implements MapSerializer, Cloneable {
 
   private Color textBoxColor = WebColors.Gainsboro;
 
+  private int textBoxOpacity = 255;
+
   private Measure<Length> textDx = GeometryStyle.ZERO_PIXEL;
 
   private Measure<Length> textDy = GeometryStyle.ZERO_PIXEL;
@@ -121,8 +123,6 @@ public class TextStyle implements MapSerializer, Cloneable {
 
   private String textVerticalAlignment = AUTO;
 
-  private int textBoxOpacity = 255;
-
   public TextStyle() {
   }
 
@@ -135,8 +135,8 @@ public class TextStyle implements MapSerializer, Cloneable {
         try {
           JavaBeanUtil.setProperty(this, propertyName, propertyValue);
         } catch (final Throwable e) {
-          ExceptionUtil.log(getClass(),
-            "Unable to set style " + propertyName + "=" + propertyValue, e);
+          ExceptionUtil.log(getClass(), "Unable to set style " + propertyName + "=" + propertyValue,
+            e);
         }
       }
     }

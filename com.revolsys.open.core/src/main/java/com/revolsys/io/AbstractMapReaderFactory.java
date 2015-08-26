@@ -4,12 +4,12 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
-public abstract class AbstractMapReaderFactory extends AbstractIoFactory implements
-  MapReaderFactory {
+public abstract class AbstractMapReaderFactory extends AbstractIoFactory
+  implements MapReaderFactory {
   public static MapReaderFactory getMapReaderFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final MapReaderFactory readerFactory = ioFactoryRegistry.getFactory(
-      MapReaderFactory.class, resource);
+    final MapReaderFactory readerFactory = ioFactoryRegistry.getFactory(MapReaderFactory.class,
+      resource);
     return readerFactory;
   }
 
@@ -23,9 +23,9 @@ public abstract class AbstractMapReaderFactory extends AbstractIoFactory impleme
     }
   }
 
-  private boolean singleFile = true;
-
   protected boolean customAttributionSupported = true;
+
+  private boolean singleFile = true;
 
   public AbstractMapReaderFactory(final String name) {
     super(name);

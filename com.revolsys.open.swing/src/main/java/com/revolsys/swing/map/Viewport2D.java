@@ -74,41 +74,41 @@ public class Viewport2D extends AbstractObjectWithProperties implements Property
     }
   }
 
-  private double pixelsPerXUnit;
-
-  private double pixelsPerYUnit;
-
-  private double originX;
-
-  private double originY;
-
   /** The current bounding box of the project. */
   private BoundingBox boundingBox = new BoundingBox();
 
   private GeometryFactory geometryFactory = GeometryFactory.floating3(3005);
 
-  private Reference<Project> project;
+  private boolean initialized = false;
 
   private AffineTransform modelToScreenTransform;
+
+  private double originX;
+
+  private double originY;
+
+  private double pixelsPerXUnit;
+
+  private double pixelsPerYUnit;
+
+  private Reference<Project> project;
 
   /** The property change listener support. */
   private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private final ThreadLocal<AffineTransform> savedTransform = new ThreadLocal<AffineTransform>();
 
-  private AffineTransform screenToModelTransform;
-
-  private int viewWidth;
-
-  private int viewHeight;
-
-  private double unitsPerPixel;
-
   private double scale;
 
   private List<Long> scales = new ArrayList<Long>();
 
-  private boolean initialized = false;
+  private AffineTransform screenToModelTransform;
+
+  private double unitsPerPixel;
+
+  private int viewHeight;
+
+  private int viewWidth;
 
   public Viewport2D() {
   }
@@ -139,10 +139,10 @@ public class Viewport2D extends AbstractObjectWithProperties implements Property
     this.originX = boundingBox.getMinX();
     this.originY = boundingBox.getMaxY();
 
-    modelToScreenTransform.concatenate(AffineTransform.getScaleInstance(this.pixelsPerXUnit,
-      this.pixelsPerYUnit));
-    modelToScreenTransform.concatenate(AffineTransform.getTranslateInstance(-this.originX,
-      -this.originY));
+    modelToScreenTransform
+      .concatenate(AffineTransform.getScaleInstance(this.pixelsPerXUnit, this.pixelsPerYUnit));
+    modelToScreenTransform
+      .concatenate(AffineTransform.getTranslateInstance(-this.originX, -this.originY));
     return modelToScreenTransform;
   }
 
@@ -150,8 +150,8 @@ public class Viewport2D extends AbstractObjectWithProperties implements Property
     return this.boundingBox;
   }
 
-  public BoundingBox getBoundingBox(final GeometryFactory geometryFactory, final int x,
-    final int y, final int pixels) {
+  public BoundingBox getBoundingBox(final GeometryFactory geometryFactory, final int x, final int y,
+    final int pixels) {
     final Point p1 = toModelPoint(geometryFactory, x - pixels, y - pixels);
     final Point p2 = toModelPoint(geometryFactory, x + pixels, y + pixels);
     final BoundingBox boundingBox = new BoundingBox(p1, p2);
@@ -528,7 +528,8 @@ public class Viewport2D extends AbstractObjectWithProperties implements Property
     this.scales = scales;
   }
 
-  public boolean setUseModelCoordinates(final boolean useModelCoordinates, final Graphics2D graphics) {
+  public boolean setUseModelCoordinates(final boolean useModelCoordinates,
+    final Graphics2D graphics) {
     boolean savedUseModelCoordinates = false;
     final AffineTransform previousTransform = this.savedTransform.get();
     if (previousTransform != null) {
@@ -597,7 +598,8 @@ public class Viewport2D extends AbstractObjectWithProperties implements Property
     }
   }
 
-  public Point toModelPoint(final GeometryFactory geometryFactory, final double... viewCoordinates) {
+  public Point toModelPoint(final GeometryFactory geometryFactory,
+    final double... viewCoordinates) {
     final double[] coordinates = toModelCoordinates(viewCoordinates);
     if (Double.isInfinite(coordinates[0]) || Double.isInfinite(coordinates[1])
       || Double.isNaN(coordinates[0]) || Double.isNaN(coordinates[1])) {

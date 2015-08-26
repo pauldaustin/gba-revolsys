@@ -69,13 +69,13 @@ public class EditGeometryOverlay extends AbstractOverlay
 
     private static final long serialVersionUID = 1L;
 
-    private final Geometry oldGeometry = EditGeometryOverlay.this.addGeometry;
-
-    private final Geometry newGeometry;
+    private final DataType geometryPartDataType = EditGeometryOverlay.this.addGeometryPartDataType;
 
     private final int[] geometryPartIndex = EditGeometryOverlay.this.addGeometryPartIndex;
 
-    private final DataType geometryPartDataType = EditGeometryOverlay.this.addGeometryPartDataType;
+    private final Geometry newGeometry;
+
+    private final Geometry oldGeometry = EditGeometryOverlay.this.addGeometry;
 
     private AddGeometryUndoEdit(final Geometry geometry) {
       this.newGeometry = geometry;
@@ -118,16 +118,16 @@ public class EditGeometryOverlay extends AbstractOverlay
     }
   }
 
-  private static final long serialVersionUID = 1L;
-
-  private static final Cursor CURSOR_NODE_ADD = Icons.getCursor("cursor_node_add", 8, 7);
+  private static final String ACTION_MOVE_GEOMETRY = "moveGeometry";
 
   private static final Cursor CURSOR_MOVE = Icons.getCursor("cursor_move", 8, 7);
 
-  private static final String ACTION_MOVE_GEOMETRY = "moveGeometry";
+  private static final Cursor CURSOR_NODE_ADD = Icons.getCursor("cursor_node_add", 8, 7);
 
   public static final SelectedRecordsRenderer MOVE_GEOMETRY_RENDERER = new SelectedRecordsRenderer(
     WebColors.Black, WebColors.Aqua);
+
+  private static final long serialVersionUID = 1L;
 
   private int actionId = 0;
 
@@ -146,13 +146,13 @@ public class EditGeometryOverlay extends AbstractOverlay
 
   private boolean dragged = false;
 
-  private java.awt.Point moveGeometryStart;
-
-  private int vertexDragModifiers;
+  private int moveGeometryButton;
 
   private List<CloseLocation> moveGeometryLocations;
 
-  private int moveGeometryButton;
+  private java.awt.Point moveGeometryStart;
+
+  private int vertexDragModifiers;
 
   public EditGeometryOverlay(final MapPanel map) {
     super(map);

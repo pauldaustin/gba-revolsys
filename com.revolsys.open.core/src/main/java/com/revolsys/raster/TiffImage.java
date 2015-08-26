@@ -33,6 +33,37 @@ import com.sun.media.jai.codec.ImageCodec;
 
 @SuppressWarnings("deprecation")
 public class TiffImage extends JaiGeoreferencedImage {
+  /** ProjFalseEastingGeoKey (3082) */
+  private static final int FALSE_EASTING_KEY = 3082;
+
+  /** ProjFalseNorthingGeoKey (3083) */
+  private static final int FALSE_NORTHING_KEY = 3083;
+
+  private static final int GEOGRAPHIC_TYPE_GEO_KEY = 2048;
+
+  /** ProjNatOriginLatGeoKey (3081) */
+  private static final int LATITUDE_OF_CENTER_2_KEY = 3081;
+
+  /** ProjLinearUnitsGeoKey (3076) */
+  private static final int LINEAR_UNIT_ID = 3076;
+
+  /** ProjNatOriginLongGeoKey (3080) */
+  private static final int LONGITUDE_OF_CENTER_2_KEY = 3080;
+
+  /** ProjectedCSTypeGeoKey (3072) */
+  private static final int PROJECTED_COORDINATE_SYSTEM_ID = 3072;
+
+  /** ProjCoordTransGeoKey (3075) */
+  private static final int PROJECTION_ID = 3075;
+
+  private static IntHashMap<String> PROJECTION_NAMES = new IntHashMap<>();
+
+  /** ProjStdParallel1GeoKey (3078) */
+  private static final int STANDARD_PARALLEL_1_KEY = 3078;
+
+  /** ProjStdParallel2GeoKey (3079) */
+  private static final int STANDARD_PARALLEL_2_KEY = 3079;
+
   private static final int TAG_X_RESOLUTION = 282;
 
   private static final int TAG_Y_RESOLUTION = 283;
@@ -51,37 +82,6 @@ public class TiffImage extends JaiGeoreferencedImage {
     } catch (final Throwable t) {
     }
   }
-
-  /** ProjectedCSTypeGeoKey (3072) */
-  private static final int PROJECTED_COORDINATE_SYSTEM_ID = 3072;
-
-  /** ProjCoordTransGeoKey (3075) */
-  private static final int PROJECTION_ID = 3075;
-
-  /** ProjLinearUnitsGeoKey (3076) */
-  private static final int LINEAR_UNIT_ID = 3076;
-
-  /** ProjStdParallel1GeoKey (3078) */
-  private static final int STANDARD_PARALLEL_1_KEY = 3078;
-
-  /** ProjStdParallel2GeoKey (3079) */
-  private static final int STANDARD_PARALLEL_2_KEY = 3079;
-
-  /** ProjNatOriginLongGeoKey (3080) */
-  private static final int LONGITUDE_OF_CENTER_2_KEY = 3080;
-
-  /** ProjNatOriginLatGeoKey (3081) */
-  private static final int LATITUDE_OF_CENTER_2_KEY = 3081;
-
-  /** ProjFalseEastingGeoKey (3082) */
-  private static final int FALSE_EASTING_KEY = 3082;
-
-  /** ProjFalseNorthingGeoKey (3083) */
-  private static final int FALSE_NORTHING_KEY = 3083;
-
-  private static final int GEOGRAPHIC_TYPE_GEO_KEY = 2048;
-
-  private static IntHashMap<String> PROJECTION_NAMES = new IntHashMap<>();
 
   static {
     PROJECTION_NAMES.put(1, "Transverse_Mercator");
@@ -252,7 +252,8 @@ public class TiffImage extends JaiGeoreferencedImage {
       final int geoSrid = getInteger(geoKeys, GEOGRAPHIC_TYPE_GEO_KEY, 0);
       if (geoSrid != 0) {
         if (geoSrid > 0 && geoSrid < 32767) {
-          final GeographicCoordinateSystem geographicCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(geoSrid);
+          final GeographicCoordinateSystem geographicCoordinateSystem = EpsgCoordinateSystems
+            .getCoordinateSystem(geoSrid);
           final String name = "unknown";
           final Projection projection = getProjection(geoKeys);
           final Area area = null;
@@ -277,7 +278,8 @@ public class TiffImage extends JaiGeoreferencedImage {
           final ProjectedCoordinateSystem coordinateSystem = new ProjectedCoordinateSystem(
             coordinateSystemId, name, geographicCoordinateSystem, area, projection, parameters,
             linearUnit, axis, authority, false);
-          final CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(coordinateSystem);
+          final CoordinateSystem epsgCoordinateSystem = EpsgCoordinateSystems
+            .getCoordinateSystem(coordinateSystem);
           geometryFactory = GeometryFactory.floating(epsgCoordinateSystem.getId(), 2);
         }
       }

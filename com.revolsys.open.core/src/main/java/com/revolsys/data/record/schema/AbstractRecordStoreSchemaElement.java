@@ -11,9 +11,9 @@ import com.revolsys.util.Property;
 public abstract class AbstractRecordStoreSchemaElement extends AbstractObjectWithProperties
   implements RecordStoreSchemaElement, Comparable<RecordStoreSchemaElement> {
 
-  private final String path;
-
   private final String name;
+
+  private final String path;
 
   private Reference<RecordStoreSchema> schema;
 

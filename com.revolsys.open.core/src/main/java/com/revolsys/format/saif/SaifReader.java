@@ -112,6 +112,8 @@ public class SaifReader extends AbstractReader<Record>
   /** The schema definition that will be set on each data object. */
   private RecordDefinitionFactory metaDataFactory;
 
+  private boolean opened = false;
+
   /** The iterator for the current object set. */
   private OsnReader osnReader;
 
@@ -130,8 +132,6 @@ public class SaifReader extends AbstractReader<Record>
 
   /** The zip file. */
   private ZipFile zipFile;
-
-  private boolean opened = false;
 
   public SaifReader() {
   }

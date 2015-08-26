@@ -35,8 +35,8 @@ import com.revolsys.util.Property;
  * @see Record
  * @see RecordDefinition
  */
-public class FieldDefinition extends AbstractObjectWithProperties implements Cloneable,
-  MapSerializer {
+public class FieldDefinition extends AbstractObjectWithProperties
+  implements Cloneable, MapSerializer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("field",
     "Data Record Field", FieldDefinition.class, "create");
@@ -595,12 +595,12 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
         try {
           value = StringConverterRegistry.toObject(fieldType, value);
         } catch (final Throwable t) {
-          throw new IllegalArgumentException(fieldName + "=" + value + " is not a valid "
-            + fieldType);
+          throw new IllegalArgumentException(
+            fieldName + "=" + value + " is not a valid " + fieldType);
         }
         if (value == null) {
-          throw new IllegalArgumentException(fieldName + "=" + value + " is not a valid "
-            + fieldType);
+          throw new IllegalArgumentException(
+            fieldName + "=" + value + " is not a valid " + fieldType);
         }
       }
       if (value != null) {
@@ -611,8 +611,8 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
           final int length = bigNumber.precision();
           if (maxLength > 0) {
             if (length > maxLength) {
-              throw new IllegalArgumentException(fieldName + "=" + value + " length " + length
-                + " > " + maxLength);
+              throw new IllegalArgumentException(
+                fieldName + "=" + value + " length " + length + " > " + maxLength);
             }
           }
 
@@ -620,8 +620,8 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
           final int maxScale = getScale();
           if (maxScale > 0) {
             if (scale > maxScale) {
-              throw new IllegalArgumentException(fieldName + "=" + value + " scale " + scale
-                + " > " + maxScale);
+              throw new IllegalArgumentException(
+                fieldName + "=" + value + " scale " + scale + " > " + maxScale);
             }
           }
           final Number minValue = getMinValue();
@@ -641,8 +641,8 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
           final int length = string.length();
           if (maxLength > 0) {
             if (length > maxLength) {
-              throw new IllegalArgumentException(fieldName + "=" + value + " length " + length
-                + " > " + maxLength);
+              throw new IllegalArgumentException(
+                fieldName + "=" + value + " length " + length + " > " + maxLength);
             }
           }
         }
@@ -674,12 +674,12 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
           try {
             value = StringConverterRegistry.toObject(fieldType, value);
           } catch (final Throwable t) {
-            throw new ObjectPropertyException(record, fieldName, "'" + value + "' is not a valid "
-              + fieldType.getValidationName(), t);
+            throw new ObjectPropertyException(record, fieldName,
+              "'" + value + "' is not a valid " + fieldType.getValidationName(), t);
           }
           if (value == null) {
-            throw new ObjectPropertyException(record, fieldName, "'" + value + "' is not a valid "
-              + fieldType.getValidationName());
+            throw new ObjectPropertyException(record, fieldName,
+              "'" + value + "' is not a valid " + fieldType.getValidationName());
           }
         }
         if (value != null) {
@@ -690,8 +690,8 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
             final int length = bigNumber.precision();
             if (maxLength > 0) {
               if (length > maxLength) {
-                throw new ObjectPropertyException(record, fieldName, "'" + value + "' length "
-                  + length + " > " + maxLength);
+                throw new ObjectPropertyException(record, fieldName,
+                  "'" + value + "' length " + length + " > " + maxLength);
               }
             }
 
@@ -699,22 +699,22 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
             final int maxScale = getScale();
             if (maxScale > 0) {
               if (scale > maxScale) {
-                throw new ObjectPropertyException(record, fieldName, "'" + value + "' scale "
-                  + scale + " > " + maxScale);
+                throw new ObjectPropertyException(record, fieldName,
+                  "'" + value + "' scale " + scale + " > " + maxScale);
               }
             }
             final Number minValue = getMinValue();
             if (minValue != null) {
               if (NumericComparator.numericCompare(number, minValue) < 0) {
-                throw new ObjectPropertyException(record, fieldName, "'" + value + "' > "
-                  + minValue);
+                throw new ObjectPropertyException(record, fieldName,
+                  "'" + value + "' > " + minValue);
               }
             }
             final Number maxValue = getMaxValue();
             if (maxValue != null) {
               if (NumericComparator.numericCompare(number, maxValue) > 0) {
-                throw new ObjectPropertyException(record, fieldName, "'" + value + "' < "
-                  + maxValue);
+                throw new ObjectPropertyException(record, fieldName,
+                  "'" + value + "' < " + maxValue);
               }
             }
           } else if (value instanceof String) {
@@ -722,15 +722,15 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
             final int length = string.length();
             if (maxLength > 0) {
               if (length > maxLength) {
-                throw new ObjectPropertyException(record, fieldName, "'" + value + "' length "
-                  + length + " > " + maxLength);
+                throw new ObjectPropertyException(record, fieldName,
+                  "'" + value + "' length " + length + " > " + maxLength);
               }
             }
           }
           if (!this.allowedValues.isEmpty()) {
             if (!this.allowedValues.containsKey(value)) {
-              throw new ObjectPropertyException(record, fieldName, "'" + value + " not in ("
-                + CollectionUtil.toString(",", this.allowedValues) + ")");
+              throw new ObjectPropertyException(record, fieldName,
+                "'" + value + " not in (" + CollectionUtil.toString(",", this.allowedValues) + ")");
             }
           }
         }
@@ -745,8 +745,8 @@ public class FieldDefinition extends AbstractObjectWithProperties implements Clo
           } else {
             codeTableName = codeTable.toString();
           }
-          throw new ObjectPropertyException(record, fieldName, "Unable to find code for '" + value
-            + "' in " + codeTableName);
+          throw new ObjectPropertyException(record, fieldName,
+            "Unable to find code for '" + value + "' in " + codeTableName);
         }
       }
     }

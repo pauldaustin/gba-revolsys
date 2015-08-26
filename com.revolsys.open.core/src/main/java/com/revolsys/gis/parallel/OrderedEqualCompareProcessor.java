@@ -23,21 +23,21 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
 
+  private String attributeName;
+
+  private List<String> equalExclude = new ArrayList<String>();
+
   private Channel<Record> otherIn;
 
   private int otherInBufferSize = 0;
 
-  private String attributeName;
+  private String otherName = "Other";
+
+  private final PrecisionModel precisionModel = new PrecisionModel(1000);
 
   private boolean running;
 
   private String sourceName = "Source";
-
-  private String otherName = "Other";
-
-  private List<String> equalExclude = new ArrayList<String>();
-
-  private final PrecisionModel precisionModel = new PrecisionModel(1000);
 
   private boolean equals(final Geometry geometry1, final Geometry geometry2) {
     if (geometry1 == null) {
@@ -159,7 +159,8 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
     }
   }
 
-  private void logNoMatch(final Record[] objects, final Channel<Record> channel, final boolean other) {
+  private void logNoMatch(final Record[] objects, final Channel<Record> channel,
+    final boolean other) {
     if (objects[0] != null) {
       logNoMatch(objects[0], false);
     }
@@ -234,7 +235,8 @@ public class OrderedEqualCompareProcessor extends AbstractInProcess<Record> {
             }
             final Object value = readObject.getValue(this.attributeName);
             if (value == null) {
-              RecordLog.error(getClass(), "Missing key value for " + this.attributeName, readObject);
+              RecordLog.error(getClass(), "Missing key value for " + this.attributeName,
+                readObject);
             } else if (objects[oppositeIndex] == null) {
               objects[index] = readObject;
               guard[index] = false;

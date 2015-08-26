@@ -13,7 +13,8 @@ import com.revolsys.jdbc.field.JdbcFieldDefinition;
 public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
   public static void replaceAttribute(final String schemaName, final RecordDefinition metaData,
     final Integer registrationId, final String rowIdColumn) {
-    final JdbcFieldDefinition objectIdAttribute = (JdbcFieldDefinition)metaData.getField(rowIdColumn);
+    final JdbcFieldDefinition objectIdAttribute = (JdbcFieldDefinition)metaData
+      .getField(rowIdColumn);
     if (objectIdAttribute != null && !(objectIdAttribute instanceof ArcSdeObjectIdJdbcAttribute)) {
       final String name = objectIdAttribute.getName();
       final String description = objectIdAttribute.getDescription();

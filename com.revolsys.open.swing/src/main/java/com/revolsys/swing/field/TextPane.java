@@ -8,8 +8,6 @@ import java.awt.event.FocusListener;
 import javax.swing.JEditorPane;
 import javax.swing.text.Element;
 
-import jsyntaxpane.DefaultSyntaxKit;
-
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.equals.Equals;
 import com.revolsys.swing.listener.WeakFocusListener;
@@ -18,6 +16,8 @@ import com.revolsys.swing.undo.CascadingUndoManager;
 import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.Property;
 
+import jsyntaxpane.DefaultSyntaxKit;
+
 public class TextPane extends JEditorPane implements Field, FocusListener {
   private static final long serialVersionUID = 1L;
 
@@ -25,19 +25,19 @@ public class TextPane extends JEditorPane implements Field, FocusListener {
     DefaultSyntaxKit.initKit();
   }
 
+  private int columns;
+
+  private String errorMessage;
+
   private final String fieldName;
 
   private String fieldValue;
 
-  private String errorMessage;
-
   private String originalToolTip;
 
-  private final CascadingUndoManager undoManager = new CascadingUndoManager();
-
-  private int columns;
-
   private int rows;
+
+  private final CascadingUndoManager undoManager = new CascadingUndoManager();
 
   public TextPane() {
     this("fieldValue");

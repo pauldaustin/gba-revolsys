@@ -30,11 +30,11 @@ import com.vividsolutions.jts.geomgraph.index.SimpleMCSweepLineIntersector;
 
 public class IsSimpleOp {
   private static class EndpointInfo {
-    Coordinate pt;
+    int degree;
 
     boolean isClosed;
 
-    int degree;
+    Coordinate pt;
 
     public EndpointInfo(final Coordinate pt) {
       this.pt = pt;
