@@ -1,9 +1,9 @@
 package com.revolsys.gis.grid.filter;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.gis.grid.RectangularMapGrid;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -13,7 +13,7 @@ import com.vividsolutions.jts.geom.Geometry;
  *
  * @author Paul Austin
  */
-public class MapGridGeometrySheetFilter implements Filter<Record> {
+public class MapGridGeometrySheetFilter implements Predicate<Record> {
   /** Set the grid to check the mapsheet for. */
   private RectangularMapGrid grid;
 
@@ -23,7 +23,7 @@ public class MapGridGeometrySheetFilter implements Filter<Record> {
   private String sheet;
 
   @Override
-  public boolean accept(final Record object) {
+  public boolean test(final Record object) {
     if (this.sheet != null && this.grid != null) {
       final Geometry geometry = object.getGeometry();
       if (geometry != null) {

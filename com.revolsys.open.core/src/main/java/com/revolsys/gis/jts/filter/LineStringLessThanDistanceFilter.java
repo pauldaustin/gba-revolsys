@@ -22,15 +22,15 @@ package com.revolsys.gis.jts.filter;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.jts.geom.BoundingBox;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LineStringLessThanDistanceFilter implements Filter<LineString> {
+public class LineStringLessThanDistanceFilter implements Predicate<LineString> {
 
-  public static Filter<Record> getFilter(final Record object, final double maxDistance) {
+  public static Predicate<Record> getFilter(final Record object, final double maxDistance) {
     final LineString line = object.getGeometry();
     final LineStringLessThanDistanceFilter lineFilter = new LineStringLessThanDistanceFilter(line,
       maxDistance);
@@ -60,7 +60,7 @@ public class LineStringLessThanDistanceFilter implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
     if (line.getEnvelopeInternal().intersects(this.envelope)) {
       final double distance = LineStringUtil.distance(line, this.geometry, this.distance);
       if (distance < this.distance) {

@@ -16,8 +16,6 @@ import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
-import com.revolsys.filter.AndFilter;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.RecordGraph;
@@ -27,6 +25,8 @@ import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.filter.LineEqualIgnoreDirectionFilter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.predicate.AndFilter;
+import java.util.function.Predicate;
 import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
@@ -218,12 +218,12 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Rec
 
       attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
 
-      final Filter<Edge<Record>> filter = getFilter();
+      final Predicate<Edge<Record>> filter = getFilter();
       if (filter != null) {
         attributeAndGeometryFilter.addFilter(filter);
       }
 
-      final Filter<Record> equalLineFilter = new RecordGeometryFilter<LineString>(
+      final Predicate<Record> equalLineFilter = new RecordGeometryFilter<LineString>(
         new LineEqualIgnoreDirectionFilter(line, 2));
       final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(equalLineFilter);
       attributeAndGeometryFilter.addFilter(edgeFilter);

@@ -12,7 +12,7 @@ public class ILike extends BinaryCondition {
   }
 
   @Override
-  public boolean accept(final Map<String, Object> record) {
+  public boolean test(final Map<String, Object> record) {
     final QueryValue left = getLeft();
     String value1 = left.getStringValue(record);
 

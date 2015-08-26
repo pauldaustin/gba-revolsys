@@ -20,12 +20,12 @@
  */
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LineEqualWithinToleranceFilter implements Filter<LineString> {
+public class LineEqualWithinToleranceFilter implements Predicate<LineString> {
   private final CoordinatesList points;
 
   private double tolerance;
@@ -40,7 +40,7 @@ public class LineEqualWithinToleranceFilter implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
     final CoordinatesList points = CoordinatesListUtil.get(line);
 
     final boolean equal = CoordinatesListUtil.equalWithinTolerance(this.points, points,

@@ -3,10 +3,10 @@ package com.revolsys.gis.algorithm.index.quadtree;
 import java.util.List;
 
 import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.InvokeMethodFilter;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.predicate.InvokeMethodFilter;
+import java.util.function.Predicate;
 import com.revolsys.visitor.CreateListVisitor;
 import com.revolsys.visitor.SingleObjectVisitor;
 import com.vividsolutions.jts.geom.Envelope;
@@ -103,7 +103,7 @@ public class QuadTree<T> {
     return visitor.getList();
   }
 
-  public List<T> query(final BoundingBox boundingBox, final Filter<T> filter) {
+  public List<T> query(final BoundingBox boundingBox, final Predicate<T> filter) {
     final CreateListVisitor<T> visitor = new CreateListVisitor<T>(filter);
     query(boundingBox, visitor);
     return visitor.getList();
@@ -131,13 +131,13 @@ public class QuadTree<T> {
     return query(boundingBox);
   }
 
-  public T queryFirst(final BoundingBox boundingBox, final Filter<T> filter) {
+  public T queryFirst(final BoundingBox boundingBox, final Predicate<T> filter) {
     final SingleObjectVisitor<T> visitor = new SingleObjectVisitor<T>(filter);
     query(boundingBox, visitor);
     return visitor.getObject();
   }
 
-  public T queryFirst(final Geometry geometry, final Filter<T> filter) {
+  public T queryFirst(final Geometry geometry, final Predicate<T> filter) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     return queryFirst(boundingBox, filter);
   }

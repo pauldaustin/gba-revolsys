@@ -20,12 +20,12 @@
  */
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LineEqualExactFilter implements Filter<LineString> {
+public class LineEqualExactFilter implements Predicate<LineString> {
   int numAxis = -1;
 
   private final CoordinatesList points;
@@ -40,7 +40,7 @@ public class LineEqualExactFilter implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
     final CoordinatesList points = CoordinatesListUtil.get(line);
 
     final boolean equal;

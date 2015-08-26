@@ -4,14 +4,14 @@ import java.util.Comparator;
 
 import com.revolsys.collection.Visitor;
 import com.revolsys.comparator.ComparatorProxy;
-import com.revolsys.filter.AndFilter;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.FilterProxy;
+import com.revolsys.predicate.AndFilter;
+import com.revolsys.predicate.FilterProxy;
+import java.util.function.Predicate;
 
 public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, ComparatorProxy<T> {
   private Comparator<T> comparator;
 
-  private Filter<T> filter;
+  private Predicate<T> predicate;
 
   public AbstractVisitor() {
   }
@@ -20,12 +20,12 @@ public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, 
     this.comparator = comparator;
   }
 
-  public AbstractVisitor(final Filter<T> filter) {
-    this.filter = filter;
+  public AbstractVisitor(final Predicate<T> filter) {
+    this.predicate = filter;
   }
 
-  public AbstractVisitor(final Filter<T> filter, final Comparator<T> comparator) {
-    this.filter = filter;
+  public AbstractVisitor(final Predicate<T> filter, final Comparator<T> comparator) {
+    this.predicate = filter;
     this.comparator = comparator;
   }
 
@@ -35,19 +35,19 @@ public abstract class AbstractVisitor<T> implements Visitor<T>, FilterProxy<T>, 
   }
 
   @Override
-  public Filter<T> getFilter() {
-    return this.filter;
+  public Predicate<T> getFilter() {
+    return this.predicate;
   }
 
   public void setComparator(final Comparator<T> comparator) {
     this.comparator = comparator;
   }
 
-  public void setFilter(final Filter<T> filter) {
-    this.filter = filter;
+  public void setFilter(final Predicate<T> filter) {
+    this.predicate = filter;
   }
 
-  public void setFilters(final Filter<T>... filters) {
-    this.filter = new AndFilter<T>(filters);
+  public void setFilters(final Predicate<T>... filters) {
+    this.predicate = new AndFilter<T>(filters);
   }
 }

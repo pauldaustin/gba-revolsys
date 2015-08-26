@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class RTree<T> extends AbstractSpatialIndex<T> {
@@ -128,7 +128,7 @@ public class RTree<T> extends AbstractSpatialIndex<T> {
   }
 
   @Override
-  public void visit(final Envelope envelope, final Filter<T> filter, final Visitor<T> visitor) {
+  public void visit(final Envelope envelope, final Predicate<T> filter, final Visitor<T> visitor) {
     this.root.visit(envelope, filter, visitor);
   }
 

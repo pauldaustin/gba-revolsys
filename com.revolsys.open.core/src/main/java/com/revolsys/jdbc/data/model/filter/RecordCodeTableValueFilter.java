@@ -8,14 +8,14 @@ import java.util.List;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 
 /**
  * Filter records by the value of the attributeName.
  *
  * @author Paul Austin
  */
-public class RecordCodeTableValueFilter implements Filter<Record> {
+public class RecordCodeTableValueFilter implements Predicate<Record> {
   /** The attributeName name, or path to match. */
   private String attributeName;
 
@@ -43,7 +43,7 @@ public class RecordCodeTableValueFilter implements Filter<Record> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final Record object) {
+  public boolean test(final Record object) {
     final Object propertyValue = object.getValue(this.attributeName);
     if (this.values.contains(propertyValue)) {
       return true;

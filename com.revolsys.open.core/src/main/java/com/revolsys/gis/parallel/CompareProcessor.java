@@ -10,10 +10,6 @@ import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.Records;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.filter.AndFilter;
-import com.revolsys.filter.Factory;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.FilterUtil;
 import com.revolsys.gis.algorithm.index.PointRecordMap;
 import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.algorithm.linematch.LineMatchGraph;
@@ -22,6 +18,10 @@ import com.revolsys.gis.jts.filter.LineEqualIgnoreDirectionFilter;
 import com.revolsys.gis.jts.filter.LineIntersectsFilter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.parallel.channel.Channel;
+import com.revolsys.predicate.AndFilter;
+import com.revolsys.predicate.Factory;
+import com.revolsys.predicate.Predicates;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -35,11 +35,11 @@ public class CompareProcessor extends AbstractMergeProcess {
 
   private Statistics duplicateSourceStatistics = new Statistics("Duplicate Source");
 
-  private Factory<Filter<Record>, Record> equalFilterFactory;
+  private Factory<Predicate<Record>, Record> equalFilterFactory;
 
   private Statistics equalStatistics = new Statistics("Equal");
 
-  private Filter<Record> excludeFilter;
+  private Predicate<Record> excludeFilter;
 
   private Statistics excludeNotEqualOtherStatistics = new Statistics("Exclude Not Equal Other");
 
@@ -69,8 +69,8 @@ public class CompareProcessor extends AbstractMergeProcess {
       if (this.cleanDuplicatePoints) {
         final List<Record> objects = this.otherPointMap.getObjects(object);
         if (!objects.isEmpty()) {
-          final Filter<Record> filter = this.equalFilterFactory.create(object);
-          add = !FilterUtil.matches(objects, filter);
+          final Predicate<Record> filter = this.equalFilterFactory.create(object);
+          add = !Predicates.matches(objects, filter);
         }
         if (add) {
           this.otherPointMap.add(object);
@@ -91,8 +91,8 @@ public class CompareProcessor extends AbstractMergeProcess {
       if (this.cleanDuplicatePoints) {
         final List<Record> objects = this.sourcePointMap.getObjects(object);
         if (!objects.isEmpty()) {
-          final Filter<Record> filter = this.equalFilterFactory.create(object);
-          add = !FilterUtil.matches(objects, filter);
+          final Predicate<Record> filter = this.equalFilterFactory.create(object);
+          add = !Predicates.matches(objects, filter);
         }
       }
       if (add) {
@@ -113,7 +113,7 @@ public class CompareProcessor extends AbstractMergeProcess {
     return this.duplicateSourceStatistics;
   }
 
-  public Factory<Filter<Record>, Record> getEqualFilterFactory() {
+  public Factory<Predicate<Record>, Record> getEqualFilterFactory() {
     return this.equalFilterFactory;
   }
 
@@ -121,7 +121,7 @@ public class CompareProcessor extends AbstractMergeProcess {
     return this.equalStatistics;
   }
 
-  public Filter<Record> getExcludeFilter() {
+  public Predicate<Record> getExcludeFilter() {
     return this.excludeFilter;
   }
 
@@ -150,7 +150,7 @@ public class CompareProcessor extends AbstractMergeProcess {
   }
 
   private void logError(final Record object, final String message, final boolean source) {
-    if (this.excludeFilter == null || !this.excludeFilter.accept(object)) {
+    if (this.excludeFilter == null || !this.excludeFilter.test(object)) {
       if (source) {
         this.notEqualSourceStatistics.add(object);
       } else {
@@ -170,9 +170,9 @@ public class CompareProcessor extends AbstractMergeProcess {
     final LineString sourceLine = sourceObject.getGeometry();
     final LineEqualIgnoreDirectionFilter lineEqualFilter = new LineEqualIgnoreDirectionFilter(
       sourceLine, 3);
-    final Filter<Record> geometryFilter = new RecordGeometryFilter<LineString>(lineEqualFilter);
-    final Filter<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
-    final Filter<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);
+    final Predicate<Record> geometryFilter = new RecordGeometryFilter<LineString>(lineEqualFilter);
+    final Predicate<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
+    final Predicate<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);
 
     final Record otherObject = this.otherIndex.queryFirst(sourceObject, filter);
     if (otherObject != null) {
@@ -189,7 +189,7 @@ public class CompareProcessor extends AbstractMergeProcess {
   }
 
   private void processExactPointMatch(final Record sourceObject) {
-    final Filter<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
+    final Predicate<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
     final Record otherObject = this.otherPointMap.getFirstMatch(sourceObject, equalFilter);
     if (otherObject != null) {
       final Point sourcePoint = sourceObject.getGeometry();
@@ -247,9 +247,9 @@ public class CompareProcessor extends AbstractMergeProcess {
       final LineString sourceLine = (LineString)sourceGeometry;
 
       final LineIntersectsFilter intersectsFilter = new LineIntersectsFilter(sourceLine);
-      final Filter<Record> geometryFilter = new RecordGeometryFilter<LineString>(intersectsFilter);
-      final Filter<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
-      final Filter<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);
+      final Predicate<Record> geometryFilter = new RecordGeometryFilter<LineString>(intersectsFilter);
+      final Predicate<Record> equalFilter = this.equalFilterFactory.create(sourceObject);
+      final Predicate<Record> filter = new AndFilter<Record>(equalFilter, geometryFilter);
       final List<Record> otherObjects = this.otherIndex.queryList(sourceGeometry, filter);
       if (!otherObjects.isEmpty()) {
         final LineMatchGraph<Record> graph = new LineMatchGraph<Record>(sourceObject, sourceLine);
@@ -306,11 +306,11 @@ public class CompareProcessor extends AbstractMergeProcess {
     }
   }
 
-  public void setEqualFilterFactory(final Factory<Filter<Record>, Record> equalFilterFactory) {
+  public void setEqualFilterFactory(final Factory<Predicate<Record>, Record> equalFilterFactory) {
     this.equalFilterFactory = equalFilterFactory;
   }
 
-  public void setExcludeFilter(final Filter<Record> excludeFilter) {
+  public void setExcludeFilter(final Predicate<Record> excludeFilter) {
     this.excludeFilter = excludeFilter;
   }
 

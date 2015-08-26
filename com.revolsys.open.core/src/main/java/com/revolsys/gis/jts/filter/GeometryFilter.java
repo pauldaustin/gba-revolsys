@@ -1,7 +1,7 @@
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.InvokeMethodFilter;
+import com.revolsys.predicate.InvokeMethodFilter;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
@@ -12,26 +12,26 @@ public class GeometryFilter {
     return envelope.intersects(geometryEnvelope);
   }
 
-  public static <T extends Geometry> Filter<T> intersects(final Envelope envelope) {
+  public static <T extends Geometry> Predicate<T> intersects(final Envelope envelope) {
     return new InvokeMethodFilter<T>(GeometryFilter.class, "acceptEnvelopeIntersects", envelope);
   }
 
-  public static Filter<LineString> lineContainedWithinTolerance(final LineString line,
+  public static Predicate<LineString> lineContainedWithinTolerance(final LineString line,
     final double maxDistance) {
     return new LineContainsWithinToleranceFilter(line, maxDistance, true);
   }
 
-  public static Filter<LineString> lineContainsWithinTolerance(final LineString line,
+  public static Predicate<LineString> lineContainsWithinTolerance(final LineString line,
     final double maxDistance) {
     return new LineContainsWithinToleranceFilter(line, maxDistance);
   }
 
-  public static Filter<LineString> lineEqualWithinTolerance(final LineString line,
+  public static Predicate<LineString> lineEqualWithinTolerance(final LineString line,
     final double maxDistance) {
     return new LineEqualWithinToleranceFilter(line, maxDistance);
   }
 
-  public static Filter<LineString> lineWithinDistance(final LineString line,
+  public static Predicate<LineString> lineWithinDistance(final LineString line,
     final double maxDistance) {
     return new LineStringLessThanDistanceFilter(line, maxDistance);
   }

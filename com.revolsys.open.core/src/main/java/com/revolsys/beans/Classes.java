@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ClassUtil {
+public class Classes {
   public static void addSuperClasses(final Set<Class<? extends Object>> classes,
     final Class<? extends Object> clazz) {
     if (clazz != null) {
@@ -27,7 +27,7 @@ public class ClassUtil {
     }
   }
 
-  public static String getFileName(final Class<?> clazz) {
+  public static String className(final Class<?> clazz) {
     final String name = clazz.getName();
     final int index = name.lastIndexOf('.');
     if (index == -1) {
@@ -48,5 +48,21 @@ public class ClassUtil {
     final Set<Class<? extends Object>> classes = new LinkedHashSet<Class<? extends Object>>();
     addSuperClassesAndInterfaces(classes, clazz);
     return Collections.unmodifiableSet(classes);
+  }
+
+  public static String packageName(final Class<?> classDef) {
+    if (classDef != null) {
+      final Package packageDef = classDef.getPackage();
+      if (packageDef != null) {
+        final String packageName = packageDef.getName();
+        return packageName;
+      }
+    }
+    return "";
+  }
+
+  public static String packagePath(final Class<?> classDef) {
+    final String packageName = packageName(classDef);
+    return "/" + packageName.replaceAll("\\.", "/");
   }
 }

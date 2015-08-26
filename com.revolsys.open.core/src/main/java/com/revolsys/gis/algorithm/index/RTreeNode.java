@@ -3,9 +3,9 @@ package com.revolsys.gis.algorithm.index;
 import java.util.LinkedList;
 
 import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 
 public abstract class RTreeNode<T> extends Envelope {
@@ -27,7 +27,7 @@ public abstract class RTreeNode<T> extends Envelope {
 
   protected abstract void updateEnvelope();
 
-  public abstract boolean visit(Envelope envelope, Filter<T> filter, Visitor<T> visitor);
+  public abstract boolean visit(Envelope envelope, Predicate<T> filter, Visitor<T> visitor);
 
   public abstract boolean visit(Envelope envelope, Visitor<T> visitor);
 

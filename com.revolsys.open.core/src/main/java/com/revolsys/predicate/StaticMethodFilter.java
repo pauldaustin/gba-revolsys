@@ -1,10 +1,11 @@
-package com.revolsys.filter;
+package com.revolsys.predicate;
 
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import javax.annotation.PostConstruct;
 
-public class StaticMethodFilter<T> implements Filter<T> {
+public class StaticMethodFilter<T> implements Predicate<T> {
   private Object[] args;
 
   private Method method;
@@ -22,26 +23,6 @@ public class StaticMethodFilter<T> implements Filter<T> {
     this.methodName = methodName;
     this.args = args;
     initialize();
-  }
-
-  @Override
-  public boolean accept(final T object) {
-    try {
-      if (this.args.length == 0) {
-        return (Boolean)this.method.invoke(null, object);
-      } else {
-        final Object[] newArgs = new Object[this.args.length + 1];
-        System.arraycopy(this.args, 0, newArgs, 0, this.args.length);
-        newArgs[this.args.length] = object;
-        return (Boolean)this.method.invoke(null, newArgs);
-      }
-    } catch (final RuntimeException e) {
-      throw e;
-    } catch (final Error e) {
-      throw e;
-    } catch (final Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 
   public Class<?> getMethodClass() {
@@ -77,6 +58,26 @@ public class StaticMethodFilter<T> implements Filter<T> {
 
   public void setMethodName(final String methodName) {
     this.methodName = methodName;
+  }
+
+  @Override
+  public boolean test(final T object) {
+    try {
+      if (this.args.length == 0) {
+        return (Boolean)this.method.invoke(null, object);
+      } else {
+        final Object[] newArgs = new Object[this.args.length + 1];
+        System.arraycopy(this.args, 0, newArgs, 0, this.args.length);
+        newArgs[this.args.length] = object;
+        return (Boolean)this.method.invoke(null, newArgs);
+      }
+    } catch (final RuntimeException e) {
+      throw e;
+    } catch (final Error e) {
+      throw e;
+    } catch (final Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override

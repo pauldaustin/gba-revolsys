@@ -1,10 +1,12 @@
-package com.revolsys.filter;
+package com.revolsys.predicate;
+
+import java.util.function.Predicate;
 
 import org.apache.commons.beanutils.MethodUtils;
 
 import com.revolsys.util.ExceptionUtil;
 
-public class InvokeMethodFilter<T> implements Filter<T> {
+public class InvokeMethodFilter<T> implements Predicate<T> {
 
   /** The name of the method to invoke. */
   private final String methodName;
@@ -27,7 +29,7 @@ public class InvokeMethodFilter<T> implements Filter<T> {
   }
 
   @Override
-  public boolean accept(final T item) {
+  public boolean test(final T item) {
     Object result;
     try {
       Object object = this.object;

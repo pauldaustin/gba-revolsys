@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.FilterUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.parallel.channel.Channel;
+import com.revolsys.predicate.Predicates;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
@@ -103,19 +103,19 @@ public class PointRecordMap {
 
   }
 
-  public Record getFirstMatch(final Record object, final Filter<Record> filter) {
+  public Record getFirstMatch(final Record object, final Predicate<Record> filter) {
     final List<Record> objects = getObjects(object);
     for (final Record matchObject : objects) {
-      if (filter.accept(matchObject)) {
+      if (filter.test(matchObject)) {
         return matchObject;
       }
     }
     return null;
   }
 
-  public List<Record> getMatches(final Record object, final Filter<Record> filter) {
+  public List<Record> getMatches(final Record object, final Predicate<Record> filter) {
     final List<Record> objects = getObjects(object);
-    final List<Record> filteredObjects = FilterUtil.filter(objects, filter);
+    final List<Record> filteredObjects = Predicates.filter(objects, filter);
     return filteredObjects;
   }
 

@@ -1,10 +1,10 @@
 package com.revolsys.jts.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.graph.linestring.LineStringGraph;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
-public class Intersection implements Filter<LineString> {
+public class Intersection implements Predicate<LineString> {
 
   private final LineStringGraph graph;
 
@@ -16,7 +16,7 @@ public class Intersection implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
     return this.graph.intersects(line);
   }
 

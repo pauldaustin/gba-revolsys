@@ -3,8 +3,8 @@ package com.revolsys.gis.graph.filter;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.graph.Edge;
+import java.util.function.Predicate;
 
 /**
  * Filter {@link Edge} objects to include those which have one of the specified
@@ -13,7 +13,7 @@ import com.revolsys.gis.graph.Edge;
  * @author Paul Austin
  * @param <T> The type of object stored in the {@link Edge}
  */
-public class EdgeTypeNameFilter<T> implements Filter<Edge<T>> {
+public class EdgeTypeNameFilter<T> implements Predicate<Edge<T>> {
   /** The list of type names to accept. */
   private final Collection<String> typePaths;
 
@@ -43,7 +43,7 @@ public class EdgeTypeNameFilter<T> implements Filter<Edge<T>> {
    * @return True if the edge has one of the type names, false otherwise.
    */
   @Override
-  public boolean accept(final Edge<T> edge) {
+  public boolean test(final Edge<T> edge) {
     final String typePath = edge.getTypeName();
     return this.typePaths.contains(typePath);
   }

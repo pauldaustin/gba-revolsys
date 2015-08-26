@@ -3,7 +3,6 @@ package com.revolsys.gis.graph.linestring;
 import java.util.List;
 
 import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.algorithm.index.IdObjectIndex;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
@@ -11,11 +10,12 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.LineSegment;
+import java.util.function.Predicate;
 import com.revolsys.visitor.CreateListVisitor;
 import com.revolsys.visitor.DelegatingVisitor;
 
 public class EdgeLessThanDistance extends DelegatingVisitor<Edge<LineSegment>>
-  implements Filter<Edge<LineSegment>> {
+  implements Predicate<Edge<LineSegment>> {
   public static List<Edge<LineSegment>> getEdges(final Graph<LineSegment> graph,
     final LineSegment lineSegment, final double maxDistance) {
     final CreateListVisitor<Edge<LineSegment>> results = new CreateListVisitor<Edge<LineSegment>>();
@@ -51,7 +51,7 @@ public class EdgeLessThanDistance extends DelegatingVisitor<Edge<LineSegment>>
   }
 
   @Override
-  public boolean accept(final Edge<LineSegment> edge) {
+  public boolean test(final Edge<LineSegment> edge) {
     final LineSegment lineSegment = edge.getObject();
     final double distance = lineSegment.distance(this.lineSegment);
     if (distance <= this.maxDistance) {
@@ -63,7 +63,7 @@ public class EdgeLessThanDistance extends DelegatingVisitor<Edge<LineSegment>>
 
   @Override
   public boolean visit(final Edge<LineSegment> edge) {
-    if (accept(edge)) {
+    if (test(edge)) {
       super.visit(edge);
     }
     return true;

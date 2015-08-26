@@ -24,14 +24,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.LineSegment;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
-public class SharesLineSegmentsFilter implements Filter<LineString> {
+public class SharesLineSegmentsFilter implements Predicate<LineString> {
   private final List<LineSegment> segments = new ArrayList<LineSegment>();
 
   public SharesLineSegmentsFilter(final LineString line) {
@@ -47,7 +47,7 @@ public class SharesLineSegmentsFilter implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
 
     final CoordinatesList points = CoordinatesListUtil.get(line);
     final Iterator<Coordinates> pointIterator = points.iterator();

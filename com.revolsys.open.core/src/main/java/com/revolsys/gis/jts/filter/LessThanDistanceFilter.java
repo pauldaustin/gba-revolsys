@@ -20,14 +20,14 @@
  */
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.jts.geom.BoundingBox;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LessThanDistanceFilter implements Filter<Geometry> {
+public class LessThanDistanceFilter implements Predicate<Geometry> {
   /** The maximum distance the object can be from the source geometry. */
   private double distance;
 
@@ -51,7 +51,7 @@ public class LessThanDistanceFilter implements Filter<Geometry> {
   }
 
   @Override
-  public boolean accept(final Geometry geometry) {
+  public boolean test(final Geometry geometry) {
     if (geometry.getEnvelopeInternal().intersects(this.envelope)) {
       double distance;
       if (geometry instanceof LineString && this.geometry instanceof LineString) {

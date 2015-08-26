@@ -27,7 +27,6 @@ import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.data.record.io.RecordStoreConnectionManager;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.Path;
@@ -38,6 +37,7 @@ import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import java.util.function.Predicate;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.ValueField;
@@ -438,11 +438,11 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
       final List<LayerRecord> records = (List)index.queryIntersects(polygon);
 
-      final Filter filter = new RecordGeometryIntersectsFilter(boundingBox);
+      final Predicate predicate = new RecordGeometryIntersectsFilter(boundingBox);
       for (final ListIterator<LayerRecord> iterator = records.listIterator(); iterator.hasNext();) {
         final LayerRecord record = iterator.next();
         final LayerRecord cachedRecord = getCacheRecord(record);
-        if (filter.accept(cachedRecord)) {
+        if (predicate.test(cachedRecord)) {
           iterator.set(cachedRecord);
         } else {
           iterator.remove();

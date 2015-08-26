@@ -1,24 +1,25 @@
-package com.revolsys.filter;
+package com.revolsys.predicate;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class FilterUtil {
-  public static <T> List<T> filter(final Collection<T> collection, final Filter<T> filter) {
+public class Predicates {
+  public static <T> List<T> filter(final Collection<T> collection, final Predicate<T> filter) {
     final List<T> list = new ArrayList<T>();
     filterCopy(collection, list, filter);
     return list;
   }
 
   public static <T> List<T> filterAndRemove(final Collection<T> collection,
-    final Filter<T> filter) {
+    final Predicate<T> filter) {
     final List<T> list = new ArrayList<T>();
     final Iterator<T> iterator = collection.iterator();
     while (iterator.hasNext()) {
       final T object = iterator.next();
-      if (filter.accept(object)) {
+      if (filter.test(object)) {
         iterator.remove();
         list.add(object);
       }
@@ -27,19 +28,28 @@ public class FilterUtil {
   }
 
   public static <T> void filterCopy(final Collection<T> source, final Collection<T> target,
-    final Filter<T> filter) {
+    final Predicate<T> filter) {
     for (final T value : source) {
-      if (filter.accept(value)) {
+      if (filter.test(value)) {
         target.add(value);
       }
     }
   }
 
-  public static <T> boolean matches(final Filter<T> filter, final T object) {
+  public static <T> boolean matches(final List<T> objects, final Predicate<T> filter) {
+    for (final T object : objects) {
+      if (filter.test(object)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static <T> boolean matches(final Predicate<T> filter, final T object) {
     if (filter == null) {
       return true;
     } else {
-      if (filter.accept(object)) {
+      if (filter.test(object)) {
         return true;
       } else {
         return false;
@@ -47,30 +57,21 @@ public class FilterUtil {
     }
   }
 
-  public static <T> boolean matches(final List<T> objects, final Filter<T> filter) {
-    for (final T object : objects) {
-      if (filter.accept(object)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public static <T> void remove(final Collection<T> collection, final Filter<T> filter) {
+  public static <T> void remove(final Collection<T> collection, final Predicate<T> filter) {
     final Iterator<T> iterator = collection.iterator();
     while (iterator.hasNext()) {
       final T value = iterator.next();
-      if (filter.accept(value)) {
+      if (filter.test(value)) {
         iterator.remove();
       }
     }
   }
 
-  public static <T> void retain(final Collection<T> collection, final Filter<T> filter) {
+  public static <T> void retain(final Collection<T> collection, final Predicate<T> filter) {
     final Iterator<T> iterator = collection.iterator();
     while (iterator.hasNext()) {
       final T value = iterator.next();
-      if (!filter.accept(value)) {
+      if (!filter.test(value)) {
         iterator.remove();
       }
     }

@@ -1,4 +1,4 @@
-package com.revolsys.filter;
+package com.revolsys.predicate;
 
 public interface Factory<T, V> {
   T create(V object);

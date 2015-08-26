@@ -12,10 +12,10 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.RecordEqualsFilter;
 import com.revolsys.data.record.filter.RecordGeometryDistanceFilter;
 import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.algorithm.index.quadtree.QuadTree;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import java.util.function.Predicate;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -91,7 +91,7 @@ public class RecordQuadTree extends QuadTree<Record> {
     return queryBoundingBox(geometry);
   }
 
-  public Record queryFirst(final Record object, final Filter<Record> filter) {
+  public Record queryFirst(final Record object, final Predicate<Record> filter) {
     final Geometry geometry = object.getGeometry();
     return queryFirst(geometry, filter);
   }
@@ -122,11 +122,11 @@ public class RecordQuadTree extends QuadTree<Record> {
     return queryList(geometry, filter);
   }
 
-  public List<Record> queryList(final BoundingBox boundingBox, final Filter<Record> filter) {
+  public List<Record> queryList(final BoundingBox boundingBox, final Predicate<Record> filter) {
     return queryList(boundingBox, filter, null);
   }
 
-  public List<Record> queryList(final BoundingBox boundingBox, final Filter<Record> filter,
+  public List<Record> queryList(final BoundingBox boundingBox, final Predicate<Record> filter,
     final Comparator<Record> comparator) {
     final CreateListVisitor<Record> listVisitor = new CreateListVisitor<Record>(filter);
     query(boundingBox, listVisitor);
@@ -137,18 +137,18 @@ public class RecordQuadTree extends QuadTree<Record> {
     return list;
   }
 
-  public List<Record> queryList(final Geometry geometry, final Filter<Record> filter) {
+  public List<Record> queryList(final Geometry geometry, final Predicate<Record> filter) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     return queryList(boundingBox, filter);
   }
 
-  public List<Record> queryList(final Geometry geometry, final Filter<Record> filter,
+  public List<Record> queryList(final Geometry geometry, final Predicate<Record> filter,
     final Comparator<Record> comparator) {
     final BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     return queryList(boundingBox, filter, comparator);
   }
 
-  public List<Record> queryList(final Record object, final Filter<Record> filter) {
+  public List<Record> queryList(final Record object, final Predicate<Record> filter) {
     final Geometry geometry = object.getGeometry();
     return queryList(geometry, filter);
   }

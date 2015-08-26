@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.MultipleAttributeValuesFilter;
-import com.revolsys.filter.AcceptAllFilter;
-import com.revolsys.filter.Filter;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.predicate.AcceptAllFilter;
+import java.util.function.Predicate;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.Viewport2D;
@@ -59,7 +59,7 @@ public abstract class AbstractRecordLayerRenderer
 
   }
 
-  public static Filter<Record> getFilter(final AbstractRecordLayer layer,
+  public static Predicate<Record> getFilter(final AbstractRecordLayer layer,
     final Map<String, Object> style) {
     @SuppressWarnings("unchecked")
     Map<String, Object> filterDefinition = (Map<String, Object>)style.get("filter");
@@ -120,7 +120,7 @@ public abstract class AbstractRecordLayerRenderer
     return getRenderer(layer, null, style);
   }
 
-  private Filter<Record> filter = DEFAULT_FILTER;
+  private Predicate<Record> predicate = DEFAULT_FILTER;
 
   public AbstractRecordLayerRenderer(final String type, final String name,
     final AbstractRecordLayer layer, final LayerRenderer<?> parent) {
@@ -131,13 +131,13 @@ public abstract class AbstractRecordLayerRenderer
     final AbstractRecordLayer layer, final LayerRenderer<?> parent,
     final Map<String, Object> style) {
     super(type, name, layer, parent, style);
-    this.filter = getFilter(layer, style);
+    this.predicate = getFilter(layer, style);
   }
 
   @Override
   public AbstractRecordLayerRenderer clone() {
     final AbstractRecordLayerRenderer clone = (AbstractRecordLayerRenderer)super.clone();
-    clone.filter = JavaBeanUtil.clone(this.filter);
+    clone.predicate = JavaBeanUtil.clone(this.predicate);
     return clone;
   }
 
@@ -150,8 +150,8 @@ public abstract class AbstractRecordLayerRenderer
   }
 
   public String getQueryFilter() {
-    if (this.filter instanceof SqlLayerFilter) {
-      final SqlLayerFilter layerFilter = (SqlLayerFilter)this.filter;
+    if (this.predicate instanceof SqlLayerFilter) {
+      final SqlLayerFilter layerFilter = (SqlLayerFilter)this.predicate;
       return layerFilter.getQuery();
     } else {
       return null;
@@ -160,7 +160,7 @@ public abstract class AbstractRecordLayerRenderer
 
   protected boolean isFilterAccept(final LayerRecord record) {
     try {
-      return this.filter.accept(record);
+      return this.predicate.test(record);
     } catch (final Throwable e) {
       return false;
     }
@@ -254,12 +254,12 @@ public abstract class AbstractRecordLayerRenderer
   }
 
   public void setQueryFilter(final String query) {
-    if (this.filter instanceof SqlLayerFilter || this.filter instanceof AcceptAllFilter) {
+    if (this.predicate instanceof SqlLayerFilter || this.predicate instanceof AcceptAllFilter) {
       if (Property.hasValue(query)) {
         final AbstractRecordLayer layer = getLayer();
-        this.filter = new SqlLayerFilter(layer, query);
+        this.predicate = new SqlLayerFilter(layer, query);
       } else {
-        this.filter = new AcceptAllFilter<Record>();
+        this.predicate = new AcceptAllFilter<Record>();
       }
     }
   }
@@ -267,8 +267,8 @@ public abstract class AbstractRecordLayerRenderer
   @Override
   public Map<String, Object> toMap() {
     final Map<String, Object> map = super.toMap();
-    if (!(this.filter instanceof AcceptAllFilter)) {
-      MapSerializerUtil.add(map, "filter", this.filter);
+    if (!(this.predicate instanceof AcceptAllFilter)) {
+      MapSerializerUtil.add(map, "filter", this.predicate);
     }
     return map;
   }

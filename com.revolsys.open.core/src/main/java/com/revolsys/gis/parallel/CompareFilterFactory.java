@@ -6,25 +6,25 @@ import java.util.List;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.AttributesEqualFilter;
 import com.revolsys.data.record.filter.AttributesEqualOrNullFilter;
-import com.revolsys.filter.AndFilter;
-import com.revolsys.filter.Factory;
-import com.revolsys.filter.Filter;
+import com.revolsys.predicate.AndFilter;
+import com.revolsys.predicate.Factory;
+import java.util.function.Predicate;
 
-public class CompareFilterFactory implements Factory<Filter<Record>, Record> {
+public class CompareFilterFactory implements Factory<Predicate<Record>, Record> {
   private List<String> equalAttributeNames = new ArrayList<String>();
 
   private List<String> equalOrNullAttributeNames = new ArrayList<String>();
 
   @Override
-  public Filter<Record> create(final Record object) {
+  public Predicate<Record> create(final Record object) {
     final AndFilter<Record> filters = new AndFilter<Record>();
     if (!this.equalAttributeNames.isEmpty()) {
-      final Filter<Record> valuesFilter = new AttributesEqualFilter(object,
+      final Predicate<Record> valuesFilter = new AttributesEqualFilter(object,
         this.equalAttributeNames);
       filters.addFilter(valuesFilter);
     }
     if (!this.equalOrNullAttributeNames.isEmpty()) {
-      final Filter<Record> valuesFilter = new AttributesEqualOrNullFilter(object,
+      final Predicate<Record> valuesFilter = new AttributesEqualOrNullFilter(object,
         this.equalOrNullAttributeNames);
       filters.addFilter(valuesFilter);
     }

@@ -1,29 +1,29 @@
 package com.revolsys.gis.graph.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.graph.Edge;
+import java.util.function.Predicate;
 
-public class EdgeObjectFilter<T> implements Filter<Edge<T>> {
-  private Filter<T> filter;
+public class EdgeObjectFilter<T> implements Predicate<Edge<T>> {
+  private Predicate<T> predicate;
 
   public EdgeObjectFilter() {
   }
 
-  public EdgeObjectFilter(final Filter<T> filter) {
-    this.filter = filter;
+  public EdgeObjectFilter(final Predicate<T> filter) {
+    this.predicate = filter;
   }
 
   @Override
-  public boolean accept(final Edge<T> edge) {
+  public boolean test(final Edge<T> edge) {
     final T object = edge.getObject();
-    return this.filter.accept(object);
+    return this.predicate.test(object);
   }
 
-  public Filter<T> getFilter() {
-    return this.filter;
+  public Predicate<T> getFilter() {
+    return this.predicate;
   }
 
-  public void setFilter(final Filter<T> filter) {
-    this.filter = filter;
+  public void setFilter(final Predicate<T> filter) {
+    this.predicate = filter;
   }
 }

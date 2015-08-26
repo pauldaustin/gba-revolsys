@@ -3,7 +3,6 @@ package com.revolsys.gis.algorithm.index.quadtree.linesegment;
 import java.util.List;
 
 import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
@@ -12,6 +11,7 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryEditUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
+import java.util.function.Predicate;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -155,7 +155,7 @@ public class LineSegmentQuadTree {
   }
 
   public List<LineSegment> getWithin(final BoundingBox boundingBox,
-    final Filter<LineSegment> filter) {
+    final Predicate<LineSegment> filter) {
     final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>(filter);
     visit(boundingBox, visitor);
     return visitor.getList();

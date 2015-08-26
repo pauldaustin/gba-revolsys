@@ -9,21 +9,21 @@ import com.revolsys.data.record.Records;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.data.record.property.DirectionalFields;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 public class RecordGraph extends Graph<Record> {
 
-  public static <T extends Geometry> Filter<Edge<Record>> getEdgeFilter(
-    final Filter<T> geometryFilter) {
-    final Filter<Record> objectFilter = new RecordGeometryFilter<T>(geometryFilter);
+  public static <T extends Geometry> Predicate<Edge<Record>> getEdgeFilter(
+    final Predicate<T> geometryFilter) {
+    final Predicate<Record> objectFilter = new RecordGeometryFilter<T>(geometryFilter);
     final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(objectFilter);
     return edgeFilter;
   }

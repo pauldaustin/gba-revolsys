@@ -35,7 +35,6 @@ import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordStoreExtension;
 import com.revolsys.data.record.io.RecordStoreQueryReader;
 import com.revolsys.data.record.property.RecordDefinitionProperty;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.FilterReader;
@@ -45,6 +44,7 @@ import com.revolsys.io.Writer;
 import com.revolsys.jdbc.io.RecordStoreIteratorFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import java.util.function.Predicate;
 import com.revolsys.properties.BaseObjectWithProperties;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
@@ -642,7 +642,7 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties
     query.setBoundingBox(boundingBox);
     query.setProperty("recordFactory", recordFactory);
     final RecordReader reader = query(query);
-    final Filter<Record> filter = new RecordGeometryIntersectsFilter(geometry);
+    final Predicate<Record> filter = new RecordGeometryIntersectsFilter(geometry);
     return new FilterReader(filter, reader);
   }
 

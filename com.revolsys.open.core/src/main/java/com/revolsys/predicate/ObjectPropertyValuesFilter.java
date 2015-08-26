@@ -1,10 +1,11 @@
-package com.revolsys.filter;
+package com.revolsys.predicate;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-public class ObjectPropertyValuesFilter<T> implements Filter<T> {
+public class ObjectPropertyValuesFilter<T> implements Predicate<T> {
   private final String propertyName;
 
   private final Collection<? extends Object> values;
@@ -16,7 +17,7 @@ public class ObjectPropertyValuesFilter<T> implements Filter<T> {
   }
 
   @Override
-  public boolean accept(final T object) {
+  public boolean test(final T object) {
     try {
       final Object value = PropertyUtils.getProperty(object, this.propertyName);
       return this.values.contains(value);

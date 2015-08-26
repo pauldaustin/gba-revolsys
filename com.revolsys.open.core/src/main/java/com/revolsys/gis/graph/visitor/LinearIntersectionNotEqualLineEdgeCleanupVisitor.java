@@ -16,9 +16,6 @@ import org.slf4j.LoggerFactory;
 import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
-import com.revolsys.filter.AndFilter;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.NotFilter;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
@@ -31,6 +28,9 @@ import com.revolsys.gis.jts.filter.EqualFilter;
 import com.revolsys.gis.jts.filter.LinearIntersectionFilter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.predicate.AndFilter;
+import com.revolsys.predicate.NotFilter;
+import java.util.function.Predicate;
 import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
@@ -125,12 +125,12 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVi
 
     attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
 
-    final Filter<Edge<Record>> filter = getFilter();
+    final Predicate<Edge<Record>> filter = getFilter();
     if (filter != null) {
       attributeAndGeometryFilter.addFilter(filter);
     }
 
-    final Filter<Record> notEqualLineFilter = new NotFilter<Record>(
+    final Predicate<Record> notEqualLineFilter = new NotFilter<Record>(
       new RecordGeometryFilter<LineString>(new EqualFilter<LineString>(line)));
 
     final RecordGeometryFilter<LineString> linearIntersectionFilter = new RecordGeometryFilter<LineString>(

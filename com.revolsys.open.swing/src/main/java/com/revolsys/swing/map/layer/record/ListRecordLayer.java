@@ -133,7 +133,7 @@ public class ListRecordLayer extends AbstractRecordLayer {
     } else {
       final List<LayerRecord> records = new ArrayList<LayerRecord>();
       for (final LayerRecord record : new ArrayList<LayerRecord>(this.records)) {
-        if (whereCondition.accept(record)) {
+        if (whereCondition.test(record)) {
           records.add(record);
         }
       }

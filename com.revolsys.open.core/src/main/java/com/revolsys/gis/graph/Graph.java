@@ -25,9 +25,6 @@ import com.revolsys.collection.bplus.BPlusTreeMap;
 import com.revolsys.collection.map.IntHashMap;
 import com.revolsys.comparator.ComparatorProxy;
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.FilterProxy;
-import com.revolsys.filter.FilterUtil;
 import com.revolsys.gis.algorithm.index.IdObjectIndex;
 import com.revolsys.gis.graph.attribute.NodeAttributes;
 import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
@@ -58,6 +55,9 @@ import com.revolsys.io.page.PageValueManager;
 import com.revolsys.io.page.SerializablePageValueManager;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.predicate.FilterProxy;
+import com.revolsys.predicate.Predicates;
+import java.util.function.Predicate;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -248,7 +248,7 @@ public class Graph<T> {
     return newEdge;
   }
 
-  public void deleteEdges(final Filter<Edge<T>> filter) {
+  public void deleteEdges(final Predicate<Edge<T>> filter) {
     final DeleteEdgeVisitor<T> visitor = new DeleteEdgeVisitor<T>();
     visitEdges(filter, visitor);
   }
@@ -474,18 +474,18 @@ public class Graph<T> {
     return edgeIndex.query(envelope);
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter) {
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter) {
     final List<Edge<T>> edges = new EdgeList<T>(this);
     for (final Integer edgeId : getEdgeIds()) {
       final Edge<T> edge = getEdge(edgeId);
-      if (FilterUtil.matches(filter, edge)) {
+      if (Predicates.matches(filter, edge)) {
         edges.add(edge);
       }
     }
     return edges;
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter,
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter,
     final Comparator<Edge<T>> comparator) {
     final List<Edge<T>> targetEdges = getEdges(filter);
     if (comparator != null) {
@@ -494,7 +494,7 @@ public class Graph<T> {
     return targetEdges;
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator,
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter, final Comparator<Edge<T>> comparator,
     final Envelope envelope) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>(filter);
     final IdObjectIndex<Edge<T>> edgeIndex = getEdgeIndex();
@@ -509,13 +509,13 @@ public class Graph<T> {
 
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator,
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter, final Comparator<Edge<T>> comparator,
     final Geometry geometry) {
     final Envelope envelope = geometry.getEnvelopeInternal();
     return getEdges(filter, comparator, envelope);
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Envelope envelope) {
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter, final Envelope envelope) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>(filter);
     final IdObjectIndex<Edge<T>> edgeIndex = getEdgeIndex();
     edgeIndex.visit(envelope, results);
@@ -525,7 +525,7 @@ public class Graph<T> {
 
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Geometry geometry) {
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter, final Geometry geometry) {
     final Envelope envelope = geometry.getEnvelopeInternal();
     return getEdges(filter, envelope);
   }
@@ -638,16 +638,16 @@ public class Graph<T> {
     return targetNodes;
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter) {
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter) {
     if (filter == null) {
       return getNodes();
     } else {
-      final List<Node<T>> filteredNodes = FilterUtil.filter(getNodes(), filter);
+      final List<Node<T>> filteredNodes = Predicates.filter(getNodes(), filter);
       return filteredNodes;
     }
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter,
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter,
     final Comparator<Node<T>> comparator) {
     final List<Node<T>> targetNodes = getNodes(filter);
     if (comparator != null) {
@@ -656,7 +656,7 @@ public class Graph<T> {
     return targetNodes;
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter, final Comparator<Node<T>> comparator,
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter, final Comparator<Node<T>> comparator,
     final Envelope envelope) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>(filter);
     final IdObjectIndex<Node<T>> nodeIndex = getNodeIndex();
@@ -671,7 +671,7 @@ public class Graph<T> {
 
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter, final Envelope envelope) {
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter, final Envelope envelope) {
     return getNodes(filter, null, envelope);
 
   }
@@ -1290,7 +1290,7 @@ public class Graph<T> {
     visitEdges(null, comparator, visitor);
   }
 
-  public void visitEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator,
+  public void visitEdges(final Predicate<Edge<T>> filter, final Comparator<Edge<T>> comparator,
     final Visitor<Edge<T>> visitor) {
     final LinkedList<Edge<T>> edges = new LinkedList<Edge<T>>(getEdges(filter));
     if (comparator != null) {
@@ -1330,13 +1330,13 @@ public class Graph<T> {
     }
   }
 
-  public void visitEdges(final Filter<Edge<T>> filter, final Visitor<Edge<T>> visitor) {
+  public void visitEdges(final Predicate<Edge<T>> filter, final Visitor<Edge<T>> visitor) {
     visitEdges(filter, null, visitor);
   }
 
   @SuppressWarnings("unchecked")
   public void visitEdges(final Visitor<Edge<T>> visitor) {
-    Filter<Edge<T>> filter = null;
+    Predicate<Edge<T>> filter = null;
     if (visitor instanceof FilterProxy) {
       filter = ((FilterProxy<Edge<T>>)visitor).getFilter();
     }
@@ -1353,14 +1353,14 @@ public class Graph<T> {
   }
 
   // TODO make this work with cached nodes
-  public void visitNodes(final Filter<Node<T>> filter, final Comparator<Node<T>> comparator,
+  public void visitNodes(final Predicate<Node<T>> filter, final Comparator<Node<T>> comparator,
     final Visitor<Node<T>> visitor) {
     final List<Node<T>> nodes = new LinkedList<Node<T>>();
     if (filter == null) {
       nodes.addAll(getNodes());
     } else {
       for (final Node<T> node : getNodes()) {
-        if (filter.accept(node)) {
+        if (filter.test(node)) {
           nodes.add(node);
         }
       }
@@ -1401,13 +1401,13 @@ public class Graph<T> {
     }
   }
 
-  public void visitNodes(final Filter<Node<T>> filter, final Visitor<Node<T>> visitor) {
+  public void visitNodes(final Predicate<Node<T>> filter, final Visitor<Node<T>> visitor) {
     visitNodes(filter, null, visitor);
   }
 
   @SuppressWarnings("unchecked")
   public void visitNodes(final Visitor<Node<T>> visitor) {
-    Filter<Node<T>> filter = null;
+    Predicate<Node<T>> filter = null;
     if (visitor instanceof FilterProxy) {
       filter = ((FilterProxy<Node<T>>)visitor).getFilter();
     }

@@ -3,19 +3,19 @@ package com.revolsys.gis.converter;
 import org.springframework.core.convert.converter.Converter;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 
 public class FilterRecordConverter {
   private Converter<Record, Record> converter;
 
-  private Filter<Record> filter;
+  private Predicate<Record> predicate;
 
   public FilterRecordConverter() {
   }
 
-  public FilterRecordConverter(final Filter<Record> filter,
+  public FilterRecordConverter(final Predicate<Record> filter,
     final Converter<Record, Record> converter) {
-    this.filter = filter;
+    this.predicate = filter;
     this.converter = converter;
   }
 
@@ -23,12 +23,12 @@ public class FilterRecordConverter {
     return this.converter;
   }
 
-  public Filter<Record> getFilter() {
-    return this.filter;
+  public Predicate<Record> getFilter() {
+    return this.predicate;
   }
 
   @Override
   public String toString() {
-    return "filter=" + this.filter + "\nconverter=" + this.converter;
+    return "filter=" + this.predicate + "\nconverter=" + this.converter;
   }
 }

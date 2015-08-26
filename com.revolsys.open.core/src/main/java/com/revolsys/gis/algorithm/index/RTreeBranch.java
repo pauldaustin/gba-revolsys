@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.revolsys.collection.ArrayUtil;
 import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class RTreeBranch<T> extends RTreeNode<T>implements Iterable<RTreeNode<T>> {
@@ -129,7 +129,7 @@ public class RTreeBranch<T> extends RTreeNode<T>implements Iterable<RTreeNode<T>
   }
 
   @Override
-  public boolean visit(final Envelope envelope, final Filter<T> filter, final Visitor<T> visitor) {
+  public boolean visit(final Envelope envelope, final Predicate<T> filter, final Visitor<T> visitor) {
     for (int i = 0; i < this.size; i++) {
       final RTreeNode<T> node = this.nodes[i];
       if (envelope.intersects(node)) {
