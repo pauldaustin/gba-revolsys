@@ -107,7 +107,8 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
   protected void appendLocations(final StringBuffer text, final String title,
     final Map<String, Set<CloseLocation>> vertexLocations) {
     if (!vertexLocations.isEmpty()) {
-      text.append("<div style=\"border-bottom: solid black 1px; font-weight:bold;padding: 1px 3px 1px 3px\">");
+      text.append(
+        "<div style=\"border-bottom: solid black 1px; font-weight:bold;padding: 1px 3px 1px 3px\">");
       text.append(title);
       text.append("</div>");
       text.append("<div style=\"padding: 1px 3px 1px 3px\">");
@@ -119,12 +120,14 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
         text.append("<b><i>");
         text.append(typePath);
         text.append("</i></b>\n");
-        text.append("<table cellspacing=\"0\" cellpadding=\"1\" style=\"border: solid black 1px;margin: 3px 0px 3px 0px;padding: 0px;width: 100%\">"
-          + "<thead><tr style=\"border-bottom: solid black 3px\"><th style=\"border-right: solid black 1px\">"
-          + idFieldName
-          + "</th><th style=\"border-right: solid black 1px\">INDEX</th><th>POINT</th></tr></th><tbody>");
+        text.append(
+          "<table cellspacing=\"0\" cellpadding=\"1\" style=\"border: solid black 1px;margin: 3px 0px 3px 0px;padding: 0px;width: 100%\">"
+            + "<thead><tr style=\"border-bottom: solid black 3px\"><th style=\"border-right: solid black 1px\">"
+            + idFieldName
+            + "</th><th style=\"border-right: solid black 1px\">INDEX</th><th>POINT</th></tr></th><tbody>");
         for (final CloseLocation location : locations) {
-          text.append("<tr style=\"border-bottom: solid black 1px\"><td style=\"border-right: solid black 1px\">");
+          text.append(
+            "<tr style=\"border-bottom: solid black 1px\"><td style=\"border-right: solid black 1px\">");
           text.append(location.getId());
           text.append("</td><td style=\"border-right: solid black 1px\">");
           text.append(location.getIndexString());
@@ -225,7 +228,8 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
     return closeLocation;
   }
 
-  protected CloseLocation findCloseLocation(final LayerRecord object, final BoundingBox boundingBox) {
+  protected CloseLocation findCloseLocation(final LayerRecord object,
+    final BoundingBox boundingBox) {
     if (object.isGeometryEditable()) {
       final AbstractRecordLayer layer = object.getLayer();
       final Geometry geometryValue = object.getGeometry();
@@ -242,14 +246,16 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
     final Geometry convertedGeometry = viewportGeometryFactory.copy(geometry);
 
     final double maxDistance = getMaxDistance(boundingBox);
-    final QuadTree<IndexedLineSegment> lineSegments = GeometryEditUtil.getLineSegmentQuadTree(convertedGeometry);
+    final QuadTree<IndexedLineSegment> lineSegments = GeometryEditUtil
+      .getLineSegmentQuadTree(convertedGeometry);
     if (lineSegments != null) {
       final Point point = boundingBox.getCentrePoint();
       final Coordinates coordinates = CoordinatesUtil.get(point);
 
       double closestDistance = Double.MAX_VALUE;
-      final List<IndexedLineSegment> segments = lineSegments.query(boundingBox, "isWithinDistance",
-        point, maxDistance);
+      final List<IndexedLineSegment> segments = lineSegments.query(boundingBox, (segment) -> {
+        return segment.isWithinDistance(point, maxDistance);
+      });
       IndexedLineSegment closestSegment = null;
       for (final IndexedLineSegment segment : segments) {
         final double distance = segment.distance(coordinates);
@@ -305,8 +311,8 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
     final int y = event.getY();
     final GeometryFactory geometryFactory = getGeometryFactory();
     final Point p1 = geometryFactory.project(this.viewport.toModelPoint(x, y));
-    final Point p2 = geometryFactory.project(this.viewport.toModelPoint(x + getHotspotPixels(), y
-      + getHotspotPixels()));
+    final Point p2 = geometryFactory
+      .project(this.viewport.toModelPoint(x + getHotspotPixels(), y + getHotspotPixels()));
 
     return p1.distance(p2);
   }
@@ -609,8 +615,8 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
           if ("Point".equals(locationType) || "End-Vertex".equals(locationType)) {
             nodeSnap = true;
           }
-          CollectionUtil.addToSet(typeLocationsMap, typePath + " (<b style=\"color:red\">"
-            + locationType + "</b>)", snapLocation);
+          CollectionUtil.addToSet(typeLocationsMap,
+            typePath + " (<b style=\"color:red\">" + locationType + "</b>)", snapLocation);
         }
 
         for (final Entry<String, Set<CloseLocation>> typeLocations : typeLocationsMap.entrySet()) {

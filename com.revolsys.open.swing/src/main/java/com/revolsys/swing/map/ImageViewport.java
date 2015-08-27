@@ -8,9 +8,9 @@ import com.revolsys.swing.map.layer.Project;
 
 public class ImageViewport extends Viewport2D {
 
-  private final BufferedImage image;
-
   private final Graphics2D graphics;
+
+  private final BufferedImage image;
 
   public ImageViewport(final Viewport2D parentViewport) {
     this(parentViewport, parentViewport.getProject(), parentViewport.getViewWidthPixels(),

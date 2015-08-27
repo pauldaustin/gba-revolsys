@@ -1,9 +1,9 @@
 package com.revolsys.gis.algorithm.index;
 
 import java.util.LinkedList;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Envelope;
@@ -18,6 +18,12 @@ public abstract class RTreeNode<T> extends Envelope {
   public RTreeNode() {
   }
 
+  public abstract void forEach(Envelope envelope, Consumer<T> visitor);
+
+  public abstract void forEach(Envelope envelope, Predicate<T> filter, Consumer<T> visitor);
+
+  public abstract void forEachNode(Consumer<T> visitor);
+
   public abstract boolean remove(LinkedList<RTreeNode<T>> path, Envelope envelope, T object);
 
   @Override
@@ -26,10 +32,4 @@ public abstract class RTreeNode<T> extends Envelope {
   }
 
   protected abstract void updateEnvelope();
-
-  public abstract boolean visit(Envelope envelope, Filter<T> filter, Visitor<T> visitor);
-
-  public abstract boolean visit(Envelope envelope, Visitor<T> visitor);
-
-  public abstract boolean visit(Visitor<T> visitor);
 }

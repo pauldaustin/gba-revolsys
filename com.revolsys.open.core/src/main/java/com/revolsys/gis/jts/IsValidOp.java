@@ -44,8 +44,8 @@ public class IsValidOp {
    *
    * @return the point found, or <code>null</code> if none found
    */
-  public static Coordinate findPtNotNode(final Coordinate[] testCoords,
-    final LinearRing searchRing, final GeometryGraph graph) {
+  public static Coordinate findPtNotNode(final Coordinate[] testCoords, final LinearRing searchRing,
+    final GeometryGraph graph) {
     // find edge corresponding to searchRing.
     final Edge searchEdge = graph.findEdge(searchRing);
     // find a point in the testCoords which is not a node of the searchRing
@@ -95,7 +95,7 @@ public class IsValidOp {
     return isValidOp.isValid();
   }
 
-  private final Geometry parentGeometry; // the base Geometry to be validated
+  private final List<TopologyValidationError> errors = new ArrayList<TopologyValidationError>();
 
   /**
    * If the following condition is TRUE JTS will validate inverted shells and exverted holes
@@ -103,7 +103,7 @@ public class IsValidOp {
    */
   private boolean isSelfTouchingRingFormingHoleValid = false;
 
-  private final List<TopologyValidationError> errors = new ArrayList<TopologyValidationError>();
+  private final Geometry parentGeometry; // the base Geometry to be validated
 
   public IsValidOp(final Geometry parentGeometry) {
     this.parentGeometry = parentGeometry;

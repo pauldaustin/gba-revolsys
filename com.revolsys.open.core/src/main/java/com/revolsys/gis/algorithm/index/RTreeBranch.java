@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import com.revolsys.collection.ArrayUtil;
-import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
 import com.vividsolutions.jts.geom.Envelope;
 
-public class RTreeBranch<T> extends RTreeNode<T> implements Iterable<RTreeNode<T>> {
+public class RTreeBranch<T> extends RTreeNode<T>implements Iterable<RTreeNode<T>> {
 
   /**
    *
@@ -43,6 +43,35 @@ public class RTreeBranch<T> extends RTreeNode<T> implements Iterable<RTreeNode<T
     expandToInclude(node);
   }
 
+  @Override
+  public void forEach(final Envelope envelope, final Consumer<T> visitor) {
+    for (int i = 0; i < this.size; i++) {
+      final RTreeNode<T> node = this.nodes[i];
+      if (envelope.intersects(node)) {
+        node.forEach(envelope, visitor);
+      }
+    }
+  }
+
+  @Override
+  public void forEach(final Envelope envelope, final Predicate<T> filter,
+    final Consumer<T> visitor) {
+    for (int i = 0; i < this.size; i++) {
+      final RTreeNode<T> node = this.nodes[i];
+      if (envelope.intersects(node)) {
+        node.forEach(envelope, filter, visitor);
+      }
+    }
+  }
+
+  @Override
+  public void forEachNode(final Consumer<T> visitor) {
+    for (int i = 0; i < this.size; i++) {
+      final RTreeNode<T> node = this.nodes[i];
+      node.forEachNode(visitor);
+    }
+  }
+
   public List<RTreeNode<T>> getNodes() {
     final List<RTreeNode<T>> nodes = new ArrayList<RTreeNode<T>>();
     for (int i = 0; i < this.size; i++) {
@@ -62,7 +91,8 @@ public class RTreeBranch<T> extends RTreeNode<T> implements Iterable<RTreeNode<T
   }
 
   @Override
-  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope, final T object) {
+  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope,
+    final T object) {
     for (int i = 0; i < this.size; i++) {
       final RTreeNode<T> node = this.nodes[i];
       if (node.contains(envelope)) {
@@ -125,42 +155,5 @@ public class RTreeBranch<T> extends RTreeNode<T> implements Iterable<RTreeNode<T
       final Envelope envelope = this.nodes[i];
       expandToInclude(envelope);
     }
-  }
-
-  @Override
-  public boolean visit(final Envelope envelope, final Filter<T> filter, final Visitor<T> visitor) {
-    for (int i = 0; i < this.size; i++) {
-      final RTreeNode<T> node = this.nodes[i];
-      if (envelope.intersects(node)) {
-        if (!node.visit(envelope, filter, visitor)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  @Override
-  public boolean visit(final Envelope envelope, final Visitor<T> visitor) {
-    for (int i = 0; i < this.size; i++) {
-      final RTreeNode<T> node = this.nodes[i];
-      if (envelope.intersects(node)) {
-        if (!node.visit(envelope, visitor)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  @Override
-  public boolean visit(final Visitor<T> visitor) {
-    for (int i = 0; i < this.size; i++) {
-      final RTreeNode<T> node = this.nodes[i];
-      if (!node.visit(visitor)) {
-        return false;
-      }
-    }
-    return true;
   }
 }

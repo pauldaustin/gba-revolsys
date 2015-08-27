@@ -9,9 +9,9 @@ import com.revolsys.data.record.schema.FieldDefinition;
 
 public class Column extends QueryValue {
 
-  private final String name;
-
   private FieldDefinition attribute;
+
+  private final String name;
 
   public Column(final FieldDefinition attribute) {
     this.name = attribute.getName();

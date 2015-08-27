@@ -17,11 +17,11 @@ import com.revolsys.util.Property;
 public class TextArea extends JTextArea implements Field, FocusListener {
   private static final long serialVersionUID = 1L;
 
+  private String errorMessage;
+
   private final String fieldName;
 
   private String fieldValue;
-
-  private String errorMessage;
 
   private String originalToolTip;
 
@@ -47,7 +47,8 @@ public class TextArea extends JTextArea implements Field, FocusListener {
     this(fieldName, fieldValue, 0, 0);
   }
 
-  public TextArea(final String fieldName, final Object fieldValue, final int rows, final int columns) {
+  public TextArea(final String fieldName, final Object fieldValue, final int rows,
+    final int columns) {
     setRows(rows);
     setColumns(columns);
     this.fieldName = fieldName;

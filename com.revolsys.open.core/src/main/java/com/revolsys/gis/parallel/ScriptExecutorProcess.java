@@ -32,7 +32,7 @@ import com.revolsys.parallel.process.BaseInProcess;
 import com.revolsys.parallel.tools.ScriptExecutorRunnable;
 import com.revolsys.util.JexlUtil;
 
-public class ScriptExecutorProcess extends BaseInProcess<Record> implements BeanFactoryAware {
+public class ScriptExecutorProcess extends BaseInProcess<Record>implements BeanFactoryAware {
   private static final Logger LOG = LoggerFactory.getLogger(ScriptExecutorProcess.class);
 
   private final Map<String, Object> attributes = new HashMap<String, Object>();
@@ -91,7 +91,8 @@ public class ScriptExecutorProcess extends BaseInProcess<Record> implements Bean
           try {
             synchronized (this) {
               ThreadUtil.pause(1000);
-              for (final Iterator<Future<?>> taskIter = this.tasks.iterator(); taskIter.hasNext();) {
+              for (final Iterator<Future<?>> taskIter = this.tasks.iterator(); taskIter
+                .hasNext();) {
                 final Future<?> task = taskIter.next();
                 if (task.isDone()) {
                   taskIter.remove();

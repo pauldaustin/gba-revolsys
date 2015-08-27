@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.Map;
 
 import org.slf4j.LoggerFactory;
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.map.Maps;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.connection.AbstractConnectionRegistry;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.util.Property;
 
 public class FolderConnectionRegistry extends AbstractConnectionRegistry<FolderConnection> {
@@ -27,7 +27,8 @@ public class FolderConnectionRegistry extends AbstractConnectionRegistry<FolderC
     return oldValue;
   }
 
-  public FolderConnectionRegistry(final FolderConnectionManager connectionManager, final String name) {
+  public FolderConnectionRegistry(final FolderConnectionManager connectionManager,
+    final String name) {
     super(connectionManager, name);
     init();
   }
@@ -55,7 +56,8 @@ public class FolderConnectionRegistry extends AbstractConnectionRegistry<FolderC
     this(null, name, true);
   }
 
-  public FolderConnectionRegistry(final String name, final Resource resource, final boolean readOnly) {
+  public FolderConnectionRegistry(final String name, final Resource resource,
+    final boolean readOnly) {
     this(null, name, resource, readOnly);
   }
 
@@ -89,8 +91,8 @@ public class FolderConnectionRegistry extends AbstractConnectionRegistry<FolderC
 
       return addConnection(name, FileUtil.getFile(fileName));
     } catch (final Throwable e) {
-      LoggerFactory.getLogger(getClass()).error(
-        "Error creating folder connection from: " + connectionFile, e);
+      LoggerFactory.getLogger(getClass())
+        .error("Error creating folder connection from: " + connectionFile, e);
       return null;
     }
   }

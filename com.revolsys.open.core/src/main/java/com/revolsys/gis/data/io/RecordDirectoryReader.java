@@ -19,9 +19,9 @@ import com.revolsys.io.Reader;
 public class RecordDirectoryReader extends AbstractDirectoryReader<Record>
   implements RecordDefinitionFactory {
 
-  private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
-
   private Statistics statistics = new Statistics();
+
+  private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
 
   public RecordDirectoryReader() {
   }

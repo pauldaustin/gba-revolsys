@@ -30,6 +30,11 @@ public final class ShapefileGeometryUtil {
   public static final Map<String, Method> GEOMETRY_TYPE_READ_METHOD_MAP = new LinkedHashMap<String, Method>();
 
   public static final Map<String, Method> GEOMETRY_TYPE_WRITE_METHOD_MAP = new LinkedHashMap<String, Method>();
+
+  public static final ShapefileGeometryUtil INSTANCE = new ShapefileGeometryUtil();
+
+  public static final ShapefileGeometryUtil SHP_INSTANCE = new ShapefileGeometryUtil(true, true);
+
   static {
     addReadWriteMethods("Point");
     addReadWriteMethods("Polygon");
@@ -56,10 +61,6 @@ public final class ShapefileGeometryUtil {
     }
 
   }
-
-  public static final ShapefileGeometryUtil INSTANCE = new ShapefileGeometryUtil();
-
-  public static final ShapefileGeometryUtil SHP_INSTANCE = new ShapefileGeometryUtil(true, true);
 
   private static void addMethod(final String action, final Map<String, Method> methodMap,
     final String geometryType, final boolean hasZ, final boolean hasM,
@@ -93,8 +94,8 @@ public final class ShapefileGeometryUtil {
       EndianOutput.class, Geometry.class);
     addMethod("write", GEOMETRY_TYPE_WRITE_METHOD_MAP, geometryType, false, true,
       EndianOutput.class, Geometry.class);
-    addMethod("write", GEOMETRY_TYPE_WRITE_METHOD_MAP, geometryType, true, true,
-      EndianOutput.class, Geometry.class);
+    addMethod("write", GEOMETRY_TYPE_WRITE_METHOD_MAP, geometryType, true, true, EndianOutput.class,
+      Geometry.class);
   }
 
   public static Method getReadMethod(String geometryTypeKey) {
@@ -146,8 +147,8 @@ public final class ShapefileGeometryUtil {
           return ShapefileConstants.POLYGON_SHAPE;
         }
       } else {
-        throw new IllegalArgumentException("Unsupported geometry type: "
-          + geometry.getGeometryType());
+        throw new IllegalArgumentException(
+          "Unsupported geometry type: " + geometry.getGeometryType());
       }
     }
     return ShapefileConstants.NULL_SHAPE;
@@ -276,8 +277,8 @@ public final class ShapefileGeometryUtil {
     return (V)JavaBeanUtil.method(method, this, geometryFactory, in);
   }
 
-  public void readCoordinates(final EndianInput in, final CoordinatesList points, final int ordinate)
-    throws IOException {
+  public void readCoordinates(final EndianInput in, final CoordinatesList points,
+    final int ordinate) throws IOException {
     final int size = points.size();
     readCoordinates(in, points, size, ordinate);
   }
@@ -650,7 +651,8 @@ public final class ShapefileGeometryUtil {
     }
   }
 
-  public void writeMCoordinates(final EndianOutput out, final Geometry geometry) throws IOException {
+  public void writeMCoordinates(final EndianOutput out, final Geometry geometry)
+    throws IOException {
     writeMCoordinatesRange(out, geometry);
     for (int n = 0; n < geometry.getNumGeometries(); n++) {
       final Geometry subGeometry = geometry.getGeometryN(n);
@@ -720,8 +722,8 @@ public final class ShapefileGeometryUtil {
     writeMultipoint(out, geometry, ShapefileConstants.POLYLINE_SHAPE, 8);
   }
 
-  private void writeMultipoint(final EndianOutput out, final Geometry geometry,
-    final int shapeType, final int wordsPerPoint) throws IOException {
+  private void writeMultipoint(final EndianOutput out, final Geometry geometry, final int shapeType,
+    final int wordsPerPoint) throws IOException {
     if (geometry instanceof MultiPoint || geometry instanceof Point) {
       final int numPoints = geometry.getNumPoints();
       if (this.writeLength) {
@@ -736,8 +738,8 @@ public final class ShapefileGeometryUtil {
       out.writeLEInt(numPoints);
       writeXYCoordinates(out, geometry);
     } else {
-      throw new IllegalArgumentException("Expecting " + MultiPoint.class + " geometry got "
-        + geometry.getClass());
+      throw new IllegalArgumentException(
+        "Expecting " + MultiPoint.class + " geometry got " + geometry.getClass());
     }
   }
 
@@ -751,7 +753,8 @@ public final class ShapefileGeometryUtil {
     writeZCoordinates(out, geometry);
   }
 
-  public void writeMultipointZM(final EndianOutput out, final Geometry geometry) throws IOException {
+  public void writeMultipointZM(final EndianOutput out, final Geometry geometry)
+    throws IOException {
     writeMultipoint(out, geometry, ShapefileConstants.MULTI_POINT_ZM_SHAPE, 16);
     writeZCoordinates(out, geometry);
     writeMCoordinates(out, geometry);
@@ -770,8 +773,8 @@ public final class ShapefileGeometryUtil {
       out.writeLEDouble(points.getX(0));
       out.writeLEDouble(points.getY(0));
     } else {
-      throw new IllegalArgumentException("Expecting " + Point.class + " geometry got "
-        + geometry.getClass());
+      throw new IllegalArgumentException(
+        "Expecting " + Point.class + " geometry got " + geometry.getClass());
     }
   }
 
@@ -789,8 +792,8 @@ public final class ShapefileGeometryUtil {
       out.writeLEDouble(points.getY(0));
       out.writeLEDouble(points.getM(0));
     } else {
-      throw new IllegalArgumentException("Expecting " + Point.class + " geometry got "
-        + geometry.getClass());
+      throw new IllegalArgumentException(
+        "Expecting " + Point.class + " geometry got " + geometry.getClass());
     }
   }
 
@@ -808,8 +811,8 @@ public final class ShapefileGeometryUtil {
       out.writeLEDouble(points.getY(0));
       out.writeLEDouble(points.getZ(0));
     } else {
-      throw new IllegalArgumentException("Expecting " + Point.class + " geometry got "
-        + geometry.getClass());
+      throw new IllegalArgumentException(
+        "Expecting " + Point.class + " geometry got " + geometry.getClass());
     }
   }
 
@@ -828,8 +831,8 @@ public final class ShapefileGeometryUtil {
       out.writeLEDouble(points.getZ(0));
       out.writeLEDouble(points.getM(0));
     } else {
-      throw new IllegalArgumentException("Expecting " + Point.class + " geometry got "
-        + geometry.getClass());
+      throw new IllegalArgumentException(
+        "Expecting " + Point.class + " geometry got " + geometry.getClass());
     }
   }
 
@@ -867,8 +870,8 @@ public final class ShapefileGeometryUtil {
           numPoints += interiorCoords.size();
         }
       } else {
-        throw new IllegalArgumentException("Expecting " + Polygon.class + " geometry got "
-          + part.getClass());
+        throw new IllegalArgumentException(
+          "Expecting " + Polygon.class + " geometry got " + part.getClass());
       }
     }
     final int numParts = rings.size();
@@ -1006,7 +1009,8 @@ public final class ShapefileGeometryUtil {
     }
   }
 
-  public void writeZCoordinates(final EndianOutput out, final Geometry geometry) throws IOException {
+  public void writeZCoordinates(final EndianOutput out, final Geometry geometry)
+    throws IOException {
     writeZCoordinatesRange(out, geometry);
     for (int n = 0; n < geometry.getNumGeometries(); n++) {
       final Geometry subGeometry = geometry.getGeometryN(n);

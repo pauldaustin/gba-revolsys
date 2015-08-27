@@ -7,9 +7,9 @@ import java.io.IOException;
 
 public class StringTransferable implements Transferable {
 
-  private final String value;
-
   private final DataFlavor dataFlavor;
+
+  private final String value;
 
   public StringTransferable(final DataFlavor dataFlavor, final String value) {
     this.dataFlavor = dataFlavor;
@@ -17,8 +17,8 @@ public class StringTransferable implements Transferable {
   }
 
   @Override
-  public Object getTransferData(final DataFlavor flavor) throws UnsupportedFlavorException,
-    IOException {
+  public Object getTransferData(final DataFlavor flavor)
+    throws UnsupportedFlavorException, IOException {
     if (isDataFlavorSupported(flavor)) {
       return this.value;
     } else {

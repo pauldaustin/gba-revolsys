@@ -33,6 +33,8 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 public class SelectRecordsOverlay extends AbstractOverlay {
+  private static final String ACTION_SELECT_RECORDS = "Select Records";
+
   protected static final BasicStroke BOX_STROKE = new BasicStroke(2, BasicStroke.CAP_SQUARE,
     BasicStroke.JOIN_MITER, 2, new float[] {
       6, 6
@@ -50,25 +52,23 @@ public class SelectRecordsOverlay extends AbstractOverlay {
   private static final Cursor CURSOR_SELECT_BOX_DELETE = Icons.getCursor("cursor_select_box_delete",
     9, 9);
 
-  public static final SelectedRecordsRenderer SELECT_RENDERER = new SelectedRecordsRenderer(
-    WebColors.Black, WebColors.Lime);
-
   public static final SelectedRecordsRenderer HIGHLIGHT_RENDERER = new SelectedRecordsRenderer(
     WebColors.Black, WebColors.Yellow);
 
+  public static final SelectedRecordsRenderer SELECT_RENDERER = new SelectedRecordsRenderer(
+    WebColors.Black, WebColors.Lime);
+
   private static final long serialVersionUID = 1L;
 
-  private static final String ACTION_SELECT_RECORDS = "Select Records";
-
   private Double selectBox;
-
-  private java.awt.Point selectBoxFirstPoint;
-
-  private Cursor selectCursor;
 
   private int selectBoxButton;
 
   private Cursor selectBoxCursor;
+
+  private java.awt.Point selectBoxFirstPoint;
+
+  private Cursor selectCursor;
 
   public SelectRecordsOverlay(final MapPanel map) {
     super(map);

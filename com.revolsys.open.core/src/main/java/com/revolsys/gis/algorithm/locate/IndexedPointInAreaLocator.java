@@ -1,6 +1,6 @@
 package com.revolsys.gis.algorithm.locate;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
@@ -42,14 +42,14 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
       }
     }
 
-    public void query(final double min, final double max, final Visitor<LineSegment> visitor) {
+    public void query(final double min, final double max, final Consumer<LineSegment> visitor) {
       this.index.query(min, max, visitor);
     }
   }
 
-  private final IntervalIndexedGeometry index;
-
   private final Polygon geometry;
+
+  private final IntervalIndexedGeometry index;
 
   /**
    * Creates a netor for a given {@link Geometry}

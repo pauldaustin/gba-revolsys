@@ -20,20 +20,20 @@
  */
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.BoundingBox;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LineContainsWithinToleranceFilter implements Filter<LineString> {
-  private final CoordinatesList points;
-
+public class LineContainsWithinToleranceFilter implements Predicate<LineString> {
   private BoundingBox envelope;
 
-  private double tolerance;
-
   private boolean flip = false;
+
+  private final CoordinatesList points;
+
+  private double tolerance;
 
   public LineContainsWithinToleranceFilter(final LineString line) {
     this.points = CoordinatesListUtil.get(line);
@@ -54,7 +54,7 @@ public class LineContainsWithinToleranceFilter implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
     if (this.envelope.intersects(line.getEnvelopeInternal())) {
       final CoordinatesList points = CoordinatesListUtil.get(line);
 

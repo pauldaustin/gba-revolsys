@@ -1,21 +1,21 @@
 package com.revolsys.gis.graph.visitor;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
+
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.util.ObjectProcessor;
 
-public class DeleteEdgeVisitor<T> implements Visitor<Edge<T>>, ObjectProcessor<Graph<T>> {
+public class DeleteEdgeVisitor<T> implements Consumer<Edge<T>>, ObjectProcessor<Graph<T>> {
   @Override
-  public void process(final Graph<T> graph) {
-    graph.visitEdges(this);
+  public void accept(final Edge<T> edge) {
+    final Graph<T> graph = edge.getGraph();
+    graph.remove(edge);
   }
 
   @Override
-  public boolean visit(final Edge<T> edge) {
-    final Graph<T> graph = edge.getGraph();
-    graph.remove(edge);
-    return true;
+  public void process(final Graph<T> graph) {
+    graph.visitEdges(this);
   }
 
 }

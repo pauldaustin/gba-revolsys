@@ -23,10 +23,10 @@ package com.revolsys.gis.jts.filter;
 import java.util.Collections;
 
 import com.revolsys.data.equals.Geometry2DEquals;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class Equals2DFilter<T extends Geometry> implements Filter<T> {
+public class Equals2DFilter<T extends Geometry> implements Predicate<T> {
   private final T geometry;
 
   public Equals2DFilter(final T geometry) {
@@ -34,8 +34,9 @@ public class Equals2DFilter<T extends Geometry> implements Filter<T> {
   }
 
   @Override
-  public boolean accept(final T geometry) {
-    if (Geometry2DEquals.INSTANCE.equals(this.geometry, geometry, Collections.<String> emptySet())) {
+  public boolean test(final T geometry) {
+    if (Geometry2DEquals.INSTANCE.equals(this.geometry, geometry,
+      Collections.<String> emptySet())) {
       return true;
     } else {
       return false;

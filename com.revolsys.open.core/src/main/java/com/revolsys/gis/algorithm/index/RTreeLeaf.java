@@ -3,9 +3,9 @@ package com.revolsys.gis.algorithm.index;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class RTreeLeaf<T> extends RTreeNode<T> {
@@ -15,9 +15,9 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
    */
   private static final long serialVersionUID = 5073275000676209987L;
 
-  private Object[] objects;
-
   private Envelope[] envelopes;
+
+  private Object[] objects;
 
   private int size = 0;
 
@@ -36,6 +36,39 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
     expandToInclude(envelope);
   }
 
+  @Override
+  public void forEach(final Envelope envelope, final Consumer<T> visitor) {
+    for (int i = 0; i < this.size; i++) {
+      final Envelope objectEnvelope = this.envelopes[i];
+      if (envelope.intersects(objectEnvelope)) {
+        final T object = getObject(i);
+        visitor.accept(object);
+      }
+    }
+  }
+
+  @Override
+  public void forEach(final Envelope envelope, final Predicate<T> filter,
+    final Consumer<T> visitor) {
+    for (int i = 0; i < this.size; i++) {
+      final Envelope objectEnvelope = this.envelopes[i];
+      if (envelope.intersects(objectEnvelope)) {
+        final T object = getObject(i);
+        if (filter.test(object)) {
+          visitor.accept(object);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void forEachNode(final Consumer<T> visitor) {
+    for (int i = 0; i < this.size; i++) {
+      final T object = getObject(i);
+      visitor.accept(object);
+    }
+  }
+
   @SuppressWarnings("unchecked")
   public T getObject(final int index) {
     return (T)this.objects[index];
@@ -46,7 +79,8 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
   }
 
   @Override
-  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope, final T object) {
+  public boolean remove(final LinkedList<RTreeNode<T>> path, final Envelope envelope,
+    final T object) {
     for (int i = 0; i < this.size; i++) {
       final Envelope envelope1 = this.envelopes[i];
       final T object1 = getObject(i);
@@ -96,46 +130,5 @@ public class RTreeLeaf<T> extends RTreeNode<T> {
       final Envelope envelope = this.envelopes[i];
       expandToInclude(envelope);
     }
-  }
-
-  @Override
-  public boolean visit(final Envelope envelope, final Filter<T> filter, final Visitor<T> visitor) {
-    for (int i = 0; i < this.size; i++) {
-      final Envelope objectEnvelope = this.envelopes[i];
-      if (envelope.intersects(objectEnvelope)) {
-        final T object = getObject(i);
-        if (filter.accept(object)) {
-          if (!visitor.visit(object)) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
-  }
-
-  @Override
-  public boolean visit(final Envelope envelope, final Visitor<T> visitor) {
-    for (int i = 0; i < this.size; i++) {
-      final Envelope objectEnvelope = this.envelopes[i];
-      if (envelope.intersects(objectEnvelope)) {
-        final T object = getObject(i);
-        if (!visitor.visit(object)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  @Override
-  public boolean visit(final Visitor<T> visitor) {
-    for (int i = 0; i < this.size; i++) {
-      final T object = getObject(i);
-      if (!visitor.visit(object)) {
-        return false;
-      }
-    }
-    return true;
   }
 }

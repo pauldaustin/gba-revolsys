@@ -45,9 +45,9 @@ public class DelegatingRecordStoreHandler implements InvocationHandler {
 
   private Map<String, Object> config;
 
-  private RecordStore recordStore;
-
   private String label;
+
+  private RecordStore recordStore;
 
   public DelegatingRecordStoreHandler() {
   }

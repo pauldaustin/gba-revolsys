@@ -32,23 +32,23 @@ import com.revolsys.jts.geom.GeometryFactory;
 
 public class ArcSdeBinaryGeometryQueryIterator extends AbstractIterator<Record> {
 
+  private List<FieldDefinition> attributes = new ArrayList<FieldDefinition>();
+
   private SeConnection connection;
+
+  private RecordDefinition metaData;
+
+  private Query query;
 
   private RecordFactory recordFactory;
 
   private JdbcRecordStore recordStore;
 
-  private RecordDefinition metaData;
+  private ArcSdeBinaryGeometryRecordUtil sdeUtil;
 
   private SeQuery seQuery;
 
-  private List<FieldDefinition> attributes = new ArrayList<FieldDefinition>();
-
-  private Query query;
-
   private Statistics statistics;
-
-  private ArcSdeBinaryGeometryRecordUtil sdeUtil;
 
   public ArcSdeBinaryGeometryQueryIterator(final ArcSdeBinaryGeometryRecordUtil sdeUtil,
     final JdbcRecordStore recordStore, final Query query, final Map<String, Object> properties) {

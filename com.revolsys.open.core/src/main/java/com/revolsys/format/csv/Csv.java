@@ -161,14 +161,16 @@ public class Csv extends AbstractRecordAndGeometryIoFactory implements MapWriter
   }
 
   @Override
-  public RecordReader createRecordReader(final Resource resource, final RecordFactory recordFactory) {
+  public RecordReader createRecordReader(final Resource resource,
+    final RecordFactory recordFactory) {
     final CsvRecordIterator iterator = new CsvRecordIterator(resource, recordFactory);
     return new RecordIteratorReader(iterator);
   }
 
   @Override
   public RecordWriter createRecordWriter(final String baseName,
-    final RecordDefinition recordDefinition, final OutputStream outputStream, final Charset charset) {
+    final RecordDefinition recordDefinition, final OutputStream outputStream,
+    final Charset charset) {
     final OutputStreamWriter writer = new OutputStreamWriter(outputStream, charset);
 
     return new CsvRecordWriter(recordDefinition, writer, true);

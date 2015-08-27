@@ -31,15 +31,15 @@ public class TriangulatedIrregularNetwork {
     2, 1, 0
   };
 
+  private final BoundingBox boundingBox;
+
   private RTree<Triangle> circumCircleIndex;
 
   private GeometryFactory geometryFactory;
 
-  private RTree<Triangle> triangleIndex;
-
-  private final BoundingBox boundingBox;
-
   private final Set<Coordinates> nodes = new HashSet<Coordinates>();
+
+  private RTree<Triangle> triangleIndex;
 
   public TriangulatedIrregularNetwork(final BoundingBox boundingBox) {
     this(boundingBox.getGeometryFactory(), boundingBox);
@@ -81,7 +81,8 @@ public class TriangulatedIrregularNetwork {
     }
   }
 
-  public TriangulatedIrregularNetwork(final GeometryFactory geometryFactory, final Envelope envelope) {
+  public TriangulatedIrregularNetwork(final GeometryFactory geometryFactory,
+    final Envelope envelope) {
     this(geometryFactory, new BoundingBox(geometryFactory, envelope));
   }
 
@@ -420,8 +421,8 @@ public class TriangulatedIrregularNetwork {
         closestCorner = t2;
         oppositeEdge = new LineSegment(t0, t1);
       }
-      LineSegment segment = new LineSegment(closestCorner, coordinate).extend(0, t0.distance(t1)
-        + t1.distance(t2) + t0.distance(t2));
+      LineSegment segment = new LineSegment(closestCorner, coordinate).extend(0,
+        t0.distance(t1) + t1.distance(t2) + t0.distance(t2));
       final CoordinatesList intersectCoordinates = oppositeEdge.getIntersection(segment);
       if (intersectCoordinates.size() > 0) {
         final Coordinates intersectPoint = intersectCoordinates.get(0);
@@ -464,7 +465,8 @@ public class TriangulatedIrregularNetwork {
     return Collections.unmodifiableSet(this.nodes);
   }
 
-  private Coordinates getOtherCoordinates(final CoordinatesList coords, final int i1, final int i2) {
+  private Coordinates getOtherCoordinates(final CoordinatesList coords, final int i1,
+    final int i2) {
     final int index = getOtherIndex(i1, i2);
     return coords.get(index);
   }

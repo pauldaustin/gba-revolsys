@@ -50,10 +50,10 @@ public class DocletUtil {
   }
 
   public static void copyFiles(final String destDir) {
-    for (final String name : Arrays.asList("javadoc.css", "javadoc.js", "javadoc.js",
-      "prettify.js", "prettify.css")) {
-      FileUtil.copy(DocletUtil.class.getResourceAsStream("/com/revolsys/doclet/" + name), new File(
-        destDir, name));
+    for (final String name : Arrays.asList("javadoc.css", "javadoc.js", "javadoc.js", "prettify.js",
+      "prettify.css")) {
+      FileUtil.copy(DocletUtil.class.getResourceAsStream("/com/revolsys/doclet/" + name),
+        new File(destDir, name));
     }
   }
 
@@ -131,7 +131,8 @@ public class DocletUtil {
     }
   }
 
-  public static AnnotationDesc getAnnotation(final AnnotationDesc[] annotations, final String name) {
+  public static AnnotationDesc getAnnotation(final AnnotationDesc[] annotations,
+    final String name) {
     for (final AnnotationDesc annotation : annotations) {
       final AnnotationTypeDoc annotationType = annotation.annotationType();
       final String annotationName = qualifiedName(annotationType);

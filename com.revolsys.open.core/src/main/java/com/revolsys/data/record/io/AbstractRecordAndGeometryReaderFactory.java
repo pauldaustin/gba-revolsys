@@ -27,11 +27,11 @@ public abstract class AbstractRecordAndGeometryReaderFactory extends AbstractGeo
     return readerFactory;
   }
 
+  private boolean customAttributionSupported = true;
+
   private final ArrayRecordFactory recordFactory = new ArrayRecordFactory();
 
   private boolean singleFile = true;
-
-  private boolean customAttributionSupported = true;
 
   public AbstractRecordAndGeometryReaderFactory(final String name, final boolean binary) {
     super(name, binary);

@@ -18,11 +18,11 @@ public class InvokeMethodObjectAttributeProxy<T, O> extends AbstractObjectAttrib
 
   private String methodName;
 
+  private Object object;
+
   private Class<?> parameterClass;
 
   private Object[] parameters;
-
-  private Object object;
 
   public InvokeMethodObjectAttributeProxy() {
   }
@@ -94,8 +94,8 @@ public class InvokeMethodObjectAttributeProxy<T, O> extends AbstractObjectAttrib
       throw new RuntimeException(e);
     }
     if (this.method == null) {
-      throw new IllegalArgumentException("Method could not be found " + this.clazz + "."
-        + this.methodName);
+      throw new IllegalArgumentException(
+        "Method could not be found " + this.clazz + "." + this.methodName);
     }
   }
 

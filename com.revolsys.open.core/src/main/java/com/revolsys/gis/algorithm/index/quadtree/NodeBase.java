@@ -2,8 +2,8 @@ package com.revolsys.gis.algorithm.index.quadtree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -37,9 +37,9 @@ public abstract class NodeBase<T> {
     return subnodeIndex;
   }
 
-  private final List<T> items = new ArrayList<T>();
-
   private final List<Envelope> envelopes = new ArrayList<Envelope>();
+
+  private final List<T> items = new ArrayList<T>();
 
   private final List<Node<T>> nodes = new ArrayList<Node<T>>(4);
 
@@ -73,6 +73,38 @@ public abstract class NodeBase<T> {
       }
     }
     return depth + 1;
+  }
+
+  public void forEach(final Consumer<T> visitor) {
+    for (final T item : this.items) {
+      visitor.accept(item);
+    }
+
+    for (int i = 0; i < 4; i++) {
+      final Node<T> node = getNode(i);
+      if (node != null) {
+        node.forEach(visitor);
+      }
+    }
+  }
+
+  public void forEach(final Envelope envelope, final Consumer<T> visitor) {
+    if (isSearchMatch(envelope)) {
+      for (int i = 0; i < this.items.size(); i++) {
+        final Envelope itemEnvelope = this.envelopes.get(i);
+        if (isSearchMatch(itemEnvelope)) {
+          final T item = this.items.get(i);
+          visitor.accept(item);
+        }
+      }
+
+      for (int i = 0; i < 4; i++) {
+        final Node<T> node = getNode(i);
+        if (node != null) {
+          node.forEach(envelope, visitor);
+        }
+      }
+    }
   }
 
   public List<T> getItems() {
@@ -173,47 +205,5 @@ public abstract class NodeBase<T> {
   @Override
   public String toString() {
     return this.nodes + "=" + this.items.size();
-  }
-
-  public boolean visit(final Envelope envelope, final Visitor<T> visitor) {
-    if (isSearchMatch(envelope)) {
-      for (int i = 0; i < this.items.size(); i++) {
-        final Envelope itemEnvelope = this.envelopes.get(i);
-        if (isSearchMatch(itemEnvelope)) {
-          final T item = this.items.get(i);
-          if (!visitor.visit(item)) {
-            return false;
-          }
-        }
-      }
-
-      for (int i = 0; i < 4; i++) {
-        final Node<T> node = getNode(i);
-        if (node != null) {
-          if (!node.visit(envelope, visitor)) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
-  }
-
-  public boolean visit(final Visitor<T> visitor) {
-    for (final T item : this.items) {
-      if (!visitor.visit(item)) {
-        return false;
-      }
-    }
-
-    for (int i = 0; i < 4; i++) {
-      final Node<T> node = getNode(i);
-      if (node != null) {
-        if (!node.visit(visitor)) {
-          return false;
-        }
-      }
-    }
-    return true;
   }
 }

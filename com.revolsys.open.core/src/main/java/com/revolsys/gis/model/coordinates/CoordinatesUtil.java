@@ -230,7 +230,8 @@ public class CoordinatesUtil {
     final double dx = p1.getX() - p0.getX();
     final double dy = p1.getY() - p0.getY();
     if (dx == 0.0 && dy == 0.0) {
-      throw new IllegalArgumentException("Cannot compute the octant for two identical points " + p0);
+      throw new IllegalArgumentException(
+        "Cannot compute the octant for two identical points " + p0);
     }
     return octant(dx, dy);
   }
@@ -255,8 +256,8 @@ public class CoordinatesUtil {
    */
   public static int octant(final double dx, final double dy) {
     if (dx == 0.0 && dy == 0.0) {
-      throw new IllegalArgumentException("Cannot compute the octant for point ( " + dx + ", " + dy
-        + " )");
+      throw new IllegalArgumentException(
+        "Cannot compute the octant for point ( " + dx + ", " + dy + " )");
     }
 
     final double adx = Math.abs(dx);
@@ -302,7 +303,8 @@ public class CoordinatesUtil {
 
   }
 
-  public static int orientationIndex(final Coordinates p1, final Coordinates p2, final Coordinates q) {
+  public static int orientationIndex(final Coordinates p1, final Coordinates p2,
+    final Coordinates q) {
     // travelling along p1->p2, turn counter clockwise to get to q return 1,
     // travelling along p1->p2, turn clockwise to get to q return -1,
     // p1, p2 and q are colinear return 0.
@@ -319,8 +321,8 @@ public class CoordinatesUtil {
     return RobustDeterminant.signOfDet2x2(dx1, dy1, dx2, dy2);
   }
 
-  public static HCoordinate perpendicularBisector(final double x1, final double y1,
-    final double x2, final double y2) {
+  public static HCoordinate perpendicularBisector(final double x1, final double y1, final double x2,
+    final double y2) {
     final double dx = x2 - x1;
     final double dy = y2 - y1;
     final HCoordinate l1 = new HCoordinate(x1 + dx / 2.0, y1 + dy / 2.0, 1.0);

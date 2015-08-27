@@ -25,13 +25,13 @@ import com.revolsys.io.page.SerializablePageValueManager;
 public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
 
   private class PutResult {
+    private boolean hasOldValue;
+
     private byte[] newKeyBytes;
 
     private byte[] newPageIndexBytes;
 
     private V oldValue;
-
-    private boolean hasOldValue;
 
     public void clear() {
       this.newKeyBytes = null;
@@ -106,7 +106,7 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
     return map;
   }
 
-  public static <K extends Comparable<K>, V> Map<K, V> createTempDisk(final Map<K, V> values,
+  public static <K extends Comparable<?>, V> Map<K, V> createTempDisk(final Map<K, V> values,
     PageValueManager<K> keyManager, PageValueManager<V> valueManager) {
     final File file = FileUtil.createTempFile("temp", ".bplustree");
     final PageManager pageManager = new FilePageManager(file);
@@ -121,7 +121,7 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
       valueManager = BPlusTreePageValueManager.create(pageManager, serializeableManager);
     }
 
-    final Comparator<K> comparator = new ComparableComparator<K>();
+    final Comparator<K> comparator = new ComparableComparator();
     final BPlusTreeMap<K, V> map = new BPlusTreeMap<K, V>(pageManager, comparator, keyManager,
       valueManager);
     map.putAll(values);
@@ -178,21 +178,21 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
 
   private final int headerSize = 3;
 
-  private final int leafHeaderSize = 7;
-
   private final PageValueManager<K> keyManager;
 
+  private final int leafHeaderSize = 7;
+
   private final int minSize;
+
+  private volatile transient int modCount;
 
   private final PageManager pages;
 
   private final int rootPageIndex = 0;
 
-  private final PageValueManager<V> valueManager;
-
   private int size = 0;
 
-  private volatile transient int modCount;
+  private final PageValueManager<V> valueManager;
 
   public BPlusTreeMap(final PageManager pages, final Comparator<K> comparator,
     final PageValueManager<K> keyManager, final PageValueManager<V> valueManager) {
@@ -638,9 +638,8 @@ public class BPlusTreeMap<K, V> extends AbstractMap<K, V> {
     }
   }
 
-  private void updateOrSplitLeafPage(final PutResult result, final Page page,
-    final int oldNumBytes, final List<byte[]> keysBytes, final List<byte[]> valuesBytes,
-    final int nextPageIndex) {
+  private void updateOrSplitLeafPage(final PutResult result, final Page page, final int oldNumBytes,
+    final List<byte[]> keysBytes, final List<byte[]> valuesBytes, final int nextPageIndex) {
     int numBytes = this.leafHeaderSize;
     int splitIndex = -1;
     int i = 0;

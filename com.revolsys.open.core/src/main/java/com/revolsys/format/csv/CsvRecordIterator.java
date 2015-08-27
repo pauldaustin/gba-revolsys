@@ -29,29 +29,29 @@ import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class CsvRecordIterator extends AbstractIterator<Record> implements RecordIterator {
+public class CsvRecordIterator extends AbstractIterator<Record>implements RecordIterator {
 
   private final char fieldSeparator;
+
+  private String geometryColumnName;
+
+  private GeometryFactory geometryFactory = GeometryFactory.floating3();
+
+  private DataType geometryType = DataTypes.GEOMETRY;
+
+  private boolean hasPointFields;
+
+  private BufferedReader in;
 
   private String pointXFieldName;
 
   private String pointYFieldName;
 
-  private String geometryColumnName;
-
-  private DataType geometryType = DataTypes.GEOMETRY;
-
-  private GeometryFactory geometryFactory = GeometryFactory.floating3();
+  private RecordDefinition recordDefinition;
 
   private RecordFactory recordFactory;
 
-  private BufferedReader in;
-
-  private RecordDefinition recordDefinition;
-
   private Resource resource;
-
-  private boolean hasPointFields;
 
   public CsvRecordIterator(final Resource resource) {
     this(resource, new ArrayRecordFactory(), CsvConstants.FIELD_SEPARATOR);

@@ -19,16 +19,17 @@ import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.util.OS;
 
 @SuppressWarnings("serial")
-public class UndoManager extends javax.swing.undo.UndoManager implements PropertyChangeSupportProxy {
+public class UndoManager extends javax.swing.undo.UndoManager
+  implements PropertyChangeSupportProxy {
 
   /**
    *
    */
   private static final long serialVersionUID = 1L;
 
-  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-
   private boolean eventsEnabled = true;
+
+  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   @Override
   public synchronized boolean addEdit(final UndoableEdit edit) {
@@ -67,7 +68,8 @@ public class UndoManager extends javax.swing.undo.UndoManager implements Propert
         final JTextComponent textComponent = (JTextComponent)jcomponent;
         textComponent.getDocument().addUndoableEditListener(this);
       }
-      final InputMap inputMap = jcomponent.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+      final InputMap inputMap = jcomponent
+        .getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
       final ActionMap actionMap = jcomponent.getActionMap();
 
       int modifiers;

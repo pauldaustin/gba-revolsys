@@ -13,11 +13,12 @@ import com.vividsolutions.jts.geom.PrecisionModel;
 
 public class UtmRectangularMapGrid extends AbstractRectangularMapGrid {
 
-  public static final UtmRectangularMapGrid INSTANCE = new UtmRectangularMapGrid();
-
-  private static final CoordinateSystem COORDINATE_SYSTEM = EpsgCoordinateSystems.getCoordinateSystem(4326);
+  private static final CoordinateSystem COORDINATE_SYSTEM = EpsgCoordinateSystems
+    .getCoordinateSystem(4326);
 
   private static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.floating3(4326);
+
+  public static final UtmRectangularMapGrid INSTANCE = new UtmRectangularMapGrid();
 
   public static final double MIN_LAT = -80;
 
@@ -110,7 +111,8 @@ public class UtmRectangularMapGrid extends AbstractRectangularMapGrid {
    * @return The new map sheet.
    */
   public String getMapTileName(final String sheet, final int east, final int north) {
-    final double lon = this.precisionModel.makePrecise(getLongitude(sheet) + east * getTileHeight());
+    final double lon = this.precisionModel
+      .makePrecise(getLongitude(sheet) + east * getTileHeight());
     final double lat = getLatitude(sheet) + north * getTileHeight();
     return getMapTileName(lon, lat);
   }

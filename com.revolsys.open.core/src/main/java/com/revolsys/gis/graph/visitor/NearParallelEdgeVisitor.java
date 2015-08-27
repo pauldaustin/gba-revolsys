@@ -22,6 +22,14 @@ public class NearParallelEdgeVisitor<T> extends EdgeVisitor<T> {
   }
 
   @Override
+  public void accept(final Edge<T> edge) {
+    final LineString matchLine = edge.getLine();
+    if (isAlmostParallel(matchLine)) {
+      super.accept(edge);
+    }
+  }
+
+  @Override
   public Envelope getEnvelope() {
     BoundingBox envelope = BoundingBox.getBoundingBox(this.line);
     envelope = envelope.expand(this.maxDistance);
@@ -29,7 +37,8 @@ public class NearParallelEdgeVisitor<T> extends EdgeVisitor<T> {
   }
 
   private boolean isAlmostParallel(final LineString matchLine) {
-    if (this.line.getEnvelopeInternal().distance(matchLine.getEnvelopeInternal()) > this.maxDistance) {
+    if (this.line.getEnvelopeInternal()
+      .distance(matchLine.getEnvelopeInternal()) > this.maxDistance) {
       return false;
     }
     final CoordinateSequence coords = this.line.getCoordinateSequence();
@@ -43,9 +52,10 @@ public class NearParallelEdgeVisitor<T> extends EdgeVisitor<T> {
         final double distance = CGAlgorithms.distanceLineLine(previousCoordinate, coordinate,
           previousMatchCoordinate, matchCoordinate);
         if (distance <= this.maxDistance) {
-          final double angle1 = Angle.normalizePositive(Angle.angle(previousCoordinate, coordinate));
-          final double angle2 = Angle.normalizePositive(Angle.angle(previousMatchCoordinate,
-            matchCoordinate));
+          final double angle1 = Angle
+            .normalizePositive(Angle.angle(previousCoordinate, coordinate));
+          final double angle2 = Angle
+            .normalizePositive(Angle.angle(previousMatchCoordinate, matchCoordinate));
           final double angleDiff = Math.abs(angle1 - angle2);
           if (angleDiff <= Math.PI / 6) {
             return true;
@@ -56,15 +66,5 @@ public class NearParallelEdgeVisitor<T> extends EdgeVisitor<T> {
       previousCoordinate = coordinate;
     }
     return false;
-  }
-
-  @Override
-  public boolean visit(final Edge<T> edge) {
-    final LineString matchLine = edge.getLine();
-    if (isAlmostParallel(matchLine)) {
-      return super.visit(edge);
-    } else {
-      return true;
-    }
   }
 }

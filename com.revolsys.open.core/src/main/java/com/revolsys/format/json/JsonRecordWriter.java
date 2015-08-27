@@ -18,17 +18,17 @@ import com.revolsys.util.MathUtil;
 
 public class JsonRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
-  private RecordDefinition metaData;
-
-  private PrintWriter out;
-
   private int depth = 0;
 
   private boolean indent;
 
-  boolean startAttribute;
+  private RecordDefinition metaData;
+
+  private PrintWriter out;
 
   private boolean singleObject;
+
+  boolean startAttribute;
 
   private boolean written;
 

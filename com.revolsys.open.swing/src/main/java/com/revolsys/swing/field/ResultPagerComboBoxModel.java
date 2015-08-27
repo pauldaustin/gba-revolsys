@@ -13,12 +13,12 @@ import com.revolsys.swing.list.ResultPagerListCellRenderer;
 @SuppressWarnings("serial")
 public class ResultPagerComboBoxModel<T> extends AbstractListModel implements ComboBoxModel {
 
+  public static final Object NULL = new Object();
+
   /**
    *
    */
   private static final long serialVersionUID = 1L;
-
-  public static final Object NULL = new Object();
 
   public static <T> ComboBox create(final ResultPager<T> codeTable, final boolean allowNull,
     final String... attributeNames) {
@@ -30,13 +30,13 @@ public class ResultPagerComboBoxModel<T> extends AbstractListModel implements Co
     return comboBox;
   }
 
-  private final Map<Integer, T> cache = new LruMap<Integer, T>(200);
+  private boolean allowNull;
 
-  private Object selectedItem;
+  private final Map<Integer, T> cache = new LruMap<Integer, T>(200);
 
   private ResultPager<T> pager;
 
-  private boolean allowNull;
+  private Object selectedItem;
 
   public ResultPagerComboBoxModel() {
     this(null, true);
@@ -118,8 +118,8 @@ public class ResultPagerComboBoxModel<T> extends AbstractListModel implements Co
 
   @Override
   public void setSelectedItem(final Object item) {
-    if (this.selectedItem != null && !this.selectedItem.equals(item) || this.selectedItem == null
-      && item != null) {
+    if (this.selectedItem != null && !this.selectedItem.equals(item)
+      || this.selectedItem == null && item != null) {
       this.selectedItem = item;
     }
   }

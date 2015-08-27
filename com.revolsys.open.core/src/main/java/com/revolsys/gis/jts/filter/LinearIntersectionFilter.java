@@ -1,19 +1,19 @@
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.IntersectionMatrix;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 
-public class LinearIntersectionFilter implements Filter<LineString> {
+public class LinearIntersectionFilter implements Predicate<LineString> {
+
+  private final Envelope envelope;
 
   private final LineString line;
 
   private final PreparedGeometry preparedLine;
-
-  private final Envelope envelope;
 
   public LinearIntersectionFilter(final LineString line) {
     this.line = line;
@@ -22,7 +22,7 @@ public class LinearIntersectionFilter implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
     final Envelope envelope = line.getEnvelopeInternal();
     if (envelope.intersects(this.envelope)) {
       if (this.preparedLine.intersects(line)) {

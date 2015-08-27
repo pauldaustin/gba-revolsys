@@ -19,15 +19,15 @@ public class ProjectionImageFilter extends WholeImageFilter {
    */
   private static final long serialVersionUID = 1L;
 
-  private final BoundingBox sourceBoundingBox;
-
   private final BoundingBox destBoundingBox;
+
+  private final int destHeight;
 
   private final double destPixelSize;
 
   private final int destWidth;
 
-  private final int destHeight;
+  private final BoundingBox sourceBoundingBox;
 
   public ProjectionImageFilter(final BoundingBox imageBoundingBox,
     final CoordinateSystem destCoordinateSystem, final double resolution) {
@@ -72,8 +72,8 @@ public class ProjectionImageFilter extends WholeImageFilter {
     final GeometryFactory sourceGeometryFactory = this.sourceBoundingBox.getGeometryFactory();
     final GeometryFactory destGeometryFactory = this.destBoundingBox.getGeometryFactory();
 
-    final CoordinatesOperation operation = ProjectionFactory.getCoordinatesOperation(
-      destGeometryFactory, sourceGeometryFactory);
+    final CoordinatesOperation operation = ProjectionFactory
+      .getCoordinatesOperation(destGeometryFactory, sourceGeometryFactory);
     if (operation == null) {
       return inPixels;
     }

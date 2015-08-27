@@ -60,19 +60,19 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordLayerTablePanel extends TablePanel implements PropertyChangeListener {
-  private static final long serialVersionUID = 1L;
+  public static final String FILTER_FIELD = "filter_attribute";
 
   public static final String FILTER_GEOMETRY = "filter_geometry";
 
-  public static final String FILTER_FIELD = "filter_attribute";
+  private static final long serialVersionUID = 1L;
+
+  private final Map<String, JToggleButton> buttonByMode = new HashMap<>();
 
   private final AbstractRecordLayer layer;
 
-  private final RecordLayerTableModel tableModel;
-
   private final RecordTableCellEditor tableCellEditor;
 
-  private final Map<String, JToggleButton> buttonByMode = new HashMap<>();
+  private final RecordLayerTableModel tableModel;
 
   public RecordLayerTablePanel(final AbstractRecordLayer layer, final RecordLayerTable table) {
     super(table);

@@ -20,17 +20,22 @@
  */
 package com.revolsys.io;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.properties.ObjectWithProperties;
+import com.revolsys.util.ExitLoopException;
 
 /**
  * <p>
  * The Reader interface defines methods for reading objects of type T. Objects
  * can either by read as a {@link List} or using an {@link Iterator} or visited
- * using a {@link Visitor}.
+ * using a {@link Consumer}.
  * </p>
  * <p>
  * The simplest and most effecient way to loop through all objects in the reader
@@ -48,11 +53,37 @@ import com.revolsys.properties.ObjectWithProperties;
  * @param <T> The type of the item to read.
  */
 public interface Reader<T> extends Iterable<T>, ObjectWithProperties, AutoCloseable {
+  Reader<?> EMPTY = new ListReader<>();
+
+  @SuppressWarnings("unchecked")
+  static <V> Reader<V> empty() {
+    return (Reader<V>)EMPTY;
+  }
+
   /**
    * Close the reader and all resources associated with it.
    */
   @Override
-  void close() throws RuntimeException;
+  default void close() {
+  }
+
+  /**
+   * Visit each item returned from the reader until all items have been visited
+   * or the visit method returns false.
+   *
+   * @param visitor The visitor.
+   */
+  @Override
+  default void forEach(final Consumer<? super T> action) {
+    if (iterator() != null) {
+      try {
+        for (final T item : this) {
+          action.accept(item);
+        }
+      } catch (final ExitLoopException e) {
+      }
+    }
+  }
 
   /**
    * Return a new iterator for type T at the first item to read. Subsequent
@@ -68,14 +99,31 @@ public interface Reader<T> extends Iterable<T>, ObjectWithProperties, AutoClosea
   /**
    * Open the reader so that it is ready to be read from.
    */
-  void open();
+  default void open() {
+  }
+
+  default Stream<T> parallelStream() {
+    return StreamSupport.stream(spliterator(), true);
+  }
 
   /**
    * Read all items and return a List containing the items.
    *
    * @return The list of items.
    */
-  List<T> read();
+  default List<T> read() {
+    final List<T> items = new ArrayList<T>();
+    if (iterator() != null) {
+      for (final T item : this) {
+        items.add(item);
+      }
+    }
+    return items;
+  }
+
+  default Stream<T> stream() {
+    return StreamSupport.stream(spliterator(), false);
+  }
 
   /**
    * Visit each item returned from the reader until all items have been visited
@@ -83,5 +131,7 @@ public interface Reader<T> extends Iterable<T>, ObjectWithProperties, AutoClosea
    *
    * @param visitor The visitor.
    */
-  void visit(Visitor<T> visitor);
+  default void visit(final Consumer<T> visitor) {
+    forEach(visitor);
+  }
 }

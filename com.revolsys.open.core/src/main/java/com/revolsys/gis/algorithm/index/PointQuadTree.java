@@ -5,18 +5,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.LineSegmentUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.util.ExitLoopException;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
 
-  private PointQuadTreeNode<T> root;
-
   private GeometryFactory geometryFactory;
+
+  private PointQuadTreeNode<T> root;
 
   public PointQuadTree() {
   }
@@ -121,16 +122,22 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
   }
 
   @Override
-  public void visit(final Envelope envelope, final Visitor<T> visitor) {
+  public void visit(final Envelope envelope, final Consumer<T> visitor) {
     if (this.root != null) {
-      this.root.visit(envelope, visitor);
+      try {
+        this.root.forEach(envelope, visitor);
+      } catch (final ExitLoopException e) {
+      }
     }
   }
 
   @Override
-  public void visit(final Visitor<T> visitor) {
+  public void visit(final Consumer<T> visitor) {
     if (this.root != null) {
-      this.root.visit(visitor);
+      try {
+        this.root.forEach(visitor);
+      } catch (final ExitLoopException e) {
+      }
     }
   }
 }

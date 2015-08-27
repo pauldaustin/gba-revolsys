@@ -48,9 +48,9 @@ public class UriTemplate implements Serializable {
    */
   private static class Parser {
 
-    private final List<String> variableNames = new LinkedList<String>();
-
     private final StringBuilder patternBuilder = new StringBuilder();
+
+    private final List<String> variableNames = new LinkedList<String>();
 
     private Parser(final String uriTemplate) {
       Assert.hasText(uriTemplate, "'uriTemplate' must not be null");
@@ -85,22 +85,22 @@ public class UriTemplate implements Serializable {
     }
   }
 
+  /** Captures URI template variable names. */
+  private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
+
   /**
    *
    */
   private static final long serialVersionUID = 1L;
 
-  /** Captures URI template variable names. */
-  private static final Pattern NAMES_PATTERN = Pattern.compile("\\{([^/]+?)\\}");
-
   /** Replaces template variables in the URI template. */
   private static final String VALUE_REGEX = "(.*)";
-
-  private final List<String> variableNames;
 
   private final Pattern matchPattern;
 
   private final String uriTemplate;
+
+  private final List<String> variableNames;
 
   /**
    * Construct a new {@link UriTemplate} with the given URI String.
@@ -174,17 +174,17 @@ public class UriTemplate implements Serializable {
   public URI expand(final Object... uriVariableValues) {
     Assert.notNull(uriVariableValues, "'uriVariableValues' must not be null");
     if (uriVariableValues.length != this.variableNames.size()) {
-      throw new IllegalArgumentException("Invalid amount of variables values in ["
-        + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
-        + uriVariableValues.length);
+      throw new IllegalArgumentException(
+        "Invalid amount of variables values in [" + this.uriTemplate + "]: expected "
+          + this.variableNames.size() + "; got " + uriVariableValues.length);
     }
     final Matcher matcher = NAMES_PATTERN.matcher(this.uriTemplate);
     final StringBuffer buffer = new StringBuffer();
     int i = 0;
     while (matcher.find()) {
       final Object uriVariable = uriVariableValues[i++];
-      final String replacement = Matcher.quoteReplacement(uriVariable != null ? uriVariable.toString()
-        : "");
+      final String replacement = Matcher
+        .quoteReplacement(uriVariable != null ? uriVariable.toString() : "");
       matcher.appendReplacement(buffer, replacement);
     }
     matcher.appendTail(buffer);
@@ -207,17 +207,17 @@ public class UriTemplate implements Serializable {
   public String expandString(final Object... uriVariableValues) {
     Assert.notNull(uriVariableValues, "'uriVariableValues' must not be null");
     if (uriVariableValues.length != this.variableNames.size()) {
-      throw new IllegalArgumentException("Invalid amount of variables values in ["
-        + this.uriTemplate + "]: expected " + this.variableNames.size() + "; got "
-        + uriVariableValues.length);
+      throw new IllegalArgumentException(
+        "Invalid amount of variables values in [" + this.uriTemplate + "]: expected "
+          + this.variableNames.size() + "; got " + uriVariableValues.length);
     }
     final Matcher matcher = NAMES_PATTERN.matcher(this.uriTemplate);
     final StringBuffer buffer = new StringBuffer();
     int i = 0;
     while (matcher.find()) {
       final Object uriVariable = uriVariableValues[i++];
-      final String replacement = Matcher.quoteReplacement(uriVariable != null ? uriVariable.toString()
-        : "");
+      final String replacement = Matcher
+        .quoteReplacement(uriVariable != null ? uriVariable.toString() : "");
       matcher.appendReplacement(buffer, replacement);
     }
     matcher.appendTail(buffer);

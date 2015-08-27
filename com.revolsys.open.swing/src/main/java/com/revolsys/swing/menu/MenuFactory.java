@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.revolsys.beans.ClassRegistry;
 import com.revolsys.format.json.JsonParser;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.AbstractAction;
 import com.revolsys.swing.action.InvokeMethodAction;
@@ -29,12 +29,12 @@ import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentFactory;
 import com.revolsys.util.Property;
 
-public class MenuFactory extends AbstractObjectWithProperties implements
-  ComponentFactory<JMenuItem> {
-
-  private static Object menuSource;
+public class MenuFactory extends BaseObjectWithProperties
+  implements ComponentFactory<JMenuItem> {
 
   private static final ClassRegistry<MenuFactory> CLASS_MENUS = new ClassRegistry<>();
+
+  private static Object menuSource;
 
   public static MenuFactory createMenu(final Class<?> clazz, final String... menuNames) {
     final MenuFactory menu = getMenu(clazz);
@@ -110,9 +110,9 @@ public class MenuFactory extends AbstractObjectWithProperties implements
 
   private EnableCheck enableCheck;
 
-  private final Map<String, List<ComponentFactory<?>>> groups = new HashMap<>();
-
   private final List<String> groupNames = new ArrayList<String>();
+
+  private final Map<String, List<ComponentFactory<?>>> groups = new HashMap<>();
 
   private String name;
 
@@ -233,10 +233,11 @@ public class MenuFactory extends AbstractObjectWithProperties implements
   }
 
   public void addMenuItem(final String groupName, final int index, final String title,
-    final String iconName, final Object object, final String methodName, final Object... parameters) {
+    final String iconName, final Object object, final String methodName,
+    final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
-    final InvokeMethodAction menuItem = createMenuItem(title, title, icon, null, object,
-      methodName, parameters);
+    final InvokeMethodAction menuItem = createMenuItem(title, title, icon, null, object, methodName,
+      parameters);
     addComponentFactory(groupName, index, menuItem);
   }
 
@@ -262,15 +263,16 @@ public class MenuFactory extends AbstractObjectWithProperties implements
     }
   }
 
-  public void addMenuItemTitleIcon(final String groupName, final String name,
-    final String iconName, final EnableCheck enableCheck, final Object object,
-    final String methodName, final Object... parameters) {
+  public void addMenuItemTitleIcon(final String groupName, final String name, final String iconName,
+    final EnableCheck enableCheck, final Object object, final String methodName,
+    final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
     addMenuItem(groupName, name, null, icon, enableCheck, object, methodName, parameters);
   }
 
   public InvokeMethodAction addMenuItemTitleIcon(final String groupName, final String title,
-    final String iconName, final Object object, final String methodName, final Object... parameters) {
+    final String iconName, final Object object, final String methodName,
+    final Object... parameters) {
     final ImageIcon icon = Icons.getIcon(iconName);
     final InvokeMethodAction action = createMenuItem(title, null, icon, null, object, methodName,
       parameters);

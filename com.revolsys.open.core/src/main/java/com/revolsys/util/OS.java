@@ -9,17 +9,17 @@ import com.revolsys.io.FileUtil;
 
 public class OS {
 
-  public static final String OS_ARCH = System.getProperty("os.arch");
-
   public final static String OS_NAME = System.getProperty("os.name");
-
-  public final static boolean IS_WINDOWS = OS_NAME.startsWith("Windows");
-
-  public final static boolean IS_SOLARIS = OS_NAME.equals("SunOS");
 
   public final static boolean IS_LINUX = OS_NAME.equals("Linux");
 
   public final static boolean IS_MAC = OS_NAME.contains("OS X") || OS_NAME.equals("Darwin");
+
+  public final static boolean IS_SOLARIS = OS_NAME.equals("SunOS");
+
+  public final static boolean IS_WINDOWS = OS_NAME.startsWith("Windows");
+
+  public static final String OS_ARCH = System.getProperty("os.arch");
 
   public static File getApplicationDataDirectory() {
     String path;
@@ -76,8 +76,8 @@ public class OS {
 
   public static File getPreferenceFile(final String applicationName, final String path) {
     if (path.contains("..")) {
-      throw new IllegalArgumentException("Path cannot contain the '..' character sequernce: "
-        + path);
+      throw new IllegalArgumentException(
+        "Path cannot contain the '..' character sequernce: " + path);
     }
     final File preferencesDirectory = getPreferencesDirectory(applicationName);
     final File file = FileUtil.getFile(preferencesDirectory, path + ".rgobject");
@@ -85,7 +85,8 @@ public class OS {
     return file;
   }
 
-  public static Map<String, Object> getPreferences(final String applicationName, final String path) {
+  public static Map<String, Object> getPreferences(final String applicationName,
+    final String path) {
     final File file = getPreferenceFile(applicationName, path);
     if (file.exists()) {
       return JsonMapIoFactory.toMap(file);

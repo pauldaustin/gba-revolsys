@@ -2,8 +2,6 @@ package com.revolsys.gis.data.query;
 
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
 import com.revolsys.data.query.Condition;
 import com.revolsys.data.query.Q;
 import com.revolsys.data.record.ArrayRecord;
@@ -12,20 +10,22 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataTypes;
 
+import junit.framework.Assert;
+
 public class QueryValueTest {
   public static void main(final String[] args) {
     new QueryValueTest().run();
   }
 
-  private final RecordDefinitionImpl metaData;
+  private final FieldDefinition descriptionAttribute;
 
   private final FieldDefinition idAttribute;
 
-  private final Record record;
+  private final RecordDefinitionImpl metaData;
 
   private final FieldDefinition nameAttribute;
 
-  private final FieldDefinition descriptionAttribute;
+  private final Record record;
 
   public QueryValueTest() {
     this.metaData = new RecordDefinitionImpl("Test");
@@ -39,12 +39,12 @@ public class QueryValueTest {
   }
 
   public void assertConditionFalse(final Condition trueCondition1, final Record record) {
-    final boolean result1 = trueCondition1.accept(record);
+    final boolean result1 = trueCondition1.test(record);
     Assert.assertFalse(result1);
   }
 
   public void assertConditionTrue(final Condition trueCondition1, final Record record) {
-    final boolean result1 = trueCondition1.accept(record);
+    final boolean result1 = trueCondition1.test(record);
     Assert.assertTrue(result1);
   }
 

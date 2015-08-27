@@ -25,13 +25,13 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
 
   private static final long serialVersionUID = 1L;
 
-  private RecordDefinition recordDefinition;
-
-  private Set<String> readOnlyFieldNames = new HashSet<String>();
-
   private boolean editable;
 
   private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+
+  private Set<String> readOnlyFieldNames = new HashSet<String>();
+
+  private RecordDefinition recordDefinition;
 
   public AbstractRecordTableModel() {
     this(null);

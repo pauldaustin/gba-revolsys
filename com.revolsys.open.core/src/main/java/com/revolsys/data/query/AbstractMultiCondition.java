@@ -11,15 +11,16 @@ import com.revolsys.util.CollectionUtil;
 
 public abstract class AbstractMultiCondition extends Condition {
 
-  private List<QueryValue> values;
-
   private String operator;
+
+  private List<QueryValue> values;
 
   public AbstractMultiCondition(final Collection<? extends QueryValue> values) {
     this.values = new ArrayList<QueryValue>(values);
   }
 
-  public AbstractMultiCondition(final String operator, final Collection<? extends QueryValue> values) {
+  public AbstractMultiCondition(final String operator,
+    final Collection<? extends QueryValue> values) {
     this.operator = operator;
     this.values = new ArrayList<QueryValue>(values);
   }

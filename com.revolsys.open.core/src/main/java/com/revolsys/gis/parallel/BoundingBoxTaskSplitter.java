@@ -11,17 +11,17 @@ import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 
 public abstract class BoundingBoxTaskSplitter extends AbstractProcess {
-  private final Logger log = LoggerFactory.getLogger(getClass());
+  private Geometry boundary;
 
   private BoundingBox boundingBox;
+
+  private final Logger log = LoggerFactory.getLogger(getClass());
+
+  private boolean logScriptInfo;
 
   private int numX = 10;
 
   private int numY = 10;
-
-  private boolean logScriptInfo;
-
-  private Geometry boundary;
 
   private PreparedGeometry preparedBoundary;
 
@@ -70,8 +70,8 @@ public abstract class BoundingBoxTaskSplitter extends AbstractProcess {
         for (int j = 0; j < this.numX; j++) {
           double x = this.boundingBox.getMinX();
           for (int i = 0; i < this.numX; i++) {
-            final BoundingBox cellBoundingBox = new BoundingBox(geometryFactory, x, y, x + xInc, y
-              + yInc);
+            final BoundingBox cellBoundingBox = new BoundingBox(geometryFactory, x, y, x + xInc,
+              y + yInc);
             if (this.preparedBoundary == null
               || this.preparedBoundary.intersects(cellBoundingBox.toPolygon(50))) {
               if (this.logScriptInfo) {

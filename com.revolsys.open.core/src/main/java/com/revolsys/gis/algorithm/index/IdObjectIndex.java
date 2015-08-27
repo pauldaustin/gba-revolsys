@@ -2,7 +2,7 @@ package com.revolsys.gis.algorithm.index;
 
 import java.util.List;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.vividsolutions.jts.geom.Envelope;
 
 public interface IdObjectIndex<T> extends Iterable<T> {
@@ -20,5 +20,5 @@ public interface IdObjectIndex<T> extends Iterable<T> {
 
   boolean remove(T object);
 
-  void visit(Envelope envelope, Visitor<T> visitor);
+  void visit(Envelope envelope, Consumer<T> visitor);
 }

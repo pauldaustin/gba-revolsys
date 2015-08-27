@@ -16,11 +16,11 @@ import com.revolsys.util.JexlUtil;
 public class ExpressionMeasurable<Q extends Quantity> extends Measure<Q> {
   private static final long serialVersionUID = 1L;
 
+  private JexlContext context;
+
   private final Expression expression;
 
   private final Unit<Q> unit;
-
-  private JexlContext context;
 
   protected ExpressionMeasurable(final Expression expression, final JexlContext context,
     final Unit<Q> unit) {
@@ -66,7 +66,8 @@ public class ExpressionMeasurable<Q extends Quantity> extends Measure<Q> {
       return Double.NaN;
     } else {
       try {
-        return Double.valueOf(JexlUtil.evaluateExpression(this.context, this.expression).toString());
+        return Double
+          .valueOf(JexlUtil.evaluateExpression(this.context, this.expression).toString());
       } catch (final NullPointerException e) {
         return 0.0;
       }

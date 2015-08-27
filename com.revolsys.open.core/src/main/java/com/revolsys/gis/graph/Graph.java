@@ -17,17 +17,15 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.collection.bplus.BPlusTreeMap;
 import com.revolsys.collection.map.IntHashMap;
 import com.revolsys.comparator.ComparatorProxy;
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.FilterProxy;
-import com.revolsys.filter.FilterUtil;
 import com.revolsys.gis.algorithm.index.IdObjectIndex;
 import com.revolsys.gis.graph.attribute.NodeAttributes;
 import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
@@ -58,6 +56,9 @@ import com.revolsys.io.page.PageValueManager;
 import com.revolsys.io.page.SerializablePageValueManager;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.predicate.PredicateProxy;
+import com.revolsys.predicate.Predicates;
+import com.revolsys.util.ExitLoopException;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -85,11 +86,9 @@ public class Graph<T> {
     }
   }
 
-  private final int id = GRAPH_IDS.incrementAndGet();
+  private Map<Integer, Map<String, Object>> edgeAttributesById = new IntHashMap<Map<String, Object>>();
 
-  private int maxEdgesInMemory = Integer.MAX_VALUE;
-
-  private boolean inMemory = true;
+  private final Map<Edge<T>, Integer> edgeIds = new TreeMap<Edge<T>, Integer>();
 
   private IdObjectIndex<Edge<T>> edgeIndex;
 
@@ -99,27 +98,29 @@ public class Graph<T> {
 
   private Map<Integer, T> edgeObjectsById = new IntHashMap<T>();
 
-  private Map<Integer, Map<String, Object>> edgeAttributesById = new IntHashMap<Map<String, Object>>();
-
-  private Map<Integer, Map<String, Object>> nodeAttributesById = new IntHashMap<Map<String, Object>>();
-
   private Map<Integer, Edge<T>> edgesById = new IntHashMap<Edge<T>>();
 
-  private final Map<Edge<T>, Integer> edgeIds = new TreeMap<Edge<T>, Integer>();
-
   private GeometryFactory geometryFactory = GeometryFactory.getFactory();
+
+  private final int id = GRAPH_IDS.incrementAndGet();
+
+  private boolean inMemory = true;
+
+  private int maxEdgesInMemory = Integer.MAX_VALUE;
 
   private int nextEdgeId;
 
   private int nextNodeId;
 
+  private Map<Integer, Map<String, Object>> nodeAttributesById = new IntHashMap<Map<String, Object>>();
+
   private IdObjectIndex<Node<T>> nodeIndex;
 
   private final NodeEventListenerList<T> nodeListeners = new NodeEventListenerList<T>();
 
-  private Map<Coordinates, Integer> nodesIdsByCoordinates = new TreeMap<Coordinates, Integer>();
-
   private Map<Integer, Node<T>> nodesById = new IntHashMap<Node<T>>();
+
+  private Map<Coordinates, Integer> nodesIdsByCoordinates = new TreeMap<Coordinates, Integer>();
 
   private CoordinatesPrecisionModel precisionModel = new SimpleCoordinatesPrecisionModel();
 
@@ -248,7 +249,7 @@ public class Graph<T> {
     return newEdge;
   }
 
-  public void deleteEdges(final Filter<Edge<T>> filter) {
+  public void deleteEdges(final Predicate<Edge<T>> filter) {
     final DeleteEdgeVisitor<T> visitor = new DeleteEdgeVisitor<T>();
     visitEdges(filter, visitor);
   }
@@ -303,7 +304,7 @@ public class Graph<T> {
    */
   public List<Node<T>> findNodes(final Coordinates point, final double distance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
-    final Visitor<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(point, distance,
+    final Consumer<Node<T>> visitor = new NodeWithinDistanceOfCoordinateVisitor<T>(point, distance,
       results);
     BoundingBox envelope = new BoundingBox(point);
     envelope = envelope.expand(distance);
@@ -342,7 +343,7 @@ public class Graph<T> {
    */
   public List<Node<T>> findNodes(final Geometry geometry, final double distance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
-    final Visitor<Node<T>> visitor = new NodeWithinDistanceOfGeometryVisitor<T>(geometry, distance,
+    final Consumer<Node<T>> visitor = new NodeWithinDistanceOfGeometryVisitor<T>(geometry, distance,
       results);
     BoundingBox envelope = BoundingBox.getBoundingBox(geometry);
     envelope = envelope.expand(distance);
@@ -474,61 +475,6 @@ public class Graph<T> {
     return edgeIndex.query(envelope);
   }
 
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter) {
-    final List<Edge<T>> edges = new EdgeList<T>(this);
-    for (final Integer edgeId : getEdgeIds()) {
-      final Edge<T> edge = getEdge(edgeId);
-      if (FilterUtil.matches(filter, edge)) {
-        edges.add(edge);
-      }
-    }
-    return edges;
-  }
-
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator) {
-    final List<Edge<T>> targetEdges = getEdges(filter);
-    if (comparator != null) {
-      Collections.sort(targetEdges, comparator);
-    }
-    return targetEdges;
-  }
-
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator,
-    final Envelope envelope) {
-    final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>(filter);
-    final IdObjectIndex<Edge<T>> edgeIndex = getEdgeIndex();
-    edgeIndex.visit(envelope, results);
-    final List<Edge<T>> targetEdges = results.getList();
-    if (comparator == null) {
-      Collections.sort(targetEdges);
-    } else {
-      Collections.sort(targetEdges, comparator);
-    }
-    return targetEdges;
-
-  }
-
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator,
-    final Geometry geometry) {
-    final Envelope envelope = geometry.getEnvelopeInternal();
-    return getEdges(filter, comparator, envelope);
-  }
-
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Envelope envelope) {
-    final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>(filter);
-    final IdObjectIndex<Edge<T>> edgeIndex = getEdgeIndex();
-    edgeIndex.visit(envelope, results);
-    final List<Edge<T>> edges = results.getList();
-    Collections.sort(edges);
-    return edges;
-
-  }
-
-  public List<Edge<T>> getEdges(final Filter<Edge<T>> filter, final Geometry geometry) {
-    final Envelope envelope = geometry.getEnvelopeInternal();
-    return getEdges(filter, envelope);
-  }
-
   public List<Edge<T>> getEdges(final int... ids) {
     final List<Edge<T>> edges = new ArrayList<Edge<T>>();
     for (final int edgeId : ids) {
@@ -549,6 +495,62 @@ public class Graph<T> {
       }
     }
     return edges;
+  }
+
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter) {
+    final List<Edge<T>> edges = new EdgeList<T>(this);
+    for (final Integer edgeId : getEdgeIds()) {
+      final Edge<T> edge = getEdge(edgeId);
+      if (Predicates.matches(filter, edge)) {
+        edges.add(edge);
+      }
+    }
+    return edges;
+  }
+
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter,
+    final Comparator<Edge<T>> comparator) {
+    final List<Edge<T>> targetEdges = getEdges(filter);
+    if (comparator != null) {
+      Collections.sort(targetEdges, comparator);
+    }
+    return targetEdges;
+  }
+
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter,
+    final Comparator<Edge<T>> comparator, final Envelope envelope) {
+    final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>(filter);
+    final IdObjectIndex<Edge<T>> edgeIndex = getEdgeIndex();
+    edgeIndex.visit(envelope, results);
+    final List<Edge<T>> targetEdges = results.getList();
+    if (comparator == null) {
+      Collections.sort(targetEdges);
+    } else {
+      Collections.sort(targetEdges, comparator);
+    }
+    return targetEdges;
+
+  }
+
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter,
+    final Comparator<Edge<T>> comparator, final Geometry geometry) {
+    final Envelope envelope = geometry.getEnvelopeInternal();
+    return getEdges(filter, comparator, envelope);
+  }
+
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter, final Envelope envelope) {
+    final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>(filter);
+    final IdObjectIndex<Edge<T>> edgeIndex = getEdgeIndex();
+    edgeIndex.visit(envelope, results);
+    final List<Edge<T>> edges = results.getList();
+    Collections.sort(edges);
+    return edges;
+
+  }
+
+  public List<Edge<T>> getEdges(final Predicate<Edge<T>> filter, final Geometry geometry) {
+    final Envelope envelope = geometry.getEnvelopeInternal();
+    return getEdges(filter, envelope);
   }
 
   public GeometryFactory getGeometryFactory() {
@@ -637,16 +639,29 @@ public class Graph<T> {
     return targetNodes;
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter) {
+  public List<Node<T>> getNodes(final List<Integer> nodeIds) {
+    final List<Node<T>> nodes = new ArrayList<Node<T>>();
+    for (final int nodeId : nodeIds) {
+      final Node<T> node = getNode(nodeId);
+      if (node != null) {
+        nodes.add(node);
+      }
+    }
+    return nodes;
+
+  }
+
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter) {
     if (filter == null) {
       return getNodes();
     } else {
-      final List<Node<T>> filteredNodes = FilterUtil.filter(getNodes(), filter);
+      final List<Node<T>> filteredNodes = Predicates.filter(getNodes(), filter);
       return filteredNodes;
     }
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter, final Comparator<Node<T>> comparator) {
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter,
+    final Comparator<Node<T>> comparator) {
     final List<Node<T>> targetNodes = getNodes(filter);
     if (comparator != null) {
       Collections.sort(targetNodes, comparator);
@@ -654,8 +669,8 @@ public class Graph<T> {
     return targetNodes;
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter, final Comparator<Node<T>> comparator,
-    final Envelope envelope) {
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter,
+    final Comparator<Node<T>> comparator, final Envelope envelope) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>(filter);
     final IdObjectIndex<Node<T>> nodeIndex = getNodeIndex();
     nodeIndex.visit(envelope, results);
@@ -669,20 +684,8 @@ public class Graph<T> {
 
   }
 
-  public List<Node<T>> getNodes(final Filter<Node<T>> filter, final Envelope envelope) {
+  public List<Node<T>> getNodes(final Predicate<Node<T>> filter, final Envelope envelope) {
     return getNodes(filter, null, envelope);
-
-  }
-
-  public List<Node<T>> getNodes(final List<Integer> nodeIds) {
-    final List<Node<T>> nodes = new ArrayList<Node<T>>();
-    for (final int nodeId : nodeIds) {
-      final Node<T> node = getNode(nodeId);
-      if (node != null) {
-        nodes.add(node);
-      }
-    }
-    return nodes;
 
   }
 
@@ -818,8 +821,8 @@ public class Graph<T> {
     final Coordinates point2 = node2.get3dCoordinates(typePath);
 
     final Graph<Record> graph = node1.getGraph();
-    final Coordinates midPoint = LineSegmentUtil.midPoint(new SimpleCoordinatesPrecisionModel(1000,
-      1), node2, node1);
+    final Coordinates midPoint = LineSegmentUtil
+      .midPoint(new SimpleCoordinatesPrecisionModel(1000, 1), node2, node1);
     final Coordinates newPoint = new DoubleCoordinates(3);
     newPoint.setX(midPoint.getX());
     newPoint.setY(midPoint.getY());
@@ -912,7 +915,7 @@ public class Graph<T> {
     index.visit(env, visitor);
   }
 
-  public void queryEdges(final EdgeVisitor<T> visitor, final Visitor<Edge<T>> matchVisitor) {
+  public void queryEdges(final EdgeVisitor<T> visitor, final Consumer<Edge<T>> matchVisitor) {
     visitor.setVisitor(matchVisitor);
     queryEdges(visitor);
   }
@@ -1108,7 +1111,8 @@ public class Graph<T> {
               nodeSegment.put(node, segmentIndex);
               nodeIter.remove();
             } else {
-              final double projectionFactor = LineSegmentUtil.projectionFactor(x1, y1, x2, y2, x, y);
+              final double projectionFactor = LineSegmentUtil.projectionFactor(x1, y1, x2, y2, x,
+                y);
               if (projectionFactor >= 0.0 && projectionFactor <= 1.0) {
                 final Double closestDistance = nodeDistanceMap.get(node);
                 if (closestDistance == null) {
@@ -1179,8 +1183,8 @@ public class Graph<T> {
               if (startIndex > index) {
                 newPoints = CoordinatesListUtil.create(points.getNumAxis(), startPoint, point);
               } else {
-                newPoints = CoordinatesListUtil.subList(points, startPoint, startIndex, index
-                  - startIndex + 1, point);
+                newPoints = CoordinatesListUtil.subList(points, startPoint, startIndex,
+                  index - startIndex + 1, point);
               }
               newLines.add(newPoints);
               startPoint = point;
@@ -1219,8 +1223,8 @@ public class Graph<T> {
       final LineString line = edge.getLine();
       final CoordinatesList points = CoordinatesListUtil.get(line);
 
-      final Map<String, Number> result = CoordinatesListUtil.findClosestSegmentAndCoordinate(
-        points, point);
+      final Map<String, Number> result = CoordinatesListUtil.findClosestSegmentAndCoordinate(points,
+        point);
       final int segmentIndex = result.get("segmentIndex").intValue();
       if (segmentIndex != -1) {
         List<LineString> lines;
@@ -1283,59 +1287,15 @@ public class Graph<T> {
     }
   }
 
-  public void visitEdges(final Comparator<Edge<T>> comparator, final Visitor<Edge<T>> visitor) {
+  public void visitEdges(final Comparator<Edge<T>> comparator, final Consumer<Edge<T>> visitor) {
     visitEdges(null, comparator, visitor);
   }
 
-  public void visitEdges(final Filter<Edge<T>> filter, final Comparator<Edge<T>> comparator,
-    final Visitor<Edge<T>> visitor) {
-    final LinkedList<Edge<T>> edges = new LinkedList<Edge<T>>(getEdges(filter));
-    if (comparator != null) {
-      Collections.sort(edges, comparator);
-    }
-    final EdgeEventListener<T> listener = new EdgeEventListener<T>() {
-      @Override
-      public void edgeEvent(final EdgeEvent<T> edgeEvent) {
-        final Edge<T> edge = edgeEvent.getEdge();
-        final String action = edgeEvent.getAction();
-        if (action.equals(EdgeEvent.EDGE_ADDED)) {
-          edges.addFirst(edge);
-          if (comparator == null) {
-            Collections.sort(edges);
-          } else {
-            Collections.sort(edges, comparator);
-          }
-        } else if (action.equals(EdgeEvent.EDGE_REMOVED)) {
-          if (comparator != null) {
-            edges.remove(edge);
-          }
-        }
-      }
-    };
-    this.edgeListeners.add(listener);
-    try {
-      while (!edges.isEmpty()) {
-        final Edge<T> edge = edges.remove(0);
-        if (!edge.isRemoved()) {
-          if (!visitor.visit(edge)) {
-            return;
-          }
-        }
-      }
-    } finally {
-      this.edgeListeners.remove(listener);
-    }
-  }
-
-  public void visitEdges(final Filter<Edge<T>> filter, final Visitor<Edge<T>> visitor) {
-    visitEdges(filter, null, visitor);
-  }
-
   @SuppressWarnings("unchecked")
-  public void visitEdges(final Visitor<Edge<T>> visitor) {
-    Filter<Edge<T>> filter = null;
-    if (visitor instanceof FilterProxy) {
-      filter = ((FilterProxy<Edge<T>>)visitor).getFilter();
+  public void visitEdges(final Consumer<Edge<T>> visitor) {
+    Predicate<Edge<T>> filter = null;
+    if (visitor instanceof PredicateProxy) {
+      filter = ((PredicateProxy<Edge<T>>)visitor).getPredicate();
     }
     Comparator<Edge<T>> comparator = null;
     if (visitor instanceof ComparatorProxy) {
@@ -1344,69 +1304,61 @@ public class Graph<T> {
     visitEdges(filter, comparator, visitor);
   }
 
-  public void visitEdges(final Visitor<Edge<T>> visitor, final Envelope envelope) {
+  public void visitEdges(final Consumer<Edge<T>> visitor, final Envelope envelope) {
     final IdObjectIndex<Edge<T>> edgeIndex = getEdgeIndex();
     edgeIndex.visit(envelope, visitor);
   }
 
-  // TODO make this work with cached nodes
-  public void visitNodes(final Filter<Node<T>> filter, final Comparator<Node<T>> comparator,
-    final Visitor<Node<T>> visitor) {
-    final List<Node<T>> nodes = new LinkedList<Node<T>>();
-    if (filter == null) {
-      nodes.addAll(getNodes());
-    } else {
-      for (final Node<T> node : getNodes()) {
-        if (filter.accept(node)) {
-          nodes.add(node);
-        }
-      }
-    }
-    if (comparator != null) {
-      Collections.sort(nodes, comparator);
-    }
-
-    final NodeEventListener<T> listener = new NodeEventListener<T>() {
-      @Override
-      public void nodeEvent(final NodeEvent<T> nodeEvent) {
-        final Node<T> node = nodeEvent.getNode();
-        final String action = nodeEvent.getAction();
-        if (action.equals(NodeEvent.NODE_ADDED)) {
-          nodes.add(node);
-          if (comparator == null) {
-            Collections.sort(nodes);
-          } else {
-            Collections.sort(nodes, comparator);
-          }
-        } else if (action.equals(NodeEvent.NODE_REMOVED)) {
-          nodes.remove(node);
-        }
-      }
-    };
-    this.nodeListeners.add(listener);
+  public void visitEdges(final Predicate<Edge<T>> filter, final Comparator<Edge<T>> comparator,
+    final Consumer<Edge<T>> visitor) {
     try {
-      while (!nodes.isEmpty()) {
-        final Node<T> node = nodes.remove(0);
-        if (!node.isRemoved()) {
-          if (!visitor.visit(node)) {
-            return;
+      final LinkedList<Edge<T>> edges = new LinkedList<Edge<T>>(getEdges(filter));
+      if (comparator != null) {
+        Collections.sort(edges, comparator);
+      }
+      final EdgeEventListener<T> listener = new EdgeEventListener<T>() {
+        @Override
+        public void edgeEvent(final EdgeEvent<T> edgeEvent) {
+          final Edge<T> edge = edgeEvent.getEdge();
+          final String action = edgeEvent.getAction();
+          if (action.equals(EdgeEvent.EDGE_ADDED)) {
+            edges.addFirst(edge);
+            if (comparator == null) {
+              Collections.sort(edges);
+            } else {
+              Collections.sort(edges, comparator);
+            }
+          } else if (action.equals(EdgeEvent.EDGE_REMOVED)) {
+            if (comparator != null) {
+              edges.remove(edge);
+            }
           }
         }
+      };
+      this.edgeListeners.add(listener);
+      try {
+        while (!edges.isEmpty()) {
+          final Edge<T> edge = edges.remove(0);
+          if (!edge.isRemoved()) {
+            visitor.accept(edge);
+          }
+        }
+      } finally {
+        this.edgeListeners.remove(listener);
       }
-    } finally {
-      this.nodeListeners.remove(listener);
+    } catch (final ExitLoopException e) {
     }
   }
 
-  public void visitNodes(final Filter<Node<T>> filter, final Visitor<Node<T>> visitor) {
-    visitNodes(filter, null, visitor);
+  public void visitEdges(final Predicate<Edge<T>> filter, final Consumer<Edge<T>> visitor) {
+    visitEdges(filter, null, visitor);
   }
 
   @SuppressWarnings("unchecked")
-  public void visitNodes(final Visitor<Node<T>> visitor) {
-    Filter<Node<T>> filter = null;
-    if (visitor instanceof FilterProxy) {
-      filter = ((FilterProxy<Node<T>>)visitor).getFilter();
+  public void visitNodes(final Consumer<Node<T>> visitor) {
+    Predicate<Node<T>> filter = null;
+    if (visitor instanceof PredicateProxy) {
+      filter = ((PredicateProxy<Node<T>>)visitor).getPredicate();
     }
     Comparator<Node<T>> comparator = null;
     if (visitor instanceof ComparatorProxy) {
@@ -1415,7 +1367,61 @@ public class Graph<T> {
     visitNodes(filter, comparator, visitor);
   }
 
-  public void visitNodes(final Visitor<Node<T>> visitor, final Comparator<Node<T>> comparator) {
+  public void visitNodes(final Consumer<Node<T>> visitor, final Comparator<Node<T>> comparator) {
     visitNodes(null, comparator, visitor);
+  }
+
+  // TODO make this work with cached nodes
+  public void visitNodes(final Predicate<Node<T>> filter, final Comparator<Node<T>> comparator,
+    final Consumer<Node<T>> visitor) {
+    try {
+      final List<Node<T>> nodes = new LinkedList<Node<T>>();
+      if (filter == null) {
+        nodes.addAll(getNodes());
+      } else {
+        for (final Node<T> node : getNodes()) {
+          if (filter.test(node)) {
+            nodes.add(node);
+          }
+        }
+      }
+      if (comparator != null) {
+        Collections.sort(nodes, comparator);
+      }
+
+      final NodeEventListener<T> listener = new NodeEventListener<T>() {
+        @Override
+        public void nodeEvent(final NodeEvent<T> nodeEvent) {
+          final Node<T> node = nodeEvent.getNode();
+          final String action = nodeEvent.getAction();
+          if (action.equals(NodeEvent.NODE_ADDED)) {
+            nodes.add(node);
+            if (comparator == null) {
+              Collections.sort(nodes);
+            } else {
+              Collections.sort(nodes, comparator);
+            }
+          } else if (action.equals(NodeEvent.NODE_REMOVED)) {
+            nodes.remove(node);
+          }
+        }
+      };
+      this.nodeListeners.add(listener);
+      try {
+        while (!nodes.isEmpty()) {
+          final Node<T> node = nodes.remove(0);
+          if (!node.isRemoved()) {
+            visitor.accept(node);
+          }
+        }
+      } finally {
+        this.nodeListeners.remove(listener);
+      }
+    } catch (final ExitLoopException e) {
+    }
+  }
+
+  public void visitNodes(final Predicate<Node<T>> filter, final Consumer<Node<T>> visitor) {
+    visitNodes(filter, null, visitor);
   }
 }

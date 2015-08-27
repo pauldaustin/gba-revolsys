@@ -111,47 +111,47 @@ public class FileGdbWriter extends AbstractRecordWriter {
     if (table == null) {
       throw new ObjectException(record, "Cannot find table: " + typePath);
     } else {
-    try {
-      final Row row = this.recordStore.createRowObject(table);
       try {
-        final List<Object> values = new ArrayList<>();
-        for (final FieldDefinition field : recordDefinition.getFields()) {
-          final String name = field.getName();
-          try {
-            final Object value = record.getValue(name);
-            final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
-            final Object esriValue = esriField.setInsertValue(record, row, value);
-            values.add(esriValue);
-          } catch (final Throwable e) {
-            throw new ObjectPropertyException(record, name, e);
-          }
-        }
-        this.recordStore.insertRow(table, row);
-        if (sourceRecordDefinition == recordDefinition) {
+        final Row row = this.recordStore.createRowObject(table);
+        try {
+          final List<Object> values = new ArrayList<>();
           for (final FieldDefinition field : recordDefinition.getFields()) {
-            final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+            final String name = field.getName();
             try {
-              esriField.setPostInsertValue(record, row);
+              final Object value = record.getValue(name);
+              final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+              final Object esriValue = esriField.setInsertValue(record, row, value);
+              values.add(esriValue);
             } catch (final Throwable e) {
-              throw new ObjectPropertyException(record, field.getName(), e);
+              throw new ObjectPropertyException(record, name, e);
             }
           }
-          record.setState(RecordState.Persisted);
+          this.recordStore.insertRow(table, row);
+          if (sourceRecordDefinition == recordDefinition) {
+            for (final FieldDefinition field : recordDefinition.getFields()) {
+              final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+              try {
+                esriField.setPostInsertValue(record, row);
+              } catch (final Throwable e) {
+                throw new ObjectPropertyException(record, field.getName(), e);
+              }
+            }
+            record.setState(RecordState.Persisted);
+          }
+        } finally {
+          this.recordStore.closeRow(row);
+          this.recordStore.addStatistic("Insert", record);
         }
-      } finally {
-        this.recordStore.closeRow(row);
-        this.recordStore.addStatistic("Insert", record);
-      }
-    } catch (final ObjectException e) {
-      if (e.getObject() == record) {
-        throw e;
-      } else {
+      } catch (final ObjectException e) {
+        if (e.getObject() == record) {
+          throw e;
+        } else {
+          throw new ObjectException(record, e);
+        }
+      } catch (final Throwable e) {
         throw new ObjectException(record, e);
       }
-    } catch (final Throwable e) {
-      throw new ObjectException(record, e);
     }
-  }
   }
 
   public synchronized void openTable(final String typePath) {

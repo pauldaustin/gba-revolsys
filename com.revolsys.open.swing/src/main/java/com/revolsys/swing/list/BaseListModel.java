@@ -12,7 +12,7 @@ import javax.swing.event.ListDataListener;
 
 import com.revolsys.util.Reorderable;
 
-public class BaseListModel<T> extends ArrayList<T> implements ListModel, Serializable, Reorderable {
+public class BaseListModel<T> extends ArrayList<T>implements ListModel, Serializable, Reorderable {
   private static final long serialVersionUID = 1L;
 
   protected EventListenerList listenerList = new EventListenerList();

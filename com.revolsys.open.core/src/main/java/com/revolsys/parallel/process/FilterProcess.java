@@ -1,15 +1,15 @@
 package com.revolsys.parallel.process;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.parallel.channel.Channel;
+import java.util.function.Predicate;
 
 public class FilterProcess<T> extends BaseInOutProcess<T, T> {
-  private Filter<T> filter;
+  private Predicate<T> predicate;
 
   private boolean invert = false;
 
-  public Filter<T> getFilter() {
-    return this.filter;
+  public Predicate<T> getFilter() {
+    return this.predicate;
   }
 
   public boolean isInvert() {
@@ -24,7 +24,7 @@ public class FilterProcess<T> extends BaseInOutProcess<T, T> {
 
   @Override
   protected void process(final Channel<T> in, final Channel<T> out, final T object) {
-    boolean accept = this.filter.accept(object);
+    boolean accept = this.predicate.test(object);
     if (this.invert) {
       accept = !accept;
     }
@@ -36,8 +36,8 @@ public class FilterProcess<T> extends BaseInOutProcess<T, T> {
     }
   }
 
-  public void setFilter(final Filter<T> filter) {
-    this.filter = filter;
+  public void setFilter(final Predicate<T> filter) {
+    this.predicate = filter;
   }
 
   public void setInvert(final boolean invert) {

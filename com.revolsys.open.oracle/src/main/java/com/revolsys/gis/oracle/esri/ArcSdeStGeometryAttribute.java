@@ -27,9 +27,9 @@ public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {
 
   private final int dimension;
 
-  private final ArcSdeSpatialReference spatialReference;
-
   private final GeometryFactory geometryFactory;
+
+  private final ArcSdeSpatialReference spatialReference;
 
   public ArcSdeStGeometryAttribute(final String dbName, final String name, final DataType type,
     final boolean required, final String description, final Map<String, Object> properties,

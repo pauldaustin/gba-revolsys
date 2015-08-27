@@ -7,32 +7,32 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
-import com.revolsys.filter.AndFilter;
-import com.revolsys.filter.Filter;
-import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.gis.graph.filter.EdgeTypeNameFilter;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.filter.LineEqualIgnoreDirectionFilter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.predicate.AndPredicate;
 import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>> implements
-  ObjectProcessor<RecordGraph> {
+public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Record>>
+  implements ObjectProcessor<RecordGraph> {
 
   /** Flag indicating that the edge has been processed. */
   private static final String EDGE_PROCESSED = EqualTypeAndLineEdgeCleanupVisitor.class.getName()
@@ -40,8 +40,39 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Rec
 
   private Statistics duplicateStatistics;
 
-  private Set<String> equalExcludeAttributes = new HashSet<String>(Arrays.asList(
-    RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
+  private Set<String> equalExcludeAttributes = new HashSet<String>(
+    Arrays.asList(RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
+
+  @Override
+  public void accept(final Edge<Record> edge) {
+    if (edge.getAttribute(EDGE_PROCESSED) == null) {
+      final String typePath = edge.getTypeName();
+      final Graph<Record> graph = edge.getGraph();
+      final LineString line = edge.getLine();
+
+      final AndPredicate<Edge<Record>> attributeAndGeometryFilter = new AndPredicate<Edge<Record>>();
+
+      attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
+
+      final Predicate<Edge<Record>> filter = getPredicate();
+      if (filter != null) {
+        attributeAndGeometryFilter.addFilter(filter);
+      }
+
+      final Predicate<Record> equalLineFilter = new RecordGeometryFilter<LineString>(
+        new LineEqualIgnoreDirectionFilter(line, 2));
+      final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(equalLineFilter);
+      attributeAndGeometryFilter.addFilter(edgeFilter);
+
+      final List<Edge<Record>> equalEdges;
+      if (getComparator() == null) {
+        equalEdges = graph.getEdges(attributeAndGeometryFilter, line);
+      } else {
+        equalEdges = graph.getEdges(attributeAndGeometryFilter, getComparator(), line);
+      }
+      processEqualEdges(equalEdges);
+    }
+  }
 
   @PreDestroy
   public void destroy() {
@@ -205,37 +236,5 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Rec
     this.equalExcludeAttributes = new HashSet<String>(equalExcludeAttributes);
     this.equalExcludeAttributes.add(RecordEquals.EXCLUDE_ID);
     this.equalExcludeAttributes.add(RecordEquals.EXCLUDE_GEOMETRY);
-  }
-
-  @Override
-  public boolean visit(final Edge<Record> edge) {
-    if (edge.getAttribute(EDGE_PROCESSED) == null) {
-      final String typePath = edge.getTypeName();
-      final Graph<Record> graph = edge.getGraph();
-      final LineString line = edge.getLine();
-
-      final AndFilter<Edge<Record>> attributeAndGeometryFilter = new AndFilter<Edge<Record>>();
-
-      attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
-
-      final Filter<Edge<Record>> filter = getFilter();
-      if (filter != null) {
-        attributeAndGeometryFilter.addFilter(filter);
-      }
-
-      final Filter<Record> equalLineFilter = new RecordGeometryFilter<LineString>(
-        new LineEqualIgnoreDirectionFilter(line, 2));
-      final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(equalLineFilter);
-      attributeAndGeometryFilter.addFilter(edgeFilter);
-
-      final List<Edge<Record>> equalEdges;
-      if (getComparator() == null) {
-        equalEdges = graph.getEdges(attributeAndGeometryFilter, line);
-      } else {
-        equalEdges = graph.getEdges(attributeAndGeometryFilter, getComparator(), line);
-      }
-      processEqualEdges(equalEdges);
-    }
-    return true;
   }
 }

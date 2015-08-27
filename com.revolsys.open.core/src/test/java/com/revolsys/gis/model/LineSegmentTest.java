@@ -19,21 +19,21 @@ public class LineSegmentTest {
 
   private final DoubleCoordinates c_0_0_0 = c(0, 0, 0);
 
-  private final DoubleCoordinates c_50_0_5 = c(50, 0, 5);
-
-  private final DoubleCoordinates c_50_0 = c(50, 0);
-
-  private final DoubleCoordinates c_50_50_5 = c(50, 50, 5);
-
-  private final DoubleCoordinates c_70_0_7 = c(70, 0, 7);
-
-  private final DoubleCoordinates c_70_0 = c(70, 0);
+  private final DoubleCoordinates c_0_100_1 = c(0, 100, 1);
 
   private final DoubleCoordinates c_100_0_10 = c(100, 0, 10);
 
   private final DoubleCoordinates c_100_100_10 = c(100, 100, 10);
 
-  private final DoubleCoordinates c_0_100_1 = c(0, 100, 1);
+  private final DoubleCoordinates c_50_0 = c(50, 0);
+
+  private final DoubleCoordinates c_50_0_5 = c(50, 0, 5);
+
+  private final DoubleCoordinates c_50_50_5 = c(50, 50, 5);
+
+  private final DoubleCoordinates c_70_0 = c(70, 0);
+
+  private final DoubleCoordinates c_70_0_7 = c(70, 0, 7);
 
   public void assertIntersection3d(final Coordinates line1Start, final Coordinates line1End,
     final Coordinates line2Start, final Coordinates line2End,
@@ -64,8 +64,8 @@ public class LineSegmentTest {
   @Test
   public void linearIntersection() {
     // Equal
-    assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_0_0_0, this.c_100_0_10,
-      this.c_0_0_0, this.c_100_0_10);
+    assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_0_0_0, this.c_100_0_10, this.c_0_0_0,
+      this.c_100_0_10);
     // First Start
     assertIntersection3d(this.c_0_0_0, this.c_50_0_5, this.c_0_0_0, this.c_100_0_10, this.c_0_0_0,
       this.c_50_0_5);
@@ -73,8 +73,8 @@ public class LineSegmentTest {
     assertIntersection3d(this.c_50_0_5, this.c_100_0_10, this.c_0_0_0, this.c_100_0_10,
       this.c_50_0_5, this.c_100_0_10);
     // First Middle
-    assertIntersection3d(this.c_50_0_5, this.c_70_0_7, this.c_0_0_0, this.c_100_0_10,
-      this.c_50_0_5, this.c_70_0_7);
+    assertIntersection3d(this.c_50_0_5, this.c_70_0_7, this.c_0_0_0, this.c_100_0_10, this.c_50_0_5,
+      this.c_70_0_7);
     // Second Start
     assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_0_0_0, this.c_50_0_5, this.c_0_0_0,
       this.c_50_0_5);
@@ -82,8 +82,8 @@ public class LineSegmentTest {
     assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_50_0_5, this.c_100_0_10,
       this.c_50_0_5, this.c_100_0_10);
     // Second Middle
-    assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_50_0_5, this.c_70_0_7,
-      this.c_50_0_5, this.c_70_0_7);
+    assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_50_0_5, this.c_70_0_7, this.c_50_0_5,
+      this.c_70_0_7);
     // Reverse First Start
     assertIntersection3d(this.c_50_0_5, this.c_0_0_0, this.c_0_0_0, this.c_100_0_10, this.c_50_0_5,
       this.c_0_0_0);
@@ -91,14 +91,14 @@ public class LineSegmentTest {
     assertIntersection3d(this.c_100_0_10, this.c_50_0_5, this.c_0_0_0, this.c_100_0_10,
       this.c_100_0_10, this.c_50_0_5);
     // Reverse First Middle
-    assertIntersection3d(this.c_70_0_7, this.c_50_0_5, this.c_0_0_0, this.c_100_0_10,
-      this.c_70_0_7, this.c_50_0_5);
+    assertIntersection3d(this.c_70_0_7, this.c_50_0_5, this.c_0_0_0, this.c_100_0_10, this.c_70_0_7,
+      this.c_50_0_5);
     // Reverse Second Start
     assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_0_0_0, this.c_50_0_5, this.c_0_0_0,
       this.c_50_0_5);
     // Reverse Second End
-    assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_70_0_7, this.c_50_0_5,
-      this.c_50_0_5, this.c_70_0_7);
+    assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_70_0_7, this.c_50_0_5, this.c_50_0_5,
+      this.c_70_0_7);
 
     // Reverse Second End No z on second line
     assertIntersection3d(this.c_0_0_0, this.c_100_0_10, this.c_70_0, this.c_50_0, this.c_50_0_5,

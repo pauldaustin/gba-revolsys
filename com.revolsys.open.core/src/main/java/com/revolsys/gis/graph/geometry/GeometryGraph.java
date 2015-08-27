@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.collection.InvokeMethodVisitor;
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
@@ -34,15 +34,15 @@ import com.vividsolutions.jts.operation.linemerge.LineMerger;
 
 public class GeometryGraph extends Graph<LineSegment> {
 
-  private final List<Point> points = new ArrayList<Point>();
+  private BoundingBox boundingBox;
 
   private final List<Geometry> geometries = new ArrayList<Geometry>();
 
-  private final List<Coordinates> startPoints = new ArrayList<Coordinates>();
-
-  private BoundingBox boundingBox;
-
   private double maxDistance;
+
+  private final List<Point> points = new ArrayList<Point>();
+
+  private final List<Coordinates> startPoints = new ArrayList<Coordinates>();
 
   public GeometryGraph(final Geometry geometry) {
     this(GeometryFactory.getFactory(geometry));
@@ -183,8 +183,8 @@ public class GeometryGraph extends Graph<LineSegment> {
             if (line2.distance(point) < this.maxDistance) {
               if (point.equals(fromPoint) || point.equals(toPoint)) {
                 // Point intersection, make sure it's not at the start
-                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor.getNodes(
-                  this, point, this.maxDistance)) {
+                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor
+                  .getNodes(this, point, this.maxDistance)) {
                   final int degree = node.getDegree();
                   if (isStartPoint(node)) {
                     if (degree > 2) {
@@ -345,8 +345,8 @@ public class GeometryGraph extends Graph<LineSegment> {
 
               if (point.equals(fromPoint) || point.equals(toPoint)) {
                 // Point intersection, make sure it's not at the start
-                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor.getNodes(
-                  this, point, maxDistance)) {
+                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor
+                  .getNodes(this, point, maxDistance)) {
                   final int degree = node.getDegree();
                   if (isStartPoint(node)) {
                     if (degree > 2) {
@@ -387,7 +387,7 @@ public class GeometryGraph extends Graph<LineSegment> {
   }
 
   public void removeDuplicateLineEdges() {
-    final Visitor<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
+    final Consumer<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
       "removeDuplicateLineEdges");
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
       "geometryIndex", "partIndex", "segmentIndex");

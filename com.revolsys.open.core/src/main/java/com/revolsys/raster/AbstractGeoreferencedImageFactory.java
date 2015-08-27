@@ -5,20 +5,20 @@ import org.springframework.core.io.Resource;
 import com.revolsys.io.AbstractIoFactory;
 import com.revolsys.io.IoFactoryRegistry;
 
-public abstract class AbstractGeoreferencedImageFactory extends AbstractIoFactory implements
-  GeoreferencedImageFactory {
+public abstract class AbstractGeoreferencedImageFactory extends AbstractIoFactory
+  implements GeoreferencedImageFactory {
 
   public static GeoreferencedImageFactory getGeoreferencedImageFactory(final Resource resource) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final GeoreferencedImageFactory factory = ioFactoryRegistry.getFactory(
-      GeoreferencedImageFactory.class, resource);
+    final GeoreferencedImageFactory factory = ioFactoryRegistry
+      .getFactory(GeoreferencedImageFactory.class, resource);
     return factory;
   }
 
   public static GeoreferencedImageFactory getGeoreferencedImageFactory(final String fileName) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
-    final GeoreferencedImageFactory factory = ioFactoryRegistry.getFactoryByFileName(
-      GeoreferencedImageFactory.class, fileName);
+    final GeoreferencedImageFactory factory = ioFactoryRegistry
+      .getFactoryByFileName(GeoreferencedImageFactory.class, fileName);
     return factory;
   }
 

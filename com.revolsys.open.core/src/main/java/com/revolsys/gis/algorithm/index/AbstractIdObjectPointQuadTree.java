@@ -2,7 +2,7 @@ package com.revolsys.gis.algorithm.index;
 
 import java.util.Collection;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -52,14 +52,14 @@ public abstract class AbstractIdObjectPointQuadTree<T> extends AbstractPointSpat
   }
 
   @Override
-  public void visit(final Envelope envelope, final Visitor<T> visitor) {
+  public void visit(final Envelope envelope, final Consumer<T> visitor) {
     final IdObjectIndexEnvelopeVisitor<T> itemVisitor = new IdObjectIndexEnvelopeVisitor<T>(this,
       envelope, visitor);
     this.index.visit(envelope, itemVisitor);
   }
 
   @Override
-  public void visit(final Visitor<T> visitor) {
+  public void visit(final Consumer<T> visitor) {
     final IdObjectIndexVisitor<T> itemVisitor = new IdObjectIndexVisitor<T>(this, visitor);
     this.index.visit(itemVisitor);
   }

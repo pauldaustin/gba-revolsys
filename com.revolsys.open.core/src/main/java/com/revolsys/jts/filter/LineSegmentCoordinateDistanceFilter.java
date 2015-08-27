@@ -1,10 +1,10 @@
 package com.revolsys.jts.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.LineSegment;
+import java.util.function.Predicate;
 
-public class LineSegmentCoordinateDistanceFilter implements Filter<LineSegment> {
+public class LineSegmentCoordinateDistanceFilter implements Predicate<LineSegment> {
 
   private final double maxDistance;
 
@@ -16,7 +16,7 @@ public class LineSegmentCoordinateDistanceFilter implements Filter<LineSegment> 
   }
 
   @Override
-  public boolean accept(final LineSegment lineSegment) {
+  public boolean test(final LineSegment lineSegment) {
     final double distance = lineSegment.distance(this.point);
     if (distance < this.maxDistance) {
       return true;

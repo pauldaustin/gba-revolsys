@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 
-public class RecordDefinitionFactoryImpl extends AbstractObjectWithProperties implements
-  RecordDefinitionFactory {
+public class RecordDefinitionFactoryImpl extends BaseObjectWithProperties
+  implements RecordDefinitionFactory {
 
   private final Map<String, RecordDefinition> types = new LinkedHashMap<>();
 

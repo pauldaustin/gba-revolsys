@@ -115,8 +115,8 @@ public class WktParser {
     if (hasText(text, "EMPTY")) {
       skipWhitespace(text);
       if (text.length() > 0) {
-        throw new IllegalArgumentException("Unexpected text at the end of an empty geometry: "
-          + text);
+        throw new IllegalArgumentException(
+          "Unexpected text at the end of an empty geometry: " + text);
       }
       return true;
     } else {

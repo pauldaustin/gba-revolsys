@@ -17,6 +17,8 @@ import com.revolsys.util.WrappedException;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class CsvRecordWriter extends AbstractRecordWriter implements RecordWriter {
+  private final boolean ewkt;
+
   private final char fieldSeparator;
 
   /** The writer */
@@ -25,8 +27,6 @@ public class CsvRecordWriter extends AbstractRecordWriter implements RecordWrite
   private final RecordDefinition recordDefinition;
 
   private final boolean useQuotes;
-
-  private final boolean ewkt;
 
   public CsvRecordWriter(final RecordDefinition recordDefinition, final Writer out,
     final boolean ewkt) {

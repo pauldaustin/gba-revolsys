@@ -14,28 +14,28 @@ import org.springframework.core.convert.converter.Converter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.converter.FilterRecordConverter;
 import com.revolsys.gis.converter.SimpleRecordConveter;
 import com.revolsys.gis.converter.process.CopyValues;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
+import java.util.function.Predicate;
 
 public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
   private static final Logger LOG = LoggerFactory.getLogger(RecordConverterProcess.class);
 
   private Converter<Record, Record> defaultConverter;
 
-  private Map<String, Collection<FilterRecordConverter>> typeFilterConverterMap = new LinkedHashMap<String, Collection<FilterRecordConverter>>();
-
-  private Map<String, Converter<Record, Record>> typeConverterMap = new HashMap<String, Converter<Record, Record>>();
-
-  private RecordDefinitionFactory targetMetaDataFactory;
-
   private Map<Object, Map<String, Object>> simpleMapping;
 
   private Statistics statistics = new Statistics("Converted");
+
+  private RecordDefinitionFactory targetMetaDataFactory;
+
+  private Map<String, Converter<Record, Record>> typeConverterMap = new HashMap<String, Converter<Record, Record>>();
+
+  private Map<String, Collection<FilterRecordConverter>> typeFilterConverterMap = new LinkedHashMap<String, Collection<FilterRecordConverter>>();
 
   //
   // private Statistics ignoredStatistics = new Statistics("Ignored");
@@ -59,12 +59,13 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
     int matchCount = 0;
     final RecordDefinition sourceMetaData = source.getRecordDefinition();
     final String sourceTypeName = sourceMetaData.getPath();
-    final Collection<FilterRecordConverter> converters = this.typeFilterConverterMap.get(sourceTypeName);
+    final Collection<FilterRecordConverter> converters = this.typeFilterConverterMap
+      .get(sourceTypeName);
     Record target = null;
     if (converters != null && !converters.isEmpty()) {
       for (final FilterRecordConverter filterConverter : converters) {
-        final Filter<Record> filter = filterConverter.getFilter();
-        if (filter.accept(source)) {
+        final Predicate<Record> filter = filterConverter.getFilter();
+        if (filter.test(source)) {
           final Converter<Record, Record> converter = filterConverter.getConverter();
           target = converter.convert(source);
           matchCount++;
@@ -88,8 +89,8 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
     } else {
       final StringBuffer sb = new StringBuffer("Multiple conveters found: \n  ");
       for (final FilterRecordConverter filterConverter : converters) {
-        final Filter<Record> filter = filterConverter.getFilter();
-        if (filter.accept(source)) {
+        final Predicate<Record> filter = filterConverter.getFilter();
+        if (filter.test(source)) {
           sb.append(filter.toString());
           sb.append("\n  ");
         }
@@ -158,7 +159,8 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
           targetTypeName = String.valueOf(targetName.toString());
         }
         @SuppressWarnings("unchecked")
-        final Map<String, String> attributeMapping = (Map<String, String>)map.get("attributeMapping");
+        final Map<String, String> attributeMapping = (Map<String, String>)map
+          .get("attributeMapping");
 
         final RecordDefinition targetMetaData = getTargetMetaData(targetTypeName);
         final SimpleRecordConveter converter = new SimpleRecordConveter(targetMetaData);

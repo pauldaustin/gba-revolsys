@@ -26,9 +26,9 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
 
   private static final String URL_REGEX = "jdbc:postgresql:(?://([^:]+)(?::(\\d+))?/)?(.+)";
 
-  public static final List<String> URL_PATTERNS = Arrays.asList(URL_REGEX);
-
   private static final Pattern URL_PATTERN = Pattern.compile(URL_REGEX);
+
+  public static final List<String> URL_PATTERNS = Arrays.asList(URL_REGEX);
 
   @Override
   public boolean canHandleUrl(final String url) {
@@ -42,11 +42,6 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
       final PGPoolingDataSource postgreSqlDataSource = (PGPoolingDataSource)dataSource;
       postgreSqlDataSource.close();
     }
-  }
-
-  @Override
-  public JdbcRecordStore createRecordStore(final DataSource dataSource) {
-    return new PostgreSQLRecordStore(dataSource);
   }
 
   @Override
@@ -71,7 +66,8 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
         try {
           JavaBeanUtil.setProperty(dataSource, name, value);
         } catch (final Throwable t) {
-          LOG.debug("Unable to set data source property " + name + " = " + value + " for " + url, t);
+          LOG.debug("Unable to set data source property " + name + " = " + value + " for " + url,
+            t);
         }
       }
 
@@ -91,7 +87,13 @@ public class PostgreSQLDatabaseFactory implements JdbcDatabaseFactory {
   }
 
   @Override
-  public JdbcRecordStore createRecordStore(final Map<String, ? extends Object> connectionProperties) {
+  public JdbcRecordStore createRecordStore(final DataSource dataSource) {
+    return new PostgreSQLRecordStore(dataSource);
+  }
+
+  @Override
+  public JdbcRecordStore createRecordStore(
+    final Map<String, ? extends Object> connectionProperties) {
     return new PostgreSQLRecordStore(this, connectionProperties);
   }
 

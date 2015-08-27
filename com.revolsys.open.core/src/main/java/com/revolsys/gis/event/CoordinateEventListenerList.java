@@ -4,8 +4,8 @@ import java.util.LinkedHashSet;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class CoordinateEventListenerList extends LinkedHashSet<CoordinateEventListener> implements
-  CoordinateEventListener {
+public class CoordinateEventListenerList extends LinkedHashSet<CoordinateEventListener>
+  implements CoordinateEventListener {
 
   /**
    *

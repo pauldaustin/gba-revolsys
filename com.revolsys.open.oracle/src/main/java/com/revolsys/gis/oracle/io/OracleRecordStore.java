@@ -48,9 +48,9 @@ public class OracleRecordStore extends AbstractJdbcRecordStore {
 
   private boolean initialized;
 
-  private boolean useSchemaSequencePrefix = true;
-
   private final IntHashMap<CoordinateSystem> oracleCoordinateSystems = new IntHashMap<>();
+
+  private boolean useSchemaSequencePrefix = true;
 
   public OracleRecordStore() {
     this(new ArrayRecordFactory());
@@ -94,7 +94,8 @@ public class OracleRecordStore extends AbstractJdbcRecordStore {
         query = query.clone();
         final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
         final String geometryColumnName = geometryAttribute.getName();
-        final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+        final GeometryFactory geometryFactory = geometryAttribute
+          .getProperty(FieldProperties.GEOMETRY_FACTORY);
 
         final BoundingBox projectedBoundingBox = boundingBox.convert(geometryFactory);
 
@@ -104,9 +105,7 @@ public class OracleRecordStore extends AbstractJdbcRecordStore {
         final double y2 = projectedBoundingBox.getMaxY();
 
         if (geometryAttribute instanceof OracleSdoGeometryJdbcAttribute) {
-          final String where = " SDO_RELATE("
-            + geometryColumnName
-            + ","
+          final String where = " SDO_RELATE(" + geometryColumnName + ","
             + "MDSYS.SDO_GEOMETRY(2003,?,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,3),MDSYS.SDO_ORDINATE_ARRAY(?,?,?,?)),'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'";
           query.and(new SqlCondition(where, geometryFactory.getSRID(), x1, y1, x2, y2));
         } else if (geometryAttribute instanceof ArcSdeStGeometryAttribute) {
@@ -139,8 +138,8 @@ public class OracleRecordStore extends AbstractJdbcRecordStore {
           coordinateSystem = EpsgCoordinateSystems.getCoordinateSystem(coordinateSystem);
         }
       } catch (final Throwable e) {
-        LoggerFactory.getLogger(getClass()).error(
-          "Unable to load coordinate system: " + oracleSrid, e);
+        LoggerFactory.getLogger(getClass()).error("Unable to load coordinate system: " + oracleSrid,
+          e);
         return null;
       }
       this.oracleCoordinateSystems.put(oracleSrid, coordinateSystem);
@@ -237,18 +236,20 @@ public class OracleRecordStore extends AbstractJdbcRecordStore {
       final OracleClobFieldAdder clobAdder = new OracleClobFieldAdder();
       addFieldAdder("CLOB", clobAdder);
 
-      setPrimaryKeySql("SELECT distinct cols.table_name, cols.column_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner =?");
+      setPrimaryKeySql(
+        "SELECT distinct cols.table_name, cols.column_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner =?");
       setPrimaryKeyTableCondition(" AND cols.table_name = ?");
 
       setSchemaPermissionsSql("select distinct p.owner \"SCHEMA_NAME\" "
         + "from ALL_TAB_PRIVS_RECD P "
         + "where p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') union all select USER \"SCHEMA_NAME\" from DUAL");
-      setSchemaTablePermissionsSql("select distinct p.owner \"SCHEMA_NAME\", p.table_name, p.privilege, comments \"REMARKS\" "
-        + "from ALL_TAB_PRIVS_RECD P "
-        + "join all_tab_comments C on (p.owner = c.owner and p.table_name = c.table_name) "
-        + "where p.owner = ? and c.table_type in ('TABLE', 'VIEW') and p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') "
-        + " union all "
-        + "select user \"SCHEMA_NAME\", t.table_name, 'ALL', comments from user_tables t join user_tab_comments c on (t.table_name = c.table_name) and c.table_type in ('TABLE', 'VIEW')");
+      setSchemaTablePermissionsSql(
+        "select distinct p.owner \"SCHEMA_NAME\", p.table_name, p.privilege, comments \"REMARKS\" "
+          + "from ALL_TAB_PRIVS_RECD P "
+          + "join all_tab_comments C on (p.owner = c.owner and p.table_name = c.table_name) "
+          + "where p.owner = ? and c.table_type in ('TABLE', 'VIEW') and p.privilege in ('SELECT', 'INSERT', 'UPDATE', 'DELETE') "
+          + " union all "
+          + "select user \"SCHEMA_NAME\", t.table_name, 'ALL', comments from user_tables t join user_tab_comments c on (t.table_name = c.table_name) and c.table_type in ('TABLE', 'VIEW')");
 
       addRecordStoreExtension(new ArcSdeStGeometryRecordStoreExtension());
       addRecordStoreExtension(new ArcSdeBinaryGeometryRecordStoreExtension());

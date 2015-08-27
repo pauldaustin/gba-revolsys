@@ -57,53 +57,53 @@ import com.revolsys.swing.table.TablePanel;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
-public class FieldFilterPanel extends JComponent implements ActionListener, ItemListener,
-  DocumentListener, PropertyChangeListener {
+public class FieldFilterPanel extends JComponent
+  implements ActionListener, ItemListener, DocumentListener, PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
-  private String previousSearchFieldName;
-
   private final List<String> attributeNames;
+
+  private CodeTable codeTable;
+
+  private final ComboBox codeTableOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL");
+
+  private final ComboBox dateOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL", "<",
+    "<=", ">", ">=");
+
+  private final boolean eventsEnabled = true;
+
+  private FieldDefinition fieldDefinition;
+
+  private final ComboBox generalOperatorField = new ComboBox("=", "<>", "Like", "IS NULL",
+    "IS NOT NULL");
+
+  private final AbstractRecordLayer layer;
+
+  private final RecordDefinition metaData;
+
+  private final ComboBox nameField;
+
+  private final ComboBox numericOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL",
+    "<", "<=", ">", ">=");
+
+  private ComboBox operatorField;
+
+  private final JPanel operatorFieldPanel = new JPanel();
+
+  private String previousSearchFieldName;
 
   private JComponent searchField;
 
   private final JPanel searchFieldPanel = new JPanel();
 
-  private final JPanel operatorFieldPanel = new JPanel();
-
-  private final ComboBox nameField;
-
   private final TextField searchTextField;
-
-  private final RecordDefinition metaData;
-
-  private final AbstractRecordLayer layer;
-
-  private final ComboBox numericOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL",
-    "<", "<=", ">", ">=");
-
-  private final ComboBox dateOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL", "<",
-    "<=", ">", ">=");
-
-  private final ComboBox generalOperatorField = new ComboBox("=", "<>", "Like", "IS NULL",
-    "IS NOT NULL");
-
-  private final ComboBox codeTableOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL");
-
-  private ComboBox operatorField;
-
-  private final RecordLayerTableModel tableModel;
-
-  private final boolean eventsEnabled = true;
-
-  private final JLabel whereLabel;
-
-  private CodeTable codeTable;
 
   private boolean settingFilter = false;
 
-  private FieldDefinition fieldDefinition;
+  private final RecordLayerTableModel tableModel;
+
+  private final JLabel whereLabel;
 
   public FieldFilterPanel(final TablePanel tablePanel, final RecordLayerTableModel tableModel) {
     this.tableModel = tableModel;

@@ -73,27 +73,27 @@ public class ModuleImport implements BeanFactoryPostProcessor, BeanNameAware, Di
 
   private GenericApplicationContext applicationContext;
 
-  private Map<String, String> exportBeanAliases = Collections.emptyMap();
-
-  private Map<String, String> importBeanAliases = Collections.emptyMap();
-
-  private List<String> exportBeanNames = Collections.emptyList();
-
-  private List<String> importBeanNames = Collections.emptyList();
-
-  private boolean exportAllBeans = false;
-
-  private Map<String, Object> parameters = new HashMap<String, Object>();
-
-  private Collection<Resource> resources = new LinkedHashSet<Resource>();
-
-  private boolean enabled = true;
-
-  private ResourceEditorRegistrar resourceEditorRegistrar = new ResourceEditorRegistrar();
-
   private String beanName;
 
   private Set<String> beanNamesNotToExport = new HashSet<String>();
+
+  private boolean enabled = true;
+
+  private boolean exportAllBeans = false;
+
+  private Map<String, String> exportBeanAliases = Collections.emptyMap();
+
+  private List<String> exportBeanNames = Collections.emptyList();
+
+  private Map<String, String> importBeanAliases = Collections.emptyMap();
+
+  private List<String> importBeanNames = Collections.emptyList();
+
+  private Map<String, Object> parameters = new HashMap<String, Object>();
+
+  private ResourceEditorRegistrar resourceEditorRegistrar = new ResourceEditorRegistrar();
+
+  private Collection<Resource> resources = new LinkedHashSet<Resource>();
 
   public ModuleImport() {
     this.beanNamesNotToExport.add("com.revolsys.spring.config.AttributesBeanConfigurer");
@@ -133,7 +133,8 @@ public class ModuleImport implements BeanFactoryPostProcessor, BeanNameAware, Di
         this.applicationContext.setClassLoader(classLoader);
       }
       AnnotationConfigUtils.registerAnnotationConfigProcessors(this.applicationContext, null);
-      final DefaultListableBeanFactory beanFactory = this.applicationContext.getDefaultListableBeanFactory();
+      final DefaultListableBeanFactory beanFactory = this.applicationContext
+        .getDefaultListableBeanFactory();
 
       final BeanFactory parentBeanFactory = (BeanFactory)parentRegistry;
       for (final String beanName : parentRegistry.getBeanDefinitionNames()) {
@@ -163,7 +164,8 @@ public class ModuleImport implements BeanFactoryPostProcessor, BeanNameAware, Di
         this.applicationContext, this.parameters);
       this.applicationContext.addBeanFactoryPostProcessor(attributesConfig);
       for (final String beanName : this.importBeanNames) {
-        registerTargetBeanDefinition(this.applicationContext, parentBeanFactory, beanName, beanName);
+        registerTargetBeanDefinition(this.applicationContext, parentBeanFactory, beanName,
+          beanName);
         this.beanNamesNotToExport.add(beanName);
       }
       for (final Entry<String, String> entry : this.importBeanAliases.entrySet()) {

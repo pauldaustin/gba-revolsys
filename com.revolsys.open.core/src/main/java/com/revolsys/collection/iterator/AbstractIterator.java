@@ -5,10 +5,11 @@ import java.util.NoSuchElementException;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.io.Reader;
+import com.revolsys.properties.BaseObjectWithProperties;
 
-public abstract class AbstractIterator<T> extends AbstractObjectWithProperties implements
-  Iterator<T>, Iterable<T>, AutoCloseable {
+public abstract class AbstractIterator<T> extends BaseObjectWithProperties
+  implements Iterator<T>, Reader<T>, AutoCloseable {
 
   private boolean hasNext = true;
 
@@ -40,11 +41,9 @@ public abstract class AbstractIterator<T> extends AbstractObjectWithProperties i
   protected abstract T getNext() throws NoSuchElementException;
 
   @Override
-  public final boolean hasNext() {
+  public synchronized final boolean hasNext() {
     if (this.hasNext) {
-      if (!this.initialized) {
-        init();
-      }
+      init();
       if (this.loadNext) {
         try {
           this.object = getNext();
@@ -71,7 +70,7 @@ public abstract class AbstractIterator<T> extends AbstractObjectWithProperties i
   }
 
   @Override
-  public final T next() {
+  public synchronized final T next() {
     if (hasNext()) {
       final T currentObject = this.object;
       this.loadNext = true;
@@ -79,6 +78,11 @@ public abstract class AbstractIterator<T> extends AbstractObjectWithProperties i
     } else {
       throw new NoSuchElementException();
     }
+  }
+
+  @Override
+  public void open() {
+    init();
   }
 
   @Override

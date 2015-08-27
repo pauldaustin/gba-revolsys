@@ -1,8 +1,8 @@
 package com.revolsys.gis.graph.visitor;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.algorithm.index.IdObjectIndex;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.IntersectionMatrix;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EdgeIntersectLineVisitor<T> implements Visitor<Edge<T>> {
+public class EdgeIntersectLineVisitor<T> implements Consumer<Edge<T>> {
 
   public static <T> List<Edge<T>> getEdges(final Graph<T> graph, final LineString line) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
@@ -25,21 +25,20 @@ public class EdgeIntersectLineVisitor<T> implements Visitor<Edge<T>> {
 
   private final LineString line;
 
-  private final Visitor<Edge<T>> matchVisitor;
+  private final Consumer<Edge<T>> matchVisitor;
 
-  public EdgeIntersectLineVisitor(final LineString line, final Visitor<Edge<T>> matchVisitor) {
+  public EdgeIntersectLineVisitor(final LineString line, final Consumer<Edge<T>> matchVisitor) {
     this.line = line;
     this.matchVisitor = matchVisitor;
   }
 
   @Override
-  public boolean visit(final Edge<T> edge) {
+  public void accept(final Edge<T> edge) {
     final LineString line = edge.getLine();
     final IntersectionMatrix relate = this.line.relate(line);
     if (relate.get(0, 0) == Dimension.L) {
-      this.matchVisitor.visit(edge);
+      this.matchVisitor.accept(edge);
     }
-    return true;
   }
 
 }

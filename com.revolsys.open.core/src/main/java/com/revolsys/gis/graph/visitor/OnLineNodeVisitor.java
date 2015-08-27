@@ -1,8 +1,8 @@
 package com.revolsys.gis.graph.visitor;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.algorithm.index.IdObjectIndex;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
@@ -12,7 +12,7 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
-public class OnLineNodeVisitor<T> implements Visitor<Node<T>> {
+public class OnLineNodeVisitor<T> implements Consumer<Node<T>> {
   public static <T> List<Node<T>> getNodes(final Graph<T> graph, final LineString line,
     final double maxDistance) {
     final CreateListVisitor<Node<T>> results = new CreateListVisitor<Node<T>>();
@@ -26,20 +26,19 @@ public class OnLineNodeVisitor<T> implements Visitor<Node<T>> {
 
   private final LineString line;
 
-  private final Visitor<Node<T>> matchVisitor;
+  private final Consumer<Node<T>> matchVisitor;
 
-  public OnLineNodeVisitor(final LineString line, final Visitor<Node<T>> matchVisitor) {
+  public OnLineNodeVisitor(final LineString line, final Consumer<Node<T>> matchVisitor) {
     this.line = line;
     this.matchVisitor = matchVisitor;
   }
 
   @Override
-  public boolean visit(final Node<T> node) {
+  public void accept(final Node<T> node) {
     final Coordinates point = node;
     if (LineStringUtil.isPointOnLine(this.line, point)) {
-      this.matchVisitor.visit(node);
+      this.matchVisitor.accept(node);
     }
-    return true;
   }
 
 }

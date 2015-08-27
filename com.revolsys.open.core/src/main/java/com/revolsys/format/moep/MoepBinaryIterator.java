@@ -25,12 +25,12 @@ import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
-public class MoepBinaryIterator extends AbstractObjectWithProperties implements Iterator<Record> {
+public class MoepBinaryIterator extends BaseObjectWithProperties implements Iterator<Record> {
   private static final int COMPLEX_LINE = 3;
 
   private static final int CONSTRUCTION_COMPLEX_LINE = 5;
@@ -64,8 +64,7 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
       object.getValue(MoepConstants.TEXT_INDEX));
     JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "text",
       object.getValue(MoepConstants.TEXT));
-    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "textType",
-      SaifConstants.TEXT_LINE);
+    JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "textType", SaifConstants.TEXT_LINE);
     JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "fontName",
       object.getValue(MoepConstants.FONT_NAME));
     JtsGeometryUtil.setGeometryProperty(object.getGeometry(), "characterHeight",
@@ -84,8 +83,6 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
 
   private Record currentRecord;
 
-  private final RecordFactory recordFactory;
-
   private final MoepDirectoryReader directoryReader;
 
   private GeometryFactory factory;
@@ -100,9 +97,11 @@ public class MoepBinaryIterator extends AbstractObjectWithProperties implements 
 
   private boolean loadNextObject = true;
 
+  private final String mapsheet;
+
   private String originalFileType;
 
-  private final String mapsheet;
+  private final RecordFactory recordFactory;
 
   public MoepBinaryIterator(final MoepDirectoryReader directoryReader, final String fileName,
     final InputStream in, final RecordFactory recordFactory) {

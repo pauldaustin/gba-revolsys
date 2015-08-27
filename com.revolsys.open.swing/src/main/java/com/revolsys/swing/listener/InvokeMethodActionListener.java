@@ -13,9 +13,9 @@ import com.revolsys.swing.parallel.Invoke;
  * @author Paul Austin
  */
 public class InvokeMethodActionListener implements ActionListener {
-  private final Runnable runnable;
-
   private final boolean invokeLater;
+
+  private final Runnable runnable;
 
   public InvokeMethodActionListener(final boolean invokeLater, final Class<?> clazz,
     final String methodName, final Object... parameters) {

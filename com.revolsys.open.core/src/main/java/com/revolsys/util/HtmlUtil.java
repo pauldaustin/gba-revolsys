@@ -47,6 +47,8 @@ public final class HtmlUtil {
 
   public static final QName ATTR_COLS = new QName("cols");
 
+  public static final QName ATTR_CONTENT = new QName("content");
+
   public static final QName ATTR_ENCTYPE = new QName("enctype");
 
   public static final QName ATTR_FOR = new QName("for");
@@ -54,6 +56,8 @@ public final class HtmlUtil {
   public static final QName ATTR_HEIGHT = new QName("height");
 
   public static final QName ATTR_HREF = new QName("href");
+
+  public static final QName ATTR_HTTP_EQUIV = new QName("http-equiv");
 
   public static final QName ATTR_ID = new QName("id");
 
@@ -87,6 +91,8 @@ public final class HtmlUtil {
 
   public static final QName ATTR_STYLE = new QName("style");
 
+  public static final QName ATTR_TARGET = new QName("target");
+
   public static final QName ATTR_TITLE = new QName("title");
 
   public static final QName ATTR_TYPE = new QName("type");
@@ -100,6 +106,8 @@ public final class HtmlUtil {
   public static final QName BODY = new QName(HTML_NS_URI, "body", HTML_NS_PREFIX);
 
   public static final QName BR = new QName(HTML_NS_URI, "br", HTML_NS_PREFIX);
+
+  public static final QName CODE = new QName(HTML_NS_URI, "code", HTML_NS_PREFIX);
 
   public static final QName DD = new QName(HTML_NS_URI, "dd", HTML_NS_PREFIX);
 
@@ -125,6 +133,8 @@ public final class HtmlUtil {
 
   public static final QName HEAD = new QName(HTML_NS_URI, "head", HTML_NS_PREFIX);
 
+  public static final QName HR = new QName(HTML_NS_URI, "hr", HTML_NS_PREFIX);
+
   public static final QName HTML = new QName(HTML_NS_URI, "html", HTML_NS_PREFIX);
 
   public static final QName I = new QName(HTML_NS_URI, "i", HTML_NS_PREFIX);
@@ -138,6 +148,8 @@ public final class HtmlUtil {
   public static final QName LI = new QName(HTML_NS_URI, "li", HTML_NS_PREFIX);
 
   public static final QName LINK = new QName(HTML_NS_URI, "link", HTML_NS_PREFIX);
+
+  public static final QName META = new QName(HTML_NS_URI, "meta", HTML_NS_PREFIX);
 
   public static final QName OL = new QName(HTML_NS_URI, "ol", HTML_NS_PREFIX);
 
@@ -174,18 +186,6 @@ public final class HtmlUtil {
   public static final QName TR = new QName(HTML_NS_URI, "tr", HTML_NS_PREFIX);
 
   public static final QName UL = new QName(HTML_NS_URI, "ul", HTML_NS_PREFIX);
-
-  public static final QName ATTR_TARGET = new QName("target");
-
-  public static final QName HR = new QName(HTML_NS_URI, "hr", HTML_NS_PREFIX);
-
-  public static final QName CODE = new QName(HTML_NS_URI, "code", HTML_NS_PREFIX);
-
-  public static final QName META = new QName(HTML_NS_URI, "meta", HTML_NS_PREFIX);
-
-  public static final QName ATTR_HTTP_EQUIV = new QName("http-equiv");
-
-  public static final QName ATTR_CONTENT = new QName("content");
 
   public static void elementWithId(final XmlWriter writer, final QName tag, final String id,
     final Object content) {
@@ -253,7 +253,8 @@ public final class HtmlUtil {
     out.endTag(LINK);
   }
 
-  public static void serializeDiv(final XmlWriter out, final String cssClass, final Object content) {
+  public static void serializeDiv(final XmlWriter out, final String cssClass,
+    final Object content) {
     if (content != null) {
       final String text = content.toString().trim();
       if (text.length() > 0) {
@@ -275,7 +276,8 @@ public final class HtmlUtil {
     out.endTag(INPUT);
   }
 
-  public static void serializeFileInput(final XmlWriter out, final String name, final Object value) {
+  public static void serializeFileInput(final XmlWriter out, final String name,
+    final Object value) {
     out.startTag(INPUT);
     out.attribute(ATTR_NAME, name);
     out.attribute(ATTR_TYPE, "file");
@@ -288,7 +290,8 @@ public final class HtmlUtil {
 
   }
 
-  public static void serializeHiddenInput(final XmlWriter out, final String name, final Object value) {
+  public static void serializeHiddenInput(final XmlWriter out, final String name,
+    final Object value) {
 
     String stringValue = null;
     if (value != null) {
@@ -297,7 +300,8 @@ public final class HtmlUtil {
     serializeHiddenInput(out, name, stringValue);
   }
 
-  public static void serializeHiddenInput(final XmlWriter out, final String name, final String value) {
+  public static void serializeHiddenInput(final XmlWriter out, final String name,
+    final String value) {
     out.startTag(INPUT);
     out.attribute(ATTR_NAME, name);
     out.attribute(ATTR_TYPE, "hidden");
@@ -389,7 +393,8 @@ public final class HtmlUtil {
 
   }
 
-  public static void serializeSpan(final XmlWriter out, final String cssClass, final Object content) {
+  public static void serializeSpan(final XmlWriter out, final String cssClass,
+    final Object content) {
     if (content != null) {
       final String text = content.toString().trim();
       if (text.length() > 0) {
@@ -403,7 +408,8 @@ public final class HtmlUtil {
     }
   }
 
-  public static void serializeSubmitInput(final XmlWriter out, final String name, final Object value) {
+  public static void serializeSubmitInput(final XmlWriter out, final String name,
+    final Object value) {
     out.startTag(INPUT);
     out.attribute(ATTR_NAME, name);
     out.attribute(ATTR_TYPE, "submit");

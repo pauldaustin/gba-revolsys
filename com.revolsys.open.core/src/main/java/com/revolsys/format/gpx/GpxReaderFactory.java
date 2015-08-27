@@ -18,8 +18,8 @@ public class GpxReaderFactory extends AbstractRecordAndGeometryReaderFactory {
     setCustomAttributionSupported(false);
   }
 
-  public RecordReader createRecordReader(final RecordDefinition metaData,
-    final Resource resource, final RecordFactory factory) {
+  public RecordReader createRecordReader(final RecordDefinition metaData, final Resource resource,
+    final RecordFactory factory) {
     throw new UnsupportedOperationException();
   }
 

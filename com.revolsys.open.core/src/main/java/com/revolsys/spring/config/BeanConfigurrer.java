@@ -34,8 +34,8 @@ import com.revolsys.spring.factory.Parameter;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.spring.util.PlaceholderResolvingStringValueResolver;
 
-public class BeanConfigurrer implements BeanFactoryPostProcessor, ApplicationContextAware,
-  BeanNameAware, PriorityOrdered {
+public class BeanConfigurrer
+  implements BeanFactoryPostProcessor, ApplicationContextAware, BeanNameAware, PriorityOrdered {
 
   protected static final Logger LOG = LoggerFactory.getLogger(BeanConfigurrer.class);
 
@@ -83,9 +83,9 @@ public class BeanConfigurrer implements BeanFactoryPostProcessor, ApplicationCon
     }
   }
 
-  private final Map<String, Object> attributes = new LinkedHashMap<String, Object>();
-
   private ApplicationContext applicationContext;
+
+  private final Map<String, Object> attributes = new LinkedHashMap<String, Object>();
 
   private String beanName;
 
@@ -178,8 +178,8 @@ public class BeanConfigurrer implements BeanFactoryPostProcessor, ApplicationCon
                         final String typeClassName = typeValueObject.toString();
                         typeClass = Class.forName(typeClassName, true, classLoader);
                       }
-                      final Object convertedValue = new SimpleTypeConverter().convertIfNecessary(
-                        value, typeClass);
+                      final Object convertedValue = new SimpleTypeConverter()
+                        .convertIfNecessary(value, typeClass);
                       propertyValue = new PropertyValue("value", convertedValue);
                     } catch (final Throwable e) {
                       LOG.error("Unable to set " + beanName + ".value=" + value, e);
@@ -236,8 +236,8 @@ public class BeanConfigurrer implements BeanFactoryPostProcessor, ApplicationCon
         attributeMap.put(key, value);
       }
     }
-    final StringValueResolver valueResolver = new PlaceholderResolvingStringValueResolver("${",
-      "}", this.ignoreUnresolvablePlaceholders, null, attributeMap);
+    final StringValueResolver valueResolver = new PlaceholderResolvingStringValueResolver("${", "}",
+      this.ignoreUnresolvablePlaceholders, null, attributeMap);
     final BeanDefinitionVisitor visitor = new BeanDefinitionVisitor(valueResolver);
 
     final String[] beanNames = beanFactory.getBeanDefinitionNames();
@@ -264,8 +264,8 @@ public class BeanConfigurrer implements BeanFactoryPostProcessor, ApplicationCon
   protected void processPlaceholderAttributes(final ConfigurableListableBeanFactory beanFactory,
     final String beanName, final Map<String, Object> attributes) throws BeansException {
 
-    final StringValueResolver valueResolver = new PlaceholderResolvingStringValueResolver("${",
-      "}", this.ignoreUnresolvablePlaceholders, null, attributes);
+    final StringValueResolver valueResolver = new PlaceholderResolvingStringValueResolver("${", "}",
+      this.ignoreUnresolvablePlaceholders, null, attributes);
     final BeanDefinitionVisitor visitor = new BeanDefinitionVisitor(valueResolver);
 
     // Check that we're not parsing our own bean definition,

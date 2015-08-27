@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 
 /**
  * A static index on a set of 1-dimensional intervals,
@@ -56,9 +56,9 @@ import com.revolsys.collection.Visitor;
 public class SortedPackedIntervalRTree<V> {
   private final List<IntervalRTreeNode<V>> leaves = new ArrayList<IntervalRTreeNode<V>>();
 
-  private IntervalRTreeNode<V> root = null;
-
   private int level = 0;
+
+  private IntervalRTreeNode<V> root = null;
 
   public SortedPackedIntervalRTree() {
 
@@ -74,7 +74,8 @@ public class SortedPackedIntervalRTree<V> {
       if (n2 == null) {
         dest.add(n1);
       } else {
-        final IntervalRTreeNode<V> node = new IntervalRTreeBranchNode<V>(src.get(i), src.get(i + 1));
+        final IntervalRTreeNode<V> node = new IntervalRTreeBranchNode<V>(src.get(i),
+          src.get(i + 1));
         // printNode(node);
         // System.out.println(node);
         dest.add(node);
@@ -134,7 +135,7 @@ public class SortedPackedIntervalRTree<V> {
    * @param max the upper bound of the query interval
    * @param visitor the visitor to pass any matched items to
    */
-  public void query(final double min, final double max, final Visitor<V> visitor) {
+  public void query(final double min, final double max, final Consumer<V> visitor) {
     init();
 
     this.root.query(min, max, visitor);

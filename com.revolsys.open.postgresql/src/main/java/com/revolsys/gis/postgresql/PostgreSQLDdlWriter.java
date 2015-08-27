@@ -55,7 +55,8 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
     final String tableName = Path.getName(typePath);
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute
+        .getProperty(FieldProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
       String geometryType = "GEOMETRY";
       final DataType dataType = geometryAttribute.getType();
@@ -90,7 +91,8 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
     }
   }
 
-  public void writeAlterOwner(final String objectType, final String objectName, final String owner) {
+  public void writeAlterOwner(final String objectType, final String objectName,
+    final String owner) {
     final PrintWriter out = getOut();
     out.print("ALTER ");
     out.print(objectType);
@@ -178,7 +180,8 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
     final String tableName = Path.getName(typePath);
     final FieldDefinition geometryAttribute = metaData.getGeometryField();
     if (geometryAttribute != null) {
-      final GeometryFactory geometryFactory = geometryAttribute.getProperty(FieldProperties.GEOMETRY_FACTORY);
+      final GeometryFactory geometryFactory = geometryAttribute
+        .getProperty(FieldProperties.GEOMETRY_FACTORY);
       final String name = geometryAttribute.getName();
       String geometryType = "GEOMETRY";
       final DataType dataType = geometryAttribute.getType();
@@ -195,7 +198,8 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       } else if (dataType == DataTypes.MULTI_POLYGON) {
         geometryType = "MULTIPOLYGON";
       }
-      out.print("INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, \"type\") VALUES ('','");
+      out.print(
+        "INSERT INTO geometry_columns(f_table_catalog, f_table_schema, f_table_name, f_geometry_column, coord_dimension, srid, \"type\") VALUES ('','");
       out.print(schemaName.toLowerCase());
       out.print("', '");
       out.print(tableName.toLowerCase());

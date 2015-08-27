@@ -19,9 +19,9 @@ public class RecordStoreQueryField extends AbstractRecordQueryField {
     };
   }
 
-  private final RecordStore recordStore;
-
   private final RecordDefinition recordDefinition;
+
+  private final RecordStore recordStore;
 
   public RecordStoreQueryField(final String fieldName, final RecordStore recordStore,
     final String typePath, final String displayFieldName) {

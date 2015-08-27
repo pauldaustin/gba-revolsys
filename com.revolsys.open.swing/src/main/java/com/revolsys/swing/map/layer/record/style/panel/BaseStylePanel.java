@@ -58,19 +58,19 @@ import com.revolsys.util.CaseConverter;
 import com.revolsys.util.Property;
 
 public class BaseStylePanel extends ValueField implements PropertyChangeListener {
-  private static final long serialVersionUID = 1L;
-
   public static final List<Action> HORIZONTAL_ALIGNMENT_ACTIONS = getTextAlignActions("left",
     "center", "right");
 
-  public static final List<Action> VERTICAL_ALIGNMENT_ACTIONS = getTextAlignActions("top",
-    "middle", "bottom");
+  public static final List<Action> LINE_CAP_ACTIONS = getLineActions("cap", "BUTT", "ROUND",
+    "SQUARE");
 
   public static final List<Action> LINE_JOIN_ACTIONS = getLineActions("join", "MITER", "ROUND",
     "BEVEL");
 
-  public static final List<Action> LINE_CAP_ACTIONS = getLineActions("cap", "BUTT", "ROUND",
-    "SQUARE");
+  private static final long serialVersionUID = 1L;
+
+  public static final List<Action> VERTICAL_ALIGNMENT_ACTIONS = getTextAlignActions("top", "middle",
+    "bottom");
 
   public static List<Action> getLineActions(final String type, final String... alignmentTypes) {
     final List<Action> actions = new ArrayList<Action>();
@@ -88,8 +88,8 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     final List<Action> actions = new ArrayList<Action>();
     for (final String alignmentType : alignmentTypes) {
       final I18nAction action = new I18nAction(alignmentType, null,
-        CaseConverter.toCapitalizedWords(alignmentType), Icons.getIcon("text_align_"
-          + alignmentType));
+        CaseConverter.toCapitalizedWords(alignmentType),
+        Icons.getIcon("text_align_" + alignmentType));
       actions.add(action);
     }
     return actions;
@@ -123,7 +123,8 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     container.add(field);
   }
 
-  protected void addColorField(final JPanel container, final Object object, final String fieldName) {
+  protected void addColorField(final JPanel container, final Object object,
+    final String fieldName) {
     SwingUtil.addLabel(container, fieldName);
     final Color value = Property.get(object, fieldName);
     final ColorChooserField field = new ColorChooserField(fieldName, value);
@@ -157,7 +158,8 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     }
   }
 
-  protected void addFields(final JPanel container, final Object object, final String... fieldNames) {
+  protected void addFields(final JPanel container, final Object object,
+    final String... fieldNames) {
     for (final String fieldName : fieldNames) {
       addField(container, object, fieldName);
     }
@@ -231,7 +233,8 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
   }
 
   @SuppressWarnings("unchecked")
-  protected Field createField(final String fieldName, final Class<?> fieldClass, final Object value) {
+  protected Field createField(final String fieldName, final Class<?> fieldClass,
+    final Object value) {
     Field field;
     if (fieldName.equals("textFaceName")) {
       field = new FontChooserField(fieldName, (String)value);
@@ -270,7 +273,8 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     if (!"left".equalsIgnoreCase(aligment) && !"right".equalsIgnoreCase(aligment)) {
       aligment = "center";
     }
-    return new TogglePanel(fieldName, aligment, new Dimension(28, 28), HORIZONTAL_ALIGNMENT_ACTIONS);
+    return new TogglePanel(fieldName, aligment, new Dimension(28, 28),
+      HORIZONTAL_ALIGNMENT_ACTIONS);
   }
 
   protected TogglePanel createLineCapField(final LineCap lineCap) {
@@ -292,7 +296,8 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     converter.setHorizontalAlignment(SwingConstants.RIGHT);
     final ComboBox field = new ComboBox(fieldName, new DefaultComboBoxModel(scales), converter,
       converter);
-    ((JTextField)field.getEditor().getEditorComponent()).setHorizontalAlignment(SwingConstants.RIGHT);
+    ((JTextField)field.getEditor().getEditorComponent())
+      .setHorizontalAlignment(SwingConstants.RIGHT);
     field.setSelectedItem(value);
     field.setPreferredSize(new Dimension(150, 22));
     return field;

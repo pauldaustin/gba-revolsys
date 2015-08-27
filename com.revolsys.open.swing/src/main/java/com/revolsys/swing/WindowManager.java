@@ -18,15 +18,15 @@ import com.revolsys.swing.action.InvokeMethodAction;
 
 public class WindowManager implements WindowFocusListener {
 
-  private static final JMenu menu = new JMenu("Window");
-
-  private static final List<Window> windows = new ArrayList<Window>();
-
-  private static final Map<Window, JCheckBoxMenuItem> windowMenuItemMap = new HashMap<Window, JCheckBoxMenuItem>();
+  private static Window currentWindow;
 
   private static final WindowManager INSTANCE = new WindowManager();
 
-  private static Window currentWindow;
+  private static final JMenu menu = new JMenu("Window");
+
+  private static final Map<Window, JCheckBoxMenuItem> windowMenuItemMap = new HashMap<Window, JCheckBoxMenuItem>();
+
+  private static final List<Window> windows = new ArrayList<Window>();
 
   public static void addMenu(final JMenuBar menuBar) {
     menuBar.add(menu);

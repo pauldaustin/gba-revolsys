@@ -1,42 +1,37 @@
 package com.revolsys.gis.graph.visitor;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.revolsys.data.equals.Geometry3DExactEquals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
-import com.revolsys.filter.AndFilter;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.NotFilter;
-import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
+import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.gis.graph.filter.EdgeTypeNameFilter;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.jts.filter.EqualFilter;
 import com.revolsys.gis.jts.filter.LinearIntersectionFilter;
+import com.revolsys.predicate.AndPredicate;
 import com.revolsys.util.ObjectProcessor;
 import com.revolsys.visitor.AbstractVisitor;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LinearIntersectionNotEqualEdgeLogVisitor extends AbstractVisitor<Edge<Record>>
   implements ObjectProcessor<RecordGraph> {
-  private static final String PROCESSED = LinearIntersectionNotEqualLineEdgeCleanupVisitor.class.getName()
-    + ".PROCESSED";
+  private static final String PROCESSED = LinearIntersectionNotEqualLineEdgeCleanupVisitor.class
+    .getName() + ".PROCESSED";
+
   static {
     Geometry3DExactEquals.addExclude(PROCESSED);
   }
 
   @Override
-  public void process(final RecordGraph graph) {
-    graph.visitEdges(this);
-  }
-
-  @Override
   @SuppressWarnings("unchecked")
-  public boolean visit(final Edge<Record> edge) {
+  public void accept(final Edge<Record> edge) {
     final Record object = edge.getObject();
     final LineString line = edge.getLine();
     if (JtsGeometryUtil.getGeometryProperty(line, PROCESSED) != Boolean.TRUE) {
@@ -44,23 +39,23 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends AbstractVisitor<Ed
 
       final Graph<Record> graph = edge.getGraph();
 
-      final AndFilter<Edge<Record>> attributeAndGeometryFilter = new AndFilter<Edge<Record>>();
+      final AndPredicate<Edge<Record>> attributeAndGeometryFilter = new AndPredicate<Edge<Record>>();
 
       attributeAndGeometryFilter.addFilter(new EdgeTypeNameFilter<Record>(typePath));
 
-      final Filter<Edge<Record>> filter = getFilter();
+      final Predicate<Edge<Record>> filter = getPredicate();
       if (filter != null) {
         attributeAndGeometryFilter.addFilter(filter);
       }
 
-      final Filter<Record> notEqualLineFilter = new NotFilter<Record>(
-        new RecordGeometryFilter<LineString>(new EqualFilter<LineString>(line)));
+      final Predicate<Record> notEqualLineFilter = new RecordGeometryFilter<LineString>(
+        new EqualFilter<LineString>(line)).negate();
 
       final RecordGeometryFilter<LineString> linearIntersectionFilter = new RecordGeometryFilter<LineString>(
         new LinearIntersectionFilter(line));
 
-      attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(new AndFilter<Record>(
-        notEqualLineFilter, linearIntersectionFilter)));
+      attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(
+        new AndPredicate<Record>(notEqualLineFilter, linearIntersectionFilter)));
 
       final List<Edge<Record>> intersectingEdges = graph.getEdges(attributeAndGeometryFilter, line);
 
@@ -76,6 +71,10 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends AbstractVisitor<Ed
         }
       }
     }
-    return true;
+  }
+
+  @Override
+  public void process(final RecordGraph graph) {
+    graph.visitEdges(this);
   }
 }

@@ -20,11 +20,12 @@ import com.revolsys.swing.Icons;
 import com.revolsys.swing.tree.node.BaseTreeNode;
 
 public class BaseTreeNodeLoadingIcon implements ImageObserver {
-  private static final BaseTreeNodeLoadingIcon INSTANCE = new BaseTreeNodeLoadingIcon();
-
   private static final ImageIcon ICON = createIcon();
 
-  private static final Set<BaseTreeNode> NODES = MapBackedSet.mapBackedSet(new WeakHashMap<BaseTreeNode, Object>());
+  private static final BaseTreeNodeLoadingIcon INSTANCE = new BaseTreeNodeLoadingIcon();
+
+  private static final Set<BaseTreeNode> NODES = MapBackedSet
+    .mapBackedSet(new WeakHashMap<BaseTreeNode, Object>());
 
   public static synchronized void addNode(final BaseTreeNode node) {
     if (node != null) {

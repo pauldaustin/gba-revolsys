@@ -34,8 +34,10 @@ public class RecordGeometryAreaComparitor implements Comparator<Record> {
     if (compare == 0) {
       compare = geometry1.compareTo(geometry2);
       if (compare == 0) {
-        final boolean clockwise1 = !CGAlgorithms.isCCW(geometry1.getExteriorRing().getCoordinates());
-        final boolean clockwise2 = !CGAlgorithms.isCCW(geometry2.getExteriorRing().getCoordinates());
+        final boolean clockwise1 = !CGAlgorithms
+          .isCCW(geometry1.getExteriorRing().getCoordinates());
+        final boolean clockwise2 = !CGAlgorithms
+          .isCCW(geometry2.getExteriorRing().getCoordinates());
         if (clockwise1) {
           if (clockwise2) {
             return 0;

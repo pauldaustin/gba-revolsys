@@ -13,9 +13,9 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.HexConverter;
 import com.revolsys.util.Property;
@@ -61,8 +61,8 @@ public class MavenRepositoryCache extends MavenRepository {
           final byte[] digest = messageDigest.digest();
           final String fileDigest = HexConverter.toHex(digest);
           if (!sha1Digest.equals(fileDigest)) {
-            LoggerFactory.getLogger(getClass()).error(
-              ".sha1 digest is different for: " + repositoryResource);
+            LoggerFactory.getLogger(getClass())
+              .error(".sha1 digest is different for: " + repositoryResource);
             SpringUtil.delete(resource);
             return false;
           }

@@ -17,14 +17,19 @@ import com.vividsolutions.jts.util.Assert;
  * @version 1.7
  */
 public abstract class LineIntersector {
+  public final static int COLLINEAR = 2;
+
+  /**
+   * Indicates that line segments intersect in a line segment
+   */
+  public final static int COLLINEAR_INTERSECTION = 2;
+
+  public final static int DO_INTERSECT = 1;
+
   /**
    * These are deprecated, due to ambiguous naming
    */
   public final static int DONT_INTERSECT = 0;
-
-  public final static int DO_INTERSECT = 1;
-
-  public final static int COLLINEAR = 2;
 
   /**
    * Indicates that line segments do not intersect
@@ -35,11 +40,6 @@ public abstract class LineIntersector {
    * Indicates that line segments intersect in a single point
    */
   public final static int POINT_INTERSECTION = 1;
-
-  /**
-   * Indicates that line segments intersect in a line segment
-   */
-  public final static int COLLINEAR_INTERSECTION = 2;
 
   /**
    * Computes the "edge distance" of an intersection point p along a segment.
@@ -102,17 +102,15 @@ public abstract class LineIntersector {
     return dist;
   }
 
-  protected int result;
-
   protected Coordinates[][] inputLines = new Coordinates[2][2];
-
-  protected Coordinates[] intPt = new Coordinates[2];
 
   /**
    * The indexes of the endpoints of the intersection lines, in order along the
    * corresponding line
    */
   protected int[][] intLineIndex;
+
+  protected Coordinates[] intPt = new Coordinates[2];
 
   protected boolean isProper;
 
@@ -125,6 +123,8 @@ public abstract class LineIntersector {
    * precise using Coordinates#makePrecise
    */
   protected CoordinatesPrecisionModel precisionModel = null;
+
+  protected int result;
 
   // public int numIntersects = 0;
 

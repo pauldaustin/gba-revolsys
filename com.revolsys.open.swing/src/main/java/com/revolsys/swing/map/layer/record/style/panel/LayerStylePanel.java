@@ -29,17 +29,17 @@ public class LayerStylePanel extends ValueField implements MouseListener, Proper
 
   private static final long serialVersionUID = 1L;
 
-  private final JScrollPane editStyleContainer = new JScrollPane();
+  private LayerRendererTreeNode currentNode;
 
-  private final BaseTree tree;
+  private final JScrollPane editStyleContainer = new JScrollPane();
 
   private final AbstractLayer layer;
 
-  private LayerRenderer<? extends Layer> rootRenderer;
-
   private final ListTreeNode rootNode;
 
-  private LayerRendererTreeNode currentNode;
+  private LayerRenderer<? extends Layer> rootRenderer;
+
+  private final BaseTree tree;
 
   public LayerStylePanel(final AbstractLayer layer) {
     this.layer = layer;
@@ -70,7 +70,8 @@ public class LayerStylePanel extends ValueField implements MouseListener, Proper
 
   @Override
   public void mouseClicked(final MouseEvent e) {
-    if (e.getClickCount() == 1 && SwingUtil.isLeftButtonAndNoModifiers(e) && e.getClickCount() == 1) {
+    if (e.getClickCount() == 1 && SwingUtil.isLeftButtonAndNoModifiers(e)
+      && e.getClickCount() == 1) {
       final int x = e.getX();
       final int y = e.getY();
       final TreePath path = this.tree.getPathForLocation(x, y);
@@ -110,8 +111,10 @@ public class LayerStylePanel extends ValueField implements MouseListener, Proper
     final String propertyName = event.getPropertyName();
     if ("replaceRenderer".equals(propertyName)) {
       saveStylePanel();
-      final LayerRenderer<? extends Layer> oldRenderer = (LayerRenderer<? extends Layer>)event.getOldValue();
-      final LayerRenderer<? extends Layer> newRenderer = (LayerRenderer<? extends Layer>)event.getNewValue();
+      final LayerRenderer<? extends Layer> oldRenderer = (LayerRenderer<? extends Layer>)event
+        .getOldValue();
+      final LayerRenderer<? extends Layer> newRenderer = (LayerRenderer<? extends Layer>)event
+        .getNewValue();
       if (oldRenderer == this.rootRenderer && newRenderer != null && newRenderer != oldRenderer) {
         Property.removeListener(oldRenderer, this);
         this.rootNode.removeNode(0);

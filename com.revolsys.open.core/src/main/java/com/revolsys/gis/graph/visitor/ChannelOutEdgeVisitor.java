@@ -1,23 +1,26 @@
 package com.revolsys.gis.graph.visitor;
 
-import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.parallel.channel.Channel;
+import com.revolsys.util.ExitLoopException;
 import com.revolsys.visitor.DelegatingVisitor;
 
-public class ChannelOutEdgeVisitor<T> implements Visitor<Edge<T>> {
+public class ChannelOutEdgeVisitor<T> implements Consumer<Edge<T>> {
   public static <T> void write(final Graph<T> graph, final Channel<T> out) {
-    final Visitor<Edge<T>> visitor = new ChannelOutEdgeVisitor<T>(out);
+    final Consumer<Edge<T>> visitor = new ChannelOutEdgeVisitor<T>(out);
     graph.visitEdges(visitor);
   }
 
-  public static <T> void write(final Graph<T> graph, final Filter<T> filter, final Channel<T> out) {
-    final Visitor<Edge<T>> visitor = new ChannelOutEdgeVisitor<T>(out);
+  public static <T> void write(final Graph<T> graph, final Predicate<T> filter,
+    final Channel<T> out) {
+    final Consumer<Edge<T>> visitor = new ChannelOutEdgeVisitor<T>(out);
     final EdgeObjectFilter<T> edgeFilter = new EdgeObjectFilter<T>(filter);
-    final Visitor<Edge<T>> filterVisitor = new DelegatingVisitor<Edge<T>>(edgeFilter, visitor);
+    final Consumer<Edge<T>> filterVisitor = new DelegatingVisitor<Edge<T>>(edgeFilter, visitor);
     graph.visitEdges(filterVisitor);
   }
 
@@ -28,13 +31,12 @@ public class ChannelOutEdgeVisitor<T> implements Visitor<Edge<T>> {
   }
 
   @Override
-  public boolean visit(final Edge<T> edge) {
+  public void accept(final Edge<T> edge) {
     if (this.out == null) {
-      return false;
+      throw new ExitLoopException();
     } else {
       final T object = edge.getObject();
       this.out.write(object);
-      return true;
     }
   }
 }

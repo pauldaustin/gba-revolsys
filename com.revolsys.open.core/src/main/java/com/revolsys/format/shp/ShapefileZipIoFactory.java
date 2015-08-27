@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.RecordFactory;
@@ -15,6 +14,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.ZipRecordReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipRecordWriter;
+import com.revolsys.spring.resource.FileSystemResource;
 
 public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
 

@@ -15,9 +15,9 @@ public class DataSource {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   protected DataSource(final long cPtr, final boolean cMemoryOwn) {
     if (cPtr == 0) {
@@ -138,7 +138,8 @@ public class DataSource {
     return ret;
   }
 
-  public Layer ExecuteSQL(final String statement, final Geometry spatialFilter, final String dialect) {
+  public Layer ExecuteSQL(final String statement, final Geometry spatialFilter,
+    final String dialect) {
     final long cPtr = ogrJNI.DataSource_ExecuteSQL__SWIG_0(this.swigCPtr, this, statement,
       Geometry.getCPtr(spatialFilter), spatialFilter, dialect);
     Layer ret = null;

@@ -23,15 +23,15 @@ import com.vividsolutions.jts.geom.Polygon;
 public class BoundingBoxRecordLayer extends AbstractRecordLayer {
   private static final Logger LOG = Logger.getLogger(BoundingBoxRecordLayer.class);
 
+  private BoundingBox boundingBox;
+
   private boolean loading = false;
 
   private final Object sync = new Object();
 
-  private BoundingBox boundingBox;
+  private SwingWorker worker;
 
   private final Class<?> workerClass;
-
-  private SwingWorker worker;
 
   public BoundingBoxRecordLayer(final String type, final String name, final Class<?> workerClass,
     final GeometryFactory geometryFactory) {
@@ -58,8 +58,8 @@ public class BoundingBoxRecordLayer extends AbstractRecordLayer {
           this.boundingBox = boundingBox;
           firePropertyChange("visible", super.isVisible(), false);
           try {
-            final Constructor<?> constructor = this.workerClass.getConstructor(
-              BoundingBoxRecordLayer.class, BoundingBox.class);
+            final Constructor<?> constructor = this.workerClass
+              .getConstructor(BoundingBoxRecordLayer.class, BoundingBox.class);
             this.worker = (SwingWorker)constructor.newInstance(this, boundingBox);
             Invoke.worker(this.worker);
           } catch (final NoSuchMethodException e) {
@@ -75,8 +75,8 @@ public class BoundingBoxRecordLayer extends AbstractRecordLayer {
       final GeometryFactory geometryFactory = getGeometryFactory();
       final GeometryFactory bboxGeometryFactory = boundingBox.getGeometryFactory();
       if (geometryFactory != null && !geometryFactory.equals(bboxGeometryFactory)) {
-        final GeometryOperation operation = ProjectionFactory.getGeometryOperation(
-          bboxGeometryFactory, geometryFactory);
+        final GeometryOperation operation = ProjectionFactory
+          .getGeometryOperation(bboxGeometryFactory, geometryFactory);
         if (operation != null) {
           polygon = operation.perform(polygon);
         }

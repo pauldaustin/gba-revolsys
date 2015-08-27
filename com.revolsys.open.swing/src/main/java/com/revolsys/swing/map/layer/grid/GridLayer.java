@@ -25,15 +25,15 @@ import com.revolsys.util.Property;
 
 public class GridLayer extends AbstractLayer {
 
+  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("grid", "Grid",
+    GridLayer.class, "create");
+
   static {
     final MenuFactory menu = MenuFactory.createMenu(GridLayer.class, "ZoomToSheet");
 
     menu.deleteMenuItem("zoom", "Zoom to Layer");
     menu.deleteMenuItem("refresh", "Refresh");
   }
-
-  public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("grid", "Grid",
-    GridLayer.class, "create");
 
   public static GridLayer create(final Map<String, Object> properties) {
     return new GridLayer(properties);
@@ -61,8 +61,8 @@ public class GridLayer extends AbstractLayer {
         return true;
       }
     } else {
-      LoggerFactory.getLogger(getClass()).error(
-        "Layer definition does not contain a 'gridName' property");
+      LoggerFactory.getLogger(getClass())
+        .error("Layer definition does not contain a 'gridName' property");
     }
     return false;
   }
@@ -92,8 +92,8 @@ public class GridLayer extends AbstractLayer {
       final String gridName = grid.getName();
       final String preferenceName = CaseConverter.toCapitalizedWords(gridName) + "Mapsheet";
       String mapsheet = PreferencesUtil.getString(getClass(), preferenceName);
-      mapsheet = JOptionPane.showInputDialog(map, "Enter name of the" + gridName
-        + " mapsheet to zoom to", mapsheet);
+      mapsheet = JOptionPane.showInputDialog(map,
+        "Enter name of the" + gridName + " mapsheet to zoom to", mapsheet);
       zoomToSheet(mapsheet);
     }
   }

@@ -41,13 +41,13 @@ public class WikipediaBoundingBoxLayerWorker extends AbstractSwingWorker<RecordQ
     return layer;
   }
 
-  private final BoundingBoxRecordLayer layer;
-
   private final BoundingBox boundingBox;
+
+  private final GeometryFactory geometryFactory;
 
   private final GeoNamesService geoNamesService = new GeoNamesService();
 
-  private final GeometryFactory geometryFactory;
+  private final BoundingBoxRecordLayer layer;
 
   public WikipediaBoundingBoxLayerWorker(final BoundingBoxRecordLayer layer,
     final BoundingBox boundingBox) {

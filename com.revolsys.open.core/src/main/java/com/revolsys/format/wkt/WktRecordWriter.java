@@ -17,9 +17,9 @@ public class WktRecordWriter extends AbstractWriter<Record>implements RecordWrit
 
   private final RecordDefinition metaData;
 
-  private final PrintWriter out;
-
   private boolean open;
+
+  private final PrintWriter out;
 
   public WktRecordWriter(final RecordDefinition metaData, final java.io.Writer out) {
     this.metaData = metaData;

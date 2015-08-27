@@ -6,15 +6,15 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 
-public class CoordinatesListIndexLineSegmentIterator implements Iterator<LineSegment>,
-  Iterable<LineSegment> {
+public class CoordinatesListIndexLineSegmentIterator
+  implements Iterator<LineSegment>, Iterable<LineSegment> {
   private static final GeometryFactory FACTORY = GeometryFactory.getFactory();
 
   private final GeometryFactory factory;
 
-  private final CoordinatesList points;
-
   private int index = -1;
+
+  private final CoordinatesList points;
 
   public CoordinatesListIndexLineSegmentIterator(final CoordinatesList points) {
     this(FACTORY, points);

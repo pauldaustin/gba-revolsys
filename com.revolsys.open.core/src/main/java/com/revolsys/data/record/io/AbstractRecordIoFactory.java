@@ -37,9 +37,9 @@ public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactor
     }
   }
 
-  private final boolean geometrySupported;
-
   private Set<CoordinateSystem> coordinateSystems = EpsgCoordinateSystems.getCoordinateSystems();
+
+  private final boolean geometrySupported;
 
   public AbstractRecordIoFactory(final String name, final boolean binary,
     final boolean geometrySupported, final boolean customAttributionSupported) {

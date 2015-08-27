@@ -26,8 +26,6 @@ public class JdbcCodeTable extends AbstractCodeTable {
 
   private List<String> columnAliases = new ArrayList<String>();
 
-  private JdbcRecordStore recordStore;
-
   private String idByValueSql;
 
   private String idColumn;
@@ -37,6 +35,8 @@ public class JdbcCodeTable extends AbstractCodeTable {
   private String insertSql;
 
   private boolean loadAll;
+
+  private JdbcRecordStore recordStore;
 
   private String sequenceName;
 

@@ -4,27 +4,28 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
+import com.revolsys.util.ExitLoopException;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class PointQuadTreeNode<T> {
-  private final double x;
-
-  private final double y;
-
-  private final T value;
+  private PointQuadTreeNode<T> northEast;
 
   private PointQuadTreeNode<T> northWest;
 
-  private PointQuadTreeNode<T> northEast;
+  private PointQuadTreeNode<T> southEast;
 
   private PointQuadTreeNode<T> southWest;
 
-  private PointQuadTreeNode<T> southEast;
+  private final T value;
+
+  private final double x;
+
+  private final double y;
 
   public PointQuadTreeNode(final T value, final double x, final double y) {
     this.value = value;
@@ -61,7 +62,8 @@ public class PointQuadTreeNode<T> {
     return false;
   }
 
-  public void findEntriesWithin(final List<Entry<Coordinates, T>> results, final Envelope envelope) {
+  public void findEntriesWithin(final List<Entry<Coordinates, T>> results,
+    final Envelope envelope) {
     final double minX = envelope.getMinX();
     final double maxX = envelope.getMaxX();
     final double minY = envelope.getMinY();
@@ -139,6 +141,55 @@ public class PointQuadTreeNode<T> {
     }
     if (this.northEast != null && !maxXLess && !maxYLess) {
       this.northEast.findWithin(results, envelope);
+    }
+  }
+
+  public void forEach(final Consumer<T> visitor) {
+    try {
+      visitor.accept(this.value);
+      if (this.southWest != null) {
+        this.southWest.forEach(visitor);
+      }
+      if (this.northWest != null) {
+        this.northWest.forEach(visitor);
+      }
+      if (this.southEast != null) {
+        this.southEast.forEach(visitor);
+      }
+      if (this.northEast != null) {
+        this.northEast.forEach(visitor);
+      }
+    } catch (final ExitLoopException e) {
+
+    }
+  }
+
+  public void forEach(final Envelope envelope, final Consumer<T> visitor) {
+    try {
+      final double minX = envelope.getMinX();
+      final double maxX = envelope.getMaxX();
+      final double minY = envelope.getMinY();
+      final double maxY = envelope.getMaxY();
+      if (envelope.contains(this.x, this.y)) {
+        visitor.accept(this.value);
+      }
+      final boolean minXLess = isLessThanX(minX);
+      final boolean maxXLess = isLessThanX(maxX);
+      final boolean minYLess = isLessThanY(minY);
+      final boolean maxYLess = isLessThanY(maxY);
+      if (this.southWest != null && minXLess && minYLess) {
+        this.southWest.forEach(envelope, visitor);
+      }
+      if (this.northWest != null && minXLess && !maxYLess) {
+        this.northWest.forEach(envelope, visitor);
+      }
+      if (this.southEast != null && !maxXLess && minYLess) {
+        this.southEast.forEach(envelope, visitor);
+      }
+      if (this.northEast != null && !maxXLess && !maxYLess) {
+        this.northEast.forEach(envelope, visitor);
+      }
+    } catch (final ExitLoopException e) {
     }
   }
 
@@ -228,70 +279,6 @@ public class PointQuadTreeNode<T> {
 
   public void setValue(final int index, final double value) {
     throw new UnsupportedOperationException("Cannot change the coordinates on a quad tree");
-  }
-
-  public boolean visit(final Envelope envelope, final Visitor<T> visitor) {
-    final double minX = envelope.getMinX();
-    final double maxX = envelope.getMaxX();
-    final double minY = envelope.getMinY();
-    final double maxY = envelope.getMaxY();
-    if (envelope.contains(this.x, this.y)) {
-      if (!visitor.visit(this.value)) {
-        return false;
-      }
-    }
-    final boolean minXLess = isLessThanX(minX);
-    final boolean maxXLess = isLessThanX(maxX);
-    final boolean minYLess = isLessThanY(minY);
-    final boolean maxYLess = isLessThanY(maxY);
-    if (this.southWest != null && minXLess && minYLess) {
-      if (!this.southWest.visit(envelope, visitor)) {
-        return false;
-      }
-    }
-    if (this.northWest != null && minXLess && !maxYLess) {
-      if (!this.northWest.visit(envelope, visitor)) {
-        return false;
-      }
-    }
-    if (this.southEast != null && !maxXLess && minYLess) {
-      if (!this.southEast.visit(envelope, visitor)) {
-        return false;
-      }
-    }
-    if (this.northEast != null && !maxXLess && !maxYLess) {
-      if (!this.northEast.visit(envelope, visitor)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  public boolean visit(final Visitor<T> visitor) {
-    if (!visitor.visit(this.value)) {
-      return false;
-    }
-    if (this.southWest != null) {
-      if (!this.southWest.visit(visitor)) {
-        return false;
-      }
-    }
-    if (this.northWest != null) {
-      if (!this.northWest.visit(visitor)) {
-        return false;
-      }
-    }
-    if (this.southEast != null) {
-      if (!this.southEast.visit(visitor)) {
-        return false;
-      }
-    }
-    if (this.northEast != null) {
-      if (!this.northEast.visit(visitor)) {
-        return false;
-      }
-    }
-    return true;
   }
 
 }

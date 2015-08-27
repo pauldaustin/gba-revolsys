@@ -6,9 +6,9 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class GeometryDistanceComparator implements Comparator<Geometry> {
 
-  private final boolean invert;
-
   private final Geometry geometry;
+
+  private final boolean invert;
 
   public GeometryDistanceComparator(final Geometry geometry) {
     this.geometry = geometry;

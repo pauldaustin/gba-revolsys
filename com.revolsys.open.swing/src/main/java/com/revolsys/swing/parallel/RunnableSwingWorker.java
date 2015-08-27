@@ -3,9 +3,9 @@ package com.revolsys.swing.parallel;
 import org.slf4j.LoggerFactory;
 
 public class RunnableSwingWorker extends AbstractSwingWorker<Void, Void> {
-  private final String description;
-
   private final Runnable backgroundTask;
+
+  private final String description;
 
   public RunnableSwingWorker(final Runnable backgroundTask) {
     this(backgroundTask.toString(), backgroundTask);
@@ -22,8 +22,8 @@ public class RunnableSwingWorker extends AbstractSwingWorker<Void, Void> {
       try {
         this.backgroundTask.run();
       } catch (final Throwable e) {
-        LoggerFactory.getLogger(this.backgroundTask.getClass()).error(
-          "Error running :" + this.description, e);
+        LoggerFactory.getLogger(this.backgroundTask.getClass())
+          .error("Error running :" + this.description, e);
         throw e;
       }
     }

@@ -19,8 +19,8 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.spring.resource.OutputStreamResource;
 
-public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory implements
-  RecordStoreFactory {
+public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory
+  implements RecordStoreFactory {
   public ShapefileIoFactory() {
     super(ShapefileConstants.DESCRIPTION, true, true);
     addMediaTypeAndFileExtension(ShapefileConstants.MIME_TYPE, ShapefileConstants.FILE_EXTENSION);

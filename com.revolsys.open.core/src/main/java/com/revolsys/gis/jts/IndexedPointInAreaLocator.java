@@ -1,6 +1,6 @@
 package com.revolsys.gis.jts;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.gis.algorithm.locate.Location;
 import com.revolsys.gis.algorithm.locate.PointOnGeometryLocator;
 import com.revolsys.gis.algorithm.locate.SortedPackedIntervalRTree;
@@ -42,7 +42,7 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
       }
     }
 
-    public void query(final double min, final double max, final Visitor<LineSegment> visitor) {
+    public void query(final double min, final double max, final Consumer<LineSegment> visitor) {
       this.index.query(min, max, visitor);
     }
   }
@@ -58,9 +58,9 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
     return locator;
   }
 
-  private final IntervalIndexedGeometry index;
-
   private final Geometry geometry;
+
+  private final IntervalIndexedGeometry index;
 
   /**
    * Creates a new locator for a given {@link Geometry}

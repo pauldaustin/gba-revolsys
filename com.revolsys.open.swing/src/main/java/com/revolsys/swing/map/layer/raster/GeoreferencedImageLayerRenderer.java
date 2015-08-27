@@ -11,7 +11,8 @@ import com.revolsys.raster.GeoreferencedImage;
 import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.swing.map.layer.AbstractLayerRenderer;
 
-public class GeoreferencedImageLayerRenderer extends AbstractLayerRenderer<GeoreferencedImageLayer> {
+public class GeoreferencedImageLayerRenderer
+  extends AbstractLayerRenderer<GeoreferencedImageLayer> {
 
   public static void render(final Viewport2D viewport, final Graphics2D graphics,
     final GeoreferencedImage image, final boolean useTransform) {

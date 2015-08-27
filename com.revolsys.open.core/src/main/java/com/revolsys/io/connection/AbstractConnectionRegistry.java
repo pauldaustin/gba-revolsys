@@ -9,35 +9,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.collection.map.Maps;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.util.Property;
 
-public abstract class AbstractConnectionRegistry<T> implements ConnectionRegistry<T>,
-  PropertyChangeListener {
+public abstract class AbstractConnectionRegistry<T>
+  implements ConnectionRegistry<T>, PropertyChangeListener {
 
-  private Map<String, T> connections;
-
-  private boolean visible = true;
+  private ConnectionRegistryManager<ConnectionRegistry<T>> connectionManager;
 
   private final Map<String, String> connectionNames = new TreeMap<String, String>();
 
-  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+  private Map<String, T> connections;
 
   private File directory;
 
+  private final String fileExtension = "rgobject";
+
   private final String name;
+
+  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private boolean readOnly;
 
-  private final String fileExtension = "rgobject";
-
-  private ConnectionRegistryManager<ConnectionRegistry<T>> connectionManager;
+  private boolean visible = true;
 
   public AbstractConnectionRegistry(
     final ConnectionRegistryManager<? extends ConnectionRegistry<T>> connectionManager,
@@ -188,7 +188,8 @@ public abstract class AbstractConnectionRegistry<T> implements ConnectionRegistr
             propertyChangeSupport.removePropertyChangeListener(this);
           }
         }
-        this.propertyChangeSupport.fireIndexedPropertyChange("connections", index, connection, null);
+        this.propertyChangeSupport.fireIndexedPropertyChange("connections", index, connection,
+          null);
         if (this.directory != null && !this.readOnly) {
           final File file = getConnectionFile(name);
           file.delete();

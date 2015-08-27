@@ -30,11 +30,10 @@ public interface ObjectWithProperties {
           properties.remove(name);
         }
       }
-      // if (value instanceof ObjectPropertyProxy) {
-      // final ObjectPropertyProxy<C, Object> proxy = (ObjectPropertyProxy<C,
-      // Object>)value;
-      // value = proxy.getValue(object);
-      // }
+      if (value instanceof ObjectPropertyProxy) {
+        final ObjectPropertyProxy<C, Object> proxy = (ObjectPropertyProxy<C, Object>)value;
+        value = proxy.getValue(object);
+      }
       return (C)value;
     }
   }

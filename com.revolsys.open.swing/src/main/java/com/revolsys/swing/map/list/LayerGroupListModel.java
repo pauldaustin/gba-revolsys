@@ -13,15 +13,15 @@ import com.revolsys.swing.map.layer.NullLayer;
 import com.revolsys.util.Property;
 import com.revolsys.util.Reorderable;
 
-public class LayerGroupListModel extends AbstractListModel implements ComboBoxModel, Reorderable,
-  PropertyChangeListener {
+public class LayerGroupListModel extends AbstractListModel
+  implements ComboBoxModel, Reorderable, PropertyChangeListener {
   private static final long serialVersionUID = 1L;
+
+  private final boolean allowNull;
 
   private final LayerGroup group;
 
   private Layer selectedItem;
-
-  private final boolean allowNull;
 
   public LayerGroupListModel(final LayerGroup group) {
     this(group, false);

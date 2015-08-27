@@ -2,8 +2,6 @@ package com.revolsys.gis.cs;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -17,6 +15,8 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
+import junit.framework.Assert;
+
 public class GeometryFactoryTest {
   private static final GeometryFactory GEOMETRY_FACTORY = GeometryFactory.getFactory(3857, 2, 1, 1);
 
@@ -24,7 +24,8 @@ public class GeometryFactoryTest {
     final CoordinatesList... pointsList) {
     System.out.println(geometry);
     final List<CoordinatesList> geometryPointsList = CoordinatesListUtil.getAll(geometry);
-    Assert.assertEquals("Number of coordinates Lists", pointsList.length, geometryPointsList.size());
+    Assert.assertEquals("Number of coordinates Lists", pointsList.length,
+      geometryPointsList.size());
     for (int i = 0; i < pointsList.length; i++) {
       final CoordinatesList points = pointsList[i];
       final CoordinatesList geometryPoints = geometryPointsList.get(i);

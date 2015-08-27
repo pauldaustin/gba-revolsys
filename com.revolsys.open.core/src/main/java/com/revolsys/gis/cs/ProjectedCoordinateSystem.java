@@ -31,15 +31,15 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
 
   private final GeographicCoordinateSystem geographicCoordinateSystem;
 
-  private final LinearUnit linearUnit;
-
   private int id;
+
+  private final LinearUnit linearUnit;
 
   private final String name;
 
-  private final Map<String, Object> parameters = new LinkedHashMap<String, Object>();
-
   private final Map<String, Object> normalizedParameters = new TreeMap<String, Object>();
+
+  private final Map<String, Object> parameters = new LinkedHashMap<String, Object>();
 
   private final Projection projection;
 
@@ -153,7 +153,8 @@ public class ProjectedCoordinateSystem implements CoordinateSystem {
   @Override
   public BoundingBox getAreaBoundingBox() {
     BoundingBox boundingBox;
-    final GeometryFactory geographicGeometryFactory = this.geographicCoordinateSystem.getGeometryFactory();
+    final GeometryFactory geographicGeometryFactory = this.geographicCoordinateSystem
+      .getGeometryFactory();
     if (this.area == null) {
       boundingBox = new BoundingBox(geographicGeometryFactory, -180, -90, 180, 90);
     } else {

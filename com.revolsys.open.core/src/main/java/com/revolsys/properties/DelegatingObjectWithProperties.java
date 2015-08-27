@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DelegatingObjectWithProperties implements ObjectWithProperties {
-  private Map<String, Object> properties = new HashMap<String, Object>();
-
   private ObjectWithProperties object;
+
+  private Map<String, Object> properties = new HashMap<String, Object>();
 
   public DelegatingObjectWithProperties() {
   }

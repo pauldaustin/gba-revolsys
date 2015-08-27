@@ -1,23 +1,20 @@
 package com.revolsys.gis.algorithm.index;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 
-public final class IdObjectIndexVisitor<T> implements Visitor<Integer> {
+public final class IdObjectIndexVisitor<T> implements Consumer<Integer> {
   private final IdObjectIndex<T> index;
 
-  private final Visitor<T> visitor;
+  private final Consumer<T> consumer;
 
-  public IdObjectIndexVisitor(final IdObjectIndex<T> index, final Visitor<T> visitor) {
+  public IdObjectIndexVisitor(final IdObjectIndex<T> index, final Consumer<T> visitor) {
     this.index = index;
-    this.visitor = visitor;
+    this.consumer = visitor;
   }
 
   @Override
-  public boolean visit(final Integer id) {
+  public void accept(final Integer id) {
     final T object = this.index.getObject(id);
-    if (!this.visitor.visit(object)) {
-      return false;
-    }
-    return true;
+    this.consumer.accept(object);
   }
 }

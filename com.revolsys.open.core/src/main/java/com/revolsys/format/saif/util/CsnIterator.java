@@ -529,8 +529,8 @@ public class CsnIterator {
       throw new RuntimeException("Unable to access method '" + methodName + "': " + e.getMessage(),
         e);
     } catch (final NoSuchMethodException e) {
-      throw new RuntimeException("No process method available for component '" + componentName
-        + "': " + e.getMessage(), e);
+      throw new RuntimeException(
+        "No process method available for component '" + componentName + "': " + e.getMessage(), e);
     } catch (final IllegalAccessException e) {
       throw new RuntimeException("Unable to access method '" + methodName + "': " + e.getMessage(),
         e);
@@ -633,8 +633,8 @@ public class CsnIterator {
   private void processDocument(final StringBuffer buffer) throws IOException {
     this.nextEventType = findStartDefinition(buffer);
     if (this.nextEventType == UNKNOWN) {
-      throw new IllegalStateException(this.lineNumber + ":"
-        + "Expecting start of an object definition");
+      throw new IllegalStateException(
+        this.lineNumber + ":" + "Expecting start of an object definition");
     }
   }
 

@@ -26,17 +26,17 @@ import com.revolsys.util.Property;
 public class LayerRendererOverlay extends JComponent implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
-  private Layer layer;
-
-  private Viewport2D viewport;
-
   private GeoreferencedImage image;
-
-  private final Object loadSync = new Object();
 
   private LayerRendererOverlaySwingWorker imageWorker;
 
+  private Layer layer;
+
   private boolean loadImage = true;
+
+  private final Object loadSync = new Object();
+
+  private Viewport2D viewport;
 
   public LayerRendererOverlay(final MapPanel mapPanel) {
     this(mapPanel, null);

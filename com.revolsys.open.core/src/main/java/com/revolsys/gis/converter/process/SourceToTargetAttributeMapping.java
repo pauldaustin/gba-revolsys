@@ -18,21 +18,24 @@ public class SourceToTargetAttributeMapping extends AbstractSourceToTargetProces
 
   @Override
   public void close() {
-    for (final SourceToTargetProcess<Record, Record> process : this.targetAttributeMappings.values()) {
+    for (final SourceToTargetProcess<Record, Record> process : this.targetAttributeMappings
+      .values()) {
       process.close();
     }
   }
 
   @Override
   public void init() {
-    for (final SourceToTargetProcess<Record, Record> process : this.targetAttributeMappings.values()) {
+    for (final SourceToTargetProcess<Record, Record> process : this.targetAttributeMappings
+      .values()) {
       process.init();
     }
   }
 
   @Override
   public void process(final Record source, final Record target) {
-    for (final SourceToTargetProcess<Record, Record> mapping : this.targetAttributeMappings.values()) {
+    for (final SourceToTargetProcess<Record, Record> mapping : this.targetAttributeMappings
+      .values()) {
       mapping.process(source, target);
     }
   }

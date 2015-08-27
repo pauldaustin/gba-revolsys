@@ -74,9 +74,9 @@ public class RecordLog {
     }
   }
 
-  private Writer<Record> writer;
-
   private final Map<RecordDefinition, RecordDefinitionImpl> logRecordDefinitionMap = new HashMap<>();
+
+  private Writer<Record> writer;
 
   public RecordLog() {
   }

@@ -5,21 +5,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
@@ -41,16 +38,11 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 
 public class GpxIterator implements RecordIterator {
-  private static final DateTimeFormatter XML_DATE_TIME_FORMAT = ISODateTimeFormat
-    .dateTimeNoMillis();
-
-  private static final XMLInputFactory FACTORY = XMLInputFactory.newInstance();
-
   private static final Logger log = Logger.getLogger(GpxIterator.class);
 
-  private Record currentRecord;
+  private String baseName;
 
-  private RecordFactory recordFactory;
+  private Record currentRecord;
 
   private File file;
 
@@ -60,17 +52,17 @@ public class GpxIterator implements RecordIterator {
 
   private final XMLStreamReader in;
 
+  private int index = 0;
+
   private boolean loadNextObject = true;
+
+  private final Queue<Record> objects = new LinkedList<Record>();
+
+  private RecordFactory recordFactory;
 
   private String schemaName = GpxConstants.GPX_NS_URI;
 
   private String typePath;
-
-  private String baseName;
-
-  private int index = 0;
-
-  private final Queue<Record> objects = new LinkedList<Record>();
 
   public GpxIterator(final File file) throws IOException, XMLStreamException {
     this(new FileReader(file));
@@ -368,8 +360,8 @@ public class GpxIterator implements RecordIterator {
           }
         } else if (this.in.getName().equals(GpxConstants.TIME_ELEMENT)) {
           final String dateText = StaxUtils.getElementText(this.in);
-          final DateTime date = XML_DATE_TIME_FORMAT.parseDateTime(dateText);
-          final long time = date.getMillis();
+          final Calendar calendar = DateUtil.getIsoCalendar(dateText);
+          final long time = calendar.getTimeInMillis();
           points.setTime(index, time);
           if (numAxis < 4) {
             numAxis = 4;

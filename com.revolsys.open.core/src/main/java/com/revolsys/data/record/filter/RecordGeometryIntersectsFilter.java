@@ -24,20 +24,20 @@ import java.util.Collection;
 import java.util.List;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
-import com.revolsys.filter.FilterUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.predicate.Predicates;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class RecordGeometryIntersectsFilter implements Filter<Record> {
+public class RecordGeometryIntersectsFilter implements Predicate<Record> {
   @SuppressWarnings({
     "rawtypes", "unchecked"
   })
   public static <D extends Record> List<D> filter(final Collection<D> collection,
     final BoundingBox boundingBox) {
-    final Filter filter = new RecordGeometryIntersectsFilter(boundingBox);
-    return FilterUtil.filter(collection, filter);
+    final Predicate predicate = new RecordGeometryIntersectsFilter(boundingBox);
+    return Predicates.filter(collection, predicate);
   }
 
   /** The geometry to compare the data objects to to. */
@@ -60,7 +60,7 @@ public class RecordGeometryIntersectsFilter implements Filter<Record> {
   }
 
   @Override
-  public boolean accept(final Record object) {
+  public boolean test(final Record object) {
     try {
       final Geometry matchGeometry = object.getGeometry();
       final Geometry convertedGeometry = this.geometryFactory.copy(matchGeometry);

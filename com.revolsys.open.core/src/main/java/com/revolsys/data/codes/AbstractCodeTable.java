@@ -23,21 +23,21 @@ public abstract class AbstractCodeTable
 
   private boolean capitalizeWords = false;
 
-  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+  private Map<Object, Object> idIdCache = new LinkedHashMap<>();
 
   private Map<Object, List<Object>> idValueCache = new LinkedHashMap<Object, List<Object>>();
 
-  private Map<Object, Object> idIdCache = new LinkedHashMap<>();
+  private long maxId;
 
-  private Map<List<Object>, Object> valueIdCache = new LinkedHashMap<List<Object>, Object>();
+  private String name;
+
+  private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private final Map<String, Object> stringIdMap = new HashMap<String, Object>();
 
   private JComponent swingEditor;
 
-  private long maxId;
-
-  private String name;
+  private Map<List<Object>, Object> valueIdCache = new LinkedHashMap<List<Object>, Object>();
 
   public AbstractCodeTable() {
   }

@@ -7,9 +7,9 @@ import java.util.NoSuchElementException;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.iterator.AbstractIterator;
-import com.revolsys.data.record.Records;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
+import com.revolsys.data.record.Records;
 import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.data.record.property.FieldProperties;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -19,15 +19,15 @@ import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class WktRecordIterator extends AbstractIterator<Record> implements RecordIterator {
+public class WktRecordIterator extends AbstractIterator<Record>implements RecordIterator {
 
   private RecordFactory factory;
 
   private BufferedReader in;
 
-  private WktParser wktParser;
-
   private RecordDefinition metaData;
+
+  private WktParser wktParser;
 
   public WktRecordIterator(final RecordFactory factory, final Resource resource)
     throws IOException {

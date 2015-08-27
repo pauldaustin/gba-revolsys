@@ -1,11 +1,12 @@
 package com.revolsys.gis.algorithm.locate;
 
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
+
 import com.revolsys.gis.model.coordinates.LineSegmentUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
 
-public class PointInArea extends RayCrossingCounter implements Visitor<LineSegment> {
+public class PointInArea extends RayCrossingCounter implements Consumer<LineSegment> {
 
   private final double minDistance;
 
@@ -19,7 +20,7 @@ public class PointInArea extends RayCrossingCounter implements Visitor<LineSegme
   }
 
   @Override
-  public boolean visit(final LineSegment segment) {
+  public void accept(final LineSegment segment) {
     final double x1 = segment.getX(0);
     final double y1 = segment.getY(0);
     final double x2 = segment.getX(1);
@@ -30,10 +31,9 @@ public class PointInArea extends RayCrossingCounter implements Visitor<LineSegme
       final double distance = LineSegmentUtil.distanceLinePoint(x1, y1, x2, y2, x, y);
       if (distance < this.minDistance) {
         setPointOnSegment(true);
-        return true;
+        return;
       }
     }
     countSegment(x1, y1, x2, y2);
-    return true;
   }
 }

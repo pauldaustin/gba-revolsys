@@ -29,10 +29,10 @@ import com.revolsys.util.Property;
 
 public class SpringUtil {
 
+  private static final ThreadLocal<Resource> BASE_RESOURCE = new ThreadLocal<Resource>();
+
   public static final Pattern KEY_PATTERN = Pattern
     .compile("(\\w[\\w\\d]*)(?:(?:\\[([\\w\\d]+)\\])|(?:\\.([\\w\\d]+)))?");
-
-  private static final ThreadLocal<Resource> BASE_RESOURCE = new ThreadLocal<Resource>();
 
   public static Resource addExtension(final Resource resource, final String extension) {
     final String fileName = resource.getFilename();

@@ -18,8 +18,8 @@ import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
 import com.revolsys.spring.resource.SpringUtil;
 
-public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory implements
-  MapWriterFactory, GeometryReaderFactory {
+public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory
+  implements MapWriterFactory, GeometryReaderFactory {
 
   public KmzIoFactory() {
     super(Kml22Constants.KMZ_FORMAT_DESCRIPTION, true, true);

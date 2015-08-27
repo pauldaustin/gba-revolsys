@@ -25,15 +25,16 @@ import com.revolsys.util.Property;
 
 public class NumberTextField extends JXTextField implements Field, DocumentListener, FocusListener {
 
-  private static final long serialVersionUID = 1L;
-
-  public static final Color DEFAULT_SELECTED_FOREGROUND = new JTextField().getSelectedTextColor();
-
   public static final Color DEFAULT_BACKGROUND = new JTextField().getBackground();
 
   public static final Color DEFAULT_FOREGROUND = new JTextField().getForeground();
 
-  public static Number createMaximumValue(final DataType dataType, final int length, final int scale) {
+  public static final Color DEFAULT_SELECTED_FOREGROUND = new JTextField().getSelectedTextColor();
+
+  private static final long serialVersionUID = 1L;
+
+  public static Number createMaximumValue(final DataType dataType, final int length,
+    final int scale) {
     final Class<?> javaClass = dataType.getJavaClass();
     final StringBuffer text = new StringBuffer(length);
     for (int i = length - scale + 1; i > 1; i--) {
@@ -133,27 +134,27 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
 
   private final DataType dataType;
 
-  private String fieldValidationMessage;
-
-  private final int length;
-
-  private final int scale;
-
-  private BigDecimal minimumValue;
-
-  private BigDecimal maximumValue;
-
-  private boolean fieldValid = true;
+  private String errorMessage;
 
   private final String fieldName;
 
-  private String errorMessage;
+  private boolean fieldValid = true;
+
+  private String fieldValidationMessage;
+
+  private Object fieldValue;
+
+  private final int length;
+
+  private BigDecimal maximumValue;
+
+  private BigDecimal minimumValue;
 
   private String originalToolTip;
 
-  private final CascadingUndoManager undoManager = new CascadingUndoManager();
+  private final int scale;
 
-  private Object fieldValue;
+  private final CascadingUndoManager undoManager = new CascadingUndoManager();
 
   public NumberTextField(final DataType dataType, final int length) {
     this(dataType, length, 0);

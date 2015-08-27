@@ -37,8 +37,6 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
 
   private boolean closeFile = true;
 
-  private RecordFactory recordFactory;
-
   private GeometryFactory geometryFactory;
 
   private EndianInput in;
@@ -53,15 +51,17 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
 
   private int position;
 
+  private RecordFactory recordFactory;
+
   private Resource resource;
+
+  private RecordDefinition returnMetaData;
 
   private int shapeType;
 
-  private XbaseIterator xbaseIterator;
-
   private String typeName;
 
-  private RecordDefinition returnMetaData;
+  private XbaseIterator xbaseIterator;
 
   public ShapefileIterator(final Resource resource, final RecordFactory factory)
     throws IOException {
@@ -166,10 +166,6 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
     this.xbaseIterator = null;
   }
 
-  public RecordFactory getRecordFactory() {
-    return this.recordFactory;
-  }
-
   @Override
   protected Record getNext() {
     Record record;
@@ -211,6 +207,10 @@ public class ShapefileIterator extends AbstractIterator<Record>implements Record
   @Override
   public RecordDefinition getRecordDefinition() {
     return this.metaData;
+  }
+
+  public RecordFactory getRecordFactory() {
+    return this.recordFactory;
   }
 
   public String getTypeName() {

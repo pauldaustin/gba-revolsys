@@ -27,11 +27,11 @@ import com.revolsys.util.UrlUtil;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class WmsClient {
+  private WmsCapabilities capabilities;
+
   private String name;
 
   private final URL serviceUrl;
-
-  private WmsCapabilities capabilities;
 
   public WmsClient(final String url) throws MalformedURLException {
     this(new URL(url));
@@ -59,7 +59,7 @@ public class WmsClient {
 
   public Image getMapImage(final List<String> layers, final List<String> styles, final String srid,
     final Envelope envelope, final String format, final int width, final int height)
-    throws IOException {
+      throws IOException {
     final URL mapUrl = getMapUrl(layers, styles, srid, envelope, format, width, height);
     final URLConnection connection = mapUrl.openConnection();
     final String userInfo = mapUrl.getUserInfo();

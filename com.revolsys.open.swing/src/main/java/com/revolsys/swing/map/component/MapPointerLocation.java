@@ -23,23 +23,23 @@ import com.revolsys.swing.map.Viewport2D;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Point;
 
-public class MapPointerLocation extends JLabel implements MouseMotionListener,
-  PropertyChangeListener {
+public class MapPointerLocation extends JLabel
+  implements MouseMotionListener, PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   private static NumberFormat getFormat() {
     return new DecimalFormat("############.############");
   }
 
-  private final Viewport2D viewport;
+  private final boolean geographics;
 
   private GeometryFactory geometryFactory;
 
+  private final Reference<MapPanel> map;
+
   private String title;
 
-  private final boolean geographics;
-
-  private final Reference<MapPanel> map;
+  private final Viewport2D viewport;
 
   public MapPointerLocation(final MapPanel map, final boolean geographics) {
     this.map = new WeakReference<MapPanel>(map);

@@ -7,14 +7,16 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.DoubleBits;
 
 public class Node extends NodeBase {
-  public static Envelope computeKey(final Coordinate point, final int level, final Envelope itemEnv) {
+  public static Envelope computeKey(final Coordinate point, final int level,
+    final Envelope itemEnv) {
     final double quadSize = DoubleBits.powerOf2(level);
     point.x = Math.floor(itemEnv.getMinX() / quadSize) * quadSize;
     point.y = Math.floor(itemEnv.getMinY() / quadSize) * quadSize;
     return new Envelope(point.x, point.x + quadSize, point.y, point.y + quadSize);
   }
 
-  public static Envelope computeKey(final int level, final Coordinate point, final Envelope itemEnv) {
+  public static Envelope computeKey(final int level, final Coordinate point,
+    final Envelope itemEnv) {
     final double quadSize = DoubleBits.powerOf2(level);
     final double x = Math.floor(itemEnv.getMinX() / quadSize) * quadSize;
     final double y = Math.floor(itemEnv.getMinY() / quadSize) * quadSize;
@@ -58,9 +60,9 @@ public class Node extends NodeBase {
     return node;
   }
 
-  private final Envelope env;
-
   private final Coordinates centre;
+
+  private final Envelope env;
 
   private final int level;
 

@@ -1,15 +1,15 @@
 package com.revolsys.gis.graph.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.GeometryFactory;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 import com.vividsolutions.jts.geom.prep.PreparedGeometryFactory;
 
-public class NodeGeometryIntersectionFilter<T> implements Filter<Node<T>> {
+public class NodeGeometryIntersectionFilter<T> implements Predicate<Node<T>> {
 
   private GeometryFactory geometryFactory;
 
@@ -23,7 +23,7 @@ public class NodeGeometryIntersectionFilter<T> implements Filter<Node<T>> {
   }
 
   @Override
-  public boolean accept(final Node<T> node) {
+  public boolean test(final Node<T> node) {
     final Coordinates coordinates = node;
     final Point point = this.geometryFactory.createPoint(coordinates);
     final boolean intersects = this.preparedGeometry.intersects(point);

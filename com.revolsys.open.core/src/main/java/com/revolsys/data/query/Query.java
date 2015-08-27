@@ -13,10 +13,10 @@ import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jts.geom.BoundingBox;
-import com.revolsys.properties.AbstractObjectWithProperties;
+import com.revolsys.properties.BaseObjectWithProperties;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class Query extends AbstractObjectWithProperties implements Cloneable {
+public class Query extends BaseObjectWithProperties implements Cloneable {
   private static void addFilter(final Query query, final RecordDefinition metaData,
     final Map<String, ?> filter, final AbstractMultiCondition multipleCondition) {
     if (filter != null && !filter.isEmpty()) {
@@ -57,7 +57,8 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return query;
   }
 
-  public static Query equal(final RecordDefinition metaData, final String name, final Object value) {
+  public static Query equal(final RecordDefinition metaData, final String name,
+    final Object value) {
     final FieldDefinition attribute = metaData.getField(name);
     if (attribute == null) {
       return null;
@@ -78,9 +79,9 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
     return query;
   }
 
-  private List<String> fieldNames = Collections.emptyList();
-
   private BoundingBox boundingBox;
+
+  private List<String> fieldNames = Collections.emptyList();
 
   private String fromClause;
 
@@ -90,13 +91,13 @@ public class Query extends AbstractObjectWithProperties implements Cloneable {
 
   private boolean lockResults = false;
 
-  private RecordDefinition recordDefinition;
-
   private int offset = 0;
 
   private Map<String, Boolean> orderBy = new HashMap<String, Boolean>();
 
   private List<Object> parameters = new ArrayList<Object>();
+
+  private RecordDefinition recordDefinition;
 
   private String sql;
 

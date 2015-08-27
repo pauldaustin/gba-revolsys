@@ -14,9 +14,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.revolsys.collection.InvokeMethodVisitor;
-import com.revolsys.collection.Visitor;
+import java.util.function.Consumer;
 import com.revolsys.comparator.CollectionComparator;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
@@ -39,6 +38,7 @@ import com.revolsys.jts.filter.CrossingLineSegmentFilter;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -66,13 +66,13 @@ public class LineStringGraph extends Graph<LineSegment> {
     }
   }
 
-  private GeometryFactory geometryFactory;
-
-  private CoordinatesList points;
+  private BoundingBox envelope;
 
   private Coordinates fromPoint;
 
-  private BoundingBox envelope;
+  private GeometryFactory geometryFactory;
+
+  private CoordinatesList points;
 
   public LineStringGraph(final CoordinatesList points) {
     super(false);
@@ -319,8 +319,8 @@ public class LineStringGraph extends Graph<LineSegment> {
 
               if (point.equals(fromPoint) || point.equals(toPoint)) {
                 // Point intersection, make sure it's not at the start
-                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor.getNodes(
-                  this, point, maxDistance)) {
+                for (final Node<LineSegment> node : NodeLessThanDistanceOfCoordinatesVisitor
+                  .getNodes(this, point, maxDistance)) {
                   final int degree = node.getDegree();
                   if (node.equals2d(this.fromPoint)) {
                     if (degree > 2) {
@@ -383,7 +383,7 @@ public class LineStringGraph extends Graph<LineSegment> {
   }
 
   private void removeDuplicateEdges() {
-    final Visitor<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
+    final Consumer<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
       "removeDuplicateEdges");
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
       INDEX);
@@ -441,15 +441,15 @@ public class LineStringGraph extends Graph<LineSegment> {
   public void splitCrossingEdges() {
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
       INDEX);
-    final Visitor<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
+    final Consumer<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
       "splitCrossingEdges");
     visitEdges(comparator, visitor);
   }
 
   public boolean splitCrossingEdges(final Edge<LineSegment> edge1) {
     final LineSegment line1 = edge1.getObject();
-    final Filter<LineSegment> lineFilter = new CrossingLineSegmentFilter(line1);
-    final Filter<Edge<LineSegment>> filter = new EdgeObjectFilter<LineSegment>(lineFilter);
+    final Predicate<LineSegment> lineFilter = new CrossingLineSegmentFilter(line1);
+    final Predicate<Edge<LineSegment>> filter = new EdgeObjectFilter<LineSegment>(lineFilter);
     final List<Edge<LineSegment>> edges = getEdges(filter, line1.getEnvelope());
 
     if (!edges.isEmpty()) {
@@ -502,7 +502,8 @@ public class LineStringGraph extends Graph<LineSegment> {
     return newEdges;
   }
 
-  public <V extends Coordinates> void splitEdges(final Map<Edge<LineSegment>, List<V>> pointsOnEdge1) {
+  public <V extends Coordinates> void splitEdges(
+    final Map<Edge<LineSegment>, List<V>> pointsOnEdge1) {
     for (final Entry<Edge<LineSegment>, List<V>> entry : pointsOnEdge1.entrySet()) {
       final Edge<LineSegment> edge = entry.getKey();
       final List<V> nodes = entry.getValue();

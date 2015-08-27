@@ -7,8 +7,8 @@ import com.revolsys.parallel.channel.ChannelValueStore;
 import com.revolsys.parallel.channel.ClosedException;
 import com.revolsys.parallel.channel.store.Buffer;
 
-public abstract class AbstractInOutProcess<I, O> extends AbstractProcess implements
-  InOutProcess<I, O> {
+public abstract class AbstractInOutProcess<I, O> extends AbstractProcess
+  implements InOutProcess<I, O> {
 
   private Channel<I> in;
 

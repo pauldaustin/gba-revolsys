@@ -25,6 +25,8 @@ public class SegmentIntersector extends com.vividsolutions.jts.geomgraph.index.S
     return Math.abs(i1 - i2) == 1;
   }
 
+  private Collection[] bdyNodes;
+
   /**
    * These variables keep track of what types of intersections were
    * found during ALL edges that have been intersected.
@@ -35,21 +37,19 @@ public class SegmentIntersector extends com.vividsolutions.jts.geomgraph.index.S
 
   private boolean hasProperInterior = false;
 
-  // the proper intersection point found
-  private Coordinate properIntersectionPoint = null;
-
-  private final LineIntersector li;
-
   private final boolean includeProper;
 
-  private final boolean recordIsolated;
+  private final LineIntersector li;
 
   // testing only
   public int numTests = 0;
 
-  private Collection[] bdyNodes;
+  // the proper intersection point found
+  private Coordinate properIntersectionPoint = null;
 
   private final List<Coordinates> properIntersections = new ArrayList<Coordinates>();
+
+  private final boolean recordIsolated;
 
   /*
    * public SegmentIntersector() { }
@@ -198,8 +198,8 @@ public class SegmentIntersector extends com.vividsolutions.jts.geomgraph.index.S
         }
         if (e0.isClosed()) {
           final int maxSegIndex = e0.getNumPoints() - 1;
-          if (segIndex0 == 0 && segIndex1 == maxSegIndex || segIndex1 == 0
-            && segIndex0 == maxSegIndex) {
+          if (segIndex0 == 0 && segIndex1 == maxSegIndex
+            || segIndex1 == 0 && segIndex0 == maxSegIndex) {
             return true;
           }
         }

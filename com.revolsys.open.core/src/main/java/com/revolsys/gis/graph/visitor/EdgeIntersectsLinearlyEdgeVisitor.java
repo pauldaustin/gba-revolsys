@@ -2,8 +2,8 @@ package com.revolsys.gis.graph.visitor;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
-import com.revolsys.collection.Visitor;
 import com.revolsys.gis.algorithm.index.IdObjectIndex;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
@@ -13,7 +13,7 @@ import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.IntersectionMatrix;
 import com.vividsolutions.jts.geom.LineString;
 
-public class EdgeIntersectsLinearlyEdgeVisitor<T> implements Visitor<Edge<T>> {
+public class EdgeIntersectsLinearlyEdgeVisitor<T> implements Consumer<Edge<T>> {
 
   public static <T> List<Edge<T>> getEdges(final Graph<T> graph, final Edge<T> edge) {
     final CreateListVisitor<Edge<T>> results = new CreateListVisitor<Edge<T>>();
@@ -29,15 +29,16 @@ public class EdgeIntersectsLinearlyEdgeVisitor<T> implements Visitor<Edge<T>> {
 
   private final Edge<T> edge;
 
-  private final Visitor<Edge<T>> matchVisitor;
+  private final Consumer<Edge<T>> matchVisitor;
 
-  public EdgeIntersectsLinearlyEdgeVisitor(final Edge<T> edge, final Visitor<Edge<T>> matchVisitor) {
+  public EdgeIntersectsLinearlyEdgeVisitor(final Edge<T> edge,
+    final Consumer<Edge<T>> matchVisitor) {
     this.edge = edge;
     this.matchVisitor = matchVisitor;
   }
 
   @Override
-  public boolean visit(final Edge<T> edge2) {
+  public void accept(final Edge<T> edge2) {
     if (edge2 != this.edge) {
       final LineString line1 = this.edge.getLine();
       final LineString line2 = edge2.getLine();
@@ -46,11 +47,10 @@ public class EdgeIntersectsLinearlyEdgeVisitor<T> implements Visitor<Edge<T>> {
       if (envelope1.intersects(envelope2)) {
         final IntersectionMatrix relate = line1.relate(line2);
         if (relate.get(0, 0) == Dimension.L) {
-          this.matchVisitor.visit(edge2);
+          this.matchVisitor.accept(edge2);
         }
       }
     }
-    return true;
   }
 
 }

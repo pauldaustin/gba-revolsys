@@ -3,13 +3,13 @@ package com.revolsys.gis.wms.capabilities;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class BoundingBox {
-  private String srs;
-
   private Envelope envelope;
 
   private double resX;
 
   private double resY;
+
+  private String srs;
 
   public Envelope getEnvelope() {
     return this.envelope;

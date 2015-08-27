@@ -1,7 +1,7 @@
 package com.revolsys.gis.algorithm.locate;
 
 public enum Location {
-  NONE(-1), INTERIOR(0), BOUNDARY(1), EXTERIOR(2);
+  BOUNDARY(1), EXTERIOR(2), INTERIOR(0), NONE(-1);
 
   private int index;
 

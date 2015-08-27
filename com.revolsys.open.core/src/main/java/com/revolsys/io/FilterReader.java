@@ -5,20 +5,20 @@ import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.collection.FilterIterator;
+import com.revolsys.collection.iterator.PredicateIterator;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 
 public class FilterReader extends AbstractReader<Record>implements RecordReader {
 
-  private Filter<Record> filter;
+  private Predicate<Record> predicate;
 
   private RecordReader reader;
 
-  public FilterReader(final Filter<Record> filter, final RecordReader reader) {
-    this.filter = filter;
+  public FilterReader(final Predicate<Record> filter, final RecordReader reader) {
+    this.predicate = filter;
     this.reader = reader;
   }
 
@@ -29,12 +29,12 @@ public class FilterReader extends AbstractReader<Record>implements RecordReader 
     if (this.reader != null) {
       this.reader.close();
     }
-    this.filter = null;
+    this.predicate = null;
     this.reader = null;
   }
 
-  protected Filter<Record> getFilter() {
-    return this.filter;
+  protected Predicate<Record> getFilter() {
+    return this.predicate;
   }
 
   @Override
@@ -54,7 +54,7 @@ public class FilterReader extends AbstractReader<Record>implements RecordReader 
   @Override
   public Iterator<Record> iterator() {
     final Iterator<Record> iterator = this.reader.iterator();
-    return new FilterIterator<Record>(this.filter, iterator);
+    return new PredicateIterator<Record>(this.predicate, iterator);
   }
 
   @Override

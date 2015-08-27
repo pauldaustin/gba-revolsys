@@ -1,14 +1,14 @@
 package com.revolsys.data.record.filter;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 
 /**
  * Filter records by the the attribute having a null value.
  *
  * @author Paul Austin
  */
-public class AttributeValueNullFilter implements Filter<Record> {
+public class AttributeValueNullFilter implements Predicate<Record> {
 
   /** The property name, or path to match. */
   private String attributeName;
@@ -27,7 +27,7 @@ public class AttributeValueNullFilter implements Filter<Record> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final Record object) {
+  public boolean test(final Record object) {
     final Object propertyValue = object.getValue(this.attributeName);
     return propertyValue == null;
   }

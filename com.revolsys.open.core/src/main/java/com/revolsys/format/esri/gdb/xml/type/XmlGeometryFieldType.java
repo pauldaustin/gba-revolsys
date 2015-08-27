@@ -96,7 +96,8 @@ public class XmlGeometryFieldType extends AbstractEsriGeodatabaseXmlFieldType {
     writePoint(out, coordinates, hasZ);
   }
 
-  public void writePointArray(final XmlWriter out, final CoordinatesList points, final boolean hasZ) {
+  public void writePointArray(final XmlWriter out, final CoordinatesList points,
+    final boolean hasZ) {
     out.startTag(POINT_ARRAY);
     out.attribute(XsiConstants.TYPE, POINT_ARRAY_TYPE);
 

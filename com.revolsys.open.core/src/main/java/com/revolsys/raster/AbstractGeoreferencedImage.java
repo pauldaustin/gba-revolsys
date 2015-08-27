@@ -51,8 +51,8 @@ import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Point;
 
-public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeObject implements
-  GeoreferencedImage {
+public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeObject
+  implements GeoreferencedImage {
 
   private static double[] calculateLSM(final BoundingBox boundingBox, final int imageWidth,
     final int imageHeight, final List<MappedLocation> mappings) {
@@ -82,7 +82,8 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
     return x.getElements()[0];
   }
 
-  public static GeneralMatrix getAMatrix(final List<MappedLocation> mappings, final int imageHeight) {
+  public static GeneralMatrix getAMatrix(final List<MappedLocation> mappings,
+    final int imageHeight) {
     final GeneralMatrix A = new GeneralMatrix(2 * mappings.size(), 6);
 
     final int numRow = mappings.size() * 2;
@@ -159,31 +160,31 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
     return X;
   }
 
-  private List<Dimension> overviewSizes = new ArrayList<>();
-
   private BoundingBox boundingBox = new BoundingBox();
-
-  private int imageWidth = -1;
-
-  private int imageHeight = -1;
-
-  private GeometryFactory geometryFactory = GeometryFactory.getFactory();
-
-  private RenderedImage renderedImage;
-
-  private Resource imageResource;
-
-  private double resolution;
-
-  private final Map<CoordinateSystem, AbstractGeoreferencedImage> projectedImages = new HashMap<CoordinateSystem, AbstractGeoreferencedImage>();
-
-  private final PropertyChangeArrayList<MappedLocation> tiePoints = new PropertyChangeArrayList<MappedLocation>();
-
-  private boolean hasChanges;
 
   private int[] dpi;
 
   private File file;
+
+  private GeometryFactory geometryFactory = GeometryFactory.getFactory();
+
+  private boolean hasChanges;
+
+  private int imageHeight = -1;
+
+  private Resource imageResource;
+
+  private int imageWidth = -1;
+
+  private List<Dimension> overviewSizes = new ArrayList<>();
+
+  private final Map<CoordinateSystem, AbstractGeoreferencedImage> projectedImages = new HashMap<CoordinateSystem, AbstractGeoreferencedImage>();
+
+  private RenderedImage renderedImage;
+
+  private double resolution;
+
+  private final PropertyChangeArrayList<MappedLocation> tiePoints = new PropertyChangeArrayList<MappedLocation>();
 
   public AbstractGeoreferencedImage() {
   }
@@ -531,7 +532,8 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
             for (int i = 0; i < srsList.getLength() && srid == 0; i++) {
               final Node srsNode = srsList.item(i);
               final String srsWkt = srsNode.getTextContent();
-              final CoordinateSystem coordinateSystem = EsriCoordinateSystems.getCoordinateSystem(srsWkt);
+              final CoordinateSystem coordinateSystem = EsriCoordinateSystems
+                .getCoordinateSystem(srsWkt);
               if (coordinateSystem != null) {
                 srid = coordinateSystem.getId();
               }
@@ -544,7 +546,8 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
           final List<Double> targetControlPoints = DomUtil.getDoubleList(doc, "TargetGCPs");
           if (sourceControlPoints.size() > 0 && targetControlPoints.size() > 0) {
             final List<MappedLocation> tiePoints = new ArrayList<MappedLocation>();
-            for (int i = 0; i < sourceControlPoints.size() && i < targetControlPoints.size(); i += 2) {
+            for (int i = 0; i < sourceControlPoints.size()
+              && i < targetControlPoints.size(); i += 2) {
               final double imageX = sourceControlPoints.get(i) * dpi[0];
               final double imageY = sourceControlPoints.get(i + 1) * dpi[1];
               final Coordinates sourcePixel = new DoubleCoordinates(imageX, imageY);
@@ -587,7 +590,8 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
     final Resource resource = getImageResource();
     final Resource projectionFile = SpringUtil.getResourceWithExtension(resource, "prj");
     if (projectionFile.exists()) {
-      final CoordinateSystem coordinateSystem = EsriCoordinateSystems.getCoordinateSystem(projectionFile);
+      final CoordinateSystem coordinateSystem = EsriCoordinateSystems
+        .getCoordinateSystem(projectionFile);
       setCoordinateSystem(coordinateSystem);
     }
   }

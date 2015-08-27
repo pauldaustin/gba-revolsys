@@ -20,10 +20,11 @@ import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
 import com.revolsys.spring.resource.SpringUtil;
 
-public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory implements
-  MapWriterFactory, GeometryReaderFactory {
+public class KmlIoFactory extends AbstractRecordAndGeometryWriterFactory
+  implements MapWriterFactory, GeometryReaderFactory {
 
-  private final Set<CoordinateSystem> coordinateSystems = EpsgCoordinateSystems.getCoordinateSystems();
+  private final Set<CoordinateSystem> coordinateSystems = EpsgCoordinateSystems
+    .getCoordinateSystems();
 
   public KmlIoFactory() {
     super(Kml22Constants.KML_FORMAT_DESCRIPTION, true, true);

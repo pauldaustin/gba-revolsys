@@ -9,15 +9,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 
-import oracle.sql.CLOB;
-
-import com.revolsys.spring.resource.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.types.DataTypes;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
+import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
+
+import oracle.sql.CLOB;
 
 public class OracleJdbcClobAttribute extends JdbcFieldDefinition {
   public OracleJdbcClobAttribute(final String dbName, final String name, final int sqlType,

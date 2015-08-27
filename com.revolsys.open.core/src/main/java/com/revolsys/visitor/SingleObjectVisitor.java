@@ -1,8 +1,9 @@
 package com.revolsys.visitor;
 
 import java.util.Comparator;
+import java.util.function.Predicate;
 
-import com.revolsys.filter.Filter;
+import com.revolsys.util.ExitLoopException;
 
 public class SingleObjectVisitor<T> extends BaseVisitor<T> {
   private T object;
@@ -14,20 +15,20 @@ public class SingleObjectVisitor<T> extends BaseVisitor<T> {
     super(comparator);
   }
 
-  public SingleObjectVisitor(final Filter<T> filter) {
+  public SingleObjectVisitor(final Predicate<T> filter) {
     super(filter);
   }
 
-  public SingleObjectVisitor(final Filter<T> filter, final Comparator<T> comparator) {
+  public SingleObjectVisitor(final Predicate<T> filter, final Comparator<T> comparator) {
     super(filter, comparator);
   }
 
   @Override
-  public boolean doVisit(final T object) {
+  public void doVisit(final T object) {
     if (this.object == null) {
       this.object = object;
     }
-    return false;
+    throw new ExitLoopException();
   }
 
   public T getObject() {

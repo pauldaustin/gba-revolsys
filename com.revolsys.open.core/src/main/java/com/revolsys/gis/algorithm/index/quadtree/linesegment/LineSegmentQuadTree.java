@@ -1,9 +1,9 @@
 package com.revolsys.gis.algorithm.index.quadtree.linesegment;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-import com.revolsys.collection.Visitor;
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
@@ -12,6 +12,7 @@ import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryEditUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
+import com.revolsys.util.ExitLoopException;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -43,9 +44,9 @@ public class LineSegmentQuadTree {
 
   private final Geometry geometry;
 
-  private final Root root = new Root();
-
   private double minExtent = 1.0;
+
+  private final Root root = new Root();
 
   private int size = 0;
 
@@ -117,7 +118,7 @@ public class LineSegmentQuadTree {
 
   public List<LineSegment> getAll() {
     final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>();
-    this.root.visit(this, visitor);
+    this.root.forEach(this, visitor);
     return visitor.getList();
   }
 
@@ -154,7 +155,8 @@ public class LineSegmentQuadTree {
     return this.size;
   }
 
-  public List<LineSegment> getWithin(final BoundingBox boundingBox, final Filter<LineSegment> filter) {
+  public List<LineSegment> getWithin(final BoundingBox boundingBox,
+    final Predicate<LineSegment> filter) {
     final CreateListVisitor<LineSegment> visitor = new CreateListVisitor<LineSegment>(filter);
     visit(boundingBox, visitor);
     return visitor.getList();
@@ -179,8 +181,12 @@ public class LineSegmentQuadTree {
     return getSize();
   }
 
-  public void visit(final BoundingBox boundingBox, final Visitor<LineSegment> visitor) {
-    this.root.visit(this, boundingBox, visitor);
+  public void visit(final BoundingBox boundingBox, final Consumer<LineSegment> visitor) {
+    try {
+      this.root.forEach(this, boundingBox, visitor);
+    } catch (final ExitLoopException e) {
+
+    }
   }
 
 }

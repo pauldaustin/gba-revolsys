@@ -54,10 +54,10 @@ public class XmlWriter extends Writer {
     /** The namespaces defined on the element. */
     private final List<String> attributeDefinedNamespaces = new ArrayList<String>();
 
-    private String tagDefinedNamespace;
-
     /** The QName of the current element. */
     private final QName element;
+
+    private String tagDefinedNamespace;
 
     /**
      * Construct a new TagConfiguration
@@ -138,12 +138,10 @@ public class XmlWriter extends Writer {
   /** Flag indicating that the xml elements should be indented. */
   private boolean indent;
 
-  private boolean writeNewLine = true;
+  private final Map<String, String> namespaceAliasMap = new LinkedHashMap<String, String>();
 
   /** The map of XML Namespace URIs to prefixes. */
   private final Map<String, String> namespacePrefixMap = new LinkedHashMap<String, String>();
-
-  private final Map<String, String> namespaceAliasMap = new LinkedHashMap<String, String>();
 
   /** The string of characters to use for a new line. */
   private final String newLine = "\n";
@@ -151,16 +149,18 @@ public class XmlWriter extends Writer {
   /** The underlying writer to write to. */
   private final PrintWriter out;
 
+  private int prefixNum;
+
   /** Flag indicating that XML namespaces should be written to the output. */
   private final boolean useNamespaces;
+
+  private boolean writeNewLine = true;
 
   /** Flag indicating that a start tag has been written by not closed. */
   private boolean writingStartTag = false;
 
   /** Flag indicating that an XML declaration has been written. */
   private boolean xmlDeclarationWritten = false;
-
-  private int prefixNum;
 
   /**
    * Construct a new XmlWriter.
@@ -546,7 +546,8 @@ public class XmlWriter extends Writer {
    */
   public void endDocument() {
     this.endingDocument = true;
-    for (final Iterator<TagConfiguration> elements = this.elementStack.iterator(); elements.hasNext();) {
+    for (final Iterator<TagConfiguration> elements = this.elementStack.iterator(); elements
+      .hasNext();) {
       final TagConfiguration tag = elements.next();
       final QName element = tag.getElement();
       endTag(element);
@@ -581,8 +582,8 @@ public class XmlWriter extends Writer {
     } else {
       final QName currentElement = currentTag.getElement();
       if (!element.equals(currentElement)) {
-        throw new IllegalArgumentException("Cannot end tag " + element + " expecting "
-          + currentElement);
+        throw new IllegalArgumentException(
+          "Cannot end tag " + element + " expecting " + currentElement);
       }
       if (this.writingStartTag) {
         writeNamespaces();
@@ -1153,8 +1154,8 @@ public class XmlWriter extends Writer {
         default:
           // Reject all other control characters
           if (ch < 32) {
-            throw new IllegalStateException("character " + Integer.toString(ch)
-              + " is not allowed in output");
+            throw new IllegalStateException(
+              "character " + Integer.toString(ch) + " is not allowed in output");
           }
         break;
       }
@@ -1217,8 +1218,8 @@ public class XmlWriter extends Writer {
         default:
           // Reject all other control characters
           if (ch < 32) {
-            throw new IllegalStateException("character " + Integer.toString(ch)
-              + " is not allowed in output");
+            throw new IllegalStateException(
+              "character " + Integer.toString(ch) + " is not allowed in output");
           }
         break;
       }

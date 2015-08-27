@@ -62,11 +62,11 @@ public class TablePanel extends JPanel implements MouseListener {
 
   private final MenuFactory menu = new MenuFactory();
 
+  private final JScrollPane scrollPane;
+
   private final JTable table;
 
   private final ToolBar toolBar = new ToolBar();
-
-  private final JScrollPane scrollPane;
 
   public TablePanel(final JTable table) {
     super(new BorderLayout());

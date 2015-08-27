@@ -2,14 +2,14 @@ package com.revolsys.data.record.filter;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 
 /**
  * Filter records by the type (Java class) of the attributeName value.
  *
  * @author Paul Austin
  */
-public class AttributeValueClassFilter implements Filter<Record> {
+public class AttributeValueClassFilter implements Predicate<Record> {
   /** The attributeName name, or path to match. */
   private String attributeName;
 
@@ -23,7 +23,7 @@ public class AttributeValueClassFilter implements Filter<Record> {
    * @return True if the object matched the filter, false otherwise.
    */
   @Override
-  public boolean accept(final Record object) {
+  public boolean test(final Record object) {
     final Object propertyValue = Records.getAttributeByPath(object, this.attributeName);
     return this.type.isInstance(propertyValue);
   }

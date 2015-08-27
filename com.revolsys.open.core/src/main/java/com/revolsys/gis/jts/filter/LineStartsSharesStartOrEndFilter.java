@@ -20,12 +20,12 @@
  */
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.filter.Filter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
-public class LineStartsSharesStartOrEndFilter implements Filter<LineString> {
+public class LineStartsSharesStartOrEndFilter implements Predicate<LineString> {
   private final CoordinatesList points;
 
   private final CoordinatesList reversePoints;
@@ -36,7 +36,7 @@ public class LineStartsSharesStartOrEndFilter implements Filter<LineString> {
   }
 
   @Override
-  public boolean accept(final LineString line) {
+  public boolean test(final LineString line) {
     final CoordinatesList points = CoordinatesListUtil.get(line);
 
     if (this.points.startsWith(points, this.points.getNumAxis())) {

@@ -18,9 +18,9 @@ import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.table.record.model.AbstractSingleRecordTableModel;
 
 public class SingleRecordTableCellRenderer implements TableCellRenderer {
-  private final JLabel valueComponent = new JLabel();
-
   private final JLabel labelComponent = new JLabel();
+
+  private final JLabel valueComponent = new JLabel();
 
   public SingleRecordTableCellRenderer() {
     this.labelComponent.setBorder(new EmptyBorder(1, 2, 1, 2));

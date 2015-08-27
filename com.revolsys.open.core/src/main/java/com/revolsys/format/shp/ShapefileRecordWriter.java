@@ -74,11 +74,11 @@ public class ShapefileRecordWriter extends XbaseRecordWriter {
 
   private final Resource resource;
 
+  private int shapeType = ShapefileConstants.NULL_SHAPE;
+
   private final double zMax = 0; // Double.MIN_VALUE;
 
   private final double zMin = 0; // Double.MAX_VALUE;
-
-  private int shapeType = ShapefileConstants.NULL_SHAPE;
 
   public ShapefileRecordWriter(final RecordDefinition metaData, final Resource resource) {
     super(metaData, SpringUtil.getResourceWithExtension(resource, "dbf"));

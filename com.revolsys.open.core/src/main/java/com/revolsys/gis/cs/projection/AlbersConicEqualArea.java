@@ -111,10 +111,14 @@ public class AlbersConicEqualArea implements CoordinatesProjection {
   public AlbersConicEqualArea(final ProjectedCoordinateSystem cs) {
     final GeographicCoordinateSystem geographicCS = cs.getGeographicCoordinateSystem();
     final Datum datum = geographicCS.getDatum();
-    final double centralMeridian = cs.getDoubleParameter(ProjectionParameterNames.LONGITUDE_OF_CENTER);
-    final double firstStandardParallel = cs.getDoubleParameter(ProjectionParameterNames.STANDARD_PARALLEL_1);
-    final double secondStandardParallel = cs.getDoubleParameter(ProjectionParameterNames.STANDARD_PARALLEL_2);
-    final double latitudeOfProjection = cs.getDoubleParameter(ProjectionParameterNames.LATITUDE_OF_CENTER);
+    final double centralMeridian = cs
+      .getDoubleParameter(ProjectionParameterNames.LONGITUDE_OF_CENTER);
+    final double firstStandardParallel = cs
+      .getDoubleParameter(ProjectionParameterNames.STANDARD_PARALLEL_1);
+    final double secondStandardParallel = cs
+      .getDoubleParameter(ProjectionParameterNames.STANDARD_PARALLEL_2);
+    final double latitudeOfProjection = cs
+      .getDoubleParameter(ProjectionParameterNames.LATITUDE_OF_CENTER);
     this.spheroid = datum.getSpheroid();
     this.x0 = cs.getDoubleParameter(ProjectionParameterNames.FALSE_EASTING);
     this.y0 = cs.getDoubleParameter(ProjectionParameterNames.FALSE_NORTHING);
@@ -152,9 +156,8 @@ public class AlbersConicEqualArea implements CoordinatesProjection {
     final double y = from.getY() - this.y0;
     final double theta = Math.atan(x / (this.rho0 - y));
     final double rho = Math.sqrt(x * x + Math.pow(this.rho0 - y, 2.0));
-    final double q = (this.c - rho * rho * this.n * this.n
-      / (this.semiMajorAxis * this.semiMajorAxis))
-      / this.n;
+    final double q = (this.c
+      - rho * rho * this.n * this.n / (this.semiMajorAxis * this.semiMajorAxis)) / this.n;
     final double lambda = this.lambda0 + theta / this.n;
     double li = Math.asin(q / 2.0);
     if (!Double.isNaN(li)) {
@@ -255,9 +258,8 @@ public class AlbersConicEqualArea implements CoordinatesProjection {
   private double q(final double phi) {
     final double sinPhi = Math.sin(phi);
     final double eSinPhi = this.e * sinPhi;
-    final double q = (1.0 - this.ee)
-      * (sinPhi / (1.0 - this.ee * sinPhi * sinPhi) - 1.0 / (2.0 * this.e)
-        * Math.log((1.0 - eSinPhi) / (1.0 + eSinPhi)));
+    final double q = (1.0 - this.ee) * (sinPhi / (1.0 - this.ee * sinPhi * sinPhi)
+      - 1.0 / (2.0 * this.e) * Math.log((1.0 - eSinPhi) / (1.0 + eSinPhi)));
     return q;
   }
 }

@@ -63,9 +63,11 @@ public class Spheroid implements Serializable {
     if (object instanceof Spheroid) {
       final Spheroid spheroid = (Spheroid)object;
       final PrecisionModel precision = new PrecisionModel(1000000);
-      if (Double.doubleToLongBits(precision.makePrecise(this.inverseFlattening)) != Double.doubleToLongBits(precision.makePrecise(spheroid.inverseFlattening))) {
+      if (Double.doubleToLongBits(precision.makePrecise(this.inverseFlattening)) != Double
+        .doubleToLongBits(precision.makePrecise(spheroid.inverseFlattening))) {
         return false;
-      } else if (Double.doubleToLongBits(this.semiMajorAxis) != Double.doubleToLongBits(spheroid.semiMajorAxis)) {
+      } else if (Double.doubleToLongBits(this.semiMajorAxis) != Double
+        .doubleToLongBits(spheroid.semiMajorAxis)) {
         return false;
       }
       return true;

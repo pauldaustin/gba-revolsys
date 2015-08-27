@@ -33,17 +33,17 @@ public class StringListField extends ValueField {
 
   private static final long serialVersionUID = 1L;
 
-  private final JTextField valueEntry = new JTextField();
-
-  private final BaseListModel<String> values = new BaseListModel<String>();
-
   private final JButton addButton;
 
   private final Comparator<String> comparator;
 
-  private final JXList valuesField;
-
   private final ToolBar toolBar = new ToolBar();
+
+  private final JTextField valueEntry = new JTextField();
+
+  private final BaseListModel<String> values = new BaseListModel<String>();
+
+  private final JXList valuesField;
 
   public StringListField(final Comparator<String> comparator, final String fieldName) {
     super(fieldName, "");
@@ -79,8 +79,8 @@ public class StringListField extends ValueField {
     fieldPanel.add(namesPane);
     updateFields();
 
-    this.valueEntry.getDocument().addDocumentListener(
-      new InvokeMethodListener(this, "updateFields"));
+    this.valueEntry.getDocument()
+      .addDocumentListener(new InvokeMethodListener(this, "updateFields"));
 
     this.valuesField.addListSelectionListener(new InvokeMethodListener(this, "updateFields"));
 

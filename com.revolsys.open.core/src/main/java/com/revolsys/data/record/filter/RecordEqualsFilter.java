@@ -6,13 +6,13 @@ import java.util.HashSet;
 import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.Record;
-import com.revolsys.filter.Filter;
+import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class RecordEqualsFilter implements Filter<Record> {
-  private EqualsRegistry equalsRegistry = EqualsInstance.INSTANCE;
-
+public class RecordEqualsFilter implements Predicate<Record> {
   private final Collection<String> equalExclude = new HashSet<String>();
+
+  private EqualsRegistry equalsRegistry = EqualsInstance.INSTANCE;
 
   private final Record searchObject;
 
@@ -40,7 +40,7 @@ public class RecordEqualsFilter implements Filter<Record> {
   }
 
   @Override
-  public boolean accept(final Record object) {
+  public boolean test(final Record object) {
     final Geometry serachGeometry = this.searchObject.getGeometry();
     final Geometry geometry = object.getGeometry();
 

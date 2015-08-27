@@ -38,8 +38,8 @@ public class StringConverterRegistry {
     if (value == null) {
       return null;
     } else {
-      final StringConverter<Object> converter = StringConverterRegistry.getInstance().getConverter(
-        valueClass);
+      final StringConverter<Object> converter = StringConverterRegistry.getInstance()
+        .getConverter(valueClass);
       if (converter == null) {
         return (V)value;
       } else {
@@ -73,8 +73,8 @@ public class StringConverterRegistry {
     if (value == null) {
       return null;
     } else {
-      final StringConverter<Object> converter = StringConverterRegistry.getInstance().getConverter(
-        valueClass);
+      final StringConverter<Object> converter = StringConverterRegistry.getInstance()
+        .getConverter(valueClass);
       if (converter == null) {
         return value.toString();
       } else {

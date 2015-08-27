@@ -20,16 +20,16 @@ import com.revolsys.swing.map.layer.record.table.RecordLayerTable;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class RecordListLayerTableModel extends RecordLayerTableModel implements
-  PropertyChangeListener {
+public class RecordListLayerTableModel extends RecordLayerTableModel
+  implements PropertyChangeListener {
   private static final long serialVersionUID = 1L;
 
   public static RecordLayerTable createTable(final ListRecordLayer layer) {
     final RecordLayerTableModel model = new RecordListLayerTableModel(layer);
     final RecordLayerTable table = new RecordLayerTable(model);
 
-    Property.addListener(layer, "hasSelectedRecords", new InvokeMethodListener(
-      RecordLayerTableModel.class, "selectionChanged", table, model));
+    Property.addListener(layer, "hasSelectedRecords",
+      new InvokeMethodListener(RecordLayerTableModel.class, "selectionChanged", table, model));
 
     return table;
   }

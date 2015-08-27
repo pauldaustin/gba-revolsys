@@ -13,16 +13,16 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.Reader;
 
-public class RecordDefinitionConvertRecordReader extends AbstractReader<Record> implements
-  RecordReader, Iterator<Record> {
+public class RecordDefinitionConvertRecordReader extends AbstractReader<Record>
+  implements RecordReader, Iterator<Record> {
+
+  private Iterator<Record> iterator;
 
   private final RecordDefinition metaData;
 
-  private final Reader<Record> reader;
-
   private boolean open;
 
-  private Iterator<Record> iterator;
+  private final Reader<Record> reader;
 
   public RecordDefinitionConvertRecordReader(final RecordDefinition metaData,
     final Reader<Record> reader) {

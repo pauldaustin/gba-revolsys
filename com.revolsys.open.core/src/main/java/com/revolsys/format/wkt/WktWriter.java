@@ -337,7 +337,8 @@ public class WktWriter {
     }
   }
 
-  private static void writePolygon(final PrintWriter out, final Polygon polygon, final int numAxis) {
+  private static void writePolygon(final PrintWriter out, final Polygon polygon,
+    final int numAxis) {
     out.print('(');
     final LineString shell = polygon.getExteriorRing();
     final CoordinateSequence coordinates = shell.getCoordinateSequence();

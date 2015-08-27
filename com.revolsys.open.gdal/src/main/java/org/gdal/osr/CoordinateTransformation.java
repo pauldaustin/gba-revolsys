@@ -19,9 +19,9 @@ public class CoordinateTransformation {
     return obj == null ? 0 : obj.swigCPtr;
   }
 
-  private long swigCPtr;
-
   protected boolean swigCMemOwn;
+
+  private long swigCPtr;
 
   public CoordinateTransformation(final long cPtr, final boolean cMemoryOwn) {
     this.swigCMemOwn = cMemoryOwn;
@@ -66,7 +66,8 @@ public class CoordinateTransformation {
     osrJNI.CoordinateTransformation_TransformPoint__SWIG_2(this.swigCPtr, this, argout, x, y);
   }
 
-  public void TransformPoint(final double[] argout, final double x, final double y, final double z) {
+  public void TransformPoint(final double[] argout, final double x, final double y,
+    final double z) {
     osrJNI.CoordinateTransformation_TransformPoint__SWIG_1(this.swigCPtr, this, argout, x, y, z);
   }
 

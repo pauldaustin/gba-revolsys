@@ -28,13 +28,13 @@ import com.revolsys.util.UrlUtil;
 
 public class BingClient {
 
-  public static final int TILE_SIZE = 256;
-
   private static final double[] METRES_PER_PIXEL = {
     78271.517, 39135.7585, 19567.8792, 9783.9396, 4891.9698, 2445.9849, 1222.9925, 611.4962,
     305.7481, 152.8741, 76.437, 38.2185, 19.1093, 9.5546, 4.7773, 2.3887, 1.1943, 0.5972, 0.2986,
     0.1493, 0.0746
   };
+
+  public static final int TILE_SIZE = 256;
 
   private final String bingMapsKey;
 
@@ -63,7 +63,8 @@ public class BingClient {
     final double y2 = getLatitude(zoomLevel, tileY + 1);
     final double x1 = getLongitude(zoomLevel, tileX);
     final double x2 = getLongitude(zoomLevel, tileX + 1);
-    return new BoundingBox(GeometryFactory.wgs84(), x1, y1, x2, y2).convert(GeometryFactory.worldMercator());
+    return new BoundingBox(GeometryFactory.wgs84(), x1, y1, x2, y2)
+      .convert(GeometryFactory.worldMercator());
   }
 
   public Map<String, Object> getImageryMetadata(final ImagerySet imagerySet) {
@@ -120,8 +121,8 @@ public class BingClient {
   }
 
   public Image getMapImage(final ImagerySet imagerySet, final MapLayer mapLayer,
-    final String format, final double minX, final double minY, final double maxX,
-    final double maxY, final Integer width, final Integer height, final double scale) {
+    final String format, final double minX, final double minY, final double maxX, final double maxY,
+    final Integer width, final Integer height, final double scale) {
     final String url = getMapUrl(imagerySet, mapLayer, format, minX, minY, maxX, maxY, width,
       height);
     try {
@@ -143,12 +144,14 @@ public class BingClient {
       imagerySet = ImagerySet.Aerial;
     }
     final Map<String, Object> metaData = getImageryMetadata(imagerySet);
-    final List<Map<String, Object>> recordSets = (List<Map<String, Object>>)metaData.get("resourceSets");
+    final List<Map<String, Object>> recordSets = (List<Map<String, Object>>)metaData
+      .get("resourceSets");
     if (recordSets == null) {
       return null;
     } else {
       final Map<String, Object> recordSet = recordSets.get(0);
-      final List<Map<String, Object>> resources = (List<Map<String, Object>>)recordSet.get("resources");
+      final List<Map<String, Object>> resources = (List<Map<String, Object>>)recordSet
+        .get("resources");
       final Map<String, Object> resource = resources.get(0);
       final String imageUrl = (String)resource.get("imageUrl");
 
@@ -191,17 +194,16 @@ public class BingClient {
     final double centreX = minX + (maxX - minX) / 2;
     final double centreY = minY + (maxY - minY) / 2;
     final Map<String, Object> parameters = createParameterMap();
-    parameters.put("mapArea", StringConverterRegistry.toString(minY) + ","
-      + StringConverterRegistry.toString(minX) + "," + StringConverterRegistry.toString(maxY) + ","
-      + StringConverterRegistry.toString(maxX));
+    parameters.put("mapArea",
+      StringConverterRegistry.toString(minY) + "," + StringConverterRegistry.toString(minX) + ","
+        + StringConverterRegistry.toString(maxY) + "," + StringConverterRegistry.toString(maxX));
     parameters.put("mapSize", width + "," + height);
     parameters.put("mapLayer", mapLayer);
     parameters.put("format", format);
 
-    return UrlUtil.getUrl(
-      "http://dev.virtualearth.net/REST/v1/Imagery/Map/" + imagerySet + "/"
-        + StringConverterRegistry.toString(centreY) + ","
-        + StringConverterRegistry.toString(centreX), parameters);
+    return UrlUtil.getUrl("http://dev.virtualearth.net/REST/v1/Imagery/Map/" + imagerySet + "/"
+      + StringConverterRegistry.toString(centreY) + "," + StringConverterRegistry.toString(centreX),
+      parameters);
   }
 
   public String getQuadKey(final int zoomLevel, final int tileX, final int tileY) {
@@ -237,9 +239,9 @@ public class BingClient {
 
   public int getTileY(final int zoomLevel, final double latitude) {
     final double sinLatitude = Math.sin(latitude * Math.PI / 180);
-    final int tileY = (int)Math.floor((0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude))
-      / (4 * Math.PI))
-      * Math.pow(2, zoomLevel));
+    final int tileY = (int)Math
+      .floor((0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (4 * Math.PI))
+        * Math.pow(2, zoomLevel));
     return tileY;
   }
 

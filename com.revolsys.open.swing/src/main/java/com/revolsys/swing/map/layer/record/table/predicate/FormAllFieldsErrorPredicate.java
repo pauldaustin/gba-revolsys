@@ -28,20 +28,21 @@ public class FormAllFieldsErrorPredicate implements HighlightPredicate {
 
   public static void addErrorHighlighters(final JXTable table, final HighlightPredicate predicate) {
 
-    table.addHighlighter(new ColorHighlighter(new AndHighlightPredicate(predicate,
-      HighlightPredicate.EVEN), ColorUtil.setAlpha(WebColors.LightCoral, 127), WebColors.Black,
-      WebColors.Red, Color.WHITE));
+    table.addHighlighter(new ColorHighlighter(
+      new AndHighlightPredicate(predicate, HighlightPredicate.EVEN),
+      ColorUtil.setAlpha(WebColors.LightCoral, 127), WebColors.Black, WebColors.Red, Color.WHITE));
 
-    table.addHighlighter(new ColorHighlighter(new AndHighlightPredicate(predicate,
-      HighlightPredicate.ODD), WebColors.LightCoral, WebColors.Black, WebColors.DarkRed,
-      WebColors.White));
+    table.addHighlighter(
+      new ColorHighlighter(new AndHighlightPredicate(predicate, HighlightPredicate.ODD),
+        WebColors.LightCoral, WebColors.Black, WebColors.DarkRed, WebColors.White));
   }
-
-  private final LayerRecordTableModel model;
 
   private final Reference<RecordLayerForm> form;
 
-  public FormAllFieldsErrorPredicate(final RecordLayerForm form, final LayerRecordTableModel model) {
+  private final LayerRecordTableModel model;
+
+  public FormAllFieldsErrorPredicate(final RecordLayerForm form,
+    final LayerRecordTableModel model) {
     this.form = new WeakReference<>(form);
     this.model = model;
   }
