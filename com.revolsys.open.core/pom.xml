@@ -169,6 +169,11 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>java3d</groupId>
+      <artifactId>vecmath</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+    <dependency>
       <groupId>xtiff-jai</groupId>
       <artifactId>xtiff-jai</artifactId>
       <version>beta-0.3</version>
