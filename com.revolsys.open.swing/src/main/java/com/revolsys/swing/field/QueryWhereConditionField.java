@@ -173,14 +173,14 @@ public class QueryWhereConditionField extends ValueField
     final BasePanel fieldNamePanel = new BasePanel(this.fieldNamesList);
     GroupLayoutUtil.makeColumns(fieldNamePanel, 1, false);
 
-    this.binaryConditionOperator = new ComboBox("=", "<>", "<", "<=", ">", ">=");
+    this.binaryConditionOperator = new ComboBox("operator", "=", "<>", "<", "<=", ">", ">=");
     final JButton binaryConditionAddButton = InvokeMethodAction.createButton("",
       "Add Binary Condition", ICON, this, "actionAddBinaryCondition");
     this.binaryConditionPanel = new BasePanel(this.binaryConditionOperator,
       binaryConditionAddButton);
     setBinaryConditionField(null);
 
-    this.rightUnaryConditionOperator = new ComboBox("IS NULL", "IS NOT NULL");
+    this.rightUnaryConditionOperator = new ComboBox("operator", "IS NULL", "IS NOT NULL");
     final JButton rightUnaryConditionAddButton = InvokeMethodAction.createButton("",
       "Add Unary Condition", ICON, this, "actionAddRightUnaryCondition");
     final BasePanel rightUnaryConditionPanel = new BasePanel(this.rightUnaryConditionOperator,

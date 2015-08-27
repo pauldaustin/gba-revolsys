@@ -26,7 +26,7 @@ public class SelectMapCoordinateSystem extends ComboBox
   private final Reference<MapPanel> map;
 
   public SelectMapCoordinateSystem(final MapPanel map) {
-    super(3857, 3005// , 26907, 26908, 26909, 26910, 26911
+    super("srid", 3857, 3005// , 26907, 26908, 26909, 26910, 26911
     );
 
     this.map = new WeakReference<MapPanel>(map);
