@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.collection.iterator.PredicateIterator;
+import com.revolsys.collection.iterator.FilterIterator;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -54,7 +54,7 @@ public class FilterReader extends AbstractReader<Record>implements RecordReader 
   @Override
   public Iterator<Record> iterator() {
     final Iterator<Record> iterator = this.reader.iterator();
-    return new PredicateIterator<Record>(this.predicate, iterator);
+    return new FilterIterator<Record>(this.predicate, iterator);
   }
 
   @Override

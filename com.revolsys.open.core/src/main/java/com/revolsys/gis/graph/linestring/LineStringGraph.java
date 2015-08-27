@@ -12,9 +12,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 
-import com.revolsys.collection.InvokeMethodVisitor;
-import java.util.function.Consumer;
 import com.revolsys.comparator.CollectionComparator;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
@@ -38,7 +37,6 @@ import com.revolsys.jts.filter.CrossingLineSegmentFilter;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -383,11 +381,9 @@ public class LineStringGraph extends Graph<LineSegment> {
   }
 
   private void removeDuplicateEdges() {
-    final Consumer<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
-      "removeDuplicateEdges");
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
       INDEX);
-    visitEdges(comparator, visitor);
+    visitEdges(comparator, (edge) -> removeDuplicateEdges(edge));
   }
 
   /**
@@ -441,9 +437,7 @@ public class LineStringGraph extends Graph<LineSegment> {
   public void splitCrossingEdges() {
     final Comparator<Edge<LineSegment>> comparator = new EdgeAttributeValueComparator<LineSegment>(
       INDEX);
-    final Consumer<Edge<LineSegment>> visitor = new InvokeMethodVisitor<Edge<LineSegment>>(this,
-      "splitCrossingEdges");
-    visitEdges(comparator, visitor);
+    visitEdges(comparator, (edge) -> splitCrossingEdges(edge));
   }
 
   public boolean splitCrossingEdges(final Edge<LineSegment> edge1) {

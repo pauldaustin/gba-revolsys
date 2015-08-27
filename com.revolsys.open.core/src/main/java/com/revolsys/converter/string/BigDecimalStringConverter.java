@@ -24,6 +24,25 @@ public class BigDecimalStringConverter extends AbstractNumberStringConverter<Big
     }
   }
 
+  public static BigDecimal toBigDecimal(final Object value) {
+    if (value instanceof BigDecimal) {
+      final BigDecimal number = (BigDecimal)value;
+      return number;
+    } else if (value == null) {
+      return null;
+    } else {
+      return toBigDecimal(value.toString());
+    }
+  }
+
+  public static BigDecimal toBigDecimal(final String string) {
+    if (Property.hasValue(string)) {
+      return new BigDecimal(string);
+    } else {
+      return null;
+    }
+  }
+
   public BigDecimalStringConverter() {
     super();
   }
@@ -58,5 +77,4 @@ public class BigDecimalStringConverter extends AbstractNumberStringConverter<Big
       return null;
     }
   }
-
 }

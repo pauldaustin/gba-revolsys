@@ -14,7 +14,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import com.revolsys.collection.InvokeMethodVisitor;
 import com.revolsys.gis.algorithm.locate.Location;
 import com.revolsys.gis.algorithm.locate.RayCrossingCounter;
 import com.revolsys.gis.graph.Edge;
@@ -209,10 +208,8 @@ public class CoordinatesListUtil {
 
     final LineStringGraph graph1 = new LineStringGraph(points1);
     final LineStringGraph graph2 = new LineStringGraph(points2);
-    graph1.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", null, graph2, tolerance));
-    graph2.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", null, graph1, tolerance));
+    graph1.visitNodes((node) -> movePointsWithinTolerance(null, graph2, tolerance, node));
+    graph2.visitNodes((node) -> movePointsWithinTolerance(null, graph1, tolerance, node));
 
     final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1
       .getPointsOnEdges(graph2, tolerance);
@@ -509,10 +506,9 @@ public class CoordinatesListUtil {
     final LineStringGraph graph2 = new LineStringGraph(points2);
     graph2.setPrecisionModel(geometryFactory);
     final Map<Coordinates, Coordinates> movedNodes = new HashMap<Coordinates, Coordinates>();
-    graph1.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", movedNodes, graph2, maxDistance));
-    graph2.visitNodes(new InvokeMethodVisitor<Node<LineSegment>>(CoordinatesListUtil.class,
-      "movePointsWithinTolerance", movedNodes, graph1, maxDistance));
+
+    graph1.visitNodes((node) -> movePointsWithinTolerance(movedNodes, graph2, maxDistance, node));
+    graph2.visitNodes((node) -> movePointsWithinTolerance(movedNodes, graph1, maxDistance, node));
 
     final Map<Edge<LineSegment>, List<Node<LineSegment>>> pointsOnEdge1 = graph1
       .getPointsOnEdges(graph2, maxDistance);

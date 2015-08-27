@@ -73,8 +73,8 @@ public class StringConverterRegistry {
     if (value == null) {
       return null;
     } else {
-      final StringConverter<Object> converter = StringConverterRegistry.getInstance()
-        .getConverter(valueClass);
+      final StringConverterRegistry registry = StringConverterRegistry.getInstance();
+      final StringConverter<Object> converter = registry.getConverter(valueClass);
       if (converter == null) {
         return value.toString();
       } else {
@@ -158,7 +158,7 @@ public class StringConverterRegistry {
   private StringConverter get(final Set<Class<?>> interfaces, final Class<?> clazz) {
     StringConverter converter = null;
     if (clazz != null) {
-      this.classConverterMap.get(clazz);
+      converter = this.classConverterMap.get(clazz);
       if (converter == null) {
         for (final Class<?> interfaceClass : clazz.getInterfaces()) {
           interfaces.add(interfaceClass);
