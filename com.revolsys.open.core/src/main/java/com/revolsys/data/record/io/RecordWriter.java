@@ -15,7 +15,7 @@ import com.revolsys.util.Property;
 
 public interface RecordWriter extends Writer<Record> {
   static RecordWriter create(final RecordDefinition recordDefinition, final Object source) {
-    final Resource resource = .Resource.getResource(source);
+    final Resource resource = Resource.getResource(source);
     final RecordWriterFactory writerFactory = IoFactory.factory(RecordWriterFactory.class,
       resource);
     if (writerFactory == null) {
