@@ -2,6 +2,8 @@ package com.revolsys.data.record.io;
 
 import java.io.File;
 
+import org.springframework.core.io.Resource;
+
 import com.revolsys.converter.string.BooleanStringConverter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
@@ -10,12 +12,11 @@ import com.revolsys.io.IoConstants;
 import com.revolsys.io.IoFactory;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Writer;
-import com.revolsys.spring.resource.Resource;
 import com.revolsys.util.Property;
 
 public interface RecordWriter extends Writer<Record> {
   static RecordWriter create(final RecordDefinition recordDefinition, final Object source) {
-    final Resource resource = Resource.getResource(source);
+    final Resource resource = com.revolsys.spring.resource.Resource.getResource(source);
     final RecordWriterFactory writerFactory = IoFactory.factory(RecordWriterFactory.class,
       resource);
     if (writerFactory == null) {
