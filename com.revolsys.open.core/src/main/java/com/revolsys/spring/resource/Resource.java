@@ -6,8 +6,11 @@ import java.net.URL;
 import java.nio.file.Path;
 
 import com.revolsys.io.FileNames;
+import com.revolsys.util.Property;
 
 public interface Resource extends org.springframework.core.io.Resource {
+
+  static String CLASSPATH_URL_PREFIX = "classpath:";
 
   static org.springframework.core.io.Resource getResource(final Object source) {
     org.springframework.core.io.Resource resource;
@@ -27,6 +30,21 @@ public interface Resource extends org.springframework.core.io.Resource {
       throw new IllegalArgumentException(source.getClass() + " is not supported");
     }
     return resource;
+  }
+
+  static Resource getResource(final String location) {
+    if (Property.hasValue(location)) {
+      if (location.charAt(0) == '/' || location.length() > 1 && location.charAt(1) == ':') {
+        return new PathResource(location);
+      } else if (location.startsWith(CLASSPATH_URL_PREFIX)) {
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final String path = location.substring(CLASSPATH_URL_PREFIX.length());
+        return new ClassPathResource(path, classLoader);
+      } else {
+        return new UrlResource(location);
+      }
+    }
+    return null;
   }
 
   @Override
