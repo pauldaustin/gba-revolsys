@@ -52,10 +52,6 @@ public class ComboBox extends JComboBox implements Field, KeyListener {
     this("fieldValue", model);
   }
 
-  public ComboBox(final Object... items) {
-    this(false, items);
-  }
-
   public ComboBox(final ObjectToStringConverter converter, final boolean editable,
     final Collection<?> items) {
     super(new Vector<Object>(items));

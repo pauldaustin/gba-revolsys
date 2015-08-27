@@ -57,8 +57,8 @@ import com.revolsys.swing.table.TablePanel;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
-public class FieldFilterPanel extends JComponent implements ActionListener, ItemListener,
-  DocumentListener, PropertyChangeListener {
+public class FieldFilterPanel extends JComponent
+  implements ActionListener, ItemListener, DocumentListener, PropertyChangeListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -80,16 +80,17 @@ public class FieldFilterPanel extends JComponent implements ActionListener, Item
 
   private final AbstractRecordLayer layer;
 
-  private final ComboBox numericOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL",
-    "<", "<=", ">", ">=");
+  private final ComboBox numericOperatorField = new ComboBox("operator", "=", "<>", "IS NULL",
+    "IS NOT NULL", "<", "<=", ">", ">=");
 
-  private final ComboBox dateOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL", "<",
-    "<=", ">", ">=");
+  private final ComboBox dateOperatorField = new ComboBox("operator", "=", "<>", "IS NULL",
+    "IS NOT NULL", "<", "<=", ">", ">=");
 
-  private final ComboBox generalOperatorField = new ComboBox("=", "<>", "Like", "IS NULL",
+  private final ComboBox generalOperatorField = new ComboBox("operator", "=", "<>", "Like",
+    "IS NULL", "IS NOT NULL");
+
+  private final ComboBox codeTableOperatorField = new ComboBox("operator", "=", "<>", "IS NULL",
     "IS NOT NULL");
-
-  private final ComboBox codeTableOperatorField = new ComboBox("=", "<>", "IS NULL", "IS NOT NULL");
 
   private ComboBox operatorField;
 
