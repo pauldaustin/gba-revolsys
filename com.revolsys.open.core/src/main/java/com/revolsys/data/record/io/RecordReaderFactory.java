@@ -1,14 +1,14 @@
 package com.revolsys.data.record.io;
 
 import java.io.File;
-
-import org.springframework.core.io.Resource;
+import java.nio.file.Path;
 
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.io.IoFactoryWithCoordinateSystem;
 import com.revolsys.io.Reader;
+import com.revolsys.spring.resource.Resource;
 
 public interface RecordReaderFactory extends IoFactoryWithCoordinateSystem {
 
@@ -45,7 +45,7 @@ public interface RecordReaderFactory extends IoFactoryWithCoordinateSystem {
    * @throws IllegalArgumentException If the source is not a supported class.
    */
   default RecordReader createRecordReader(final Object source, final RecordFactory factory) {
-    final Resource resource = com.revolsys.spring.resource.Resource.getResource(source);
+    final Resource resource = Resource.getResource(source);
     return createRecordReader(resource, factory);
   }
 
