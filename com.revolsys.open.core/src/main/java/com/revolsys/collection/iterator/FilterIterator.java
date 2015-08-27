@@ -4,14 +4,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
-public class PredicateIterator<T> extends AbstractIterator<T> {
+public class FilterIterator<T> extends AbstractIterator<T> {
 
-  private Predicate<T> predicate;
+  private Predicate<T> filter;
 
   private Iterator<T> iterator;
 
-  public PredicateIterator(final Predicate<T> filter, final Iterator<T> iterator) {
-    this.predicate = filter;
+  public FilterIterator(final Predicate<T> filter, final Iterator<T> iterator) {
+    this.filter = filter;
     this.iterator = iterator;
   }
 
@@ -22,12 +22,12 @@ public class PredicateIterator<T> extends AbstractIterator<T> {
       final AbstractIterator<T> abstractIterator = (AbstractIterator<T>)this.iterator;
       abstractIterator.close();
     }
-    this.predicate = null;
+    this.filter = null;
     this.iterator = null;
   }
 
   protected Predicate<T> getFilter() {
-    return this.predicate;
+    return this.filter;
   }
 
   protected Iterator<T> getIterator() {
@@ -38,7 +38,7 @@ public class PredicateIterator<T> extends AbstractIterator<T> {
   protected T getNext() throws NoSuchElementException {
     while (this.iterator != null && this.iterator.hasNext()) {
       final T value = this.iterator.next();
-      if (this.predicate == null || this.predicate.test(value)) {
+      if (this.filter == null || this.filter.test(value)) {
         return value;
       }
     }

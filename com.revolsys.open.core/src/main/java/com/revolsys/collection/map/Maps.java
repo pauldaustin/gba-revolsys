@@ -6,22 +6,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 
 public class Maps {
-
   public static <T> Integer addCount(final Map<T, Integer> counts, final T key) {
     Integer count = counts.get(key);
     if (count == null) {
@@ -33,20 +34,48 @@ public class Maps {
     return count;
   }
 
-  public static <K1, V> boolean addToList(final Map<K1, List<V>> map, final K1 key1,
-    final V value) {
-    final List<V> values = getList(map, key1);
+  public static <K, V, C extends Collection<V>> boolean addToCollection(final Supplier<C> supplier,
+    final Map<K, C> map, final K key, final V value) {
+    final C values = get(map, key, supplier);
     return values.add(value);
   }
 
-  public static <K1, K2, V> void addToMap(final Map<K1, Map<K2, V>> map, final K1 key1,
+  public static <K1, V> boolean addToList(final Map<K1, List<V>> map, final K1 key1,
+    final V value) {
+    if (map != null && key1 != null) {
+      final List<V> values = getList(map, key1);
+      return values.add(value);
+    } else {
+      return false;
+    }
+  }
+
+  public static <K1, K2, V> boolean addToList(final Map<K1, Map<K2, List<V>>> map, final K1 key1,
     final K2 key2, final V value) {
+    final List<V> values = getList(map, key1, key2);
+    return values.add(value);
+  }
+
+  public static <K1, K2, V> boolean addToList(final Supplier<Map<K2, List<V>>> supplier,
+    final Map<K1, Map<K2, List<V>>> map, final K1 key1, final K2 key2, final V value) {
+    final List<V> values = getList(supplier, map, key1, key2);
+    return values.add(value);
+  }
+
+  public static <K1, K2, V> V addToMap(final Map<K1, Map<K2, V>> map, final K1 key1, final K2 key2,
+    final V value) {
     final Map<K2, V> mapValue = getMap(map, key1);
-    mapValue.put(key2, value);
+    return mapValue.put(key2, value);
+  }
+
+  public static <K1, K2, V> V addToMap(final Supplier<Map<K2, V>> supplier,
+    final Map<K1, Map<K2, V>> map, final K1 key1, final K2 key2, final V value) {
+    final Map<K2, V> mapValue = getMap(supplier, map, key1);
+    return mapValue.put(key2, value);
   }
 
   public static <K1, V> boolean addToSet(final Map<K1, Set<V>> map, final K1 key1, final V value) {
-    final Set<V> values = CollectionUtil.getSet(map, key1);
+    final Set<V> values = getSet(map, key1);
     return values.add(value);
   }
 
@@ -63,6 +92,16 @@ public class Maps {
       return false;
     } else {
       return values.add(value);
+    }
+  }
+
+  public static <K1, V> boolean containsInCollection(final Map<K1, ? extends Collection<V>> map,
+    final K1 key, final V value) {
+    final Collection<V> collection = map.get(key);
+    if (collection == null) {
+      return false;
+    } else {
+      return collection.contains(value);
     }
   }
 
@@ -120,6 +159,13 @@ public class Maps {
     }
   }
 
+  public static <V> V first(final Map<?, V> map) {
+    if (Property.hasValue(map)) {
+      return map.values().iterator().next();
+    }
+    return null;
+  }
+
   /**
    * Get the value for the key from the map. If the value was null return
    * default Value instead.
@@ -143,12 +189,45 @@ public class Maps {
     }
   }
 
-  public static Object get(final Map<String, ? extends Object> map, final String name) {
+  @SuppressWarnings("unchecked")
+  public static <K, V> V get(final Map<K, ? extends Object> map, final K key) {
     if (map == null) {
       return null;
     } else {
-      return map.get(name);
+      return (V)map.get(key);
     }
+  }
+
+  public static <K, V> V get(final Map<K, V> map, final K key,
+    final Function<K, V> defaultFactory) {
+    V value = map.get(key);
+    if (value == null) {
+      value = defaultFactory.apply(key);
+      map.put(key, value);
+    }
+    return value;
+  }
+
+  public static <K, V> V get(final Map<K, V> map, final K key, final Supplier<V> defaultFactory) {
+    V value = map.get(key);
+    if (value == null) {
+      value = defaultFactory.get();
+      map.put(key, value);
+    }
+    return value;
+  }
+
+  @SuppressWarnings({
+    "unchecked", "rawtypes"
+  })
+  public static <K, V> V get(final Supplier<V> supplier, final Map<K, ? extends Object> map,
+    final K key) {
+    V value = (V)map.get(key);
+    if (value == null) {
+      value = supplier.get();
+      ((Map)map).put(key, value);
+    }
+    return value;
   }
 
   public static boolean getBool(final Map<String, ? extends Object> map, final String name) {
@@ -274,6 +353,20 @@ public class Maps {
     return list;
   }
 
+  public static <K1, K2, V> List<V> getList(final Map<K1, Map<K2, List<V>>> map, final K1 key1,
+    final K2 key2) {
+    final Map<K2, List<V>> map2 = getMap(map, key1);
+    final List<V> list = getList(map2, key2);
+    return list;
+  }
+
+  public static <K1, K2, V> List<V> getList(final Supplier<Map<K2, List<V>>> supplier,
+    final Map<K1, Map<K2, List<V>>> map, final K1 key1, final K2 key2) {
+    final Map<K2, List<V>> map2 = getMap(supplier, map, key1);
+    final List<V> list = getList(map2, key2);
+    return list;
+  }
+
   public static Long getLong(final Map<String, ? extends Object> map, final String name) {
     final Object value = get(map, name);
     if (value == null) {
@@ -331,6 +424,22 @@ public class Maps {
     return values.get(key2);
   }
 
+  public static <K1, K2, V> V getMap(final Map<K1, Map<K2, V>> map, final K1 key1, final K2 key2,
+    final Supplier<V> supplier) {
+    final Map<K2, V> values = getMap(map, key1);
+    return get(supplier, values, key2);
+  }
+
+  public static <K1, K2, V> Map<K2, V> getMap(final Supplier<Map<K2, V>> supplier,
+    final Map<K1, Map<K2, V>> map, final K1 key) {
+    Map<K2, V> value = map.get(key);
+    if (value == null) {
+      value = supplier.get();
+      map.put(key, value);
+    }
+    return value;
+  }
+
   public static <K, V> List<V> getNotNull(final Map<K, V> map, final Collection<K> keys) {
     final List<V> values = new ArrayList<V>();
     if (keys != null) {
@@ -342,6 +451,15 @@ public class Maps {
       }
     }
     return values;
+  }
+
+  public static <K, V> Set<V> getSet(final Map<K, Set<V>> map, final K key) {
+    Set<V> value = map.get(key);
+    if (value == null) {
+      value = new LinkedHashSet<V>();
+      map.put(key, value);
+    }
+    return value;
   }
 
   public static String getString(final Map<String, ? extends Object> map, final String name) {
@@ -395,10 +513,25 @@ public class Maps {
     }
   }
 
+  public static <K, V> Supplier<Map<K, V>> hashFactory() {
+    return () -> {
+      return new HashMap<K, V>();
+    };
+  }
+
   public static <K, V> Map<K, V> hashMap(final K key, final V value) {
     final Map<K, V> map = new HashMap<>();
     map.put(key, value);
     return map;
+  }
+
+  public static <K> boolean hasValue(final Map<K, ?> map, final K key) {
+    if (map == null || key == null) {
+      return false;
+    } else {
+      final Object value = map.get(key);
+      return Property.hasValue(value);
+    }
   }
 
   public static boolean isNotNullAndNotZero(final Map<String, Object> object, final String name) {
@@ -408,6 +541,12 @@ public class Maps {
     } else {
       return true;
     }
+  }
+
+  public static <K, V> Supplier<Map<K, V>> linkedHashFactory() {
+    return () -> {
+      return new LinkedHashMap<K, V>();
+    };
   }
 
   public static <K, V> void mergeCollection(final Map<K, Collection<V>> map,
@@ -522,6 +661,12 @@ public class Maps {
       }
       return map;
     }
+  }
+
+  public static <K, V> Supplier<Map<K, V>> treeFactory() {
+    return () -> {
+      return new TreeMap<K, V>();
+    };
   }
 
   public static <K, V> Map<K, V> treeMap(final K key, final V value) {

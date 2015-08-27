@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.revolsys.collection.InvokeMethodVisitor;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.Node;
@@ -48,12 +47,10 @@ public class LineStringRelate {
     this.graph2 = new LineStringGraph(geometryFactory, line2);
 
     final Map<Coordinates, Coordinates> movedNodes = new HashMap<Coordinates, Coordinates>();
-    final InvokeMethodVisitor<Node<LineSegment>> moveNodesVisitor1 = new InvokeMethodVisitor<Node<LineSegment>>(
-      this.graph2, "movePointsWithinTolerance", movedNodes, tolerance);
-    this.graph1.visitNodes(moveNodesVisitor1);
-    final InvokeMethodVisitor<Node<LineSegment>> moveNodesVisitor2 = new InvokeMethodVisitor<Node<LineSegment>>(
-      this.graph1, "movePointsWithinTolerance", movedNodes, tolerance);
-    this.graph2.visitNodes(moveNodesVisitor2);
+    this.graph1
+      .visitNodes((node) -> this.graph2.movePointsWithinTolerance(movedNodes, tolerance, node));
+    this.graph2
+      .visitNodes((node) -> this.graph1.movePointsWithinTolerance(movedNodes, tolerance, node));
 
     final int i = 0;
     this.fromPoint1 = getMovedCoordinate(movedNodes, line1, i);

@@ -32,148 +32,20 @@ import java.util.Set;
 import com.revolsys.collection.ArrayUtil;
 
 /**
- * This is a int hashmap that has the exact same features and interface as a
- * normal Map except that the key is directly an integer. So no hash is
+ * This is a long hashmap that has the exact same features and interface as a
+ * normal Map except that the key is directly an long. So no hash is
  * calculated or key object is stored.
  *
  * @author jcompagner
  */
-public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
-  private class EntryIterator extends HashIterator<IntEntry<T>> {
-    /**
-     * @see java.util.Iterator#next()
-     */
-    @Override
-    public IntEntry<T> next() {
-      return nextEntry();
-    }
-  }
-
-  private class EntrySet extends AbstractSet<IntEntry<T>> {
-    /**
-     * @see java.util.AbstractCollection#clear()
-     */
-    @Override
-    public void clear() {
-      IntHashMap.this.clear();
-    }
-
-    /**
-     * @see java.util.AbstractCollection#contains(java.lang.Object)
-     */
-    @Override
-    public boolean contains(final Object o) {
-      if (!(o instanceof IntEntry)) {
-        return false;
-      }
-      @SuppressWarnings("unchecked")
-      final IntEntry<T> e = (IntEntry<T>)o;
-      final IntEntry<T> candidate = getEntry(e.getIntKey());
-      return candidate != null && candidate.equals(e);
-    }
-
-    /**
-     * @see java.util.AbstractCollection#iterator()
-     */
-    @Override
-    public Iterator<IntEntry<T>> iterator() {
-      return newEntryIterator();
-    }
-
-    /**
-     * @see java.util.AbstractCollection#remove(java.lang.Object)
-     */
-    @Override
-    public boolean remove(final Object o) {
-      return removeMapping(o) != null;
-    }
-
-    /**
-     * @see java.util.AbstractCollection#size()
-     */
-    @Override
-    public int size() {
-      return IntHashMap.this.size;
-    }
-  }
-
-  private abstract class HashIterator<V> implements Iterator<V> {
-    IntEntry<T> current; // current entry
-
-    int expectedModCount; // For fast-fail
-
-    int index; // current slot
-
-    IntEntry<T> next; // next entry to return
-
-    HashIterator() {
-      this.expectedModCount = IntHashMap.this.modCount;
-      final IntEntry<T>[] t = IntHashMap.this.table;
-      int i = t.length;
-      IntEntry<T> n = null;
-      if (IntHashMap.this.size != 0) { // advance to first entry
-        while (i > 0 && (n = t[--i]) == null) {
-          /* NoOp */;
-        }
-      }
-      this.next = n;
-      this.index = i;
-    }
-
-    /**
-     * @see java.util.Iterator#hasNext()
-     */
-    @Override
-    public boolean hasNext() {
-      return this.next != null;
-    }
-
-    IntEntry<T> nextEntry() {
-      if (IntHashMap.this.modCount != this.expectedModCount) {
-        throw new ConcurrentModificationException();
-      }
-      final IntEntry<T> e = this.next;
-      if (e == null) {
-        throw new NoSuchElementException();
-      }
-
-      IntEntry<T> n = e.next;
-      final IntEntry<T>[] t = IntHashMap.this.table;
-      int i = this.index;
-      while (n == null && i > 0) {
-        n = t[--i];
-      }
-      this.index = i;
-      this.next = n;
-      return this.current = e;
-    }
-
-    /**
-     * @see java.util.Iterator#remove()
-     */
-    @Override
-    public void remove() {
-      if (this.current == null) {
-        throw new IllegalStateException();
-      }
-      if (IntHashMap.this.modCount != this.expectedModCount) {
-        throw new ConcurrentModificationException();
-      }
-      final int k = this.current.key;
-      this.current = null;
-      IntHashMap.this.removeEntryForKey(k);
-      this.expectedModCount = IntHashMap.this.modCount;
-    }
-
-  }
-
+public class LongHashMap<T> implements Map<Long, T>, Cloneable, Serializable {
   /**
    * @author jcompagner
    */
-  public static class IntEntry<T> implements Entry<Integer, T> {
-    final int key;
+  public static class Entry<T> implements Map.Entry<Long, T> {
+    final long key;
 
-    IntEntry<T> next;
+    Entry<T> next;
 
     T value;
 
@@ -184,7 +56,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      * @param v
      * @param n
      */
-    IntEntry(final int k, final T v, final IntEntry<T> n) {
+    Entry(final long k, final T v, final Entry<T> n) {
       this.value = v;
       this.next = n;
       this.key = k;
@@ -195,13 +67,13 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      */
     @Override
     public boolean equals(final Object o) {
-      if (!(o instanceof IntEntry)) {
+      if (!(o instanceof Entry)) {
         return false;
       }
       @SuppressWarnings("unchecked")
-      final IntEntry<T> e = (IntEntry<T>)o;
-      final int k1 = getIntKey();
-      final int k2 = e.getIntKey();
+      final Entry<T> e = (Entry<T>)o;
+      final long k1 = getLongKey();
+      final long k2 = e.getLongKey();
       if (k1 == k2) {
         final Object v1 = getValue();
         final Object v2 = e.getValue();
@@ -212,15 +84,15 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
       return false;
     }
 
-    /**
-     * @return The int key of this entry
-     */
-    public int getIntKey() {
+    @Override
+    public Long getKey() {
       return this.key;
     }
 
-    @Override
-    public Integer getKey() {
+    /**
+     * @return The long key of this entry
+     */
+    public long getLongKey() {
       return this.key;
     }
 
@@ -237,7 +109,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      */
     @Override
     public int hashCode() {
-      return this.key ^ (this.value == null ? 0 : this.value.hashCode());
+      return (int)this.key ^ (this.value == null ? 0 : this.value.hashCode());
     }
 
     /**
@@ -256,27 +128,155 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      */
     @Override
     public String toString() {
-      return getIntKey() + "=" + getValue(); //$NON-NLS-1$
+      return getLongKey() + "=" + getValue(); //$NON-NLS-1$
     }
   }
 
-  private class KeyIterator extends HashIterator<Integer> {
+  private class EntryIterator extends HashIterator<Entry<T>> {
     /**
      * @see java.util.Iterator#next()
      */
     @Override
-    public Integer next() {
-      return new Integer(nextEntry().getIntKey());
+    public Entry<T> next() {
+      return nextEntry();
     }
   }
 
-  private class KeySet extends AbstractSet<Integer> {
+  private class EntrySet extends AbstractSet<Entry<T>> {
     /**
      * @see java.util.AbstractCollection#clear()
      */
     @Override
     public void clear() {
-      IntHashMap.this.clear();
+      LongHashMap.this.clear();
+    }
+
+    /**
+     * @see java.util.AbstractCollection#contains(java.lang.Object)
+     */
+    @Override
+    public boolean contains(final Object o) {
+      if (!(o instanceof Entry)) {
+        return false;
+      }
+      @SuppressWarnings("unchecked")
+      final Entry<T> e = (Entry<T>)o;
+      final Entry<T> candidate = getEntry(e.getLongKey());
+      return candidate != null && candidate.equals(e);
+    }
+
+    /**
+     * @see java.util.AbstractCollection#iterator()
+     */
+    @Override
+    public Iterator<Entry<T>> iterator() {
+      return newEntryIterator();
+    }
+
+    /**
+     * @see java.util.AbstractCollection#remove(java.lang.Object)
+     */
+    @Override
+    public boolean remove(final Object o) {
+      return removeMapping(o) != null;
+    }
+
+    /**
+     * @see java.util.AbstractCollection#size()
+     */
+    @Override
+    public int size() {
+      return LongHashMap.this.size;
+    }
+  }
+
+  private abstract class HashIterator<V> implements Iterator<V> {
+    Entry<T> current; // current entry
+
+    int expectedModCount; // For fast-fail
+
+    int index; // current slot
+
+    Entry<T> next; // next entry to return
+
+    HashIterator() {
+      this.expectedModCount = LongHashMap.this.modCount;
+      final Entry<T>[] t = LongHashMap.this.table;
+      int i = t.length;
+      Entry<T> n = null;
+      if (LongHashMap.this.size != 0) { // advance to first entry
+        while (i > 0 && (n = t[--i]) == null) {
+          /* NoOp */;
+        }
+      }
+      this.next = n;
+      this.index = i;
+    }
+
+    /**
+     * @see java.util.Iterator#hasNext()
+     */
+    @Override
+    public boolean hasNext() {
+      return this.next != null;
+    }
+
+    Entry<T> nextEntry() {
+      if (LongHashMap.this.modCount != this.expectedModCount) {
+        throw new ConcurrentModificationException();
+      }
+      final Entry<T> e = this.next;
+      if (e == null) {
+        throw new NoSuchElementException();
+      }
+
+      Entry<T> n = e.next;
+      final Entry<T>[] t = LongHashMap.this.table;
+      int i = this.index;
+      while (n == null && i > 0) {
+        n = t[--i];
+      }
+      this.index = i;
+      this.next = n;
+      return this.current = e;
+    }
+
+    /**
+     * @see java.util.Iterator#remove()
+     */
+    @Override
+    public void remove() {
+      if (this.current == null) {
+        throw new IllegalStateException();
+      }
+      if (LongHashMap.this.modCount != this.expectedModCount) {
+        throw new ConcurrentModificationException();
+      }
+      final long k = this.current.key;
+      this.current = null;
+      LongHashMap.this.removeEntryForKey(k);
+      this.expectedModCount = LongHashMap.this.modCount;
+    }
+
+  }
+
+  private class KeyIterator extends HashIterator<Long> {
+    /**
+     * @see java.util.Iterator#next()
+     */
+    @Override
+    public Long next() {
+      return new Long(nextEntry().getLongKey());
+    }
+  }
+
+  private class KeySet extends AbstractSet<Long> {
+    /**
+     * @see java.util.AbstractCollection#clear()
+     */
+    @Override
+    public void clear() {
+      LongHashMap.this.clear();
     }
 
     /**
@@ -285,7 +285,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
     @Override
     public boolean contains(final Object o) {
       if (o instanceof Number) {
-        return containsKey(((Number)o).intValue());
+        return containsKey(((Number)o).longValue());
       }
       return false;
     }
@@ -294,7 +294,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      * @see java.util.AbstractCollection#iterator()
      */
     @Override
-    public Iterator<Integer> iterator() {
+    public Iterator<Long> iterator() {
       return newKeyIterator();
     }
 
@@ -304,7 +304,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
     @Override
     public boolean remove(final Object o) {
       if (o instanceof Number) {
-        return IntHashMap.this.removeEntryForKey(((Number)o).intValue()) != null;
+        return LongHashMap.this.removeEntryForKey(((Number)o).intValue()) != null;
       }
       return false;
     }
@@ -314,7 +314,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      */
     @Override
     public int size() {
-      return IntHashMap.this.size;
+      return LongHashMap.this.size;
     }
   }
 
@@ -334,7 +334,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      */
     @Override
     public void clear() {
-      IntHashMap.this.clear();
+      LongHashMap.this.clear();
     }
 
     /**
@@ -358,7 +358,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
      */
     @Override
     public int size() {
-      return IntHashMap.this.size;
+      return LongHashMap.this.size;
     }
   }
 
@@ -385,7 +385,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    *
    * @param h
    * @param length
-   * @return The index for the hash integer for the given length
+   * @return The index for the hash long for the given length
    */
   static int indexFor(final int h, final int length) {
     return h & length - 1;
@@ -393,9 +393,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
 
   // internal utilities
 
-  private transient Set<IntEntry<T>> entrySet = null;
+  private transient Set<Entry<T>> entrySet = null;
 
-  transient volatile Set<Integer> keySet = null;
+  transient volatile Set<Long> keySet = null;
 
   /**
    * The load factor for the hash table.
@@ -421,7 +421,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   /**
    * The table, resized as necessary. Length MUST Always be a power of two.
    */
-  transient IntEntry<T>[] table;
+  transient Entry<T>[] table;
 
   /**
    * The next size value at which to resize (capacity * load factor).
@@ -437,10 +437,10 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * and the default load factor (0.75).
    */
   @SuppressWarnings("unchecked")
-  public IntHashMap() {
+  public LongHashMap() {
     this.loadFactor = DEFAULT_LOAD_FACTOR;
     this.threshold = (int)(DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR);
-    this.table = ArrayUtil.create(IntEntry.class, DEFAULT_INITIAL_CAPACITY);
+    this.table = ArrayUtil.create(Entry.class, DEFAULT_INITIAL_CAPACITY);
     init();
   }
 
@@ -451,7 +451,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param initialCapacity the initial capacity.
    * @throws IllegalArgumentException if the initial capacity is negative.
    */
-  public IntHashMap(final int initialCapacity) {
+  public LongHashMap(final int initialCapacity) {
     this(initialCapacity, DEFAULT_LOAD_FACTOR);
   }
 
@@ -465,7 +465,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    *           load factor is nonpositive.
    */
   @SuppressWarnings("unchecked")
-  public IntHashMap(int initialCapacity, final float loadFactor) {
+  public LongHashMap(int initialCapacity, final float loadFactor) {
     if (initialCapacity < 0) {
       throw new IllegalArgumentException("Illegal initial capacity: " + //$NON-NLS-1$
         initialCapacity);
@@ -486,7 +486,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
 
     this.loadFactor = loadFactor;
     this.threshold = (int)(capacity * loadFactor);
-    this.table = ArrayUtil.create(IntEntry.class, this.size);
+    this.table = ArrayUtil.create(Entry.class, this.size);
     init();
   }
 
@@ -501,7 +501,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param bucketIndex
    */
   void addEntry(final int key, final T value, final int bucketIndex) {
-    this.table[bucketIndex] = new IntEntry<T>(key, value, this.table[bucketIndex]);
+    this.table[bucketIndex] = new Entry<T>(key, value, this.table[bucketIndex]);
     if (this.size++ >= this.threshold) {
       resize(2 * this.table.length);
     }
@@ -518,7 +518,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   @Override
   public void clear() {
     this.modCount++;
-    final IntEntry<T> tab[] = this.table;
+    final Entry<T> tab[] = this.table;
     for (int i = 0; i < tab.length; i++) {
       tab[i] = null;
     }
@@ -534,10 +534,10 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   @Override
   @SuppressWarnings("unchecked")
   public Object clone() throws CloneNotSupportedException {
-    IntHashMap<T> result = null;
+    LongHashMap<T> result = null;
     try {
-      result = (IntHashMap<T>)super.clone();
-      result.table = ArrayUtil.create(IntEntry.class, this.table.length);
+      result = (LongHashMap<T>)super.clone();
+      result.table = ArrayUtil.create(Entry.class, this.table.length);
       result.entrySet = null;
       result.modCount = 0;
       result.size = 0;
@@ -557,7 +557,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    */
   public boolean containsKey(final int key) {
     final int i = indexFor(key, this.table.length);
-    IntEntry<T> e = this.table[i];
+    Entry<T> e = this.table[i];
     while (e != null) {
       if (key == e.key) {
         return true;
@@ -569,9 +569,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
 
   @Override
   public boolean containsKey(final Object obj) {
-    if (obj instanceof Integer) {
-      final Integer integer = (Integer)obj;
-      return get(integer.intValue()) != null;
+    if (obj instanceof Long) {
+      final Long number = (Long)obj;
+      return get(number) != null;
     } else {
       return false;
     }
@@ -583,9 +583,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @return boolean true if there is a null value in this map
    */
   private boolean containsNullValue() {
-    final IntEntry<T> tab[] = this.table;
-    for (final IntEntry<T> element : tab) {
-      for (IntEntry<T> e = element; e != null; e = e.next) {
+    final Entry<T> tab[] = this.table;
+    for (final Entry<T> element : tab) {
+      for (Entry<T> e = element; e != null; e = e.next) {
         if (e.value == null) {
           return true;
         }
@@ -608,9 +608,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
       return containsNullValue();
     }
 
-    final IntEntry<T> tab[] = this.table;
-    for (final IntEntry<T> element : tab) {
-      for (IntEntry<T> e = element; e != null; e = e.next) {
+    final Entry<T> tab[] = this.table;
+    for (final Entry<T> element : tab) {
+      for (Entry<T> e = element; e != null; e = e.next) {
         if (value.equals(e.value)) {
           return true;
         }
@@ -630,12 +630,12 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param value
    * @param bucketIndex
    */
-  void createEntry(final int key, final T value, final int bucketIndex) {
-    this.table[bucketIndex] = new IntEntry<T>(key, value, this.table[bucketIndex]);
+  void createEntry(final long key, final T value, final int bucketIndex) {
+    this.table[bucketIndex] = new Entry<T>(key, value, this.table[bucketIndex]);
     this.size++;
   }
 
-  public Set<IntEntry<T>> entryIntSet() {
+  public Set<Entry<T>> entryIntSet() {
     if (this.entrySet == null) {
       this.entrySet = new EntrySet();
     }
@@ -659,7 +659,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   @SuppressWarnings({
     "rawtypes", "unchecked"
   })
-  public Set<Map.Entry<Integer, T>> entrySet() {
+  public Set<Map.Entry<Long, T>> entrySet() {
     if (this.entrySet == null) {
       this.entrySet = new EntrySet();
     }
@@ -679,9 +679,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    *         <tt>null</tt> if the map contains no mapping for this key.
    * @see #put(int, Object)
    */
-  public T get(final int key) {
-    final int i = indexFor(key, this.table.length);
-    IntEntry<T> e = this.table[i];
+  public T get(final long key) {
+    final int i = indexFor((int)key, this.table.length);
+    Entry<T> e = this.table[i];
     while (true) {
       if (e == null) {
         return null;
@@ -695,9 +695,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
 
   @Override
   public T get(final Object obj) {
-    if (obj instanceof Integer) {
-      final Integer integer = (Integer)obj;
-      return get(integer.intValue());
+    if (obj instanceof Number) {
+      final long number = ((Long)obj).longValue();
+      return get(number);
     } else {
       return null;
     }
@@ -710,9 +710,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param key
    * @return The MapKeyEntry<T> object for the given hash key
    */
-  IntEntry<T> getEntry(final int key) {
-    final int i = indexFor(key, this.table.length);
-    IntEntry<T> e = this.table[i];
+  Entry<T> getEntry(final long key) {
+    final int i = indexFor((int)key, this.table.length);
+    Entry<T> e = this.table[i];
     while (e != null && !(key == e.key)) {
       e = e.next;
     }
@@ -749,8 +749,8 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @return a set view of the keys contained in this map.
    */
   @Override
-  public Set<Integer> keySet() {
-    final Set<Integer> ks = this.keySet;
+  public Set<Long> keySet() {
+    final Set<Long> ks = this.keySet;
     return ks != null ? ks : (this.keySet = new KeySet());
   }
 
@@ -758,12 +758,12 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
     return this.loadFactor;
   }
 
-  Iterator<IntEntry<T>> newEntryIterator() {
+  Iterator<Entry<T>> newEntryIterator() {
     return new EntryIterator();
   }
 
   // Subclass overrides these to alter behavior of views' iterator() method
-  Iterator<Integer> newKeyIterator() {
+  Iterator<Long> newKeyIterator() {
     return new KeyIterator();
   }
 
@@ -774,7 +774,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   }
 
   @Override
-  public T put(final Integer key, final T value) {
+  public T put(final Long key, final T value) {
     return putInt(key.intValue(), value);
   }
 
@@ -786,7 +786,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param m mappings to be stored in this map.
    * @throws NullPointerException if the specified map is null.
    */
-  public void putAll(final IntHashMap<T> m) {
+  public void putAll(final LongHashMap<T> m) {
     final int numKeysToBeAdded = m.size();
     if (numKeysToBeAdded == 0) {
       return;
@@ -814,13 +814,13 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
       }
     }
 
-    for (final IntEntry<T> e : m.entryIntSet()) {
-      put(e.getIntKey(), e.getValue());
+    for (final Entry<T> e : m.entryIntSet()) {
+      put(e.getLongKey(), e.getValue());
     }
   }
 
   @Override
-  public void putAll(final Map<? extends Integer, ? extends T> map) {
+  public void putAll(final Map<? extends Long, ? extends T> map) {
     final int numKeysToBeAdded = map.size();
     if (numKeysToBeAdded > 0) {
       if (numKeysToBeAdded > this.threshold) {
@@ -837,17 +837,17 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
         }
       }
 
-      for (final Map.Entry<? extends Integer, ? extends T> e : map.entrySet()) {
-        final Integer key = e.getKey();
+      for (final Map.Entry<? extends Long, ? extends T> e : map.entrySet()) {
+        final Long key = e.getKey();
         final T value = e.getValue();
         put(key, value);
       }
     }
   }
 
-  void putAllForCreate(final IntHashMap<T> m) {
-    for (final IntEntry<T> e : m.entryIntSet()) {
-      putForCreate(e.getIntKey(), e.getValue());
+  void putAllForCreate(final LongHashMap<T> m) {
+    for (final Entry<T> e : m.entryIntSet()) {
+      putForCreate(e.getLongKey(), e.getValue());
     }
   }
 
@@ -859,15 +859,15 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param key
    * @param value
    */
-  private void putForCreate(final int key, final T value) {
-    final int i = indexFor(key, this.table.length);
+  private void putForCreate(final long key, final T value) {
+    final int i = indexFor((int)key, this.table.length);
 
     /**
      * Look for preexisting entry for key. This will never happen for clone or
      * deserialize. It will only happen for construction if the input Map is a
      * sorted map whose ordering is inconsistent w/ equals.
      */
-    for (IntEntry<T> e = this.table[i]; e != null; e = e.next) {
+    for (Entry<T> e = this.table[i]; e != null; e = e.next) {
       if (key == e.key) {
         e.value = value;
         return;
@@ -891,7 +891,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
   public T putInt(final int key, final T value) {
     final int i = indexFor(key, this.table.length);
 
-    for (IntEntry<T> e = this.table[i]; e != null; e = e.next) {
+    for (Entry<T> e = this.table[i]; e != null; e = e.next) {
       if (key == e.key) {
         final T oldValue = e.value;
         e.value = value;
@@ -920,7 +920,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
 
     // Read in number of buckets and allocate the bucket array;
     final int numBuckets = s.readInt();
-    this.table = ArrayUtil.create(IntEntry.class, numBuckets);
+    this.table = ArrayUtil.create(Entry.class, numBuckets);
 
     init(); // Give subclass a chance to do its thing.
 
@@ -944,8 +944,8 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    *         indicate that the map previously associated <tt>null</tt> with the
    *         specified key.
    */
-  public T remove(final int key) {
-    final IntEntry<T> e = removeEntryForKey(key);
+  public T remove(final long key) {
+    final Entry<T> e = removeEntryForKey(key);
     if (e == null) {
       return null;
     } else {
@@ -955,9 +955,9 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
 
   @Override
   public T remove(final Object obj) {
-    if (obj instanceof Integer) {
-      final Integer integer = (Integer)obj;
-      return remove(integer.intValue());
+    if (obj instanceof Long) {
+      final Long number = (Long)obj;
+      return remove(number.intValue());
     } else {
       return null;
     }
@@ -970,13 +970,13 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param key
    * @return The MapKeyEntry<T> object that was removed
    */
-  IntEntry<T> removeEntryForKey(final int key) {
-    final int i = indexFor(key, this.table.length);
-    IntEntry<T> prev = this.table[i];
-    IntEntry<T> e = prev;
+  Entry<T> removeEntryForKey(final long key) {
+    final int i = indexFor((int)key, this.table.length);
+    Entry<T> prev = this.table[i];
+    Entry<T> e = prev;
 
     while (e != null) {
-      final IntEntry<T> next = e.next;
+      final Entry<T> next = e.next;
       if (key == e.key) {
         this.modCount++;
         this.size--;
@@ -1000,20 +1000,20 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * @param o
    * @return The entry that was removed
    */
-  IntEntry<T> removeMapping(final Object o) {
-    if (!(o instanceof IntEntry)) {
+  Entry<T> removeMapping(final Object o) {
+    if (!(o instanceof Entry)) {
       return null;
     }
 
     @SuppressWarnings("unchecked")
-    final IntEntry<T> entry = (IntEntry<T>)o;
-    final int key = entry.getIntKey();
-    final int i = indexFor(key, this.table.length);
-    IntEntry<T> prev = this.table[i];
-    IntEntry<T> e = prev;
+    final Entry<T> entry = (Entry<T>)o;
+    final long key = entry.getLongKey();
+    final int i = indexFor((int)key, this.table.length);
+    Entry<T> prev = this.table[i];
+    Entry<T> e = prev;
 
     while (e != null) {
-      final IntEntry<T> next = e.next;
+      final Entry<T> next = e.next;
       if (e.key == key && e.equals(entry)) {
         this.modCount++;
         this.size--;
@@ -1035,7 +1035,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    * Rehashes the contents of this map into a new array with a larger capacity.
    * This method is called automatically when the number of keys in this map
    * reaches its threshold. If current capacity is MAXIMUM_CAPACITY, this method
-   * does not resize the map, but but sets threshold to Integer.MAX_VALUE. This
+   * does not resize the map, but but sets threshold to Long.MAX_VALUE. This
    * has the effect of preventing future calls.
    *
    * @param newCapacity the new capacity, MUST be a power of two; must be
@@ -1043,7 +1043,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    *          MAXIMUM_CAPACITY (in which case value is irrelevant).
    */
   void resize(final int newCapacity) {
-    final IntEntry<T>[] oldTable = this.table;
+    final Entry<T>[] oldTable = this.table;
     final int oldCapacity = oldTable.length;
     if (oldCapacity == MAXIMUM_CAPACITY) {
       this.threshold = Integer.MAX_VALUE;
@@ -1051,7 +1051,7 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    final IntEntry<T>[] newTable = ArrayUtil.create(IntEntry.class, newCapacity);
+    final Entry<T>[] newTable = ArrayUtil.create(Entry.class, newCapacity);
     transfer(newTable);
     this.table = newTable;
     this.threshold = (int)(newCapacity * this.loadFactor);
@@ -1072,16 +1072,16 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
    *
    * @param newTable
    */
-  void transfer(final IntEntry<T>[] newTable) {
-    final IntEntry<T>[] src = this.table;
+  void transfer(final Entry<T>[] newTable) {
+    final Entry<T>[] src = this.table;
     final int newCapacity = newTable.length;
     for (int j = 0; j < src.length; j++) {
-      IntEntry<T> e = src[j];
+      Entry<T> e = src[j];
       if (e != null) {
         src[j] = null;
         do {
-          final IntEntry<T> next = e.next;
-          final int i = indexFor(e.key, newCapacity);
+          final Entry<T> next = e.next;
+          final int i = indexFor((int)e.key, newCapacity);
           e.next = newTable[i];
           newTable[i] = e;
           e = next;
@@ -1132,8 +1132,8 @@ public class IntHashMap<T> implements Map<Integer, T>, Cloneable, Serializable {
     s.writeInt(this.size);
 
     // Write out keys and values (alternating)
-    for (final IntEntry<T> e : entryIntSet()) {
-      s.writeInt(e.getIntKey());
+    for (final Entry<T> e : entryIntSet()) {
+      s.writeLong(e.getLongKey());
       s.writeObject(e.getValue());
     }
   }

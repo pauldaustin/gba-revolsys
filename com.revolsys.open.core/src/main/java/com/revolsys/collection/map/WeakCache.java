@@ -11,16 +11,9 @@ import com.revolsys.collection.ReferenceEntrySet;
 import com.revolsys.collection.ReferenceSet;
 
 public class WeakCache<K, V> implements Map<K, V> {
-  private final Map<K, Reference<V>> cache = new WeakHashMap<K, Reference<V>>();
-
-  private final Map<K, V> map;
+  private final Map<K, Reference<V>> cache = new WeakHashMap<>();
 
   public WeakCache() {
-    this(null);
-  }
-
-  public WeakCache(final Map<K, V> map) {
-    this.map = map;
   }
 
   @Override
@@ -29,30 +22,18 @@ public class WeakCache<K, V> implements Map<K, V> {
   }
 
   @Override
-  public boolean containsKey(final Object obj) {
-    if (this.map == null) {
-      return this.cache.containsKey(obj);
-    } else {
-      return this.map.containsKey(obj);
-    }
+  public boolean containsKey(final Object key) {
+    return this.cache.containsKey(key);
   }
 
   @Override
   public boolean containsValue(final Object value) {
-    if (this.map == null) {
-      return this.cache.containsKey(value);
-    } else {
-      return this.map.containsKey(value);
-    }
+    return this.cache.containsKey(value);
   }
 
   @Override
   public Set<Entry<K, V>> entrySet() {
-    if (this.map == null) {
-      return new ReferenceEntrySet<K, V>(this.cache.entrySet());
-    } else {
-      throw new UnsupportedOperationException();
-    }
+    return new ReferenceEntrySet<K, V>(this.cache.entrySet());
   }
 
   public void evict(final K key) {
@@ -60,7 +41,6 @@ public class WeakCache<K, V> implements Map<K, V> {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public V get(final Object key) {
     V value = null;
     final Reference<V> reference = this.cache.get(key);
@@ -68,34 +48,19 @@ public class WeakCache<K, V> implements Map<K, V> {
       value = reference.get();
     }
     if (value == null) {
-      if (this.map != null) {
-        value = this.map.get(key);
-      }
-      if (value == null) {
-        this.cache.remove(key);
-      } else {
-        this.cache.put((K)key, new WeakReference<V>(value));
-      }
+      this.cache.remove(key);
     }
     return value;
   }
 
   @Override
   public boolean isEmpty() {
-    if (this.map == null) {
-      return this.cache.isEmpty();
-    } else {
-      return this.map.isEmpty();
-    }
+    return this.cache.isEmpty();
   }
 
   @Override
   public Set<K> keySet() {
-    if (this.map == null) {
-      return this.cache.keySet();
-    } else {
-      throw new UnsupportedOperationException();
-    }
+    return this.cache.keySet();
   }
 
   @Override
@@ -104,23 +69,14 @@ public class WeakCache<K, V> implements Map<K, V> {
     if (value == null) {
       final Reference<V> oldReference = this.cache.remove(key);
 
-      if (this.map == null) {
-        if (oldReference != null) {
-          oldValue = oldReference.get();
-        }
-      } else {
-        oldValue = this.map.remove(key);
+      if (oldReference != null) {
+        oldValue = oldReference.get();
       }
     } else {
       final Reference<V> oldReference = this.cache.put(key, new WeakReference<V>(value));
-      if (this.map == null) {
-        if (oldReference != null) {
-          oldValue = oldReference.get();
-        }
-      } else {
-        oldValue = this.map.put(key, value);
+      if (oldReference != null) {
+        oldValue = oldReference.get();
       }
-
     }
     return oldValue;
   }
@@ -137,28 +93,20 @@ public class WeakCache<K, V> implements Map<K, V> {
   @Override
   public V remove(final Object obj) {
     final Reference<V> oldReference = this.cache.remove(obj);
-    if (this.map == null) {
-      return oldReference.get();
+    if (oldReference == null) {
+      return null;
     } else {
-      return this.map.remove(obj);
+      return oldReference.get();
     }
   }
 
   @Override
   public int size() {
-    if (this.map == null) {
-      return this.cache.size();
-    } else {
-      return this.map.size();
-    }
+    return this.cache.size();
   }
 
   @Override
   public Collection<V> values() {
-    if (this.map == null) {
-      return new ReferenceSet<V>(this.cache.values());
-    } else {
-      throw new UnsupportedOperationException();
-    }
+    return new ReferenceSet<V>(this.cache.values());
   }
 }
