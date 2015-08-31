@@ -458,6 +458,12 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     return true;
   }
 
+  default void setGeometryValue(final com.revolsys.geometry.model.Geometry geometry) {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final int index = recordDefinition.getGeometryFieldIndex();
+    setValue(index, geometry);
+  }
+
   /**
    * Set the value of the primary geometry attribute.
    *
@@ -623,7 +629,7 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
       final Object value = JavaBeanUtil.clone(record.getValue(name));
       setValue(name, value);
     }
-    setGeometryValue(JavaBeanUtil.clone(record.getGeometry()));
+    setGeometryValue((Geometry)JavaBeanUtil.clone(record.getGeometry()));
   }
 
   default void setValues(final Record record, final Collection<String> fieldNames) {

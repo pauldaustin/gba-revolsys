@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.revolsys.format.wkt.WktParser;
+import com.revolsys.format.wkt.WktParserOld;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.GeographicCoordinateSystem;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
@@ -604,14 +604,14 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   @SuppressWarnings("unchecked")
   public <T extends Geometry> T createGeometry(final String wkt) {
-    final WktParser parser = new WktParser(this);
+    final WktParserOld parser = new WktParserOld(this);
     return (T)parser.parseGeometry(wkt);
   }
 
   @SuppressWarnings("unchecked")
   public <T extends Geometry> T createGeometry(final String wkt,
     final boolean useNumAxisFromGeometryFactory) {
-    final WktParser parser = new WktParser(this);
+    final WktParserOld parser = new WktParserOld(this);
     return (T)parser.parseGeometry(wkt, useNumAxisFromGeometryFactory);
   }
 

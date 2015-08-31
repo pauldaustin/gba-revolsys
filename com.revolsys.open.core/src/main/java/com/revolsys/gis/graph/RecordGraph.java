@@ -7,7 +7,7 @@ import java.util.List;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
 import com.revolsys.data.record.filter.RecordGeometryFilter;
-import com.revolsys.data.record.property.DirectionalFields;
+import com.revolsys.data.record.property.DirectionalFieldsOld;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -132,7 +132,7 @@ public class RecordGraph extends Graph<Record> {
     final Edge<Record> edge2) {
     final Record object1 = edge1.getObject();
     final Record object2 = edge2.getObject();
-    final Record mergedObject = DirectionalFields.merge(node, object1, object2);
+    final Record mergedObject = DirectionalFieldsOld.merge(node, object1, object2);
     final Edge<Record> mergedEdge = addEdge(mergedObject);
     remove(edge1);
     remove(edge2);
@@ -144,7 +144,7 @@ public class RecordGraph extends Graph<Record> {
     for (final Edge<Record> edge : findEdges(point, distance)) {
       final LineString line = edge.getLine();
       final List<Edge<Record>> splitEdges = edge.split(new DoubleCoordinates(point));
-      DirectionalFields.edgeSplitAttributes(line, point, splitEdges);
+      DirectionalFieldsOld.edgeSplitAttributes(line, point, splitEdges);
       edges.addAll(splitEdges);
     }
     return edges;

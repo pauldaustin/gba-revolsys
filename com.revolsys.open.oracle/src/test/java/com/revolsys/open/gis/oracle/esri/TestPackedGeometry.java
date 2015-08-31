@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.revolsys.data.equals.Geometry3DExactEquals;
-import com.revolsys.format.wkt.WktWriter;
+import com.revolsys.format.wkt.WktWriterOld;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.oracle.esri.ArcSdeConstants;
@@ -37,10 +37,10 @@ public class TestPackedGeometry {
     final int geometryType = ArcSdeConstants.getStGeometryType(geometry);
     final Geometry geometry2 = PackedCoordinateUtil.getGeometry(data, geometryFactory, geometryType,
       numPoints, xOffset, yOffset, xyScale, zOffset, zScale, mOffset, mScale);
-    System.out.println(WktWriter.toString(geometry));
+    System.out.println(WktWriterOld.toString(geometry));
     if (!new Geometry3DExactEquals().equals(geometry, geometry2,
       Collections.<String> emptyList())) {
-      System.err.println(WktWriter.toString(geometry2));
+      System.err.println(WktWriterOld.toString(geometry2));
       throw new RuntimeException("Geometry not equal");
     }
   }

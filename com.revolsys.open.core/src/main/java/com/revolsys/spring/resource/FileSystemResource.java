@@ -18,6 +18,7 @@ package com.revolsys.spring.resource;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +28,8 @@ import java.net.URL;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import com.revolsys.util.WrappedException;
 
 /**
  * {@link Resource} implementation for {@code java.io.File} handles.
@@ -145,8 +148,12 @@ public class FileSystemResource extends AbstractResource {
    * @see java.io.FileInputStream
    */
   @Override
-  public InputStream getInputStream() throws IOException {
-    return new FileInputStream(this.file);
+  public InputStream getInputStream() {
+    try {
+      return new FileInputStream(this.file);
+    } catch (final FileNotFoundException e) {
+      throw new WrappedException(e);
+    }
   }
 
   /**

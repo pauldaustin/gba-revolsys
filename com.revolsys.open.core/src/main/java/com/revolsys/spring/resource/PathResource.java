@@ -29,6 +29,8 @@ import java.nio.file.Paths;
 
 import org.springframework.util.Assert;
 
+import com.revolsys.util.WrappedException;
+
 /**
  * {@link Resource} implementation for {@code java.nio.file.Path} handles.
  * Supports resolution as File, and also as URL.
@@ -151,14 +153,18 @@ public class PathResource extends AbstractResource {
    * @see java.nio.file.spi.FileSystemProvider#newInputStream(Path, OpenOption...)
    */
   @Override
-  public InputStream getInputStream() throws IOException {
+  public InputStream getInputStream() {
     if (!exists()) {
-      throw new FileNotFoundException(getPath() + " (no such file or directory)");
+      throw new IllegalArgumentException(getPath() + " (no such file or directory)");
     }
     if (Files.isDirectory(this.path)) {
-      throw new FileNotFoundException(getPath() + " (is a directory)");
+      throw new IllegalArgumentException(getPath() + " (is a directory)");
     }
-    return Files.newInputStream(this.path);
+    try {
+      return Files.newInputStream(this.path);
+    } catch (final IOException e) {
+      throw new WrappedException(e);
+    }
   }
 
   @Override

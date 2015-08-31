@@ -136,4 +136,11 @@ public class Paths {
   public static String toUrlString(final Path path) {
     return toUrl(path).toString();
   }
+
+  public static Path withExtension(final Path path, final String extension) {
+    final String baseName = getBaseName(path);
+    final String newFileName = baseName + "." + extension;
+    final Path parent = path.getParent();
+    return parent.resolve(newFileName);
+  }
 }

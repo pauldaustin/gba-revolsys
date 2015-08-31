@@ -16,6 +16,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.data.types.DataType;
 import com.revolsys.data.types.DataTypes;
+import com.revolsys.geometry.util.GeometryProperties;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
@@ -27,6 +28,16 @@ public final class Records {
     final Record copy = new ArrayRecord(recordDefinition);
     copy.setValues(record);
     return copy;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <T extends Record> T copy(final T record,
+    final com.revolsys.geometry.model.Geometry geometry) {
+    final com.revolsys.geometry.model.Geometry oldGeometry = record.getGeometry();
+    final T newObject = (T)record.clone();
+    newObject.setGeometryValue(geometry);
+    GeometryProperties.copyUserData(oldGeometry, geometry);
+    return newObject;
   }
 
   /**

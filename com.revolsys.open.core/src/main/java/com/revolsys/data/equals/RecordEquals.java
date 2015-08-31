@@ -86,6 +86,21 @@ public class RecordEquals implements Equals<Record> {
     }
   }
 
+  public static boolean isFieldIgnored(final RecordDefinition recordDefinition,
+    final Collection<String> excludedAttributes, final String fieldName) {
+    if (excludedAttributes.contains(fieldName)) {
+      return true;
+    } else if (excludedAttributes.contains(EXCLUDE_ID)
+      && fieldName.equals(recordDefinition.getIdFieldName())) {
+      return true;
+    } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
+      && fieldName.equals(recordDefinition.getGeometryFieldName())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private EqualsRegistry equalsRegistry;
 
   @Override

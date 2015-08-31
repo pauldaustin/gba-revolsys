@@ -10,7 +10,7 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
-import com.revolsys.format.wkt.EWktWriter;
+import com.revolsys.format.wkt.EWktWriterJts;
 import com.revolsys.io.AbstractRecordWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.WrappedException;
@@ -105,7 +105,7 @@ public class CsvRecordWriter extends AbstractRecordWriter implements RecordWrite
         final Object value = object.getValue(i);
         if (value instanceof Geometry) {
           final Geometry geometry = (Geometry)value;
-          final String text = EWktWriter.toString(geometry, this.ewkt);
+          final String text = EWktWriterJts.toString(geometry, this.ewkt);
           string(text);
         } else if (value != null) {
           final String name = recordDefinition.getFieldName(i);

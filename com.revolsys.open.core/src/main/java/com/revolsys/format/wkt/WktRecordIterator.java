@@ -27,7 +27,7 @@ public class WktRecordIterator extends AbstractIterator<Record>implements Record
 
   private RecordDefinition metaData;
 
-  private WktParser wktParser;
+  private WktParserOld wktParserOld;
 
   public WktRecordIterator(final RecordFactory factory, final Resource resource)
     throws IOException {
@@ -41,7 +41,7 @@ public class WktRecordIterator extends AbstractIterator<Record>implements Record
     FileUtil.closeSilent(this.in);
     this.factory = null;
     this.in = null;
-    this.wktParser = null;
+    this.wktParserOld = null;
     this.metaData = null;
   }
 
@@ -61,14 +61,14 @@ public class WktRecordIterator extends AbstractIterator<Record>implements Record
         geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
       }
     }
-    this.wktParser = new WktParser(geometryFactory);
+    this.wktParserOld = new WktParserOld(geometryFactory);
   }
 
   @Override
   protected Record getNext() {
     try {
       final String wkt = this.in.readLine();
-      final Geometry geometry = this.wktParser.parseGeometry(wkt);
+      final Geometry geometry = this.wktParserOld.parseGeometry(wkt);
       if (geometry == null) {
         throw new NoSuchElementException();
       } else {

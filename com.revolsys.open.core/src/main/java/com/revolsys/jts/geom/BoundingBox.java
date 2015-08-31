@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.record.Record;
-import com.revolsys.format.wkt.WktParser;
+import com.revolsys.format.wkt.WktParserOld;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
 import com.revolsys.gis.cs.projection.CoordinatesListProjectionUtil;
@@ -67,21 +67,21 @@ public class BoundingBox extends Envelope implements Cloneable {
     if (Property.hasValue(wkt)) {
       GeometryFactory geometryFactory = null;
       final StringBuffer text = new StringBuffer(wkt);
-      if (WktParser.hasText(text, "SRID=")) {
-        final Integer srid = WktParser.parseInteger(text);
+      if (WktParserOld.hasText(text, "SRID=")) {
+        final Integer srid = WktParserOld.parseInteger(text);
         if (srid != null) {
           geometryFactory = GeometryFactory.floating(srid, 2);
         }
-        WktParser.hasText(text, ";");
+        WktParserOld.hasText(text, ";");
       }
-      if (WktParser.hasText(text, "BBOX(")) {
-        final Double x1 = WktParser.parseDouble(text);
-        if (WktParser.hasText(text, ",")) {
-          final Double y1 = WktParser.parseDouble(text);
-          WktParser.skipWhitespace(text);
-          final Double x2 = WktParser.parseDouble(text);
-          if (WktParser.hasText(text, ",")) {
-            final Double y2 = WktParser.parseDouble(text);
+      if (WktParserOld.hasText(text, "BBOX(")) {
+        final Double x1 = WktParserOld.parseDouble(text);
+        if (WktParserOld.hasText(text, ",")) {
+          final Double y1 = WktParserOld.parseDouble(text);
+          WktParserOld.skipWhitespace(text);
+          final Double x2 = WktParserOld.parseDouble(text);
+          if (WktParserOld.hasText(text, ",")) {
+            final Double y2 = WktParserOld.parseDouble(text);
             return new BoundingBox(geometryFactory, x1, y1, x2, y2);
           } else {
             throw new IllegalArgumentException("Expecting a ',' not " + text);
@@ -90,7 +90,7 @@ public class BoundingBox extends Envelope implements Cloneable {
         } else {
           throw new IllegalArgumentException("Expecting a ',' not " + text);
         }
-      } else if (WktParser.hasText(text, "BBOX EMPTY")) {
+      } else if (WktParserOld.hasText(text, "BBOX EMPTY")) {
         return new BoundingBox(geometryFactory);
       }
     }

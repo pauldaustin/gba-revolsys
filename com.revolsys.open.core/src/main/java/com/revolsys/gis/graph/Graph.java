@@ -916,7 +916,7 @@ public class Graph<T> {
   }
 
   public void queryEdges(final EdgeVisitor<T> visitor, final Consumer<Edge<T>> matchVisitor) {
-    visitor.setVisitor(matchVisitor);
+    visitor.setAction(matchVisitor);
     queryEdges(visitor);
   }
 

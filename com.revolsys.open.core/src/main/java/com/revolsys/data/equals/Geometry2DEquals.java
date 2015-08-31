@@ -18,6 +18,31 @@ public class Geometry2DEquals implements Equals<Geometry> {
     this.equalsRegistry = equalsRegistry;
   }
 
+  public boolean equals(final com.revolsys.geometry.model.Geometry geometry1,
+    final com.revolsys.geometry.model.Geometry geometry2, final Collection<String> exclude) {
+    if (geometry1.getGeometryCount() != geometry2.getGeometryCount()) {
+      return false;
+    }
+    for (int j = 0; j < geometry1.getGeometryCount(); j++) {
+      final Geometry geometryPart1 = geometry1.getGeometry(j);
+      final Geometry geometryPart2 = geometry2.getGeometry(j);
+      if (!geometryPart1.equals(geometryPart2)) {
+        return false;
+      }
+      if (!this.equalsRegistry.equals(geometryPart1.getUserData(), geometryPart2.getUserData(),
+        exclude)) {
+        return false;
+      }
+    }
+    if (geometry1 instanceof GeometryCollection) {
+      final Object userData1 = geometry1.getUserData();
+      final Object userData2 = geometry2.getUserData();
+      return this.equalsRegistry.equals(userData1, userData2, exclude);
+    } else {
+      return true;
+    }
+  }
+
   @Override
   public boolean equals(final Geometry geometry1, final Geometry geometry2,
     final Collection<String> exclude) {

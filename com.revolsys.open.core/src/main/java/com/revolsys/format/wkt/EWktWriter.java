@@ -36,28 +36,27 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import com.revolsys.geometry.model.Geometry;
+import com.revolsys.geometry.model.GeometryCollection;
+import com.revolsys.geometry.model.LineString;
+import com.revolsys.geometry.model.LinearRing;
+import com.revolsys.geometry.model.MultiLineString;
+import com.revolsys.geometry.model.MultiPoint;
+import com.revolsys.geometry.model.MultiPolygon;
+import com.revolsys.geometry.model.Point;
+import com.revolsys.geometry.model.Polygon;
 import com.revolsys.gis.model.coordinates.Coordinates;
-import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.util.MathUtil;
 import com.revolsys.util.WrappedException;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
 
 public class EWktWriter {
 
   public static void append(final StringBuilder wkt, final int axisCount, final Point point) {
     for (int i = 0; i < axisCount; i++) {
       if (i > 0) {
-        wkt.append(' ');
+        wkt.append(" ");
       }
-      MathUtil.append(wkt, point.getCoordinateSequence().getOrdinate(0, i));
+      MathUtil.append(wkt, point.getCoordinate(i));
     }
   }
 
@@ -65,7 +64,7 @@ public class EWktWriter {
     wkt.append("LINESTRING");
     int axisCount = 2;
     for (final Point point : points) {
-      axisCount = Math.max(axisCount, GeometryFactory.getFactory(point).getAxisCount());
+      axisCount = Math.max(axisCount, point.getAxisCount());
     }
     if (axisCount > 3) {
       wkt.append(" ZM");
@@ -86,14 +85,14 @@ public class EWktWriter {
 
   public static void appendPoint(final StringBuilder wkt, final Point point) {
     wkt.append("POINT");
-    final int axisCount = GeometryFactory.getFactory(point).getAxisCount();
+    final int axisCount = point.getAxisCount();
     if (axisCount > 3) {
       wkt.append(" ZM");
     } else if (axisCount > 2) {
       wkt.append(" Z");
     }
     append(wkt, axisCount, point);
-    wkt.append(')');
+    wkt.append(")");
   }
 
   /**
@@ -127,7 +126,7 @@ public class EWktWriter {
 
   public static String toString(final Geometry geometry) {
     final StringWriter out = new StringWriter();
-    final int srid = geometry.getSRID();
+    final int srid = geometry.getSrid();
     if (srid > 0) {
       out.write("SRID=");
       out.write(Integer.toString(srid));
@@ -212,7 +211,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final GeometryCollection multiGeometry) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(multiGeometry).getAxisCount(), 4);
+    final int axisCount = Math.min(multiGeometry.getAxisCount(), 4);
     try {
       write(out, multiGeometry, axisCount);
     } catch (final IOException e) {
@@ -227,11 +226,11 @@ public class EWktWriter {
       out.write(" EMPTY");
     } else {
       out.write("(");
-      Geometry geometry = multiGeometry.getGeometryN(0);
+      Geometry geometry = multiGeometry.getGeometry(0);
       write(out, geometry, axisCount);
-      for (int i = 1; i < multiGeometry.getNumGeometries(); i++) {
+      for (int i = 1; i < multiGeometry.getGeometryCount(); i++) {
         out.write(',');
-        geometry = multiGeometry.getGeometryN(i);
+        geometry = multiGeometry.getGeometry(i);
         write(out, geometry, axisCount);
       }
       out.write(')');
@@ -239,7 +238,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final LinearRing line) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(line).getAxisCount(), 4);
+    final int axisCount = Math.min(line.getAxisCount(), 4);
     try {
       write(out, line, axisCount);
     } catch (final IOException e) {
@@ -259,7 +258,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final LineString line) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(line).getAxisCount(), 4);
+    final int axisCount = Math.min(line.getAxisCount(), 4);
     try {
       write(out, line, axisCount);
     } catch (final IOException e) {
@@ -288,7 +287,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final MultiLineString multiLineString) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(multiLineString).getAxisCount(), 4);
+    final int axisCount = Math.min(multiLineString.getAxisCount(), 4);
     try {
       write(out, multiLineString, axisCount);
     } catch (final IOException e) {
@@ -303,12 +302,12 @@ public class EWktWriter {
       out.write(" EMPTY");
     } else {
       out.write("(");
-      LineString line = (LineString)multiLineString.getGeometryN(0);
+      LineString line = (LineString)multiLineString.getGeometry(0);
       LineString points = line;
       writeCoordinates(out, points, axisCount);
-      for (int i = 1; i < multiLineString.getNumGeometries(); i++) {
+      for (int i = 1; i < multiLineString.getGeometryCount(); i++) {
         out.write(",");
-        line = (LineString)multiLineString.getGeometryN(i);
+        line = (LineString)multiLineString.getGeometry(i);
         points = line;
         writeCoordinates(out, points, axisCount);
       }
@@ -317,7 +316,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final MultiPoint multiPoint) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(multiPoint).getAxisCount(), 4);
+    final int axisCount = Math.min(multiPoint.getAxisCount(), 4);
     try {
       write(out, multiPoint, axisCount);
     } catch (final IOException e) {
@@ -331,12 +330,12 @@ public class EWktWriter {
     if (multiPoint.isEmpty()) {
       out.write(" EMPTY");
     } else {
-      Point point = (Point)multiPoint.getGeometryN(0);
+      Point point = multiPoint.getPoint(0);
       out.write("((");
       writeCoordinates(out, point, axisCount);
-      for (int i = 1; i < multiPoint.getNumGeometries(); i++) {
+      for (int i = 1; i < multiPoint.getGeometryCount(); i++) {
         out.write("),(");
-        point = (Point)multiPoint.getGeometryN(i);
+        point = multiPoint.getPoint(i);
         writeCoordinates(out, point, axisCount);
       }
       out.write("))");
@@ -344,7 +343,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final MultiPolygon multiPolygon) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(multiPolygon).getAxisCount(), 4);
+    final int axisCount = Math.min(multiPolygon.getAxisCount(), 4);
     try {
       write(out, multiPolygon, axisCount);
     } catch (final IOException e) {
@@ -360,11 +359,11 @@ public class EWktWriter {
     } else {
       out.write("(");
 
-      Polygon polygon = (Polygon)multiPolygon.getGeometryN(0);
+      Polygon polygon = (Polygon)multiPolygon.getGeometry(0);
       writePolygon(out, polygon, axisCount);
-      for (int i = 1; i < multiPolygon.getNumGeometries(); i++) {
+      for (int i = 1; i < multiPolygon.getGeometryCount(); i++) {
         out.write(",");
-        polygon = (Polygon)multiPolygon.getGeometryN(i);
+        polygon = (Polygon)multiPolygon.getGeometry(i);
         writePolygon(out, polygon, axisCount);
       }
       out.write(")");
@@ -372,7 +371,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final Point point) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(point).getAxisCount(), 4);
+    final int axisCount = Math.min(point.getAxisCount(), 4);
     try {
       write(out, point, axisCount);
     } catch (final IOException e) {
@@ -393,7 +392,7 @@ public class EWktWriter {
   }
 
   public static void write(final Writer out, final Polygon polygon) {
-    final int axisCount = Math.min(GeometryFactory.getFactory(polygon).getAxisCount(), 4);
+    final int axisCount = Math.min(polygon.getAxisCount(), 4);
     try {
       write(out, polygon, axisCount);
     } catch (final IOException e) {
@@ -423,7 +422,7 @@ public class EWktWriter {
     final int axisCount) throws IOException {
     out.write('(');
     write(out, coordinates, 0, axisCount);
-    for (int i = 1; i < coordinates.getNumPoints(); i++) {
+    for (int i = 1; i < coordinates.getVertexCount(); i++) {
       out.write(',');
       write(out, coordinates, i, axisCount);
     }
@@ -447,10 +446,10 @@ public class EWktWriter {
 
   private static void writeOrdinate(final Writer out, final LineString coordinates, final int index,
     final int ordinateIndex) throws IOException {
-    if (ordinateIndex > GeometryFactory.getFactory(coordinates).getAxisCount()) {
+    if (ordinateIndex > coordinates.getAxisCount()) {
       out.write('0');
     } else {
-      final double ordinate = coordinates.getCoordinateSequence().getOrdinate(index, ordinateIndex);
+      final double ordinate = coordinates.getCoordinate(index, ordinateIndex);
       if (Double.isNaN(ordinate)) {
         out.write('0');
       } else {
@@ -461,10 +460,10 @@ public class EWktWriter {
 
   private static void writeOrdinate(final Writer out, final Point coordinates,
     final int ordinateIndex) throws IOException {
-    if (ordinateIndex > GeometryFactory.getFactory(coordinates).getAxisCount()) {
+    if (ordinateIndex > coordinates.getAxisCount()) {
       out.write('0');
     } else {
-      final double ordinate = coordinates.getCoordinateSequence().getOrdinate(0, ordinateIndex);
+      final double ordinate = coordinates.getCoordinate(ordinateIndex);
       out.write(MathUtil.toString(ordinate));
     }
   }
@@ -472,12 +471,12 @@ public class EWktWriter {
   private static void writePolygon(final Writer out, final Polygon polygon, final int axisCount)
     throws IOException {
     out.write('(');
-    final LineString shell = polygon.getExteriorRing();
+    final LineString shell = polygon.getShell();
     final LineString coordinates = shell;
     writeCoordinates(out, coordinates, axisCount);
-    for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
+    for (int i = 0; i < polygon.getHoleCount(); i++) {
       out.write(',');
-      final LineString hole = polygon.getInteriorRingN(i);
+      final LineString hole = polygon.getHole(i);
       final LineString holeCoordinates = hole;
       writeCoordinates(out, holeCoordinates, axisCount);
     }

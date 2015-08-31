@@ -321,22 +321,26 @@ public class UrlResource extends AbstractResource {
    * @see java.net.URLConnection#getInputStream()
    */
   @Override
-  public InputStream getInputStream() throws IOException {
-    if (isFolderConnection()) {
-      final File file = getFile();
-      return new FileInputStream(file);
-    } else {
-      final URLConnection con = this.url.openConnection();
-      // ResourceUtils.useCachesIfNecessary(con);
-      try {
-        return con.getInputStream();
-      } catch (final IOException ex) {
-        // Close the HTTP connection (if applicable).
-        if (con instanceof HttpURLConnection) {
-          ((HttpURLConnection)con).disconnect();
+  public InputStream getInputStream() {
+    try {
+      if (isFolderConnection()) {
+        final File file = getFile();
+        return new FileInputStream(file);
+      } else {
+        final URLConnection con = this.url.openConnection();
+        // ResourceUtils.useCachesIfNecessary(con);
+        try {
+          return con.getInputStream();
+        } catch (final IOException ex) {
+          // Close the HTTP connection (if applicable).
+          if (con instanceof HttpURLConnection) {
+            ((HttpURLConnection)con).disconnect();
+          }
+          throw ex;
         }
-        throw ex;
       }
+    } catch (final IOException e) {
+      throw new WrappedException(e);
     }
   }
 

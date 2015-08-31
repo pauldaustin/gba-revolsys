@@ -60,7 +60,7 @@ public class WktRecordWriter extends AbstractWriter<Record>implements RecordWrit
       this.out.print(srid);
       this.out.print(';');
     }
-    WktWriter.write(this.out, geometry);
+    WktWriterOld.write(this.out, geometry);
     this.out.println();
   }
 

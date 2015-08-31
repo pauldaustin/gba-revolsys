@@ -1,16 +1,39 @@
 package com.revolsys.spring.resource;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 import com.revolsys.io.FileNames;
+import com.revolsys.io.FileUtil;
 import com.revolsys.util.Property;
+import com.revolsys.util.WrappedException;
 
 public interface Resource extends org.springframework.core.io.Resource {
 
   static String CLASSPATH_URL_PREFIX = "classpath:";
+
+  static boolean exists(final Resource resource) {
+    if (resource == null) {
+      return false;
+    } else {
+      return resource.exists();
+    }
+  }
 
   static org.springframework.core.io.Resource getResource(final Object source) {
     org.springframework.core.io.Resource resource;
@@ -47,6 +70,37 @@ public interface Resource extends org.springframework.core.io.Resource {
     return null;
   }
 
+  default String contentsAsString() {
+    final Reader reader = newReader();
+    return FileUtil.getString(reader);
+  }
+
+  default Resource createAddExtension(final String extension) {
+    final String fileName = getFilename();
+    final String newFileName = fileName + "." + extension;
+    final Resource parent = getParent();
+    if (parent == null) {
+      return null;
+    } else {
+      return parent.createChild(newFileName);
+    }
+  }
+
+  default Resource createChangeExtension(final String extension) {
+    final String baseName = getBaseName();
+    final String newFileName = baseName + "." + extension;
+    final Resource parent = getParent();
+    if (parent == null) {
+      return null;
+    } else {
+      return parent.createChild(newFileName);
+    }
+  }
+
+  default Resource createChild(final CharSequence childPath) {
+    return createRelative(childPath.toString());
+  }
+
   @Override
   Resource createRelative(String relativePath);
 
@@ -59,6 +113,9 @@ public interface Resource extends org.springframework.core.io.Resource {
     final String filename = resource.getFilename();
     return FileNames.getFileNameExtension(filename);
   }
+
+  @Override
+  InputStream getInputStream();
 
   default Resource getParent() {
     return null;
@@ -73,5 +130,61 @@ public interface Resource extends org.springframework.core.io.Resource {
     } else {
       return parent.createRelative(newFileName);
     }
+  }
+
+  default InputStream newBufferedInputStream() {
+    final InputStream in = newInputStream();
+    return new BufferedInputStream(in);
+  }
+
+  default OutputStream newBufferedOutputStream() {
+    final OutputStream out = newOutputStream();
+    return new BufferedOutputStream(out);
+  }
+
+  default BufferedReader newBufferedReader() {
+    final Reader in = newReader();
+    return new BufferedReader(in);
+  }
+
+  default InputStream newInputStream() {
+    return getInputStream();
+  }
+
+  default OutputStream newOutputStream() {
+    try {
+      final URL url = getURL();
+      final String protocol = url.getProtocol();
+      if (protocol.equals("file") || protocol.equals("folderconnection")) {
+        final File file = getFile();
+        return new FileOutputStream(file);
+      } else {
+        final URLConnection connection = url.openConnection();
+        connection.setDoOutput(true);
+        return connection.getOutputStream();
+      }
+    } catch (final IOException e) {
+      throw new WrappedException(e);
+    }
+  }
+
+  default PrintWriter newPrintWriter() {
+    final Writer writer = newWriter();
+    return new PrintWriter(writer);
+  }
+
+  default Reader newReader() {
+    final InputStream in = getInputStream();
+    return FileUtil.createUtf8Reader(in);
+  }
+
+  default Writer newWriter() {
+    final OutputStream stream = newOutputStream();
+    return FileUtil.createUtf8Writer(stream);
+  }
+
+  default Writer newWriter(final Charset charset) {
+    final OutputStream stream = newOutputStream();
+    return new OutputStreamWriter(stream, charset);
   }
 }

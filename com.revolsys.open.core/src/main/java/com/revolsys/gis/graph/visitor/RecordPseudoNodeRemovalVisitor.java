@@ -7,8 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.property.DirectionalFields;
-import com.revolsys.data.record.property.PseudoNodeProperty;
+import com.revolsys.data.record.property.DirectionalFieldsOld;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.EdgePair;
@@ -16,6 +15,7 @@ import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.graph.RecordGraph;
 import com.revolsys.gis.graph.attribute.NodeAttributes;
 import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
+import com.revolsys.gis.graph.attribute.PseudoNodeProperty;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.predicate.PredicateProxy;
 import com.revolsys.util.ObjectProcessor;
@@ -93,7 +93,7 @@ public class RecordPseudoNodeRemovalVisitor extends AbstractNodeListenerVisitor<
 
   protected Record mergeObjects(final Node<Record> node, final Record object1,
     final Record object2) {
-    return DirectionalFields.merge(node, object1, object2);
+    return DirectionalFieldsOld.merge(node, object1, object2);
   }
 
   @Override

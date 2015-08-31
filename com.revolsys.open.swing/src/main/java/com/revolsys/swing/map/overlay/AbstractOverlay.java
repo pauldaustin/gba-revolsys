@@ -30,7 +30,7 @@ import javax.swing.undo.UndoableEdit;
 
 import com.revolsys.comparator.IntArrayComparator;
 import com.revolsys.converter.string.BooleanStringConverter;
-import com.revolsys.format.wkt.WktWriter;
+import com.revolsys.format.wkt.WktWriterOld;
 import com.revolsys.gis.algorithm.index.PointQuadTree;
 import com.revolsys.gis.algorithm.index.quadtree.QuadTree;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
@@ -605,7 +605,7 @@ public class AbstractOverlay extends JComponent implements PropertyChangeListene
         }
         i++;
         text.append("<b>Snap to (");
-        text.append(WktWriter.toString(snapPoint, true));
+        text.append(WktWriterOld.toString(snapPoint, true));
         text.append(")</b><ul style=\"margin: 2px 2px 2px 15px\">");
 
         final Map<String, Set<CloseLocation>> typeLocationsMap = new TreeMap<String, Set<CloseLocation>>();

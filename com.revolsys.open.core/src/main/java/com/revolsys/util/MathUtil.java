@@ -240,6 +240,40 @@ public final class MathUtil {
   }
 
   /**
+   * Clamps a <tt>double</tt> value to a given range.
+   * @param x the value to clamp
+   * @param min the minimum value of the range
+   * @param max the maximum value of the range
+   * @return the clamped value
+   */
+  public static double clamp(final double x, final double min, final double max) {
+    if (x < min) {
+      return min;
+    }
+    if (x > max) {
+      return max;
+    }
+    return x;
+  }
+
+  /**
+   * Clamps an <tt>int</tt> value to a given range.
+   * @param x the value to clamp
+   * @param min the minimum value of the range
+   * @param max the maximum value of the range
+   * @return the clamped value
+   */
+  public static int clamp(final int x, final int min, final int max) {
+    if (x < min) {
+      return min;
+    }
+    if (x > max) {
+      return max;
+    }
+    return x;
+  }
+
+  /**
    * Convert a BigDecimal amount to a currency string prefixed by the "$" sign.
    *
    * @param amount The BigDecimal amount.
@@ -482,6 +516,25 @@ public final class MathUtil {
     return getPercent(new BigDecimal(decimalPercent));
   }
 
+  public static int hashCode(final double d) {
+    final long f = Double.doubleToLongBits(d);
+    return (int)(f ^ f >>> 32);
+  }
+
+  public static double hypot(final double a, final double b) {
+    double r;
+    if (Math.abs(a) > Math.abs(b)) {
+      r = b / a;
+      r = Math.abs(a) * Math.sqrt(1 + r * r);
+    } else if (b != 0) {
+      r = a / b;
+      r = Math.abs(b) * Math.sqrt(1 + r * r);
+    } else {
+      r = 0.0;
+    }
+    return r;
+  }
+
   /**
    * Convert a BigDecimal integer to a string.
    *
@@ -524,8 +577,92 @@ public final class MathUtil {
     }
   }
 
+  public static double max(final double... values) {
+    double max = -Double.MAX_VALUE;
+    for (final double value : values) {
+      if (value > max) {
+        max = value;
+      }
+    }
+    return max;
+  }
+
+  public static int max(final int... values) {
+    int max = Integer.MIN_VALUE;
+    for (final int value : values) {
+      if (value > max) {
+        max = value;
+      }
+    }
+    return max;
+  }
+
+  public static double max(final Iterable<? extends Number> numbers) {
+    double max = -Double.MAX_VALUE;
+    for (final Number number : numbers) {
+      final double value = number.doubleValue();
+      if (value > max) {
+        max = value;
+      }
+    }
+    return max;
+  }
+
+  public static int maxInt(final Iterable<Integer> numbers) {
+    int min = Integer.MIN_VALUE;
+    for (final Integer number : numbers) {
+      final int value = number.intValue();
+      if (value > min) {
+        min = value;
+      }
+    }
+    return min;
+  }
+
   public static double midpoint(final double d1, final double d2) {
     return d1 + (d2 - d1) / 2;
+  }
+
+  public static double min(final double... values) {
+    double min = Double.MAX_VALUE;
+    for (final double value : values) {
+      if (value < min) {
+        min = value;
+      }
+    }
+    return min;
+  }
+
+  public static int min(final int... values) {
+    int min = Integer.MAX_VALUE;
+    for (final int value : values) {
+      if (value < min) {
+        min = value;
+      }
+    }
+    return min;
+  }
+
+  public static double min(final Iterable<? extends Number> numbers) {
+    double min = Double.MAX_VALUE;
+    for (final Number number : numbers) {
+      final double value = number.doubleValue();
+      if (value < min) {
+        min = value;
+      }
+    }
+    return min;
+  }
+
+  public static int minInt(final Iterable<Integer> numbers) {
+    int max = Integer.MAX_VALUE;
+    for (final Integer number : numbers) {
+      final int value = number.intValue();
+      if (value < max) {
+        max = value;
+      }
+    }
+    return max;
   }
 
   public static double orientedAngleBetween(double angle1, double angle2) {

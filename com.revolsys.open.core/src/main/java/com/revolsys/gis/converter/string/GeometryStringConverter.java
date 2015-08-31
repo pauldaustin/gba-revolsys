@@ -1,8 +1,8 @@
 package com.revolsys.gis.converter.string;
 
 import com.revolsys.converter.string.StringConverter;
-import com.revolsys.format.wkt.WktParser;
-import com.revolsys.format.wkt.WktWriter;
+import com.revolsys.format.wkt.WktParserOld;
+import com.revolsys.format.wkt.WktWriterOld;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class GeometryStringConverter implements StringConverter<Geometry> {
@@ -30,7 +30,7 @@ public class GeometryStringConverter implements StringConverter<Geometry> {
 
   @Override
   public Geometry toObject(final String string) {
-    return new WktParser().parseGeometry(string, false);
+    return new WktParserOld().parseGeometry(string, false);
   }
 
   @Override
@@ -39,7 +39,7 @@ public class GeometryStringConverter implements StringConverter<Geometry> {
       return null;
     } else if (value instanceof Geometry) {
       final Geometry geometry = (Geometry)value;
-      return WktWriter.toString(geometry, true);
+      return WktWriterOld.toString(geometry, true);
     } else {
       return value.toString();
     }

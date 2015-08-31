@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.revolsys.beans.AbstractPropertyChangeObject;
-import com.revolsys.format.wkt.WktWriter;
+import com.revolsys.format.wkt.WktWriterOld;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
@@ -163,7 +163,7 @@ public class MappedLocation extends AbstractPropertyChangeObject implements MapS
     final Map<String, Object> map = new LinkedHashMap<String, Object>();
     map.put("sourceX", this.sourcePixel.getX());
     map.put("sourceY", this.sourcePixel.getY());
-    map.put("target", WktWriter.toString(this.targetPoint, true));
+    map.put("target", WktWriterOld.toString(this.targetPoint, true));
     return map;
   }
 

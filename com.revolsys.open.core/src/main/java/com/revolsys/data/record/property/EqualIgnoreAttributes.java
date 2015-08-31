@@ -61,6 +61,10 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
     return this.attributeNames.contains(attributeName);
   }
 
+  public boolean isFieldIgnored(final String fieldName) {
+    return this.attributeNames.contains(fieldName);
+  }
+
   public void setAttributeNames(final Collection<String> attributeNames) {
     setAttributeNames(new LinkedHashSet<String>(attributeNames));
   }

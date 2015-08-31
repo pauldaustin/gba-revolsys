@@ -1,4 +1,4 @@
-package com.revolsys.data.record.property;
+package com.revolsys.gis.graph.attribute;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,11 +8,11 @@ import java.util.Set;
 
 import com.revolsys.data.equals.RecordEquals;
 import com.revolsys.data.record.Record;
+import com.revolsys.data.record.property.AbstractRecordDefinitionProperty;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.geometry.graph.attribute.InvokeMethodObjectPropertyProxy;
 import com.revolsys.gis.graph.Node;
-import com.revolsys.gis.graph.attribute.InvokeMethodObjectAttributeProxy;
-import com.revolsys.gis.graph.attribute.ObjectAttributeProxy;
-import com.revolsys.gis.graph.attribute.PseudoNodeAttribute;
+import com.revolsys.properties.ObjectPropertyProxy;
 
 public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
   protected static final List<String> DEFAULT_EXCLUDE = Arrays.asList(RecordEquals.EXCLUDE_ID,
@@ -25,11 +25,11 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
     return getProperty(metaData);
   }
 
-  public static PseudoNodeProperty getProperty(final RecordDefinition metaData) {
-    PseudoNodeProperty property = metaData.getProperty(PROPERTY_NAME);
+  public static PseudoNodeProperty getProperty(final RecordDefinition recordDefinition) {
+    PseudoNodeProperty property = recordDefinition.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new PseudoNodeProperty();
-      property.setRecordDefinition(metaData);
+      property.setRecordDefinition(recordDefinition);
     }
     return property;
   }
@@ -56,6 +56,17 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
 
   public Collection<String> getEqualExcludeAttributes() {
     return this.equalExcludeAttributes;
+  }
+
+  public PseudoNodeAttribute getProperty(final com.revolsys.geometry.graph.Node<Record> node) {
+    final String fieldName = PseudoNodeProperty.PROPERTY_NAME;
+    if (!node.hasProperty(fieldName)) {
+      final ObjectPropertyProxy<PseudoNodeAttribute, Node<Record>> proxy = new InvokeMethodObjectPropertyProxy<>(
+        this, "createProperty", Node.class);
+      node.setProperty(fieldName, proxy);
+    }
+    final PseudoNodeAttribute value = node.getProperty(fieldName);
+    return value;
   }
 
   @Override

@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class DelegatingVisitor<T> extends AbstractVisitor<T> {
-  private Consumer<T> consumer;
+  private Consumer<T> action;
 
   public DelegatingVisitor() {
   }
@@ -14,13 +14,13 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
     super(comparator);
   }
 
-  public DelegatingVisitor(final Comparator<T> comparator, final Consumer<T> visitor) {
+  public DelegatingVisitor(final Comparator<T> comparator, final Consumer<T> action) {
     super(comparator);
-    this.consumer = visitor;
+    this.action = action;
   }
 
-  public DelegatingVisitor(final Consumer<T> visitor) {
-    this.consumer = visitor;
+  public DelegatingVisitor(final Consumer<T> action) {
+    this.action = action;
   }
 
   public DelegatingVisitor(final Predicate<T> filter) {
@@ -32,34 +32,34 @@ public class DelegatingVisitor<T> extends AbstractVisitor<T> {
   }
 
   public DelegatingVisitor(final Predicate<T> filter, final Comparator<T> comparator,
-    final Consumer<T> visitor) {
+    final Consumer<T> action) {
     super(filter, comparator);
-    this.consumer = visitor;
+    this.action = action;
   }
 
-  public DelegatingVisitor(final Predicate<T> filter, final Consumer<T> visitor) {
+  public DelegatingVisitor(final Predicate<T> filter, final Consumer<T> action) {
     super(filter);
-    this.consumer = visitor;
+    this.action = action;
   }
 
   @Override
   public void accept(final T item) {
     final Predicate<T> filter = getPredicate();
     if (filter == null || filter.test(item)) {
-      this.consumer.accept(item);
+      this.action.accept(item);
     }
   }
 
-  public Consumer<T> getVisitor() {
-    return this.consumer;
+  public Consumer<T> getAction() {
+    return this.action;
   }
 
-  public void setVisitor(final Consumer<T> visitor) {
-    this.consumer = visitor;
+  public void setAction(final Consumer<T> action) {
+    this.action = action;
   }
 
   @Override
   public String toString() {
-    return this.consumer.toString();
+    return this.action.toString();
   }
 }

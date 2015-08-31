@@ -1,6 +1,5 @@
 package com.revolsys.spring.resource;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -52,7 +51,7 @@ public class OutputStreamResource extends AbstractResource {
   }
 
   @Override
-  public InputStream getInputStream() throws IOException {
+  public InputStream getInputStream() {
     throw new IllegalArgumentException("No input stream exists");
   }
 

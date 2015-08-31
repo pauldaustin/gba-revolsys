@@ -65,7 +65,7 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.equals.Equals;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
-import com.revolsys.data.record.property.DirectionalFields;
+import com.revolsys.data.record.property.DirectionalFieldsOld;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -521,7 +521,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
       final DataType geometryDataType = geometryField.getType();
       if (geometryDataType == DataTypes.LINE_STRING
         || geometryDataType == DataTypes.MULTI_LINE_STRING) {
-        if (DirectionalFields.getProperty(recordDefinition).hasDirectionalFields()) {
+        if (DirectionalFieldsOld.getProperty(recordDefinition).hasDirectionalFields()) {
           this.toolBar.addButton("geometry", FLIP_RECORD_NAME, FLIP_RECORD_ICON, editable, this,
             "flipRecordOrientation");
           this.toolBar.addButton("geometry", FLIP_LINE_ORIENTATION_NAME, FLIP_LINE_ORIENTATION_ICON,
