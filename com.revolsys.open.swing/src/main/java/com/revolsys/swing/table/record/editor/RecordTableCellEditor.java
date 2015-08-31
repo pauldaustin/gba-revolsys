@@ -28,14 +28,15 @@ import com.revolsys.data.types.DataType;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.field.AbstractRecordQueryField;
 import com.revolsys.swing.field.Field;
+import com.revolsys.swing.field.TextField;
 import com.revolsys.swing.listener.Listener;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.table.BaseJTable;
 import com.revolsys.swing.table.record.model.AbstractRecordTableModel;
 
-public class RecordTableCellEditor extends AbstractCellEditor implements TableCellEditor,
-  KeyListener, MouseListener, TableModelListener {
+public class RecordTableCellEditor extends AbstractCellEditor
+  implements TableCellEditor, KeyListener, MouseListener, TableModelListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -73,10 +74,6 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
     return SwingUtil.createField(recordDefinition, fieldName, true);
   }
 
-  public String getFieldName() {
-    return this.attributeName;
-  }
-
   @Override
   public Object getCellEditorValue() {
     final Object value = SwingUtil.getValue(this.editorComponent);
@@ -89,6 +86,10 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
 
   public JComponent getEditorComponent() {
     return this.editorComponent;
+  }
+
+  public String getFieldName() {
+    return this.attributeName;
   }
 
   public Object getOldValue() {
@@ -120,14 +121,14 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
     this.editorComponent = (JComponent)SwingUtil.createField(metaData, this.attributeName, true);
     if (this.editorComponent instanceof JTextField) {
       final JTextField textField = (JTextField)this.editorComponent;
-      textField.setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(WebColors.LightSteelBlue),
-        BorderFactory.createEmptyBorder(1, 2, 1, 2)));
+      textField.setBorder(
+        BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(WebColors.LightSteelBlue),
+          BorderFactory.createEmptyBorder(1, 2, 1, 2)));
     } else if (this.editorComponent instanceof AbstractRecordQueryField) {
       final AbstractRecordQueryField queryField = (AbstractRecordQueryField)this.editorComponent;
-      queryField.setSearchFieldBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(WebColors.LightSteelBlue),
-        BorderFactory.createEmptyBorder(1, 2, 1, 2)));
+      queryField.setSearchFieldBorder(
+        BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(WebColors.LightSteelBlue),
+          BorderFactory.createEmptyBorder(1, 2, 1, 2)));
     }
     this.editorComponent.setOpaque(false);
     SwingUtil.setFieldValue(this.editorComponent, value);
@@ -137,11 +138,16 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
     this.editorComponent.addKeyListener(this);
     this.editorComponent.addMouseListener(this);
     if (this.editorComponent instanceof JComboBox) {
-      final JComboBox comboBox = (JComboBox)this.editorComponent;
+      final JComboBox<?> comboBox = (JComboBox<?>)this.editorComponent;
       final ComboBoxEditor editor = comboBox.getEditor();
       final Component comboEditorComponent = editor.getEditorComponent();
       comboEditorComponent.addKeyListener(this);
       comboEditorComponent.addMouseListener(this);
+    } else if (this.editorComponent instanceof AbstractRecordQueryField) {
+      final AbstractRecordQueryField queryField = (AbstractRecordQueryField)this.editorComponent;
+      final TextField searchField = queryField.getSearchField();
+      searchField.addKeyListener(this);
+      searchField.addMouseListener(this);
     }
     if (this.popupMenu != null) {
       this.popupMenu.addToComponent(this.editorComponent);
@@ -248,10 +254,10 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
     } catch (final IndexOutOfBoundsException e) {
       return true;
     } catch (final Throwable t) {
-      final int result = JOptionPane.showConfirmDialog(this.editorComponent, "<html><p><b>'"
-        + getCellEditorValue() + "' is not a valid " + this.dataType
-        + ".</b></p><p>Discard changes (Yes) or edit field (No).</p></html>", "Invalid value",
-        JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+      final int result = JOptionPane.showConfirmDialog(this.editorComponent,
+        "<html><p><b>'" + getCellEditorValue() + "' is not a valid " + this.dataType
+          + ".</b></p><p>Discard changes (Yes) or edit field (No).</p></html>",
+        "Invalid value", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
       if (result == JOptionPane.YES_OPTION) {
         cancelCellEditing();
         return true;
@@ -264,11 +270,16 @@ public class RecordTableCellEditor extends AbstractCellEditor implements TableCe
           this.editorComponent.removeMouseListener(this);
           this.editorComponent.removeKeyListener(this);
           if (this.editorComponent instanceof JComboBox) {
-            final JComboBox comboBox = (JComboBox)this.editorComponent;
+            final JComboBox<?> comboBox = (JComboBox<?>)this.editorComponent;
             final ComboBoxEditor editor = comboBox.getEditor();
             final Component comboEditorComponent = editor.getEditorComponent();
             comboEditorComponent.removeKeyListener(this);
             comboEditorComponent.removeMouseListener(this);
+          } else if (this.editorComponent instanceof AbstractRecordQueryField) {
+            final AbstractRecordQueryField queryField = (AbstractRecordQueryField)this.editorComponent;
+            final TextField searchField = queryField.getSearchField();
+            searchField.removeKeyListener(this);
+            searchField.removeMouseListener(this);
           }
           if (this.popupMenu != null) {
             PopupMenu.removeFromComponent(this.editorComponent);

@@ -286,6 +286,10 @@ public abstract class AbstractRecordQueryField extends ValueField
 
   protected abstract List<Record> getRecords(Query query);
 
+  public TextField getSearchField() {
+    return this.searchField;
+  }
+
   public String getSearchText() {
     return this.searchField.getText();
   }
@@ -406,7 +410,8 @@ public abstract class AbstractRecordQueryField extends ValueField
 
   @Override
   public void mousePressed(final MouseEvent e) {
-    if (e.getSource() == this) {
+    final Object source = e.getSource();
+    if (source == this) {
       showMenu();
     }
   }
@@ -447,6 +452,7 @@ public abstract class AbstractRecordQueryField extends ValueField
         this.listModel.clear();
         this.menu.setVisible(false);
         setSelectedRecord(null);
+        this.searchField.setFieldValid();
       }
     }
   }
@@ -537,10 +543,6 @@ public abstract class AbstractRecordQueryField extends ValueField
         y = componentHeight;
 
       }
-      // } else {
-      // x = this.getWidth();
-      // y = 0;
-      // }
       this.menu.show(this, x, y);
       this.menu.pack();
     }
