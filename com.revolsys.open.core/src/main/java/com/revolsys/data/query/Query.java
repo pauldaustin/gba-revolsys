@@ -142,11 +142,11 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
     final Condition whereCondition = getWhereCondition();
     if (whereCondition == null) {
       setWhereCondition(condition);
+    } else if (whereCondition instanceof And) {
+      final And and = (And)whereCondition;
+      and.add(condition);
     } else {
-      final Condition[] conditions = {
-        whereCondition, condition
-      };
-      setWhereCondition(new And(conditions));
+      setWhereCondition(new And(whereCondition, condition));
     }
   }
 
@@ -231,6 +231,18 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
 
   public boolean isLockResults() {
     return this.lockResults;
+  }
+
+  public void or(final Condition condition) {
+    final Condition whereCondition = getWhereCondition();
+    if (whereCondition == null) {
+      setWhereCondition(condition);
+    } else if (whereCondition instanceof Or) {
+      final Or or = (Or)whereCondition;
+      or.add(condition);
+    } else {
+      setWhereCondition(new Or(whereCondition, condition));
+    }
   }
 
   public void setBoundingBox(final BoundingBox boundingBox) {

@@ -15,18 +15,10 @@ public class And extends AbstractMultiCondition {
     this(Arrays.asList(conditions));
   }
 
-  @SuppressWarnings({
-    "unchecked", "rawtypes"
-  })
   @Override
-  public boolean test(final Map<String, Object> object) {
-    final List<Condition> conditions = (List)getQueryValues();
-    for (final Condition condition : conditions) {
-      if (!condition.test(object)) {
-        return false;
-      }
-    }
-    return true;
+  public And and(final Condition condition) {
+    add(condition);
+    return this;
   }
 
   @Override
@@ -40,5 +32,19 @@ public class And extends AbstractMultiCondition {
       return super.equals(obj);
     }
     return false;
+  }
+
+  @SuppressWarnings({
+    "unchecked", "rawtypes"
+  })
+  @Override
+  public boolean test(final Map<String, Object> object) {
+    final List<Condition> conditions = (List)getQueryValues();
+    for (final Condition condition : conditions) {
+      if (!condition.test(object)) {
+        return false;
+      }
+    }
+    return true;
   }
 }

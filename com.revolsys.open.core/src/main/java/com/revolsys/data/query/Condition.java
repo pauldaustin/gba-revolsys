@@ -1,7 +1,6 @@
 package com.revolsys.data.query;
 
 import java.util.Map;
-
 import java.util.function.Predicate;
 
 public abstract class Condition extends QueryValue implements Predicate<Map<String, Object>> {
@@ -13,6 +12,10 @@ public abstract class Condition extends QueryValue implements Predicate<Map<Stri
     } else {
       return condition.test(record);
     }
+  }
+
+  public And and(final Condition condition) {
+    return new And(this, condition);
   }
 
   @Override
@@ -29,6 +32,10 @@ public abstract class Condition extends QueryValue implements Predicate<Map<Stri
 
   public boolean isEmpty() {
     return false;
+  }
+
+  public Or or(final Condition condition) {
+    return new Or(this, condition);
   }
 
   @Override
