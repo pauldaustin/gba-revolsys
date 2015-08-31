@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.revolsys.open</groupId>
     <artifactId>com.revolsys.open.parent</artifactId>
-    <version>GBA-SNAPSHOT</version>
+    <version>0.20150831.125646-GBA_1_1_21</version>
   </parent>
   <dependencies>
     <dependency>
