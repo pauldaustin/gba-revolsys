@@ -87,11 +87,15 @@ public class CopyRecords extends AbstractProcess {
               while (CompareUtil.compare(maxId, sourceId) < 0) {
                 maxId = this.targetRecordStore.createPrimaryIdValue(this.typePath);
               }
-              targetWriter.write(sourceRecord);
+              final Record targetRecord = this.targetRecordStore.create(this.typePath,
+                sourceRecord);
+              targetWriter.write(targetRecord);
             }
           } else {
             for (final Record sourceRecord : reader) {
-              targetWriter.write(sourceRecord);
+              final Record targetRecord = this.targetRecordStore.create(this.typePath,
+                sourceRecord);
+              targetWriter.write(targetRecord);
             }
           }
         }
