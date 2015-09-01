@@ -248,17 +248,6 @@ public abstract class AbstractCodeTable
     return this.swingEditor;
   }
 
-  @Override
-  @SuppressWarnings("unchecked")
-  public <V> V getValue(final Object id) {
-    final List<Object> values = getValues(id);
-    if (values != null) {
-      return (V)values.get(0);
-    } else {
-      return null;
-    }
-  }
-
   protected List<Object> getValueById(Object id) {
     if (this.valueIdCache.containsKey(Collections.singletonList(id))) {
       return Collections.singletonList(id);
