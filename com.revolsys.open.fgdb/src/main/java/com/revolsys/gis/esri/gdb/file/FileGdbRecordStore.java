@@ -25,6 +25,7 @@ import com.revolsys.collection.iterator.AbstractIterator;
 import com.revolsys.collection.map.Maps;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.query.AbstractMultiCondition;
 import com.revolsys.data.query.BinaryCondition;
 import com.revolsys.data.query.CollectionValue;
@@ -278,7 +279,11 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       buffer.append(")");
     } else if (condition instanceof Value) {
       final Value valueCondition = (Value)condition;
-      final Object value = valueCondition.getValue();
+      Object value = valueCondition.getValue();
+      if (value instanceof Identifier) {
+        final Identifier identifier = (Identifier)value;
+        value = identifier.getValue(0);
+      }
       appendValue(buffer, value);
     } else if (condition instanceof CollectionValue) {
       final CollectionValue collectionValue = (CollectionValue)condition;

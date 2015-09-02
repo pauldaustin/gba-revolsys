@@ -12,6 +12,7 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.codes.CodeTableProperty;
 import com.revolsys.data.equals.Equals;
+import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
@@ -20,18 +21,18 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.DateUtil;
 
 public class Value extends QueryValue {
-  private FieldDefinition attribute;
+  private FieldDefinition field;
 
   private Object displayValue;
 
-  private JdbcFieldDefinition jdbcAttribute;
+  private JdbcFieldDefinition jdbcField;
 
   private Object queryValue;
 
-  public Value(final FieldDefinition attribute, final Object value) {
+  public Value(final FieldDefinition field, final Object value) {
     this.queryValue = value;
     this.displayValue = value;
-    setAttribute(attribute);
+    setField(field);
 
   }
 
@@ -42,7 +43,12 @@ public class Value extends QueryValue {
   @Override
   public int appendParameters(final int index, final PreparedStatement statement) {
     try {
-      return this.jdbcAttribute.setPreparedStatementValue(statement, index, this.queryValue);
+      Object sqlValue = this.queryValue;
+      if (sqlValue instanceof Identifier) {
+        final Identifier identifier = (Identifier)sqlValue;
+        sqlValue = identifier.getValue(0);
+      }
+      return this.jdbcField.setPreparedStatementValue(statement, index, sqlValue);
     } catch (final SQLException e) {
       throw new RuntimeException("Unable to set value: " + this.queryValue, e);
     }
@@ -70,11 +76,11 @@ public class Value extends QueryValue {
     }
   }
 
-  public void convert(final FieldDefinition attribute) {
-    if (attribute instanceof JdbcFieldDefinition) {
-      this.jdbcAttribute = (JdbcFieldDefinition)attribute;
+  public void convert(final FieldDefinition field) {
+    if (field instanceof JdbcFieldDefinition) {
+      this.jdbcField = (JdbcFieldDefinition)field;
     }
-    convert(attribute.getType());
+    convert(field.getType());
   }
 
   @Override
@@ -91,8 +97,8 @@ public class Value extends QueryValue {
     return this.displayValue;
   }
 
-  public JdbcFieldDefinition getJdbcAttribute() {
-    return this.jdbcAttribute;
+  public JdbcFieldDefinition getJdbcField() {
+    return this.jdbcField;
   }
 
   public Object getQueryValue() {
@@ -102,10 +108,10 @@ public class Value extends QueryValue {
   @Override
   public String getStringValue(final Map<String, Object> record) {
     final Object value = getValue(record);
-    if (this.attribute == null) {
+    if (this.field == null) {
       return StringConverterRegistry.toString(value);
     } else {
-      final Class<?> typeClass = this.attribute.getTypeClass();
+      final Class<?> typeClass = this.field.getTypeClass();
       return StringConverterRegistry.toString(typeClass, value);
     }
   }
@@ -120,22 +126,22 @@ public class Value extends QueryValue {
     return (V)this.queryValue;
   }
 
-  public void setAttribute(final FieldDefinition attribute) {
-    this.attribute = attribute;
-    if (attribute == null) {
+  public void setField(final FieldDefinition field) {
+    this.field = field;
+    if (field == null) {
 
     } else {
-      if (attribute instanceof JdbcFieldDefinition) {
-        this.jdbcAttribute = (JdbcFieldDefinition)attribute;
+      if (field instanceof JdbcFieldDefinition) {
+        this.jdbcField = (JdbcFieldDefinition)field;
       } else {
-        this.jdbcAttribute = JdbcFieldDefinition.createField(this.queryValue);
+        this.jdbcField = JdbcFieldDefinition.createField(this.queryValue);
       }
 
       CodeTable codeTable = null;
-      if (attribute != null) {
-        final RecordDefinition metaData = attribute.getRecordDefinition();
+      if (field != null) {
+        final RecordDefinition metaData = field.getRecordDefinition();
         if (metaData != null) {
-          final String fieldName = attribute.getName();
+          final String fieldName = field.getName();
           codeTable = metaData.getCodeTableByFieldName(fieldName);
           if (codeTable instanceof CodeTableProperty) {
             final CodeTableProperty codeTableProperty = (CodeTableProperty)codeTable;
@@ -144,7 +150,7 @@ public class Value extends QueryValue {
             }
           }
           if (codeTable == null) {
-            convert(attribute);
+            convert(field);
           } else {
             final Object id = codeTable.getId(this.queryValue);
             if (id == null) {

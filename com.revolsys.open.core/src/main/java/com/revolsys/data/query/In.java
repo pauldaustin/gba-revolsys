@@ -26,7 +26,7 @@ public class In extends Condition {
       final Column column = (Column)left;
       final FieldDefinition attribute = column.getAttribute();
       if (attribute != null) {
-        values.setAttribute(attribute);
+        values.setField(attribute);
       }
     }
     this.values = values;

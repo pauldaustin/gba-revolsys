@@ -162,7 +162,7 @@ public abstract class QueryValue implements Cloneable {
                 }
                 if (id == null) {
                   throw new IllegalArgumentException(
-                    name + " requires a valid code value that exists not " + value);
+                    name + " requires a valid  code value that exists not " + value);
                 } else {
                   rightCondition = new Value(attribute, id);
                 }
