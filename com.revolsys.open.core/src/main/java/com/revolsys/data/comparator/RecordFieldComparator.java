@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.comparator;
+package com.revolsys.data.comparator;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -8,33 +8,33 @@ import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
 import com.revolsys.util.CompareUtil;
 
-public class RecordAttributeComparator implements Comparator<Record> {
-  private List<String> attributeNames;
+public class RecordFieldComparator implements Comparator<Record> {
+  private List<String> fieldNames;
 
   private boolean invert;
 
   private boolean nullFirst;
 
-  public RecordAttributeComparator() {
+  public RecordFieldComparator() {
   }
 
-  public RecordAttributeComparator(final boolean sortAsceding, final String... attributeNames) {
-    this(Arrays.asList(attributeNames));
+  public RecordFieldComparator(final boolean sortAsceding, final String... fieldNames) {
+    this(Arrays.asList(fieldNames));
     this.invert = !sortAsceding;
   }
 
-  public RecordAttributeComparator(final List<String> attributeNames) {
-    this.attributeNames = attributeNames;
+  public RecordFieldComparator(final List<String> fieldNames) {
+    this.fieldNames = fieldNames;
   }
 
-  public RecordAttributeComparator(final String... attributeNames) {
-    this(Arrays.asList(attributeNames));
+  public RecordFieldComparator(final String... fieldNames) {
+    this(Arrays.asList(fieldNames));
   }
 
   @Override
   public int compare(final Record object1, final Record object2) {
-    for (final String attributeName : this.attributeNames) {
-      final int compare = compare(object1, object2, attributeName);
+    for (final String fieldName : this.fieldNames) {
+      final int compare = compare(object1, object2, fieldName);
       if (compare != 0) {
         return compare;
       }
@@ -43,9 +43,9 @@ public class RecordAttributeComparator implements Comparator<Record> {
     return 0;
   }
 
-  public int compare(final Record object1, final Record object2, final String attributeName) {
-    final Comparable<Object> value1 = Records.getAttributeByPath(object1, attributeName);
-    final Comparable<Object> value2 = Records.getAttributeByPath(object2, attributeName);
+  public int compare(final Record object1, final Record object2, final String fieldName) {
+    final Comparable<Object> value1 = Records.getFieldByPath(object1, fieldName);
+    final Comparable<Object> value2 = Records.getFieldByPath(object2, fieldName);
     if (value1 == null) {
       if (value2 == null) {
         return 0;
@@ -72,8 +72,8 @@ public class RecordAttributeComparator implements Comparator<Record> {
     }
   }
 
-  public List<String> getAttributeNames() {
-    return this.attributeNames;
+  public List<String> getFieldNames() {
+    return this.fieldNames;
   }
 
   public boolean isInvert() {
@@ -84,8 +84,8 @@ public class RecordAttributeComparator implements Comparator<Record> {
     return this.nullFirst;
   }
 
-  public void setAttributeNames(final List<String> attributeNames) {
-    this.attributeNames = attributeNames;
+  public void setFieldNames(final List<String> fieldNames) {
+    this.fieldNames = fieldNames;
   }
 
   public void setInvert(final boolean invert) {
@@ -95,5 +95,4 @@ public class RecordAttributeComparator implements Comparator<Record> {
   public void setNullFirst(final boolean nullFirst) {
     this.nullFirst = nullFirst;
   }
-
 }

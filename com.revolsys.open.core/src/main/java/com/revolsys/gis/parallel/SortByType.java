@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.revolsys.data.comparator.RecordDefinitionNameComparator;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.gis.data.model.comparator.RecordDefinitionNameComparator;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 

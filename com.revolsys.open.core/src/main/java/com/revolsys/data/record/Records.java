@@ -78,7 +78,7 @@ public final class Records {
   }
 
   @SuppressWarnings("unchecked")
-  public static <T> T getAttributeByPath(final Record record, final String path) {
+  public static <T> T getFieldByPath(final Record record, final String path) {
     final RecordDefinition recordDefinition = record.getRecordDefinition();
 
     final String[] propertyPath = path.split("\\.");

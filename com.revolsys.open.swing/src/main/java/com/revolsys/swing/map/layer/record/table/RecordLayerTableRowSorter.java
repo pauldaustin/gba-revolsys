@@ -7,7 +7,7 @@ import org.jdesktop.swingx.sort.TableSortController;
 
 import com.revolsys.comparator.NumericComparator;
 import com.revolsys.data.codes.CodeTable;
-import com.revolsys.data.codes.CodeTableCoparator;
+import com.revolsys.data.codes.CodeTableValueComparator;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
@@ -44,7 +44,7 @@ public class RecordLayerTableRowSorter extends TableSortController<RecordLayerTa
         return Collator.getInstance();
       }
     } else {
-      return new CodeTableCoparator(codeTable);
+      return new CodeTableValueComparator(codeTable);
     }
   }
 }

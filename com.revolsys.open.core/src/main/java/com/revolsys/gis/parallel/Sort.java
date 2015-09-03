@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.revolsys.data.comparator.RecordFieldComparator;
 import com.revolsys.data.record.Record;
-import com.revolsys.gis.data.model.comparator.RecordAttributeComparator;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
 
@@ -43,7 +43,7 @@ public class Sort extends BaseInOutProcess<Record, Record> {
 
   public void setAttributeName(final String attributeName) {
     this.attributeName = attributeName;
-    this.comparator = new RecordAttributeComparator(attributeName);
+    this.comparator = new RecordFieldComparator(attributeName);
   }
 
   public void setComparator(final Comparator<Record> comparator) {

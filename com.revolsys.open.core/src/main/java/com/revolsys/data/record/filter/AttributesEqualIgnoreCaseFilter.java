@@ -11,8 +11,8 @@ public class AttributesEqualIgnoreCaseFilter implements Predicate<Record> {
   public static boolean test(final Record object1, final Record object2,
     final Collection<String> attributeNames) {
     for (final String attributeName : attributeNames) {
-      final String value1 = Records.getAttributeByPath(object1, attributeName);
-      final String value2 = Records.getAttributeByPath(object2, attributeName);
+      final String value1 = Records.getFieldByPath(object1, attributeName);
+      final String value2 = Records.getFieldByPath(object2, attributeName);
 
       if (value1 == null) {
         if (value2 != null) {

@@ -72,7 +72,7 @@ public class AttributeValuesFilter implements Predicate<Record> {
    */
   @Override
   public boolean test(final Record object) {
-    final Object propertyValue = Records.getAttributeByPath(object, this.attributeName);
+    final Object propertyValue = Records.getFieldByPath(object, this.attributeName);
     if (propertyValue == null) {
       if (this.allowNulls) {
         return true;

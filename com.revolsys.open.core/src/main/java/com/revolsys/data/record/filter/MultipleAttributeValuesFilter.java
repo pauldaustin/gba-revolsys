@@ -33,7 +33,7 @@ public class MultipleAttributeValuesFilter implements Predicate<Record> {
     for (final Entry<String, ? extends Object> entry : this.values.entrySet()) {
       final String attributeName = entry.getKey();
       final Object value = entry.getValue();
-      final Object objectValue = Records.getAttributeByPath(object, attributeName);
+      final Object objectValue = Records.getFieldByPath(object, attributeName);
       if (objectValue == null) {
         if (value != null) {
           if (!EqualsInstance.INSTANCE.equals(value, objectValue)) {

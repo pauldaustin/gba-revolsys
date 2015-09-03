@@ -1,4 +1,4 @@
-package com.revolsys.gis.data.model.comparator;
+package com.revolsys.data.comparator;
 
 import java.util.Comparator;
 import java.util.List;

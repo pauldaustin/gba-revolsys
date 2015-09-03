@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.revolsys.data.comparator.RecordFieldComparator;
 import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.identifier.ListIdentifier;
 import com.revolsys.data.identifier.SingleIdentifier;
@@ -20,7 +21,6 @@ import com.revolsys.data.record.property.RecordDefinitionProperty;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.gis.data.model.comparator.RecordAttributeComparator;
 import com.revolsys.io.PathName;
 import com.revolsys.io.Reader;
 import com.revolsys.util.Property;
@@ -277,7 +277,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
             final List<Record> codes = reader.read();
             this.recordStore.getStatistics().getStatistics("query").add(this.typePath,
               -codes.size());
-            Collections.sort(codes, new RecordAttributeComparator(this.orderBy));
+            Collections.sort(codes, new RecordFieldComparator(this.orderBy));
             addValues(codes);
           }
           Property.firePropertyChange(this, "valuesChanged", false, true);

@@ -4,11 +4,11 @@ import java.util.Comparator;
 
 import com.revolsys.util.CompareUtil;
 
-public class CodeTableCoparator implements Comparator<Object> {
+public class CodeTableValueComparator implements Comparator<Object> {
 
   private final CodeTable codeTable;
 
-  public CodeTableCoparator(final CodeTable codeTable) {
+  public CodeTableValueComparator(final CodeTable codeTable) {
     this.codeTable = codeTable;
   }
 

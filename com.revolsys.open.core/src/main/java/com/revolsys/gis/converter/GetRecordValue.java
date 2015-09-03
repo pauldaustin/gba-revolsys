@@ -27,7 +27,7 @@ public class GetRecordValue implements Converter<Record, Object> {
 
   @Override
   public Object convert(final Record source) {
-    Object value = Records.getAttributeByPath(source, this.attributePath);
+    Object value = Records.getFieldByPath(source, this.attributePath);
     if (!this.valueMap.isEmpty()) {
       if (this.valueMap.containsKey(value)) {
         value = this.valueMap.get(value);
