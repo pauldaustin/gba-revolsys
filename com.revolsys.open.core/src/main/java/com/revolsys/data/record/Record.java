@@ -266,6 +266,15 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     }
   }
 
+  default int getInteger(final CharSequence name, final int defaultValue) {
+    final Integer value = getInteger(name);
+    if (value == null) {
+      return defaultValue;
+    } else {
+      return value;
+    }
+  }
+
   default Long getLong(final CharSequence name) {
     final Object value = getValue(name);
     if (Property.hasValue(value)) {
