@@ -4,16 +4,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Closeable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
-import javax.swing.SwingUtilities;
 
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.identifier.Identifier;
+import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.parallel.Invoke;
-import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 
 public class CodeTableComboBoxModel extends AbstractListModel<Object>
@@ -69,10 +67,9 @@ public class CodeTableComboBoxModel extends AbstractListModel<Object>
       }
       index--;
     }
-    if (index < getSize()) {
-      final Map<Object, List<Object>> codes = this.codeTable.getCodes();
-      final Set<Object> keys = codes.keySet();
-      return CollectionUtil.get(keys, index);
+    if (index >= 0 && index < getSize()) {
+      final List<Identifier> identifiers = this.codeTable.getIdentifiers();
+      return identifiers.get(index);
     } else {
       return null;
     }
@@ -92,7 +89,7 @@ public class CodeTableComboBoxModel extends AbstractListModel<Object>
     if (this.codeTable == null) {
       return 0;
     } else {
-      int size = this.codeTable.getCodes().size();
+      int size = this.codeTable.getIdentifiers().size();
       if (this.allowNull) {
         size++;
       }
@@ -104,7 +101,7 @@ public class CodeTableComboBoxModel extends AbstractListModel<Object>
   public void propertyChange(final PropertyChangeEvent event) {
     if (event.getPropertyName().equals("valuesChanged")) {
       final int size = getSize();
-      if (SwingUtilities.isEventDispatchThread()) {
+      if (SwingUtil.isEventDispatchThread()) {
         fireContentsChanged(this, 0, size);
       } else {
         Invoke.later(this, "fireContentsChanged", this, 0, size);

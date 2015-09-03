@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.io.PathName;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.properties.BaseObjectWithProperties;
@@ -108,6 +109,10 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
   private Condition whereCondition;
 
   public Query() {
+  }
+
+  public Query(final PathName typePath) {
+    this(typePath.toString());
   }
 
   public Query(final RecordDefinition metaData) {

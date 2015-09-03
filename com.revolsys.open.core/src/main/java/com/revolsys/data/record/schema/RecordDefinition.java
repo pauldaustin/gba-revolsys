@@ -7,6 +7,7 @@ import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.types.DataType;
+import com.revolsys.io.PathName;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.jts.geom.GeometryFactory;
 
@@ -161,6 +162,10 @@ public interface RecordDefinition extends RecordStoreSchemaElement, MapSerialize
   List<FieldDefinition> getIdFields();
 
   int getInstanceId();
+
+  default PathName getPathName() {
+    return PathName.create(getPath());
+  }
 
   RecordDefinitionFactory getRecordDefinitionFactory();
 

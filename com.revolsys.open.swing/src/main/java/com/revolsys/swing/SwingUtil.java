@@ -59,6 +59,7 @@ import com.revolsys.awt.WebColors;
 import com.revolsys.beans.MethodInvoker;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.types.DataType;
@@ -190,7 +191,7 @@ public class SwingUtil {
         comboBox.setSelectedIndex(0);
       }
       int longestLength = -1;
-      for (final Entry<Object, List<Object>> codes : codeTable.getCodes().entrySet()) {
+      for (final Entry<Identifier, List<Object>> codes : codeTable.getCodes().entrySet()) {
         final List<Object> values = codes.getValue();
         if (values != null && !values.isEmpty()) {
           final String text = CollectionUtil.toString(values);
@@ -206,7 +207,7 @@ public class SwingUtil {
       if (maxLength > 0 && longestLength > maxLength) {
         longestLength = maxLength;
       }
-      final StringBuffer value = new StringBuffer();
+      final StringBuilder value = new StringBuilder();
       for (int i = 0; i < longestLength; i++) {
         value.append("W");
       }

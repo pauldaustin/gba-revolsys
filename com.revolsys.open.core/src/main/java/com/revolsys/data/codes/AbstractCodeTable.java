@@ -15,6 +15,8 @@ import javax.annotation.PreDestroy;
 import javax.swing.JComponent;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
+import com.revolsys.data.identifier.Identifier;
+import com.revolsys.data.identifier.SingleIdentifier;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.MathUtil;
 
@@ -23,9 +25,13 @@ public abstract class AbstractCodeTable
 
   private boolean capitalizeWords = false;
 
-  private Map<Object, Object> idIdCache = new LinkedHashMap<>();
+  private boolean caseSensitive = false;
 
-  private Map<Object, List<Object>> idValueCache = new LinkedHashMap<Object, List<Object>>();
+  private List<Identifier> identifiers = new ArrayList<>();
+
+  private Map<Identifier, Identifier> idIdCache = new LinkedHashMap<>();
+
+  private Map<Identifier, List<Object>> idValueCache = new LinkedHashMap<>();
 
   private long maxId;
 
@@ -33,11 +39,11 @@ public abstract class AbstractCodeTable
 
   private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-  private final Map<String, Object> stringIdMap = new HashMap<String, Object>();
+  private final Map<String, Identifier> stringIdMap = new HashMap<>();
 
   private JComponent swingEditor;
 
-  private Map<List<Object>, Object> valueIdCache = new LinkedHashMap<List<Object>, Object>();
+  private Map<List<Object>, Identifier> valueIdCache = new LinkedHashMap<>();
 
   public AbstractCodeTable() {
   }
@@ -46,7 +52,7 @@ public abstract class AbstractCodeTable
     this.capitalizeWords = capitalizeWords;
   }
 
-  protected synchronized void addValue(final Object id, final List<Object> values) {
+  protected synchronized void addValue(final Identifier id, final List<Object> values) {
     if (id instanceof Number) {
       final Number number = (Number)id;
       final long longValue = number.longValue();
@@ -54,23 +60,26 @@ public abstract class AbstractCodeTable
         this.maxId = longValue;
       }
     }
+    this.identifiers.add(id);
     this.idValueCache.put(id, values);
     this.idIdCache.put(id, id);
     this.valueIdCache.put(values, id);
     this.valueIdCache.put(getNormalizedValues(values), id);
-    this.stringIdMap.put(id.toString().toLowerCase(), id);
+    String lowerId = id.toString();
+    if (!this.caseSensitive) {
+      lowerId = lowerId.toLowerCase();
+    }
+    this.stringIdMap.put(lowerId, id);
   }
 
-  protected void addValue(final Object id, final Object... values) {
+  protected void addValue(final Identifier id, final Object... values) {
     final List<Object> valueList = Arrays.asList(values);
     addValue(id, valueList);
-
   }
 
-  protected synchronized void addValues(final Map<Object, List<Object>> valueMap) {
-
-    for (final Entry<Object, List<Object>> entry : valueMap.entrySet()) {
-      final Object id = entry.getKey();
+  protected synchronized void addValues(final Map<Identifier, List<Object>> valueMap) {
+    for (final Entry<Identifier, List<Object>> entry : valueMap.entrySet()) {
+      final Identifier id = entry.getKey();
       final List<Object> values = entry.getValue();
       addValue(id, values);
     }
@@ -80,6 +89,7 @@ public abstract class AbstractCodeTable
   public AbstractCodeTable clone() {
     try {
       final AbstractCodeTable clone = (AbstractCodeTable)super.clone();
+      clone.identifiers = new ArrayList<>(this.identifiers);
       clone.idValueCache = new LinkedHashMap<>(this.idValueCache);
       clone.idIdCache = new LinkedHashMap<>(this.idIdCache);
       clone.valueIdCache = new LinkedHashMap<>(this.valueIdCache);
@@ -93,6 +103,7 @@ public abstract class AbstractCodeTable
   @PreDestroy
   public void close() {
     this.propertyChangeSupport = null;
+    this.identifiers.clear();
     this.idValueCache.clear();
     this.idIdCache.clear();
     this.stringIdMap.clear();
@@ -101,41 +112,44 @@ public abstract class AbstractCodeTable
   }
 
   @Override
-  public Map<Object, List<Object>> getCodes() {
+  public Map<Identifier, List<Object>> getCodes() {
     return Collections.unmodifiableMap(this.idValueCache);
   }
 
+  protected Identifier getIdByValue(final List<Object> valueList) {
+    processValues(valueList);
+    Identifier id = this.valueIdCache.get(valueList);
+    if (id == null) {
+      final List<Object> normalizedValues = getNormalizedValues(valueList);
+      id = this.valueIdCache.get(normalizedValues);
+    }
+    return id;
+  }
+
   @Override
-  public List<String> getFieldAliases() {
-    return Collections.emptyList();
-  }
-
-  @SuppressWarnings("unchecked")
-  public <T> T getId(final List<Object> values) {
-    return (T)getId(values, true);
-  }
-
-  @SuppressWarnings("unchecked")
-  public <T> T getId(final List<Object> values, final boolean loadValues) {
+  public Identifier getIdentifier(final List<Object> values, final boolean loadValues) {
     if (values.size() == 1) {
       final Object id = values.get(0);
       if (id == null) {
         return null;
       } else {
-        final Object cachedId = this.idIdCache.get(id);
+        final Identifier cachedId = this.idIdCache.get(id);
         if (cachedId != null) {
-          return (T)cachedId;
+          return cachedId;
         } else {
-          final String lowerId = id.toString().toLowerCase();
+          String lowerId = id.toString();
+          if (!this.caseSensitive) {
+            lowerId = lowerId.toLowerCase();
+          }
           if (this.stringIdMap.containsKey(lowerId)) {
-            return (T)this.stringIdMap.get(lowerId);
+            return this.stringIdMap.get(lowerId);
           }
         }
       }
     }
 
     processValues(values);
-    Object id = getIdByValue(values);
+    Identifier id = getIdByValue(values);
     if (id == null && loadValues) {
       synchronized (this) {
         id = loadId(values, true);
@@ -144,45 +158,17 @@ public abstract class AbstractCodeTable
         }
       }
     }
-    return (T)id;
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getId(final Map<String, ? extends Object> valueMap) {
-    final List<String> valueAttributeNames = getValueFieldNames();
-    final Object[] values = new Object[valueAttributeNames.size()];
-    for (int i = 0; i < values.length; i++) {
-      final String name = valueAttributeNames.get(i);
-      final Object value = valueMap.get(name);
-      values[i] = value;
-    }
-    return (T)getId(values);
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getId(final Object... values) {
-    final List<Object> valueList = Arrays.asList(values);
-    return (T)getId(valueList);
-  }
-
-  protected Object getIdByValue(final List<Object> valueList) {
-    processValues(valueList);
-    Object id = this.valueIdCache.get(valueList);
-    if (id == null) {
-      final List<Object> normalizedValues = getNormalizedValues(valueList);
-      id = this.valueIdCache.get(normalizedValues);
-    }
     return id;
   }
 
-  public Object getIdExact(final List<Object> values) {
-    return getIdExact(values, true);
+  @Override
+  public List<Identifier> getIdentifiers() {
+    return Collections.unmodifiableList(this.identifiers);
   }
 
-  public Object getIdExact(final List<Object> values, final boolean loadValues) {
-    Object id = this.valueIdCache.get(values);
+  @Override
+  public Identifier getIdExact(final List<Object> values, final boolean loadValues) {
+    Identifier id = this.valueIdCache.get(values);
     if (id == null && loadValues) {
       synchronized (this) {
         id = loadId(values, false);
@@ -192,26 +178,8 @@ public abstract class AbstractCodeTable
     return id;
   }
 
-  @Override
-  public Object getIdExact(final Object... values) {
-    final List<Object> valueList = Arrays.asList(values);
-    return getIdExact(valueList);
-  }
-
-  @Override
-  public Map<String, ? extends Object> getMap(final Object id) {
-    final List<Object> values = getValues(id);
-    if (values == null) {
-      return Collections.emptyMap();
-    } else {
-      final Map<String, Object> map = new HashMap<String, Object>();
-      for (int i = 0; i < values.size(); i++) {
-        final String name = getValueFieldNames().get(i);
-        final Object value = values.get(i);
-        map.put(name, value);
-      }
-      return map;
-    }
+  public Map<Identifier, List<Object>> getIdValueCache() {
+    return this.idValueCache;
   }
 
   @Override
@@ -223,7 +191,7 @@ public abstract class AbstractCodeTable
     return ++this.maxId;
   }
 
-  List<Object> getNormalizedValues(final List<Object> values) {
+  private List<Object> getNormalizedValues(final List<Object> values) {
     final List<Object> normalizedValues = new ArrayList<Object>();
     for (final Object value : values) {
       if (value == null) {
@@ -250,11 +218,19 @@ public abstract class AbstractCodeTable
 
   protected List<Object> getValueById(Object id) {
     if (this.valueIdCache.containsKey(Collections.singletonList(id))) {
-      return Collections.singletonList(id);
+      if (id instanceof SingleIdentifier) {
+        final SingleIdentifier identifier = (SingleIdentifier)id;
+        return Collections.singletonList(identifier.getValue(0));
+      } else {
+        return Collections.singletonList(id);
+      }
     } else {
       List<Object> values = this.idValueCache.get(id);
       if (values == null) {
-        final String lowerId = id.toString().toLowerCase();
+        String lowerId = id.toString();
+        if (!this.caseSensitive) {
+          lowerId = lowerId.toLowerCase();
+        }
         if (this.stringIdMap.containsKey(lowerId)) {
           id = this.stringIdMap.get(lowerId);
           values = this.idValueCache.get(id);
@@ -265,12 +241,7 @@ public abstract class AbstractCodeTable
   }
 
   @Override
-  public List<String> getValueFieldNames() {
-    return Arrays.asList("VALUE");
-  }
-
-  @Override
-  public List<Object> getValues(final Object id) {
+  public List<Object> getValues(final Identifier id) {
     if (id != null) {
       List<Object> values = getValueById(id);
       if (values == null) {
@@ -294,11 +265,16 @@ public abstract class AbstractCodeTable
     return this.capitalizeWords;
   }
 
+  public boolean isCaseSensitive() {
+    return this.caseSensitive;
+  }
+
+  @Override
   public boolean isEmpty() {
     return this.idIdCache.isEmpty();
   }
 
-  protected Object loadId(final List<Object> values, final boolean createId) {
+  protected Identifier loadId(final List<Object> values, final boolean createId) {
     return null;
   }
 
@@ -320,6 +296,7 @@ public abstract class AbstractCodeTable
 
   @Override
   public synchronized void refresh() {
+    this.identifiers.clear();
     this.idValueCache.clear();
     this.stringIdMap.clear();
     this.valueIdCache.clear();
@@ -327,6 +304,10 @@ public abstract class AbstractCodeTable
 
   public void setCapitalizeWords(final boolean capitalizedWords) {
     this.capitalizeWords = capitalizedWords;
+  }
+
+  public void setCaseSensitive(final boolean caseSensitive) {
+    this.caseSensitive = caseSensitive;
   }
 
   public void setName(final String name) {

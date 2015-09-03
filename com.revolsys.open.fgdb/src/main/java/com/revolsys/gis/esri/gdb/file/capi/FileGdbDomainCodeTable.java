@@ -1,5 +1,6 @@
 package com.revolsys.gis.esri.gdb.file.capi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.identifier.Identifier;
 import com.revolsys.format.esri.gdb.xml.model.CodedValueDomain;
 import com.revolsys.format.esri.gdb.xml.model.Domain;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStore;
+import com.revolsys.util.CompareUtil;
 
 public class FileGdbDomainCodeTable implements CodeTable {
   private static final Logger LOG = LoggerFactory.getLogger(FileGdbDomainCodeTable.class);
@@ -40,9 +43,26 @@ public class FileGdbDomainCodeTable implements CodeTable {
     }
   }
 
-  private Object createValue(final String name) {
+  @Override
+  public int compare(final Object value1, final Object value2) {
+    if (value1 == null) {
+      if (value2 == null) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } else if (value2 == null) {
+      return -1;
+    } else {
+      final Object codeValue1 = getValue(Identifier.create(value1));
+      final Object codeValue2 = getValue(Identifier.create(value2));
+      return CompareUtil.compare(codeValue1, codeValue2);
+    }
+  }
+
+  private Identifier createValue(final String name) {
     synchronized (this.recordStore) {
-      final Object id = this.domain.addCodedValue(name);
+      final Identifier id = this.domain.addCodedValue(name);
       this.recordStore.alterDomain(this.domain);
       LOG.info(this.domain.getDomainName() + " created code " + id + "=" + name);
       return id;
@@ -50,7 +70,7 @@ public class FileGdbDomainCodeTable implements CodeTable {
   }
 
   @Override
-  public Map<Object, List<Object>> getCodes() {
+  public Map<Identifier, List<Object>> getCodes() {
     return this.domain.getCodes();
   }
 
@@ -64,23 +84,26 @@ public class FileGdbDomainCodeTable implements CodeTable {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getId(final Map<String, ? extends Object> values) {
-    final Object id = this.domain.getId(values);
+  public Identifier getIdentifier(final List<Object> values, final boolean loadValues) {
+    final Identifier id = this.domain.getIdentifier(values, loadValues);
     if (id == null) {
-      return (T)createValue(this.domain.getName(values));
+      return createValue((String)values.get(0));
     }
-    return (T)id;
+    return id;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getId(final Object... values) {
-    final Object id = this.domain.getId(values);
+  public Identifier getIdentifier(final Map<String, ? extends Object> values) {
+    final Identifier id = this.domain.getIdentifier(values);
     if (id == null) {
-      return (T)createValue((String)values[0]);
+      return createValue(this.domain.getName(values));
     }
-    return (T)id;
+    return id;
+  }
+
+  @Override
+  public List<Identifier> getIdentifiers() {
+    return new ArrayList<>(getCodes().keySet());
   }
 
   @Override
@@ -89,7 +112,7 @@ public class FileGdbDomainCodeTable implements CodeTable {
   }
 
   @Override
-  public Map<String, ? extends Object> getMap(final Object id) {
+  public Map<String, ? extends Object> getMap(final Identifier id) {
     return this.domain.getMap(id);
   }
 
@@ -105,8 +128,13 @@ public class FileGdbDomainCodeTable implements CodeTable {
 
   @Override
   @SuppressWarnings("unchecked")
-  public <V> V getValue(final Object id) {
+  public <V> V getValue(final Identifier id) {
     return (V)this.domain.getValue(id);
+  }
+
+  @Override
+  public <V> V getValue(final Object id) {
+    return getValue(Identifier.create(id));
   }
 
   @Override
@@ -115,8 +143,23 @@ public class FileGdbDomainCodeTable implements CodeTable {
   }
 
   @Override
-  public List<Object> getValues(final Object id) {
+  public List<Object> getValues(final Identifier id) {
     return this.domain.getValues(id);
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return this.domain.isEmpty();
+  }
+
+  @Override
+  public boolean isLoaded() {
+    return true;
+  }
+
+  @Override
+  public boolean isLoading() {
+    return false;
   }
 
   @Override

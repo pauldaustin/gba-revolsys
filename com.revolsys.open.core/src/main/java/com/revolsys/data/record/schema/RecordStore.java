@@ -8,12 +8,14 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.collection.ResultPager;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
+import com.revolsys.io.PathName;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -35,11 +37,20 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
 
   Record copy(Record record);
 
+  default Record create(final PathName typePath) {
+    return create(typePath.toString());
+  }
+
   Record create(RecordDefinition recordDefinition);
 
   Record create(String typePath);
 
   Record create(String typePath, Map<String, ? extends Object> values);
+
+  default Identifier createPrimaryIdValue(final PathName typePath) {
+    final Object id = createPrimaryIdValue(typePath.toString());
+    return Identifier.create(id);
+  }
 
   <T> T createPrimaryIdValue(String typePath);
 
@@ -68,6 +79,10 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
   GeometryFactory getGeometryFactory();
 
   String getLabel();
+
+  default RecordDefinition getRecordDefinition(final PathName typePath) {
+    return getRecordDefinition(typePath.toString());
+  }
 
   RecordDefinition getRecordDefinition(RecordDefinition recordDefinition);
 
@@ -121,6 +136,14 @@ public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
   void insertAll(Collection<Record> objects);
 
   boolean isEditable(String typePath);
+
+  default Record load(final PathName typePath, final Identifier id) {
+    return load(typePath.toString(), id.getValue(0));
+  }
+
+  default Record load(final PathName typePath, final Object id) {
+    return load(typePath.toString(), id);
+  }
 
   Record load(String typePath, Object... id);
 

@@ -541,10 +541,9 @@ public abstract class AbstractRecordQueryField extends ValueField
         y = -menuHeight;
       } else {
         y = componentHeight;
-
-        this.menu.show(this, x, y);
-        this.menu.pack();
       }
+      this.menu.show(this, x, y);
+      this.menu.pack();
     }
   }
 
