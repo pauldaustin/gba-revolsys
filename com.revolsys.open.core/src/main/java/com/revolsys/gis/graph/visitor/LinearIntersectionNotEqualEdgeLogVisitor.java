@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.revolsys.data.equals.Geometry3DExactEquals;
+import com.revolsys.data.filter.OldRecordGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
-import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.RecordGraph;
@@ -48,10 +48,10 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends AbstractVisitor<Ed
         attributeAndGeometryFilter.addFilter(filter);
       }
 
-      final Predicate<Record> notEqualLineFilter = new RecordGeometryFilter<LineString>(
+      final Predicate<Record> notEqualLineFilter = new OldRecordGeometryFilter<LineString>(
         new EqualFilter<LineString>(line)).negate();
 
-      final RecordGeometryFilter<LineString> linearIntersectionFilter = new RecordGeometryFilter<LineString>(
+      final OldRecordGeometryFilter<LineString> linearIntersectionFilter = new OldRecordGeometryFilter<LineString>(
         new LinearIntersectionFilter(line));
 
       attributeAndGeometryFilter.addFilter(new EdgeObjectFilter<Record>(

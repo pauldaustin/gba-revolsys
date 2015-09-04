@@ -171,7 +171,7 @@ public class Value extends QueryValue {
           if (codeTable == null) {
             convert(field);
           } else {
-            final Object id = codeTable.getId(this.queryValue);
+            final Object id = codeTable.getIdValue(this.queryValue);
             if (id == null) {
               this.displayValue = this.queryValue;
             } else {

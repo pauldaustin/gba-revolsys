@@ -18,36 +18,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.revolsys.data.record.filter;
+package com.revolsys.data.filter;
 
 import java.util.function.Predicate;
 
 import com.revolsys.data.record.Record;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class RecordGeometryFilter<G extends Geometry> implements Predicate<Record> {
-  private Predicate<G> predicate;
+public class OldRecordGeometryFilter<G extends Geometry> implements Predicate<Record> {
+  private Predicate<G> filter;
 
-  public RecordGeometryFilter() {
+  public OldRecordGeometryFilter() {
   }
 
-  public RecordGeometryFilter(final Predicate<G> filter) {
-    this.predicate = filter;
+  public OldRecordGeometryFilter(final Predicate<G> filter) {
+    this.filter = filter;
   }
 
   public Predicate<G> getFilter() {
-    return this.predicate;
+    return this.filter;
   }
 
   public void setFilter(final Predicate<G> filter) {
-    this.predicate = filter;
+    this.filter = filter;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public boolean test(final Record object) {
     final G geometry = (G)object.getGeometry();
-    if (this.predicate.test(geometry)) {
+    if (this.filter.test(geometry)) {
       return true;
     } else {
       return false;

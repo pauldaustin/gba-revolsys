@@ -27,6 +27,7 @@ import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.data.types.DataType;
 import com.revolsys.gis.jts.JtsGeometryUtil;
+import com.revolsys.io.PathName;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
@@ -75,11 +76,56 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
         return recordDefinitionCompare;
       }
     }
-
   }
 
   default void delete() {
     getRecordDefinition().delete(this);
+  }
+
+  default boolean equalPathValue(final CharSequence fieldPath, final Object value) {
+    final Object fieldValue = getValueByPath(fieldPath);
+    final boolean hasValue1 = Property.hasValue(value);
+    final boolean hasValue2 = Property.hasValue(fieldValue);
+    if (hasValue1) {
+      if (hasValue2) {
+        return Equals.equal(fieldValue, value);
+      } else {
+        return false;
+      }
+    } else {
+      if (hasValue2) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  default boolean equalValue(final CharSequence fieldName, final Object value) {
+    final Object fieldValue = getValue(fieldName);
+    final boolean hasValue1 = Property.hasValue(value);
+    final boolean hasValue2 = Property.hasValue(fieldValue);
+    if (hasValue1) {
+      if (hasValue2) {
+        return Equals.equal(fieldValue, value);
+      } else {
+        return false;
+      }
+    } else {
+      if (hasValue2) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  default boolean equalValue(final Record otherRecord, final CharSequence fieldName) {
+    if (otherRecord != null) {
+      final Object value = getValue(fieldName);
+      return otherRecord.equalValue(fieldName, value);
+    }
+    return false;
   }
 
   default Byte getByte(final CharSequence name) {
@@ -334,6 +380,10 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
 
   default String getTypeName() {
     return getRecordDefinition().getPath();
+  }
+
+  default PathName getTypePathName() {
+    return getRecordDefinition().getPathName();
   }
 
   /**

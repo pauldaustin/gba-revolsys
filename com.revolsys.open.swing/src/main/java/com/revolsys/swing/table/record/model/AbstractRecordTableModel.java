@@ -179,7 +179,7 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
       final Object objectValue = StringConverterRegistry.toObject(fieldClass, displayValue);
       return objectValue;
     } else {
-      final Object objectValue = codeTable.getId(displayValue);
+      final Object objectValue = codeTable.getIdValue(displayValue);
       return objectValue;
     }
   }

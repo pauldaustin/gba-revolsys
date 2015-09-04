@@ -241,8 +241,8 @@ public class DirectionalFieldsOld extends AbstractRecordDefinitionProperty {
       final RecordDefinition recordDefinition = getRecordDefinition();
       final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(recordDefinition);
       for (final String fieldName : recordDefinition.getFieldNames()) {
-        if (!RecordEquals.isAttributeIgnored(recordDefinition, equalExcludeAttributes, fieldName)
-          && !equalIgnore.isAttributeIgnored(fieldName)) {
+        if (!RecordEquals.isFieldIgnored(recordDefinition, equalExcludeAttributes, fieldName)
+          && !equalIgnore.isFieldIgnored(fieldName)) {
           if (!canMerge(fieldName, point, record1, record2, equalExcludeAttributes,
             forwardsIndicators)) {
             return false;
@@ -369,7 +369,7 @@ public class DirectionalFieldsOld extends AbstractRecordDefinitionProperty {
     final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(recordDefinition);
     for (final String fieldName : recordDefinition.getFieldNames()) {
       if (!equalExcludeAttributes.contains(fieldName)
-        && !equalIgnore.isAttributeIgnored(fieldName)) {
+        && !equalIgnore.isFieldIgnored(fieldName)) {
         if (!equals(fieldName, record1, record2, equalExcludeAttributes)) {
           return false;
         }
@@ -458,7 +458,7 @@ public class DirectionalFieldsOld extends AbstractRecordDefinitionProperty {
       final EqualIgnoreAttributes equalIgnore = EqualIgnoreAttributes.getProperty(recordDefinition);
       for (final String fieldName : recordDefinition.getFieldNames()) {
         if (!equalExcludeAttributes.contains(fieldName)
-          && !equalIgnore.isAttributeIgnored(fieldName)) {
+          && !equalIgnore.isFieldIgnored(fieldName)) {
           if (!canMerge(fieldName, point, record1, record2, equalExcludeAttributes,
             forwardsIndicators)) {
             fieldNames.add(fieldName);

@@ -1,4 +1,4 @@
-package com.revolsys.data.record.filter;
+package com.revolsys.data.filter;
 
 import java.util.Collection;
 import java.util.HashSet;

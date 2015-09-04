@@ -47,7 +47,7 @@ public class LinearIntersectionNotEqualEdgeLogVisitor extends AbstractVisitor<Ed
       final Predicate<Record> notEqualLineFilter = new RecordGeometryFilter<LineString>(
         new EqualFilter<LineString>(line)).negate();
 
-      final RecordGeometryFilter<LineString> linearIntersectionFilter = new RecordGeometryFilter<LineString>(
+      final Predicate<Record> linearIntersectionFilter = new RecordGeometryFilter<LineString>(
         new LinearIntersectionFilter(line));
 
       attributeAndGeometryFilter = attributeAndGeometryFilter

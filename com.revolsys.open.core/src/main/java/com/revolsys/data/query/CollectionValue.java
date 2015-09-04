@@ -140,7 +140,7 @@ public class CollectionValue extends QueryValue {
       }
       if (value != null) {
         if (codeTable != null) {
-          value = codeTable.getId(value);
+          value = codeTable.getIdValue(value);
         }
         values.add(value);
       }

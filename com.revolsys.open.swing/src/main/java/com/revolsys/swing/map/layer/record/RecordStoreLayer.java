@@ -21,10 +21,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.filter.OldRecordGeometryIntersectsFilter;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordState;
-import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.data.record.io.RecordStoreConnectionManager;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordStore;
@@ -438,7 +438,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
       final List<LayerRecord> records = (List)index.queryIntersects(polygon);
 
-      final Predicate predicate = new RecordGeometryIntersectsFilter(boundingBox);
+      final Predicate predicate = new OldRecordGeometryIntersectsFilter(boundingBox.toGeometry());
       for (final ListIterator<LayerRecord> iterator = records.listIterator(); iterator.hasNext();) {
         final LayerRecord record = iterator.next();
         final LayerRecord cachedRecord = getCacheRecord(record);

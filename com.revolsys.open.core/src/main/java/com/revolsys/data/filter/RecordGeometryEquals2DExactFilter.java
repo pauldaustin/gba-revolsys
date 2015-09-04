@@ -18,7 +18,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.revolsys.data.record.filter;
+package com.revolsys.data.filter;
 
 import java.util.function.Predicate;
 

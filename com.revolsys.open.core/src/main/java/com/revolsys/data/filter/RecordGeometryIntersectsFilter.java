@@ -34,7 +34,7 @@ public class RecordGeometryIntersectsFilter implements Predicate<Record> {
   private final GeometryFactory geometryFactory;
 
   /**
-   * Construct a new RecordGeometryIntersectsFilter.
+   * Construct a new OldRecordGeometryIntersectsFilter.
    *
    * @param geometry The geometry to compare the data objects to to.
    */

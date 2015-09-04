@@ -18,16 +18,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.revolsys.data.record.filter;
+package com.revolsys.data.filter;
 
+import java.util.Comparator;
 import java.util.function.Predicate;
 
 import com.revolsys.data.record.Record;
 import com.vividsolutions.jts.geom.Geometry;
 
-public class RecordGeometryDistanceFilter implements Predicate<Record> {
+public class OldRecordGeometryDistanceFilter implements Predicate<Record>, Comparator<Record> {
   /** The geometry to compare the data objects to to. */
-  private final Geometry geometry;
+  private Geometry geometry;
 
   /** The maximum maxDistance the object can be from the source geometry. */
   private final double maxDistance;
@@ -38,9 +39,35 @@ public class RecordGeometryDistanceFilter implements Predicate<Record> {
    * @param geometry The geometry to compare the data objects to to.
    * @param maxDistance
    */
-  public RecordGeometryDistanceFilter(final Geometry geometry, final double maxDistance) {
+  public OldRecordGeometryDistanceFilter(final Geometry geometry, final double maxDistance) {
     this.geometry = geometry;
     this.maxDistance = maxDistance;
+  }
+
+  @Override
+  public int compare(final Record record1, final Record record2) {
+    if (record1 == record2) {
+      return 0;
+    } else {
+      final double distance1 = getDistance(record1);
+      final double distance2 = getDistance(record2);
+      int compare = Double.compare(distance1, distance2);
+      if (compare == 0) {
+        compare = record1.compareTo(record2);
+      }
+      return compare;
+    }
+  }
+
+  @Override
+  protected void finalize() throws Throwable {
+    this.geometry = null;
+  }
+
+  public double getDistance(final Record record) {
+    final Geometry recordGeometry = record.getGeometry();
+    final double distance = recordGeometry.distance(this.geometry);
+    return distance;
   }
 
   /**
@@ -62,10 +89,9 @@ public class RecordGeometryDistanceFilter implements Predicate<Record> {
   }
 
   @Override
-  public boolean test(final Record object) {
-    final Geometry matchGeometry = object.getGeometry();
-    final double distance = matchGeometry.distance(this.geometry);
-    if (distance <= this.maxDistance) {
+  public boolean test(final Record record) {
+    final Geometry recordGeometry = record.getGeometry();
+    if (recordGeometry.isWithinDistance(this.geometry, this.maxDistance)) {
       return true;
     } else {
       return false;

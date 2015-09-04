@@ -41,14 +41,14 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import com.revolsys.beans.InvokeMethodCallable;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.equals.Equals;
+import com.revolsys.data.filter.OldRecordGeometryDistanceFilter;
+import com.revolsys.data.filter.OldRecordGeometryIntersectsFilter;
 import com.revolsys.data.query.Condition;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.ArrayRecord;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
 import com.revolsys.data.record.RecordState;
-import com.revolsys.data.record.filter.RecordGeometryDistanceFilter;
-import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.property.DirectionalFieldsOld;
 import com.revolsys.data.record.schema.FieldDefinition;
@@ -1662,7 +1662,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   public final List<LayerRecord> query(final BoundingBox boundingBox) {
     if (hasGeometryAttribute()) {
       final List<LayerRecord> results = doQuery(boundingBox);
-      final Predicate predicate = new RecordGeometryIntersectsFilter(boundingBox);
+      final Predicate predicate = new OldRecordGeometryIntersectsFilter(boundingBox.toGeometry());
       return filterQueryResults(results, predicate);
     } else {
       return Collections.emptyList();
@@ -1675,7 +1675,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   public List<LayerRecord> query(final Geometry geometry, final double maxDistance) {
     if (hasGeometryAttribute()) {
       final List<LayerRecord> results = doQuery(geometry, maxDistance);
-      final Predicate predicate = new RecordGeometryDistanceFilter(geometry, maxDistance);
+      final Predicate predicate = new OldRecordGeometryDistanceFilter(geometry, maxDistance);
       return filterQueryResults(results, predicate);
     } else {
       return Collections.emptyList();

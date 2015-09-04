@@ -12,8 +12,8 @@ import javax.swing.ImageIcon;
 
 import org.slf4j.LoggerFactory;
 
+import com.revolsys.data.filter.MultipleAttributeValuesFilter;
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.filter.MultipleAttributeValuesFilter;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.predicate.Predicates;

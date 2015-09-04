@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.revolsys.data.filter.AttributesEqualFilter;
+import com.revolsys.data.filter.AttributesEqualOrNullFilter;
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.filter.AttributesEqualFilter;
-import com.revolsys.data.record.filter.AttributesEqualOrNullFilter;
 import com.revolsys.predicate.AndPredicate;
 
 public class CompareFilterFactory implements Function<Record, Predicate<Record>> {

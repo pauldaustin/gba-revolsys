@@ -22,8 +22,8 @@ package com.revolsys.gis.jts.filter;
 
 import java.util.function.Predicate;
 
+import com.revolsys.data.filter.OldRecordGeometryFilter;
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.vividsolutions.jts.geom.Envelope;
@@ -35,7 +35,7 @@ public class LineStringLessThanDistanceFilter implements Predicate<LineString> {
     final LineString line = object.getGeometry();
     final LineStringLessThanDistanceFilter lineFilter = new LineStringLessThanDistanceFilter(line,
       maxDistance);
-    return new RecordGeometryFilter<LineString>(lineFilter);
+    return new OldRecordGeometryFilter<LineString>(lineFilter);
   }
 
   /** The maximum distance the object can be from the source geometry. */

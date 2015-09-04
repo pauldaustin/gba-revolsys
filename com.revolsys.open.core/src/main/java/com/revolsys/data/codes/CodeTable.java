@@ -39,20 +39,6 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
     return Collections.emptyList();
   }
 
-  @Deprecated
-  default <V> V getId(final Object value) {
-    if (value == null) {
-      return null;
-    } else {
-      final Identifier identifier = getIdentifier(value);
-      if (identifier == null) {
-        return null;
-      } else {
-        return identifier.getValue(0);
-      }
-    }
-  }
-
   default Identifier getIdentifier(final List<Object> values) {
     return getIdentifier(values, true);
   }
@@ -90,6 +76,19 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
   }
 
   String getIdFieldName();
+
+  default <V> V getIdValue(final Object value) {
+    if (value == null) {
+      return null;
+    } else {
+      final Identifier identifier = getIdentifier(value);
+      if (identifier == null) {
+        return null;
+      } else {
+        return identifier.getValue(0);
+      }
+    }
+  }
 
   default Map<String, ? extends Object> getMap(final Identifier id) {
     final List<Object> values = getValues(id);

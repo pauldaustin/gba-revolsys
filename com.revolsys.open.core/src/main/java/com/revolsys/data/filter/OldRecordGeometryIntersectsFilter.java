@@ -18,45 +18,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.revolsys.data.record.filter;
+package com.revolsys.data.filter;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.function.Predicate;
 
 import com.revolsys.data.record.Record;
-import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.predicate.Predicates;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.TopologyException;
 
-public class RecordGeometryIntersectsFilter implements Predicate<Record> {
-  @SuppressWarnings({
-    "rawtypes", "unchecked"
-  })
-  public static <D extends Record> List<D> filter(final Collection<D> collection,
-    final BoundingBox boundingBox) {
-    final Predicate predicate = new RecordGeometryIntersectsFilter(boundingBox);
-    return Predicates.filter(collection, predicate);
-  }
-
+public class OldRecordGeometryIntersectsFilter implements Predicate<Record> {
   /** The geometry to compare the data objects to to. */
   private final Geometry geometry;
 
   private final GeometryFactory geometryFactory;
 
-  public RecordGeometryIntersectsFilter(final BoundingBox boundingBox) {
-    this(boundingBox.toPolygon());
-  }
-
   /**
-   * Construct a new RecordGeometryIntersectsFilter.
+   * Construct a new OldRecordGeometryIntersectsFilter.
    *
    * @param geometry The geometry to compare the data objects to to.
    */
-  public RecordGeometryIntersectsFilter(final Geometry geometry) {
+  public OldRecordGeometryIntersectsFilter(final Geometry geometry) {
     this.geometry = geometry;
-    this.geometryFactory = GeometryFactory.getFactory(geometry);
+    this.geometryFactory = GeometryFactory.get(geometry);
   }
 
   /**
@@ -72,12 +57,18 @@ public class RecordGeometryIntersectsFilter implements Predicate<Record> {
   public boolean test(final Record object) {
     try {
       final Geometry matchGeometry = object.getGeometry();
-      final Geometry convertedGeometry = this.geometryFactory.copy(matchGeometry);
-      if (convertedGeometry != null && this.geometry != null
-        && convertedGeometry.intersects(this.geometry)) {
+      final Geometry convertedGeometry = GeometryProjectionUtil.perform(matchGeometry,
+        this.geometryFactory);
+      try {
+        if (convertedGeometry != null && this.geometry != null
+          && convertedGeometry.intersects(this.geometry)) {
+          return true;
+        } else {
+          return false;
+        }
+      } catch (final TopologyException e) {
+        e.printStackTrace();
         return true;
-      } else {
-        return false;
       }
     } catch (final Throwable t) {
       t.printStackTrace();

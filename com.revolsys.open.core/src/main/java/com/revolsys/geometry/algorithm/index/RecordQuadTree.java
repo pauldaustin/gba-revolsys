@@ -137,7 +137,7 @@ public class RecordQuadTree extends QuadTree<Record> {
     if (geometryFactory != null) {
       geometry = geometry.convert(geometryFactory);
     }
-    final RecordGeometryIntersectsFilter filter = new RecordGeometryIntersectsFilter(geometry);
+    final Predicate<Record> filter = new RecordGeometryIntersectsFilter(geometry);
     return queryList(geometry, filter);
   }
 

@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import com.revolsys.data.filter.OldRecordGeometryDistanceFilter;
+import com.revolsys.data.filter.OldRecordGeometryIntersectsFilter;
+import com.revolsys.data.filter.RecordEqualsFilter;
 import com.revolsys.data.record.Record;
-import com.revolsys.data.record.filter.RecordEqualsFilter;
-import com.revolsys.data.record.filter.RecordGeometryDistanceFilter;
-import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.gis.algorithm.index.quadtree.QuadTree;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
@@ -81,8 +81,7 @@ public class RecordQuadTree extends QuadTree<Record> {
   public List<Record> queryDistance(final Geometry geometry, final double distance) {
     BoundingBox boundingBox = BoundingBox.getBoundingBox(geometry);
     boundingBox = boundingBox.expand(distance);
-    final RecordGeometryDistanceFilter filter = new RecordGeometryDistanceFilter(geometry,
-      distance);
+    final Predicate<Record> filter = new OldRecordGeometryDistanceFilter(geometry, distance);
     return queryList(boundingBox, filter);
   }
 
@@ -108,7 +107,7 @@ public class RecordQuadTree extends QuadTree<Record> {
       return Arrays.asList();
     } else {
       final Geometry geometry = convertedBoundingBox.toPolygon(1, 1);
-      final RecordGeometryIntersectsFilter filter = new RecordGeometryIntersectsFilter(geometry);
+      final Predicate<Record> filter = new OldRecordGeometryIntersectsFilter(geometry);
       return queryList(geometry, filter);
     }
   }
@@ -118,7 +117,7 @@ public class RecordQuadTree extends QuadTree<Record> {
     if (geometryFactory != null) {
       geometry = geometryFactory.copy(geometry);
     }
-    final RecordGeometryIntersectsFilter filter = new RecordGeometryIntersectsFilter(geometry);
+    final Predicate<Record> filter = new OldRecordGeometryIntersectsFilter(geometry);
     return queryList(geometry, filter);
   }
 

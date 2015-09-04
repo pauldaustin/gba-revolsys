@@ -14,9 +14,9 @@ import javax.annotation.PreDestroy;
 
 import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.equals.RecordEquals;
+import com.revolsys.data.filter.OldRecordGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
-import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Graph;
 import com.revolsys.gis.graph.RecordGraph;
@@ -59,7 +59,7 @@ public class EqualTypeAndLineEdgeCleanupVisitor extends AbstractVisitor<Edge<Rec
         attributeAndGeometryFilter.addFilter(filter);
       }
 
-      final Predicate<Record> equalLineFilter = new RecordGeometryFilter<LineString>(
+      final Predicate<Record> equalLineFilter = new OldRecordGeometryFilter<LineString>(
         new LineEqualIgnoreDirectionFilter(line, 2));
       final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(equalLineFilter);
       attributeAndGeometryFilter.addFilter(edgeFilter);

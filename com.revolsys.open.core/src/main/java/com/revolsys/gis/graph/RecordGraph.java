@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.revolsys.data.filter.OldRecordGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
-import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.data.record.property.DirectionalFieldsOld;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.graph.filter.EdgeObjectFilter;
@@ -23,7 +23,7 @@ public class RecordGraph extends Graph<Record> {
 
   public static <T extends Geometry> Predicate<Edge<Record>> getEdgeFilter(
     final Predicate<T> geometryFilter) {
-    final Predicate<Record> objectFilter = new RecordGeometryFilter<T>(geometryFilter);
+    final Predicate<Record> objectFilter = new OldRecordGeometryFilter<T>(geometryFilter);
     final EdgeObjectFilter<Record> edgeFilter = new EdgeObjectFilter<Record>(objectFilter);
     return edgeFilter;
   }

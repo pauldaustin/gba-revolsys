@@ -7,10 +7,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.revolsys.data.filter.OldRecordGeometryFilter;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordLog;
 import com.revolsys.data.record.Records;
-import com.revolsys.data.record.filter.RecordGeometryFilter;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.algorithm.index.PointRecordMap;
 import com.revolsys.gis.algorithm.index.RecordQuadTree;
@@ -170,7 +170,7 @@ public class CompareProcessor extends AbstractMergeProcess {
     final LineString sourceLine = sourceObject.getGeometry();
     final LineEqualIgnoreDirectionFilter lineEqualFilter = new LineEqualIgnoreDirectionFilter(
       sourceLine, 3);
-    final Predicate<Record> geometryFilter = new RecordGeometryFilter<LineString>(lineEqualFilter);
+    final Predicate<Record> geometryFilter = new OldRecordGeometryFilter<LineString>(lineEqualFilter);
     final Predicate<Record> equalFilter = this.equalFilterFactory.apply(sourceObject);
     final Predicate<Record> filter = new AndPredicate<Record>(equalFilter, geometryFilter);
 
@@ -248,7 +248,7 @@ public class CompareProcessor extends AbstractMergeProcess {
       final LineString sourceLine = (LineString)sourceGeometry;
 
       final LineIntersectsFilter intersectsFilter = new LineIntersectsFilter(sourceLine);
-      final Predicate<Record> geometryFilter = new RecordGeometryFilter<LineString>(
+      final Predicate<Record> geometryFilter = new OldRecordGeometryFilter<LineString>(
         intersectsFilter);
       final Predicate<Record> equalFilter = this.equalFilterFactory.apply(sourceObject);
       final Predicate<Record> filter = new AndPredicate<Record>(equalFilter, geometryFilter);

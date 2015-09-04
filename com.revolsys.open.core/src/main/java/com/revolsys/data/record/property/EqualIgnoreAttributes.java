@@ -57,10 +57,6 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
     return PROPERTY_NAME;
   }
 
-  public boolean isAttributeIgnored(final String fieldName) {
-    return this.fieldNames.contains(fieldName);
-  }
-
   public boolean isFieldIgnored(final String fieldName) {
     return this.fieldNames.contains(fieldName);
   }

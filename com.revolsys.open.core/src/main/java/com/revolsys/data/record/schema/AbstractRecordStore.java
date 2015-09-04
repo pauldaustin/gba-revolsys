@@ -26,12 +26,12 @@ import com.revolsys.collection.map.Maps;
 import com.revolsys.collection.map.ThreadSharedAttributes;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.codes.CodeTableProperty;
+import com.revolsys.data.filter.OldRecordGeometryIntersectsFilter;
 import com.revolsys.data.query.Q;
 import com.revolsys.data.query.Query;
 import com.revolsys.data.record.ArrayRecordFactory;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.filter.RecordGeometryIntersectsFilter;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.io.RecordStoreExtension;
 import com.revolsys.data.record.io.RecordStoreQueryReader;
@@ -641,7 +641,7 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
     query.setBoundingBox(boundingBox);
     query.setProperty("recordFactory", recordFactory);
     final RecordReader reader = query(query);
-    final Predicate<Record> filter = new RecordGeometryIntersectsFilter(geometry);
+    final Predicate<Record> filter = new OldRecordGeometryIntersectsFilter(geometry);
     return new FilterReader(filter, reader);
   }
 

@@ -1,4 +1,4 @@
-package com.revolsys.data.record.filter;
+package com.revolsys.data.filter;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -8,14 +8,14 @@ import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
 
-public class AttributesEqualOrSourceNullFilter implements Predicate<Record> {
+public class AttributesEqualOrNullFilter implements Predicate<Record> {
   public static boolean test(final Record object1, final Record object2,
     final Collection<String> fieldNames) {
     for (final String fieldName : fieldNames) {
       final Object value1 = Records.getFieldByPath(object1, fieldName);
       final Object value2 = Records.getFieldByPath(object2, fieldName);
 
-      if (value1 != null && !EqualsInstance.INSTANCE.equals(value1, value2)) {
+      if (value1 != null && value2 != null && !EqualsInstance.INSTANCE.equals(value1, value2)) {
         return false;
       }
     }
@@ -31,19 +31,18 @@ public class AttributesEqualOrSourceNullFilter implements Predicate<Record> {
 
   private final Record object;
 
-  public AttributesEqualOrSourceNullFilter(final Record object,
-    final Collection<String> fieldNames) {
+  public AttributesEqualOrNullFilter(final Record object, final Collection<String> fieldNames) {
     this.fieldNames = fieldNames;
     this.object = object;
   }
 
-  public AttributesEqualOrSourceNullFilter(final Record object, final String... fieldNames) {
+  public AttributesEqualOrNullFilter(final Record object, final String... fieldNames) {
     this(object, Arrays.asList(fieldNames));
   }
 
   @Override
-  public boolean test(final Record object) {
-    return test(this.object, object, this.fieldNames);
+  public boolean test(final Record record) {
+    return test(this.object, record, this.fieldNames);
   }
 
   @Override
