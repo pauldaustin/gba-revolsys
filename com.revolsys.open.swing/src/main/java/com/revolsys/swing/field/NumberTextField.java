@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -256,7 +255,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
   }
 
   private Object getTypedValue(final Object value) {
-    if (value == null) {
+    if (Property.isEmpty(value)) {
       return null;
     } else {
       try {
@@ -324,11 +323,8 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
   }
 
   @Override
-  public void setFieldValue(Object value) {
-    if (value == null) {
-      value = "";
-    }
-    if (SwingUtilities.isEventDispatchThread()) {
+  public void setFieldValue(final Object value) {
+    Invoke.later(() -> {
       final Object newValue = getTypedValue(value);
       if (!Equals.equal(this.fieldValue, newValue)) {
         this.undoManager.discardAllEdits();
@@ -354,9 +350,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
         SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue,
           this.fieldValue);
       }
-    } else {
-      Invoke.later(this, "setFieldValue", value);
-    }
+    });
   }
 
   public void setMaximumValue(final Number maximumValue) {
