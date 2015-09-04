@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -33,7 +32,8 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
 
   public static final Color DEFAULT_FOREGROUND = new JTextField().getForeground();
 
-  public static Number createMaximumValue(final DataType dataType, final int length, final int scale) {
+  public static Number createMaximumValue(final DataType dataType, final int length,
+    final int scale) {
     final Class<?> javaClass = dataType.getJavaClass();
     final StringBuffer text = new StringBuffer(length);
     for (int i = length - scale + 1; i > 1; i--) {
@@ -255,7 +255,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
   }
 
   private Object getTypedValue(final Object value) {
-    if (value == null) {
+    if (Property.isEmpty(value)) {
       return null;
     } else {
       try {
@@ -323,11 +323,8 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
   }
 
   @Override
-  public void setFieldValue(Object value) {
-    if (value == null) {
-      value = "";
-    }
-    if (SwingUtilities.isEventDispatchThread()) {
+  public void setFieldValue(final Object value) {
+    Invoke.later(() -> {
       final Object newValue = getTypedValue(value);
       if (!Equals.equal(this.fieldValue, newValue)) {
         this.undoManager.discardAllEdits();
@@ -353,9 +350,7 @@ public class NumberTextField extends JXTextField implements Field, DocumentListe
         SetFieldValueUndoableEdit.create(this.undoManager.getParent(), this, oldValue,
           this.fieldValue);
       }
-    } else {
-      Invoke.later(this, "setFieldValue", value);
-    }
+    });
   }
 
   public void setMaximumValue(final Number maximumValue) {
