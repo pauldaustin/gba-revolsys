@@ -18,6 +18,7 @@ import com.revolsys.geometry.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.geometry.model.impl.AbstractLineString;
 import com.revolsys.geometry.model.impl.PointDoubleGf;
 import com.revolsys.geometry.util.BoundingBoxUtil;
+import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.math.Angle;
 import com.revolsys.util.MathUtil;
 import com.revolsys.util.Property;

@@ -2,9 +2,9 @@ package com.revolsys.gis.graph.filter;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import com.revolsys.gis.graph.Edge;
-import java.util.function.Predicate;
 
 /**
  * Filter {@link Edge} objects to include those which have one of the specified

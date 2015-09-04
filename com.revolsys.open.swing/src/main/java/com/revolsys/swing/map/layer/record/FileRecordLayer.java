@@ -98,9 +98,9 @@ public class FileRecordLayer extends ListRecordLayer {
           return false;
         } else {
           try {
-            final RecordDefinition metaData = reader.getRecordDefinition();
-            setRecordDefinition(metaData);
-            final GeometryFactory geometryFactory = metaData.getGeometryFactory();
+            final RecordDefinition recordDefinition = reader.getRecordDefinition();
+            setRecordDefinition(recordDefinition);
+            final GeometryFactory geometryFactory = recordDefinition.getGeometryFactory();
             BoundingBox boundingBox = new BoundingBox(geometryFactory);
             for (final Record record : reader) {
               final Geometry geometry = record.getGeometry();

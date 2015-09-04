@@ -39,8 +39,8 @@ public class ArcSdeBinaryGeometryRecordStoreExtension implements RecordStoreExte
   @Override
   public void postProcess(final RecordStoreSchema schema) {
     final AbstractJdbcRecordStore recordStore = (AbstractJdbcRecordStore)schema.getRecordStore();
-    for (final RecordDefinition metaData : schema.getRecordDefinitions()) {
-      final String typePath = metaData.getPath();
+    for (final RecordDefinition recordDefinition : schema.getRecordDefinitions()) {
+      final String typePath = recordDefinition.getPath();
       final Map<String, Map<String, Object>> typeColumnProperties = JdbcFieldAdder
         .getTypeColumnProperties(schema, typePath);
       for (final Entry<String, Map<String, Object>> columnEntry : typeColumnProperties.entrySet()) {
@@ -48,14 +48,15 @@ public class ArcSdeBinaryGeometryRecordStoreExtension implements RecordStoreExte
         final Map<String, Object> columnProperties = columnEntry.getValue();
         if (ArcSdeConstants.SDEBINARY
           .equals(columnProperties.get(ArcSdeConstants.GEOMETRY_COLUMN_TYPE))) {
-          final FieldDefinition attribute = metaData.getField(columnName);
+          final FieldDefinition attribute = recordDefinition.getField(columnName);
           if (!(attribute instanceof OracleSdoGeometryJdbcAttribute)) {
             if (this.sdeUtil == null) {
               LoggerFactory.getLogger(getClass())
                 .error("SDE Binary columns not supported without the ArcSDE Java API jars");
             } else {
               ((ArcSdeBinaryGeometryRecordUtil)this.sdeUtil).createGeometryColumn(recordStore,
-                schema, metaData, typePath, columnName, columnName.toUpperCase(), columnProperties);
+                schema, recordDefinition, typePath, columnName, columnName.toUpperCase(),
+                columnProperties);
             }
           }
         }

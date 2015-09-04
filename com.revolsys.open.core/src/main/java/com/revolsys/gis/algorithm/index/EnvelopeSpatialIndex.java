@@ -1,9 +1,9 @@
 package com.revolsys.gis.algorithm.index;
 
 import java.util.List;
-
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
 import com.vividsolutions.jts.geom.Envelope;
 
 public interface EnvelopeSpatialIndex<T> {
@@ -17,9 +17,9 @@ public interface EnvelopeSpatialIndex<T> {
 
   boolean remove(Envelope envelope, T object);
 
-  void visit(Envelope envelope, Predicate<T> filter, Consumer<T> visitor);
+  void visit(final Consumer<T> visitor);
 
   void visit(final Envelope envelope, final Consumer<T> visitor);
 
-  void visit(final Consumer<T> visitor);
+  void visit(Envelope envelope, Predicate<T> filter, Consumer<T> visitor);
 }

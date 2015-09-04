@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.swing.JComponent;
 import javax.swing.SwingWorker;
@@ -37,7 +38,6 @@ import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import java.util.function.Predicate;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.ValueField;
@@ -319,15 +319,15 @@ public class RecordStoreLayer extends AbstractRecordLayer {
         }
       }
     }
-    RecordDefinition metaData = this.getRecordDefinition();
-    if (metaData == null) {
-      metaData = recordStore.getRecordDefinition(this.typePath);
-      if (metaData == null) {
+    RecordDefinition recordDefinition = this.getRecordDefinition();
+    if (recordDefinition == null) {
+      recordDefinition = recordStore.getRecordDefinition(this.typePath);
+      if (recordDefinition == null) {
         LoggerFactory.getLogger(getClass())
           .error("Cannot find table " + this.typePath + " for layer " + getPath());
         return false;
       } else {
-        setRecordDefinition(metaData);
+        setRecordDefinition(recordDefinition);
         return true;
       }
     } else {
@@ -608,8 +608,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
   @Override
   public LayerRecord getRecordById(final Object id) {
-    final RecordDefinition metaData = getRecordDefinition();
-    final String idFieldName = metaData.getIdFieldName();
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final String idFieldName = recordDefinition.getIdFieldName();
     if (idFieldName == null) {
       LoggerFactory.getLogger(getClass()).error(this.typePath + " does not have a primary key");
       return null;
@@ -617,7 +617,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       final String idString = StringConverterRegistry.toString(id);
       final LayerRecord record = this.cachedRecords.get(idString);
       if (record == null) {
-        final Query query = Query.equal(metaData, idFieldName, id);
+        final Query query = Query.equal(recordDefinition, idFieldName, id);
         query.setProperty("recordFactory", this);
         final RecordStore recordStore = getRecordStore();
         return (LayerRecord)recordStore.queryFirst(query);
@@ -748,8 +748,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
   }
 
   public List<LayerRecord> query(final Map<String, ? extends Object> filter) {
-    final RecordDefinition metaData = getRecordDefinition();
-    final Query query = Query.and(metaData, filter);
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final Query query = Query.and(recordDefinition, filter);
     return query(query);
   }
 
@@ -852,11 +852,11 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       if (isExists()) {
         final RecordStore recordStore = getRecordStore();
         if (recordStore != null) {
-          final RecordDefinition metaData = recordStore.getRecordDefinition(typePath);
-          if (metaData != null) {
+          final RecordDefinition recordDefinition = recordStore.getRecordDefinition(typePath);
+          if (recordDefinition != null) {
 
-            setRecordDefinition(metaData);
-            setQuery(new Query(metaData));
+            setRecordDefinition(recordDefinition);
+            setQuery(new Query(recordDefinition));
             return;
           }
         }

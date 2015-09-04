@@ -3,6 +3,7 @@ package com.revolsys.gis.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
@@ -14,7 +15,6 @@ import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
@@ -103,8 +103,8 @@ public class RecordGraph extends Graph<Record> {
     if (object == null) {
       return null;
     } else {
-      final RecordDefinition metaData = object.getRecordDefinition();
-      final String typePath = metaData.getPath();
+      final RecordDefinition recordDefinition = object.getRecordDefinition();
+      final String typePath = recordDefinition.getPath();
       return typePath;
     }
   }

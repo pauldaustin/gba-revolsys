@@ -23,12 +23,12 @@ package com.revolsys.gis.jts.filter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.LineSegment;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
 public class SharesLineSegmentsFilter implements Predicate<LineString> {

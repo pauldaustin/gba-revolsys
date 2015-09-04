@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.Comparator;
 
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.util.MathUtil;
 
 /**

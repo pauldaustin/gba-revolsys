@@ -63,6 +63,7 @@ import com.akiban.sql.parser.ValueNodeList;
 import com.revolsys.awt.WebColors;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
+import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.query.And;
 import com.revolsys.data.query.Between;
 import com.revolsys.data.query.Cast;
@@ -743,14 +744,14 @@ public class QueryWhereConditionField extends ValueField
                     name + " requires a " + attribute.getType() + " not the value " + value);
                 }
               } else {
-                Object id;
+                Identifier id;
 
                 if (value instanceof String) {
                   final String string = (String)value;
                   final String[] values = string.split(":");
-                  id = codeTable.getId((Object[])values);
+                  id = codeTable.getIdentifier((Object[])values);
                 } else {
-                  id = codeTable.getId(value);
+                  id = codeTable.getIdentifier(value);
                 }
                 if (id == null) {
                   setInvalidMessage(name + " requires a valid code value that exists not " + value);

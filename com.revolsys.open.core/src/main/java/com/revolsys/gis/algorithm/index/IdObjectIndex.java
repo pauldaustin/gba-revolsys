@@ -1,8 +1,8 @@
 package com.revolsys.gis.algorithm.index;
 
 import java.util.List;
-
 import java.util.function.Consumer;
+
 import com.vividsolutions.jts.geom.Envelope;
 
 public interface IdObjectIndex<T> extends Iterable<T> {

@@ -68,7 +68,7 @@ public class JmxUtil {
   }
 
   public static MBeanAttributeInfo getMBeanAttribute(final MBeanServerConnection connection,
-    final String nameString, final String attributeName) {
+    final String nameString, final String fieldName) {
     MBeanAttributeInfo attribute = null;
     ObjectName objectName;
     try {
@@ -77,7 +77,7 @@ public class JmxUtil {
       mBeanInfo = connection.getMBeanInfo(objectName);
       final MBeanAttributeInfo[] attributes = mBeanInfo.getAttributes();
       for (final MBeanAttributeInfo thisAttribute : attributes) {
-        if (thisAttribute.getName().equals(attributeName)) {
+        if (thisAttribute.getName().equals(fieldName)) {
           attribute = thisAttribute;
           break;
         }
@@ -157,10 +157,10 @@ public class JmxUtil {
   }
 
   public static Object getMBeanAttributeValue(final MBeanServerConnection connection,
-    final ObjectName objName, final String attributeName) {
+    final ObjectName objName, final String fieldName) {
     Object attributeValue = "Unavailable";
     try {
-      attributeValue = connection.getAttribute(objName, attributeName);
+      attributeValue = connection.getAttribute(objName, fieldName);
     } catch (final AttributeNotFoundException e) {
       // e.printStackTrace();
     } catch (final MBeanException e) {
@@ -181,12 +181,12 @@ public class JmxUtil {
   }
 
   public static Object getMBeanAttributeValue(final MBeanServerConnection connection,
-    final String nameString, final String attributeName) {
+    final String nameString, final String fieldName) {
     Object attributeValue = null;
     ObjectName objName;
     try {
       objName = new ObjectName(nameString);
-      attributeValue = getMBeanAttributeValue(connection, objName, attributeName);
+      attributeValue = getMBeanAttributeValue(connection, objName, fieldName);
     } catch (final MalformedObjectNameException e) {
       e.printStackTrace();
     } catch (final NullPointerException e) {
@@ -218,13 +218,13 @@ public class JmxUtil {
       try {
         objectName = new ObjectName(objectNameStr);
         for (final MBeanAttributeInfo attribute : attributes) {
-          final String attributeName = attribute.getName();
-          System.out.print(" name=" + attributeName);
+          final String fieldName = attribute.getName();
+          System.out.print(" name=" + fieldName);
           final String attributeType = attribute.getType();
           System.out.print(" type=" + attributeType);
           if (attribute.isReadable()) {
             Object attributeValue = null;
-            attributeValue = JmxUtil.getMBeanAttributeValue(connection, objectName, attributeName);
+            attributeValue = JmxUtil.getMBeanAttributeValue(connection, objectName, fieldName);
             if (attributeValue != null) {
               System.out.print(" value=" + attributeValue);
             }
@@ -241,9 +241,9 @@ public class JmxUtil {
 
   public static void printAttributeValue(final MBeanServerConnection connection,
     final String objectNameString, final MBeanAttributeInfo attribute) {
-    final String attributeName = attribute.getName();
-    System.out.println("objectName=" + objectNameString + " " + attributeName + "="
-      + JmxUtil.getMBeanAttributeValue(connection, objectNameString, attributeName));
+    final String fieldName = attribute.getName();
+    System.out.println("objectName=" + objectNameString + " " + fieldName + "="
+      + JmxUtil.getMBeanAttributeValue(connection, objectNameString, fieldName));
 
   }
 }

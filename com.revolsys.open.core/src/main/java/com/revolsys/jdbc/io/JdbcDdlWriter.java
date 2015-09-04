@@ -50,14 +50,14 @@ public abstract class JdbcDdlWriter implements Cloneable {
     return this.out;
   }
 
-  public String getSequenceName(final RecordDefinition metaData) {
+  public String getSequenceName(final RecordDefinition recordDefinition) {
     throw new UnsupportedOperationException();
   }
 
-  public String getTableAlias(final RecordDefinition metaData) {
-    final String shortName = ShortNameProperty.getShortName(metaData);
+  public String getTableAlias(final RecordDefinition recordDefinition) {
+    final String shortName = ShortNameProperty.getShortName(recordDefinition);
     if (shortName == null) {
-      final String path = metaData.getPath();
+      final String path = recordDefinition.getPath();
       return Path.getName(path);
     } else {
       return shortName;
@@ -81,50 +81,49 @@ public abstract class JdbcDdlWriter implements Cloneable {
     this.out = out;
   }
 
-  public void writeAddForeignKeyConstraint(final RecordDefinition metaData,
-    final String attributeName, final RecordDefinition referencedMetaData) {
-    final String typePath = metaData.getPath();
-    final String referencedTypeName = referencedMetaData.getPath();
-    final String referencedAttributeName = referencedMetaData.getIdFieldName();
-    final String constraintName = getTableAlias(metaData) + "_" + getTableAlias(referencedMetaData)
-      + "_FK";
-    writeAddForeignKeyConstraint(typePath, constraintName, attributeName, referencedTypeName,
-      referencedAttributeName);
+  public void writeAddForeignKeyConstraint(final RecordDefinition recordDefinition,
+    final String fieldName, final RecordDefinition referencedRecordDefinition) {
+    final String typePath = recordDefinition.getPath();
+    final String referencedTypeName = referencedRecordDefinition.getPath();
+    final String referencedFieldName = referencedRecordDefinition.getIdFieldName();
+    final String constraintName = getTableAlias(recordDefinition) + "_"
+      + getTableAlias(referencedRecordDefinition) + "_FK";
+    writeAddForeignKeyConstraint(typePath, constraintName, fieldName, referencedTypeName,
+      referencedFieldName);
   }
 
-  public void writeAddForeignKeyConstraint(final RecordDefinition metaData,
-    final String attributeName, final String referenceTablePrefix,
-    final RecordDefinition referencedMetaData) {
-    final String typePath = metaData.getPath();
-    final String referencedTypeName = referencedMetaData.getPath();
-    final String referencedAttributeName = referencedMetaData.getIdFieldName();
-    final String constraintName = getTableAlias(metaData) + "_" + referenceTablePrefix + "_"
-      + getTableAlias(referencedMetaData) + "_FK";
-    writeAddForeignKeyConstraint(typePath, constraintName, attributeName, referencedTypeName,
-      referencedAttributeName);
+  public void writeAddForeignKeyConstraint(final RecordDefinition recordDefinition,
+    final String fieldName, final String referenceTablePrefix,
+    final RecordDefinition referencedRecordDefinition) {
+    final String typePath = recordDefinition.getPath();
+    final String referencedTypeName = referencedRecordDefinition.getPath();
+    final String referencedFieldName = referencedRecordDefinition.getIdFieldName();
+    final String constraintName = getTableAlias(recordDefinition) + "_" + referenceTablePrefix + "_"
+      + getTableAlias(referencedRecordDefinition) + "_FK";
+    writeAddForeignKeyConstraint(typePath, constraintName, fieldName, referencedTypeName,
+      referencedFieldName);
   }
 
   public void writeAddForeignKeyConstraint(final String typePath, final String constraintName,
-    final String attributeName, final String referencedTypeName,
-    final String referencedAttributeName) {
+    final String fieldName, final String referencedTypeName, final String referencedFieldName) {
     this.out.print("ALTER TABLE ");
     writeTableName(typePath);
     this.out.print(" ADD CONSTRAINT ");
     this.out.print(constraintName);
     this.out.print(" FOREIGN KEY (");
-    this.out.print(attributeName);
+    this.out.print(fieldName);
     this.out.print(") REFERENCES ");
     writeTableName(referencedTypeName);
     this.out.print(" (");
-    this.out.print(referencedAttributeName);
+    this.out.print(referencedFieldName);
     this.out.println(");");
   }
 
-  public void writeAddPrimaryKeyConstraint(final RecordDefinition metaData) {
-    final String idFieldName = metaData.getIdFieldName();
+  public void writeAddPrimaryKeyConstraint(final RecordDefinition recordDefinition) {
+    final String idFieldName = recordDefinition.getIdFieldName();
     if (idFieldName != null) {
-      final String typePath = metaData.getPath();
-      final String constraintName = getTableAlias(metaData) + "_PK";
+      final String typePath = recordDefinition.getPath();
+      final String constraintName = getTableAlias(recordDefinition) + "_PK";
       writeAddPrimaryKeyConstraint(typePath, constraintName, idFieldName);
     }
   }
@@ -145,8 +144,8 @@ public abstract class JdbcDdlWriter implements Cloneable {
   public void writeCreateSchema(final String schemaName) {
   }
 
-  public String writeCreateSequence(final RecordDefinition metaData) {
-    final String sequenceName = getSequenceName(metaData);
+  public String writeCreateSequence(final RecordDefinition recordDefinition) {
+    final String sequenceName = getSequenceName(recordDefinition);
     writeCreateSequence(sequenceName);
     return sequenceName;
   }
@@ -157,14 +156,14 @@ public abstract class JdbcDdlWriter implements Cloneable {
     this.out.println(";");
   }
 
-  public void writeCreateTable(final RecordDefinition metaData) {
-    final String typePath = metaData.getPath();
+  public void writeCreateTable(final RecordDefinition recordDefinition) {
+    final String typePath = recordDefinition.getPath();
     this.out.println();
     this.out.print("CREATE TABLE ");
     writeTableName(typePath);
     this.out.println(" (");
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
-      final FieldDefinition attribute = metaData.getField(i);
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+      final FieldDefinition attribute = recordDefinition.getField(i);
       if (i > 0) {
         this.out.println(",");
       }
@@ -182,14 +181,14 @@ public abstract class JdbcDdlWriter implements Cloneable {
     this.out.println();
     this.out.println(");");
 
-    writeAddPrimaryKeyConstraint(metaData);
+    writeAddPrimaryKeyConstraint(recordDefinition);
 
-    writeGeometryMetaData(metaData);
+    writeGeometryRecordDefinition(recordDefinition);
 
-    final FieldDefinition idAttribute = metaData.getIdField();
+    final FieldDefinition idAttribute = recordDefinition.getIdField();
     if (idAttribute != null) {
       if (Number.class.isAssignableFrom(idAttribute.getType().getJavaClass())) {
-        writeCreateSequence(metaData);
+        writeCreateSequence(recordDefinition);
       }
     }
   }
@@ -209,7 +208,7 @@ public abstract class JdbcDdlWriter implements Cloneable {
     this.out.println(");");
   }
 
-  public abstract void writeGeometryMetaData(final RecordDefinition metaData);
+  public abstract void writeGeometryRecordDefinition(final RecordDefinition recordDefinition);
 
   public void writeGrant(final String typePath, final String username, final boolean select,
     final boolean insert, final boolean update, final boolean delete) {
@@ -238,19 +237,19 @@ public abstract class JdbcDdlWriter implements Cloneable {
   }
 
   public void writeInsert(final Record row) {
-    final RecordDefinition metaData = row.getRecordDefinition();
-    final String typePath = metaData.getPath();
+    final RecordDefinition recordDefinition = row.getRecordDefinition();
+    final String typePath = recordDefinition.getPath();
     this.out.print("INSERT INTO ");
     writeTableName(typePath);
     this.out.print(" (");
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
       if (i > 0) {
         this.out.print(", ");
       }
-      this.out.print(metaData.getFieldName(i));
+      this.out.print(recordDefinition.getFieldName(i));
     }
     this.out.print(" ) VALUES (");
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
       if (i > 0) {
         this.out.print(", ");
       }
@@ -277,7 +276,8 @@ public abstract class JdbcDdlWriter implements Cloneable {
 
   }
 
-  public void writeResetSequence(final RecordDefinition metaData, final List<Record> values) {
+  public void writeResetSequence(final RecordDefinition recordDefinition,
+    final List<Record> values) {
     throw new UnsupportedOperationException();
   }
 

@@ -2,6 +2,7 @@ package com.revolsys.geometry.operation.valid;
 
 import com.revolsys.geometry.model.Geometry;
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Contains information about the nature and location of a {@link Geometry}

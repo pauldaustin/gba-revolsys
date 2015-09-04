@@ -75,7 +75,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
 
   private boolean mappedFile;
 
-  private RecordDefinitionImpl metaData;
+  private RecordDefinitionImpl recordDefinition;
 
   private int numRecords;
 
@@ -141,7 +141,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
           this.in = new EndianInputStream(this.resource.getInputStream());
         }
         loadHeader();
-        readMetaData();
+        readRecordDefinition();
         this.recordBuffer = new byte[this.recordSize];
         if (this.initCallback != null) {
           this.initCallback.run();
@@ -157,7 +157,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
     this.recordFactory = null;
     this.in = null;
     this.initCallback = null;
-    this.metaData = null;
+    this.recordDefinition = null;
     this.recordBuffer = null;
     this.resource = null;
   }
@@ -263,7 +263,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
 
   @Override
   public RecordDefinitionImpl getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 
   private String getString(final int startIndex, final int len) {
@@ -302,11 +302,11 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
     if (this.in.read(this.recordBuffer) != this.recordBuffer.length) {
       throw new IllegalStateException("Unexpected end of mappedFile");
     }
-    final Record object = this.recordFactory.createRecord(this.metaData);
+    final Record object = this.recordFactory.createRecord(this.recordDefinition);
     int startIndex = 0;
-    for (int i = 0; i < this.metaData.getFieldCount(); i++) {
-      int len = this.metaData.getFieldLength(i);
-      final DataType type = this.metaData.getFieldType(i);
+    for (int i = 0; i < this.recordDefinition.getFieldCount(); i++) {
+      int len = this.recordDefinition.getFieldLength(i);
+      final DataType type = this.recordDefinition.getFieldType(i);
       Object value = null;
 
       if (type == DataTypes.STRING) {
@@ -329,8 +329,8 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
     return object;
   }
 
-  private void readMetaData() throws IOException {
-    this.metaData = new RecordDefinitionImpl(this.typeName);
+  private void readRecordDefinition() throws IOException {
+    this.recordDefinition = new RecordDefinitionImpl(this.typeName);
     int b = this.in.read();
     while (b != 0x0D) {
       final StringBuffer fieldName = new StringBuffer();
@@ -356,7 +356,7 @@ public class XbaseIterator extends AbstractIterator<Record>implements RecordIter
       if (fieldType == MEMO_TYPE) {
         length = Integer.MAX_VALUE;
       }
-      this.metaData.addField(fieldName.toString(), dataType, length, decimalCount, false);
+      this.recordDefinition.addField(fieldName.toString(), dataType, length, decimalCount, false);
     }
     if (this.mappedFile) {
       final EndianMappedByteBuffer file = (EndianMappedByteBuffer)this.in;

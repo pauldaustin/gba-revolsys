@@ -25,7 +25,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
 
   private DataSource dataSource;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
   /** The number of pages. */
   private int numPages;
@@ -65,10 +65,10 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     this.query = query;
 
     final String tableName = query.getTypeName();
-    this.metaData = query.getRecordDefinition();
-    if (this.metaData == null) {
-      this.metaData = recordStore.getRecordDefinition(tableName);
-      query.setRecordDefinition(this.metaData);
+    this.recordDefinition = query.getRecordDefinition();
+    if (this.recordDefinition == null) {
+      this.recordDefinition = recordStore.getRecordDefinition(tableName);
+      query.setRecordDefinition(this.recordDefinition);
     }
 
     this.sql = JdbcUtils.getSelectSql(query);
@@ -83,7 +83,7 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     this.recordFactory = null;
     this.dataSource = null;
     this.recordStore = null;
-    this.metaData = null;
+    this.recordDefinition = null;
     this.results = null;
     this.resultSet = null;
     this.statement = null;
@@ -129,10 +129,6 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
       throw new IllegalStateException("The page number must be set using setPageNumber");
     }
     return this.results;
-  }
-
-  public RecordDefinition getMetaData() {
-    return this.metaData;
   }
 
   /**
@@ -199,6 +195,10 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
     return this.query;
   }
 
+  public RecordDefinition getRecordDefinition() {
+    return this.recordDefinition;
+  }
+
   public RecordFactory getRecordFactory() {
     return this.recordFactory;
   }
@@ -252,7 +252,8 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
           ResultSet.CONCUR_READ_ONLY);
         this.statement.setFetchSize(this.pageSize);
 
-        this.resultSet = JdbcQueryIterator.getResultSet(this.metaData, this.statement, this.query);
+        this.resultSet = JdbcQueryIterator.getResultSet(this.recordDefinition, this.statement,
+          this.query);
         this.resultSet.last();
         this.numResults = this.resultSet.getRow();
       } catch (final SQLException e) {
@@ -330,8 +331,9 @@ public class JdbcQueryResultPager implements ResultPager<Record> {
         if (this.resultSet.absolute(this.pageNumber * this.pageSize + 1)) {
           int i = 0;
           do {
-            final Record object = JdbcQueryIterator.getNextObject(this.recordStore, this.metaData,
-              this.metaData.getFields(), this.recordFactory, this.resultSet);
+            final Record object = JdbcQueryIterator.getNextObject(this.recordStore,
+              this.recordDefinition, this.recordDefinition.getFields(), this.recordFactory,
+              this.resultSet);
             this.results.add(object);
             i++;
           } while (this.resultSet.next() && i < this.pageSize);

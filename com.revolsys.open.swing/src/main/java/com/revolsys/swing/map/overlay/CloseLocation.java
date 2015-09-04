@@ -56,7 +56,7 @@ public class CloseLocation {
   }
 
   public String getIdFieldName() {
-    return getMetaData().getIdFieldName();
+    return getRecordDefinition().getIdFieldName();
   }
 
   public String getIndexString() {
@@ -72,16 +72,16 @@ public class CloseLocation {
     return this.layer;
   }
 
-  public RecordDefinition getMetaData() {
-    return this.layer.getRecordDefinition();
-  }
-
   public LayerRecord getObject() {
     return this.object;
   }
 
   public Point getPoint() {
     return this.point;
+  }
+
+  public RecordDefinition getRecordDefinition() {
+    return this.layer.getRecordDefinition();
   }
 
   public IndexedLineSegment getSegment() {
@@ -108,8 +108,8 @@ public class CloseLocation {
   }
 
   public String getTypePath() {
-    final RecordDefinition metaData = getMetaData();
-    return metaData.getPath();
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    return recordDefinition.getPath();
   }
 
   public int[] getVertexIndex() {
@@ -121,8 +121,8 @@ public class CloseLocation {
     final StringBuffer string = new StringBuffer();
     string.append(getTypePath());
     string.append(", ");
-    final RecordDefinition metaData = getMetaData();
-    string.append(metaData.getIdFieldName());
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    string.append(recordDefinition.getIdFieldName());
     string.append("=");
     final Object id = getId();
     string.append(id);

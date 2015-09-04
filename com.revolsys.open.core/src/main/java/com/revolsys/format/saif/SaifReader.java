@@ -75,7 +75,7 @@ public class SaifReader extends AbstractReader<Record>
   private Record currentRecord;
 
   /** The schema definition declared in the SAIF archive. */
-  private RecordDefinitionFactory declaredMetaDataFactory;
+  private RecordDefinitionFactory declaredRecordDefinitionFactory;
 
   /** List of type names to exclude from reading. */
   private final Set<String> excludeTypeNames = new LinkedHashSet<String>();
@@ -110,7 +110,7 @@ public class SaifReader extends AbstractReader<Record>
   private boolean loadNewObject = true;
 
   /** The schema definition that will be set on each data object. */
-  private RecordDefinitionFactory metaDataFactory;
+  private RecordDefinitionFactory recordDefinitionFactory;
 
   private boolean opened = false;
 
@@ -195,8 +195,8 @@ public class SaifReader extends AbstractReader<Record>
    *
    * @return The schema definition.
    */
-  public RecordDefinitionFactory getDeclaredMetaDataFactory() {
-    return this.declaredMetaDataFactory;
+  public RecordDefinitionFactory getDeclaredRecordDefinitionFactory() {
+    return this.declaredRecordDefinitionFactory;
   }
 
   /**
@@ -280,26 +280,19 @@ public class SaifReader extends AbstractReader<Record>
     return this.internallyReferencedObjects;
   }
 
-  /**
-   * Get the schema definition that will be set on each data object.
-   *
-   * @return The schema definition.
-   */
-  public RecordDefinitionFactory getMetaDataFactory() {
-    return this.metaDataFactory;
-  }
-
-  private <D extends Record> OsnReader getOsnReader(final RecordDefinitionFactory metaDataFactory,
-    final RecordFactory factory, final String className) throws IOException {
+  private <D extends Record> OsnReader getOsnReader(
+    final RecordDefinitionFactory recordDefinitionFactory, final RecordFactory factory,
+    final String className) throws IOException {
     String fileName = this.typePathFileNameMap.get(className);
     if (fileName == null) {
       fileName = Path.getName(className);
     }
     OsnReader reader;
     if (this.zipFile != null) {
-      reader = new OsnReader(metaDataFactory, this.zipFile, fileName, this.srid);
+      reader = new OsnReader(recordDefinitionFactory, this.zipFile, fileName, this.srid);
     } else {
-      reader = new OsnReader(metaDataFactory, this.saifArchiveDirectory, fileName, this.srid);
+      reader = new OsnReader(recordDefinitionFactory, this.saifArchiveDirectory, fileName,
+        this.srid);
     }
     reader.setFactory(factory);
     return reader;
@@ -311,8 +304,8 @@ public class SaifReader extends AbstractReader<Record>
 
   public <D extends Record> OsnReader getOsnReader(final String className,
     final RecordFactory factory) throws IOException {
-    final RecordDefinitionFactory metaDataFactory = this.metaDataFactory;
-    return getOsnReader(metaDataFactory, factory, className);
+    final RecordDefinitionFactory recordDefinitionFactory = this.recordDefinitionFactory;
+    return getOsnReader(recordDefinitionFactory, factory, className);
 
   }
 
@@ -324,7 +317,16 @@ public class SaifReader extends AbstractReader<Record>
 
   @Override
   public RecordDefinition getRecordDefinition(final String typePath) {
-    return this.metaDataFactory.getRecordDefinition(typePath);
+    return this.recordDefinitionFactory.getRecordDefinition(typePath);
+  }
+
+  /**
+   * Get the schema definition that will be set on each data object.
+   *
+   * @return The schema definition.
+   */
+  public RecordDefinitionFactory getRecordDefinitionFactory() {
+    return this.recordDefinitionFactory;
   }
 
   public int getSrid() {
@@ -515,12 +517,12 @@ public class SaifReader extends AbstractReader<Record>
 
     final InputStream in = getInputStream("clasdefs.csn");
     try {
-      this.declaredMetaDataFactory = parser.loadSchema("clasdefs.csn", in);
+      this.declaredRecordDefinitionFactory = parser.loadSchema("clasdefs.csn", in);
     } finally {
       FileUtil.closeSilent(in);
     }
-    if (this.metaDataFactory == null) {
-      setMetaDataFactory(this.declaredMetaDataFactory);
+    if (this.recordDefinitionFactory == null) {
+      setRecordDefinitionFactory(this.declaredRecordDefinitionFactory);
     }
   }
 
@@ -583,9 +585,9 @@ public class SaifReader extends AbstractReader<Record>
         loadSrid();
         final GeometryFactory geometryFactory = GeometryFactory.getFactory(this.srid, 1.0, 1.0);
 
-        for (final RecordDefinition metaData : ((RecordDefinitionFactoryImpl)this.metaDataFactory)
+        for (final RecordDefinition recordDefinition : ((RecordDefinitionFactoryImpl)this.recordDefinitionFactory)
           .getTypes()) {
-          final FieldDefinition geometryAttribute = metaData.getGeometryField();
+          final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
           if (geometryAttribute != null) {
             geometryAttribute.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
           }
@@ -652,8 +654,9 @@ public class SaifReader extends AbstractReader<Record>
    *
    * @param declaredSchema The schema definition.
    */
-  public void setDeclaredMetaDataFactory(final RecordDefinitionFactory declaredMetaDataFactory) {
-    this.declaredMetaDataFactory = declaredMetaDataFactory;
+  public void setDeclaredRecordDefinitionFactory(
+    final RecordDefinitionFactory declaredRecordDefinitionFactory) {
+    this.declaredRecordDefinitionFactory = declaredRecordDefinitionFactory;
   }
 
   /**
@@ -692,11 +695,11 @@ public class SaifReader extends AbstractReader<Record>
    *
    * @param schema The schema definition.
    */
-  public void setMetaDataFactory(final RecordDefinitionFactory metaDataFactory) {
-    if (metaDataFactory != null) {
-      this.metaDataFactory = metaDataFactory;
+  public void setRecordDefinitionFactory(final RecordDefinitionFactory recordDefinitionFactory) {
+    if (recordDefinitionFactory != null) {
+      this.recordDefinitionFactory = recordDefinitionFactory;
     } else {
-      this.metaDataFactory = this.declaredMetaDataFactory;
+      this.recordDefinitionFactory = this.declaredRecordDefinitionFactory;
     }
 
   }

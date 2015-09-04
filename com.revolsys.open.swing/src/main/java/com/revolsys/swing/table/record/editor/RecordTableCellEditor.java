@@ -42,7 +42,7 @@ public class RecordTableCellEditor extends AbstractCellEditor
 
   private JComponent editorComponent;
 
-  private String attributeName;
+  private String fieldName;
 
   private final BaseJTable table;
 
@@ -89,7 +89,7 @@ public class RecordTableCellEditor extends AbstractCellEditor
   }
 
   public String getFieldName() {
-    return this.attributeName;
+    return this.fieldName;
   }
 
   public Object getOldValue() {
@@ -115,10 +115,11 @@ public class RecordTableCellEditor extends AbstractCellEditor
     }
     this.oldValue = value;
     final AbstractRecordTableModel model = (AbstractRecordTableModel)table.getModel();
-    this.attributeName = model.getFieldName(rowIndex, columnIndex);
-    final RecordDefinition metaData = model.getRecordDefinition();
-    this.dataType = metaData.getFieldType(this.attributeName);
-    this.editorComponent = (JComponent)SwingUtil.createField(metaData, this.attributeName, true);
+    this.fieldName = model.getFieldName(rowIndex, columnIndex);
+    final RecordDefinition recordDefinition = model.getRecordDefinition();
+    this.dataType = recordDefinition.getFieldType(this.fieldName);
+    this.editorComponent = (JComponent)SwingUtil.createField(recordDefinition, this.fieldName,
+      true);
     if (this.editorComponent instanceof JTextField) {
       final JTextField textField = (JTextField)this.editorComponent;
       textField.setBorder(

@@ -26,7 +26,7 @@ public class OrientedArcConverter extends ArcConverter {
     Geometry geometry = null;
     final Map<String, Object> values = new TreeMap<String, Object>();
     values.put("type", GEOMETRY_CLASS);
-    String name = iterator.nextAttributeName();
+    String name = iterator.nextFieldName();
     while (name != null) {
       if (name.equals("arc")) {
         final String objectName = iterator.nextObjectName();
@@ -38,7 +38,7 @@ public class OrientedArcConverter extends ArcConverter {
       } else {
         readAttribute(iterator, name, values);
       }
-      name = iterator.nextAttributeName();
+      name = iterator.nextFieldName();
     }
     geometry.setUserData(values);
     return geometry;
@@ -49,7 +49,7 @@ public class OrientedArcConverter extends ArcConverter {
     if (object instanceof LineString) {
       final LineString lineString = (LineString)object;
       serializer.startObject(GEOMETRY_CLASS);
-      serializer.attributeName("arc");
+      serializer.fieldName("arc");
       super.write(serializer, object, false);
       serializer.endAttribute();
       final Map<String, Object> values = JtsGeometryUtil.getGeometryProperties(lineString);

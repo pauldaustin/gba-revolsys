@@ -1,14 +1,15 @@
 package com.revolsys.visitor;
 
 import java.util.Comparator;
-
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 import com.revolsys.comparator.ComparatorProxy;
 import com.revolsys.predicate.AndPredicate;
 import com.revolsys.predicate.PredicateProxy;
-import java.util.function.Predicate;
 
-public abstract class AbstractVisitor<T> implements Consumer<T>, PredicateProxy<T>, ComparatorProxy<T> {
+public abstract class AbstractVisitor<T>
+  implements Consumer<T>, PredicateProxy<T>, ComparatorProxy<T> {
   private Comparator<T> comparator;
 
   private Predicate<T> predicate;

@@ -37,6 +37,7 @@ import com.revolsys.geometry.model.Geometry;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.util.Assert;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents an affine transformation on the 2D Cartesian plane.
@@ -456,7 +457,7 @@ public class AffineTransformation implements Cloneable
    * the transform is singular (not invertible),
    * and operations which attempt to compute
    * an inverse will throw a <tt>NoninvertibleTransformException</tt>.
-
+  
    * @return the determinant of the transformation
    * @see #getInverse()
    */

@@ -3,11 +3,11 @@ package com.revolsys.data.record.filter;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
-import java.util.function.Predicate;
 
 /**
  * Filter records by the value of the property.
@@ -22,6 +22,14 @@ public class MultipleAttributeValuesFilter implements Predicate<Record> {
     this.values = values;
   }
 
+  public Map<String, ? extends Object> getValues() {
+    return this.values;
+  }
+
+  public void setValues(final Map<String, ? extends Object> values) {
+    this.values = values;
+  }
+
   /**
    * Match the property on the data object with the required value.
    *
@@ -31,9 +39,9 @@ public class MultipleAttributeValuesFilter implements Predicate<Record> {
   @Override
   public boolean test(final Record object) {
     for (final Entry<String, ? extends Object> entry : this.values.entrySet()) {
-      final String attributeName = entry.getKey();
+      final String fieldName = entry.getKey();
       final Object value = entry.getValue();
-      final Object objectValue = Records.getFieldByPath(object, attributeName);
+      final Object objectValue = Records.getFieldByPath(object, fieldName);
       if (objectValue == null) {
         if (value != null) {
           if (!EqualsInstance.INSTANCE.equals(value, objectValue)) {
@@ -47,14 +55,6 @@ public class MultipleAttributeValuesFilter implements Predicate<Record> {
       }
     }
     return true;
-  }
-
-  public Map<String, ? extends Object> getValues() {
-    return this.values;
-  }
-
-  public void setValues(final Map<String, ? extends Object> values) {
-    this.values = values;
   }
 
   /**

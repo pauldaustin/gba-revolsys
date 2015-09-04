@@ -35,8 +35,8 @@ public class AttributeTitleStringConveter extends ObjectToStringConverter
       final FieldDefinition attribute = (FieldDefinition)item;
       return this.layer.getFieldTitle(attribute.getName());
     } else if (item instanceof String) {
-      final String attributeName = (String)item;
-      return this.layer.getFieldTitle(attributeName);
+      final String fieldName = (String)item;
+      return this.layer.getFieldTitle(fieldName);
     }
     return StringConverterRegistry.toString(item);
   }

@@ -22,7 +22,7 @@ public class JsonRecordWriter extends AbstractWriter<Record>implements RecordWri
 
   private boolean indent;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
   private PrintWriter out;
 
@@ -32,8 +32,8 @@ public class JsonRecordWriter extends AbstractWriter<Record>implements RecordWri
 
   private boolean written;
 
-  public JsonRecordWriter(final RecordDefinition metaData, final java.io.Writer out) {
-    this.metaData = metaData;
+  public JsonRecordWriter(final RecordDefinition recordDefinition, final java.io.Writer out) {
+    this.recordDefinition = recordDefinition;
     if (out instanceof PrintWriter) {
       this.out = (PrintWriter)out;
     } else {
@@ -89,7 +89,7 @@ public class JsonRecordWriter extends AbstractWriter<Record>implements RecordWri
         this.out = null;
       }
     }
-    this.metaData = null;
+    this.recordDefinition = null;
   }
 
   private void endAttribute() {
@@ -183,7 +183,7 @@ public class JsonRecordWriter extends AbstractWriter<Record>implements RecordWri
 
   @Override
   public String toString() {
-    return this.metaData.getPath().toString();
+    return this.recordDefinition.getPath().toString();
   }
 
   @SuppressWarnings("unchecked")
@@ -238,15 +238,15 @@ public class JsonRecordWriter extends AbstractWriter<Record>implements RecordWri
     }
     startObject();
     boolean first = true;
-    final int attributeCount = this.metaData.getFieldCount();
+    final int attributeCount = this.recordDefinition.getFieldCount();
     for (int i = 0; i < attributeCount; i++) {
       final Object value = object.getValue(i);
       if (value != null) {
         if (!first) {
           endAttribute();
         }
-        final String name = this.metaData.getFieldName(i);
-        final DataType dataType = this.metaData.getFieldType(i);
+        final String name = this.recordDefinition.getFieldName(i);
+        final DataType dataType = this.recordDefinition.getFieldType(i);
         label(name);
         value(dataType, value);
         first = false;

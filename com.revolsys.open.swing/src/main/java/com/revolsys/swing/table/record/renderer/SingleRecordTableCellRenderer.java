@@ -41,11 +41,11 @@ public class SingleRecordTableCellRenderer implements TableCellRenderer {
       columnIndex = jxTable.convertColumnIndexToModel(columnIndex);
     }
     final AbstractSingleRecordTableModel model = (AbstractSingleRecordTableModel)table.getModel();
-    final RecordDefinition metaData = model.getRecordDefinition();
+    final RecordDefinition recordDefinition = model.getRecordDefinition();
 
     JComponent component = null;
     final String name = model.getFieldName(rowIndex, columnIndex);
-    final boolean required = metaData.isFieldRequired(name);
+    final boolean required = recordDefinition.isFieldRequired(name);
     if (columnIndex == 0) {
       this.valueComponent.setText(String.valueOf(rowIndex));
       this.valueComponent.setHorizontalAlignment(SwingConstants.RIGHT);

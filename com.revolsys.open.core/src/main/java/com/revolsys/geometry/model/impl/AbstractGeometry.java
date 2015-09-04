@@ -74,6 +74,7 @@ import com.revolsys.geometry.operation.predicate.RectangleIntersects;
 import com.revolsys.geometry.operation.relate.RelateOp;
 import com.revolsys.geometry.operation.union.UnaryUnionOp;
 import com.revolsys.geometry.operation.valid.IsValidOp;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A representation of a planar, linear vector geometry.

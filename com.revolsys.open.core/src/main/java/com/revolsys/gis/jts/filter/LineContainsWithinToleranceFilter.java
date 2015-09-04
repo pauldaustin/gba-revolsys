@@ -20,10 +20,11 @@
  */
 package com.revolsys.gis.jts.filter;
 
+import java.util.function.Predicate;
+
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.BoundingBox;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineContainsWithinToleranceFilter implements Predicate<LineString> {

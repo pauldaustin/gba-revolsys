@@ -29,8 +29,7 @@ import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentFactory;
 import com.revolsys.util.Property;
 
-public class MenuFactory extends BaseObjectWithProperties
-  implements ComponentFactory<JMenuItem> {
+public class MenuFactory extends BaseObjectWithProperties implements ComponentFactory<JMenuItem> {
 
   private static final ClassRegistry<MenuFactory> CLASS_MENUS = new ClassRegistry<>();
 

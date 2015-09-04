@@ -74,9 +74,9 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
     return this.directory;
   }
 
-  private File getDirectory(final RecordDefinition metaData) {
+  private File getDirectory(final RecordDefinition recordDefinition) {
     if (this.useNamespaceAsSubDirectory) {
-      final String typePath = metaData.getPath();
+      final String typePath = recordDefinition.getPath();
       final String schemaName = Path.getPath(typePath);
       if (Property.hasValue(schemaName)) {
         final File childDirectory = new File(this.directory, schemaName);
@@ -91,8 +91,8 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
     return this.directory;
   }
 
-  private String getFileName(final RecordDefinition metaData) {
-    return metaData.getName();
+  private String getFileName(final RecordDefinition recordDefinition) {
+    return recordDefinition.getName();
   }
 
   public String getNameSuffix() {
@@ -104,14 +104,15 @@ public class ShapeDirectoryWriter extends AbstractWriter<Record> {
   }
 
   private Writer<Record> getWriter(final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    final String path = metaData.getPath();
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    final String path = recordDefinition.getPath();
     Writer<Record> writer = this.writers.get(path);
     if (writer == null) {
-      final File directory = getDirectory(metaData);
+      final File directory = getDirectory(recordDefinition);
       directory.mkdirs();
-      final File file = new File(directory, getFileName(metaData) + this.nameSuffix + ".shp");
-      writer = RecordWriter.create(metaData, new FileSystemResource(file));
+      final File file = new File(directory,
+        getFileName(recordDefinition) + this.nameSuffix + ".shp");
+      writer = RecordWriter.create(recordDefinition, new FileSystemResource(file));
       ((XbaseRecordWriter)writer).setUseZeroForNull(this.useZeroForNull);
       final Geometry geometry = object.getGeometry();
       if (geometry != null) {

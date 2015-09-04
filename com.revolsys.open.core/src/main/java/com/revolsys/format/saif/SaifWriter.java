@@ -187,7 +187,7 @@ public class SaifWriter extends AbstractWriter<Record> {
     final OsnSerializer exportsSerializer = createSerializer("/ExportedObject", exportsFile,
       Long.MAX_VALUE);
     exportsSerializer.startObject("/ExportedObjects");
-    exportsSerializer.attributeName("handles");
+    exportsSerializer.fieldName("handles");
     exportsSerializer.startCollection("Set");
     writeExport(exportsSerializer, "GlobalMetadata", "GlobalMetadata", "globmeta.osn");
     for (final Map<String, Object> export : this.exports.values()) {
@@ -228,7 +228,7 @@ public class SaifWriter extends AbstractWriter<Record> {
         serializer.startObject("/GlobalMetadata");
         serializer.attribute("objectIdentifier", "GlobalMetadata", true);
 
-        serializer.attributeName("creationTime");
+        serializer.fieldName("creationTime");
         serializer.startObject("/TimeStamp");
         final Date creationTimestamp = new Date(System.currentTimeMillis());
         serializer.attribute("year", new BigDecimal(creationTimestamp.getYear() + 1900), true);
@@ -239,7 +239,7 @@ public class SaifWriter extends AbstractWriter<Record> {
         serializer.attribute("second", new BigDecimal(creationTimestamp.getSeconds()), true);
         serializer.endObject();
 
-        serializer.attributeName("saifProfile");
+        serializer.fieldName("saifProfile");
         serializer.startObject("/Profile");
         serializer.attribute("authority", "Government of British Columbia", true);
         serializer.attribute("idName", "SAIFLite", true);
@@ -249,10 +249,10 @@ public class SaifWriter extends AbstractWriter<Record> {
         serializer.attribute("saifRelease", "SAIF 3.2", true);
         serializer.attribute("toolkitVersion", "SAIF Toolkit Version 1.4.0 (May 05, 1997)", true);
 
-        serializer.attributeName("userProfile");
+        serializer.fieldName("userProfile");
         serializer.startObject("/UserProfile");
 
-        serializer.attributeName("coordDefs");
+        serializer.fieldName("coordDefs");
         serializer.startObject("/LocationalDefinitions");
         serializer.attributeEnum("c1", "real32", true);
         serializer.attributeEnum("c2", "real32", true);
@@ -367,21 +367,21 @@ public class SaifWriter extends AbstractWriter<Record> {
           }
           if (compositeType.isInstanceOf(this.annotatedSpatialDataSetType)) {
             serializer.startObject(compositeType.getPath());
-            serializer.attributeName("objectIdentifier");
+            serializer.fieldName("objectIdentifier");
             final String objectIdentifier = getObjectIdentifier(typePath);
             serializer.attributeValue(objectIdentifier);
             serializer.endLine();
             serializer.serializeIndent();
-            serializer.attributeName("annotationComponents");
+            serializer.fieldName("annotationComponents");
             serializer.startCollection("Set");
           } else if (compositeType.isInstanceOf(this.spatialDataSetType)) {
             serializer.startObject(compositeType.getPath());
-            serializer.attributeName("objectIdentifier");
+            serializer.fieldName("objectIdentifier");
             final String objectIdentifier = getObjectIdentifier(typePath);
             serializer.attributeValue(objectIdentifier);
             serializer.endLine();
             serializer.serializeIndent();
-            serializer.attributeName("geoComponents");
+            serializer.fieldName("geoComponents");
             serializer.startCollection("Set");
           }
           addExport(typePath, compositeType.getPath(), objectSubsetName);

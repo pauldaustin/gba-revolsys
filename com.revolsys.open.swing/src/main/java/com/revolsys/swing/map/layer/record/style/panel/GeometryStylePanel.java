@@ -39,8 +39,8 @@ public class GeometryStylePanel extends BaseStylePanel implements PropertyChange
     this.geometryStyleRenderer = geometryStyleRenderer;
     this.geometryStyle = geometryStyleRenderer.getStyle().clone();
     final AbstractRecordLayer layer = geometryStyleRenderer.getLayer();
-    final RecordDefinition metaData = layer.getRecordDefinition();
-    final FieldDefinition geometryAttribute = metaData.getGeometryField();
+    final RecordDefinition recordDefinition = layer.getRecordDefinition();
+    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
 
     if (geometryAttribute != null) {
       this.geometryDataType = geometryAttribute.getType();

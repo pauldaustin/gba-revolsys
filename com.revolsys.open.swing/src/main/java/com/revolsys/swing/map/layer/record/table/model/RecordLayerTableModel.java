@@ -67,8 +67,8 @@ public class RecordLayerTableModel extends RecordRowTableModel
   private static final long serialVersionUID = 1L;
 
   public static RecordLayerTable createTable(final AbstractRecordLayer layer) {
-    final RecordDefinition metaData = layer.getRecordDefinition();
-    if (metaData == null) {
+    final RecordDefinition recordDefinition = layer.getRecordDefinition();
+    if (recordDefinition == null) {
       return null;
     } else {
       final List<String> columnNames = layer.getFieldNames();
@@ -141,8 +141,8 @@ public class RecordLayerTableModel extends RecordRowTableModel
 
   private final Object sync = new Object();
 
-  public RecordLayerTableModel(final AbstractRecordLayer layer, final List<String> attributeNames) {
-    super(layer.getRecordDefinition(), attributeNames);
+  public RecordLayerTableModel(final AbstractRecordLayer layer, final List<String> fieldNames) {
+    super(layer.getRecordDefinition(), fieldNames);
     this.layer = layer;
     Property.addListener(layer, this);
     setEditable(true);
@@ -624,15 +624,15 @@ public class RecordLayerTableModel extends RecordRowTableModel
   @Override
   public SortOrder setSortOrder(final int column) {
     final SortOrder sortOrder = super.setSortOrder(column);
-    final String attributeName = getFieldName(column);
+    final String fieldName = getFieldName(column);
 
     Map<String, Boolean> orderBy;
     if (sortOrder == SortOrder.ASCENDING) {
-      orderBy = Collections.singletonMap(attributeName, true);
+      orderBy = Collections.singletonMap(fieldName, true);
     } else if (sortOrder == SortOrder.DESCENDING) {
-      orderBy = Collections.singletonMap(attributeName, false);
+      orderBy = Collections.singletonMap(fieldName, false);
     } else {
-      orderBy = Collections.singletonMap(attributeName, true);
+      orderBy = Collections.singletonMap(fieldName, true);
     }
     if (this.sync == null) {
       this.orderBy = orderBy;

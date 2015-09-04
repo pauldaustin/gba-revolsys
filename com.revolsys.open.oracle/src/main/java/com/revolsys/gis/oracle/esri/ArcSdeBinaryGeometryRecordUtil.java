@@ -81,9 +81,9 @@ public class ArcSdeBinaryGeometryRecordUtil {
   }
 
   public void createGeometryColumn(final AbstractJdbcRecordStore recordStore,
-    final RecordStoreSchema schema, final RecordDefinition metaData, final String typePath,
+    final RecordStoreSchema schema, final RecordDefinition recordDefinition, final String typePath,
     final String dbName, final String columnName, final Map<String, Object> columnProperties) {
-    final FieldDefinition attribute = metaData.getField(columnName);
+    final FieldDefinition attribute = recordDefinition.getField(columnName);
 
     DataType dataType = JdbcFieldAdder.getColumnProperty(schema, typePath, columnName,
       JdbcFieldAdder.GEOMETRY_TYPE);
@@ -100,12 +100,12 @@ public class ArcSdeBinaryGeometryRecordUtil {
     final ArcSdeBinaryGeometryAttribute sdeAttribute = new ArcSdeBinaryGeometryAttribute(this,
       dbName, columnName, dataType, attribute.isRequired(), "The GEOMETRY reference",
       attribute.getProperties(), geometryFactory);
-    ((RecordDefinitionImpl)metaData).replaceField(attribute, sdeAttribute);
-    sdeAttribute.setRecordDefinition(metaData);
+    ((RecordDefinitionImpl)recordDefinition).replaceField(attribute, sdeAttribute);
+    sdeAttribute.setRecordDefinition(recordDefinition);
 
-    metaData.setProperty("recordStoreIteratorFactory", this.iteratorFactory);
+    recordDefinition.setProperty("recordStoreIteratorFactory", this.iteratorFactory);
 
-    ((RecordDefinitionImpl)metaData).setGeometryFieldName(columnName);
+    ((RecordDefinitionImpl)recordDefinition).setGeometryFieldName(columnName);
   }
 
   public AbstractIterator<Record> createIterator(final OracleRecordStore recordStore,
@@ -162,8 +162,8 @@ public class ArcSdeBinaryGeometryRecordUtil {
     }
   }
 
-  public String getTableName(final RecordDefinition metaData) {
-    final String typePath = metaData.getPath();
+  public String getTableName(final RecordDefinition recordDefinition) {
+    final String typePath = recordDefinition.getPath();
     return this.recordStore.getDatabaseQualifiedTableName(typePath);
   }
 

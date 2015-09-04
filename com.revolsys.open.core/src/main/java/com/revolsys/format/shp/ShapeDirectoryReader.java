@@ -34,7 +34,7 @@ import com.revolsys.spring.resource.SpringUtil;
 public class ShapeDirectoryReader extends RecordDirectoryReader {
   private final Map<String, String> fileNameTypeMap = new HashMap<String, String>();
 
-  private Map<String, RecordDefinition> typeNameMetaDataMap = new HashMap<String, RecordDefinition>();
+  private Map<String, RecordDefinition> typeNameRecordDefinitionMap = new HashMap<String, RecordDefinition>();
 
   public ShapeDirectoryReader() {
     setFileExtensions(ShapefileConstants.FILE_EXTENSION);
@@ -57,7 +57,7 @@ public class ShapeDirectoryReader extends RecordDirectoryReader {
       final ShapefileIterator iterator = new ShapefileIterator(resource, factory);
       final String baseName = SpringUtil.getBaseName(resource).toUpperCase();
       iterator.setTypeName(this.fileNameTypeMap.get(baseName));
-      iterator.setMetaData(this.typeNameMetaDataMap.get(iterator.getTypeName()));
+      iterator.setRecordDefinition(this.typeNameRecordDefinitionMap.get(iterator.getTypeName()));
       return new RecordIteratorReader(iterator);
     } catch (final IOException e) {
       throw new RuntimeException("Unable to create reader for " + resource, e);
@@ -68,8 +68,8 @@ public class ShapeDirectoryReader extends RecordDirectoryReader {
     return this.fileNameTypeMap;
   }
 
-  public Map<String, RecordDefinition> getTypeNameMetaDataMap() {
-    return this.typeNameMetaDataMap;
+  public Map<String, RecordDefinition> getTypeNameRecordDefinitionMap() {
+    return this.typeNameRecordDefinitionMap;
   }
 
   public void setFileNameTypeMap(final Map<String, String> fileNameTypeMap) {
@@ -82,8 +82,9 @@ public class ShapeDirectoryReader extends RecordDirectoryReader {
     setBaseFileNames(fileNameTypeMap.keySet());
   }
 
-  public void setTypeNameMetaDataMap(final Map<String, RecordDefinition> typeNameMetaDataMap) {
-    this.typeNameMetaDataMap = typeNameMetaDataMap;
+  public void setTypeNameRecordDefinitionMap(
+    final Map<String, RecordDefinition> typeNameRecordDefinitionMap) {
+    this.typeNameRecordDefinitionMap = typeNameRecordDefinitionMap;
   }
 
 }

@@ -35,6 +35,7 @@ package com.revolsys.geometry.noding;
 
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.util.Assert;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Implements a robust method of comparing the relative position of two

@@ -75,7 +75,7 @@ public class FgdbReader {
 
   private EndianInputStream in;
 
-  private final RecordDefinitionImpl metaData = new RecordDefinitionImpl();
+  private final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl();
 
   private int numValidRows;
 
@@ -114,12 +114,12 @@ public class FgdbReader {
       final double opt = Math.ceil(this.optionalFieldCount / 8.0);
       final byte[] nullFields = new byte[(int)opt];
       this.in.read(nullFields);
-      final Record record = new ArrayRecord(this.metaData);
+      final Record record = new ArrayRecord(this.recordDefinition);
       record.setIdValue(objectId++);
       int fieldIndex = 0;
       int optionalFieldIndex = 0;
-      final int idIndex = this.metaData.getIdFieldIndex();
-      for (final FieldDefinition field : this.metaData.getFields()) {
+      final int idIndex = this.recordDefinition.getIdFieldIndex();
+      for (final FieldDefinition field : this.recordDefinition.getFields()) {
         if (fieldIndex != idIndex) {
           if (field.isRequired() || !isNull(nullFields, optionalFieldIndex++)) {
             final FgdbField fgdbField = (FgdbField)field;
@@ -327,18 +327,18 @@ public class FgdbReader {
     for (int i = 0; i < numFields; i++) {
       final FgdbField field = readFieldDescription();
       if (field != null) {
-        this.metaData.addField(field);
+        this.recordDefinition.addField(field);
         if (field instanceof ObjectIdField) {
           final String fieldName = field.getName();
-          this.metaData.setIdFieldName(fieldName);
+          this.recordDefinition.setIdFieldName(fieldName);
         }
         if (!field.isRequired()) {
           this.optionalFieldCount++;
         }
       }
     }
-    this.metaData.setProperty("optionalFieldCount", this.optionalFieldCount);
-    System.out.println(MapObjectFactoryRegistry.toString(this.metaData));
+    this.recordDefinition.setProperty("optionalFieldCount", this.optionalFieldCount);
+    System.out.println(MapObjectFactoryRegistry.toString(this.recordDefinition));
   }
 
   protected boolean readFlags() throws IOException {

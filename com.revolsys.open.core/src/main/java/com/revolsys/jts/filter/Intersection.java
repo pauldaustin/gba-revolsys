@@ -1,7 +1,8 @@
 package com.revolsys.jts.filter;
 
-import com.revolsys.gis.graph.linestring.LineStringGraph;
 import java.util.function.Predicate;
+
+import com.revolsys.gis.graph.linestring.LineStringGraph;
 import com.vividsolutions.jts.geom.LineString;
 
 public class Intersection implements Predicate<LineString> {
@@ -15,12 +16,12 @@ public class Intersection implements Predicate<LineString> {
     this.graph = new LineStringGraph(line);
   }
 
+  public LineString getLine() {
+    return this.line;
+  }
+
   @Override
   public boolean test(final LineString line) {
     return this.graph.intersects(line);
-  }
-
-  public LineString getLine() {
-    return this.line;
   }
 }

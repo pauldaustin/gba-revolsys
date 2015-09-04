@@ -12,6 +12,31 @@ public class ILike extends BinaryCondition {
   }
 
   @Override
+  public void appendSql(final StringBuffer buffer) {
+    final QueryValue left = getLeft();
+    final QueryValue right = getRight();
+
+    buffer.append("UPPER(CAST(");
+    if (left == null) {
+      buffer.append("NULL");
+    } else {
+      left.appendSql(buffer);
+    }
+    buffer.append(" AS VARCHAR(4000))) LIKE UPPER(");
+    if (right == null) {
+      buffer.append("NULL");
+    } else {
+      right.appendSql(buffer);
+    }
+    buffer.append(")");
+  }
+
+  @Override
+  public ILike clone() {
+    return (ILike)super.clone();
+  }
+
+  @Override
   public boolean test(final Map<String, Object> record) {
     final QueryValue left = getLeft();
     String value1 = left.getStringValue(record);
@@ -39,31 +64,6 @@ public class ILike extends BinaryCondition {
     } else {
       return !Property.hasValue(value2);
     }
-  }
-
-  @Override
-  public void appendSql(final StringBuffer buffer) {
-    final QueryValue left = getLeft();
-    final QueryValue right = getRight();
-
-    buffer.append("UPPER(CAST(");
-    if (left == null) {
-      buffer.append("NULL");
-    } else {
-      left.appendSql(buffer);
-    }
-    buffer.append(" AS VARCHAR(4000))) LIKE UPPER(");
-    if (right == null) {
-      buffer.append("NULL");
-    } else {
-      right.appendSql(buffer);
-    }
-    buffer.append(")");
-  }
-
-  @Override
-  public ILike clone() {
-    return (ILike)super.clone();
   }
 
 }

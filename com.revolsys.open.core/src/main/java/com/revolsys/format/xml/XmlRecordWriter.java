@@ -19,7 +19,7 @@ import com.revolsys.io.NamedObject;
 
 public class XmlRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private boolean opened;
 
@@ -29,8 +29,8 @@ public class XmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
 
   boolean startAttribute;
 
-  public XmlRecordWriter(final RecordDefinition metaData, final java.io.Writer out) {
-    this.metaData = metaData;
+  public XmlRecordWriter(final RecordDefinition recordDefinition, final java.io.Writer out) {
+    this.recordDefinition = recordDefinition;
     if (out instanceof XmlWriter) {
       this.out = (XmlWriter)out;
     } else {
@@ -118,7 +118,7 @@ public class XmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
 
   @Override
   public String toString() {
-    return this.metaData.getPath().toString();
+    return this.recordDefinition.getPath().toString();
   }
 
   @Override
@@ -126,16 +126,16 @@ public class XmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
     if (!this.opened) {
       writeHeader();
     }
-    QName qualifiedName = this.metaData.getProperty(RecordProperties.QUALIFIED_NAME);
+    QName qualifiedName = this.recordDefinition.getProperty(RecordProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
-      qualifiedName = new QName(this.metaData.getName());
+      qualifiedName = new QName(this.recordDefinition.getName());
     }
 
     this.out.startTag(qualifiedName);
 
-    final int attributeCount = this.metaData.getFieldCount();
+    final int attributeCount = this.recordDefinition.getFieldCount();
     for (int i = 0; i < attributeCount; i++) {
-      final String name = this.metaData.getFieldName(i);
+      final String name = this.recordDefinition.getFieldName(i);
       final Object value = object.getValue(i);
       final QName tagName = new QName(name);
       if (value instanceof Map) {
@@ -150,7 +150,7 @@ public class XmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
         list(list);
         this.out.endTag();
       } else {
-        final DataType dataType = this.metaData.getFieldType(i);
+        final DataType dataType = this.recordDefinition.getFieldType(i);
         final String string = StringConverterRegistry.toString(dataType, value);
         this.out.nillableElement(tagName, string);
       }

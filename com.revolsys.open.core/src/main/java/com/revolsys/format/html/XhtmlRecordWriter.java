@@ -22,7 +22,7 @@ public class XhtmlRecordWriter extends AbstractWriter<Record>implements RecordWr
 
   private String cssClass;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private boolean opened = false;
 
@@ -35,8 +35,8 @@ public class XhtmlRecordWriter extends AbstractWriter<Record>implements RecordWr
 
   private boolean wrap = true;
 
-  public XhtmlRecordWriter(final RecordDefinition metaData, final Writer out) {
-    this.metaData = metaData;
+  public XhtmlRecordWriter(final RecordDefinition recordDefinition, final Writer out) {
+    this.recordDefinition = recordDefinition;
     this.out = new XmlWriter(out);
   }
 
@@ -83,7 +83,7 @@ public class XhtmlRecordWriter extends AbstractWriter<Record>implements RecordWr
       writeHeader();
     }
     if (this.singleObject) {
-      for (final String key : this.metaData.getFieldNames()) {
+      for (final String key : this.recordDefinition.getFieldNames()) {
         final Object value = object.getValue(key);
         this.out.startTag(HtmlUtil.TR);
         this.out.element(HtmlUtil.TH, CaseConverter.toCapitalizedWords(key.toString()));
@@ -100,7 +100,7 @@ public class XhtmlRecordWriter extends AbstractWriter<Record>implements RecordWr
       }
     } else {
       this.out.startTag(HtmlUtil.TR);
-      for (final String key : this.metaData.getFieldNames()) {
+      for (final String key : this.recordDefinition.getFieldNames()) {
         final Object value = object.getValue(key);
         this.out.startTag(HtmlUtil.TD);
         if (value == null) {
@@ -190,7 +190,7 @@ public class XhtmlRecordWriter extends AbstractWriter<Record>implements RecordWr
 
       this.out.startTag(HtmlUtil.THEAD);
       this.out.startTag(HtmlUtil.TR);
-      for (final String name : this.metaData.getFieldNames()) {
+      for (final String name : this.recordDefinition.getFieldNames()) {
         this.out.element(HtmlUtil.TH, name);
       }
       this.out.endTag(HtmlUtil.TR);
@@ -202,7 +202,7 @@ public class XhtmlRecordWriter extends AbstractWriter<Record>implements RecordWr
   }
 
   public void writeValue(final String name, final Object value) {
-    final DataType dataType = this.metaData.getFieldType(name);
+    final DataType dataType = this.recordDefinition.getFieldType(name);
 
     @SuppressWarnings("unchecked")
     final Class<Object> dataTypeClass = (Class<Object>)dataType.getJavaClass();

@@ -36,8 +36,8 @@ public class MapTransferable implements Transferable {
       return this.map;
     } else if (DataFlavor.stringFlavor.equals(flavor)) {
       final StringWriter out = new StringWriter();
-      final Collection<String> attributeNames = this.map.keySet();
-      Csv.writeColumns(out, attributeNames, '\t', '\n');
+      final Collection<String> fieldNames = this.map.keySet();
+      Csv.writeColumns(out, fieldNames, '\t', '\n');
       final Collection<Object> values = this.map.values();
       Csv.writeColumns(out, values, '\t', '\n');
       final String text = out.toString();

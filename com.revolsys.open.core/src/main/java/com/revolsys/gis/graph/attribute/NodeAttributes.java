@@ -50,17 +50,17 @@ public class NodeAttributes {
       return anglesByType;
     }
 
-    public static Set<RecordDefinition> edgeMetaDatas(final Node<?> node) {
-      final Set<RecordDefinition> metaDatas = new HashSet<RecordDefinition>();
+    public static Set<RecordDefinition> edgeRecordDefinitions(final Node<?> node) {
+      final Set<RecordDefinition> recordDefinitions = new HashSet<RecordDefinition>();
       for (final Edge<?> edge : node.getEdges()) {
         final Object object = edge.getObject();
         if (object instanceof Record) {
           final Record record = (Record)object;
-          final RecordDefinition metaData = record.getRecordDefinition();
-          metaDatas.add(metaData);
+          final RecordDefinition recordDefinition = record.getRecordDefinition();
+          recordDefinitions.add(recordDefinition);
         }
       }
-      return metaDatas;
+      return recordDefinitions;
     }
 
     public static <T> Map<LineString, Map<String, Set<Edge<T>>>> edgesByLineAndTypeName(
@@ -154,7 +154,7 @@ public class NodeAttributes {
 
   private static String EDGE_ANGLES_BY_TYPE = "edgeAnglesByType";
 
-  private static String EDGE_META_DATAS = "edgeMetaDatas";
+  private static String EDGE_META_DATAS = "edgeRecordDefinitions";
 
   private static String EDGE_TYPE_NAMES = "edgeTypeNames";
 
@@ -166,13 +166,13 @@ public class NodeAttributes {
 
   @SuppressWarnings("unchecked")
   private static <T, V> V getAttribute(final Node<T> node, final String name) {
-    final String attributeName = NodeAttributes.class.getName() + "." + name;
-    if (!node.hasAttribute(attributeName)) {
+    final String fieldName = NodeAttributes.class.getName() + "." + name;
+    if (!node.hasAttribute(fieldName)) {
       final ObjectAttributeProxy<T, V> proxy = new InvokeMethodObjectAttributeProxy<T, V>(
         Methods.class, name, Node.class);
-      node.setAttribute(attributeName, proxy);
+      node.setAttribute(fieldName, proxy);
     }
-    final V value = (V)node.getAttribute(attributeName);
+    final V value = (V)node.getAttribute(fieldName);
     return value;
   }
 
@@ -190,7 +190,7 @@ public class NodeAttributes {
     return angles;
   }
 
-  public static Set<RecordDefinition> getEdgeMetaDatas(final Node<? extends Object> node) {
+  public static Set<RecordDefinition> getEdgeRecordDefinitions(final Node<? extends Object> node) {
     return getAttribute(node, EDGE_META_DATAS);
   }
 

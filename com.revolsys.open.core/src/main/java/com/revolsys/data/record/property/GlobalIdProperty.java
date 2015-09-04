@@ -7,25 +7,25 @@ public class GlobalIdProperty extends AbstractRecordDefinitionProperty {
   static final String PROPERTY_NAME = "http://revolsys.com/gis/globalId";
 
   public static GlobalIdProperty getProperty(final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    return getProperty(metaData);
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    return getProperty(recordDefinition);
   }
 
-  public static GlobalIdProperty getProperty(final RecordDefinition metaData) {
-    if (metaData == null) {
+  public static GlobalIdProperty getProperty(final RecordDefinition recordDefinition) {
+    if (recordDefinition == null) {
       return null;
     } else {
-      return metaData.getProperty(PROPERTY_NAME);
+      return recordDefinition.getProperty(PROPERTY_NAME);
     }
   }
 
-  private String attributeName;
+  private String fieldName;
 
   public GlobalIdProperty() {
   }
 
-  public GlobalIdProperty(final String attributeName) {
-    this.attributeName = attributeName;
+  public GlobalIdProperty(final String fieldName) {
+    this.fieldName = fieldName;
   }
 
   @Override
@@ -33,8 +33,8 @@ public class GlobalIdProperty extends AbstractRecordDefinitionProperty {
     return (GlobalIdProperty)super.clone();
   }
 
-  public String getAttributeName() {
-    return this.attributeName;
+  public String getFieldName() {
+    return this.fieldName;
   }
 
   @Override
@@ -42,16 +42,16 @@ public class GlobalIdProperty extends AbstractRecordDefinitionProperty {
     return PROPERTY_NAME;
   }
 
-  public void setAttributeName(final String attributeName) {
-    this.attributeName = attributeName;
+  public void setFieldName(final String fieldName) {
+    this.fieldName = fieldName;
   }
 
   @Override
-  public void setRecordDefinition(final RecordDefinition metaData) {
-    if (this.attributeName == null) {
-      this.attributeName = metaData.getIdFieldName();
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    if (this.fieldName == null) {
+      this.fieldName = recordDefinition.getIdFieldName();
     }
-    super.setRecordDefinition(metaData);
+    super.setRecordDefinition(recordDefinition);
   }
 
 }

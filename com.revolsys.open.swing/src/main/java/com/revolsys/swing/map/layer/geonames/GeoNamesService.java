@@ -47,19 +47,19 @@ public class GeoNamesService {
     meta.addField("geometry", DataTypes.POINT, false);
     NAME_METADATA = meta;
 
-    final RecordDefinitionImpl wikipediaMetaData = new RecordDefinitionImpl(
+    final RecordDefinitionImpl wikipediaRecordDefinition = new RecordDefinitionImpl(
       Path.toPath("/geoname.org", "wikipedia"));
-    wikipediaMetaData.addField("summary", DataTypes.STRING, false);
-    wikipediaMetaData.addField("title", DataTypes.STRING, false);
-    wikipediaMetaData.addField("wikipediaUrl", DataTypes.STRING, false);
-    wikipediaMetaData.addField("countryCode", DataTypes.STRING, false);
-    wikipediaMetaData.addField("feature", DataTypes.STRING, false);
-    wikipediaMetaData.addField("thumbnailImg", DataTypes.STRING, false);
-    wikipediaMetaData.addField("lang", DataTypes.STRING, false);
-    wikipediaMetaData.addField("population", DataTypes.INTEGER, false);
-    wikipediaMetaData.addField("geometry", DataTypes.POINT, false);
+    wikipediaRecordDefinition.addField("summary", DataTypes.STRING, false);
+    wikipediaRecordDefinition.addField("title", DataTypes.STRING, false);
+    wikipediaRecordDefinition.addField("wikipediaUrl", DataTypes.STRING, false);
+    wikipediaRecordDefinition.addField("countryCode", DataTypes.STRING, false);
+    wikipediaRecordDefinition.addField("feature", DataTypes.STRING, false);
+    wikipediaRecordDefinition.addField("thumbnailImg", DataTypes.STRING, false);
+    wikipediaRecordDefinition.addField("lang", DataTypes.STRING, false);
+    wikipediaRecordDefinition.addField("population", DataTypes.INTEGER, false);
+    wikipediaRecordDefinition.addField("geometry", DataTypes.POINT, false);
 
-    WIKIPEDIA_METADATA = wikipediaMetaData;
+    WIKIPEDIA_METADATA = wikipediaRecordDefinition;
   }
 
   private URL findNearbyBoundingBoxJsonUrl;
@@ -138,16 +138,16 @@ public class GeoNamesService {
     }
   }
 
-  private List<Record> mapToObjects(final RecordDefinition metaData,
+  private List<Record> mapToObjects(final RecordDefinition recordDefinition,
     final Map<String, Object> result) {
     final List<Record> results = new ArrayList<Record>();
     final List<Map<String, Object>> names = (List<Map<String, Object>>)result.get("geonames");
     for (final Map<String, Object> name : names) {
-      final Record record = metaData.createRecord();
-      for (final String attributeName : metaData.getFieldNames()) {
-        final Object value = name.get(attributeName);
+      final Record record = recordDefinition.createRecord();
+      for (final String fieldName : recordDefinition.getFieldNames()) {
+        final Object value = name.get(fieldName);
         if (value != null) {
-          record.setValue(attributeName, value);
+          record.setValue(fieldName, value);
         }
       }
       final double lat = ((Number)name.get("lat")).doubleValue();

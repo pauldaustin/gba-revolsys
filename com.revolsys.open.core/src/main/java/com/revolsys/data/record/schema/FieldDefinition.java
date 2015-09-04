@@ -35,8 +35,7 @@ import com.revolsys.util.Property;
  * @see Record
  * @see RecordDefinition
  */
-public class FieldDefinition extends BaseObjectWithProperties
-  implements Cloneable, MapSerializer {
+public class FieldDefinition extends BaseObjectWithProperties implements Cloneable, MapSerializer {
 
   public static final MapObjectFactory FACTORY = new InvokeMethodMapObjectFactory("field",
     "Data Record Field", FieldDefinition.class, "create");

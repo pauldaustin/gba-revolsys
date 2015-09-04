@@ -41,6 +41,7 @@ import com.revolsys.geometry.model.GeometryFactory;
 import com.revolsys.geometry.model.LineString;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents a list of contiguous line segments,

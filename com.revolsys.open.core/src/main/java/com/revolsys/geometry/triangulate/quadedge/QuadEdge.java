@@ -37,6 +37,7 @@ import com.revolsys.format.wkt.EWktWriter;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.segment.LineSegment;
 import com.revolsys.geometry.model.segment.LineSegmentDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A class that represents the edge data structure which implements the quadedge algebra.

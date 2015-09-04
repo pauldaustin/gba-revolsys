@@ -1,6 +1,7 @@
 package com.revolsys.gis.algorithm.locate;
 
 import java.util.function.Consumer;
+
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.io.WKTWriter;
 

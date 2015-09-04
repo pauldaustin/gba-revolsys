@@ -21,13 +21,13 @@ public class MapReaderRecordReader extends AbstractReader<Record>
 
   private final Reader<Map<String, Object>> mapReader;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private boolean open;
 
-  public MapReaderRecordReader(final RecordDefinition metaData,
+  public MapReaderRecordReader(final RecordDefinition recordDefinition,
     final Reader<Map<String, Object>> mapReader) {
-    this.metaData = metaData;
+    this.recordDefinition = recordDefinition;
     this.mapReader = mapReader;
   }
 
@@ -38,7 +38,7 @@ public class MapReaderRecordReader extends AbstractReader<Record>
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 
   @Override
@@ -58,12 +58,12 @@ public class MapReaderRecordReader extends AbstractReader<Record>
   public Record next() {
     if (hasNext()) {
       final Map<String, Object> source = this.mapIterator.next();
-      final Record target = new ArrayRecord(this.metaData);
-      for (final FieldDefinition attribute : this.metaData.getFields()) {
+      final Record target = new ArrayRecord(this.recordDefinition);
+      for (final FieldDefinition attribute : this.recordDefinition.getFields()) {
         final String name = attribute.getName();
         final Object value = source.get(name);
         if (value != null) {
-          final DataType dataType = this.metaData.getFieldType(name);
+          final DataType dataType = this.recordDefinition.getFieldType(name);
           final Object convertedValue = StringConverterRegistry.toObject(dataType, value);
           target.setValue(name, convertedValue);
         }

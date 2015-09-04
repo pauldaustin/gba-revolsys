@@ -44,14 +44,16 @@ public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory
   }
 
   @Override
-  public RecordWriter createRecordWriter(final RecordDefinition metaData, final Resource resource) {
-    return new ShapefileRecordWriter(metaData, resource);
+  public RecordWriter createRecordWriter(final RecordDefinition recordDefinition,
+    final Resource resource) {
+    return new ShapefileRecordWriter(recordDefinition, resource);
   }
 
   @Override
-  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
-    final OutputStream outputStream, final Charset charset) {
-    return createRecordWriter(metaData, new OutputStreamResource(baseName, outputStream));
+  public RecordWriter createRecordWriter(final String baseName,
+    final RecordDefinition recordDefinition, final OutputStream outputStream,
+    final Charset charset) {
+    return createRecordWriter(recordDefinition, new OutputStreamResource(baseName, outputStream));
   }
 
   @Override

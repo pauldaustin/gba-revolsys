@@ -27,11 +27,11 @@ public class SortByType extends BaseInOutProcess<Record, Record> {
 
   @Override
   protected void process(final Channel<Record> in, final Channel<Record> out, final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    Collection<Record> objects = this.objectsByType.get(metaData);
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    Collection<Record> objects = this.objectsByType.get(recordDefinition);
     if (objects == null) {
       objects = new ArrayList<Record>();
-      this.objectsByType.put(metaData, objects);
+      this.objectsByType.put(recordDefinition, objects);
     }
     objects.add(object);
   }

@@ -21,19 +21,19 @@ public class JsonRecordIterator extends AbstractIterator<Record>implements Recor
 
   private JsonMapIterator iterator;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
-  public JsonRecordIterator(final RecordDefinition metaData, final InputStream in) {
-    this(metaData, FileUtil.createUtf8Reader(in));
+  public JsonRecordIterator(final RecordDefinition recordDefinition, final InputStream in) {
+    this(recordDefinition, FileUtil.createUtf8Reader(in));
   }
 
-  public JsonRecordIterator(final RecordDefinition metaData, final Reader in) {
-    this(metaData, in, false);
+  public JsonRecordIterator(final RecordDefinition recordDefinition, final Reader in) {
+    this(recordDefinition, in, false);
   }
 
-  public JsonRecordIterator(final RecordDefinition metaData, final Reader in,
+  public JsonRecordIterator(final RecordDefinition recordDefinition, final Reader in,
     final boolean single) {
-    this.metaData = metaData;
+    this.recordDefinition = recordDefinition;
     try {
       this.iterator = new JsonMapIterator(in, single);
     } catch (final IOException e) {
@@ -45,15 +45,15 @@ public class JsonRecordIterator extends AbstractIterator<Record>implements Recor
   protected void doClose() {
     FileUtil.closeSilent(this.iterator);
     this.iterator = null;
-    this.metaData = null;
+    this.recordDefinition = null;
   }
 
   @Override
   protected Record getNext() throws NoSuchElementException {
     if (this.iterator.hasNext()) {
       final Map<String, Object> map = this.iterator.next();
-      final Record object = new ArrayRecord(this.metaData);
-      for (final FieldDefinition attribute : this.metaData.getFields()) {
+      final Record object = new ArrayRecord(this.recordDefinition);
+      for (final FieldDefinition attribute : this.recordDefinition.getFields()) {
         final String name = attribute.getName();
         final Object value = map.get(name);
         if (value != null) {
@@ -82,6 +82,6 @@ public class JsonRecordIterator extends AbstractIterator<Record>implements Recor
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 }

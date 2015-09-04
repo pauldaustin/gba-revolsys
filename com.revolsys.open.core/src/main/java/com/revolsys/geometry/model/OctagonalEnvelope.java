@@ -34,6 +34,7 @@ package com.revolsys.geometry.model;
 
 import com.revolsys.geometry.model.impl.BoundingBoxDoubleGf;
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A Bounding Container which is in the shape of an octagon.

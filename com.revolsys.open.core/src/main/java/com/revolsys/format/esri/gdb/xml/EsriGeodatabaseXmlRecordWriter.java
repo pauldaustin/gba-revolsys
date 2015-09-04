@@ -47,7 +47,7 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
 
   private String geometryType;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private int objectId = 1;
 
@@ -55,8 +55,8 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
 
   private final XmlWriter out;
 
-  public EsriGeodatabaseXmlRecordWriter(final RecordDefinition metaData, final Writer out) {
-    this.metaData = metaData;
+  public EsriGeodatabaseXmlRecordWriter(final RecordDefinition recordDefinition, final Writer out) {
+    this.recordDefinition = recordDefinition;
     this.out = new XmlWriter(out);
   }
 
@@ -87,16 +87,16 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
     this.out.startTag(VALUES);
     this.out.attribute(XsiConstants.TYPE, VALUES_TYPE);
 
-    for (final FieldDefinition attribute : this.metaData.getFields()) {
-      final String attributeName = attribute.getName();
-      final Object value = object.getValue(attributeName);
+    for (final FieldDefinition attribute : this.recordDefinition.getFields()) {
+      final String fieldName = attribute.getName();
+      final Object value = object.getValue(fieldName);
       final DataType type = attribute.getType();
       final EsriGeodatabaseXmlFieldType fieldType = this.fieldTypes.getFieldType(type);
       if (fieldType != null) {
         fieldType.writeValue(this.out, value);
       }
     }
-    if (this.metaData.getField("OBJECTID") == null) {
+    if (this.recordDefinition.getField("OBJECTID") == null) {
       final EsriGeodatabaseXmlFieldType fieldType = this.fieldTypes.getFieldType(DataTypes.INTEGER);
       fieldType.writeValue(this.out, this.objectId++);
     }
@@ -106,9 +106,9 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
     this.out.endTag(RECORD);
   }
 
-  private void writeDataElement(final RecordDefinition metaData, final Geometry geometry) {
+  private void writeDataElement(final RecordDefinition recordDefinition, final Geometry geometry) {
     final String dataElementType;
-    final FieldDefinition geometryAttribute = metaData.getGeometryField();
+    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
     boolean hasGeometry = false;
     DataType geometryDataType = null;
     if (geometryAttribute != null) {
@@ -155,7 +155,7 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
     this.out.startTag(DATA_ELEMENT);
     this.out.attribute(XsiConstants.TYPE, dataElementType);
 
-    final String path = metaData.getPath();
+    final String path = recordDefinition.getPath();
     final String localName = Path.getName(path);
     this.out.element(CATALOG_PATH, "/FC=" + localName);
     this.out.element(NAME, localName);
@@ -189,7 +189,7 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
     this.out.element(CAN_VERSION, false);
     this.out.element(HAS_OID, true);
     this.out.element(OBJECT_ID_FIELD_NAME, "OBJECTID");
-    writeFields(metaData);
+    writeFields(recordDefinition);
 
     this.out.element(CLSID, "{52353152-891A-11D0-BEC6-00805F7C4268}");
     this.out.emptyTag(EXTCLSID);
@@ -298,17 +298,17 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
     }
   }
 
-  private void writeFields(final RecordDefinition metaData) {
+  private void writeFields(final RecordDefinition recordDefinition) {
     this.out.startTag(FIELDS);
     this.out.attribute(XsiConstants.TYPE, FIELDS_TYPE);
 
     this.out.startTag(FIELD_ARRAY);
     this.out.attribute(XsiConstants.TYPE, FIELD_ARRAY_TYPE);
 
-    for (final FieldDefinition attribute : metaData.getFields()) {
+    for (final FieldDefinition attribute : recordDefinition.getFields()) {
       writeField(attribute);
     }
-    if (metaData.getField("OBJECTID") == null) {
+    if (recordDefinition.getField("OBJECTID") == null) {
       writeOidField();
     }
     this.out.endTag(FIELD_ARRAY);
@@ -340,7 +340,7 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
 
     this.out.startTag(DATASET_DEFINITIONS);
     this.out.attribute(XsiConstants.TYPE, DATASET_DEFINITIONS_TYPE);
-    writeDataElement(this.metaData, geometry);
+    writeDataElement(this.recordDefinition, geometry);
     this.out.endTag(DATASET_DEFINITIONS);
 
     this.out.endTag(WORKSPACE_DEFINITION);
@@ -402,13 +402,13 @@ public class EsriGeodatabaseXmlRecordWriter extends AbstractWriter<Record>
     this.out.startTag(DATASET_DATA);
     this.out.attribute(XsiConstants.TYPE, DATASET_DATA_TABLE_DATA);
 
-    this.out.element(DATASET_NAME, this.metaData.getName());
+    this.out.element(DATASET_NAME, this.recordDefinition.getName());
     this.out.element(DATASET_TYPE, this.datasetType);
 
     this.out.startTag(DATA);
     this.out.attribute(XsiConstants.TYPE, DATA_RECORD_SET);
 
-    writeFields(this.metaData);
+    writeFields(this.recordDefinition);
 
     this.out.startTag(RECORDS);
     this.out.attribute(XsiConstants.TYPE, RECORDS_TYPE);

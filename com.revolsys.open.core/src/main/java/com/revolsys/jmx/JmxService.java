@@ -88,29 +88,6 @@ public class JmxService {
   }
 
   /**
-   * Get all the attributes names for an object on a server.
-   *
-   * @param serverId The name of the server.
-   * @param objectId The name of the object.
-   * @return The attribute names.
-   */
-  @SuppressWarnings("unchecked")
-  public List<String> getAttributeNames(final String serverId, final String objectId) {
-    final Map<String, Object> object = getObjectParams(serverId, objectId);
-    final List<Map<String, Object>> attributes = (List<Map<String, Object>>)object
-      .get("attributes");
-
-    final List<String> attributeNames = new ArrayList<String>();
-    for (final Map<String, Object> attribute : attributes) {
-      final String name = (String)attribute.get("attributeName");
-      if (name != null) {
-        attributeNames.add(name);
-      }
-    }
-    return attributeNames;
-  }
-
-  /**
    * Get the values for all attributes for an object on a server.
    *
    * @param serverId The name of the server.
@@ -120,10 +97,10 @@ public class JmxService {
   public List<Attribute> getAttributes(final String serverId, final String objectId) {
     final MBeanServerConnection connection = getConnection(serverId);
     try {
-      final String[] attributeNames = getAttributeNames(serverId, objectId).toArray(new String[0]);
+      final String[] fieldNames = getFieldNames(serverId, objectId).toArray(new String[0]);
       final ObjectName objectName = getObjectName(serverId, objectId);
       final List<Attribute> attributeValues = new ArrayList<Attribute>();
-      for (final Object attribute : connection.getAttributes(objectName, attributeNames)) {
+      for (final Object attribute : connection.getAttributes(objectName, fieldNames)) {
         attributeValues.add((Attribute)attribute);
       }
       return attributeValues;
@@ -152,6 +129,29 @@ public class JmxService {
     } else {
       return connection;
     }
+  }
+
+  /**
+   * Get all the attributes names for an object on a server.
+   *
+   * @param serverId The name of the server.
+   * @param objectId The name of the object.
+   * @return The attribute names.
+   */
+  @SuppressWarnings("unchecked")
+  public List<String> getFieldNames(final String serverId, final String objectId) {
+    final Map<String, Object> object = getObjectParams(serverId, objectId);
+    final List<Map<String, Object>> attributes = (List<Map<String, Object>>)object
+      .get("attributes");
+
+    final List<String> fieldNames = new ArrayList<String>();
+    for (final Map<String, Object> attribute : attributes) {
+      final String name = (String)attribute.get("fieldName");
+      if (name != null) {
+        fieldNames.add(name);
+      }
+    }
+    return fieldNames;
   }
 
   /**
@@ -331,7 +331,7 @@ public class JmxService {
    */
   public boolean hasAttribute(final String serverId, final String objectId,
     final String attributeId) {
-    return getAttributeNames(serverId, objectId).contains(attributeId);
+    return getFieldNames(serverId, objectId).contains(attributeId);
   }
 
   /**
@@ -457,8 +457,8 @@ public class JmxService {
    */
   public void writeAttributes(final MapWriter mapWriter, final String serverId,
     final String objectId) {
-    final String[] attributeNames = getAttributeNames(serverId, objectId).toArray(new String[0]);
-    for (final String attributeId : attributeNames) {
+    final String[] fieldNames = getFieldNames(serverId, objectId).toArray(new String[0]);
+    for (final String attributeId : fieldNames) {
       writeAttribute(mapWriter, serverId, objectId, attributeId);
     }
   }

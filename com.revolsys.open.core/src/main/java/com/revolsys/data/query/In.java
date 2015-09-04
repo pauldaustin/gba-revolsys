@@ -45,22 +45,6 @@ public class In extends Condition {
   }
 
   @Override
-  public boolean test(final Map<String, Object> record) {
-    final QueryValue left = getLeft();
-    final Object value = left.getValue(record);
-
-    final CollectionValue right = getValues();
-    final List<Object> allowedValues = right.getValues();
-
-    for (final Object allowedValue : allowedValues) {
-      if (Equals.equal(value, allowedValue)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
   public int appendParameters(int index, final PreparedStatement statement) {
     if (this.left != null) {
       index = this.left.appendParameters(index, statement);
@@ -116,6 +100,22 @@ public class In extends Condition {
 
   public CollectionValue getValues() {
     return this.values;
+  }
+
+  @Override
+  public boolean test(final Map<String, Object> record) {
+    final QueryValue left = getLeft();
+    final Object value = left.getValue(record);
+
+    final CollectionValue right = getValues();
+    final List<Object> allowedValues = right.getValues();
+
+    for (final Object allowedValue : allowedValues) {
+      if (Equals.equal(value, allowedValue)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override

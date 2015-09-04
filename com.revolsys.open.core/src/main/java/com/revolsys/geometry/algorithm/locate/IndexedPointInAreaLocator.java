@@ -46,6 +46,7 @@ import com.revolsys.geometry.model.Polygonal;
 import com.revolsys.geometry.model.segment.LineSegment;
 import com.revolsys.geometry.model.segment.Segment;
 import com.revolsys.geometry.util.GeometryProperties;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Determines the {@link Location} of {@link Coordinates}s relative to

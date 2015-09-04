@@ -120,7 +120,7 @@ public class PostgreSQLRecordStore extends AbstractJdbcRecordStore {
       } else {
         query = query.clone();
         query.setFieldNames("count(*))");
-        final String geometryAttributeName = recordDefinition.getGeometryFieldName();
+        final String geometryFieldName = recordDefinition.getGeometryFieldName();
         final GeometryFactory geometryFactory = recordDefinition.getGeometryFactory();
         boundingBox = boundingBox.convert(geometryFactory);
         final double x1 = boundingBox.getMinX();
@@ -129,7 +129,7 @@ public class PostgreSQLRecordStore extends AbstractJdbcRecordStore {
         final double y2 = boundingBox.getMaxY();
 
         final PGbox2d box = new PGbox2d(new Point(x1, y1), new Point(x2, y2));
-        query.and(new BinaryCondition(geometryAttributeName, "&&", box));
+        query.and(new BinaryCondition(geometryFieldName, "&&", box));
       }
     }
 

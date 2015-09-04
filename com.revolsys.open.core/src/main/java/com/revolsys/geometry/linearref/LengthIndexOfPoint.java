@@ -37,6 +37,7 @@ import com.revolsys.geometry.model.Geometry;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.coordinates.LineSegmentUtil;
 import com.revolsys.geometry.util.Assert;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Computes the length index of the point

@@ -118,7 +118,7 @@ public class KmlXmlWriter extends XmlWriter implements Kml22Constants {
   public void writeExtendedData(final Map<String, ? extends Object> data) {
     boolean hasValues = false;
     for (final Entry<String, ? extends Object> entry : data.entrySet()) {
-      final String attributeName = entry.getKey();
+      final String fieldName = entry.getKey();
       final Object value = entry.getValue();
       if (!(value instanceof Geometry)) {
         if (value != null) {
@@ -129,7 +129,7 @@ public class KmlXmlWriter extends XmlWriter implements Kml22Constants {
               startTag(EXTENDED_DATA);
             }
             startTag(DATA);
-            attribute(NAME, attributeName);
+            attribute(NAME, fieldName);
             element(VALUE, value);
             endTag(DATA);
           }

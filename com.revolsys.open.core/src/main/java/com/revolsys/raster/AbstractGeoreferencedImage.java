@@ -197,7 +197,7 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
   @Override
   public void cancelChanges() {
     if (this.imageResource != null) {
-      loadImageMetaData();
+      loadImageRecordDefinition();
       setHasChanges(false);
     }
   }
@@ -571,8 +571,8 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
     }
   }
 
-  protected void loadImageMetaData() {
-    loadMetaDataFromImage();
+  protected void loadImageRecordDefinition() {
+    loadRecordDefinitionFromImage();
     final long modifiedTime = loadSettings();
     loadAuxXmlFile(modifiedTime);
     if (!hasGeometryFactory()) {
@@ -583,9 +583,6 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
     }
   }
 
-  protected void loadMetaDataFromImage() {
-  }
-
   protected void loadProjectionFile() {
     final Resource resource = getImageResource();
     final Resource projectionFile = SpringUtil.getResourceWithExtension(resource, "prj");
@@ -594,6 +591,9 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
         .getCoordinateSystem(projectionFile);
       setCoordinateSystem(coordinateSystem);
     }
+  }
+
+  protected void loadRecordDefinitionFromImage() {
   }
 
   protected long loadSettings() {

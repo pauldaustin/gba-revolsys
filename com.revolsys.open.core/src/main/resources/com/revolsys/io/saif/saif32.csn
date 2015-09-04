@@ -1708,7 +1708,7 @@ attributes: description String
 >
 <AbstractObject
 subclass: AttributeDefinition
-attributes: attributeName String
+attributes: fieldName String
 attributeDomain TypeIdentifier
 optional Boolean
 >

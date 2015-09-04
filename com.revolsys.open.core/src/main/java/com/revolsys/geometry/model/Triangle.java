@@ -36,6 +36,7 @@ import com.revolsys.geometry.algorithm.CGAlgorithms;
 import com.revolsys.geometry.algorithm.HCoordinate;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.math.Angle;
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * Represents a planar triangle, and provides methods for calculating various

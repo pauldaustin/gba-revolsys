@@ -98,9 +98,9 @@ public class KmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
   public void write(final Record object) {
     open();
     this.writer.startTag(PLACEMARK);
-    final RecordDefinition metaData = object.getRecordDefinition();
-    final int geometryIndex = metaData.getGeometryFieldIndex();
-    final int idIndex = metaData.getIdFieldIndex();
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    final int geometryIndex = recordDefinition.getGeometryFieldIndex();
+    final int idIndex = recordDefinition.getIdFieldIndex();
 
     final String nameAttribute = getProperty(PLACEMARK_NAME_ATTRIBUTE_PROPERTY);
     String name = null;
@@ -109,7 +109,7 @@ public class KmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
     }
     if (name == null && idIndex != -1) {
       final Object id = object.getValue(idIndex);
-      final String typeName = metaData.getName();
+      final String typeName = recordDefinition.getName();
       name = typeName + " " + id;
     }
     if (name != null) {
@@ -137,9 +137,9 @@ public class KmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
       this.writer.element(STYLE_URL, this.defaultStyleUrl);
     }
     boolean hasValues = false;
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
       if (i != geometryIndex) {
-        final String attributeName = metaData.getFieldName(i);
+        final String fieldName = recordDefinition.getFieldName(i);
         final Object value = object.getValue(i);
         if (value != null
           || BooleanStringConverter.isTrue(getProperty(Kml22Constants.WRITE_NULLS_PROPERTY))) {
@@ -148,7 +148,7 @@ public class KmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
             this.writer.startTag(EXTENDED_DATA);
           }
           this.writer.startTag(DATA);
-          this.writer.attribute(NAME, attributeName);
+          this.writer.attribute(NAME, fieldName);
           this.writer.element(VALUE, value);
           this.writer.endTag(DATA);
         }
@@ -157,7 +157,7 @@ public class KmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
     if (hasValues) {
       this.writer.endTag(EXTENDED_DATA);
     }
-    final List<Integer> geometryAttributeIndexes = metaData.getGeometryFieldIndexes();
+    final List<Integer> geometryAttributeIndexes = recordDefinition.getGeometryFieldIndexes();
     if (!geometryAttributeIndexes.isEmpty()) {
       Geometry geometry = null;
       if (geometryAttributeIndexes.size() == 1) {
@@ -171,7 +171,7 @@ public class KmlRecordWriter extends AbstractWriter<Record>implements RecordWrit
           }
         }
         if (!geometries.isEmpty()) {
-          geometry = metaData.getGeometryFactory().createGeometry(geometries);
+          geometry = recordDefinition.getGeometryFactory().createGeometry(geometries);
         }
       }
       if (geometry != null) {

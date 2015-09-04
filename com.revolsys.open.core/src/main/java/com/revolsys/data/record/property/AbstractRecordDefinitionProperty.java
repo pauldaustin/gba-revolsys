@@ -3,13 +3,13 @@ package com.revolsys.data.record.property;
 import com.revolsys.data.record.schema.RecordDefinition;
 
 public abstract class AbstractRecordDefinitionProperty implements RecordDefinitionProperty {
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
   @Override
   public AbstractRecordDefinitionProperty clone() {
     try {
       final AbstractRecordDefinitionProperty clone = (AbstractRecordDefinitionProperty)super.clone();
-      clone.metaData = null;
+      clone.recordDefinition = null;
       return clone;
     } catch (final CloneNotSupportedException e) {
       throw new RuntimeException(e);
@@ -18,7 +18,7 @@ public abstract class AbstractRecordDefinitionProperty implements RecordDefiniti
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 
   public String getTypePath() {
@@ -26,13 +26,13 @@ public abstract class AbstractRecordDefinitionProperty implements RecordDefiniti
   }
 
   @Override
-  public void setRecordDefinition(final RecordDefinition metaData) {
-    if (this.metaData != null) {
-      this.metaData.setProperty(getPropertyName(), null);
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    if (this.recordDefinition != null) {
+      this.recordDefinition.setProperty(getPropertyName(), null);
     }
-    this.metaData = metaData;
-    if (metaData != null) {
-      metaData.setProperty(getPropertyName(), this);
+    this.recordDefinition = recordDefinition;
+    if (recordDefinition != null) {
+      recordDefinition.setProperty(getPropertyName(), this);
     }
   }
 

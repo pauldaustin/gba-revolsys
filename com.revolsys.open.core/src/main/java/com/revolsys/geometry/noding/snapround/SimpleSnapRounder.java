@@ -45,6 +45,7 @@ import com.revolsys.geometry.noding.NodedSegmentString;
 import com.revolsys.geometry.noding.Noder;
 import com.revolsys.geometry.noding.SegmentString;
 import com.revolsys.geometry.noding.SinglePassNoder;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Uses Snap Rounding to compute a rounded,

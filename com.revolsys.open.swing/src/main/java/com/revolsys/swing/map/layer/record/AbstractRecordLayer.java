@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -64,7 +65,6 @@ import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import java.util.function.Predicate;
 import com.revolsys.spring.resource.ByteArrayResource;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
@@ -332,9 +332,9 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   public void addComplete(final AbstractOverlay overlay, final Geometry geometry) {
     if (geometry != null) {
       final RecordDefinition recordDefinition = getRecordDefinition();
-      final String geometryAttributeName = recordDefinition.getGeometryFieldName();
+      final String geometryFieldName = recordDefinition.getGeometryFieldName();
       final Map<String, Object> parameters = new HashMap<String, Object>();
-      parameters.put(geometryAttributeName, geometry);
+      parameters.put(geometryFieldName, geometry);
       showAddForm(parameters);
     }
   }
@@ -917,8 +917,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       if (this.columnNames == null) {
         final Set<String> columnNames = new LinkedHashSet<String>(this.columnNameOrder);
         final RecordDefinition recordDefinition = getRecordDefinition();
-        final List<String> attributeNames = recordDefinition.getFieldNames();
-        columnNames.addAll(attributeNames);
+        final List<String> fieldNames = recordDefinition.getFieldNames();
+        columnNames.addAll(fieldNames);
         this.columnNames = new ArrayList<String>(columnNames);
         updateColumnNames();
       }
@@ -935,7 +935,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     }
   }
 
-  public String getGeometryAttributeName() {
+  public String getGeometryFieldName() {
     if (this.recordDefinition == null) {
       return "";
     } else {
@@ -1039,7 +1039,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       if (compare > 0) {
         return getMergedRecord(point, record2, record1);
       } else {
-        final DirectionalFieldsOld property = DirectionalFieldsOld.getProperty(getRecordDefinition());
+        final DirectionalFieldsOld property = DirectionalFieldsOld
+          .getProperty(getRecordDefinition());
         final Map<String, Object> newValues = property.getMergedMap(point, record1, record2);
         newValues.remove(getIdFieldName());
         return new ArrayRecord(getRecordDefinition(), newValues);
@@ -1403,7 +1404,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   @Override
   public boolean isHasGeometry() {
-    return getGeometryAttributeName() != null;
+    return getGeometryFieldName() != null;
   }
 
   public boolean isHasSelectedRecords() {
@@ -1545,8 +1546,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
           Geometry sourceGeometry = sourceRecord.getGeometry();
           for (final Iterator<String> iterator = newValues.keySet().iterator(); iterator
             .hasNext();) {
-            final String attributeName = iterator.next();
-            final FieldDefinition attribute = recordDefinition.getField(attributeName);
+            final String fieldName = iterator.next();
+            final FieldDefinition attribute = recordDefinition.getField(fieldName);
             if (attribute == null) {
               iterator.remove();
             } else if (ignorePasteFields != null) {
@@ -1565,8 +1566,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
             if (geometry == null) {
               newValues.clear();
             } else {
-              final String geometryAttributeName = geometryAttribute.getName();
-              newValues.put(geometryAttributeName, geometry);
+              final String geometryFieldName = geometryAttribute.getName();
+              newValues.put(geometryFieldName, geometry);
             }
           }
           LayerRecord newRecord = null;
@@ -1644,7 +1645,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
         if (source instanceof LayerRecord) {
           final LayerRecord record = (LayerRecord)source;
           if (record.getLayer() == this) {
-            if (Equals.equal(propertyName, getGeometryAttributeName())) {
+            if (Equals.equal(propertyName, getGeometryFieldName())) {
               final Geometry oldGeometry = (Geometry)event.getOldValue();
               updateSpatialIndex(record, oldGeometry);
             }
@@ -2341,8 +2342,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   protected void updateColumnNames() {
     if (this.columnNames != null && this.recordDefinition != null) {
-      final List<String> attributeNames = this.recordDefinition.getFieldNames();
-      this.columnNames.retainAll(attributeNames);
+      final List<String> fieldNames = this.recordDefinition.getFieldNames();
+      this.columnNames.retainAll(fieldNames);
     }
   }
 

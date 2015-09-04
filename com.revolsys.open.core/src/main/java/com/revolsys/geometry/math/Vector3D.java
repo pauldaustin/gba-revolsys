@@ -35,6 +35,7 @@ package com.revolsys.geometry.math;
 
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents a vector in 3-dimensional Cartesian space.

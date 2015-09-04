@@ -10,6 +10,8 @@ import com.revolsys.geometry.model.LineString;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Side;
 import com.revolsys.geometry.model.coordinates.LineSegmentUtil;
+import com.revolsys.gis.model.coordinates.Coordinates;
+import com.vividsolutions.jts.geom.Coordinate;
 
 public interface LineSegment extends LineString {
 

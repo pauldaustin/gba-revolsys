@@ -21,6 +21,25 @@ import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.DateUtil;
 
 public class Value extends QueryValue {
+  public static Object getValue(final Object value) {
+    Object newValue;
+    if (value instanceof Identifier) {
+      final Identifier identifier = (Identifier)value;
+      final List<Object> values = identifier.getValues();
+      if (values.size() == 0) {
+        newValue = null;
+      } else if (values.size() == 1) {
+        newValue = values.get(0);
+      } else {
+        throw new IllegalArgumentException(
+          "Cannot create value for identifier with multiple parts " + value);
+      }
+    } else {
+      newValue = value;
+    }
+    return newValue;
+  }
+
   private FieldDefinition field;
 
   private Object displayValue;
@@ -139,13 +158,13 @@ public class Value extends QueryValue {
 
       CodeTable codeTable = null;
       if (field != null) {
-        final RecordDefinition metaData = field.getRecordDefinition();
-        if (metaData != null) {
+        final RecordDefinition recordDefinition = field.getRecordDefinition();
+        if (recordDefinition != null) {
           final String fieldName = field.getName();
-          codeTable = metaData.getCodeTableByFieldName(fieldName);
+          codeTable = recordDefinition.getCodeTableByFieldName(fieldName);
           if (codeTable instanceof CodeTableProperty) {
             final CodeTableProperty codeTableProperty = (CodeTableProperty)codeTable;
-            if (codeTableProperty.getRecordDefinition() == metaData) {
+            if (codeTableProperty.getRecordDefinition() == recordDefinition) {
               codeTable = null;
             }
           }

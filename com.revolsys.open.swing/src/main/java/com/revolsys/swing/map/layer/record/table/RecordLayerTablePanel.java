@@ -82,8 +82,8 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     table.getTableCellEditor().addMouseListener(this);
     table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     this.tableModel = getTableModel();
-    final RecordDefinition metaData = layer.getRecordDefinition();
-    final boolean hasGeometry = metaData.getGeometryFieldIndex() != -1;
+    final RecordDefinition recordDefinition = layer.getRecordDefinition();
+    final boolean hasGeometry = recordDefinition.getGeometryFieldIndex() != -1;
     final EnableCheck deletableEnableCheck = new RecordRowPropertyEnableCheck("deletable");
 
     final EnableCheck modifiedEnableCheck = new RecordRowPropertyEnableCheck("modified");
@@ -134,10 +134,10 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
         this, "pasteGeometry");
 
       final MenuFactory editMenu = new MenuFactory("Edit Record Operations");
-      final DataType geometryDataType = metaData.getGeometryField().getType();
+      final DataType geometryDataType = recordDefinition.getGeometryField().getType();
       if (geometryDataType == DataTypes.LINE_STRING
         || geometryDataType == DataTypes.MULTI_LINE_STRING) {
-        if (DirectionalFieldsOld.getProperty(metaData).hasDirectionalFields()) {
+        if (DirectionalFieldsOld.getProperty(recordDefinition).hasDirectionalFields()) {
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_RECORD_NAME,
             RecordLayerForm.FLIP_RECORD_ICON, editableEnableCheck, this, "flipRecordOrientation");
           editMenu.addMenuItemTitleIcon("geometry", RecordLayerForm.FLIP_LINE_ORIENTATION_NAME,

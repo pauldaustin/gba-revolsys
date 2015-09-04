@@ -50,6 +50,7 @@ import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.triangulate.quadedge.LastFoundQuadEdgeLocator;
 import com.revolsys.geometry.triangulate.quadedge.QuadEdgeSubdivision;
 import com.revolsys.geometry.triangulate.quadedge.Vertex;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Computes a Conforming Delaunay Triangulation over a set of sites and a set of

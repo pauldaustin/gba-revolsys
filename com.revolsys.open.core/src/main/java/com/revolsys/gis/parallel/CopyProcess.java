@@ -17,9 +17,9 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
 
   private Map<String, String> attributeMap = new HashMap<String, String>();
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
-  private RecordDefinitionFactory metaDataFactory;
+  private RecordDefinitionFactory recordDefinitionFactory;
 
   private String typeName;
 
@@ -30,47 +30,47 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
 
   protected Record copy(final Record object) {
     Record targetObject;
-    if (this.metaData == null) {
+    if (this.recordDefinition == null) {
       targetObject = object;
     } else {
-      targetObject = new ArrayRecord(this.metaData);
-      for (final String attributeName : this.metaData.getFieldNames()) {
-        copyAttribute(object, attributeName, targetObject, attributeName);
+      targetObject = new ArrayRecord(this.recordDefinition);
+      for (final String fieldName : this.recordDefinition.getFieldNames()) {
+        copyAttribute(object, fieldName, targetObject, fieldName);
       }
       if (this.attributeMap != null) {
         for (final Entry<String, String> mapping : this.attributeMap.entrySet()) {
-          final String sourceAttributeName = mapping.getKey();
-          final String targetAttributeName = mapping.getValue();
-          copyAttribute(object, sourceAttributeName, targetObject, targetAttributeName);
+          final String sourceFieldName = mapping.getKey();
+          final String targetFieldName = mapping.getValue();
+          copyAttribute(object, sourceFieldName, targetObject, targetFieldName);
         }
       }
     }
     return targetObject;
   }
 
-  private void copyAttribute(final Record sourceObject, final String sourceAttributeName,
-    final Record targetObject, final String targetAttributeName) {
-    Object value = sourceObject.getValueByPath(sourceAttributeName);
-    final Map<Object, Object> valueMap = this.valueMaps.get(targetAttributeName);
+  private void copyAttribute(final Record sourceObject, final String sourceFieldName,
+    final Record targetObject, final String targetFieldName) {
+    Object value = sourceObject.getValueByPath(sourceFieldName);
+    final Map<Object, Object> valueMap = this.valueMaps.get(targetFieldName);
     if (valueMap != null) {
       final Object mappedValue = valueMap.get(value);
       if (mappedValue != null) {
         value = mappedValue;
       }
     }
-    targetObject.setValue(targetAttributeName, value);
+    targetObject.setValue(targetFieldName, value);
   }
 
   public Map<String, String> getAttributeMap() {
     return this.attributeMap;
   }
 
-  public RecordDefinition getMetaData() {
-    return this.metaData;
+  public RecordDefinition getRecordDefinition() {
+    return this.recordDefinition;
   }
 
-  public RecordDefinitionFactory getMetaDataFactory() {
-    return this.metaDataFactory;
+  public RecordDefinitionFactory getRecordDefinitionFactory() {
+    return this.recordDefinitionFactory;
   }
 
   public String getTypeName() {
@@ -85,8 +85,8 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
   @PostConstruct
   protected void init() {
     super.init();
-    if (this.metaData == null) {
-      this.metaData = this.metaDataFactory.getRecordDefinition(this.typeName);
+    if (this.recordDefinition == null) {
+      this.recordDefinition = this.recordDefinitionFactory.getRecordDefinition(this.typeName);
     }
   }
 
@@ -100,12 +100,12 @@ public class CopyProcess extends BaseInOutProcess<Record, Record> {
     this.attributeMap = attributeMap;
   }
 
-  public void setMetaData(final RecordDefinition metaData) {
-    this.metaData = metaData;
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    this.recordDefinition = recordDefinition;
   }
 
-  public void setMetaDataFactory(final RecordDefinitionFactory metaDataFactory) {
-    this.metaDataFactory = metaDataFactory;
+  public void setRecordDefinitionFactory(final RecordDefinitionFactory recordDefinitionFactory) {
+    this.recordDefinitionFactory = recordDefinitionFactory;
   }
 
   public void setTypeName(final String typeName) {

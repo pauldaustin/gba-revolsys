@@ -100,10 +100,6 @@ public class ObjectListTableModel<T> extends AbstractTableModel
     this.objects.getPropertyChangeSupport().firePropertyChange(event);
   }
 
-  public String getAttributeName(final int columnIndex) {
-    return this.columnNames.get(columnIndex);
-  }
-
   @Override
   public Class<?> getColumnClass(final int columnIndex) {
     return Object.class;
@@ -117,6 +113,10 @@ public class ObjectListTableModel<T> extends AbstractTableModel
   @Override
   public String getColumnName(final int columnIndex) {
     return this.columnTitles.get(columnIndex);
+  }
+
+  public String getFieldName(final int columnIndex) {
+    return this.columnNames.get(columnIndex);
   }
 
   public T getObject(final int index) {
@@ -158,7 +158,7 @@ public class ObjectListTableModel<T> extends AbstractTableModel
       return null;
     } else {
       try {
-        final String name = getAttributeName(columnIndex);
+        final String name = getFieldName(columnIndex);
         return Property.get(object, name);
       } catch (final Throwable t) {
         return null;

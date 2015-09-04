@@ -36,8 +36,8 @@ public class TextStylePanel extends BaseStylePanel implements PropertyChangeList
     this.textStyleRenderer = textStyleRenderer;
     this.textStyle = textStyleRenderer.getStyle().clone();
     final AbstractRecordLayer layer = textStyleRenderer.getLayer();
-    final RecordDefinition metaData = layer.getRecordDefinition();
-    final FieldDefinition geometryAttribute = metaData.getGeometryField();
+    final RecordDefinition recordDefinition = layer.getRecordDefinition();
+    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
 
     if (geometryAttribute != null) {
 

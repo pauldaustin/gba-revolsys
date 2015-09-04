@@ -80,8 +80,8 @@ public class ShapefileRecordWriter extends XbaseRecordWriter {
 
   private final double zMin = 0; // Double.MAX_VALUE;
 
-  public ShapefileRecordWriter(final RecordDefinition metaData, final Resource resource) {
-    super(metaData, SpringUtil.getResourceWithExtension(resource, "dbf"));
+  public ShapefileRecordWriter(final RecordDefinition recordDefinition, final Resource resource) {
+    super(recordDefinition, SpringUtil.getResourceWithExtension(resource, "dbf"));
     this.resource = resource;
   }
 
@@ -143,9 +143,9 @@ public class ShapefileRecordWriter extends XbaseRecordWriter {
   @Override
   protected void init() throws IOException {
     super.init();
-    final RecordDefinitionImpl metaData = (RecordDefinitionImpl)getMetaData();
-    if (metaData != null) {
-      this.geometryPropertyName = metaData.getGeometryFieldName();
+    final RecordDefinitionImpl recordDefinition = (RecordDefinitionImpl)getRecordDefinition();
+    if (recordDefinition != null) {
+      this.geometryPropertyName = recordDefinition.getGeometryFieldName();
       if (this.geometryPropertyName != null) {
 
         this.out = new ResourceEndianOutput(this.resource);

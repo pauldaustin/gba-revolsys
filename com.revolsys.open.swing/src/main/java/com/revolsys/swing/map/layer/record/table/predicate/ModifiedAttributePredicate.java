@@ -54,13 +54,12 @@ public class ModifiedAttributePredicate implements HighlightPredicate {
       if (object instanceof LayerRecord) {
         final LayerRecord layerObject = (LayerRecord)object;
         final int columnIndex = adapter.convertColumnIndexToModel(adapter.column);
-        final String attributeName = this.model.getFieldName(columnIndex);
-        final boolean highlighted = layerObject.isModified(attributeName);
+        final String fieldName = this.model.getFieldName(columnIndex);
+        final boolean highlighted = layerObject.isModified(fieldName);
         if (highlighted) {
-          final RecordDefinition metaData = layerObject.getRecordDefinition();
-          final String fieldName = metaData.getFieldName(columnIndex);
+          final RecordDefinition recordDefinition = layerObject.getRecordDefinition();
           final Object originalValue = layerObject.getOriginalValue(fieldName);
-          final CodeTable codeTable = metaData.getCodeTableByFieldName(fieldName);
+          final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(fieldName);
           String text;
           if (originalValue == null) {
             text = "-";

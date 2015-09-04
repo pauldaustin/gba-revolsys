@@ -41,7 +41,7 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
 
   private boolean initialized;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private int numRecords = 0;
 
@@ -53,8 +53,8 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
 
   private boolean useZeroForNull = true;
 
-  public XbaseRecordWriter(final RecordDefinition metaData, final Resource resource) {
-    this.metaData = metaData;
+  public XbaseRecordWriter(final RecordDefinition recordDefinition, final Resource resource) {
+    this.recordDefinition = recordDefinition;
     this.resource = resource;
   }
 
@@ -162,8 +162,9 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
     return this.charset;
   }
 
-  public RecordDefinition getMetaData() {
-    return this.metaData;
+  @Override
+  public RecordDefinition getRecordDefinition() {
+    return this.recordDefinition;
   }
 
   public Map<String, String> getShortNames() {
@@ -237,9 +238,9 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
       }
       for (final FieldDefinition field : this.fields) {
         if (!writeField(object, field)) {
-          final String attributeName = field.getFullName();
-          log.warn("Unable to write attribute '" + attributeName + "' with value "
-            + object.getValue(attributeName));
+          final String fieldName = field.getFullName();
+          log.warn("Unable to write attribute '" + fieldName + "' with value "
+            + object.getValue(fieldName));
         }
       }
       this.numRecords++;
@@ -253,8 +254,8 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
     if (this.out == null) {
       return true;
     } else {
-      final String attributeName = field.getFullName();
-      final Object value = object.getValue(attributeName);
+      final String fieldName = field.getFullName();
+      final Object value = object.getValue(fieldName);
       final int fieldLength = field.getLength();
       switch (field.getType()) {
         case FieldDefinition.NUMBER_TYPE:
@@ -279,7 +280,7 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
             }
             numString = numberFormat.format(number);
           } else {
-            throw new IllegalArgumentException("Not a number " + attributeName + "=" + value);
+            throw new IllegalArgumentException("Not a number " + fieldName + "=" + value);
           }
           final int numLength = numString.length();
           if (numLength > fieldLength) {
@@ -368,11 +369,11 @@ public class XbaseRecordWriter extends AbstractWriter<Record>implements RecordWr
 
       this.fields.clear();
       int numFields = 0;
-      for (final String name : this.metaData.getFieldNames()) {
-        final int index = this.metaData.getFieldIndex(name);
-        final int length = this.metaData.getFieldLength(index);
-        final int scale = this.metaData.getFieldScale(index);
-        final DataType attributeType = this.metaData.getFieldType(index);
+      for (final String name : this.recordDefinition.getFieldNames()) {
+        final int index = this.recordDefinition.getFieldIndex(name);
+        final int length = this.recordDefinition.getFieldLength(index);
+        final int scale = this.recordDefinition.getFieldScale(index);
+        final DataType attributeType = this.recordDefinition.getFieldType(index);
         final Class<?> typeJavaClass = attributeType.getJavaClass();
         final int fieldLength = addDbaseField(name, attributeType, typeJavaClass, length, scale);
         if (fieldLength > 0) {

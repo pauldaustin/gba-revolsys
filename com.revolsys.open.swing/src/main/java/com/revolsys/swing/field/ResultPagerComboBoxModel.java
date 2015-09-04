@@ -21,10 +21,10 @@ public class ResultPagerComboBoxModel<T> extends AbstractListModel implements Co
   private static final long serialVersionUID = 1L;
 
   public static <T> ComboBox create(final ResultPager<T> codeTable, final boolean allowNull,
-    final String... attributeNames) {
+    final String... fieldNames) {
     final ResultPagerComboBoxModel<T> model = new ResultPagerComboBoxModel<T>(codeTable, allowNull);
     final ComboBox comboBox = new ComboBox(model);
-    final ResultPagerListCellRenderer renderer = new ResultPagerListCellRenderer(attributeNames);
+    final ResultPagerListCellRenderer renderer = new ResultPagerListCellRenderer(fieldNames);
     comboBox.setRenderer(renderer);
     comboBox.setEditable(false);
     return comboBox;

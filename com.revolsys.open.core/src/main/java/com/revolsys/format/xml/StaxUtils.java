@@ -142,8 +142,8 @@ public final class StaxUtils {
     }
   }
 
-  public static QName getQNameAttribute(final XMLStreamReader in, final QName attributeName) {
-    final String value = StaxUtils.getAttribute(in, attributeName);
+  public static QName getQNameAttribute(final XMLStreamReader in, final QName fieldName) {
+    final String value = StaxUtils.getAttribute(in, fieldName);
     final NamespaceContext namespaceContext = in.getNamespaceContext();
     final QName qName = getXmlQName(namespaceContext, value);
     return qName;

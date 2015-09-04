@@ -69,8 +69,8 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
     if (this.record == null) {
       return null;
     } else if (columnIndex == 3) {
-      final String attributeName = getFieldName(rowIndex);
-      return this.record.getOriginalValue(attributeName);
+      final String fieldName = getFieldName(rowIndex);
+      return this.record.getOriginalValue(fieldName);
     } else {
       return super.getValueAt(rowIndex, columnIndex);
     }
@@ -81,11 +81,11 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
     if (columnIndex == 2) {
       if (this.form.get().isEditable()) {
         final String idFieldName = getRecordDefinition().getIdFieldName();
-        final String attributeName = getFieldName(rowIndex);
-        if (attributeName.equals(idFieldName)) {
+        final String fieldName = getFieldName(rowIndex);
+        if (fieldName.equals(idFieldName)) {
           return false;
         } else {
-          return this.form.get().isEditable(attributeName);
+          return this.form.get().isEditable(fieldName);
         }
       } else {
         return false;
@@ -96,9 +96,9 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
   }
 
   public boolean isModified(final int rowIndex) {
-    final String attributeName = getFieldName(rowIndex);
-    final Object originalValue = this.record.getOriginalValue(attributeName);
-    final Object value = this.record.getValue(attributeName);
+    final String fieldName = getFieldName(rowIndex);
+    final Object originalValue = this.record.getOriginalValue(fieldName);
+    final Object value = this.record.getValue(fieldName);
     return !Equals.equal(originalValue, value);
   }
 
@@ -107,8 +107,8 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
     final Object source = event.getSource();
     if (source == this.record) {
       final String propertyName = event.getPropertyName();
-      final RecordDefinition metaData = getRecordDefinition();
-      final int index = metaData.getFieldIndex(propertyName);
+      final RecordDefinition recordDefinition = getRecordDefinition();
+      final int index = recordDefinition.getFieldIndex(propertyName);
       if (index > -1) {
         try {
           fireTableRowsUpdated(index, index);

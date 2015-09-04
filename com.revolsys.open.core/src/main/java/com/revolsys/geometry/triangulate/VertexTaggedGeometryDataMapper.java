@@ -41,6 +41,7 @@ import java.util.TreeMap;
 
 import com.revolsys.geometry.model.Geometry;
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Creates a map between the vertex {@link Coordinates}s of a

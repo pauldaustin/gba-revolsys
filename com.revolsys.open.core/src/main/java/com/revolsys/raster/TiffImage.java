@@ -232,7 +232,7 @@ public class TiffImage extends JaiGeoreferencedImage {
     return "tfw";
   }
 
-  private boolean loadGeoTiffMetaData(final XTIFFDirectory directory) {
+  private boolean loadGeoTiffRecordDefinition(final XTIFFDirectory directory) {
     try {
       final int xResolution = (int)getFieldAsDouble(directory, TAG_X_RESOLUTION, 1);
       final int yResolution = (int)getFieldAsDouble(directory, TAG_Y_RESOLUTION, 1);
@@ -341,14 +341,14 @@ public class TiffImage extends JaiGeoreferencedImage {
   }
 
   @Override
-  protected void loadMetaDataFromImage() {
+  protected void loadRecordDefinitionFromImage() {
     final RenderedImage image = getRenderedImage();
     final Object tiffDirectory = image.getProperty("tiff.directory");
     if (tiffDirectory == null) {
       throw new IllegalArgumentException("This is not a (geo)tiff file. Missing TIFF directory.");
     } else {
       if (!(tiffDirectory instanceof XTIFFDirectory)
-        || !loadGeoTiffMetaData((XTIFFDirectory)tiffDirectory)) {
+        || !loadGeoTiffRecordDefinition((XTIFFDirectory)tiffDirectory)) {
       }
     }
   }

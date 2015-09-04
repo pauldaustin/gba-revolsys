@@ -41,7 +41,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
 
   private String label;
 
-  private RecordDefinition lastMetaData;
+  private RecordDefinition lastRecordDefinition;
 
   private boolean quoteColumnNames = true;
 
@@ -94,11 +94,11 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
 
   private void addSqlColumEqualsPlaceholder(final StringBuffer sqlBuffer,
     final JdbcFieldDefinition attribute) {
-    final String attributeName = attribute.getName();
+    final String fieldName = attribute.getName();
     if (this.quoteColumnNames) {
-      sqlBuffer.append('"').append(attributeName).append('"');
+      sqlBuffer.append('"').append(fieldName).append('"');
     } else {
-      sqlBuffer.append(attributeName);
+      sqlBuffer.append(fieldName);
     }
     sqlBuffer.append(" = ");
     attribute.addInsertStatementPlaceHolder(sqlBuffer, false);
@@ -138,11 +138,11 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
   private void delete(final Record object) throws SQLException {
     final RecordDefinition objectType = object.getRecordDefinition();
     final String typePath = objectType.getPath();
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    flushIfRequired(metaData);
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    flushIfRequired(recordDefinition);
     PreparedStatement statement = this.typeDeleteStatementMap.get(typePath);
     if (statement == null) {
-      final String sql = getDeleteSql(metaData);
+      final String sql = getDeleteSql(recordDefinition);
       try {
         statement = this.connection.prepareStatement(sql);
         this.typeDeleteStatementMap.put(typePath, statement);
@@ -151,7 +151,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       }
     }
     int parameterIndex = 1;
-    final JdbcFieldDefinition idAttribute = (JdbcFieldDefinition)metaData.getIdField();
+    final JdbcFieldDefinition idAttribute = (JdbcFieldDefinition)recordDefinition.getIdField();
     parameterIndex = idAttribute.setInsertPreparedStatementValue(statement, parameterIndex, object);
     statement.addBatch();
     Integer batchCount = this.typeDeleteBatchCountMap.get(typePath);
@@ -166,7 +166,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
 
     // TODO this locks code tables which prevents insert
     // if (batchCount >= batchSize) {
-    // final String sql = getDeleteSql(metaData);
+    // final String sql = getDeleteSql(recordDefinition);
     // processCurrentBatch(typePath, sql, statement, typeDeleteBatchCountMap,
     // getDeleteStatistics());
     // }
@@ -244,10 +244,10 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
     }
   }
 
-  private void flushIfRequired(final RecordDefinition metaData) {
-    if (this.flushBetweenTypes && metaData != this.lastMetaData) {
+  private void flushIfRequired(final RecordDefinition recordDefinition) {
+    if (this.flushBetweenTypes && recordDefinition != this.lastRecordDefinition) {
       flush();
-      this.lastMetaData = metaData;
+      this.lastRecordDefinition = recordDefinition;
     }
   }
 
@@ -288,8 +288,8 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
     return sql;
   }
 
-  private String getGeneratePrimaryKeySql(final RecordDefinition metaData) {
-    return this.recordStore.getGeneratePrimaryKeySql(metaData);
+  private String getGeneratePrimaryKeySql(final RecordDefinition recordDefinition) {
+    return this.recordStore.getGeneratePrimaryKeySql(recordDefinition);
   }
 
   /**
@@ -331,11 +331,11 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       }
       for (int i = 0; i < type.getFieldCount(); i++) {
         if (!generatePrimaryKey || i != type.getIdFieldIndex()) {
-          final String attributeName = type.getFieldName(i);
+          final String fieldName = type.getFieldName(i);
           if (this.quoteColumnNames) {
-            sqlBuffer.append('"').append(attributeName).append('"');
+            sqlBuffer.append('"').append(fieldName).append('"');
           } else {
-            sqlBuffer.append(attributeName);
+            sqlBuffer.append(fieldName);
           }
           if (i < type.getFieldCount() - 1) {
             sqlBuffer.append(", ");
@@ -378,8 +378,8 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
     if (this.recordStore == null) {
       return null;
     } else {
-      final RecordDefinition metaData = this.recordStore.getRecordDefinition(typePath);
-      return metaData;
+      final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(typePath);
+      return recordDefinition;
     }
   }
 
@@ -445,34 +445,34 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
   private void insert(final Record object) throws SQLException {
     final RecordDefinition objectType = object.getRecordDefinition();
     final String typePath = objectType.getPath();
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    flushIfRequired(metaData);
-    final String idFieldName = metaData.getIdFieldName();
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    flushIfRequired(recordDefinition);
+    final String idFieldName = recordDefinition.getIdFieldName();
     final boolean hasId = idFieldName != null;
 
     final GlobalIdProperty globalIdProperty = GlobalIdProperty.getProperty(object);
     if (globalIdProperty != null) {
-      if (object.getValue(globalIdProperty.getAttributeName()) == null) {
-        object.setValue(globalIdProperty.getAttributeName(), UUID.randomUUID().toString());
+      if (object.getValue(globalIdProperty.getFieldName()) == null) {
+        object.setValue(globalIdProperty.getFieldName(), UUID.randomUUID().toString());
       }
     }
 
     final boolean hasIdValue = hasId && object.getValue(idFieldName) != null;
 
     if (!hasId || hasIdValue) {
-      insert(object, typePath, metaData);
+      insert(object, typePath, recordDefinition);
     } else {
-      insertSequence(object, typePath, metaData);
+      insertSequence(object, typePath, recordDefinition);
     }
     object.setState(RecordState.Persisted);
     this.recordStore.addStatistic("Insert", object);
   }
 
-  private void insert(final Record object, final String typePath, final RecordDefinition metaData)
-    throws SQLException {
+  private void insert(final Record object, final String typePath,
+    final RecordDefinition recordDefinition) throws SQLException {
     PreparedStatement statement = this.typeInsertStatementMap.get(typePath);
     if (statement == null) {
-      final String sql = getInsertSql(metaData, false);
+      final String sql = getInsertSql(recordDefinition, false);
       try {
         statement = this.connection.prepareStatement(sql);
         this.typeInsertStatementMap.put(typePath, statement);
@@ -481,7 +481,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       }
     }
     int parameterIndex = 1;
-    for (final FieldDefinition attribute : metaData.getFields()) {
+    for (final FieldDefinition attribute : recordDefinition.getFields()) {
       final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
       parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement, parameterIndex,
         object);
@@ -496,16 +496,16 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       this.typeInsertBatchCountMap.put(typePath, batchCount);
     }
     if (batchCount >= this.batchSize) {
-      final String sql = getInsertSql(metaData, false);
+      final String sql = getInsertSql(recordDefinition, false);
       processCurrentBatch(typePath, sql, statement, this.typeInsertBatchCountMap);
     }
   }
 
   private void insertSequence(final Record object, final String typePath,
-    final RecordDefinition metaData) throws SQLException {
+    final RecordDefinition recordDefinition) throws SQLException {
     PreparedStatement statement = this.typeInsertSequenceStatementMap.get(typePath);
     if (statement == null) {
-      final String sql = getInsertSql(metaData, true);
+      final String sql = getInsertSql(recordDefinition, true);
       try {
         statement = this.connection.prepareStatement(sql);
         this.typeInsertSequenceStatementMap.put(typePath, statement);
@@ -514,8 +514,8 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       }
     }
     int parameterIndex = 1;
-    final FieldDefinition idAttribute = metaData.getIdField();
-    for (final FieldDefinition attribute : metaData.getFields()) {
+    final FieldDefinition idAttribute = recordDefinition.getIdField();
+    for (final FieldDefinition attribute : recordDefinition.getFields()) {
       if (attribute != idAttribute) {
         final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
         parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement, parameterIndex,
@@ -532,7 +532,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       this.typeInsertSequenceBatchCountMap.put(typePath, batchCount);
     }
     if (batchCount >= this.batchSize) {
-      final String sql = getInsertSql(metaData, true);
+      final String sql = getInsertSql(recordDefinition, true);
       processCurrentBatch(typePath, sql, statement, this.typeInsertSequenceBatchCountMap);
     }
   }
@@ -621,11 +621,11 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
   private void update(final Record object) throws SQLException {
     final RecordDefinition objectType = object.getRecordDefinition();
     final String typePath = objectType.getPath();
-    final RecordDefinition metaData = getRecordDefinition(typePath);
-    flushIfRequired(metaData);
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    flushIfRequired(recordDefinition);
     PreparedStatement statement = this.typeUpdateStatementMap.get(typePath);
     if (statement == null) {
-      final String sql = getUpdateSql(metaData);
+      final String sql = getUpdateSql(recordDefinition);
       try {
         statement = this.connection.prepareStatement(sql);
         this.typeUpdateStatementMap.put(typePath, statement);
@@ -634,8 +634,8 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       }
     }
     int parameterIndex = 1;
-    final List<FieldDefinition> idAttributes = metaData.getIdFields();
-    for (final FieldDefinition attribute : metaData.getFields()) {
+    final List<FieldDefinition> idAttributes = recordDefinition.getIdFields();
+    for (final FieldDefinition attribute : recordDefinition.getFields()) {
       if (!idAttributes.contains(attribute)) {
         final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
         parameterIndex = jdbcAttribute.setInsertPreparedStatementValue(statement, parameterIndex,
@@ -658,7 +658,7 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
       this.typeUpdateBatchCountMap.put(typePath, batchCount);
     }
     if (batchCount >= this.batchSize) {
-      final String sql = getUpdateSql(metaData);
+      final String sql = getUpdateSql(recordDefinition);
       processCurrentBatch(typePath, sql, statement, this.typeUpdateBatchCountMap);
     }
     this.recordStore.addStatistic("Update", object);
@@ -667,8 +667,8 @@ public class JdbcWriterImpl extends AbstractWriter<Record>implements JdbcWriter 
   @Override
   public synchronized void write(final Record object) {
     try {
-      final RecordDefinition metaData = object.getRecordDefinition();
-      final RecordStore recordStore = metaData.getRecordStore();
+      final RecordDefinition recordDefinition = object.getRecordDefinition();
+      final RecordStore recordStore = recordDefinition.getRecordStore();
       final RecordState state = object.getState();
       if (recordStore != this.recordStore) {
         if (state != RecordState.Deleted) {

@@ -38,6 +38,7 @@ import com.revolsys.geometry.model.LineString;
 import com.revolsys.geometry.model.Lineal;
 import com.revolsys.geometry.model.MultiLineString;
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * An iterator over the components and coordinates of a linear geometry

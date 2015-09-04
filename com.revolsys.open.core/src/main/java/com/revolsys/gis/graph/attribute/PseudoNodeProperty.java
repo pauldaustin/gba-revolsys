@@ -21,8 +21,8 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = PseudoNodeProperty.class.getName() + ".propertyName";
 
   public static AbstractRecordDefinitionProperty getProperty(final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    return getProperty(metaData);
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    return getProperty(recordDefinition);
   }
 
   public static PseudoNodeProperty getProperty(final RecordDefinition recordDefinition) {
@@ -44,13 +44,13 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
   }
 
   public PseudoNodeAttribute getAttribute(final Node<Record> node) {
-    final String attributeName = PseudoNodeProperty.PROPERTY_NAME;
-    if (!node.hasAttribute(attributeName)) {
+    final String fieldName = PseudoNodeProperty.PROPERTY_NAME;
+    if (!node.hasAttribute(fieldName)) {
       final ObjectAttributeProxy<PseudoNodeAttribute, Node<Record>> proxy = new InvokeMethodObjectAttributeProxy<PseudoNodeAttribute, Node<Record>>(
         this, "createAttribute", Node.class);
-      node.setAttribute(attributeName, proxy);
+      node.setAttribute(fieldName, proxy);
     }
-    final PseudoNodeAttribute value = node.getAttribute(attributeName);
+    final PseudoNodeAttribute value = node.getAttribute(fieldName);
     return value;
   }
 
@@ -84,8 +84,8 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
   }
 
   @Override
-  public void setRecordDefinition(final RecordDefinition metaData) {
-    super.setRecordDefinition(metaData);
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    super.setRecordDefinition(recordDefinition);
   }
 
   @Override

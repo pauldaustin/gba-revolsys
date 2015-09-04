@@ -132,14 +132,14 @@ public class ArcSdeStGeometryRecordStoreExtension implements RecordStoreExtensio
   @Override
   public void postProcess(final RecordStoreSchema schema) {
     final String schemaName = schema.getName();
-    for (final RecordDefinition metaData : schema.getRecordDefinitions()) {
-      final String typePath = metaData.getPath();
+    for (final RecordDefinition recordDefinition : schema.getRecordDefinitions()) {
+      final String typePath = recordDefinition.getPath();
       final Integer registrationId = JdbcFieldAdder.getTableProperty(schema, typePath,
         ArcSdeConstants.REGISTRATION_ID);
       final String rowIdColumn = JdbcFieldAdder.getTableProperty(schema, typePath,
         ArcSdeConstants.ROWID_COLUMN);
       if (registrationId != null && rowIdColumn != null) {
-        ArcSdeObjectIdJdbcAttribute.replaceAttribute(schemaName, metaData, registrationId,
+        ArcSdeObjectIdJdbcAttribute.replaceAttribute(schemaName, recordDefinition, registrationId,
           rowIdColumn);
       }
     }

@@ -21,6 +21,7 @@
 package com.revolsys.gis.jts.filter;
 
 import java.util.function.Predicate;
+
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineCrossesFilter implements Predicate<LineString> {

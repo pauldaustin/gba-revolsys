@@ -1,8 +1,9 @@
 package com.revolsys.gis.graph.linestring;
 
+import java.util.function.Predicate;
+
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.jts.geom.LineSegment;
-import java.util.function.Predicate;
 
 public class LineSegmentIntersectingFilter implements Predicate<LineSegment> {
 

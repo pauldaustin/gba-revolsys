@@ -23,7 +23,7 @@ public class JsonResourceRecordDefinitionFactory extends BaseObjectWithPropertie
 
   private String locationPattern;
 
-  private final Map<String, RecordDefinition> metaDataMap = new HashMap<String, RecordDefinition>();
+  private final Map<String, RecordDefinition> recordDefinitionMap = new HashMap<String, RecordDefinition>();
 
   public String getLocationPattern() {
     return this.locationPattern;
@@ -31,16 +31,16 @@ public class JsonResourceRecordDefinitionFactory extends BaseObjectWithPropertie
 
   @Override
   public RecordDefinition getRecordDefinition(final String typePath) {
-    return this.metaDataMap.get(typePath);
+    return this.recordDefinitionMap.get(typePath);
   }
 
   @PostConstruct
   public void init() {
     try {
       for (final Resource resource : this.applicationContext.getResources(this.locationPattern)) {
-        final RecordDefinition metaData = MapObjectFactoryRegistry.toObject(resource);
-        final String name = metaData.getPath();
-        this.metaDataMap.put(name, metaData);
+        final RecordDefinition recordDefinition = MapObjectFactoryRegistry.toObject(resource);
+        final String name = recordDefinition.getPath();
+        this.recordDefinitionMap.put(name, recordDefinition);
       }
     } catch (final IOException e) {
       throw new IllegalArgumentException("Unable to get resources for " + this.locationPattern);

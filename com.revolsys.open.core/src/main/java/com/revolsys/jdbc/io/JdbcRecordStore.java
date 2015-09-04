@@ -34,7 +34,8 @@ public interface JdbcRecordStore extends RecordStore {
 
   Object getNextPrimaryKey(String typePath);
 
-  RecordDefinition getRecordDefinition(String tableName, ResultSetMetaData resultSetMetaData);
+  RecordDefinition getRecordDefinition(String tableName,
+    ResultSetMetaData resultSetRecordDefinition);
 
   @Override
   Statistics getStatistics(String name);

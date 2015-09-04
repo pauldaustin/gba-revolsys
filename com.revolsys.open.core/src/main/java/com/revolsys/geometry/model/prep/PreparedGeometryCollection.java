@@ -43,6 +43,7 @@ import com.revolsys.geometry.model.GeometryFactory;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.AbstractGeometryCollection;
 import com.revolsys.geometry.model.vertex.Vertex;
+import com.vividsolutions.jts.geom.prep.PreparedGeometry;
 
 /**
  * A base class for {@link PreparedGeometry} subclasses.

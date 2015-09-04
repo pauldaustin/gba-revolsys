@@ -106,7 +106,7 @@ public class OsnSerializer {
 
   public void attribute(final String name, final Object value, final boolean endLine)
     throws IOException {
-    attributeName(name);
+    fieldName(name);
     attributeValue(value);
     if (endLine || this.indentEnabled) {
       endLine();
@@ -116,20 +116,13 @@ public class OsnSerializer {
 
   public void attributeEnum(final String name, final String value, final boolean endLine)
     throws IOException {
-    attributeName(name);
+    fieldName(name);
     write(value);
     endAttribute();
     if (endLine || this.indentEnabled) {
       endLine();
     }
 
-  }
-
-  public void attributeName(final String name) throws IOException {
-    this.endElement = false;
-    serializeIndent();
-    write(name + ":");
-    this.scope.addLast(ATTRIBUTE_SCOPE);
   }
 
   public void attributeValue(final Object value) throws IOException {
@@ -196,6 +189,13 @@ public class OsnSerializer {
     endAttribute();
   }
 
+  public void fieldName(final String name) throws IOException {
+    this.endElement = false;
+    serializeIndent();
+    write(name + ":");
+    this.scope.addLast(ATTRIBUTE_SCOPE);
+  }
+
   private void increaseIndent() {
     if (this.indentEnabled) {
       this.indent += '\t';
@@ -233,7 +233,7 @@ public class OsnSerializer {
       final int day = cal.get(Calendar.DAY_OF_MONTH);
 
       if (day < 10) {
-        attributeName("day");
+        fieldName("day");
         write("0" + day);
         endAttribute();
         endLine();
@@ -243,7 +243,7 @@ public class OsnSerializer {
 
       final int month = cal.get(Calendar.MONTH) + 1;
       if (month < 10) {
-        attributeName("month");
+        fieldName("month");
         write("0" + month);
         endAttribute();
         endLine();
@@ -298,10 +298,10 @@ public class OsnSerializer {
   }
 
   public void serializeAttribute(final String name, final Object value) throws IOException {
-    attributeName(name);
+    fieldName(name);
     if (value instanceof Geometry && name.equals("position")) {
       startObject(SPATIAL_OBJECT);
-      attributeName("geometry");
+      fieldName("geometry");
       attributeValue(value);
       endAttribute();
       endObject();
@@ -319,7 +319,7 @@ public class OsnSerializer {
         final String name = type.getFieldName(i);
         final DataType dataType = type.getFieldType(i);
         if (dataType instanceof EnumerationDataType) {
-          attributeName(name);
+          fieldName(name);
           write(value.toString());
           endAttribute();
         } else {

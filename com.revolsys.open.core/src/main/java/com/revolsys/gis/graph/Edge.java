@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import com.revolsys.gis.algorithm.linematch.LineSegmentMatch;
 import com.revolsys.gis.jts.LineStringUtil;
@@ -22,7 +23,6 @@ import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jts.geom.BoundingBox;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 
@@ -181,10 +181,10 @@ public class Edge<T> implements AttributedObject, Comparable<Edge<T>>, Externali
     }
   }
 
-  public static <T> void setEdgesAttribute(final List<Edge<T>> edges, final String attributeName,
+  public static <T> void setEdgesAttribute(final List<Edge<T>> edges, final String fieldName,
     final Object value) {
     for (final Edge<T> edge : edges) {
-      edge.setAttribute(attributeName, value);
+      edge.setAttribute(fieldName, value);
     }
   }
 

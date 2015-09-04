@@ -2781,17 +2781,17 @@
 					<xs:documentation>The default length units that will be used for reporting distances in driving directions.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="LengthAttributeName" type="xs:string">
+			<xs:element name="LengthFieldName" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>The name of the network attribute to be used for reporting travel distances.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="TimeAttributeName" type="xs:string">
+			<xs:element name="TimeFieldName" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>The name of the network attribute to be used for reporting travel time.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="RoadClassAttributeName" type="xs:string">
+			<xs:element name="RoadClassFieldName" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>The name of the network attribute to be used for road classification.</xs:documentation>
 				</xs:annotation>
@@ -3138,7 +3138,7 @@
 		<xs:sequence>
 			<xs:element name="IsDefault" type="xs:boolean"/>
 			<xs:element name="ID" type="xs:int"/>
-			<xs:element name="NetworkAttributeName" type="xs:string">
+			<xs:element name="NetworkFieldName" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>The name of the network attribute associated with this network assignment.</xs:documentation>
 				</xs:annotation>
@@ -3225,7 +3225,7 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="ConfigurationKeyword" type="xs:string"/>
-					<xs:element name="HierarchyAttributeName" type="xs:string" minOccurs="0">
+					<xs:element name="HierarchyFieldName" type="xs:string" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>The name of the network attribute used to optimize network building for hierarchical traversal.</xs:documentation>
 						</xs:annotation>

@@ -62,7 +62,7 @@ public class FieldFilterPanel extends JComponent
 
   private static final long serialVersionUID = 1L;
 
-  private final List<String> attributeNames;
+  private final List<String> fieldNames;
 
   private CodeTable codeTable;
 
@@ -81,7 +81,7 @@ public class FieldFilterPanel extends JComponent
 
   private final AbstractRecordLayer layer;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private final ComboBox nameField;
 
@@ -109,7 +109,7 @@ public class FieldFilterPanel extends JComponent
   public FieldFilterPanel(final TablePanel tablePanel, final RecordLayerTableModel tableModel) {
     this.tableModel = tableModel;
     this.layer = tableModel.getLayer();
-    this.metaData = this.layer.getRecordDefinition();
+    this.recordDefinition = this.layer.getRecordDefinition();
 
     this.whereLabel = new JLabel();
     this.whereLabel.setMaximumSize(new Dimension(100, 250));
@@ -120,10 +120,10 @@ public class FieldFilterPanel extends JComponent
     this.whereLabel.setBackground(WebColors.White);
     add(this.whereLabel);
 
-    this.attributeNames = new ArrayList<String>(this.layer.getFieldNames());
-    this.attributeNames.remove(this.metaData.getGeometryFieldName());
+    this.fieldNames = new ArrayList<String>(this.layer.getFieldNames());
+    this.fieldNames.remove(this.recordDefinition.getGeometryFieldName());
     final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(this.layer);
-    this.nameField = new ComboBox(converter, false, this.attributeNames.toArray());
+    this.nameField = new ComboBox(converter, false, this.fieldNames.toArray());
     this.nameField.setRenderer(converter);
     this.nameField.addActionListener(this);
     add(this.nameField);
@@ -188,7 +188,7 @@ public class FieldFilterPanel extends JComponent
       if (!Property.hasValue(searchField)) {
         searchField = this.layer.getProperty("searchField");
         if (!Property.hasValue(searchField)) {
-          searchField = this.metaData.getFieldNames().get(0);
+          searchField = this.recordDefinition.getFieldNames().get(0);
         }
       }
       setSearchFieldName(searchField);
@@ -211,8 +211,8 @@ public class FieldFilterPanel extends JComponent
     }
   }
 
-  public List<String> getAttributeNames() {
-    return this.attributeNames;
+  public List<String> getFieldNames() {
+    return this.fieldNames;
   }
 
   public Condition getFilter() {
@@ -461,16 +461,16 @@ public class FieldFilterPanel extends JComponent
     if (!Equals.equal(searchFieldName, this.previousSearchFieldName)) {
       this.previousSearchFieldName = searchFieldName;
       this.layer.setProperty("searchField", searchFieldName);
-      final RecordDefinition metaData = this.tableModel.getRecordDefinition();
-      this.fieldDefinition = metaData.getField(searchFieldName);
+      final RecordDefinition recordDefinition = this.tableModel.getRecordDefinition();
+      this.fieldDefinition = recordDefinition.getField(searchFieldName);
       final Class<?> attributeClass = this.fieldDefinition.getTypeClass();
       if (!Equals.equal(searchFieldName, this.nameField.getSelectedItem())) {
         this.nameField.setFieldValue(searchFieldName);
       }
-      if (searchFieldName.equals(metaData.getIdFieldName())) {
+      if (searchFieldName.equals(recordDefinition.getIdFieldName())) {
         this.codeTable = null;
       } else {
-        this.codeTable = this.metaData.getCodeTableByFieldName(searchFieldName);
+        this.codeTable = this.recordDefinition.getCodeTableByFieldName(searchFieldName);
       }
 
       ComboBox operatorField;

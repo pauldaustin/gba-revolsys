@@ -1,8 +1,9 @@
 package com.revolsys.jts.filter;
 
+import java.util.function.Predicate;
+
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.LineSegment;
-import java.util.function.Predicate;
 
 public class LineSegmentCoordinateDistanceFilter implements Predicate<LineSegment> {
 

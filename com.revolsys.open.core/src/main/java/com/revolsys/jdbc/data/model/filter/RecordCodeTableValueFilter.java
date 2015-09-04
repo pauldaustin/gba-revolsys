@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
-import java.util.function.Predicate;
 
 /**
- * Filter records by the value of the attributeName.
+ * Filter records by the value of the fieldName.
  *
  * @author Paul Austin
  */
 public class RecordCodeTableValueFilter implements Predicate<Record> {
-  /** The attributeName name, or path to match. */
-  private String attributeName;
+  /** The fieldName name, or path to match. */
+  private String fieldName;
 
   private String name;
 
@@ -27,51 +27,22 @@ public class RecordCodeTableValueFilter implements Predicate<Record> {
   public RecordCodeTableValueFilter() {
   }
 
-  public RecordCodeTableValueFilter(final String attributeName, final List<Object> values) {
-    this.attributeName = attributeName;
+  public RecordCodeTableValueFilter(final String fieldName, final List<Object> values) {
+    this.fieldName = fieldName;
     this.values.addAll(values);
   }
 
-  public RecordCodeTableValueFilter(final String attributeName, final Object... values) {
-    this(attributeName, Arrays.asList(values));
+  public RecordCodeTableValueFilter(final String fieldName, final Object... values) {
+    this(fieldName, Arrays.asList(values));
   }
 
   /**
-   * Match the attributeName on the data object with the required value.
+   * Get the fieldName name, or path to match.
    *
-   * @param object The object.
-   * @return True if the object matched the filter, false otherwise.
+   * @return The fieldName name, or path to match.
    */
-  @Override
-  public boolean test(final Record object) {
-    final Object propertyValue = object.getValue(this.attributeName);
-    if (this.values.contains(propertyValue)) {
-      return true;
-    } else {
-      final RecordDefinition metaData = object.getRecordDefinition();
-      final CodeTable codeTable = metaData.getCodeTableByFieldName(this.attributeName);
-      if (codeTable != null) {
-        final Object codeValue = codeTable.getValue((Number)propertyValue);
-        if (this.values.contains(codeValue)) {
-          this.values.add(propertyValue);
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-
-    }
-  }
-
-  /**
-   * Get the attributeName name, or path to match.
-   *
-   * @return The attributeName name, or path to match.
-   */
-  public String getAttributeName() {
-    return this.attributeName;
+  public String getFieldName() {
+    return this.fieldName;
   }
 
   /**
@@ -81,8 +52,8 @@ public class RecordCodeTableValueFilter implements Predicate<Record> {
     return this.values;
   }
 
-  public void setAttributeName(final String attributeName) {
-    this.attributeName = attributeName;
+  public void setFieldName(final String fieldName) {
+    this.fieldName = fieldName;
   }
 
   /**
@@ -105,12 +76,41 @@ public class RecordCodeTableValueFilter implements Predicate<Record> {
   }
 
   /**
+   * Match the fieldName on the data object with the required value.
+   *
+   * @param object The object.
+   * @return True if the object matched the filter, false otherwise.
+   */
+  @Override
+  public boolean test(final Record object) {
+    final Object propertyValue = object.getValue(this.fieldName);
+    if (this.values.contains(propertyValue)) {
+      return true;
+    } else {
+      final RecordDefinition recordDefinition = object.getRecordDefinition();
+      final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(this.fieldName);
+      if (codeTable != null) {
+        final Object codeValue = codeTable.getValue((Number)propertyValue);
+        if (this.values.contains(codeValue)) {
+          this.values.add(propertyValue);
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+    }
+  }
+
+  /**
    * @return the name
    */
   @Override
   public String toString() {
     if (this.name == null) {
-      return this.attributeName + " in " + this.values;
+      return this.fieldName + " in " + this.values;
     } else {
       return this.name;
     }

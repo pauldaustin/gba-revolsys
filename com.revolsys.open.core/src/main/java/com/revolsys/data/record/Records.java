@@ -58,7 +58,7 @@ public final class Records {
     return newObject;
   }
 
-  public static RecordDefinition createGeometryMetaData() {
+  public static RecordDefinition createGeometryRecordDefinition() {
     final FieldDefinition geometryAttribute = new FieldDefinition("geometry", DataTypes.GEOMETRY,
       true);
     return new RecordDefinitionImpl("Feature", geometryAttribute);
@@ -75,6 +75,52 @@ public final class Records {
       }
     }
     return results;
+  }
+
+  public static boolean getBoolean(final Record record, final String fieldName) {
+    if (record == null) {
+      return false;
+    } else {
+      final Object value = record.getValue(fieldName);
+      if (value == null) {
+        return false;
+      } else if (value instanceof Boolean) {
+        final Boolean booleanValue = (Boolean)value;
+        return booleanValue;
+      } else if (value instanceof Number) {
+        final Number number = (Number)value;
+        return number.intValue() == 1;
+      } else {
+        final String stringValue = value.toString();
+        if (stringValue.equals("1") || Boolean.parseBoolean(stringValue)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+  }
+
+  public static Double getDouble(final Record record, final int attributeIndex) {
+    final Number value = record.getValue(attributeIndex);
+    if (value == null) {
+      return null;
+    } else if (value instanceof Double) {
+      return (Double)value;
+    } else {
+      return value.doubleValue();
+    }
+  }
+
+  public static Double getDouble(final Record record, final String fieldName) {
+    final Number value = record.getValue(fieldName);
+    if (value == null) {
+      return null;
+    } else if (value instanceof Double) {
+      return (Double)value;
+    } else {
+      return value.doubleValue();
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -126,57 +172,11 @@ public final class Records {
     return (T)propertyValue;
   }
 
-  public static boolean getBoolean(final Record record, final String attributeName) {
-    if (record == null) {
-      return false;
-    } else {
-      final Object value = record.getValue(attributeName);
-      if (value == null) {
-        return false;
-      } else if (value instanceof Boolean) {
-        final Boolean booleanValue = (Boolean)value;
-        return booleanValue;
-      } else if (value instanceof Number) {
-        final Number number = (Number)value;
-        return number.intValue() == 1;
-      } else {
-        final String stringValue = value.toString();
-        if (stringValue.equals("1") || Boolean.parseBoolean(stringValue)) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
-  }
-
-  public static Double getDouble(final Record record, final int attributeIndex) {
-    final Number value = record.getValue(attributeIndex);
-    if (value == null) {
-      return null;
-    } else if (value instanceof Double) {
-      return (Double)value;
-    } else {
-      return value.doubleValue();
-    }
-  }
-
-  public static Double getDouble(final Record record, final String attributeName) {
-    final Number value = record.getValue(attributeName);
-    if (value == null) {
-      return null;
-    } else if (value instanceof Double) {
-      return (Double)value;
-    } else {
-      return value.doubleValue();
-    }
-  }
-
-  public static Integer getInteger(final Record record, final String attributeName) {
+  public static Integer getInteger(final Record record, final String fieldName) {
     if (record == null) {
       return null;
     } else {
-      final Number value = record.getValue(attributeName);
+      final Number value = record.getValue(fieldName);
       if (value == null) {
         return null;
       } else if (value instanceof Integer) {
@@ -187,12 +187,12 @@ public final class Records {
     }
   }
 
-  public static Integer getInteger(final Record record, final String attributeName,
+  public static Integer getInteger(final Record record, final String fieldName,
     final Integer defaultValue) {
     if (record == null) {
       return null;
     } else {
-      final Number value = record.getValue(attributeName);
+      final Number value = record.getValue(fieldName);
       if (value == null) {
         return defaultValue;
       } else if (value instanceof Integer) {
@@ -203,8 +203,8 @@ public final class Records {
     }
   }
 
-  public static Long getLong(final Record record, final String attributeName) {
-    final Number value = record.getValue(attributeName);
+  public static Long getLong(final Record record, final String fieldName) {
+    final Number value = record.getValue(fieldName);
     if (value == null) {
       return null;
     } else if (value instanceof Long) {
@@ -272,14 +272,14 @@ public final class Records {
   }
 
   public static void setValues(final Record target, final Record source,
-    final Collection<String> attributesNames, final Collection<String> ignoreAttributeNames) {
-    for (final String attributeName : attributesNames) {
-      if (!ignoreAttributeNames.contains(attributeName)) {
-        final Object oldValue = target.getValue(attributeName);
-        Object newValue = source.getValue(attributeName);
+    final Collection<String> attributesNames, final Collection<String> ignoreFieldNames) {
+    for (final String fieldName : attributesNames) {
+      if (!ignoreFieldNames.contains(fieldName)) {
+        final Object oldValue = target.getValue(fieldName);
+        Object newValue = source.getValue(fieldName);
         if (!EqualsInstance.INSTANCE.equals(oldValue, newValue)) {
           newValue = JavaBeanUtil.clone(newValue);
-          target.setValue(attributeName, newValue);
+          target.setValue(fieldName, newValue);
         }
       }
     }

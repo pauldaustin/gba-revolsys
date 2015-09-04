@@ -18,12 +18,12 @@ import com.revolsys.properties.BaseObjectWithProperties;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class Query extends BaseObjectWithProperties implements Cloneable {
-  private static void addFilter(final Query query, final RecordDefinition metaData,
+  private static void addFilter(final Query query, final RecordDefinition recordDefinition,
     final Map<String, ?> filter, final AbstractMultiCondition multipleCondition) {
     if (filter != null && !filter.isEmpty()) {
       for (final Entry<String, ?> entry : filter.entrySet()) {
         final String name = entry.getKey();
-        final FieldDefinition attribute = metaData.getField(name);
+        final FieldDefinition attribute = recordDefinition.getField(name);
         if (attribute == null) {
           final Object value = entry.getValue();
           if (value == null) {
@@ -50,21 +50,21 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
     }
   }
 
-  public static Query and(final RecordDefinition metaData, final Map<String, ?> filter) {
-    final Query query = new Query(metaData);
+  public static Query and(final RecordDefinition recordDefinition, final Map<String, ?> filter) {
+    final Query query = new Query(recordDefinition);
     final Condition[] conditions = {};
     final And and = new And(conditions);
-    addFilter(query, metaData, filter, and);
+    addFilter(query, recordDefinition, filter, and);
     return query;
   }
 
-  public static Query equal(final RecordDefinition metaData, final String name,
+  public static Query equal(final RecordDefinition recordDefinition, final String name,
     final Object value) {
-    final FieldDefinition attribute = metaData.getField(name);
+    final FieldDefinition attribute = recordDefinition.getField(name);
     if (attribute == null) {
       return null;
     } else {
-      final Query query = new Query(metaData);
+      final Query query = new Query(recordDefinition);
       final Value valueCondition = new Value(attribute, value);
       final BinaryCondition equal = Q.equal(name, valueCondition);
       query.setWhereCondition(equal);
@@ -72,11 +72,11 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
     }
   }
 
-  public static Query or(final RecordDefinition metaData, final Map<String, ?> filter) {
-    final Query query = new Query(metaData);
+  public static Query or(final RecordDefinition recordDefinition, final Map<String, ?> filter) {
+    final Query query = new Query(recordDefinition);
     final Condition[] conditions = {};
     final Or or = new Or(conditions);
-    addFilter(query, metaData, filter, or);
+    addFilter(query, recordDefinition, filter, or);
     return query;
   }
 
@@ -115,13 +115,13 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
     this(typePath.toString());
   }
 
-  public Query(final RecordDefinition metaData) {
-    this(metaData.getPath());
-    this.recordDefinition = metaData;
+  public Query(final RecordDefinition recordDefinition) {
+    this(recordDefinition.getPath());
+    this.recordDefinition = recordDefinition;
   }
 
-  public Query(final RecordDefinition metaData, final Condition whereCondition) {
-    this(metaData);
+  public Query(final RecordDefinition recordDefinition, final Condition whereCondition) {
+    this(recordDefinition);
     this.whereCondition = whereCondition;
   }
 
@@ -302,8 +302,8 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
     setOrderByColumns(Arrays.asList(orderBy));
   }
 
-  public void setRecordDefinition(final RecordDefinition metaData) {
-    this.recordDefinition = metaData;
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    this.recordDefinition = recordDefinition;
   }
 
   public void setSql(final String sql) {

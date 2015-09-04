@@ -12,9 +12,9 @@ public class RecordEquals implements Equals<Record> {
   public static final String EXCLUDE_ID = RecordEquals.class.getName() + ".excludeId";
 
   public static boolean equalAttributes(final Collection<String> excludedAttributes,
-    final Record object1, final Record object2, final Collection<String> attributeNames) {
-    for (final String attributeName : attributeNames) {
-      if (!equals(excludedAttributes, object1, object2, attributeName)) {
+    final Record object1, final Record object2, final Collection<String> fieldNames) {
+    for (final String fieldName : fieldNames) {
+      if (!equals(excludedAttributes, object1, object2, fieldName)) {
         return false;
       }
     }
@@ -27,8 +27,8 @@ public class RecordEquals implements Equals<Record> {
     } else if (values2 == null) {
       return false;
     } else {
-      for (final String attributeName : object1.getRecordDefinition().getFieldNames()) {
-        if (!MapEquals.equals(object1, values2, attributeName)) {
+      for (final String fieldName : object1.getRecordDefinition().getFieldNames()) {
+        if (!MapEquals.equals(object1, values2, fieldName)) {
           return false;
         }
       }
@@ -37,9 +37,9 @@ public class RecordEquals implements Equals<Record> {
   }
 
   public static boolean equalAttributes(final Record object1, final Record object2,
-    final Collection<String> attributeNames) {
-    for (final String attributeName : attributeNames) {
-      if (!equals(object1, object2, attributeName)) {
+    final Collection<String> fieldNames) {
+    for (final String fieldName : fieldNames) {
+      if (!equals(object1, object2, fieldName)) {
         return false;
       }
     }
@@ -47,39 +47,38 @@ public class RecordEquals implements Equals<Record> {
   }
 
   public static boolean equals(final Collection<String> excludedAttributes, final Record object1,
-    final Record object2, final String attributeName) {
-    final RecordDefinition metaData = object1.getRecordDefinition();
-    if (excludedAttributes.contains(attributeName)) {
+    final Record object2, final String fieldName) {
+    final RecordDefinition recordDefinition = object1.getRecordDefinition();
+    if (excludedAttributes.contains(fieldName)) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_ID)
-      && attributeName.equals(metaData.getIdFieldName())) {
+      && fieldName.equals(recordDefinition.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
-      && attributeName.equals(metaData.getGeometryFieldName())) {
+      && fieldName.equals(recordDefinition.getGeometryFieldName())) {
       return true;
     } else {
-      final Object value1 = object1.getValue(attributeName);
-      final Object value2 = object2.getValue(attributeName);
+      final Object value1 = object1.getValue(fieldName);
+      final Object value2 = object2.getValue(fieldName);
       return EqualsInstance.INSTANCE.equals(value1, value2);
     }
   }
 
-  public static boolean equals(final Record object1, final Record object2,
-    final String attributeName) {
-    final Object value1 = object1.getValue(attributeName);
-    final Object value2 = object2.getValue(attributeName);
+  public static boolean equals(final Record object1, final Record object2, final String fieldName) {
+    final Object value1 = object1.getValue(fieldName);
+    final Object value2 = object2.getValue(fieldName);
     return EqualsInstance.INSTANCE.equals(value1, value2);
   }
 
-  public static boolean isAttributeIgnored(final RecordDefinition metaData,
-    final Collection<String> excludedAttributes, final String attributeName) {
-    if (excludedAttributes.contains(attributeName)) {
+  public static boolean isAttributeIgnored(final RecordDefinition recordDefinition,
+    final Collection<String> excludedAttributes, final String fieldName) {
+    if (excludedAttributes.contains(fieldName)) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_ID)
-      && attributeName.equals(metaData.getIdFieldName())) {
+      && fieldName.equals(recordDefinition.getIdFieldName())) {
       return true;
     } else if (excludedAttributes.contains(EXCLUDE_GEOMETRY)
-      && attributeName.equals(metaData.getGeometryFieldName())) {
+      && fieldName.equals(recordDefinition.getGeometryFieldName())) {
       return true;
     } else {
       return false;
@@ -107,15 +106,15 @@ public class RecordEquals implements Equals<Record> {
   public boolean equals(final Record object1, final Record object2,
     final Collection<String> excludedAttributes) {
     if (object1 != null && object2 != null) {
-      final RecordDefinition metaData1 = object1.getRecordDefinition();
-      final RecordDefinition metaData2 = object2.getRecordDefinition();
-      if (metaData1.getPath().equals(metaData2.getPath())) {
-        if (metaData1.getFieldCount() == metaData2.getFieldCount()) {
-          final int idIndex = metaData1.getIdFieldIndex();
-          final int geometryIndex = metaData1.getGeometryFieldIndex();
-          final int objectIdIndex = metaData1.getFieldIndex("OBJECTID");
-          for (int i = 0; i < metaData1.getFieldCount(); i++) {
-            final String name = metaData1.getFieldName(i);
+      final RecordDefinition recordDefinition1 = object1.getRecordDefinition();
+      final RecordDefinition recordDefinition2 = object2.getRecordDefinition();
+      if (recordDefinition1.getPath().equals(recordDefinition2.getPath())) {
+        if (recordDefinition1.getFieldCount() == recordDefinition2.getFieldCount()) {
+          final int idIndex = recordDefinition1.getIdFieldIndex();
+          final int geometryIndex = recordDefinition1.getGeometryFieldIndex();
+          final int objectIdIndex = recordDefinition1.getFieldIndex("OBJECTID");
+          for (int i = 0; i < recordDefinition1.getFieldCount(); i++) {
+            final String name = recordDefinition1.getFieldName(i);
             if (excludedAttributes.contains(name)) {
             } else if (i == idIndex && excludedAttributes.contains(EXCLUDE_ID)) {
             } else if (i == geometryIndex && excludedAttributes.contains(EXCLUDE_GEOMETRY)) {

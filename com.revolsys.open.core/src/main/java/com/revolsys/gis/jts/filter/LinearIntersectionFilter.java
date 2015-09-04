@@ -1,6 +1,7 @@
 package com.revolsys.gis.jts.filter;
 
 import java.util.function.Predicate;
+
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.IntersectionMatrix;
 import com.vividsolutions.jts.geom.LineString;

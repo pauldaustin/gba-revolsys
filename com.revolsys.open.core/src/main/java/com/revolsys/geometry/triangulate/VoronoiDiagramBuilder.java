@@ -44,6 +44,7 @@ import com.revolsys.geometry.model.GeometryFactory;
 import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.model.impl.BoundingBoxDoubleGf;
 import com.revolsys.geometry.triangulate.quadedge.QuadEdgeSubdivision;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A utility class which creates Voronoi Diagrams

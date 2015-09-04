@@ -39,11 +39,11 @@ public class GmlRecordWriter extends AbstractWriter<Record>implements GmlConstan
 
   private QName qualifiedName;
 
-  public GmlRecordWriter(final RecordDefinition metaData, final Writer out) {
+  public GmlRecordWriter(final RecordDefinition recordDefinition, final Writer out) {
     this.out = new XmlWriter(out);
-    this.qualifiedName = metaData.getProperty(RecordProperties.QUALIFIED_NAME);
+    this.qualifiedName = recordDefinition.getProperty(RecordProperties.QUALIFIED_NAME);
     if (this.qualifiedName == null) {
-      this.qualifiedName = new QName(metaData.getName());
+      this.qualifiedName = new QName(recordDefinition.getName());
     }
     this.namespaceUri = this.qualifiedName.getNamespaceURI();
     this.out.setPrefix(this.qualifiedName);
@@ -93,21 +93,21 @@ public class GmlRecordWriter extends AbstractWriter<Record>implements GmlConstan
       writeHeader();
     }
     this.out.startTag(FEATURE_MEMBER);
-    final RecordDefinition metaData = object.getRecordDefinition();
-    QName qualifiedName = metaData.getProperty(RecordProperties.QUALIFIED_NAME);
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    QName qualifiedName = recordDefinition.getProperty(RecordProperties.QUALIFIED_NAME);
     if (qualifiedName == null) {
-      final String typeName = metaData.getPath();
+      final String typeName = recordDefinition.getPath();
       final String path = Path.getPath(typeName);
       final String name = Path.getName(typeName);
       qualifiedName = new QName(path, name);
-      metaData.setProperty(RecordProperties.QUALIFIED_NAME, qualifiedName);
+      recordDefinition.setProperty(RecordProperties.QUALIFIED_NAME, qualifiedName);
     }
     this.out.startTag(qualifiedName);
 
-    for (final FieldDefinition attribute : metaData.getFields()) {
-      final String attributeName = attribute.getName();
-      this.out.startTag(this.namespaceUri, attributeName);
-      final Object value = object.getValue(attributeName);
+    for (final FieldDefinition attribute : recordDefinition.getFields()) {
+      final String fieldName = attribute.getName();
+      this.out.startTag(this.namespaceUri, fieldName);
+      final Object value = object.getValue(fieldName);
       final DataType type = attribute.getType();
       final GmlFieldType fieldType = this.fieldTypes.getFieldType(type);
       if (fieldType != null) {

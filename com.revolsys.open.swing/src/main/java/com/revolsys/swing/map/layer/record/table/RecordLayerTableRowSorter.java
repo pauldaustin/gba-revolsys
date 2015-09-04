@@ -25,9 +25,9 @@ public class RecordLayerTableRowSorter extends TableSortController<RecordLayerTa
   @Override
   public Comparator<?> getComparator(final int columnIndex) {
     final RecordLayerTableModel model = getModel();
-    final String attributeName = model.getFieldName(columnIndex);
-    final RecordDefinition metaData = this.layer.getRecordDefinition();
-    final CodeTable codeTable = metaData.getCodeTableByFieldName(attributeName);
+    final String fieldName = model.getFieldName(columnIndex);
+    final RecordDefinition recordDefinition = this.layer.getRecordDefinition();
+    final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(fieldName);
     if (codeTable == null) {
       final Class<?> columnClass = model.getColumnClass(columnIndex);
       final Comparator<?> comparator = super.getComparator(columnIndex);

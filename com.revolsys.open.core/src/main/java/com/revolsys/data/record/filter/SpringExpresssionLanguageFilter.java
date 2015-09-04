@@ -3,6 +3,7 @@ package com.revolsys.data.record.filter;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.SpelParserConfiguration;
@@ -11,7 +12,6 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.io.map.MapSerializer;
-import java.util.function.Predicate;
 
 public class SpringExpresssionLanguageFilter implements Predicate<Record>, MapSerializer {
   private static SpelParserConfiguration EXPRESSION_CONFIGURATION = new SpelParserConfiguration(

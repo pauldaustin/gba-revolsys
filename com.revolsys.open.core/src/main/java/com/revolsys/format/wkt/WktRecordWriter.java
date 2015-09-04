@@ -15,16 +15,16 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class WktRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private boolean open;
 
   private final PrintWriter out;
 
-  public WktRecordWriter(final RecordDefinition metaData, final java.io.Writer out) {
-    this.metaData = metaData;
+  public WktRecordWriter(final RecordDefinition recordDefinition, final java.io.Writer out) {
+    this.recordDefinition = recordDefinition;
     this.out = new PrintWriter(new BufferedWriter(out));
-    final FieldDefinition geometryAttribute = metaData.getGeometryField();
+    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute
         .getProperty(FieldProperties.GEOMETRY_FACTORY);
@@ -45,7 +45,7 @@ public class WktRecordWriter extends AbstractWriter<Record>implements RecordWrit
 
   @Override
   public String toString() {
-    return this.metaData.getPath().toString();
+    return this.recordDefinition.getPath().toString();
   }
 
   @Override

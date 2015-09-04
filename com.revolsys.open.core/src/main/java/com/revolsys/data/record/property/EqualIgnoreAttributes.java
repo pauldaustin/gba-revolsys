@@ -14,42 +14,42 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
     + ".propertyName";
 
   public static EqualIgnoreAttributes getProperty(final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    return getProperty(metaData);
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    return getProperty(recordDefinition);
   }
 
-  public static EqualIgnoreAttributes getProperty(final RecordDefinition metaData) {
-    EqualIgnoreAttributes property = metaData.getProperty(PROPERTY_NAME);
+  public static EqualIgnoreAttributes getProperty(final RecordDefinition recordDefinition) {
+    EqualIgnoreAttributes property = recordDefinition.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new EqualIgnoreAttributes();
-      property.setRecordDefinition(metaData);
+      property.setRecordDefinition(recordDefinition);
     }
     return property;
   }
 
-  private Set<String> attributeNames = new LinkedHashSet<String>();
+  private Set<String> fieldNames = new LinkedHashSet<String>();
 
   public EqualIgnoreAttributes() {
   }
 
-  public EqualIgnoreAttributes(final Collection<String> attributeNames) {
-    this.attributeNames.addAll(attributeNames);
+  public EqualIgnoreAttributes(final Collection<String> fieldNames) {
+    this.fieldNames.addAll(fieldNames);
   }
 
-  public EqualIgnoreAttributes(final String... attributeNames) {
-    this(Arrays.asList(attributeNames));
+  public EqualIgnoreAttributes(final String... fieldNames) {
+    this(Arrays.asList(fieldNames));
   }
 
-  public void addAttributeNames(final Collection<String> attributeNames) {
-    this.attributeNames.addAll(attributeNames);
+  public void addFieldNames(final Collection<String> fieldNames) {
+    this.fieldNames.addAll(fieldNames);
   }
 
-  public void addAttributeNames(final String... attributeNames) {
-    addAttributeNames(Arrays.asList(attributeNames));
+  public void addFieldNames(final String... fieldNames) {
+    addFieldNames(Arrays.asList(fieldNames));
   }
 
-  public Set<String> getAttributeNames() {
-    return this.attributeNames;
+  public Set<String> getFieldNames() {
+    return this.fieldNames;
   }
 
   @Override
@@ -57,41 +57,41 @@ public class EqualIgnoreAttributes extends AbstractRecordDefinitionProperty {
     return PROPERTY_NAME;
   }
 
-  public boolean isAttributeIgnored(final String attributeName) {
-    return this.attributeNames.contains(attributeName);
+  public boolean isAttributeIgnored(final String fieldName) {
+    return this.fieldNames.contains(fieldName);
   }
 
   public boolean isFieldIgnored(final String fieldName) {
-    return this.attributeNames.contains(fieldName);
+    return this.fieldNames.contains(fieldName);
   }
 
-  public void setAttributeNames(final Collection<String> attributeNames) {
-    setAttributeNames(new LinkedHashSet<String>(attributeNames));
+  public void setFieldNames(final Collection<String> fieldNames) {
+    setFieldNames(new LinkedHashSet<String>(fieldNames));
   }
 
-  public void setAttributeNames(final Set<String> attributeNames) {
-    this.attributeNames = attributeNames;
+  public void setFieldNames(final Set<String> fieldNames) {
+    this.fieldNames = fieldNames;
   }
 
-  public void setFieldNames(final String... attributeNames) {
-    setAttributeNames(Arrays.asList(attributeNames));
+  public void setFieldNames(final String... fieldNames) {
+    setFieldNames(Arrays.asList(fieldNames));
   }
 
   @Override
-  public void setRecordDefinition(final RecordDefinition metaData) {
-    super.setRecordDefinition(metaData);
-    if (this.attributeNames.contains(RecordEquals.EXCLUDE_ID)) {
-      final String idFieldName = metaData.getIdFieldName();
-      this.attributeNames.add(idFieldName);
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    super.setRecordDefinition(recordDefinition);
+    if (this.fieldNames.contains(RecordEquals.EXCLUDE_ID)) {
+      final String idFieldName = recordDefinition.getIdFieldName();
+      this.fieldNames.add(idFieldName);
     }
-    if (this.attributeNames.contains(RecordEquals.EXCLUDE_GEOMETRY)) {
-      final String geometryAttributeName = metaData.getGeometryFieldName();
-      this.attributeNames.add(geometryAttributeName);
+    if (this.fieldNames.contains(RecordEquals.EXCLUDE_GEOMETRY)) {
+      final String geometryFieldName = recordDefinition.getGeometryFieldName();
+      this.fieldNames.add(geometryFieldName);
     }
   }
 
   @Override
   public String toString() {
-    return "EqualIgnore " + this.attributeNames;
+    return "EqualIgnore " + this.fieldNames;
   }
 }

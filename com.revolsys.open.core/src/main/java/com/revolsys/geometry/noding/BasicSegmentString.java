@@ -34,6 +34,7 @@ package com.revolsys.geometry.noding;
 
 import com.revolsys.geometry.model.LineString;
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents a list of contiguous line segments,

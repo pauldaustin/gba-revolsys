@@ -127,7 +127,7 @@ public abstract class AbstractCodeTable
   }
 
   @Override
-  public Identifier getIdentifier(final List<Object> values, final boolean loadValues) {
+  public Identifier getIdentifier(final List<Object> values, final boolean loadMissing) {
     if (values.size() == 1) {
       final Object id = values.get(0);
       if (id == null) {
@@ -150,7 +150,7 @@ public abstract class AbstractCodeTable
 
     processValues(values);
     Identifier id = getIdByValue(values);
-    if (id == null && loadValues) {
+    if (id == null && loadMissing) {
       synchronized (this) {
         id = loadId(values, true);
         if (id != null && !this.idValueCache.containsKey(id)) {

@@ -2,11 +2,11 @@ package com.revolsys.data.record.filter;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.function.Predicate;
 
 import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.equals.EqualsRegistry;
 import com.revolsys.data.record.Record;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordEqualsFilter implements Predicate<Record> {

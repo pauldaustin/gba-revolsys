@@ -36,7 +36,7 @@ public class WmsLayer {
 
   private List<WmsLayer> layers = new ArrayList<WmsLayer>();
 
-  private List<MetadataUrl> metaDataUrls = new ArrayList<MetadataUrl>();
+  private List<MetadataUrl> recordDefinitionUrls = new ArrayList<MetadataUrl>();
 
   private String name;
 
@@ -95,8 +95,8 @@ public class WmsLayer {
 
   }
 
-  public void addMetaDataUrl(final MetadataUrl metaDataUrl) {
-    this.metaDataUrls.add(metaDataUrl);
+  public void addRecordDefinitionUrl(final MetadataUrl recordDefinitionUrl) {
+    this.recordDefinitionUrls.add(recordDefinitionUrl);
 
   }
 
@@ -168,16 +168,16 @@ public class WmsLayer {
     return this.layers;
   }
 
-  public List<MetadataUrl> getMetaDataUrls() {
-    return this.metaDataUrls;
-  }
-
   public String getName() {
     return this.name;
   }
 
   public WmsLayer getParent() {
     return this.parent;
+  }
+
+  public List<MetadataUrl> getRecordDefinitionUrls() {
+    return this.recordDefinitionUrls;
   }
 
   public ScaleHint getScaleHint() {
@@ -268,10 +268,6 @@ public class WmsLayer {
     this.layers = layers;
   }
 
-  public void setMetaDataUrls(final List<MetadataUrl> metaDataUrls) {
-    this.metaDataUrls = metaDataUrls;
-  }
-
   public void setName(final String name) {
     this.name = name;
   }
@@ -290,6 +286,10 @@ public class WmsLayer {
 
   public void setQueryable(final boolean queryable) {
     this.queryable = queryable;
+  }
+
+  public void setRecordDefinitionUrls(final List<MetadataUrl> recordDefinitionUrls) {
+    this.recordDefinitionUrls = recordDefinitionUrls;
   }
 
   public void setScaleHint(final ScaleHint scaleHint) {

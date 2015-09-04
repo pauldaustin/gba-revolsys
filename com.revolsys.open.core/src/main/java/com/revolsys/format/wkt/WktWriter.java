@@ -13,6 +13,7 @@ import com.revolsys.geometry.model.MultiPoint;
 import com.revolsys.geometry.model.MultiPolygon;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Polygon;
+import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.util.MathUtil;
 import com.revolsys.util.WrappedException;
 

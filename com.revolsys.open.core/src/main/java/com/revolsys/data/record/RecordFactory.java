@@ -12,8 +12,8 @@ public interface RecordFactory {
    * Create an instance of record implementation supported by this factory
    * using the metadata
    *
-   * @param metaData The metadata used to create the instance.
+   * @param recordDefinition The metadata used to create the instance.
    * @return The record instance.
    */
-  Record createRecord(RecordDefinition metaData);
+  Record createRecord(RecordDefinition recordDefinition);
 }

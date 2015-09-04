@@ -179,21 +179,6 @@ public class OsnIterator implements Iterator<Object> {
     this.in.close();
   }
 
-  private Object findAttributeName() throws IOException {
-    this.value = findLowerName(true);
-    if (this.value == null) {
-      return UNKNOWN;
-    } else {
-      skipWhitespace();
-      if (isNextCharacter(':')) {
-        this.scopeStack.push(IN_ATTRIBUTE);
-        return START_ATTRIBUTE;
-      } else {
-        return UNKNOWN;
-      }
-    }
-  }
-
   private String findClassName() throws IOException {
     final String className = findUpperName(true);
     // If the class name is fullowed by '::' get and return the schema name
@@ -277,6 +262,21 @@ public class OsnIterator implements Iterator<Object> {
       }
     }
     return eventType;
+  }
+
+  private Object findFieldName() throws IOException {
+    this.value = findLowerName(true);
+    if (this.value == null) {
+      return UNKNOWN;
+    } else {
+      skipWhitespace();
+      if (isNextCharacter(':')) {
+        this.scopeStack.push(IN_ATTRIBUTE);
+        return START_ATTRIBUTE;
+      } else {
+        return UNKNOWN;
+      }
+    }
   }
 
   private String findLowerName(final boolean tokenStart) throws IOException {
@@ -430,22 +430,9 @@ public class OsnIterator implements Iterator<Object> {
     }
   }
 
-  public String nextAttributeName() {
-    Object currentEventType = getEventType();
-    if (currentEventType != OsnIterator.START_ATTRIBUTE) {
-      currentEventType = next();
-      if (currentEventType == OsnIterator.END_OBJECT) {
-        return null;
-      } else if (currentEventType != OsnIterator.START_ATTRIBUTE) {
-        throwParseError("Excepecting an attribute name");
-      }
-    }
-    return getStringValue();
-  }
-
   public Boolean nextBooleanAttribute(final String name) {
-    final String attributeName = nextAttributeName();
-    if (attributeName == null || !attributeName.equals(name)) {
+    final String fieldName = nextFieldName();
+    if (fieldName == null || !fieldName.equals(name)) {
       throwParseError("Expecting attribute " + name);
     }
     return nextBooleanValue();
@@ -463,8 +450,8 @@ public class OsnIterator implements Iterator<Object> {
   }
 
   public double nextDoubleAttribute(final String name) {
-    final String attributeName = nextAttributeName();
-    if (attributeName == null || !attributeName.equals(name)) {
+    final String fieldName = nextFieldName();
+    if (fieldName == null || !fieldName.equals(name)) {
       throwParseError("Expecting attribute " + name);
     }
     return nextDoubleValue();
@@ -485,6 +472,19 @@ public class OsnIterator implements Iterator<Object> {
     if (next() != OsnIterator.END_OBJECT) {
       throwParseError("Expecting End Object");
     }
+  }
+
+  public String nextFieldName() {
+    Object currentEventType = getEventType();
+    if (currentEventType != OsnIterator.START_ATTRIBUTE) {
+      currentEventType = next();
+      if (currentEventType == OsnIterator.END_OBJECT) {
+        return null;
+      } else if (currentEventType != OsnIterator.START_ATTRIBUTE) {
+        throwParseError("Excepecting an attribute name");
+      }
+    }
+    return getStringValue();
   }
 
   public int nextIntValue() {
@@ -516,10 +516,10 @@ public class OsnIterator implements Iterator<Object> {
   }
 
   public String nextStringAttribute(final String name) {
-    final String attributeName = nextAttributeName();
-    if (attributeName == null) {
+    final String fieldName = nextFieldName();
+    if (fieldName == null) {
       return null;
-    } else if (!attributeName.equals(name)) {
+    } else if (!fieldName.equals(name)) {
       throwParseError("Expecting attribute " + name);
     }
     return nextStringValue();
@@ -590,7 +590,7 @@ public class OsnIterator implements Iterator<Object> {
 
   private void processObject() throws IOException {
     skipWhitespace();
-    this.eventType = findAttributeName();
+    this.eventType = findFieldName();
     if (this.eventType == UNKNOWN) {
       skipWhitespace();
       this.eventType = findEndObject();

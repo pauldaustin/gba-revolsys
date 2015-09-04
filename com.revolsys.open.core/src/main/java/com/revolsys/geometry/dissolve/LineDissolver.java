@@ -12,6 +12,7 @@ import com.revolsys.geometry.model.CoordinateList;
 import com.revolsys.geometry.model.Geometry;
 import com.revolsys.geometry.model.GeometryFactory;
 import com.revolsys.geometry.model.LineString;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Dissolves the linear components

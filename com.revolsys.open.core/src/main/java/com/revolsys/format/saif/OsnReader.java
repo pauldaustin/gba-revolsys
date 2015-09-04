@@ -31,7 +31,7 @@ public class OsnReader implements RecordIterator {
 
   private final String fileName;
 
-  private final RecordDefinitionFactory metaDataFactory;
+  private final RecordDefinitionFactory recordDefinitionFactory;
 
   private boolean nextChecked = false;
 
@@ -39,18 +39,18 @@ public class OsnReader implements RecordIterator {
 
   private ZipFile zipFile;
 
-  public OsnReader(final RecordDefinitionFactory metaDataFactory, final File directory,
+  public OsnReader(final RecordDefinitionFactory recordDefinitionFactory, final File directory,
     final String fileName, final int srid) throws IOException {
-    this.metaDataFactory = metaDataFactory;
+    this.recordDefinitionFactory = recordDefinitionFactory;
     this.directory = directory;
     this.fileName = fileName;
     this.converters = new OsnConverterRegistry(srid);
     open();
   }
 
-  public OsnReader(final RecordDefinitionFactory metaDataFactory, final ZipFile zipFile,
+  public OsnReader(final RecordDefinitionFactory recordDefinitionFactory, final ZipFile zipFile,
     final String fileName, final int srid) throws IOException {
-    this.metaDataFactory = metaDataFactory;
+    this.recordDefinitionFactory = recordDefinitionFactory;
     this.fileName = fileName;
     this.zipFile = zipFile;
     this.converters = new OsnConverterRegistry(srid);
@@ -132,23 +132,23 @@ public class OsnReader implements RecordIterator {
     return this.fileName;
   }
 
-  public RecordDefinitionFactory getMetaDataFactory() {
-    return this.metaDataFactory;
-  }
-
   private Object getRecord() {
     final String typePath = this.osnIterator.getPathValue();
     final OsnConverter converter = this.converters.getConverter(typePath);
     if (converter != null) {
       return converter.read(this.osnIterator);
     } else {
-      final RecordDefinition type = this.metaDataFactory.getRecordDefinition(typePath);
+      final RecordDefinition type = this.recordDefinitionFactory.getRecordDefinition(typePath);
       final Record record = this.factory.createRecord(type);
       while (this.osnIterator.next() != OsnIterator.END_OBJECT) {
         addAttribute(record);
       }
       return record;
     }
+  }
+
+  public RecordDefinitionFactory getRecordDefinitionFactory() {
+    return this.recordDefinitionFactory;
   }
 
   @Override
@@ -236,18 +236,18 @@ public class OsnReader implements RecordIterator {
   private boolean skipToFirstRecord() throws IOException {
     if (this.osnIterator.next() == OsnIterator.START_DEFINITION) {
       final String typePath = this.osnIterator.getPathValue();
-      final RecordDefinitionImpl type = (RecordDefinitionImpl)this.metaDataFactory
+      final RecordDefinitionImpl type = (RecordDefinitionImpl)this.recordDefinitionFactory
         .getRecordDefinition(typePath);
-      final RecordDefinition spatialDataSetType = this.metaDataFactory
+      final RecordDefinition spatialDataSetType = this.recordDefinitionFactory
         .getRecordDefinition("/SpatialDataSet");
       if (type != null && type.isInstanceOf(spatialDataSetType)) {
-        final String oiName = this.osnIterator.nextAttributeName();
+        final String oiName = this.osnIterator.nextFieldName();
 
         if (oiName != null && oiName.equals("objectIdentifier")) {
           this.osnIterator.nextStringValue();
-          final String attributeName = this.osnIterator.nextAttributeName();
-          if (attributeName != null && (attributeName.equals("geoComponents")
-            || attributeName.equals("annotationComponents"))) {
+          final String fieldName = this.osnIterator.nextFieldName();
+          if (fieldName != null
+            && (fieldName.equals("geoComponents") || fieldName.equals("annotationComponents"))) {
             if (this.osnIterator.next() == OsnIterator.START_SET) {
               return true;
             } else {

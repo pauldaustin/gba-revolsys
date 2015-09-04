@@ -34,9 +34,9 @@ public class PointConverter implements OsnConverter {
     values.put("type", this.geometryClass);
     Geometry geometry = null;
 
-    String attributeName = iterator.nextAttributeName();
-    while (attributeName != null) {
-      if (attributeName.equals("coords")) {
+    String fieldName = iterator.nextFieldName();
+    while (fieldName != null) {
+      if (fieldName.equals("coords")) {
         Coordinates coordinate = null;
         final String coordTypeName = iterator.nextObjectName();
         if (coordTypeName.equals("/Coord3D")) {
@@ -57,9 +57,9 @@ public class PointConverter implements OsnConverter {
         iterator.nextEndObject();
         geometry = this.geometryFactory.createPoint(coordinate);
       } else {
-        readAttribute(iterator, attributeName, values);
+        readAttribute(iterator, fieldName, values);
       }
-      attributeName = iterator.nextAttributeName();
+      fieldName = iterator.nextFieldName();
     }
     if (!values.isEmpty()) {
       geometry.setUserData(values);
@@ -67,10 +67,10 @@ public class PointConverter implements OsnConverter {
     return geometry;
   }
 
-  protected void readAttribute(final OsnIterator iterator, final String attributeName,
+  protected void readAttribute(final OsnIterator iterator, final String fieldName,
     final Map<String, Object> values) {
     iterator.next();
-    values.put(attributeName, iterator.getValue());
+    values.put(fieldName, iterator.getValue());
   }
 
   @Override
@@ -84,7 +84,7 @@ public class PointConverter implements OsnConverter {
       final double y = points.getY(0);
       final double z = points.getZ(0);
       serializer.startObject(this.geometryClass);
-      serializer.attributeName("coords");
+      serializer.fieldName("coords");
       if (numAxis == 2) {
         serializer.startObject("/Coord2D");
         serializer.attribute("c1", x, true);

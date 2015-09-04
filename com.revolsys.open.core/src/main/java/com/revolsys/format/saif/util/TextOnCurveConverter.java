@@ -34,9 +34,9 @@ public class TextOnCurveConverter implements OsnConverter {
     Geometry geometry = null;
     final List<Point> points = new ArrayList<Point>();
 
-    String attributeName = iterator.nextAttributeName();
-    while (attributeName != null) {
-      if (attributeName.equals("characters")) {
+    String fieldName = iterator.nextFieldName();
+    while (fieldName != null) {
+      if (fieldName.equals("characters")) {
         while (iterator.next() != OsnIterator.END_LIST) {
           final String objectName = iterator.nextObjectName();
           final OsnConverter osnConverter = this.converters.getConverter(objectName);
@@ -46,7 +46,7 @@ public class TextOnCurveConverter implements OsnConverter {
           points.add((Point)osnConverter.read(iterator));
         }
       }
-      attributeName = iterator.nextAttributeName();
+      fieldName = iterator.nextFieldName();
     }
     geometry = this.geometryFactory.createMultiPoint(points);
     for (int i = 0; i < points.size(); i++) {
@@ -58,10 +58,10 @@ public class TextOnCurveConverter implements OsnConverter {
     return geometry;
   }
 
-  protected void readAttribute(final OsnIterator iterator, final String attributeName,
+  protected void readAttribute(final OsnIterator iterator, final String fieldName,
     final Map<String, Object> values) {
     iterator.next();
-    values.put(attributeName, iterator.getValue());
+    values.put(fieldName, iterator.getValue());
   }
 
   @Override
@@ -69,7 +69,7 @@ public class TextOnCurveConverter implements OsnConverter {
     if (object instanceof MultiPoint) {
       final MultiPoint multiPoint = (MultiPoint)object;
       serializer.startObject(SaifConstants.TEXT_ON_CURVE);
-      serializer.attributeName("characters");
+      serializer.fieldName("characters");
       serializer.startCollection("List");
       final OsnConverter osnConverter = this.converters.getConverter(SaifConstants.TEXT_LINE);
       for (int i = 0; i < multiPoint.getNumGeometries(); i++) {

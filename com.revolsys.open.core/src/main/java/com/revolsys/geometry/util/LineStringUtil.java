@@ -22,6 +22,7 @@ import com.revolsys.geometry.model.coordinates.comparator.CoordinatesDistanceCom
 import com.revolsys.geometry.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.geometry.model.segment.Segment;
 import com.revolsys.geometry.model.vertex.Vertex;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 public final class LineStringUtil {
   public static final String COORDINATE_DISTANCE = "coordinateDistance";

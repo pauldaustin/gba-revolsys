@@ -56,10 +56,10 @@ public final class MoepConstants {
   public static final String TYPE_NAME = "/MOEP/Feature";
 
   static {
-    META_DATA = createMetaData(TYPE_NAME);
+    META_DATA = createRecordDefinition(TYPE_NAME);
   }
 
-  public static RecordDefinitionImpl createMetaData(final String typePath) {
+  public static RecordDefinitionImpl createRecordDefinition(final String typePath) {
     final RecordDefinitionImpl type = new RecordDefinitionImpl(typePath);
     type.addField(FEATURE_CODE, DataTypes.STRING, 10, true);
     type.addField(MAPSHEET_NAME, DataTypes.STRING, 7, false);

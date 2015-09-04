@@ -91,8 +91,8 @@ public class RecordListLayerTableModel extends RecordLayerTableModel
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (isEditable()) {
       final String columnName = getColumnName(columnIndex);
-      final RecordDefinition metaData = getRecordDefinition();
-      final DataType dataType = metaData.getFieldType(columnName);
+      final RecordDefinition recordDefinition = getRecordDefinition();
+      final DataType dataType = recordDefinition.getFieldType(columnName);
       if (Geometry.class.isAssignableFrom(dataType.getJavaClass())) {
         return false;
       } else {

@@ -1,7 +1,8 @@
 package com.revolsys.gis.jts.filter;
 
-import com.revolsys.gis.jts.LineStringUtil;
 import java.util.function.Predicate;
+
+import com.revolsys.gis.jts.LineStringUtil;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineEqualIgnoreDirectionFilter implements Predicate<LineString> {

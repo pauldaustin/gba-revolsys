@@ -337,13 +337,13 @@ public class CsnIterator {
   private void processAttribute(final StringBuffer buffer) throws IOException {
     StringBuffer localBuffer = buffer;
     if (this.nextEventType == OPTIONAL_ATTRIBUTE) {
-      final String attributeName = findLowerName(localBuffer);
-      if (attributeName != null) {
+      final String fieldName = findLowerName(localBuffer);
+      if (fieldName != null) {
         final StringBuffer newBuffer = getStrippedBuffer();
         if (newBuffer.charAt(0) == ']') {
           removeToken(0, 1);
           this.nextEventType = ATTRIBUTE_NAME;
-          setNextToken(attributeName);
+          setNextToken(fieldName);
           // scopeStack.pop();
         } else {
           throw new IllegalStateException("Expecting end of optional attribute name ']'");
@@ -413,29 +413,16 @@ public class CsnIterator {
     }
   }
 
-  private int processAttributeName(final StringBuffer buffer) throws IOException {
-    final String attributeName = findLowerName(buffer);
-    if (attributeName == null) {
-      return UNKNOWN;
-    } else if (isReservedWord(attributeName)) {
-      return COMPONENT_NAME;
-    } else {
-      setNextToken(attributeName);
-      this.scopeStack.push(IN_ATTRIBUTE);
-      return ATTRIBUTE_NAME;
-    }
-  }
-
   private int processAttributePath() throws IOException {
     StringBuffer buffer = getStrippedBuffer();
     final StringBuffer attributePath = new StringBuffer();
-    String attributeName = findLowerName(buffer);
-    if (attributeName == null) {
+    String fieldName = findLowerName(buffer);
+    if (fieldName == null) {
       return UNKNOWN;
-    } else if (isReservedWord(attributeName)) {
+    } else if (isReservedWord(fieldName)) {
       return COMPONENT_NAME;
     } else {
-      attributePath.append(attributeName);
+      attributePath.append(fieldName);
       buffer = getStrippedBuffer();
       while (buffer.charAt(0) != ':') {
         if (buffer.charAt(0) == '{' && buffer.charAt(1) == '}') {
@@ -446,9 +433,9 @@ public class CsnIterator {
         if (buffer.charAt(0) == '*') {
           removeExtraToken(0, 1);
           buffer = getStrippedBuffer();
-          attributeName = findName(buffer);
-          if (attributeName != null) {
-            attributePath.append('*').append(attributeName);
+          fieldName = findName(buffer);
+          if (fieldName != null) {
+            attributePath.append('*').append(fieldName);
           } else {
             throw new IllegalArgumentException("Expecting an attribute name");
           }
@@ -457,9 +444,9 @@ public class CsnIterator {
         if (buffer.charAt(0) == '.') {
           removeExtraToken(0, 1);
           buffer = getStrippedBuffer();
-          attributeName = findLowerName(buffer);
-          if (attributeName != null) {
-            attributePath.append('.').append(attributeName);
+          fieldName = findLowerName(buffer);
+          if (fieldName != null) {
+            attributePath.append('.').append(fieldName);
           } else {
             throw new IllegalArgumentException("Expecting an attribute name");
           }
@@ -484,7 +471,7 @@ public class CsnIterator {
       removeToken(0, 1);
       this.scopeStack.push(IN_ATTRIBUTE);
     } else {
-      this.nextEventType = processAttributeName(buffer);
+      this.nextEventType = processFieldName(buffer);
       if (this.nextEventType == UNKNOWN) {
         throw new IllegalStateException("Expecting an attribute name or component name");
       }
@@ -504,7 +491,7 @@ public class CsnIterator {
       removeToken(0, 1);
       this.scopeStack.push(IN_ATTRIBUTE);
     } else {
-      this.nextEventType = processAttributeName(buffer);
+      this.nextEventType = processFieldName(buffer);
       if (this.nextEventType == UNKNOWN) {
         throw new IllegalStateException("Expecting an attribute name or component name");
       }
@@ -635,6 +622,19 @@ public class CsnIterator {
     if (this.nextEventType == UNKNOWN) {
       throw new IllegalStateException(
         this.lineNumber + ":" + "Expecting start of an object definition");
+    }
+  }
+
+  private int processFieldName(final StringBuffer buffer) throws IOException {
+    final String fieldName = findLowerName(buffer);
+    if (fieldName == null) {
+      return UNKNOWN;
+    } else if (isReservedWord(fieldName)) {
+      return COMPONENT_NAME;
+    } else {
+      setNextToken(fieldName);
+      this.scopeStack.push(IN_ATTRIBUTE);
+      return ATTRIBUTE_NAME;
     }
   }
 

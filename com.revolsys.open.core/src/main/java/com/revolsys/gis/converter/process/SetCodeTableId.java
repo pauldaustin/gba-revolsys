@@ -16,11 +16,11 @@ public class SetCodeTableId extends AbstractSourceToTargetProcess<Record, Record
 
   private final Map<String, Converter<Record, Object>> codeTableValueConverters = new HashMap<String, Converter<Record, Object>>();
 
-  private final String targetAttributeName;
+  private final String targetFieldName;
 
-  public SetCodeTableId(final CodeTable codeTable, final String targetAttributeName) {
+  public SetCodeTableId(final CodeTable codeTable, final String targetFieldName) {
     this.codeTable = codeTable;
-    this.targetAttributeName = targetAttributeName;
+    this.targetFieldName = targetFieldName;
   }
 
   @Override
@@ -29,32 +29,32 @@ public class SetCodeTableId extends AbstractSourceToTargetProcess<Record, Record
 
     for (final Entry<String, Converter<Record, Object>> entry : this.codeTableValueConverters
       .entrySet()) {
-      String codeTableAttributeName = entry.getKey();
+      String codeTableFieldName = entry.getKey();
       final Converter<Record, Object> sourceAttributeConverter = entry.getValue();
       Object sourceValue = sourceAttributeConverter.convert(source);
       if (sourceValue != null) {
-        final RecordDefinition targetMetaData = target.getRecordDefinition();
+        final RecordDefinition targetRecordDefinition = target.getRecordDefinition();
         String codeTableValueName = null;
-        final int dotIndex = codeTableAttributeName.indexOf(".");
+        final int dotIndex = codeTableFieldName.indexOf(".");
         if (dotIndex != -1) {
-          codeTableValueName = codeTableAttributeName.substring(dotIndex + 1);
-          codeTableAttributeName = codeTableAttributeName.substring(0, dotIndex);
+          codeTableValueName = codeTableFieldName.substring(dotIndex + 1);
+          codeTableFieldName = codeTableFieldName.substring(0, dotIndex);
         }
-        final CodeTable targetCodeTable = targetMetaData
-          .getCodeTableByFieldName(codeTableAttributeName);
+        final CodeTable targetCodeTable = targetRecordDefinition
+          .getCodeTableByFieldName(codeTableFieldName);
         if (targetCodeTable != null) {
           if (codeTableValueName == null) {
-            sourceValue = targetCodeTable.getId(sourceValue);
+            sourceValue = targetCodeTable.getIdentifier(sourceValue);
           } else {
             sourceValue = targetCodeTable
-              .getId(Collections.singletonMap(codeTableValueName, sourceValue));
+              .getIdentifier(Collections.singletonMap(codeTableValueName, sourceValue));
           }
         }
       }
-      codeTableValues.put(codeTableAttributeName, sourceValue);
+      codeTableValues.put(codeTableFieldName, sourceValue);
     }
-    final Object codeId = this.codeTable.getId(codeTableValues);
-    target.setValue(this.targetAttributeName, codeId);
+    final Object codeId = this.codeTable.getIdentifier(codeTableValues);
+    target.setValue(this.targetFieldName, codeId);
   }
 
   public void setValueMapping(final String codeTableAttribute,

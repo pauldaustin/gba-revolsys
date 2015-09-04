@@ -247,14 +247,14 @@ public class JsonParser implements Iterator<JsonParser.EventType>, AutoCloseable
    * found.
    *
    * @param parser The parser.
-   * @param attributeName The name of the attribute to skip through.
+   * @param fieldName The name of the attribute to skip through.
    */
-  public static void skipToAttribute(final JsonParser parser, final String attributeName) {
+  public static void skipToAttribute(final JsonParser parser, final String fieldName) {
     while (parser.hasNext()) {
       final EventType eventType = parser.next();
       if (eventType == EventType.string) {
         final String key = getString(parser);
-        if (key.equals(attributeName)) {
+        if (key.equals(fieldName)) {
           if (parser.hasNext() && parser.next() == EventType.colon) {
             return;
           }

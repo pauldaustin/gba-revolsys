@@ -3,10 +3,10 @@ package com.revolsys.parallel.process;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.channel.ClosedException;
-import java.util.function.Predicate;
 
 public class MultipleFilterProcess<T> extends BaseInOutProcess<T, T> {
   /** The map of filters to channels. */

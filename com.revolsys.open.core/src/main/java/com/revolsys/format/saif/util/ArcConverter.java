@@ -34,17 +34,17 @@ public class ArcConverter implements OsnConverter {
     final Map<String, Object> values = new TreeMap<String, Object>();
     values.put(SaifConstants.TYPE, this.geometryType);
 
-    String attributeName = iterator.nextAttributeName();
+    String fieldName = iterator.nextFieldName();
     LineString geometry = null;
-    while (attributeName != null) {
-      if (attributeName.equals("pointList")) {
+    while (fieldName != null) {
+      if (fieldName.equals("pointList")) {
         final List<Coordinates> coordinates = new ArrayList<Coordinates>();
         while (iterator.next() != OsnIterator.END_LIST) {
           final String pointName = iterator.nextObjectName();
           if (!pointName.equals("/Point")) {
             iterator.throwParseError("Expecting Point object");
           }
-          final String coordsName = iterator.nextAttributeName();
+          final String coordsName = iterator.nextFieldName();
           if (!coordsName.equals("coords")) {
             iterator.throwParseError("Expecting coords attribute");
           }
@@ -66,9 +66,9 @@ public class ArcConverter implements OsnConverter {
         }
         geometry = this.geometryFactory.createLineString(coordinates);
       } else {
-        readAttribute(iterator, attributeName, values);
+        readAttribute(iterator, fieldName, values);
       }
-      attributeName = iterator.nextAttributeName();
+      fieldName = iterator.nextFieldName();
     }
     if (!values.isEmpty()) {
       geometry.setUserData(values);
@@ -77,10 +77,10 @@ public class ArcConverter implements OsnConverter {
     return geometry;
   }
 
-  protected void readAttribute(final OsnIterator iterator, final String attributeName,
+  protected void readAttribute(final OsnIterator iterator, final String fieldName,
     final Map<String, Object> values) {
     final Object value = iterator.nextValue();
-    values.put(attributeName, value);
+    values.put(fieldName, value);
   }
 
   @Override
@@ -95,13 +95,13 @@ public class ArcConverter implements OsnConverter {
       final LineString line = (LineString)object;
       serializer.startObject(this.geometryType);
 
-      serializer.attributeName("pointList");
+      serializer.fieldName("pointList");
       serializer.startCollection("List");
       final CoordinatesList points = CoordinatesListUtil.get(line);
       final int numAxis = points.getNumAxis();
       for (int i = 0; i < points.size(); i++) {
         serializer.startObject(SaifConstants.POINT);
-        serializer.attributeName("coords");
+        serializer.fieldName("coords");
         final double x = points.getX(i);
         final double y = points.getY(i);
         final double z = points.getZ(i);

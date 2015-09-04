@@ -2,6 +2,7 @@ package com.revolsys.io;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import javax.annotation.PreDestroy;
 
@@ -9,7 +10,6 @@ import com.revolsys.collection.iterator.FilterIterator;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.data.record.schema.RecordDefinition;
-import java.util.function.Predicate;
 
 public class FilterReader extends AbstractReader<Record>implements RecordReader {
 

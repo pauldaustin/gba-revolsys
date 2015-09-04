@@ -16,11 +16,6 @@ public class ParenthesisCondition extends Condition {
   }
 
   @Override
-  public boolean test(final Map<String, Object> record) {
-    return this.condition.test(record);
-  }
-
-  @Override
   public int appendParameters(final int index, final PreparedStatement statement) {
     return this.condition.appendParameters(index, statement);
   }
@@ -62,6 +57,11 @@ public class ParenthesisCondition extends Condition {
   @Override
   public <V> V getValue(final Map<String, Object> record) {
     return this.condition.getValue(record);
+  }
+
+  @Override
+  public boolean test(final Map<String, Object> record) {
+    return this.condition.test(record);
   }
 
   @Override

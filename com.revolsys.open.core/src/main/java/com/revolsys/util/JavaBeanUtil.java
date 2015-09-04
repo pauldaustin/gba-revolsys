@@ -142,11 +142,11 @@ public final class JavaBeanUtil {
     }
   }
 
-  public static boolean getBooleanValue(final Object object, final String attributeName) {
+  public static boolean getBooleanValue(final Object object, final String fieldName) {
     if (object == null) {
       return false;
     } else {
-      final Object value = Property.get(object, attributeName);
+      final Object value = Property.get(object, fieldName);
       if (value == null) {
         return false;
       } else if (value instanceof Boolean) {

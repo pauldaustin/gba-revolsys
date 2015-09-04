@@ -29,8 +29,8 @@ public abstract class BaseRecord extends AbstractRecord {
   }
 
   private void readObject(final ObjectInputStream ois) throws ClassNotFoundException, IOException {
-    final int metaDataInstanceId = ois.readInt();
-    this.recordDefinition = RecordDefinitionImpl.getRecordDefinition(metaDataInstanceId);
+    final int recordDefinitionInstanceId = ois.readInt();
+    this.recordDefinition = RecordDefinitionImpl.getRecordDefinition(recordDefinitionInstanceId);
     ois.defaultReadObject();
   }
 

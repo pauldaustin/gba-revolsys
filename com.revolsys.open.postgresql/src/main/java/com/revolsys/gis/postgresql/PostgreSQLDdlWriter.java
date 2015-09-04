@@ -27,10 +27,10 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
   }
 
   @Override
-  public String getSequenceName(final RecordDefinition metaData) {
-    final String typePath = metaData.getPath();
+  public String getSequenceName(final RecordDefinition recordDefinition) {
+    final String typePath = recordDefinition.getPath();
     final String schema = JdbcUtils.getSchemaName(typePath);
-    final ShortNameProperty shortNameProperty = ShortNameProperty.getProperty(metaData);
+    final ShortNameProperty shortNameProperty = ShortNameProperty.getProperty(recordDefinition);
     String shortName = null;
     if (shortNameProperty != null) {
       shortName = shortNameProperty.getShortName();
@@ -40,20 +40,20 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       return sequenceName;
     } else {
       final String tableName = Path.getName(typePath).toLowerCase();
-      final String idFieldName = metaData.getIdFieldName().toLowerCase();
+      final String idFieldName = recordDefinition.getIdFieldName().toLowerCase();
       return schema + "." + tableName + "_" + idFieldName + "_seq";
     }
   }
 
-  public void writeAddGeometryColumn(final RecordDefinition metaData) {
+  public void writeAddGeometryColumn(final RecordDefinition recordDefinition) {
     final PrintWriter out = getOut();
-    final String typePath = metaData.getPath();
+    final String typePath = recordDefinition.getPath();
     String schemaName = JdbcUtils.getSchemaName(typePath);
     if (schemaName.length() == 0) {
       schemaName = "public";
     }
     final String tableName = Path.getName(typePath);
-    final FieldDefinition geometryAttribute = metaData.getGeometryField();
+    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute
         .getProperty(FieldProperties.GEOMETRY_FACTORY);
@@ -170,15 +170,15 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
   }
 
   @Override
-  public void writeGeometryMetaData(final RecordDefinition metaData) {
+  public void writeGeometryRecordDefinition(final RecordDefinition recordDefinition) {
     final PrintWriter out = getOut();
-    final String typePath = metaData.getPath();
+    final String typePath = recordDefinition.getPath();
     String schemaName = JdbcUtils.getSchemaName(typePath);
     if (schemaName.length() == 0) {
       schemaName = "public";
     }
     final String tableName = Path.getName(typePath);
-    final FieldDefinition geometryAttribute = metaData.getGeometryField();
+    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
     if (geometryAttribute != null) {
       final GeometryFactory geometryFactory = geometryAttribute
         .getProperty(FieldProperties.GEOMETRY_FACTORY);
@@ -217,7 +217,8 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
   }
 
   @Override
-  public void writeResetSequence(final RecordDefinition metaData, final List<Record> values) {
+  public void writeResetSequence(final RecordDefinition recordDefinition,
+    final List<Record> values) {
     final PrintWriter out = getOut();
     Long nextValue = 0L;
     for (final Record object : values) {
@@ -231,7 +232,7 @@ public class PostgreSQLDdlWriter extends JdbcDdlWriter {
       }
     }
     nextValue++;
-    final String sequeneName = getSequenceName(metaData);
+    final String sequeneName = getSequenceName(recordDefinition);
     out.print("ALTER SEQUENCE ");
     out.print(sequeneName);
     out.print(" RESTART WITH ");

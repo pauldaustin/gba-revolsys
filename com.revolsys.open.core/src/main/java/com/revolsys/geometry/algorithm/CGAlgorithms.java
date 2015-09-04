@@ -36,6 +36,7 @@ import com.revolsys.geometry.model.LineString;
 import com.revolsys.geometry.model.Location;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.segment.Segment;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Specifies and implements various fundamental Computational Geometric

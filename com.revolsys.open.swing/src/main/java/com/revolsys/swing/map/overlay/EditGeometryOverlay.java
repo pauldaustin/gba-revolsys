@@ -183,12 +183,12 @@ public class EditGeometryOverlay extends AbstractOverlay
   public void addRecord(final AbstractRecordLayer layer,
     final AddGeometryCompleteAction addCompleteAction) {
     if (layer != null) {
-      final RecordDefinition metaData = layer.getRecordDefinition();
-      final FieldDefinition geometryAttribute = metaData.getGeometryField();
+      final RecordDefinition recordDefinition = layer.getRecordDefinition();
+      final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
       if (geometryAttribute != null) {
         this.addLayer = layer;
         this.addCompleteAction = addCompleteAction;
-        final GeometryFactory geometryFactory = metaData.getGeometryFactory();
+        final GeometryFactory geometryFactory = recordDefinition.getGeometryFactory();
         this.setGeometryFactory(geometryFactory);
         clearUndoHistory();
         this.addGeometry = geometryFactory.createEmptyGeometry();
@@ -977,14 +977,14 @@ public class EditGeometryOverlay extends AbstractOverlay
       }
     } else {
       final LayerRecord object = location.getObject();
-      final RecordDefinition metaData = location.getMetaData();
-      final String geometryAttributeName = metaData.getGeometryFieldName();
-      final Geometry oldValue = object.getValue(geometryAttributeName);
+      final RecordDefinition recordDefinition = location.getRecordDefinition();
+      final String geometryFieldName = recordDefinition.getGeometryFieldName();
+      final Geometry oldValue = object.getValue(geometryFieldName);
       if (JtsGeometryUtil.equalsExact3D(newGeometry, oldValue)) {
         return null;
       } else {
         final AbstractRecordLayer layer = location.getLayer();
-        return layer.createPropertyEdit(object, geometryAttributeName, oldValue, newGeometry);
+        return layer.createPropertyEdit(object, geometryFieldName, oldValue, newGeometry);
       }
     }
   }

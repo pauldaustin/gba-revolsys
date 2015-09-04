@@ -41,6 +41,7 @@ import com.revolsys.geometry.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.util.Assert;
 import com.revolsys.math.Angle;
+import com.vividsolutions.jts.algorithm.MinimumDiameter;
 
 /**
  * Computes the <b>Minimum Bounding Circle</b> (MBC)

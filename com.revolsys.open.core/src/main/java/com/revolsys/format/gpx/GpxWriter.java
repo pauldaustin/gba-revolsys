@@ -128,8 +128,8 @@ public class GpxWriter extends AbstractWriter<Record> {
     writeElement(object, GpxConstants.DESCRIPTION_ELEMENT, this.descriptionAttribute);
   }
 
-  private void writeElement(final Record object, final QName tag, final String attributeName) {
-    final String name = object.getValue(attributeName);
+  private void writeElement(final Record object, final QName tag, final String fieldName) {
+    final String name = object.getValue(fieldName);
     if (name != null && name.length() > 0) {
       this.out.element(tag, name);
     }

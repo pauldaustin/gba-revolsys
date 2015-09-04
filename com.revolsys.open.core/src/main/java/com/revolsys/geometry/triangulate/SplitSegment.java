@@ -36,6 +36,7 @@ package com.revolsys.geometry.triangulate;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.model.segment.LineSegment;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Models a constraint segment which can be split in two in various ways,

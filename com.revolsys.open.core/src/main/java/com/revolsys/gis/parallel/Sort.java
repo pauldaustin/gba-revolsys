@@ -12,18 +12,18 @@ import com.revolsys.parallel.process.BaseInOutProcess;
 
 public class Sort extends BaseInOutProcess<Record, Record> {
 
-  private String attributeName;
+  private String fieldName;
 
   private Comparator<Record> comparator;
 
   private final List<Record> objects = new ArrayList<Record>();
 
-  public String getAttributeName() {
-    return this.attributeName;
-  }
-
   public Comparator<Record> getComparator() {
     return this.comparator;
+  }
+
+  public String getFieldName() {
+    return this.fieldName;
   }
 
   @Override
@@ -41,13 +41,13 @@ public class Sort extends BaseInOutProcess<Record, Record> {
     this.objects.add(object);
   }
 
-  public void setAttributeName(final String attributeName) {
-    this.attributeName = attributeName;
-    this.comparator = new RecordFieldComparator(attributeName);
-  }
-
   public void setComparator(final Comparator<Record> comparator) {
     this.comparator = comparator;
+  }
+
+  public void setFieldName(final String fieldName) {
+    this.fieldName = fieldName;
+    this.comparator = new RecordFieldComparator(fieldName);
   }
 
 }

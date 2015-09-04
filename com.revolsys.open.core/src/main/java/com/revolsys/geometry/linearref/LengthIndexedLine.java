@@ -36,6 +36,7 @@ package com.revolsys.geometry.linearref;
 import com.revolsys.geometry.model.Geometry;
 import com.revolsys.geometry.model.LineString;
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Supports linear referencing along a linear {@link Geometry}

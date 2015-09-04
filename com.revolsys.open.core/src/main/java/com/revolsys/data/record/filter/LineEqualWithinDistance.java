@@ -1,8 +1,9 @@
 package com.revolsys.data.record.filter;
 
+import java.util.function.Predicate;
+
 import com.revolsys.data.record.Record;
 import com.revolsys.gis.graph.linestring.LineStringRelate;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineEqualWithinDistance implements Predicate<LineString> {

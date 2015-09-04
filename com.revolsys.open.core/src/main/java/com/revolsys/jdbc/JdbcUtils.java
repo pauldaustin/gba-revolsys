@@ -39,40 +39,40 @@ import com.revolsys.util.WrappedException;
 public final class JdbcUtils {
   private static final Logger LOG = Logger.getLogger(JdbcUtils.class);
 
-  public static void addAttributeName(final StringBuffer sql, final String tablePrefix,
+  public static void addColumnNames(final StringBuffer sql, final RecordDefinition recordDefinition,
+    final String tablePrefix) {
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
+      if (i > 0) {
+        sql.append(", ");
+      }
+      final FieldDefinition attribute = recordDefinition.getField(i);
+      addFieldName(sql, tablePrefix, attribute);
+    }
+  }
+
+  public static void addColumnNames(final StringBuffer sql, final RecordDefinition recordDefinition,
+    final String tablePrefix, final List<String> fieldNames, boolean hasColumns) {
+    for (final String fieldName : fieldNames) {
+      if (hasColumns) {
+        sql.append(", ");
+      }
+      final FieldDefinition attribute = recordDefinition.getField(fieldName);
+      if (attribute == null) {
+        sql.append(fieldName);
+      } else {
+        addFieldName(sql, tablePrefix, attribute);
+      }
+      hasColumns = true;
+    }
+  }
+
+  public static void addFieldName(final StringBuffer sql, final String tablePrefix,
     final FieldDefinition attribute) {
     if (attribute instanceof JdbcFieldDefinition) {
       final JdbcFieldDefinition jdbcAttribute = (JdbcFieldDefinition)attribute;
       jdbcAttribute.addColumnName(sql, tablePrefix);
     } else {
       sql.append(attribute.getName());
-    }
-  }
-
-  public static void addColumnNames(final StringBuffer sql, final RecordDefinition metaData,
-    final String tablePrefix) {
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
-      if (i > 0) {
-        sql.append(", ");
-      }
-      final FieldDefinition attribute = metaData.getField(i);
-      addAttributeName(sql, tablePrefix, attribute);
-    }
-  }
-
-  public static void addColumnNames(final StringBuffer sql, final RecordDefinition metaData,
-    final String tablePrefix, final List<String> attributeNames, boolean hasColumns) {
-    for (final String attributeName : attributeNames) {
-      if (hasColumns) {
-        sql.append(", ");
-      }
-      final FieldDefinition attribute = metaData.getField(attributeName);
-      if (attribute == null) {
-        sql.append(attributeName);
-      } else {
-        addAttributeName(sql, tablePrefix, attribute);
-      }
-      hasColumns = true;
     }
   }
 
@@ -143,18 +143,18 @@ public final class JdbcUtils {
     }
   }
 
-  public static String createSelectSql(final RecordDefinition metaData, final String tablePrefix,
-    final String fromClause, final boolean lockResults, final List<String> attributeNames,
-    final Query query, final Map<String, Boolean> orderBy) {
-    final String typePath = metaData.getPath();
+  public static String createSelectSql(final RecordDefinition recordDefinition,
+    final String tablePrefix, final String fromClause, final boolean lockResults,
+    final List<String> fieldNames, final Query query, final Map<String, Boolean> orderBy) {
+    final String typePath = recordDefinition.getPath();
     final StringBuffer sql = new StringBuffer();
     sql.append("SELECT ");
     boolean hasColumns = false;
-    if (attributeNames.isEmpty() || attributeNames.remove("*")) {
-      addColumnNames(sql, metaData, tablePrefix);
+    if (fieldNames.isEmpty() || fieldNames.remove("*")) {
+      addColumnNames(sql, recordDefinition, tablePrefix);
       hasColumns = true;
     }
-    addColumnNames(sql, metaData, tablePrefix, attributeNames, hasColumns);
+    addColumnNames(sql, recordDefinition, tablePrefix, fieldNames, hasColumns);
     sql.append(" FROM ");
     if (Property.hasValue(fromClause)) {
       sql.append(fromClause);
@@ -259,8 +259,8 @@ public final class JdbcUtils {
             return null;
           }
         } else {
-          final DatabaseMetaData metaData = connection.getMetaData();
-          return metaData.getDatabaseProductName();
+          final DatabaseMetaData recordDefinition = connection.getMetaData();
+          return recordDefinition.getDatabaseProductName();
         }
       } catch (final SQLException e) {
         throw new IllegalArgumentException("Unable to get database product name", e);
@@ -294,29 +294,30 @@ public final class JdbcUtils {
 
     String sql = query.getSql();
     final Map<String, Boolean> orderBy = query.getOrderBy();
-    RecordDefinition metaData = query.getRecordDefinition();
+    RecordDefinition recordDefinition = query.getRecordDefinition();
     if (sql == null) {
-      if (metaData == null) {
-        metaData = new RecordDefinitionImpl(tableName);
+      if (recordDefinition == null) {
+        recordDefinition = new RecordDefinitionImpl(tableName);
         // throw new IllegalArgumentException("Unknown table name " +
         // tableName);
       }
-      final List<String> attributeNames = new ArrayList<String>(query.getFieldNames());
-      if (attributeNames.isEmpty()) {
-        final List<String> metaDataAttributeNames = metaData.getFieldNames();
-        if (metaDataAttributeNames.isEmpty()) {
-          attributeNames.add("T.*");
+      final List<String> fieldNames = new ArrayList<String>(query.getFieldNames());
+      if (fieldNames.isEmpty()) {
+        final List<String> recordDefinitionFieldNames = recordDefinition.getFieldNames();
+        if (recordDefinitionFieldNames.isEmpty()) {
+          fieldNames.add("T.*");
         } else {
-          attributeNames.addAll(metaDataAttributeNames);
+          fieldNames.addAll(recordDefinitionFieldNames);
         }
       }
       final String fromClause = query.getFromClause();
       final boolean lockResults = query.isLockResults();
-      sql = createSelectSql(metaData, "T", fromClause, lockResults, attributeNames, query, orderBy);
+      sql = createSelectSql(recordDefinition, "T", fromClause, lockResults, fieldNames, query,
+        orderBy);
     } else {
       if (sql.toUpperCase().startsWith("SELECT * FROM ")) {
         final StringBuffer newSql = new StringBuffer("SELECT ");
-        addColumnNames(newSql, metaData, dbTableName);
+        addColumnNames(newSql, recordDefinition, dbTableName);
         newSql.append(" FROM ");
         newSql.append(sql.substring(14));
         sql = newSql.toString();
@@ -363,9 +364,9 @@ public final class JdbcUtils {
 
   public static Map<String, Object> readMap(final ResultSet rs) throws SQLException {
     final Map<String, Object> values = new LinkedHashMap<String, Object>();
-    final ResultSetMetaData metaData = rs.getMetaData();
-    for (int i = 1; i <= metaData.getColumnCount(); i++) {
-      final String name = metaData.getColumnName(i);
+    final ResultSetMetaData resultSetRecordDefinition = rs.getMetaData();
+    for (int i = 1; i <= resultSetRecordDefinition.getColumnCount(); i++) {
+      final String name = resultSetRecordDefinition.getColumnName(i);
       final Object value = rs.getObject(i);
       values.put(name, value);
     }

@@ -26,11 +26,11 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcFieldAdder {
 
   @Override
   public FieldDefinition addField(final AbstractJdbcRecordStore recordStore,
-    final RecordDefinitionImpl metaData, final String dbName, final String name,
+    final RecordDefinitionImpl recordDefinition, final String dbName, final String name,
     final String dataTypeName, final int sqlType, final int length, final int scale,
     final boolean required, final String description) {
-    final RecordStoreSchema schema = metaData.getSchema();
-    final String typePath = metaData.getPath();
+    final RecordStoreSchema schema = recordDefinition.getSchema();
+    final String typePath = recordDefinition.getPath();
     final String owner = this.recordStore.getDatabaseSchemaName(schema);
     final String tableName = this.recordStore.getDatabaseTableName(typePath);
     final String columnName = name.toUpperCase();
@@ -62,7 +62,7 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcFieldAdder {
     final FieldDefinition attribute = new ArcSdeStGeometryAttribute(dbName, name, dataType,
       required, description, null, spatialReference, numAxis);
 
-    metaData.addField(attribute);
+    recordDefinition.addField(attribute);
     attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS,
       new SqlFunction("SDE.ST_ENVINTERSECTS(", ") = 1"));
     attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("SDE.ST_BUFFER(", ")"));

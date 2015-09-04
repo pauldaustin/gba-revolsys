@@ -37,6 +37,7 @@ import java.util.List;
 
 import com.revolsys.geometry.geomgraph.Quadrant;
 import com.revolsys.geometry.model.LineString;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Constructs {@link MonotoneChain}s

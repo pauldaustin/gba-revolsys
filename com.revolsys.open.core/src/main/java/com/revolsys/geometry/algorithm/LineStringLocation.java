@@ -3,6 +3,7 @@ package com.revolsys.geometry.algorithm;
 import com.revolsys.geometry.model.LineString;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents a location along a {@link LineString}.

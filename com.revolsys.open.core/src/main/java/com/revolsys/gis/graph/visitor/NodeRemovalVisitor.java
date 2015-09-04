@@ -18,7 +18,7 @@ public class NodeRemovalVisitor implements Consumer<Node<Record>> {
 
   private final RecordGraph graph;
 
-  public NodeRemovalVisitor(final RecordDefinition metaData, final RecordGraph graph,
+  public NodeRemovalVisitor(final RecordDefinition recordDefinition, final RecordGraph graph,
     final Collection<String> excludedAttributes) {
     super();
     this.graph = graph;

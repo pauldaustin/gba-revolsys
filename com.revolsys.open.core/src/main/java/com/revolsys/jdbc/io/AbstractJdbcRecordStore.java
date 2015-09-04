@@ -162,13 +162,13 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
       dataType, sqlType, length, scale, required, description);
   }
 
-  protected void addField(final ResultSetMetaData resultSetMetaData,
+  protected void addField(final ResultSetMetaData resultSetRecordDefinition,
     final RecordDefinitionImpl recordDefinition, final String name, final int i,
     final String description) throws SQLException {
-    final String dataType = resultSetMetaData.getColumnTypeName(i);
-    final int sqlType = resultSetMetaData.getColumnType(i);
-    final int length = resultSetMetaData.getPrecision(i);
-    final int scale = resultSetMetaData.getScale(i);
+    final String dataType = resultSetRecordDefinition.getColumnTypeName(i);
+    final int sqlType = resultSetRecordDefinition.getColumnType(i);
+    final int length = resultSetRecordDefinition.getPrecision(i);
+    final int scale = resultSetRecordDefinition.getScale(i);
     final boolean required = false;
     addField(recordDefinition, name, name.toUpperCase(), dataType, sqlType, length, scale, required,
       description);
@@ -289,8 +289,9 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
   // try {
   // final Connection connection = getDbConnection();
   // try {
-  // final DatabaseMetaData databaseMetaData = connection.getRecordDefinition();
-  // final ResultSet schemaRs = databaseMetaData.getSchemas();
+  // final DatabaseMetaData databaseRecordDefinition =
+  // connection.getRecordDefinition();
+  // final ResultSet schemaRs = databaseRecordDefinition.getSchemas();
   //
   // try {
   // while (schemaRs.next()) {
@@ -319,8 +320,10 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
   // try {
   // final Set<String> tableNames = new LinkedHashSet<String>();
   //
-  // final DatabaseMetaData databaseMetaData = connection.getRecordDefinition();
-  // final ResultSet tablesRs = databaseMetaData.getTables(null, dbSchemaName,
+  // final DatabaseMetaData databaseRecordDefinition =
+  // connection.getRecordDefinition();
+  // final ResultSet tablesRs = databaseRecordDefinition.getTables(null,
+  // dbSchemaName,
   // "%", null);
   // try {
   // while (tablesRs.next()) {
@@ -448,19 +451,19 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
 
   @Override
   public RecordDefinition getRecordDefinition(final String typePath,
-    final ResultSetMetaData resultSetMetaData) {
+    final ResultSetMetaData resultSetRecordDefinition) {
     try {
       final String schemaName = Path.getPath(typePath);
       final RecordStoreSchema schema = getSchema(schemaName);
       final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(schema, typePath);
 
       final String idFieldName = getIdFieldName(typePath);
-      for (int i = 1; i <= resultSetMetaData.getColumnCount(); i++) {
-        final String name = resultSetMetaData.getColumnName(i).toUpperCase();
+      for (int i = 1; i <= resultSetRecordDefinition.getColumnCount(); i++) {
+        final String name = resultSetRecordDefinition.getColumnName(i).toUpperCase();
         if (name.equals(idFieldName)) {
           recordDefinition.setIdFieldIndex(i - 1);
         }
-        addField(resultSetMetaData, recordDefinition, name, i, null);
+        addField(resultSetRecordDefinition, recordDefinition, name, i, null);
       }
 
       addRecordDefinitionProperties(recordDefinition);
@@ -843,15 +846,15 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
         try {
           try (
             final Connection connection = getJdbcConnection()) {
-            final DatabaseMetaData databaseMetaData = connection.getMetaData();
+            final DatabaseMetaData databaseRecordDefinition = connection.getMetaData();
             final List<String> idFieldNames = loadIdFieldNames(dbSchemaName, dbTableName);
             final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(schema,
               typePath);
             recordDefinition.setDescription(tableDescription);
             recordDefinition.setProperty("permissions", tablePermissions);
             try (
-              final ResultSet columnsRs = databaseMetaData.getColumns(null, dbSchemaName, tableName,
-                "%")) {
+              final ResultSet columnsRs = databaseRecordDefinition.getColumns(null, dbSchemaName,
+                tableName, "%")) {
               while (columnsRs.next()) {
                 final String dbColumnName = columnsRs.getString("COLUMN_NAME");
                 final String name = dbColumnName.toUpperCase();
@@ -913,7 +916,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
       try {
         try (
           final Connection connection = getJdbcConnection()) {
-          final DatabaseMetaData databaseMetaData = connection.getMetaData();
+          final DatabaseMetaData databaseRecordDefinition = connection.getMetaData();
           final List<String> removedPaths = schema.getTypeNames();
           final Map<String, List<String>> idFieldNameMap = loadIdFieldNames(dbSchemaName);
           final Set<String> tableNames = tablePermissionsMap.keySet();
@@ -933,7 +936,8 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
             elementsByPath.put(typePath.toUpperCase(), recordDefinition);
           }
           try (
-            final ResultSet columnsRs = databaseMetaData.getColumns(null, dbSchemaName, "%", "%")) {
+            final ResultSet columnsRs = databaseRecordDefinition.getColumns(null, dbSchemaName, "%",
+              "%")) {
             while (columnsRs.next()) {
               final String tableName = columnsRs.getString("TABLE_NAME").toUpperCase();
               final String typePath = Path.toPath(schemaName, tableName);

@@ -22,12 +22,12 @@ package com.revolsys.data.record.filter;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.predicate.Predicates;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordGeometryIntersectsFilter implements Predicate<Record> {
@@ -59,6 +59,15 @@ public class RecordGeometryIntersectsFilter implements Predicate<Record> {
     this.geometryFactory = GeometryFactory.getFactory(geometry);
   }
 
+  /**
+   * Get the geometry to compare the data objects to to.
+   *
+   * @return The geometry to compare the data objects to to.
+   */
+  public Geometry getGeometry() {
+    return this.geometry;
+  }
+
   @Override
   public boolean test(final Record object) {
     try {
@@ -74,14 +83,5 @@ public class RecordGeometryIntersectsFilter implements Predicate<Record> {
       t.printStackTrace();
       return false;
     }
-  }
-
-  /**
-   * Get the geometry to compare the data objects to to.
-   *
-   * @return The geometry to compare the data objects to to.
-   */
-  public Geometry getGeometry() {
-    return this.geometry;
   }
 }

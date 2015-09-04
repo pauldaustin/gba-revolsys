@@ -5,6 +5,7 @@ import com.revolsys.geometry.algorithm.CGAlgorithmsDD;
 import com.revolsys.geometry.geomgraph.Quadrant;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.util.Assert;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents a directed component of an edge in an {@link EdgeGraph}.

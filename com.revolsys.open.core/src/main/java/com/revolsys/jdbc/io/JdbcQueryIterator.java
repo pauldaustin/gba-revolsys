@@ -30,9 +30,9 @@ import com.revolsys.jdbc.field.JdbcFieldDefinition;
 public class JdbcQueryIterator extends AbstractIterator<Record>implements RecordIterator {
 
   public static Record getNextObject(final JdbcRecordStore recordStore,
-    final RecordDefinition metaData, final List<FieldDefinition> attributes,
+    final RecordDefinition recordDefinition, final List<FieldDefinition> attributes,
     final RecordFactory recordFactory, final ResultSet resultSet) {
-    final Record object = recordFactory.createRecord(metaData);
+    final Record object = recordFactory.createRecord(recordDefinition);
     if (object != null) {
       object.setState(RecordState.Initalizing);
       int columnIndex = 1;
@@ -52,7 +52,7 @@ public class JdbcQueryIterator extends AbstractIterator<Record>implements Record
     return object;
   }
 
-  public static ResultSet getResultSet(final RecordDefinition metaData,
+  public static ResultSet getResultSet(final RecordDefinition recordDefinition,
     final PreparedStatement statement, final Query query) throws SQLException {
     JdbcUtils.setPreparedStatementParameters(statement, query);
 
@@ -180,20 +180,21 @@ public class JdbcQueryIterator extends AbstractIterator<Record>implements Record
       this.statement.setFetchSize(this.fetchSize);
 
       this.resultSet = getResultSet(this.recordDefinition, this.statement, this.query);
-      final ResultSetMetaData resultSetMetaData = this.resultSet.getMetaData();
+      final ResultSetMetaData resultSetRecordDefinition = this.resultSet.getMetaData();
 
       if (this.recordDefinition == null) {
-        this.recordDefinition = this.recordStore.getRecordDefinition(tableName, resultSetMetaData);
+        this.recordDefinition = this.recordStore.getRecordDefinition(tableName,
+          resultSetRecordDefinition);
       }
-      final List<String> attributeNames = new ArrayList<String>(this.query.getFieldNames());
-      if (attributeNames.isEmpty()) {
+      final List<String> fieldNames = new ArrayList<String>(this.query.getFieldNames());
+      if (fieldNames.isEmpty()) {
         this.attributes.addAll(this.recordDefinition.getFields());
       } else {
-        for (final String attributeName : attributeNames) {
-          if (attributeName.equals("*")) {
+        for (final String fieldName : fieldNames) {
+          if (fieldName.equals("*")) {
             this.attributes.addAll(this.recordDefinition.getFields());
           } else {
-            final FieldDefinition attribute = this.recordDefinition.getField(attributeName);
+            final FieldDefinition attribute = this.recordDefinition.getField(fieldName);
             if (attribute != null) {
               this.attributes.add(attribute);
             }

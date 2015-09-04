@@ -25,13 +25,13 @@ public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
     BoundingBox boundingBox = query.getBoundingBox();
     if (boundingBox != null) {
       final String typePath = query.getTypeName();
-      final RecordDefinition metaData = getRecordDefinition();
-      if (metaData == null) {
+      final RecordDefinition recordDefinition = getRecordDefinition();
+      if (recordDefinition == null) {
         throw new IllegalArgumentException("Unable to  find table " + typePath);
       } else {
         query = query.clone();
-        final String geometryAttributeName = metaData.getGeometryFieldName();
-        final GeometryFactory geometryFactory = metaData.getGeometryFactory();
+        final String geometryFieldName = recordDefinition.getGeometryFieldName();
+        final GeometryFactory geometryFactory = recordDefinition.getGeometryFactory();
         boundingBox = boundingBox.convert(geometryFactory);
         final double x1 = boundingBox.getMinX();
         final double y1 = boundingBox.getMinY();
@@ -39,7 +39,7 @@ public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
         final double y2 = boundingBox.getMaxY();
 
         final PGbox2d box = new PGbox2d(new Point(x1, y1), new Point(x2, y2));
-        query.and(new BinaryCondition(geometryAttributeName, "&&", box));
+        query.and(new BinaryCondition(geometryFieldName, "&&", box));
         setQuery(query);
       }
     }

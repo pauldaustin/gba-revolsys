@@ -29,8 +29,9 @@ public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
   }
 
   @Override
-  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
-    final OutputStream outputStream, final Charset charset) {
+  public RecordWriter createRecordWriter(final String baseName,
+    final RecordDefinition recordDefinition, final OutputStream outputStream,
+    final Charset charset) {
     File directory;
     try {
       directory = FileUtil.createTempDirectory(baseName, "zipDir");
@@ -38,7 +39,7 @@ public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {
       throw new RuntimeException("Unable to create temporary directory", e);
     }
     final Resource tempResource = new FileSystemResource(new File(directory, baseName + ".shp"));
-    final RecordWriter shapeWriter = new ShapefileRecordWriter(metaData, tempResource);
+    final RecordWriter shapeWriter = new ShapefileRecordWriter(recordDefinition, tempResource);
     return new ZipRecordWriter(directory, shapeWriter, outputStream);
   }
 

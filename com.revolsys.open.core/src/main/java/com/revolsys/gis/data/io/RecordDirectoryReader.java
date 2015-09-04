@@ -21,16 +21,16 @@ public class RecordDirectoryReader extends AbstractDirectoryReader<Record>
 
   private Statistics statistics = new Statistics();
 
-  private final Map<String, RecordDefinition> typePathMetaDataMap = new HashMap<String, RecordDefinition>();
+  private final Map<String, RecordDefinition> typePathRecordDefinitionMap = new HashMap<String, RecordDefinition>();
 
   public RecordDirectoryReader() {
   }
 
-  protected void addMetaData(final RecordReader reader) {
-    final RecordDefinition metaData = reader.getRecordDefinition();
-    if (metaData != null) {
-      final String path = metaData.getPath();
-      this.typePathMetaDataMap.put(path, metaData);
+  protected void addRecordDefinition(final RecordReader reader) {
+    final RecordDefinition recordDefinition = reader.getRecordDefinition();
+    if (recordDefinition != null) {
+      final String path = recordDefinition.getPath();
+      this.typePathRecordDefinitionMap.put(path, recordDefinition);
     }
   }
 
@@ -42,14 +42,14 @@ public class RecordDirectoryReader extends AbstractDirectoryReader<Record>
     final RecordReaderFactory factory = registry
       .getFactoryByFileExtension(RecordReaderFactory.class, extension);
     final RecordReader reader = factory.createRecordReader(resource);
-    addMetaData(reader);
+    addRecordDefinition(reader);
     return reader;
   }
 
   @Override
   public RecordDefinition getRecordDefinition(final String path) {
-    final RecordDefinition metaData = this.typePathMetaDataMap.get(path);
-    return metaData;
+    final RecordDefinition recordDefinition = this.typePathRecordDefinitionMap.get(path);
+    return recordDefinition;
   }
 
   public Statistics getStatistics() {

@@ -2,18 +2,18 @@ package com.revolsys.data.record.filter;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import com.revolsys.data.equals.EqualsInstance;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.Records;
-import java.util.function.Predicate;
 
 public class AttributesEqualOrSourceNullFilter implements Predicate<Record> {
   public static boolean test(final Record object1, final Record object2,
-    final Collection<String> attributeNames) {
-    for (final String attributeName : attributeNames) {
-      final Object value1 = Records.getFieldByPath(object1, attributeName);
-      final Object value2 = Records.getFieldByPath(object2, attributeName);
+    final Collection<String> fieldNames) {
+    for (final String fieldName : fieldNames) {
+      final Object value1 = Records.getFieldByPath(object1, fieldName);
+      final Object value2 = Records.getFieldByPath(object2, fieldName);
 
       if (value1 != null && !EqualsInstance.INSTANCE.equals(value1, value2)) {
         return false;
@@ -23,32 +23,32 @@ public class AttributesEqualOrSourceNullFilter implements Predicate<Record> {
   }
 
   public static boolean test(final Record object1, final Record object2,
-    final String... attributeNames) {
-    return test(object1, object2, Arrays.asList(attributeNames));
+    final String... fieldNames) {
+    return test(object1, object2, Arrays.asList(fieldNames));
   }
 
-  private final Collection<String> attributeNames;
+  private final Collection<String> fieldNames;
 
   private final Record object;
 
   public AttributesEqualOrSourceNullFilter(final Record object,
-    final Collection<String> attributeNames) {
-    this.attributeNames = attributeNames;
+    final Collection<String> fieldNames) {
+    this.fieldNames = fieldNames;
     this.object = object;
   }
 
-  public AttributesEqualOrSourceNullFilter(final Record object, final String... attributeNames) {
-    this(object, Arrays.asList(attributeNames));
+  public AttributesEqualOrSourceNullFilter(final Record object, final String... fieldNames) {
+    this(object, Arrays.asList(fieldNames));
   }
 
   @Override
   public boolean test(final Record object) {
-    return test(this.object, object, this.attributeNames);
+    return test(this.object, object, this.fieldNames);
   }
 
   @Override
   public String toString() {
-    return "AttributeEquals" + this.attributeNames;
+    return "AttributeEquals" + this.fieldNames;
   }
 
 }

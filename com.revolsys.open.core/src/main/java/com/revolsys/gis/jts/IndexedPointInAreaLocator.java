@@ -1,6 +1,7 @@
 package com.revolsys.gis.jts;
 
 import java.util.function.Consumer;
+
 import com.revolsys.gis.algorithm.locate.Location;
 import com.revolsys.gis.algorithm.locate.PointOnGeometryLocator;
 import com.revolsys.gis.algorithm.locate.SortedPackedIntervalRTree;

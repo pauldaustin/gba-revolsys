@@ -51,6 +51,7 @@ import com.revolsys.geometry.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.geometry.model.impl.BoundingBoxDoubleGf;
 import com.revolsys.geometry.triangulate.quadedge.QuadEdgeSubdivision;
 import com.revolsys.geometry.triangulate.quadedge.Vertex;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A utility class which creates Delaunay Trianglulations

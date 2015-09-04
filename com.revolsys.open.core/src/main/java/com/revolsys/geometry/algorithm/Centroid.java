@@ -39,6 +39,7 @@ import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.model.segment.Segment;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Computes the centroid of a {@link Geometry} of any dimension.

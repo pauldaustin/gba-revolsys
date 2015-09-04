@@ -52,6 +52,7 @@ import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.util.Assert;
 import com.revolsys.geometry.util.UniqueCoordinateArrayFilter;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Computes the convex hull of a {@link Geometry}.

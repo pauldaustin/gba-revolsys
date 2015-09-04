@@ -25,7 +25,7 @@ public class WktRecordIterator extends AbstractIterator<Record>implements Record
 
   private BufferedReader in;
 
-  private RecordDefinition metaData;
+  private RecordDefinition recordDefinition;
 
   private WktParserOld wktParserOld;
 
@@ -33,7 +33,7 @@ public class WktRecordIterator extends AbstractIterator<Record>implements Record
     throws IOException {
     this.factory = factory;
     this.in = new BufferedReader(FileUtil.createUtf8Reader(resource.getInputStream()));
-    this.metaData = Records.createGeometryMetaData();
+    this.recordDefinition = Records.createGeometryRecordDefinition();
   }
 
   @Override
@@ -42,13 +42,13 @@ public class WktRecordIterator extends AbstractIterator<Record>implements Record
     this.factory = null;
     this.in = null;
     this.wktParserOld = null;
-    this.metaData = null;
+    this.recordDefinition = null;
   }
 
   @Override
   protected void doInit() {
     GeometryFactory geometryFactory;
-    final FieldDefinition geometryAttribute = this.metaData.getGeometryField();
+    final FieldDefinition geometryAttribute = this.recordDefinition.getGeometryField();
     if (geometryAttribute == null) {
       geometryFactory = GeometryFactory.getFactory();
     } else {
@@ -84,7 +84,7 @@ public class WktRecordIterator extends AbstractIterator<Record>implements Record
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 
   @Override

@@ -37,6 +37,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A list of {@link Coordinates}s, which may

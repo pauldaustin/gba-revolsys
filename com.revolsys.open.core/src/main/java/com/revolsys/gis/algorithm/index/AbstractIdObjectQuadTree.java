@@ -3,8 +3,8 @@ package com.revolsys.gis.algorithm.index;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import java.util.function.Consumer;
+
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.Quadtree;

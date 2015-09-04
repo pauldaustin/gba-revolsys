@@ -71,8 +71,8 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   }
 
   @Override
-  public Record create(final RecordDefinition objectMetaData) {
-    return this.recordStore.create(objectMetaData);
+  public Record create(final RecordDefinition objectRecordDefinition) {
+    return this.recordStore.create(objectRecordDefinition);
   }
 
   @Override
@@ -167,8 +167,8 @@ public class DelegatingRecordStore extends AbstractRecordStore {
   }
 
   @Override
-  public RecordDefinition getRecordDefinition(final RecordDefinition objectMetaData) {
-    return this.recordStore.getRecordDefinition(objectMetaData);
+  public RecordDefinition getRecordDefinition(final RecordDefinition objectRecordDefinition) {
+    return this.recordStore.getRecordDefinition(objectRecordDefinition);
   }
 
   @Override

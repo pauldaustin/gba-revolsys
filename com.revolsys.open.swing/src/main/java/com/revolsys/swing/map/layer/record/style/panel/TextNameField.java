@@ -42,8 +42,8 @@ public class TextNameField extends ValueField {
     add(new JScrollPane(this.textNameField), BorderLayout.NORTH);
 
     final ArrayList<String> fieldNames = new ArrayList<String>(layer.getFieldNames());
-    final RecordDefinition metaData = layer.getRecordDefinition();
-    fieldNames.remove(metaData.getGeometryFieldName());
+    final RecordDefinition recordDefinition = layer.getRecordDefinition();
+    fieldNames.remove(recordDefinition.getGeometryFieldName());
     final AttributeTitleStringConveter converter = new AttributeTitleStringConveter(layer);
     this.fieldNamesField = new ComboBox(converter, false, fieldNames.toArray());
     this.fieldNamesField.setRenderer(converter);

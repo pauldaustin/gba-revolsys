@@ -94,12 +94,12 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
   protected void initializeColumnPreferredWidth(final TableColumn column) {
     super.initializeColumnPreferredWidth(column);
     final RecordRowTableModel model = getTableModel();
-    final RecordDefinition metaData = model.getRecordDefinition();
+    final RecordDefinition recordDefinition = model.getRecordDefinition();
     final int viewIndex = column.getModelIndex();
     final int attributesOffset = model.getAttributesOffset();
     if (viewIndex < attributesOffset) {
-      final String attributeName = model.getFieldName(viewIndex - attributesOffset);
-      final FieldDefinition attribute = metaData.getField(attributeName);
+      final String fieldName = model.getFieldName(viewIndex - attributesOffset);
+      final FieldDefinition attribute = recordDefinition.getField(fieldName);
       if (attribute != null) {
         Integer columnWidth = attribute.getProperty("tableColumnWidth");
         final String columnName = attribute.getTitle();

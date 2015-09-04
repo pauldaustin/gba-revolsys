@@ -11,41 +11,41 @@ import com.revolsys.data.record.filter.AttributesEqualOrNullFilter;
 import com.revolsys.predicate.AndPredicate;
 
 public class CompareFilterFactory implements Function<Record, Predicate<Record>> {
-  private List<String> equalAttributeNames = new ArrayList<String>();
+  private List<String> equalFieldNames = new ArrayList<String>();
 
-  private List<String> equalOrNullAttributeNames = new ArrayList<String>();
+  private List<String> equalOrNullFieldNames = new ArrayList<String>();
 
   @Override
   public Predicate<Record> apply(final Record object) {
     final AndPredicate<Record> filters = new AndPredicate<Record>();
-    if (!this.equalAttributeNames.isEmpty()) {
+    if (!this.equalFieldNames.isEmpty()) {
       final Predicate<Record> valuesFilter = new AttributesEqualFilter(object,
-        this.equalAttributeNames);
+        this.equalFieldNames);
       filters.addFilter(valuesFilter);
     }
-    if (!this.equalOrNullAttributeNames.isEmpty()) {
+    if (!this.equalOrNullFieldNames.isEmpty()) {
       final Predicate<Record> valuesFilter = new AttributesEqualOrNullFilter(object,
-        this.equalOrNullAttributeNames);
+        this.equalOrNullFieldNames);
       filters.addFilter(valuesFilter);
     }
 
     return filters;
   }
 
-  public List<String> getEqualAttributeNames() {
-    return this.equalAttributeNames;
+  public List<String> getEqualFieldNames() {
+    return this.equalFieldNames;
   }
 
-  public List<String> getEqualOrNullAttributeNames() {
-    return this.equalOrNullAttributeNames;
+  public List<String> getEqualOrNullFieldNames() {
+    return this.equalOrNullFieldNames;
   }
 
-  public void setEqualAttributeNames(final List<String> equalAttributeNames) {
-    this.equalAttributeNames = equalAttributeNames;
+  public void setEqualFieldNames(final List<String> equalFieldNames) {
+    this.equalFieldNames = equalFieldNames;
   }
 
-  public void setEqualOrNullAttributeNames(final List<String> equalOrNullAttributeNames) {
-    this.equalOrNullAttributeNames = equalOrNullAttributeNames;
+  public void setEqualOrNullFieldNames(final List<String> equalOrNullFieldNames) {
+    this.equalOrNullFieldNames = equalOrNullFieldNames;
   }
 
 }

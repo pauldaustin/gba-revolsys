@@ -36,7 +36,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
 
   private List<Record> geometryObjects = new ArrayList<Record>();
 
-  private Map<RecordDefinition, Map<RecordDefinition, PreparedGeometry>> metaDataGeometryMap = new HashMap<RecordDefinition, Map<RecordDefinition, PreparedGeometry>>();
+  private Map<RecordDefinition, Map<RecordDefinition, PreparedGeometry>> recordDefinitionGeometryMap = new HashMap<RecordDefinition, Map<RecordDefinition, PreparedGeometry>>();
 
   private String typePathTemplate;
 
@@ -53,7 +53,7 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
     }
     this.attributes = null;
     this.geometryObjects = null;
-    this.metaDataGeometryMap = null;
+    this.recordDefinitionGeometryMap = null;
   }
 
   public Map<String, Object> getAttributes() {
@@ -75,14 +75,14 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
     return this.geometryObjects;
   }
 
-  private final Map<RecordDefinition, PreparedGeometry> getMetaDataGeometries(
-    final RecordDefinition metaData) {
-    Map<RecordDefinition, PreparedGeometry> metaDataGeometries = this.metaDataGeometryMap
-      .get(metaData);
-    if (metaDataGeometries == null) {
+  private final Map<RecordDefinition, PreparedGeometry> getRecordDefinitionGeometries(
+    final RecordDefinition recordDefinition) {
+    Map<RecordDefinition, PreparedGeometry> recordDefinitionGeometries = this.recordDefinitionGeometryMap
+      .get(recordDefinition);
+    if (recordDefinitionGeometries == null) {
       final PreparedGeometryFactory preparedGeometryFactory = new PreparedGeometryFactory();
-      metaDataGeometries = new LinkedHashMap<RecordDefinition, PreparedGeometry>();
-      RecordDefinition newMetaData;
+      recordDefinitionGeometries = new LinkedHashMap<RecordDefinition, PreparedGeometry>();
+      RecordDefinition newRecordDefinition;
       PreparedGeometry preparedGeometry;
       for (final Record object : this.geometryObjects) {
         Geometry geometry = object.getGeometry();
@@ -90,24 +90,24 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
           final JexlContext context = new HashMapContext();
           final Map<String, Object> vars = new HashMap<String, Object>(this.attributes);
           vars.putAll(new RecordMap(object));
-          vars.put("typePath", metaData.getPath());
+          vars.put("typePath", recordDefinition.getPath());
           context.setVars(vars);
           final String typePath = (String)JexlUtil.evaluateExpression(context,
             this.typePathTemplateExpression);
-          newMetaData = new RecordDefinitionImpl(typePath, metaData.getFields());
+          newRecordDefinition = new RecordDefinitionImpl(typePath, recordDefinition.getFields());
           if (this.distance > 0) {
             final BufferOp buffer = new BufferOp(geometry, new BufferParameters(1, 3, 2, 1.0D));
             geometry = buffer.getResultGeometry(this.distance);
           }
           geometry = DouglasPeuckerSimplifier.simplify(geometry, 2D);
           preparedGeometry = preparedGeometryFactory.create(geometry);
-          metaDataGeometries.put(newMetaData, preparedGeometry);
+          recordDefinitionGeometries.put(newRecordDefinition, preparedGeometry);
         }
       }
 
-      this.metaDataGeometryMap.put(metaData, metaDataGeometries);
+      this.recordDefinitionGeometryMap.put(recordDefinition, recordDefinitionGeometries);
     }
-    return metaDataGeometries;
+    return recordDefinitionGeometries;
   }
 
   public String getTypeNameTemplate() {
@@ -136,16 +136,16 @@ public class CreateObjectsWithinDistanceOfGeometry extends BaseInOutProcess<Reco
     if (this.writeOriginal) {
       out.write(object);
     }
-    final RecordDefinition metaData = object.getRecordDefinition();
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
     final Geometry geometryValue = object.getGeometry();
-    final Map<RecordDefinition, PreparedGeometry> metaDataGeometries = getMetaDataGeometries(
-      metaData);
-    for (final Entry<RecordDefinition, PreparedGeometry> metaDataGeometry : metaDataGeometries
+    final Map<RecordDefinition, PreparedGeometry> recordDefinitionGeometries = getRecordDefinitionGeometries(
+      recordDefinition);
+    for (final Entry<RecordDefinition, PreparedGeometry> recordDefinitionGeometry : recordDefinitionGeometries
       .entrySet()) {
-      final RecordDefinition newMetaData = metaDataGeometry.getKey();
-      final PreparedGeometry intersectsGeometry = metaDataGeometry.getValue();
+      final RecordDefinition newRecordDefinition = recordDefinitionGeometry.getKey();
+      final PreparedGeometry intersectsGeometry = recordDefinitionGeometry.getValue();
       if (intersectsGeometry.intersects(geometryValue)) {
-        final Record newObject = new ArrayRecord(newMetaData, object);
+        final Record newObject = new ArrayRecord(newRecordDefinition, object);
         out.write(newObject);
       }
     }

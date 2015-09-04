@@ -9,24 +9,24 @@ import com.revolsys.data.record.Records;
 import com.revolsys.data.record.schema.RecordDefinition;
 
 public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
-  private String sourceAttributeName;
+  private String sourceFieldName;
 
-  private String targetAttributeName;
+  private String targetFieldName;
 
   private Map<Object, Object> valueMap = new LinkedHashMap<Object, Object>();
 
   public MapValues() {
   }
 
-  public MapValues(final String sourceAttributeName, final String targetAttributeName) {
-    this.sourceAttributeName = sourceAttributeName;
-    this.targetAttributeName = targetAttributeName;
+  public MapValues(final String sourceFieldName, final String targetFieldName) {
+    this.sourceFieldName = sourceFieldName;
+    this.targetFieldName = targetFieldName;
   }
 
-  public MapValues(final String sourceAttributeName, final String targetAttributeName,
+  public MapValues(final String sourceFieldName, final String targetFieldName,
     final Map<Object, Object> valueMap) {
-    this.sourceAttributeName = sourceAttributeName;
-    this.targetAttributeName = targetAttributeName;
+    this.sourceFieldName = sourceFieldName;
+    this.targetFieldName = targetFieldName;
     this.valueMap = valueMap;
   }
 
@@ -34,12 +34,12 @@ public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
     this.valueMap.put(sourceValue, targetValue);
   }
 
-  public String getSourceAttributeName() {
-    return this.sourceAttributeName;
+  public String getSourceFieldName() {
+    return this.sourceFieldName;
   }
 
-  public String getTargetAttributeName() {
-    return this.targetAttributeName;
+  public String getTargetFieldName() {
+    return this.targetFieldName;
   }
 
   public Map<Object, Object> getValueMap() {
@@ -48,33 +48,33 @@ public class MapValues extends AbstractSourceToTargetProcess<Record, Record> {
 
   @Override
   public void process(final Record source, final Record target) {
-    final Object sourceValue = Records.getFieldByPath(source, this.sourceAttributeName);
+    final Object sourceValue = Records.getFieldByPath(source, this.sourceFieldName);
     if (sourceValue != null) {
       final Object targetValue = this.valueMap.get(sourceValue);
       if (targetValue != null) {
-        final RecordDefinition targetMetaData = target.getRecordDefinition();
-        final CodeTable codeTable = targetMetaData
-          .getCodeTableByFieldName(this.targetAttributeName);
+        final RecordDefinition targetRecordDefinition = target.getRecordDefinition();
+        final CodeTable codeTable = targetRecordDefinition
+          .getCodeTableByFieldName(this.targetFieldName);
         if (codeTable == null) {
-          target.setValue(this.targetAttributeName, targetValue);
+          target.setValue(this.targetFieldName, targetValue);
         } else {
           final Object codeId = codeTable.getId(targetValue);
-          target.setValue(this.targetAttributeName, codeId);
+          target.setValue(this.targetFieldName, codeId);
         }
       }
     }
   }
 
-  public void setSourceAttributeName(final String sourceAttributeName) {
-    this.sourceAttributeName = sourceAttributeName;
+  public void setSourceFieldName(final String sourceFieldName) {
+    this.sourceFieldName = sourceFieldName;
   }
 
-  public void setTargetAttributeName(final String targetAttributeName) {
-    this.targetAttributeName = targetAttributeName;
+  public void setTargetFieldName(final String targetFieldName) {
+    this.targetFieldName = targetFieldName;
   }
 
-  public void setValueMap(final Map<Object, Object> attributeNames) {
-    this.valueMap = attributeNames;
+  public void setValueMap(final Map<Object, Object> fieldNames) {
+    this.valueMap = fieldNames;
   }
 
   @Override

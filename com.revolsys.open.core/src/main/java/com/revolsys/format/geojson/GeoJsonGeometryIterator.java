@@ -57,14 +57,14 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
   @Override
   protected Geometry getNext() throws NoSuchElementException {
     do {
-      final String attributeName = JsonParser.skipToAttribute(this.in);
-      if (TYPE.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToAttribute(this.in);
+      if (TYPE.equals(fieldName)) {
         this.in.next();
         final String geometryType = this.in.getValue();
         if (GEOMETRY_TYPE_NAMES.contains(geometryType)) {
           return readGeometry();
         }
-      } else if (CRS.equals(attributeName)) {
+      } else if (CRS.equals(fieldName)) {
         this.in.next();
         this.geometryFactory = readCoordinateSystem();
 
@@ -200,8 +200,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
   private GeometryFactory readCoordinateSystem() {
     GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (PROPERTIES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (PROPERTIES.equals(fieldName)) {
         final Map<String, Object> properties = JsonParser.getMap(this.in);
         final String name = (String)properties.get("name");
         if (name != null) {
@@ -252,10 +252,10 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
     List<Geometry> geometries = new ArrayList<Geometry>();
     GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (GEOMETRIES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (GEOMETRIES.equals(fieldName)) {
         geometries = readGeometryList();
-      } else if (CRS.equals(attributeName)) {
+      } else if (CRS.equals(fieldName)) {
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
@@ -289,10 +289,10 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
     CoordinatesList points = null;
     GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (COORDINATES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (COORDINATES.equals(fieldName)) {
         points = readCoordinatesList();
-      } else if (CRS.equals(attributeName)) {
+      } else if (CRS.equals(fieldName)) {
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
@@ -305,10 +305,10 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
     List<CoordinatesList> lineStrings = null;
     GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (COORDINATES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (COORDINATES.equals(fieldName)) {
         lineStrings = readCoordinatesListList(cogo, false);
-      } else if (CRS.equals(attributeName)) {
+      } else if (CRS.equals(fieldName)) {
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
@@ -320,10 +320,10 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
     List<CoordinatesList> points = null;
     GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (COORDINATES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (COORDINATES.equals(fieldName)) {
         points = readPointCoordinatesListList();
-      } else if (CRS.equals(attributeName)) {
+      } else if (CRS.equals(fieldName)) {
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
@@ -336,10 +336,10 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
     List<List<CoordinatesList>> polygonRings = null;
     GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (COORDINATES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (COORDINATES.equals(fieldName)) {
         polygonRings = readCoordinatesListListList(cogo);
-      } else if (CRS.equals(attributeName)) {
+      } else if (CRS.equals(fieldName)) {
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
@@ -357,10 +357,10 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
     CoordinatesList coordinates = null;
     GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (COORDINATES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (COORDINATES.equals(fieldName)) {
         coordinates = readPointCoordinatesList();
-      } else if (CRS.equals(attributeName)) {
+      } else if (CRS.equals(fieldName)) {
         factory = readCoordinateSystem();
       }
     } while (this.in.getEvent() != EventType.endObject
@@ -398,8 +398,8 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
     List<CoordinatesList> rings = null;
     final GeometryFactory factory = this.geometryFactory;
     do {
-      final String attributeName = JsonParser.skipToNextAttribute(this.in);
-      if (COORDINATES.equals(attributeName)) {
+      final String fieldName = JsonParser.skipToNextAttribute(this.in);
+      if (COORDINATES.equals(fieldName)) {
         rings = readCoordinatesListList(cogo, true);
       }
     } while (this.in.getEvent() != EventType.endObject

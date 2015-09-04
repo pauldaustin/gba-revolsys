@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-
 import java.util.function.Consumer;
+
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.LineSegmentUtil;
 import com.revolsys.jts.geom.BoundingBox;
@@ -122,20 +122,20 @@ public class PointQuadTree<T> extends AbstractPointSpatialIndex<T> {
   }
 
   @Override
-  public void visit(final Envelope envelope, final Consumer<T> visitor) {
+  public void visit(final Consumer<T> visitor) {
     if (this.root != null) {
       try {
-        this.root.forEach(envelope, visitor);
+        this.root.forEach(visitor);
       } catch (final ExitLoopException e) {
       }
     }
   }
 
   @Override
-  public void visit(final Consumer<T> visitor) {
+  public void visit(final Envelope envelope, final Consumer<T> visitor) {
     if (this.root != null) {
       try {
-        this.root.forEach(visitor);
+        this.root.forEach(envelope, visitor);
       } catch (final ExitLoopException e) {
       }
     }

@@ -17,9 +17,11 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.data.codes.CodeTable;
 import com.revolsys.data.equals.Equals;
 import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.data.identifier.AbstractIdentifier;
 import com.revolsys.data.identifier.Identifiable;
 import com.revolsys.data.identifier.Identifier;
 import com.revolsys.data.identifier.ListIdentifier;
+import com.revolsys.data.query.Value;
 import com.revolsys.data.record.schema.FieldDefinition;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.data.record.schema.RecordDefinitionFactory;
@@ -115,11 +117,11 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
    */
 
   default RecordFactory getFactory() {
-    final RecordDefinition metaData = getRecordDefinition();
-    if (metaData == null) {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    if (recordDefinition == null) {
       return null;
     } else {
-      return metaData.getRecordFactory();
+      return recordDefinition.getRecordFactory();
     }
   }
 
@@ -414,9 +416,9 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     return (T)propertyValue;
   }
 
-  default Map<String, Object> getValueMap(final Collection<? extends CharSequence> attributeNames) {
+  default Map<String, Object> getValueMap(final Collection<? extends CharSequence> fieldNames) {
     final Map<String, Object> values = new HashMap<String, Object>();
-    for (final CharSequence name : attributeNames) {
+    for (final CharSequence name : fieldNames) {
       final Object value = getValue(name);
       if (value != null) {
         values.put(name.toString(), value);
@@ -490,7 +492,7 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     return true;
   }
 
-  default boolean isValid(final String attributeName) {
+  default boolean isValid(final String fieldName) {
     return true;
   }
 
@@ -510,6 +512,12 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     final RecordDefinition recordDefinition = getRecordDefinition();
     final int index = recordDefinition.getGeometryFieldIndex();
     setValue(index, geometry);
+  }
+
+  default void setIdentifier(final Identifier identifier) {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final List<String> idFieldNames = recordDefinition.getIdFieldNames();
+    AbstractIdentifier.setIdentifier(this, idFieldNames, identifier);
   }
 
   /**
@@ -561,11 +569,12 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
           if (attributeType != null) {
             if (attributeType.getJavaClass() == Record.class) {
               final String typePath = attributeType.getName();
-              final RecordDefinitionFactory metaDataFactory = recordDefinition
+              final RecordDefinitionFactory recordDefinitionFactory = recordDefinition
                 .getRecordDefinitionFactory();
-              final RecordDefinition subMetaData = metaDataFactory.getRecordDefinition(typePath);
-              final RecordFactory recordFactory = subMetaData.getRecordFactory();
-              final Record subObject = recordFactory.createRecord(subMetaData);
+              final RecordDefinition subRecordDefinition = recordDefinitionFactory
+                .getRecordDefinition(typePath);
+              final RecordFactory recordFactory = subRecordDefinition.getRecordFactory();
+              final Record subObject = recordFactory.createRecord(subRecordDefinition);
               subObject.setValue(subKey, value);
               setValue(key, subObject);
             }
@@ -599,19 +608,19 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     final RecordDefinition recordDefinition = getRecordDefinition();
     final String name = path.toString();
     final int dotIndex = name.indexOf(".");
-    String codeTableAttributeName;
+    String codeTableFieldName;
     String codeTableValueName = null;
     if (dotIndex == -1) {
       if (name.equals(getRecordDefinition().getIdFieldName())) {
-        codeTableAttributeName = null;
+        codeTableFieldName = null;
       } else {
-        codeTableAttributeName = name;
+        codeTableFieldName = name;
       }
     } else {
-      codeTableAttributeName = name.substring(0, dotIndex);
+      codeTableFieldName = name.substring(0, dotIndex);
       codeTableValueName = name.substring(dotIndex + 1);
     }
-    final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(codeTableAttributeName);
+    final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(codeTableFieldName);
     if (codeTable == null) {
       if (dotIndex != -1) {
         LoggerFactory.getLogger(getClass())
@@ -620,23 +629,26 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
       }
       setValue(name, value);
     } else if (value == null || !Property.hasValue(value.toString())) {
-      setValue(codeTableAttributeName, null);
+      setValue(codeTableFieldName, null);
     } else {
       Object targetValue;
+      Identifier id;
       if (codeTableValueName == null) {
         if (value instanceof List) {
           final List list = (List)value;
-          targetValue = codeTable.getId(list.toArray());
+          id = codeTable.getIdentifier(list.toArray());
         } else {
-          targetValue = codeTable.getId(value);
+          id = codeTable.getIdentifier(value);
         }
       } else {
-        targetValue = codeTable.getId(Collections.singletonMap(codeTableValueName, value));
+        id = codeTable.getIdentifier(Collections.singletonMap(codeTableValueName, value));
       }
-      if (targetValue == null) {
+      if (id == null) {
         targetValue = value;
+      } else {
+        targetValue = Value.getValue(id);
       }
-      setValue(codeTableAttributeName, targetValue);
+      setValue(codeTableFieldName, targetValue);
     }
   }
 
@@ -669,12 +681,12 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
   }
 
   default void setValues(final Record record, final Collection<String> fieldNames) {
-    for (final String attributeName : fieldNames) {
-      final Object oldValue = getValue(attributeName);
-      Object newValue = record.getValue(attributeName);
+    for (final String fieldName : fieldNames) {
+      final Object oldValue = getValue(fieldName);
+      Object newValue = record.getValue(fieldName);
       if (!EqualsInstance.INSTANCE.equals(oldValue, newValue)) {
         newValue = JavaBeanUtil.clone(newValue);
-        setValue(attributeName, newValue);
+        setValue(fieldName, newValue);
       }
     }
   }

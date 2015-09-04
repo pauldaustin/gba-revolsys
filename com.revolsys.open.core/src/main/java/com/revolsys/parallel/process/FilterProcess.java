@@ -1,7 +1,8 @@
 package com.revolsys.parallel.process;
 
-import com.revolsys.parallel.channel.Channel;
 import java.util.function.Predicate;
+
+import com.revolsys.parallel.channel.Channel;
 
 public class FilterProcess<T> extends BaseInOutProcess<T, T> {
   private Predicate<T> predicate;

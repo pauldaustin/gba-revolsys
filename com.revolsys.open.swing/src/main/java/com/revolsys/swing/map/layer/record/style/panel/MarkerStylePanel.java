@@ -35,8 +35,8 @@ public class MarkerStylePanel extends BaseStylePanel implements PropertyChangeLi
     this.geometryStyleRenderer = markerStyleRenderer;
     this.markerStyle = markerStyleRenderer.getStyle().clone();
     final AbstractRecordLayer layer = markerStyleRenderer.getLayer();
-    final RecordDefinition metaData = layer.getRecordDefinition();
-    final FieldDefinition geometryAttribute = metaData.getGeometryField();
+    final RecordDefinition recordDefinition = layer.getRecordDefinition();
+    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
 
     if (geometryAttribute != null) {
 

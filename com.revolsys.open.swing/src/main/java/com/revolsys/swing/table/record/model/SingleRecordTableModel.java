@@ -39,7 +39,7 @@ public class SingleRecordTableModel extends AbstractSingleRecordTableModel {
 
   public void setObject(final Record object) {
     if (object != this.object) {
-      setMetaData(object.getRecordDefinition());
+      setRecordDefinition(object.getRecordDefinition());
       this.object = object;
       fireTableDataChanged();
     }

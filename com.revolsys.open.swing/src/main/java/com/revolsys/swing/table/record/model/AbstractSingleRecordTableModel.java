@@ -26,10 +26,10 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
     final SingleRecordTableCellRenderer cellRenderer = new SingleRecordTableCellRenderer();
     final RecordTableCellEditor cellEditor = new RecordTableCellEditor(table);
 
-    final RecordDefinition metaData = model.getRecordDefinition();
+    final RecordDefinition recordDefinition = model.getRecordDefinition();
 
     int maxTitleWidth = 100;
-    for (final String fieldName : metaData.getFieldNames()) {
+    for (final String fieldName : recordDefinition.getFieldNames()) {
       final String title = model.getFieldTitle(fieldName);
       final int titleWidth = Math.max(title.length(), fieldName.length()) * 8;
       if (titleWidth > maxTitleWidth) {
@@ -67,8 +67,9 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
     return table;
   }
 
-  public AbstractSingleRecordTableModel(final RecordDefinition metaData, final boolean editable) {
-    super(metaData);
+  public AbstractSingleRecordTableModel(final RecordDefinition recordDefinition,
+    final boolean editable) {
+    super(recordDefinition);
     setEditable(editable);
   }
 
@@ -88,16 +89,16 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
   }
 
   public String getFieldTitle(final String fieldName) {
-    final RecordDefinition metaData = getRecordDefinition();
-    return metaData.getFieldTitle(fieldName);
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    return recordDefinition.getFieldTitle(fieldName);
   }
 
   public abstract Object getObjectValue(final int attributeIndex);
 
   @Override
   public int getRowCount() {
-    final RecordDefinition metaData = getRecordDefinition();
-    final int attributeCount = metaData.getFieldCount();
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final int attributeCount = recordDefinition.getFieldCount();
     return attributeCount;
   }
 
@@ -121,12 +122,12 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (columnIndex == 2) {
       if (isEditable()) {
-        final RecordDefinition metaData = getRecordDefinition();
-        if (rowIndex == metaData.getIdFieldIndex()) {
+        final RecordDefinition recordDefinition = getRecordDefinition();
+        if (rowIndex == recordDefinition.getIdFieldIndex()) {
           return false;
         } else {
-          final String attributeName = getFieldName(rowIndex);
-          return !isReadOnly(attributeName);
+          final String fieldName = getFieldName(rowIndex);
+          return !isReadOnly(fieldName);
         }
       } else {
         return false;
@@ -146,12 +147,12 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
     return setObjectValue(attributeIndex, objectValue);
   }
 
-  @Override
-  public void setMetaData(final RecordDefinition metaData) {
-    super.setMetaData(metaData);
-  }
-
   protected abstract Object setObjectValue(final int attributeIndex, final Object value);
+
+  @Override
+  public void setRecordDefinition(final RecordDefinition recordDefinition) {
+    super.setRecordDefinition(recordDefinition);
+  }
 
   @Override
   public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {

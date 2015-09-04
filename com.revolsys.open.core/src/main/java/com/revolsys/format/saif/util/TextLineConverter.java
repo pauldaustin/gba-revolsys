@@ -27,9 +27,9 @@ public class TextLineConverter implements OsnConverter {
     values.put(TYPE, SaifConstants.TEXT_LINE);
     Geometry geometry = null;
 
-    String attributeName = iterator.nextAttributeName();
-    while (attributeName != null) {
-      if (attributeName.equals("position")) {
+    String fieldName = iterator.nextFieldName();
+    while (fieldName != null) {
+      if (fieldName.equals("position")) {
         final String objectName = iterator.nextObjectName();
         final OsnConverter osnConverter = this.converters.getConverter(objectName);
         if (osnConverter == null) {
@@ -37,9 +37,9 @@ public class TextLineConverter implements OsnConverter {
         }
         geometry = (Geometry)osnConverter.read(iterator);
       } else {
-        readAttribute(iterator, attributeName, values);
+        readAttribute(iterator, fieldName, values);
       }
-      attributeName = iterator.nextAttributeName();
+      fieldName = iterator.nextFieldName();
     }
     if (!values.isEmpty()) {
       geometry.setUserData(values);
@@ -47,10 +47,10 @@ public class TextLineConverter implements OsnConverter {
     return geometry;
   }
 
-  protected void readAttribute(final OsnIterator iterator, final String attributeName,
+  protected void readAttribute(final OsnIterator iterator, final String fieldName,
     final Map<String, Object> values) {
     iterator.next();
-    values.put(attributeName, iterator.getValue());
+    values.put(fieldName, iterator.getValue());
   }
 
   @Override
@@ -58,7 +58,7 @@ public class TextLineConverter implements OsnConverter {
     if (object instanceof Point) {
       final Point point = (Point)object;
       serializer.startObject(SaifConstants.TEXT_LINE);
-      serializer.attributeName("position");
+      serializer.fieldName("position");
       final OsnConverter osnConverter = this.converters.getConverter(SaifConstants.POINT);
       osnConverter.write(serializer, point);
       serializer.endAttribute();

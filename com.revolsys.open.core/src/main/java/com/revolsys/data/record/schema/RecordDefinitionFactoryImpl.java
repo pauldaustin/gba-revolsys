@@ -11,7 +11,7 @@ public class RecordDefinitionFactoryImpl extends BaseObjectWithProperties
 
   private final Map<String, RecordDefinition> types = new LinkedHashMap<>();
 
-  public void addMetaData(final RecordDefinition type) {
+  public void addRecordDefinition(final RecordDefinition type) {
     if (type != null) {
       this.types.put(type.getPath(), type);
     }

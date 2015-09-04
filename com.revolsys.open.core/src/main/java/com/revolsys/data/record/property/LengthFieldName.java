@@ -9,15 +9,15 @@ public class LengthFieldName extends AbstractRecordDefinitionProperty {
   public static final String PROPERTY_NAME = LengthFieldName.class.getName() + ".propertyName";
 
   public static LengthFieldName getProperty(final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    return getProperty(metaData);
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    return getProperty(recordDefinition);
   }
 
-  public static LengthFieldName getProperty(final RecordDefinition metaData) {
-    LengthFieldName property = metaData.getProperty(PROPERTY_NAME);
+  public static LengthFieldName getProperty(final RecordDefinition recordDefinition) {
+    LengthFieldName property = recordDefinition.getProperty(PROPERTY_NAME);
     if (property == null) {
       property = new LengthFieldName();
-      property.setRecordDefinition(metaData);
+      property.setRecordDefinition(recordDefinition);
     }
     return property;
   }
@@ -27,17 +27,17 @@ public class LengthFieldName extends AbstractRecordDefinitionProperty {
     property.setLength(object);
   }
 
-  private String attributeName;
+  private String fieldName;
 
   public LengthFieldName() {
   }
 
-  public LengthFieldName(final String attributeName) {
-    this.attributeName = attributeName;
+  public LengthFieldName(final String fieldName) {
+    this.fieldName = fieldName;
   }
 
-  public String getAttributeName() {
-    return this.attributeName;
+  public String getFieldName() {
+    return this.fieldName;
   }
 
   @Override
@@ -45,20 +45,20 @@ public class LengthFieldName extends AbstractRecordDefinitionProperty {
     return PROPERTY_NAME;
   }
 
-  public void setFieldName(final String attributeName) {
-    this.attributeName = attributeName;
+  public void setFieldName(final String fieldName) {
+    this.fieldName = fieldName;
   }
 
   public void setLength(final Record object) {
-    if (Property.hasValue(this.attributeName)) {
+    if (Property.hasValue(this.fieldName)) {
       final LineString line = object.getGeometry();
       final double length = line.getLength();
-      object.setValue(this.attributeName, length);
+      object.setValue(this.fieldName, length);
     }
   }
 
   @Override
   public String toString() {
-    return "LengthAttribute " + this.attributeName;
+    return "LengthAttribute " + this.fieldName;
   }
 }

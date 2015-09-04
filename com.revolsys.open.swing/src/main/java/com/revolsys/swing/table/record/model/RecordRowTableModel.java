@@ -41,11 +41,12 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
 
   private RecordRowTable table;
 
-  public RecordRowTableModel(final RecordDefinition metaData, final Collection<String> fieldNames) {
-    super(metaData);
+  public RecordRowTableModel(final RecordDefinition recordDefinition,
+    final Collection<String> fieldNames) {
+    super(recordDefinition);
     setFieldNames(fieldNames);
     setFieldTitles(Collections.<String> emptyList());
-    final String idFieldName = metaData.getIdFieldName();
+    final String idFieldName = recordDefinition.getIdFieldName();
     setSortOrder(idFieldName);
   }
 
@@ -85,8 +86,8 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
       return null;
     } else {
       final String name = getFieldName(columnIndex);
-      final RecordDefinition metaData = getRecordDefinition();
-      return metaData.getField(name);
+      final RecordDefinition recordDefinition = getRecordDefinition();
+      return recordDefinition.getField(name);
     }
   }
 
@@ -96,8 +97,8 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
       return Object.class;
     } else {
       final String name = getFieldName(columnIndex);
-      final RecordDefinition metaData = getRecordDefinition();
-      final DataType type = metaData.getFieldType(name);
+      final RecordDefinition recordDefinition = getRecordDefinition();
+      final DataType type = recordDefinition.getFieldType(name);
       if (type == null) {
         return Object.class;
       } else {
@@ -126,15 +127,15 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
     if (columnIndex < this.fieldsOffset) {
       return null;
     } else {
-      final String attributeName = this.fieldNames.get(columnIndex - this.fieldsOffset);
-      if (attributeName == null) {
+      final String fieldName = this.fieldNames.get(columnIndex - this.fieldsOffset);
+      if (fieldName == null) {
         return null;
       } else {
-        final int index = attributeName.indexOf('.');
+        final int index = fieldName.indexOf('.');
         if (index == -1) {
-          return attributeName;
+          return fieldName;
         } else {
-          return attributeName.substring(0, index);
+          return fieldName.substring(0, index);
         }
       }
     }
@@ -196,10 +197,10 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
     if (isEditable()) {
       final Record record = getRecord(rowIndex);
       if (record != null && record.getState() != RecordState.Initalizing) {
-        final String attributeName = getFieldName(rowIndex, columnIndex);
-        if (attributeName != null) {
-          if (!isReadOnly(attributeName)) {
-            final Class<?> attributeClass = getRecordDefinition().getFieldClass(attributeName);
+        final String fieldName = getFieldName(rowIndex, columnIndex);
+        if (fieldName != null) {
+          if (!isReadOnly(fieldName)) {
+            final Class<?> attributeClass = getRecordDefinition().getFieldClass(fieldName);
             if (!Geometry.class.isAssignableFrom(attributeClass)) {
               return true;
             }
@@ -222,12 +223,12 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
     return false;
   }
 
-  public void setFieldNames(final Collection<String> attributeNames) {
-    if (attributeNames == null || attributeNames.isEmpty()) {
-      final RecordDefinition metaData = getRecordDefinition();
-      this.fieldNames = new ArrayList<String>(metaData.getFieldNames());
+  public void setFieldNames(final Collection<String> fieldNames) {
+    if (fieldNames == null || fieldNames.isEmpty()) {
+      final RecordDefinition recordDefinition = getRecordDefinition();
+      this.fieldNames = new ArrayList<String>(recordDefinition.getFieldNames());
     } else {
-      this.fieldNames = new ArrayList<String>(attributeNames);
+      this.fieldNames = new ArrayList<String>(fieldNames);
     }
   }
 
@@ -242,9 +243,9 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
       if (i < attributeTitles.size()) {
         title = attributeTitles.get(i);
       } else {
-        final String attributeName = getFieldName(i);
-        final RecordDefinition metaData = getRecordDefinition();
-        final FieldDefinition attribute = metaData.getField(attributeName);
+        final String fieldName = getFieldName(i);
+        final RecordDefinition recordDefinition = getRecordDefinition();
+        final FieldDefinition attribute = recordDefinition.getField(fieldName);
         title = attribute.getTitle();
       }
       this.fieldTitles.add(title);

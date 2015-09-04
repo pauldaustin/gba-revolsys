@@ -23,23 +23,24 @@ public abstract class AbstractRecordAndGeometryWriterFactory extends AbstractRec
 
   @Override
   public Writer<Geometry> createGeometryWriter(final Resource resource) {
-    final RecordDefinition recordDefinition = Records.createGeometryMetaData();
+    final RecordDefinition recordDefinition = Records.createGeometryRecordDefinition();
     final Writer<Record> recordWriter = createRecordWriter(recordDefinition, resource);
     return createGeometryWriter(recordWriter);
   }
 
   @Override
   public Writer<Geometry> createGeometryWriter(final String baseName, final OutputStream out) {
-    final RecordDefinition metaData = Records.createGeometryMetaData();
-    final Writer<Record> recordWriter = createRecordWriter(baseName, metaData, out);
+    final RecordDefinition recordDefinition = Records.createGeometryRecordDefinition();
+    final Writer<Record> recordWriter = createRecordWriter(baseName, recordDefinition, out);
     return createGeometryWriter(recordWriter);
   }
 
   @Override
   public Writer<Geometry> createGeometryWriter(final String baseName, final OutputStream out,
     final Charset charset) {
-    final RecordDefinition metaData = Records.createGeometryMetaData();
-    final Writer<Record> recordWriter = createRecordWriter(baseName, metaData, out, charset);
+    final RecordDefinition recordDefinition = Records.createGeometryRecordDefinition();
+    final Writer<Record> recordWriter = createRecordWriter(baseName, recordDefinition, out,
+      charset);
     return createGeometryWriter(recordWriter);
   }
 

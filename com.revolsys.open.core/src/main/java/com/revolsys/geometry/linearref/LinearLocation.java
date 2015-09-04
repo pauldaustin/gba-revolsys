@@ -40,6 +40,7 @@ import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.model.segment.LineSegment;
 import com.revolsys.geometry.model.segment.LineSegmentDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents a location along a {@link LineString} or {@link MultiLineString}.

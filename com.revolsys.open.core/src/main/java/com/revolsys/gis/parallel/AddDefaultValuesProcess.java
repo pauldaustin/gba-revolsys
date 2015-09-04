@@ -40,9 +40,9 @@ import com.revolsys.parallel.process.AbstractInOutProcess;
 public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record> {
   private static final Logger log = Logger.getLogger(AddDefaultValuesProcess.class);
 
-  private Set<String> excludedAttributeNames = new HashSet<String>();
+  private Set<String> excludedFieldNames = new HashSet<String>();
 
-  private RecordDefinitionFactory metaDataFactory;
+  private RecordDefinitionFactory recordDefinitionFactory;
 
   private String schemaName;
 
@@ -75,12 +75,12 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
    *
    * @return The names of the attributes to exclude.
    */
-  public Set<String> getExcludedAttributeNames() {
-    return this.excludedAttributeNames;
+  public Set<String> getExcludedFieldNames() {
+    return this.excludedFieldNames;
   }
 
-  public RecordDefinitionFactory getMetaDataFactory() {
-    return this.metaDataFactory;
+  public RecordDefinitionFactory getRecordDefinitionFactory() {
+    return this.recordDefinitionFactory;
   }
 
   /**
@@ -132,35 +132,35 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
   private void setDefaultValue(final Record record, final String key, final Object value) {
     final int dotIndex = key.indexOf('.');
     if (dotIndex == -1) {
-      if (record.getValue(key) == null && !this.excludedAttributeNames.contains(key)) {
+      if (record.getValue(key) == null && !this.excludedFieldNames.contains(key)) {
         log.info("Adding attribute " + key + "=" + value);
         record.setValue(key, value);
       }
     } else {
-      final String attributeName = key.substring(0, dotIndex);
-      NDC.push(" -> " + attributeName);
+      final String fieldName = key.substring(0, dotIndex);
+      NDC.push(" -> " + fieldName);
       try {
         final String subKey = key.substring(dotIndex + 1);
-        final Object attributeValue = record.getValue(attributeName);
+        final Object attributeValue = record.getValue(fieldName);
         if (attributeValue == null) {
           final RecordDefinition type = record.getRecordDefinition();
-          final int attrIndex = type.getFieldIndex(attributeName);
+          final int attrIndex = type.getFieldIndex(fieldName);
           final DataType dataType = type.getFieldType(attrIndex);
           final Class<?> typeClass = dataType.getJavaClass();
           if (typeClass == Record.class) {
 
-            final RecordDefinition subClass = this.metaDataFactory
+            final RecordDefinition subClass = this.recordDefinitionFactory
               .getRecordDefinition(dataType.getName());
             final Record subObject = subClass.createRecord();
             setDefaultValue(subObject, subKey, value);
-            record.setValue(attributeName, subObject);
+            record.setValue(fieldName, subObject);
             process(subObject);
           }
         } else if (attributeValue instanceof Record) {
           final Record subObject = (Record)attributeValue;
           setDefaultValue(subObject, subKey, value);
-        } else if (!attributeName.equals(record.getRecordDefinition().getGeometryFieldName())) {
-          log.error("Attribute '" + attributeName + "' must be a Record");
+        } else if (!fieldName.equals(record.getRecordDefinition().getGeometryFieldName())) {
+          log.error("Attribute '" + fieldName + "' must be a Record");
         }
       } finally {
         NDC.pop();
@@ -172,14 +172,14 @@ public class AddDefaultValuesProcess extends AbstractInOutProcess<Record, Record
    * Set the list of attribute names that will be excluded from having the
    * default values set.
    *
-   * @param excludedAttributeNames The names of the attributes to exclude.
+   * @param excludedFieldNames The names of the attributes to exclude.
    */
-  public void setExcludedAttributeNames(final Set<String> excludedAttributeNames) {
-    this.excludedAttributeNames = excludedAttributeNames;
+  public void setExcludedFieldNames(final Set<String> excludedFieldNames) {
+    this.excludedFieldNames = excludedFieldNames;
   }
 
-  public void setMetaDataFactory(final RecordDefinitionFactory metaDataFactory) {
-    this.metaDataFactory = metaDataFactory;
+  public void setRecordDefinitionFactory(final RecordDefinitionFactory recordDefinitionFactory) {
+    this.recordDefinitionFactory = recordDefinitionFactory;
   }
 
   /**

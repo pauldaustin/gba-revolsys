@@ -97,14 +97,14 @@ public class RecordStoreQueryReader extends IteratorReader<Record>implements Rec
   public void open() {
     if (this.typePaths != null) {
       for (final String tableName : this.typePaths) {
-        final RecordDefinition metaData = this.recordStore.getRecordDefinition(tableName);
-        if (metaData != null) {
+        final RecordDefinition recordDefinition = this.recordStore.getRecordDefinition(tableName);
+        if (recordDefinition != null) {
           Query query;
           if (this.boundingBox == null) {
-            query = new Query(metaData);
+            query = new Query(recordDefinition);
             query.setWhereCondition(new SqlCondition(this.whereClause));
           } else {
-            query = new Query(metaData);
+            query = new Query(recordDefinition);
             query.setBoundingBox(this.boundingBox);
           }
           addQuery(query);

@@ -71,8 +71,8 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
   }
 
   public String getFieldName(final int attributeIndex) {
-    final RecordDefinition metaData = getRecordDefinition();
-    return metaData.getFieldName(attributeIndex);
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    return recordDefinition.getFieldName(attributeIndex);
   }
 
   public abstract String getFieldName(int rowIndex, int columnIndex);
@@ -94,8 +94,8 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
     return this.editable;
   }
 
-  public boolean isReadOnly(final String attributeName) {
-    return this.readOnlyFieldNames.contains(attributeName);
+  public boolean isReadOnly(final String fieldName) {
+    return this.readOnlyFieldNames.contains(fieldName);
   }
 
   public abstract boolean isSelected(boolean selected, int rowIndex, int columnIndex);
@@ -108,18 +108,18 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
     this.editable = editable;
   }
 
-  protected void setMetaData(final RecordDefinition metaData) {
-    if (metaData != this.recordDefinition) {
-      this.recordDefinition = metaData;
-      fireTableStructureChanged();
-    }
-  }
-
   public void setReadOnlyFieldNames(final Collection<String> readOnlyFieldNames) {
     if (readOnlyFieldNames == null) {
       this.readOnlyFieldNames = new HashSet<String>();
     } else {
       this.readOnlyFieldNames = new HashSet<String>(readOnlyFieldNames);
+    }
+  }
+
+  protected void setRecordDefinition(final RecordDefinition recordDefinition) {
+    if (recordDefinition != this.recordDefinition) {
+      this.recordDefinition = recordDefinition;
+      fireTableStructureChanged();
     }
   }
 
@@ -171,11 +171,11 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
         return null;
       }
     }
-    final RecordDefinition metaData = getRecordDefinition();
+    final RecordDefinition recordDefinition = getRecordDefinition();
     final String name = getFieldName(attributeIndex);
-    final CodeTable codeTable = metaData.getCodeTableByFieldName(name);
+    final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(name);
     if (codeTable == null) {
-      final Class<?> fieldClass = metaData.getFieldClass(name);
+      final Class<?> fieldClass = recordDefinition.getFieldClass(name);
       final Object objectValue = StringConverterRegistry.toObject(fieldClass, displayValue);
       return objectValue;
     } else {

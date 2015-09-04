@@ -36,8 +36,8 @@ public class RecordReaderTransferable implements Transferable {
       return this.reader;
     } else if (DataFlavor.stringFlavor.equals(flavor)) {
       final StringWriter out = new StringWriter();
-      final Collection<String> attributeNames = this.reader.getRecordDefinition().getFieldNames();
-      Csv.writeColumns(out, attributeNames, '\t', '\n');
+      final Collection<String> fieldNames = this.reader.getRecordDefinition().getFieldNames();
+      Csv.writeColumns(out, fieldNames, '\t', '\n');
       for (final Record object : this.reader) {
         if (object != null) {
           final Collection<Object> values = object.values();

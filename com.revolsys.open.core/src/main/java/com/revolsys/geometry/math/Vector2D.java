@@ -36,6 +36,7 @@ import com.revolsys.geometry.algorithm.RobustDeterminant;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.util.Assert;
+import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.math.Angle;
 import com.revolsys.util.MathUtil;
 

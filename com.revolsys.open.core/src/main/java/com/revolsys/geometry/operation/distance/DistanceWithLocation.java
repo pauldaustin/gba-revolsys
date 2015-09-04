@@ -44,6 +44,7 @@ import com.revolsys.geometry.model.Location;
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.model.segment.Segment;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Find two points on two {@link Geometry}s which lie

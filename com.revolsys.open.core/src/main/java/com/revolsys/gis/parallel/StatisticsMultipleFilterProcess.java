@@ -2,12 +2,12 @@ package com.revolsys.gis.parallel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import com.revolsys.data.record.Record;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.MultipleFilterProcess;
-import java.util.function.Predicate;
 
 public class StatisticsMultipleFilterProcess extends MultipleFilterProcess<Record> {
 

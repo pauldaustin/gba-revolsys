@@ -71,6 +71,7 @@ import com.revolsys.geometry.model.impl.PointDoubleGf;
 import com.revolsys.geometry.model.impl.PolygonImpl;
 import com.revolsys.geometry.model.segment.LineSegment;
 import com.revolsys.geometry.model.segment.LineSegmentDoubleGF;
+import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.io.map.MapSerializer;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.MathUtil;

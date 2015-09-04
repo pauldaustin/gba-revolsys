@@ -34,6 +34,7 @@ package com.revolsys.geometry.algorithm;
 
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents a homogeneous coordinate in a 2-D coordinate space.

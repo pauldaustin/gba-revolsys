@@ -61,6 +61,7 @@ import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.geometry.util.BoundingBoxUtil;
+import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.MathUtil;
 import com.revolsys.util.Property;

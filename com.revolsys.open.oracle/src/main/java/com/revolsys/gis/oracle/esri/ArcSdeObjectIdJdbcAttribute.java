@@ -11,9 +11,10 @@ import com.revolsys.data.types.DataTypes;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
 
 public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
-  public static void replaceAttribute(final String schemaName, final RecordDefinition metaData,
-    final Integer registrationId, final String rowIdColumn) {
-    final JdbcFieldDefinition objectIdAttribute = (JdbcFieldDefinition)metaData
+  public static void replaceAttribute(final String schemaName,
+    final RecordDefinition recordDefinition, final Integer registrationId,
+    final String rowIdColumn) {
+    final JdbcFieldDefinition objectIdAttribute = (JdbcFieldDefinition)recordDefinition
       .getField(rowIdColumn);
     if (objectIdAttribute != null && !(objectIdAttribute instanceof ArcSdeObjectIdJdbcAttribute)) {
       final String name = objectIdAttribute.getName();
@@ -22,11 +23,12 @@ public class ArcSdeObjectIdJdbcAttribute extends JdbcFieldDefinition {
 
       final ArcSdeObjectIdJdbcAttribute newObjectIdAttribute = new ArcSdeObjectIdJdbcAttribute(
         objectIdAttribute.getDbName(), name, description, properties, schemaName, registrationId);
-      newObjectIdAttribute.setRecordDefinition(metaData);
-      final RecordDefinitionImpl metaDataImpl = (RecordDefinitionImpl)metaData;
-      metaDataImpl.replaceField(objectIdAttribute, newObjectIdAttribute);
-      if (metaData.getIdFieldName() == null && metaData.getIdFieldNames().isEmpty()) {
-        metaDataImpl.setIdFieldName(name);
+      newObjectIdAttribute.setRecordDefinition(recordDefinition);
+      final RecordDefinitionImpl recordDefinitionImpl = (RecordDefinitionImpl)recordDefinition;
+      recordDefinitionImpl.replaceField(objectIdAttribute, newObjectIdAttribute);
+      if (recordDefinition.getIdFieldName() == null
+        && recordDefinition.getIdFieldNames().isEmpty()) {
+        recordDefinitionImpl.setIdFieldName(name);
       }
     }
   }

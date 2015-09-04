@@ -301,13 +301,13 @@ public class Node<T> extends AbstractCoordinates implements AttributedObject, Ex
    * specified name.
    *
    * @param node The node to get the edges for.
-   * @param attributeName The attribute name.
+   * @param fieldName The attribute name.
    * @return The list of edges without the attribute.
    */
-  public List<Edge<T>> getEdgesWithoutAttribute(final String attributeName) {
+  public List<Edge<T>> getEdgesWithoutAttribute(final String fieldName) {
     final List<Edge<T>> edges = new ArrayList<Edge<T>>();
     for (final Edge<T> edge : getEdges()) {
-      if (edge.getAttribute(attributeName) == null) {
+      if (edge.getAttribute(fieldName) == null) {
         edges.add(edge);
       }
     }

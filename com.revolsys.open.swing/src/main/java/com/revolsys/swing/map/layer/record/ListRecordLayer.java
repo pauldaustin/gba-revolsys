@@ -22,12 +22,12 @@ import com.vividsolutions.jts.geom.Geometry;
 
 public class ListRecordLayer extends AbstractRecordLayer {
 
-  public static RecordDefinitionImpl createMetaData(final String name,
+  public static RecordDefinitionImpl createRecordDefinition(final String name,
     final GeometryFactory geometryFactory, final DataType geometryType) {
-    final RecordDefinitionImpl metaData = new RecordDefinitionImpl(name);
-    metaData.addField("GEOMETRY", geometryType, true);
-    metaData.setGeometryFactory(geometryFactory);
-    return metaData;
+    final RecordDefinitionImpl recordDefinition = new RecordDefinitionImpl(name);
+    recordDefinition.addField("GEOMETRY", geometryType, true);
+    recordDefinition.setGeometryFactory(geometryFactory);
+    return recordDefinition;
   }
 
   private final List<LayerRecord> records = new ArrayList<LayerRecord>();
@@ -39,16 +39,17 @@ public class ListRecordLayer extends AbstractRecordLayer {
     super(properties);
   }
 
-  public ListRecordLayer(final RecordDefinition metaData) {
-    super(metaData);
+  public ListRecordLayer(final RecordDefinition recordDefinition) {
+    super(recordDefinition);
     setEditable(true);
   }
 
   public ListRecordLayer(final String name, final GeometryFactory geometryFactory,
     final DataType geometryType) {
     super(name);
-    final RecordDefinitionImpl metaData = createMetaData(name, geometryFactory, geometryType);
-    setRecordDefinition(metaData);
+    final RecordDefinitionImpl recordDefinition = createRecordDefinition(name, geometryFactory,
+      geometryType);
+    setRecordDefinition(recordDefinition);
   }
 
   @Override

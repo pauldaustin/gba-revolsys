@@ -39,6 +39,7 @@ import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.model.segment.LineSegment;
 import com.revolsys.geometry.model.segment.Segment;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Computes the Euclidean distance (L2 metric) from a {@link Coordinates} to a {@link Geometry}.

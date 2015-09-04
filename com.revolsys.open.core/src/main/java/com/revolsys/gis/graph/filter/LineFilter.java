@@ -1,7 +1,8 @@
 package com.revolsys.gis.graph.filter;
 
-import com.revolsys.gis.graph.Edge;
 import java.util.function.Predicate;
+
+import com.revolsys.gis.graph.Edge;
 import com.vividsolutions.jts.geom.LineString;
 
 public class LineFilter<T> implements Predicate<Edge<T>> {

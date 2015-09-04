@@ -20,8 +20,9 @@
  */
 package com.revolsys.data.record.filter;
 
-import com.revolsys.data.record.Record;
 import java.util.function.Predicate;
+
+import com.revolsys.data.record.Record;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordGeometryDistanceFilter implements Predicate<Record> {
@@ -42,17 +43,6 @@ public class RecordGeometryDistanceFilter implements Predicate<Record> {
     this.maxDistance = maxDistance;
   }
 
-  @Override
-  public boolean test(final Record object) {
-    final Geometry matchGeometry = object.getGeometry();
-    final double distance = matchGeometry.distance(this.geometry);
-    if (distance <= this.maxDistance) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   /**
    * Get the geometry to compare the data objects to to.
    *
@@ -69,6 +59,17 @@ public class RecordGeometryDistanceFilter implements Predicate<Record> {
    */
   public double getMaxDistance() {
     return this.maxDistance;
+  }
+
+  @Override
+  public boolean test(final Record object) {
+    final Geometry matchGeometry = object.getGeometry();
+    final double distance = matchGeometry.distance(this.geometry);
+    if (distance <= this.maxDistance) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

@@ -24,9 +24,9 @@ public class RecordLog {
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.error(message + "\tnull");
     } else if (recordLog == null) {
-      final RecordDefinition metaData = object.getRecordDefinition();
+      final RecordDefinition recordDefinition = object.getRecordDefinition();
       final Logger log = LoggerFactory.getLogger(logCategory);
-      log.error(message + "\t" + metaData.getPath() + object.getIdValue());
+      log.error(message + "\t" + recordDefinition.getPath() + object.getIdValue());
     } else {
       recordLog.error(message, object);
     }
@@ -43,9 +43,9 @@ public class RecordLog {
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.info(message + "\tnull");
     } else if (recordLog == null) {
-      final RecordDefinition metaData = object.getRecordDefinition();
+      final RecordDefinition recordDefinition = object.getRecordDefinition();
       final Logger log = LoggerFactory.getLogger(logCategory);
-      log.info(message + "\t" + metaData.getPath() + object.getIdValue());
+      log.info(message + "\t" + recordDefinition.getPath() + object.getIdValue());
     } else {
       recordLog.info(message, object);
     }
@@ -66,9 +66,9 @@ public class RecordLog {
       final Logger log = LoggerFactory.getLogger(logCategory);
       log.warn(message + "\tnull");
     } else if (recordLog == null) {
-      final RecordDefinition metaData = object.getRecordDefinition();
+      final RecordDefinition recordDefinition = object.getRecordDefinition();
       final Logger log = LoggerFactory.getLogger(logCategory);
-      log.warn(message + "\t" + metaData.getPath() + object.getIdValue());
+      log.warn(message + "\t" + recordDefinition.getPath() + object.getIdValue());
     } else {
       recordLog.warn(message, object);
     }
@@ -89,16 +89,16 @@ public class RecordLog {
     log("ERROR", message, object);
   }
 
-  private RecordDefinition getLogMetaData(final Record object) {
-    final RecordDefinition metaData = object.getRecordDefinition();
-    final RecordDefinition logMetaData = getLogMetaData(metaData);
-    return logMetaData;
+  private RecordDefinition getLogRecordDefinition(final Record object) {
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    final RecordDefinition logRecordDefinition = getLogRecordDefinition(recordDefinition);
+    return logRecordDefinition;
   }
 
-  private RecordDefinition getLogMetaData(final RecordDefinition metaData) {
-    RecordDefinitionImpl logMetaData = this.logRecordDefinitionMap.get(metaData);
-    if (logMetaData == null) {
-      final String path = metaData.getPath();
+  private RecordDefinition getLogRecordDefinition(final RecordDefinition recordDefinition) {
+    RecordDefinitionImpl logRecordDefinition = this.logRecordDefinitionMap.get(recordDefinition);
+    if (logRecordDefinition == null) {
+      final String path = recordDefinition.getPath();
       final String parentPath = Path.getPath(path);
       final String tableName = Path.getName(path);
       final String logTableName;
@@ -108,17 +108,17 @@ public class RecordLog {
         logTableName = tableName + "_log";
       }
       final String logTypeName = Path.toPath(parentPath, logTableName);
-      logMetaData = new RecordDefinitionImpl(logTypeName);
-      logMetaData.addField("LOGMESSAGE", DataTypes.STRING, 255, true);
-      logMetaData.addField("LOGLEVEL", DataTypes.STRING, 10, true);
-      for (final FieldDefinition attribute : metaData.getFields()) {
+      logRecordDefinition = new RecordDefinitionImpl(logTypeName);
+      logRecordDefinition.addField("LOGMESSAGE", DataTypes.STRING, 255, true);
+      logRecordDefinition.addField("LOGLEVEL", DataTypes.STRING, 10, true);
+      for (final FieldDefinition attribute : recordDefinition.getFields()) {
         final FieldDefinition logAttribute = new FieldDefinition(attribute);
-        logMetaData.addField(logAttribute);
+        logRecordDefinition.addField(logAttribute);
 
       }
-      this.logRecordDefinitionMap.put(metaData, logMetaData);
+      this.logRecordDefinitionMap.put(recordDefinition, logRecordDefinition);
     }
-    return logMetaData;
+    return logRecordDefinition;
   }
 
   public Writer<Record> getWriter() {
@@ -131,8 +131,8 @@ public class RecordLog {
 
   private void log(final String logLevel, final Object message, final Record object) {
     if (this.writer != null) {
-      final RecordDefinition logMetaData = getLogMetaData(object);
-      final Record logObject = new ArrayRecord(logMetaData, object);
+      final RecordDefinition logRecordDefinition = getLogRecordDefinition(object);
+      final Record logObject = new ArrayRecord(logRecordDefinition, object);
       logObject.setValue("LOGMESSAGE", message);
       logObject.setValue("LOGLEVEL", logLevel);
       synchronized (this.writer) {

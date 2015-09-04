@@ -90,7 +90,7 @@ public class GpxIterator implements RecordIterator {
     this.in = in;
     try {
       StaxUtils.skipToStartElement(in);
-      skipMetaData();
+      skipRecordDefinition();
     } catch (final XMLStreamException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
@@ -153,18 +153,18 @@ public class GpxIterator implements RecordIterator {
   }
 
   protected Object parseAttribute(final Record record) {
-    final String attributeName = this.in.getLocalName();
+    final String fieldName = this.in.getLocalName();
     final String stringValue = StaxUtils.getElementText(this.in);
     Object value;
     if (stringValue == null) {
       value = null;
-    } else if (attributeName.equals("time")) {
+    } else if (fieldName.equals("time")) {
       value = DateUtil.getDate("yyyy-MM-dd'T'HH:mm:ss'Z'", stringValue);
     } else {
       value = stringValue;
     }
     if (value != null) {
-      record.setValue(attributeName, value);
+      record.setValue(fieldName, value);
     }
     return value;
   }
@@ -401,7 +401,7 @@ public class GpxIterator implements RecordIterator {
     this.schemaName = schemaName;
   }
 
-  public void skipMetaData() throws XMLStreamException {
+  public void skipRecordDefinition() throws XMLStreamException {
     StaxUtils.requireLocalPart(this.in, GpxConstants.GPX_ELEMENT);
     StaxUtils.skipToStartElement(this.in);
     if (this.in.getName().equals(GpxConstants.METADATA_ELEMENT)) {

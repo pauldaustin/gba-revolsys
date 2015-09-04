@@ -19,21 +19,21 @@ public class RecordDefinitionTableModel extends AbstractTableModel {
 
   private static final long serialVersionUID = 1L;
 
-  public static BaseJTable createTable(final RecordDefinition metaData) {
-    if (metaData == null) {
+  public static BaseJTable createTable(final RecordDefinition recordDefinition) {
+    if (recordDefinition == null) {
       return null;
     } else {
-      final RecordDefinitionTableModel model = new RecordDefinitionTableModel(metaData);
+      final RecordDefinitionTableModel model = new RecordDefinitionTableModel(recordDefinition);
       final BaseJTable table = new BaseJTable(model);
       table.resizeColumnsToContent();
       return table;
     }
   }
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
-  public RecordDefinitionTableModel(final RecordDefinition metaData) {
-    this.metaData = metaData;
+  public RecordDefinitionTableModel(final RecordDefinition recordDefinition) {
+    this.recordDefinition = recordDefinition;
   }
 
   @Override
@@ -53,12 +53,12 @@ public class RecordDefinitionTableModel extends AbstractTableModel {
 
   @Override
   public int getRowCount() {
-    return this.metaData.getFieldCount();
+    return this.recordDefinition.getFieldCount();
   }
 
   @Override
   public Object getValueAt(final int rowIndex, final int columnIndex) {
-    final FieldDefinition attribute = this.metaData.getField(rowIndex);
+    final FieldDefinition attribute = this.recordDefinition.getField(rowIndex);
     if (attribute == null) {
       return "...";
     } else {

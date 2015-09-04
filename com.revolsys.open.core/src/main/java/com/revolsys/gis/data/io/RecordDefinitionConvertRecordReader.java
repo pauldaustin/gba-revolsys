@@ -18,15 +18,15 @@ public class RecordDefinitionConvertRecordReader extends AbstractReader<Record>
 
   private Iterator<Record> iterator;
 
-  private final RecordDefinition metaData;
+  private final RecordDefinition recordDefinition;
 
   private boolean open;
 
   private final Reader<Record> reader;
 
-  public RecordDefinitionConvertRecordReader(final RecordDefinition metaData,
+  public RecordDefinitionConvertRecordReader(final RecordDefinition recordDefinition,
     final Reader<Record> reader) {
-    this.metaData = metaData;
+    this.recordDefinition = recordDefinition;
     this.reader = reader;
   }
 
@@ -37,7 +37,7 @@ public class RecordDefinitionConvertRecordReader extends AbstractReader<Record>
 
   @Override
   public RecordDefinition getRecordDefinition() {
-    return this.metaData;
+    return this.recordDefinition;
   }
 
   @Override
@@ -57,12 +57,12 @@ public class RecordDefinitionConvertRecordReader extends AbstractReader<Record>
   public Record next() {
     if (hasNext()) {
       final Record source = this.iterator.next();
-      final Record target = new ArrayRecord(this.metaData);
-      for (final FieldDefinition attribute : this.metaData.getFields()) {
+      final Record target = new ArrayRecord(this.recordDefinition);
+      for (final FieldDefinition attribute : this.recordDefinition.getFields()) {
         final String name = attribute.getName();
         final Object value = source.getValue(name);
         if (value != null) {
-          final DataType dataType = this.metaData.getFieldType(name);
+          final DataType dataType = this.recordDefinition.getFieldType(name);
           final Object convertedValue = StringConverterRegistry.toObject(dataType, value);
           target.setValue(name, convertedValue);
         }

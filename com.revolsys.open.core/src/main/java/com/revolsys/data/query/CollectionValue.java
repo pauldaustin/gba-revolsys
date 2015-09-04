@@ -125,9 +125,9 @@ public class CollectionValue extends QueryValue {
   public List<Object> getValues() {
     CodeTable codeTable = null;
     if (this.field != null) {
-      final RecordDefinition metaData = this.field.getRecordDefinition();
+      final RecordDefinition recordDefinition = this.field.getRecordDefinition();
       final String fieldName = this.field.getName();
-      codeTable = metaData.getCodeTableByFieldName(fieldName);
+      codeTable = recordDefinition.getCodeTableByFieldName(fieldName);
     }
     final List<Object> values = new ArrayList<Object>();
     for (final QueryValue queryValue : getQueryValues()) {

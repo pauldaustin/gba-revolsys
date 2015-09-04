@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A graph comprised of {@link HalfEdge}s.

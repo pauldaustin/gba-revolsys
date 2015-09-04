@@ -41,6 +41,7 @@ import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.model.impl.PointDouble;
 import com.revolsys.geometry.model.segment.Segment;
 import com.revolsys.geometry.operation.distance.GeometryLocation;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Find two points on two {@link Geometry}s which lie within a given distance,

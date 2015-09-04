@@ -57,6 +57,7 @@ import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.Polygon;
 import com.revolsys.geometry.model.Polygonal;
 import com.revolsys.geometry.model.util.CleanDuplicatePoints;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * A GeometryGraph is a graph that models a given Geometry

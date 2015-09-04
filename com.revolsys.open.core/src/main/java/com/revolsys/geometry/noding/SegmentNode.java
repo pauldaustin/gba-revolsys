@@ -36,6 +36,7 @@ import java.io.PrintStream;
 
 import com.revolsys.geometry.model.Point;
 import com.revolsys.geometry.model.impl.PointDouble;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents an intersection point between two {@link SegmentString}s.

@@ -1,7 +1,8 @@
 package com.revolsys.data.record.filter;
 
-import com.revolsys.data.record.Record;
 import java.util.function.Predicate;
+
+import com.revolsys.data.record.Record;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class GeometryValueFilter implements Predicate<Record> {

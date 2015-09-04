@@ -38,12 +38,12 @@ public class RecordGeometryComparitor implements Comparator<Record> {
           final Object id2 = object2.getIdValue();
           compare = CompareUtil.compare(id1, id2);
           if (compare == 0) {
-            final RecordDefinition metaData1 = object1.getRecordDefinition();
-            final RecordDefinition metaData2 = object2.getRecordDefinition();
-            final Set<String> attributeNames = new LinkedHashSet<String>();
-            attributeNames.addAll(metaData1.getFieldNames());
-            attributeNames.addAll(metaData2.getFieldNames());
-            compare = compareAttributes(object1, object2, attributeNames);
+            final RecordDefinition recordDefinition1 = object1.getRecordDefinition();
+            final RecordDefinition recordDefinition2 = object2.getRecordDefinition();
+            final Set<String> fieldNames = new LinkedHashSet<String>();
+            fieldNames.addAll(recordDefinition1.getFieldNames());
+            fieldNames.addAll(recordDefinition2.getFieldNames());
+            compare = compareAttributes(object1, object2, fieldNames);
           }
         }
       }
@@ -56,10 +56,10 @@ public class RecordGeometryComparitor implements Comparator<Record> {
   }
 
   public int compareAttributes(final Record object1, final Record object2,
-    final Set<String> attributeNames) {
-    for (final String attributeName : attributeNames) {
-      final Object value1 = object1.getValue(attributeName);
-      final Object value2 = object2.getValue(attributeName);
+    final Set<String> fieldNames) {
+    for (final String fieldName : fieldNames) {
+      final Object value1 = object1.getValue(fieldName);
+      final Object value2 = object2.getValue(fieldName);
       final int compare = CompareUtil.compare(value1, value2);
       if (compare != 0) {
         return compare;

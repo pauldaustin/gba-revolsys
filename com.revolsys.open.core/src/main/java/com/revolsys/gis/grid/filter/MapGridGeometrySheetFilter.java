@@ -1,9 +1,10 @@
 package com.revolsys.gis.grid.filter;
 
+import java.util.function.Predicate;
+
 import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.gis.grid.RectangularMapGrid;
-import java.util.function.Predicate;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 
@@ -21,24 +22,6 @@ public class MapGridGeometrySheetFilter implements Predicate<Record> {
 
   /** The map sheet name. */
   private String sheet;
-
-  @Override
-  public boolean test(final Record object) {
-    if (this.sheet != null && this.grid != null) {
-      final Geometry geometry = object.getGeometry();
-      if (geometry != null) {
-        final Geometry geographicsGeometry = GeometryProjectionUtil.perform(geometry, 4326);
-        final Coordinate centroid = geographicsGeometry.getCentroid().getCoordinate();
-        final String geometrySheet = this.grid.getMapTileName(centroid.x, centroid.y);
-        if (geometrySheet != null) {
-          if (this.sheet.equals(geometrySheet) == !this.inverse) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
-  }
 
   /**
    * @return the grid
@@ -80,6 +63,24 @@ public class MapGridGeometrySheetFilter implements Predicate<Record> {
    */
   public void setSheet(final String sheet) {
     this.sheet = sheet;
+  }
+
+  @Override
+  public boolean test(final Record object) {
+    if (this.sheet != null && this.grid != null) {
+      final Geometry geometry = object.getGeometry();
+      if (geometry != null) {
+        final Geometry geographicsGeometry = GeometryProjectionUtil.perform(geometry, 4326);
+        final Coordinate centroid = geographicsGeometry.getCentroid().getCoordinate();
+        final String geometrySheet = this.grid.getMapTileName(centroid.x, centroid.y);
+        if (geometrySheet != null) {
+          if (this.sheet.equals(geometrySheet) == !this.inverse) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   @Override

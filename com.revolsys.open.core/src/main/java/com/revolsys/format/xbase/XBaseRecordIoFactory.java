@@ -34,14 +34,16 @@ public class XBaseRecordIoFactory extends AbstractRecordIoFactory {
   }
 
   @Override
-  public RecordWriter createRecordWriter(final RecordDefinition metaData, final Resource resource) {
-    return new XbaseRecordWriter(metaData, resource);
+  public RecordWriter createRecordWriter(final RecordDefinition recordDefinition,
+    final Resource resource) {
+    return new XbaseRecordWriter(recordDefinition, resource);
   }
 
   @Override
-  public RecordWriter createRecordWriter(final String baseName, final RecordDefinition metaData,
-    final OutputStream outputStream, final Charset charset) {
-    return createRecordWriter(metaData, new OutputStreamResource(baseName, outputStream));
+  public RecordWriter createRecordWriter(final String baseName,
+    final RecordDefinition recordDefinition, final OutputStream outputStream,
+    final Charset charset) {
+    return createRecordWriter(recordDefinition, new OutputStreamResource(baseName, outputStream));
   }
 
 }

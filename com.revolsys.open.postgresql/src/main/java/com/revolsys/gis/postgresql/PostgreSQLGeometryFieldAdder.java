@@ -51,10 +51,10 @@ public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
 
   @Override
   public FieldDefinition addField(final AbstractJdbcRecordStore recordStore,
-    final RecordDefinitionImpl metaData, final String dbName, final String name,
+    final RecordDefinitionImpl recordDefinition, final String dbName, final String name,
     final String dataTypeName, final int sqlType, final int length, final int scale,
     final boolean required, final String description) {
-    final String typePath = metaData.getPath();
+    final String typePath = recordDefinition.getPath();
     String owner = this.recordStore.getDatabaseSchemaName(Path.getPath(typePath));
     if (!Property.hasValue(owner)) {
       owner = "public";
@@ -87,7 +87,7 @@ public class PostgreSQLGeometryFieldAdder extends JdbcFieldAdder {
       }
       final FieldDefinition attribute = new PostgreSQLGeometryJdbcAttribute(dbName, name, dataType,
         required, description, null, srid, numAxis, geometryFactory);
-      metaData.addField(attribute);
+      recordDefinition.addField(attribute);
       attribute.setProperty(JdbcConstants.FUNCTION_INTERSECTS,
         new SqlFunction("st_intersects(", ")"));
       attribute.setProperty(JdbcConstants.FUNCTION_BUFFER, new SqlFunction("st_buffer(", ")"));

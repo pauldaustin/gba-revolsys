@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.function.Predicate;
 
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,6 @@ import com.revolsys.data.query.QueryValue;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.map.MapSerializer;
-import java.util.function.Predicate;
 import com.revolsys.util.UriTemplate;
 
 public class SqlLayerFilter implements Predicate<Record>, MapSerializer {
@@ -30,25 +30,11 @@ public class SqlLayerFilter implements Predicate<Record>, MapSerializer {
     this.query = query;
   }
 
-  @Override
-  public boolean test(final Record record) {
-    final Condition condition = getCondition();
-    if (condition == null) {
-      return false;
-    } else {
-      if (condition.test(record)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
   private synchronized Condition getCondition() {
     if (this.condition == null) {
       if (!this.initialized) {
-        final RecordDefinition metaData = this.layer.getRecordDefinition();
-        if (metaData != null) {
+        final RecordDefinition recordDefinition = this.layer.getRecordDefinition();
+        if (recordDefinition != null) {
           this.initialized = true;
           try {
             final Properties properties = System.getProperties();
@@ -62,7 +48,7 @@ public class SqlLayerFilter implements Predicate<Record>, MapSerializer {
             }
 
             final String query = new UriTemplate(this.query).expandString(uriVariables);
-            this.condition = QueryValue.parseWhere(metaData, query);
+            this.condition = QueryValue.parseWhere(recordDefinition, query);
           } catch (final Throwable e) {
             LoggerFactory.getLogger(getClass()).error("Invalid query: " + this.query, e);
           }
@@ -74,6 +60,20 @@ public class SqlLayerFilter implements Predicate<Record>, MapSerializer {
 
   public String getQuery() {
     return this.query;
+  }
+
+  @Override
+  public boolean test(final Record record) {
+    final Condition condition = getCondition();
+    if (condition == null) {
+      return false;
+    } else {
+      if (condition.test(record)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
   @Override

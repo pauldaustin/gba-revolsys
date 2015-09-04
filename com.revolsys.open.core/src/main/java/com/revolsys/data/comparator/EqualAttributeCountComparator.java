@@ -16,7 +16,7 @@ import com.revolsys.util.CompareUtil;
  * @author Paul Austin
  */
 public class EqualAttributeCountComparator implements Comparator<Record> {
-  private final List<String> attributeNames;
+  private final List<String> fieldNames;
 
   private final Record object;
 
@@ -26,8 +26,8 @@ public class EqualAttributeCountComparator implements Comparator<Record> {
 
   public EqualAttributeCountComparator(final Record object, final boolean invert) {
     this.object = object;
-    final RecordDefinition metaData = object.getRecordDefinition();
-    this.attributeNames = metaData.getFieldNames();
+    final RecordDefinition recordDefinition = object.getRecordDefinition();
+    this.fieldNames = recordDefinition.getFieldNames();
   }
 
   @Override
@@ -45,15 +45,15 @@ public class EqualAttributeCountComparator implements Comparator<Record> {
       int count1 = 0;
       int count2 = 0;
 
-      for (final String attributeName : this.attributeNames) {
-        final Object value = this.object.getValue(attributeName);
+      for (final String fieldName : this.fieldNames) {
+        final Object value = this.object.getValue(fieldName);
 
-        final Object value1 = object1.getValue(attributeName);
+        final Object value1 = object1.getValue(fieldName);
         if (EqualsInstance.INSTANCE.equals(value, value1)) {
           count1++;
         }
 
-        final Object value2 = object1.getValue(attributeName);
+        final Object value2 = object1.getValue(fieldName);
         if (EqualsInstance.INSTANCE.equals(value, value2)) {
           count2++;
         }

@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import java.util.function.Consumer;
 import com.revolsys.data.record.Record;
 import com.revolsys.data.record.filter.RecordEqualsFilter;
 import com.revolsys.data.record.filter.RecordGeometryDistanceFilter;

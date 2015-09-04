@@ -1,7 +1,8 @@
 package com.revolsys.gis.tin;
 
-import com.revolsys.gis.model.coordinates.Coordinates;
 import java.util.function.Predicate;
+
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 public class TriangleContainsPointFilter implements Predicate<Triangle> {
   private final Coordinates point;

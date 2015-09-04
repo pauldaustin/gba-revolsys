@@ -26,13 +26,13 @@ public abstract class AbstractRecordIoFactory extends AbstractRecordReaderFactor
     return readerFactory;
   }
 
-  public static Writer<Record> recordWriter(final RecordDefinition metaData,
+  public static Writer<Record> recordWriter(final RecordDefinition recordDefinition,
     final Resource resource) {
     final RecordWriterFactory writerFactory = getRecordWriterFactory(resource);
     if (writerFactory == null) {
       return null;
     } else {
-      final Writer<Record> writer = writerFactory.createRecordWriter(metaData, resource);
+      final Writer<Record> writer = writerFactory.createRecordWriter(recordDefinition, resource);
       return writer;
     }
   }

@@ -33,6 +33,7 @@
 package com.revolsys.geometry.noding;
 
 import com.revolsys.geometry.model.LineString;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Allows comparing {@link Coordinates} arrays

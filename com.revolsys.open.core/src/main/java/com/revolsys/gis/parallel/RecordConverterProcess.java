@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,6 @@ import com.revolsys.gis.converter.process.CopyValues;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
-import java.util.function.Predicate;
 
 public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
   private static final Logger LOG = LoggerFactory.getLogger(RecordConverterProcess.class);
@@ -31,7 +31,7 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
 
   private Statistics statistics = new Statistics("Converted");
 
-  private RecordDefinitionFactory targetMetaDataFactory;
+  private RecordDefinitionFactory targetRecordDefinitionFactory;
 
   private Map<String, Converter<Record, Record>> typeConverterMap = new HashMap<String, Converter<Record, Record>>();
 
@@ -57,8 +57,8 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
 
   protected Record convert(final Record source) {
     int matchCount = 0;
-    final RecordDefinition sourceMetaData = source.getRecordDefinition();
-    final String sourceTypeName = sourceMetaData.getPath();
+    final RecordDefinition sourceRecordDefinition = source.getRecordDefinition();
+    final String sourceTypeName = sourceRecordDefinition.getPath();
     final Collection<FilterRecordConverter> converters = this.typeFilterConverterMap
       .get(sourceTypeName);
     Record target = null;
@@ -118,12 +118,12 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
     return this.statistics;
   }
 
-  public RecordDefinition getTargetMetaData(final String typePath) {
-    return this.targetMetaDataFactory.getRecordDefinition(typePath);
+  public RecordDefinition getTargetRecordDefinition(final String typePath) {
+    return this.targetRecordDefinitionFactory.getRecordDefinition(typePath);
   }
 
-  public RecordDefinitionFactory getTargetMetaDataFactory() {
-    return this.targetMetaDataFactory;
+  public RecordDefinitionFactory getTargetRecordDefinitionFactory() {
+    return this.targetRecordDefinitionFactory;
   }
 
   public Map<String, Converter<Record, Record>> getTypeConverterMap() {
@@ -162,8 +162,8 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
         final Map<String, String> attributeMapping = (Map<String, String>)map
           .get("attributeMapping");
 
-        final RecordDefinition targetMetaData = getTargetMetaData(targetTypeName);
-        final SimpleRecordConveter converter = new SimpleRecordConveter(targetMetaData);
+        final RecordDefinition targetRecordDefinition = getTargetRecordDefinition(targetTypeName);
+        final SimpleRecordConveter converter = new SimpleRecordConveter(targetRecordDefinition);
         converter.addProcessor(new CopyValues(attributeMapping));
         addTypeConverter(sourceTypeName, converter);
       }
@@ -198,8 +198,9 @@ public class RecordConverterProcess extends BaseInOutProcess<Record, Record> {
     }
   }
 
-  public void setTargetMetaDataFactory(final RecordDefinitionFactory targetMetaDataFactory) {
-    this.targetMetaDataFactory = targetMetaDataFactory;
+  public void setTargetRecordDefinitionFactory(
+    final RecordDefinitionFactory targetRecordDefinitionFactory) {
+    this.targetRecordDefinitionFactory = targetRecordDefinitionFactory;
   }
 
   public void setTypeConverterMap(final Map<String, Converter<Record, Record>> typeConverterMap) {

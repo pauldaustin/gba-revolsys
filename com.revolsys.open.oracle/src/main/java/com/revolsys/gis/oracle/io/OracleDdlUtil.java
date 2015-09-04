@@ -10,18 +10,18 @@ import com.revolsys.jdbc.JdbcUtils;
 
 public class OracleDdlUtil {
 
-  public static void createTable(final PrintWriter out, final RecordDefinition metaData) {
-    final String typePath = metaData.getPath();
+  public static void createTable(final PrintWriter out, final RecordDefinition recordDefinition) {
+    final String typePath = recordDefinition.getPath();
     out.println();
     out.print("CREATE TABLE ");
     final String tableName = JdbcUtils.getQualifiedTableName(typePath);
     out.print(tableName);
     out.println(" (");
-    for (int i = 0; i < metaData.getFieldCount(); i++) {
+    for (int i = 0; i < recordDefinition.getFieldCount(); i++) {
       if (i > 1) {
         out.println(",");
       }
-      final FieldDefinition attribute = metaData.getField(i);
+      final FieldDefinition attribute = recordDefinition.getField(i);
       final String name = attribute.getName();
       out.print("  ");
       out.print(name);

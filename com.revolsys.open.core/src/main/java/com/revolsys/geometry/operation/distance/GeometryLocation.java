@@ -34,6 +34,7 @@ package com.revolsys.geometry.operation.distance;
 
 import com.revolsys.geometry.model.Geometry;
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * Represents the location of a point on a Geometry.

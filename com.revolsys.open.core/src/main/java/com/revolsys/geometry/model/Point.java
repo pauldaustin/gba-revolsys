@@ -34,6 +34,8 @@ package com.revolsys.geometry.model;
 
 import java.io.Serializable;
 
+import com.revolsys.gis.model.coordinates.Coordinates;
+
 /**
  * Represents a single point.
  *

@@ -47,6 +47,7 @@ import com.revolsys.geometry.model.vertex.Vertex;
 import com.revolsys.geometry.operation.buffer.Buffer;
 import com.revolsys.geometry.operation.union.UnaryUnionOp;
 import com.revolsys.geometry.operation.valid.IsValidOp;
+import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.io.Reader;
 import com.revolsys.util.Emptyable;
 

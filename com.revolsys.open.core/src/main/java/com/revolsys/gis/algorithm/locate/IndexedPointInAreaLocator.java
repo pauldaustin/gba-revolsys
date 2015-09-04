@@ -1,6 +1,7 @@
 package com.revolsys.gis.algorithm.locate;
 
 import java.util.function.Consumer;
+
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.jts.geom.LineSegment;

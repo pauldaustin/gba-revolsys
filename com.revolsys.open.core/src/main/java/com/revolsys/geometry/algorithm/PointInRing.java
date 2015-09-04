@@ -34,6 +34,7 @@ package com.revolsys.geometry.algorithm;
 
 import com.revolsys.geometry.algorithm.locate.PointOnGeometryLocator;
 import com.revolsys.geometry.model.Point;
+import com.revolsys.gis.model.coordinates.Coordinates;
 
 /**
  * An interface for classes which test whether a {@link Coordinates} lies inside

@@ -15,12 +15,12 @@ public class AlignedPointConverter extends PointConverter {
    * north, directionIndicator are handled by the default handling
    */
   @Override
-  protected void readAttribute(final OsnIterator iterator, final String attributeName,
+  protected void readAttribute(final OsnIterator iterator, final String fieldName,
     final Map<String, Object> values) {
-    if (attributeName.equals("alignment")) {
+    if (fieldName.equals("alignment")) {
       values.put("alignment", new Double(iterator.nextDoubleValue()));
     } else {
-      super.readAttribute(iterator, attributeName, values);
+      super.readAttribute(iterator, fieldName, values);
     }
   }
 

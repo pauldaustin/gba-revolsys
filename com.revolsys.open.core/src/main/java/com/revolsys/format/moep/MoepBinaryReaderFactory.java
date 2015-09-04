@@ -14,8 +14,8 @@ public class MoepBinaryReaderFactory extends AbstractRecordAndGeometryReaderFact
     setCustomAttributionSupported(false);
   }
 
-  public RecordReader createRecordReader(final RecordDefinition metaData, final Resource resource,
-    final RecordFactory recordFactory) {
+  public RecordReader createRecordReader(final RecordDefinition recordDefinition,
+    final Resource resource, final RecordFactory recordFactory) {
     throw new UnsupportedOperationException();
   }
 

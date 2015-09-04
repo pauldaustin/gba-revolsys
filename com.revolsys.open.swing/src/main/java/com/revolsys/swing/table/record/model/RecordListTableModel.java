@@ -37,16 +37,16 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
   }
 
   public static TablePanel createPanel(final RecordDefinition recordDefinition,
-    final Collection<LayerRecord> objects, final Collection<String> attributeNames) {
+    final Collection<LayerRecord> objects, final Collection<String> fieldNames) {
     final RecordListTableModel model = new RecordListTableModel(recordDefinition, objects,
-      attributeNames);
+      fieldNames);
     final JTable table = new RecordRowTable(model);
     return new TablePanel(table);
   }
 
   public static TablePanel createPanel(final RecordDefinition recordDefinition,
-    final List<LayerRecord> objects, final String... attributeNames) {
-    return createPanel(recordDefinition, objects, Arrays.asList(attributeNames));
+    final List<LayerRecord> objects, final String... fieldNames) {
+    return createPanel(recordDefinition, objects, Arrays.asList(fieldNames));
   }
 
   private final List<LayerRecord> records = new ArrayList<LayerRecord>();
@@ -114,12 +114,12 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
   @Override
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (isEditable()) {
-      final String attributeName = getFieldName(rowIndex, columnIndex);
-      if (isReadOnly(attributeName)) {
+      final String fieldName = getFieldName(rowIndex, columnIndex);
+      if (isReadOnly(fieldName)) {
         return false;
       } else {
         final RecordDefinition recordDefinition = getRecordDefinition();
-        final DataType dataType = recordDefinition.getFieldType(attributeName);
+        final DataType dataType = recordDefinition.getFieldType(fieldName);
         if (dataType == null) {
           return false;
         } else if (Geometry.class.isAssignableFrom(dataType.getJavaClass())) {
@@ -182,9 +182,9 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
   public SortOrder setSortOrder(final int column) {
     final SortOrder sortOrder = super.setSortOrder(column);
     if (this.records != null) {
-      final String attributeName = getFieldName(column);
+      final String fieldName = getFieldName(column);
       final Comparator<Record> comparitor = new RecordFieldComparator(
-        sortOrder == SortOrder.ASCENDING, attributeName);
+        sortOrder == SortOrder.ASCENDING, fieldName);
       Collections.sort(this.records, comparitor);
       fireTableDataChanged();
     }
