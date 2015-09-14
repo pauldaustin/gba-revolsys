@@ -3,14 +3,14 @@ package com.revolsys.format.wkt;
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.property.FieldProperties;
-import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.property.FieldProperties;
+import com.revolsys.record.schema.FieldDefinition;
+import com.revolsys.record.schema.RecordDefinition;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class WktRecordWriter extends AbstractWriter<Record>implements RecordWriter {

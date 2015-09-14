@@ -22,10 +22,10 @@ package com.revolsys.gis.jts.filter;
 
 import java.util.function.Predicate;
 
-import com.revolsys.data.filter.OldRecordGeometryFilter;
-import com.revolsys.data.record.Record;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.jts.geom.BoundingBox;
+import com.revolsys.record.Record;
+import com.revolsys.record.filter.OldRecordGeometryFilter;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.LineString;
 

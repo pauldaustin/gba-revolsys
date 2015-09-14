@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.revolsys.data.filter.OldRecordGeometryDistanceFilter;
-import com.revolsys.data.filter.OldRecordGeometryIntersectsFilter;
-import com.revolsys.data.filter.RecordEqualsFilter;
-import com.revolsys.data.record.Record;
 import com.revolsys.gis.algorithm.index.quadtree.QuadTree;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.filter.OldRecordGeometryDistanceFilter;
+import com.revolsys.record.filter.OldRecordGeometryIntersectsFilter;
+import com.revolsys.record.filter.RecordEqualsFilter;
 import com.revolsys.visitor.CreateListVisitor;
 import com.vividsolutions.jts.geom.Geometry;
 

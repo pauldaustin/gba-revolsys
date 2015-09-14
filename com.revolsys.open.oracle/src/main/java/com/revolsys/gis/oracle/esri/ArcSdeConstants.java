@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.data.types.DataType;
-import com.revolsys.data.types.DataTypes;
+import com.revolsys.datatype.DataType;
+import com.revolsys.datatype.DataTypes;
 import com.revolsys.gis.oracle.io.OracleRecordStore;
+import com.revolsys.record.schema.RecordStore;
+import com.revolsys.record.schema.RecordStoreSchema;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;

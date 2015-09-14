@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.map.Maps;
-import com.revolsys.data.record.io.RecordWriterFactory;
+import com.revolsys.record.io.RecordWriterFactory;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.Property;
 import com.revolsys.util.UrlUtil;

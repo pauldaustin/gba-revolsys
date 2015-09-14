@@ -22,9 +22,9 @@ package com.revolsys.format.xbase;
 
 import java.io.File;
 
-import com.revolsys.data.record.io.RecordIterator;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
 import com.revolsys.gis.data.io.RecordDirectoryReader;
+import com.revolsys.record.io.RecordIterator;
 
 /**
  * <p>

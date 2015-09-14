@@ -1,12 +1,12 @@
 package com.revolsys.gis.util;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordState;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordState;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 

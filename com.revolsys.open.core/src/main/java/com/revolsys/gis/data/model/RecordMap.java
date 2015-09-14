@@ -6,8 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordMapEntry;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordMapEntry;
 
 public class RecordMap extends AbstractMap<String, Object> {
   private LinkedHashSet<Entry<String, Object>> entries;

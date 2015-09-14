@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.data.record.schema.RecordStoreSchema;
-import com.revolsys.data.types.DataType;
+import com.revolsys.datatype.DataType;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
+import com.revolsys.record.schema.FieldDefinition;
+import com.revolsys.record.schema.RecordDefinitionImpl;
+import com.revolsys.record.schema.RecordStoreSchema;
 
 public class JdbcFieldAdder {
   public static String AXIS_COUNT = "axisCount";

@@ -5,7 +5,7 @@ import javax.swing.JTable;
 import org.jdesktop.swingx.table.TableColumnExt;
 
 import com.revolsys.comparator.NumericComparator;
-import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.swing.table.BaseJTable;
 import com.revolsys.swing.table.record.editor.RecordTableCellEditor;
 import com.revolsys.swing.table.record.renderer.SingleRecordTableCellRenderer;

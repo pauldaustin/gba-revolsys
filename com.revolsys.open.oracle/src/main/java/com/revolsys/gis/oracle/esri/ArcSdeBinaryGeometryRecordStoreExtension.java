@@ -5,14 +5,14 @@ import java.util.Map.Entry;
 
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.data.record.io.RecordStoreExtension;
-import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.record.schema.RecordStore;
-import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.oracle.io.OracleSdoGeometryJdbcAttribute;
 import com.revolsys.jdbc.field.JdbcFieldAdder;
 import com.revolsys.jdbc.io.AbstractJdbcRecordStore;
+import com.revolsys.record.io.RecordStoreExtension;
+import com.revolsys.record.schema.FieldDefinition;
+import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordStore;
+import com.revolsys.record.schema.RecordStoreSchema;
 
 public class ArcSdeBinaryGeometryRecordStoreExtension implements RecordStoreExtension {
 

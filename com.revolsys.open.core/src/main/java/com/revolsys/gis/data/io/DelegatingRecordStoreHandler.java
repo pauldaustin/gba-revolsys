@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.data.record.io.RecordStoreFactoryRegistry;
-import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.record.io.RecordStoreFactoryRegistry;
+import com.revolsys.record.schema.RecordStore;
 
 public class DelegatingRecordStoreHandler implements InvocationHandler {
   public static <T extends RecordStore> T create(final String label, final Class<T> interfaceClass,

@@ -2,11 +2,11 @@ package com.revolsys.gis.esri.gdb.file.test.field;
 
 import java.io.IOException;
 
-import com.revolsys.data.record.property.FieldProperties;
-import com.revolsys.data.types.DataType;
+import com.revolsys.datatype.DataType;
 import com.revolsys.gis.esri.gdb.file.test.FgdbReader;
 import com.revolsys.io.EndianInput;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.property.FieldProperties;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class GeometryField extends FgdbField {

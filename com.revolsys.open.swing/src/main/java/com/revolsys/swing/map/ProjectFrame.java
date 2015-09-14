@@ -33,12 +33,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
-import com.revolsys.data.record.io.RecordStoreConnectionManager;
-import com.revolsys.data.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.io.file.FolderConnectionManager;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.net.urlcache.FileResponseCache;
+import com.revolsys.record.io.RecordStoreConnectionManager;
+import com.revolsys.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;

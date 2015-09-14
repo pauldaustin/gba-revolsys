@@ -10,13 +10,13 @@ import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
 
-import com.revolsys.data.equals.Equals;
-import com.revolsys.data.query.Query;
+import com.revolsys.equals.Equals;
 import com.revolsys.gis.algorithm.index.RecordQuadTree;
 import com.revolsys.gis.cs.projection.GeometryOperation;
 import com.revolsys.gis.cs.projection.ProjectionFactory;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.query.Query;
 import com.revolsys.swing.parallel.Invoke;
 import com.vividsolutions.jts.geom.Polygon;
 

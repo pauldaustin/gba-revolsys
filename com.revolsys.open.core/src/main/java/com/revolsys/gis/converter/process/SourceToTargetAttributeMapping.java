@@ -3,7 +3,7 @@ package com.revolsys.gis.converter.process;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.data.record.Record;
+import com.revolsys.record.Record;
 
 public class SourceToTargetAttributeMapping extends AbstractSourceToTargetProcess<Record, Record> {
   private Map<String, SourceToTargetProcess<Record, Record>> targetAttributeMappings = new HashMap<String, SourceToTargetProcess<Record, Record>>();

@@ -7,13 +7,13 @@ import java.nio.charset.Charset;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
-import com.revolsys.data.record.io.RecordIteratorReader;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.record.io.RecordIteratorReader;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class WktIoFactory extends AbstractRecordAndGeometryIoFactory implements WktConstants {
   public WktIoFactory() {

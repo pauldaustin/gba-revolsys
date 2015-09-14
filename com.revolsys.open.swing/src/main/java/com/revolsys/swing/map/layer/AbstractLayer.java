@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.revolsys.beans.KeyedPropertyChangeEvent;
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.BooleanStringConverter;
-import com.revolsys.data.equals.EqualsInstance;
+import com.revolsys.equals.EqualsInstance;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.esri.EsriCoordinateSystems;
 import com.revolsys.gis.cs.esri.EsriCsWktWriter;

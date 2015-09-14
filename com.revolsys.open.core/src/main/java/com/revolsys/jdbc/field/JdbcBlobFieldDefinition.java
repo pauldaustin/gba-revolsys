@@ -9,9 +9,9 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.types.DataTypes;
+import com.revolsys.datatype.DataTypes;
 import com.revolsys.jdbc.LocalBlob;
+import com.revolsys.record.Record;
 import com.revolsys.spring.resource.FileSystemResource;
 
 public class JdbcBlobFieldDefinition extends JdbcFieldDefinition {

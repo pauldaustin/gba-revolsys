@@ -1,6 +1,6 @@
 package com.revolsys.util;
 
-import com.revolsys.data.equals.Equals;
+import com.revolsys.equals.Equals;
 
 public interface Strings {
 
@@ -81,6 +81,14 @@ public interface Strings {
       } else {
         return false;
       }
+    }
+  }
+
+  public static boolean equals(final String string1, final String string2) {
+    if (string1 == null) {
+      return string2 == null;
+    } else {
+      return string1.equals(string2);
     }
   }
 

@@ -8,10 +8,10 @@ import java.nio.charset.Charset;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordWriter;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.FileUtil;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordWriter;
 
 public class KmzRecordWriter extends AbstractWriter<Record>implements RecordWriter {
 

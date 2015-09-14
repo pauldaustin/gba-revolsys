@@ -12,7 +12,6 @@ import java.util.TimeZone;
 
 import javax.xml.namespace.QName;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.format.xml.XmlWriter;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
@@ -25,6 +24,7 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.InPlaceIterator;
 import com.revolsys.io.AbstractWriter;
+import com.revolsys.record.Record;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;

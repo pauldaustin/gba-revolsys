@@ -1,6 +1,6 @@
 package com.revolsys.gis.io;
 
-import com.revolsys.data.record.Record;
+import com.revolsys.record.Record;
 
 public class StatisticsRecordIterator implements RecordIterator {
   private RecordIterator reader;

@@ -3,15 +3,15 @@ package com.revolsys.format.geojson;
 import java.io.BufferedWriter;
 import java.io.Writer;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.json.JsonWriter;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.util.MathUtil;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;

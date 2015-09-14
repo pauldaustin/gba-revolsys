@@ -6,13 +6,13 @@ import java.io.Writer;
 
 import com.revolsys.converter.string.StringConverter;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.types.DataType;
+import com.revolsys.datatype.DataType;
 import com.revolsys.format.wkt.EWktWriterJts;
 import com.revolsys.io.AbstractRecordWriter;
 import com.revolsys.io.FileUtil;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.util.WrappedException;
 import com.vividsolutions.jts.geom.Geometry;
 

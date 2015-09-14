@@ -6,12 +6,12 @@ import java.util.List;
 
 import org.springframework.core.convert.converter.Converter;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.converter.process.SourceToTargetProcess;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.util.CollectionUtil;
 import com.vividsolutions.jts.geom.Geometry;
 

@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.revolsys.data.record.ArrayRecord;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
+import com.revolsys.record.ArrayRecord;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.AbstractRecordAndGeometryWriterFactory;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class JsonRecordIoFactory extends AbstractRecordAndGeometryWriterFactory {
   public static final Record toRecord(final RecordDefinition recordDefinition,

@@ -2,7 +2,7 @@ package com.revolsys.gis.data.io;
 
 import java.util.Iterator;
 
-import com.revolsys.data.io.IteratorReader;
+import com.revolsys.io.IteratorReader;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class GeometryReader extends IteratorReader<Geometry> {

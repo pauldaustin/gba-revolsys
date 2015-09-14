@@ -17,10 +17,8 @@ import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.postgis.Polygon;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.property.FieldProperties;
-import com.revolsys.data.types.DataType;
-import com.revolsys.data.types.DataTypes;
+import com.revolsys.datatype.DataType;
+import com.revolsys.datatype.DataTypes;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -28,6 +26,8 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.property.FieldProperties;
 
 public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
   private final GeometryFactory geometryFactory;

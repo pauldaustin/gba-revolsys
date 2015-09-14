@@ -8,9 +8,9 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordReader;
 import com.revolsys.format.csv.Csv;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordReader;
 
 public class RecordReaderTransferable implements Transferable {
   public static final DataFlavor DATA_OBJECT_READER_FLAVOR = new DataFlavor(RecordReader.class,

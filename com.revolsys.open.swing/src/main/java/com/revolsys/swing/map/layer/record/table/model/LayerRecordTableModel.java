@@ -5,8 +5,8 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
-import com.revolsys.data.equals.Equals;
-import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.equals.Equals;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.LayerRecord;

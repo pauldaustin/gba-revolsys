@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.map.Maps;
-import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.format.json.JsonParser;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.schema.FieldDefinition;
+import com.revolsys.record.schema.RecordDefinitionImpl;
 import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.util.JavaBeanUtil;

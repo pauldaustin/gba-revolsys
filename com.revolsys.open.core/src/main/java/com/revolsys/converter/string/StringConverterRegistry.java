@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.revolsys.data.types.DataType;
+import com.revolsys.datatype.DataType;
 import com.revolsys.gis.converter.string.BoundingBoxStringConverter;
 import com.revolsys.gis.converter.string.GeometryStringConverter;
 import com.revolsys.util.CollectionUtil;

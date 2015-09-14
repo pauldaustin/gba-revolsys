@@ -3,7 +3,7 @@ package com.revolsys.swing.table.record.model;
 import javax.swing.JComponent;
 import javax.swing.table.JTableHeader;
 
-import com.revolsys.data.record.Record;
+import com.revolsys.record.Record;
 import com.revolsys.swing.table.BaseJTable;
 
 public class SingleRecordTableModel extends AbstractSingleRecordTableModel {

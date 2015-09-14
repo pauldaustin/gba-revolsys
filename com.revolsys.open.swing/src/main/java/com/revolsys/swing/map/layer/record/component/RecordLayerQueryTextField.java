@@ -3,9 +3,9 @@ package com.revolsys.swing.map.layer.record.component;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.revolsys.data.query.Query;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.record.Record;
+import com.revolsys.record.query.Query;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.swing.field.AbstractRecordQueryField;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;

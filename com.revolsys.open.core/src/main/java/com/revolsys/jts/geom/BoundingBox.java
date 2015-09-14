@@ -12,7 +12,6 @@ import org.apache.commons.beanutils.Converter;
 import org.slf4j.LoggerFactory;
 
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.record.Record;
 import com.revolsys.format.wkt.WktParserOld;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.ProjectedCoordinateSystem;
@@ -25,6 +24,7 @@ import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
 import com.revolsys.gis.model.coordinates.list.DoubleCoordinatesList;
+import com.revolsys.record.Record;
 import com.revolsys.util.MathUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Coordinate;

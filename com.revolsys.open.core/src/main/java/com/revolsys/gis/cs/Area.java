@@ -2,7 +2,7 @@ package com.revolsys.gis.cs;
 
 import java.io.Serializable;
 
-import com.revolsys.data.equals.Equals;
+import com.revolsys.equals.Equals;
 import com.vividsolutions.jts.geom.Envelope;
 
 public class Area implements Serializable {

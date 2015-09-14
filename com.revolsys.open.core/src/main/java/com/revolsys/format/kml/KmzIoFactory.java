@@ -7,15 +7,15 @@ import java.util.Set;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.gis.data.io.GeometryReader;
 import com.revolsys.gis.geometry.io.GeometryReaderFactory;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
+import com.revolsys.record.io.AbstractRecordAndGeometryWriterFactory;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.spring.resource.SpringUtil;
 
 public class KmzIoFactory extends AbstractRecordAndGeometryWriterFactory

@@ -3,14 +3,14 @@ package com.revolsys.gis.parallel;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.Records;
 import com.revolsys.gis.algorithm.index.LineSegmentIndex;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.jts.LineStringUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
+import com.revolsys.record.Record;
+import com.revolsys.record.Records;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.PrecisionModel;

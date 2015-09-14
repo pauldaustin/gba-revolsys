@@ -10,9 +10,7 @@ import java.sql.Types;
 import java.util.List;
 import java.util.Map;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.property.FieldProperties;
-import com.revolsys.data.types.DataType;
+import com.revolsys.datatype.DataType;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.gis.model.coordinates.Coordinates;
@@ -21,6 +19,8 @@ import com.revolsys.gis.model.coordinates.list.CoordinatesListUtil;
 import com.revolsys.jdbc.field.JdbcFieldDefinition;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.property.FieldProperties;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class ArcSdeStGeometryAttribute extends JdbcFieldDefinition {

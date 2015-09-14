@@ -2,12 +2,12 @@ package com.revolsys.gis.data.io;
 
 import java.util.Map;
 
-import com.revolsys.data.record.ArrayRecord;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.Records;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractWriter;
 import com.revolsys.io.Writer;
+import com.revolsys.record.ArrayRecord;
+import com.revolsys.record.Record;
+import com.revolsys.record.Records;
+import com.revolsys.record.schema.RecordDefinition;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordWriterGeometryWriter extends AbstractWriter<Geometry> {

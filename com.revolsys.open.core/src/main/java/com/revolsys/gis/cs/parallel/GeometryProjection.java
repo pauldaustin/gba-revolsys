@@ -1,10 +1,10 @@
 package com.revolsys.gis.cs.parallel;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
+import com.revolsys.record.Record;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class GeometryProjection extends BaseInOutProcess<Record, Record> {

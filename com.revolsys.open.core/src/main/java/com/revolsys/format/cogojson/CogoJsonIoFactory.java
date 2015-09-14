@@ -7,15 +7,15 @@ import java.nio.charset.Charset;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.io.AbstractRecordAndGeometryWriterFactory;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.geojson.GeoJsonConstants;
 import com.revolsys.format.geojson.GeoJsonGeometryIterator;
 import com.revolsys.format.geojson.GeoJsonRecordWriter;
 import com.revolsys.gis.data.io.GeometryReader;
 import com.revolsys.gis.geometry.io.GeometryReaderFactory;
 import com.revolsys.io.FileUtil;
+import com.revolsys.record.io.AbstractRecordAndGeometryWriterFactory;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class CogoJsonIoFactory extends AbstractRecordAndGeometryWriterFactory
   implements GeometryReaderFactory {

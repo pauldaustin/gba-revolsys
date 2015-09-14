@@ -1,6 +1,6 @@
 package com.revolsys.gis.model.coordinates;
 
-import com.revolsys.data.equals.NumberEquals;
+import com.revolsys.equals.NumberEquals;
 import com.revolsys.util.MathUtil;
 
 public abstract class AbstractCoordinates implements Coordinates {

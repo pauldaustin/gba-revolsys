@@ -3,8 +3,8 @@ package com.revolsys.gis.data.io;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.revolsys.data.record.schema.AbstractRecordStore;
-import com.revolsys.data.record.schema.RecordStoreSchema;
+import com.revolsys.record.schema.AbstractRecordStore;
+import com.revolsys.record.schema.RecordStoreSchema;
 
 public class RecordStoreSchemaMapProxy extends TreeMap<String, RecordStoreSchema> {
 

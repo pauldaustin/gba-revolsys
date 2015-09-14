@@ -6,9 +6,6 @@ import java.util.Map;
 
 import javax.annotation.PreDestroy;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.format.xbase.XbaseRecordWriter;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.AbstractWriter;
@@ -16,6 +13,9 @@ import com.revolsys.io.IoConstants;
 import com.revolsys.io.Path;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;

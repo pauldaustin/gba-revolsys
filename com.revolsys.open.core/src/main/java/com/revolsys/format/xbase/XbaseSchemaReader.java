@@ -3,9 +3,9 @@ package com.revolsys.format.xbase;
 import java.io.IOException;
 import java.util.List;
 
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
 import com.revolsys.io.EndianInput;
+import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordDefinitionImpl;
 
 public class XbaseSchemaReader {
   private final List<FieldDefinition> fieldDefinitions;

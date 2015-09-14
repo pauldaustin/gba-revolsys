@@ -6,14 +6,14 @@ import java.nio.charset.Charset;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.ZipRecordReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipRecordWriter;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.spring.resource.FileSystemResource;
 
 public class ShapefileZipIoFactory extends AbstractRecordAndGeometryIoFactory {

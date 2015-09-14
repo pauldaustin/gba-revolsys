@@ -14,8 +14,8 @@ import javax.swing.table.AbstractTableModel;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
-import com.revolsys.data.codes.CodeTable;
-import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.record.code.CodeTable;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;

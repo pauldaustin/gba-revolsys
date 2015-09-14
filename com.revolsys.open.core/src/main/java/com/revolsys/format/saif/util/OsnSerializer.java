@@ -37,13 +37,13 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.types.DataType;
-import com.revolsys.data.types.EnumerationDataType;
+import com.revolsys.datatype.DataType;
+import com.revolsys.datatype.EnumerationDataType;
 import com.revolsys.format.saif.SaifConstants;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.io.FileUtil;
+import com.revolsys.record.Record;
+import com.revolsys.record.schema.RecordDefinition;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;

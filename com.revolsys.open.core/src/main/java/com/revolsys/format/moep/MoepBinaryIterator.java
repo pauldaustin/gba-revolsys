@@ -10,8 +10,6 @@ import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordFactory;
 import com.revolsys.format.saif.SaifConstants;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
@@ -26,6 +24,8 @@ import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoConstants;
 import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.properties.BaseObjectWithProperties;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordFactory;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;

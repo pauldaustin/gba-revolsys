@@ -42,20 +42,20 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.ArrayRecordFactory;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.property.FieldProperties;
-import com.revolsys.data.record.schema.FieldDefinition;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
-import com.revolsys.data.record.schema.RecordDefinitionFactoryImpl;
 import com.revolsys.format.saif.util.PathCache;
 import com.revolsys.gis.io.RecordIterator;
 import com.revolsys.io.AbstractReader;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.Path;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.ArrayRecordFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.property.FieldProperties;
+import com.revolsys.record.schema.FieldDefinition;
+import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordDefinitionFactory;
+import com.revolsys.record.schema.RecordDefinitionFactoryImpl;
 import com.revolsys.spring.resource.SpringUtil;
 
 /**
@@ -67,7 +67,7 @@ import com.revolsys.spring.resource.SpringUtil;
  * @see SaifWriter
  */
 public class SaifReader extends AbstractReader<Record>
-  implements RecordIterator, RecordDefinitionFactory, com.revolsys.data.record.io.RecordReader {
+  implements RecordIterator, RecordDefinitionFactory, com.revolsys.record.io.RecordReader {
   /** The logging instance. */
   private static final Logger log = Logger.getLogger(SaifReader.class);
 

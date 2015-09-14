@@ -7,9 +7,9 @@ import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.PathName;
+import com.revolsys.record.Record;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class Statistics {
   private final Map<String, Long> counts = new TreeMap<String, Long>();

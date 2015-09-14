@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.record.schema.RecordStore;
 
 public class RecordStoreRegistry {
   private Map<String, RecordStore> recordStores = new HashMap<String, RecordStore>();

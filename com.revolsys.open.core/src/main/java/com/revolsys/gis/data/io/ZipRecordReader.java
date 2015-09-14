@@ -5,13 +5,13 @@ import java.io.IOException;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.ZipUtil;
 import com.revolsys.io.filter.ExtensionFilenameFilter;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.spring.resource.FileSystemResource;
 
 public class ZipRecordReader extends DelegatingReader<Record>implements RecordReader {

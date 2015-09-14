@@ -3,8 +3,8 @@ package com.revolsys.gis.data.io;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.properties.DelegatingObjectWithProperties;
+import com.revolsys.record.Record;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class RecordGeometryIterator extends DelegatingObjectWithProperties

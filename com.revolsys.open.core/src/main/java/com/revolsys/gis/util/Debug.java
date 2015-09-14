@@ -2,9 +2,9 @@ package com.revolsys.gis.util;
 
 import java.sql.Timestamp;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordState;
 import com.revolsys.gis.graph.Edge;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordState;
 import com.vividsolutions.jts.geom.LineString;
 
 public class Debug {

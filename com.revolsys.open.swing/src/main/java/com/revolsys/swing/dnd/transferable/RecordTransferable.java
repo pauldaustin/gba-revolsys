@@ -8,8 +8,8 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.format.csv.Csv;
+import com.revolsys.record.Record;
 
 public class RecordTransferable implements Transferable {
 

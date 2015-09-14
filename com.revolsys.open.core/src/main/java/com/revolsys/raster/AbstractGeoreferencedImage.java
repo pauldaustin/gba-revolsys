@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
 
 import com.revolsys.beans.AbstractPropertyChangeObject;
 import com.revolsys.collection.PropertyChangeArrayList;
-import com.revolsys.data.equals.Equals;
+import com.revolsys.equals.Equals;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.format.xml.DomUtil;
 import com.revolsys.gis.cs.CoordinateSystem;

@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.gis.jts.JtsGeometryUtil;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.process.BaseInOutProcess;
+import com.revolsys.record.Record;
+import com.revolsys.record.schema.RecordDefinition;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class ExcludeSavedObjectsInOutProcess extends BaseInOutProcess<Record, Record> {

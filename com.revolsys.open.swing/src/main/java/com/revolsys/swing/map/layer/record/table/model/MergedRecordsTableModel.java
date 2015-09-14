@@ -3,7 +3,7 @@ package com.revolsys.swing.map.layer.record.table.model;
 import java.util.Collection;
 import java.util.Map;
 
-import com.revolsys.data.record.Record;
+import com.revolsys.record.Record;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.LayerRecord;
 import com.revolsys.swing.map.layer.record.table.predicate.MergedNullValuePredicate;

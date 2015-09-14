@@ -2,9 +2,9 @@ package com.revolsys.gis.grid.filter;
 
 import java.util.function.Predicate;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.gis.cs.projection.GeometryProjectionUtil;
 import com.revolsys.gis.grid.RectangularMapGrid;
+import com.revolsys.record.Record;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 

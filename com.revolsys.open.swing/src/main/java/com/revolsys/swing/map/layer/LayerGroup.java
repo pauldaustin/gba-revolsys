@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.revolsys.collection.Parent;
-import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.IoFactory;
@@ -28,6 +27,7 @@ import com.revolsys.io.map.MapObjectFactory;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.raster.AbstractGeoreferencedImageFactory;
+import com.revolsys.record.io.RecordReaderFactory;
 import com.revolsys.spring.resource.FileSystemResource;
 import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.swing.SwingUtil;

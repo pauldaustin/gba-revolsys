@@ -6,15 +6,15 @@ import java.util.NoSuchElementException;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.io.RecordReaderFactory;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.record.schema.RecordDefinitionFactory;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.io.FileNames;
 import com.revolsys.io.IoFactoryRegistry;
 import com.revolsys.io.Reader;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.io.RecordReaderFactory;
+import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordDefinitionFactory;
 
 public class RecordDirectoryReader extends AbstractDirectoryReader<Record>
   implements RecordDefinitionFactory {

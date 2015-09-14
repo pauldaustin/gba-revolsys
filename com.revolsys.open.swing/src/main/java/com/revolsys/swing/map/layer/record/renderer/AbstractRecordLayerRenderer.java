@@ -12,11 +12,11 @@ import javax.swing.ImageIcon;
 
 import org.slf4j.LoggerFactory;
 
-import com.revolsys.data.filter.MultipleAttributeValuesFilter;
-import com.revolsys.data.record.Record;
 import com.revolsys.io.map.MapSerializerUtil;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.predicate.Predicates;
+import com.revolsys.record.Record;
+import com.revolsys.record.filter.MultipleAttributeValuesFilter;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.map.Viewport2D;

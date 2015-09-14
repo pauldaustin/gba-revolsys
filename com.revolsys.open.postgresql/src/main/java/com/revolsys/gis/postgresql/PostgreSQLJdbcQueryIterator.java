@@ -5,13 +5,13 @@ import java.util.Map;
 import org.postgis.PGbox2d;
 import org.postgis.Point;
 
-import com.revolsys.data.query.BinaryCondition;
-import com.revolsys.data.query.Query;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.jdbc.io.JdbcQueryIterator;
 import com.revolsys.jdbc.io.JdbcRecordStore;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.query.BinaryCondition;
+import com.revolsys.record.query.Query;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class PostgreSQLJdbcQueryIterator extends JdbcQueryIterator {
 

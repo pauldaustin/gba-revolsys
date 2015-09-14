@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.revolsys.data.equals.EqualsInstance;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.equals.EqualsInstance;
 import com.revolsys.gis.graph.Edge;
 import com.revolsys.gis.graph.Node;
 import com.revolsys.gis.graph.RecordGraph;
+import com.revolsys.record.Record;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class NodeRemovalVisitor implements Consumer<Node<Record>> {
 

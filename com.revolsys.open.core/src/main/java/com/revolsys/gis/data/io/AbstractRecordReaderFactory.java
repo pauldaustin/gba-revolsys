@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.ArrayRecordFactory;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.io.RecordReaderFactory;
 import com.revolsys.io.AbstractMapReaderFactory;
 import com.revolsys.io.Reader;
+import com.revolsys.record.ArrayRecordFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.io.RecordReaderFactory;
 
 public abstract class AbstractRecordReaderFactory extends AbstractMapReaderFactory
   implements RecordReaderFactory {

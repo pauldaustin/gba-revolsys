@@ -2,7 +2,7 @@ package com.revolsys.gis.algorithm.index;
 
 import java.util.function.Consumer;
 
-import com.revolsys.data.record.Record;
+import com.revolsys.record.Record;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.ItemVisitor;
 

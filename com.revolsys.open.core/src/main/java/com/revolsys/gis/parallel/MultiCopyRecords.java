@@ -7,7 +7,6 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.schema.RecordStore;
 import com.revolsys.format.json.JsonMapIoFactory;
 import com.revolsys.parallel.process.AbstractMultipleProcess;
 import com.revolsys.parallel.process.Parallel;
@@ -15,6 +14,7 @@ import com.revolsys.parallel.process.Process;
 import com.revolsys.parallel.process.ProcessNetwork;
 import com.revolsys.parallel.process.Sequential;
 import com.revolsys.process.CopyRecords;
+import com.revolsys.record.schema.RecordStore;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 

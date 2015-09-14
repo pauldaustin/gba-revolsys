@@ -10,21 +10,21 @@ import javax.annotation.PreDestroy;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.collection.ResultPager;
-import com.revolsys.data.codes.CodeTable;
-import com.revolsys.data.query.Query;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.io.RecordStoreQueryReader;
-import com.revolsys.data.record.property.RecordDefinitionProperty;
-import com.revolsys.data.record.schema.AbstractRecordStore;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.record.schema.RecordStoreSchema;
 import com.revolsys.gis.io.Statistics;
 import com.revolsys.gis.io.StatisticsMap;
 import com.revolsys.io.Writer;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.code.CodeTable;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.io.RecordStoreQueryReader;
+import com.revolsys.record.property.RecordDefinitionProperty;
+import com.revolsys.record.query.Query;
+import com.revolsys.record.schema.AbstractRecordStore;
+import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordStoreSchema;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class DelegatingRecordStore extends AbstractRecordStore {

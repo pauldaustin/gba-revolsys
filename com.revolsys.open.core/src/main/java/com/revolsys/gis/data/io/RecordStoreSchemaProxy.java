@@ -1,9 +1,9 @@
 package com.revolsys.gis.data.io;
 
-import com.revolsys.data.record.schema.AbstractRecordStore;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.record.schema.RecordDefinitionImpl;
-import com.revolsys.data.record.schema.RecordStoreSchema;
+import com.revolsys.record.schema.AbstractRecordStore;
+import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordDefinitionImpl;
+import com.revolsys.record.schema.RecordStoreSchema;
 
 public class RecordStoreSchemaProxy extends RecordStoreSchema {
   private final RecordStoreSchema schema;

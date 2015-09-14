@@ -3,9 +3,9 @@ package com.revolsys.io;
 import java.io.File;
 import java.io.OutputStream;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class ZipRecordWriter extends ZipWriter<Record>implements RecordWriter {
 

@@ -8,13 +8,13 @@ import java.util.Map.Entry;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.ArrayRecordFactory;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordIteratorReader;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.gis.data.io.AbstractDirectoryReader;
 import com.revolsys.gis.data.io.RecordDirectoryReader;
 import com.revolsys.io.Reader;
+import com.revolsys.record.ArrayRecordFactory;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordIteratorReader;
+import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.spring.resource.SpringUtil;
 
 /**

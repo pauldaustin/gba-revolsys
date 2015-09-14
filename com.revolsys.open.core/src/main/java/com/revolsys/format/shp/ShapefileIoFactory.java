@@ -9,14 +9,14 @@ import java.util.Map;
 
 import org.springframework.core.io.Resource;
 
-import com.revolsys.data.record.RecordFactory;
-import com.revolsys.data.record.io.AbstractRecordAndGeometryIoFactory;
-import com.revolsys.data.record.io.RecordIteratorReader;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.io.RecordStoreFactory;
-import com.revolsys.data.record.io.RecordWriter;
-import com.revolsys.data.record.schema.RecordDefinition;
-import com.revolsys.data.record.schema.RecordStore;
+import com.revolsys.record.RecordFactory;
+import com.revolsys.record.io.AbstractRecordAndGeometryIoFactory;
+import com.revolsys.record.io.RecordIteratorReader;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.io.RecordStoreFactory;
+import com.revolsys.record.io.RecordWriter;
+import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordStore;
 import com.revolsys.spring.resource.OutputStreamResource;
 
 public class ShapefileIoFactory extends AbstractRecordAndGeometryIoFactory

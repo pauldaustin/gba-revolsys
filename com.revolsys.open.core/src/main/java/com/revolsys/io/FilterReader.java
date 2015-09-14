@@ -7,9 +7,9 @@ import java.util.function.Predicate;
 import javax.annotation.PreDestroy;
 
 import com.revolsys.collection.iterator.FilterIterator;
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.schema.RecordDefinition;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class FilterReader extends AbstractReader<Record>implements RecordReader {
 

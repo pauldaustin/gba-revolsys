@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.revolsys.data.record.Record;
-import com.revolsys.data.record.io.RecordReader;
-import com.revolsys.data.record.schema.RecordDefinition;
 import com.revolsys.io.AbstractReader;
+import com.revolsys.record.Record;
+import com.revolsys.record.io.RecordReader;
+import com.revolsys.record.schema.RecordDefinition;
 
 public class ListRecordReader extends AbstractReader<Record>implements RecordReader {
   private RecordDefinition recordDefinition;

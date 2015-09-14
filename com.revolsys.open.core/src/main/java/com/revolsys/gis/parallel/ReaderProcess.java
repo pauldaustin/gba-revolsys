@@ -2,11 +2,11 @@ package com.revolsys.gis.parallel;
 
 import org.apache.log4j.Logger;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.gis.io.RecordIterator;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.parallel.channel.ClosedException;
 import com.revolsys.parallel.process.AbstractOutProcess;
+import com.revolsys.record.Record;
 
 public class ReaderProcess extends AbstractOutProcess<Record> {
   private RecordIterator reader;

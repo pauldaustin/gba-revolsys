@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import com.revolsys.data.record.Record;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.CoordinatesUtil;
 import com.revolsys.gis.model.coordinates.DoubleCoordinates;
 import com.revolsys.parallel.channel.Channel;
 import com.revolsys.predicate.Predicates;
+import com.revolsys.record.Record;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
