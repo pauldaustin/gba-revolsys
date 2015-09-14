@@ -144,7 +144,7 @@ public class RecordGraph extends Graph<Record> {
     for (final Edge<Record> edge : findEdges(point, distance)) {
       final LineString line = edge.getLine();
       final List<Edge<Record>> splitEdges = edge.split(new DoubleCoordinates(point));
-      DirectionalFieldsOld.edgeSplitAttributes(line, point, splitEdges);
+      DirectionalFieldsOld.edgeSplitFieldValues(line, point, splitEdges);
       edges.addAll(splitEdges);
     }
     return edges;

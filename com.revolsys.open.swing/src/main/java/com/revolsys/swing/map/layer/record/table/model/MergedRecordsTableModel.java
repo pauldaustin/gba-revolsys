@@ -17,11 +17,11 @@ import com.revolsys.swing.table.record.row.RecordRowTable;
 public class MergedRecordsTableModel extends RecordListTableModel implements SortableTableModel {
   private static final long serialVersionUID = 1L;
 
-  public static TablePanel createPanel(final AbstractRecordLayer layer, final Record mergedObject,
-    final Collection<LayerRecord> objects) {
-    final MergedRecordsTableModel model = new MergedRecordsTableModel(layer, mergedObject, objects);
+  public static TablePanel createPanel(final AbstractRecordLayer layer, final Record mergedRecord,
+    final Collection<LayerRecord> records) {
+    final MergedRecordsTableModel model = new MergedRecordsTableModel(layer, mergedRecord, records);
     final RecordRowTable table = new RecordRowTable(model);
-    table.setVisibleRowCount(objects.size() + 2);
+    table.setVisibleRowCount(records.size() + 2);
     MergedValuePredicate.add(table);
     MergedObjectPredicate.add(table);
     MergedNullValuePredicate.add(table);
@@ -30,17 +30,17 @@ public class MergedRecordsTableModel extends RecordListTableModel implements Sor
     return new TablePanel(table);
   }
 
-  private final Record mergedObject;
+  private final Record mergedRecord;
 
   public MergedRecordsTableModel(final AbstractRecordLayer layer) {
     this(layer, null, null);
   }
 
-  public MergedRecordsTableModel(final AbstractRecordLayer layer, final Record mergedObject,
-    final Collection<LayerRecord> objects) {
-    super(layer.getRecordDefinition(), objects, layer.getFieldNames());
+  public MergedRecordsTableModel(final AbstractRecordLayer layer, final Record mergedRecord,
+    final Collection<LayerRecord> records) {
+    super(layer.getRecordDefinition(), records, layer.getFieldNames());
     setFieldsOffset(1);
-    this.mergedObject = mergedObject;
+    this.mergedRecord = mergedRecord;
     setEditable(true);
     setReadOnlyFieldNames(layer.getUserReadOnlyFieldNames());
   }
@@ -55,14 +55,14 @@ public class MergedRecordsTableModel extends RecordListTableModel implements Sor
   }
 
   public Record getMergedRecord() {
-    return this.mergedObject;
+    return this.mergedRecord;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public <V extends Record> V getRecord(final int index) {
     if (index == super.getRowCount()) {
-      return (V)this.mergedObject;
+      return (V)this.mergedRecord;
     } else {
       return (V)super.getRecord(index);
     }
@@ -99,10 +99,10 @@ public class MergedRecordsTableModel extends RecordListTableModel implements Sor
 
   @Override
   public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
-    final Map<String, Object> object = getRecord(rowIndex);
-    if (object != null) {
-      final String name = getColumnName(columnIndex);
-      object.put(name, value);
+    final Map<String, Object> record = getRecord(rowIndex);
+    if (record != null) {
+      final String name = getFieldName(columnIndex);
+      record.put(name, value);
     }
   }
 

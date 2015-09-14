@@ -1,6 +1,5 @@
 package com.revolsys.gis.algorithm.index;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -104,7 +103,7 @@ public class RecordQuadTree extends QuadTree<Record> {
 
     final BoundingBox convertedBoundingBox = boundingBox.convert(getGeometryFactory());
     if (convertedBoundingBox.isEmpty()) {
-      return Arrays.asList();
+      return Collections.emptyList();
     } else {
       final Geometry geometry = convertedBoundingBox.toPolygon(1, 1);
       final Predicate<Record> filter = new OldRecordGeometryIntersectsFilter(geometry);
@@ -113,12 +112,16 @@ public class RecordQuadTree extends QuadTree<Record> {
   }
 
   public List<Record> queryIntersects(Geometry geometry) {
-    final GeometryFactory geometryFactory = getGeometryFactory();
-    if (geometryFactory != null) {
-      geometry = geometryFactory.copy(geometry);
+    if (geometry == null) {
+      return Collections.emptyList();
+    } else {
+      final GeometryFactory geometryFactory = getGeometryFactory();
+      if (geometryFactory != null) {
+        geometry = geometryFactory.copy(geometry);
+      }
+      final Predicate<Record> filter = new OldRecordGeometryIntersectsFilter(geometry);
+      return queryList(geometry, filter);
     }
-    final Predicate<Record> filter = new OldRecordGeometryIntersectsFilter(geometry);
-    return queryList(geometry, filter);
   }
 
   public List<Record> queryList(final BoundingBox boundingBox, final Predicate<Record> filter) {

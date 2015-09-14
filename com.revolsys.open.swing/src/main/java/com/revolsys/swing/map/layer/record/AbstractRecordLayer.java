@@ -2258,8 +2258,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     record1.setGeometryValue(line1);
     record2.setGeometryValue(line2);
 
-    property.setSplitAttributes(line, point, record1);
-    property.setSplitAttributes(line, point, record2);
+    property.setSplitFieldValues(line, point, record1);
+    property.setSplitFieldValues(line, point, record2);
     deleteRecord(record);
     saveChanges(record);
 

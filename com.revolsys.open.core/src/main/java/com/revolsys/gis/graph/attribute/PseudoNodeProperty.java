@@ -34,13 +34,13 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
     return property;
   }
 
-  private Set<String> equalExcludeAttributes = new HashSet<String>(DEFAULT_EXCLUDE);
+  private Set<String> equalExcludeFieldNames = new HashSet<String>(DEFAULT_EXCLUDE);
 
   public PseudoNodeProperty() {
   }
 
   public PseudoNodeAttribute createAttribute(final Node<Record> node) {
-    return new PseudoNodeAttribute(node, getTypePath(), this.equalExcludeAttributes);
+    return new PseudoNodeAttribute(node, getTypePath(), this.equalExcludeFieldNames);
   }
 
   public PseudoNodeAttribute getAttribute(final Node<Record> node) {
@@ -54,8 +54,8 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
     return value;
   }
 
-  public Collection<String> getEqualExcludeAttributes() {
-    return this.equalExcludeAttributes;
+  public Collection<String> getEqualExcludeFieldNames() {
+    return this.equalExcludeFieldNames;
   }
 
   public PseudoNodeAttribute getProperty(final com.revolsys.geometry.graph.Node<Record> node) {
@@ -74,13 +74,13 @@ public class PseudoNodeProperty extends AbstractRecordDefinitionProperty {
     return PROPERTY_NAME;
   }
 
-  public void setEqualExcludeAttributes(final Collection<String> equalExcludeAttributes) {
-    if (equalExcludeAttributes == null) {
-      this.equalExcludeAttributes.clear();
+  public void setEqualExcludeFieldNames(final Collection<String> equalExcludeFieldNames) {
+    if (equalExcludeFieldNames == null) {
+      this.equalExcludeFieldNames.clear();
     } else {
-      this.equalExcludeAttributes = new HashSet<String>(equalExcludeAttributes);
+      this.equalExcludeFieldNames = new HashSet<String>(equalExcludeFieldNames);
     }
-    this.equalExcludeAttributes.addAll(DEFAULT_EXCLUDE);
+    this.equalExcludeFieldNames.addAll(DEFAULT_EXCLUDE);
   }
 
   @Override

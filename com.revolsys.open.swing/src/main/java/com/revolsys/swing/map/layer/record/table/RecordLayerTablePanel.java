@@ -327,7 +327,7 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
   public void flipFields() {
     final Record record = getEventRowObject();
     final DirectionalFieldsOld property = DirectionalFieldsOld.getProperty(record);
-    property.reverseAttributes(record);
+    property.reverseFieldValues(record);
   }
 
   public void flipLineOrientation() {

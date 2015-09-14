@@ -41,7 +41,7 @@ public class OldRecordGeometryIntersectsFilter implements Predicate<Record> {
    */
   public OldRecordGeometryIntersectsFilter(final Geometry geometry) {
     this.geometry = geometry;
-    this.geometryFactory = GeometryFactory.get(geometry);
+    this.geometryFactory = GeometryFactory.getFactory(geometry);
   }
 
   /**

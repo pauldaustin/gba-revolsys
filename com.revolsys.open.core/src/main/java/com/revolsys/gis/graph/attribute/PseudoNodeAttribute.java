@@ -19,17 +19,17 @@ import com.vividsolutions.jts.geom.LineString;
 public class PseudoNodeAttribute {
   private final List<EdgePair<Record>> edgePairs = new ArrayList<EdgePair<Record>>();
 
-  private final Set<String> equalExcludeAttributes = new HashSet<String>();
+  private final Set<String> equalExcludeFieldNames = new HashSet<String>();
 
   private final List<EdgePair<Record>> reversedEdgePairs = new ArrayList<EdgePair<Record>>();
 
   private final String typePath;
 
   public PseudoNodeAttribute(final Node<Record> node, final String typePath,
-    final Collection<String> equalExcludeAttributes) {
+    final Collection<String> equalExcludeFieldNames) {
     this.typePath = typePath;
-    if (equalExcludeAttributes != null) {
-      this.equalExcludeAttributes.addAll(equalExcludeAttributes);
+    if (equalExcludeFieldNames != null) {
+      this.equalExcludeFieldNames.addAll(equalExcludeFieldNames);
     }
     final Map<String, Map<LineString, Set<Edge<Record>>>> edgesByTypeNameAndLine = NodeAttributes
       .getEdgesByTypeNameAndLine(node);
@@ -41,7 +41,7 @@ public class PseudoNodeAttribute {
     final Edge<Record> edge2) {
     final Record object1 = edge1.getObject();
     final Record object2 = edge2.getObject();
-    if (DirectionalFieldsOld.canMergeObjects(node, object1, object2, this.equalExcludeAttributes)) {
+    if (DirectionalFieldsOld.canMergeRecords(node, object1, object2, this.equalExcludeFieldNames)) {
       return new EdgePair<Record>(edge1, edge2);
     } else {
       return null;

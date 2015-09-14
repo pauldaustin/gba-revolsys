@@ -42,7 +42,7 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVi
 
   private Statistics duplicateStatistics;
 
-  private Set<String> equalExcludeAttributes = new HashSet<String>(
+  private Set<String> equalExcludeFieldNames = new HashSet<String>(
     Arrays.asList(RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
 
   private Comparator<Record> newerComparator;
@@ -123,7 +123,7 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVi
   }
 
   public Set<String> getEqualExcludeAttributes() {
-    return this.equalExcludeAttributes;
+    return this.equalExcludeFieldNames;
   }
 
   public Comparator<Record> getNewerComparator() {
@@ -161,14 +161,14 @@ public class LinearIntersectionNotEqualLineEdgeCleanupVisitor extends AbstractVi
     throw new IllegalArgumentException("Cannot override comparator");
   }
 
-  public void setEqualExcludeAttributes(final Collection<String> equalExcludeAttributes) {
-    setEqualExcludeAttributes(new HashSet<String>(equalExcludeAttributes));
+  public void setEqualExcludeAttributes(final Collection<String> equalExcludeFieldNames) {
+    setEqualExcludeAttributes(new HashSet<String>(equalExcludeFieldNames));
   }
 
-  public void setEqualExcludeAttributes(final Set<String> equalExcludeAttributes) {
-    this.equalExcludeAttributes = new HashSet<String>(equalExcludeAttributes);
-    this.equalExcludeAttributes.add(RecordEquals.EXCLUDE_ID);
-    this.equalExcludeAttributes.add(RecordEquals.EXCLUDE_GEOMETRY);
+  public void setEqualExcludeAttributes(final Set<String> equalExcludeFieldNames) {
+    this.equalExcludeFieldNames = new HashSet<String>(equalExcludeFieldNames);
+    this.equalExcludeFieldNames.add(RecordEquals.EXCLUDE_ID);
+    this.equalExcludeFieldNames.add(RecordEquals.EXCLUDE_GEOMETRY);
   }
 
   public void setNewerComparator(final Comparator<Record> newerComparator) {

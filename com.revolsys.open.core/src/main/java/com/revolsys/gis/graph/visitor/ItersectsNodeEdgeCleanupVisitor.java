@@ -28,7 +28,7 @@ public class ItersectsNodeEdgeCleanupVisitor extends AbstractVisitor<Edge<Record
 
   private static final Logger LOG = LoggerFactory.getLogger(ItersectsNodeEdgeCleanupVisitor.class);
 
-  private final Set<String> equalExcludeAttributes = new HashSet<String>(
+  private final Set<String> equalExcludeFieldNames = new HashSet<String>(
     Arrays.asList(RecordEquals.EXCLUDE_ID, RecordEquals.EXCLUDE_GEOMETRY));
 
   private Statistics splitStatistics;
@@ -91,7 +91,7 @@ public class ItersectsNodeEdgeCleanupVisitor extends AbstractVisitor<Edge<Record
   }
 
   public Set<String> getEqualExcludeAttributes() {
-    return this.equalExcludeAttributes;
+    return this.equalExcludeFieldNames;
   }
 
   @PostConstruct
