@@ -13,8 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
@@ -33,6 +37,7 @@ import com.revolsys.record.io.RecordWriterFactory;
 import com.revolsys.record.property.DirectionalFieldsOld;
 import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.swing.SwingUtil;
+import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.action.enablecheck.InvokeMethodEnableCheck;
@@ -73,6 +78,8 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
   private final RecordTableCellEditor tableCellEditor;
 
   private final RecordLayerTableModel tableModel;
+
+  private final JButton fieldSetsButton;
 
   public RecordLayerTablePanel(final AbstractRecordLayer layer, final RecordLayerTable table) {
     super(table);
@@ -175,6 +182,9 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
     toolBar.addButtonTitleIcon("table", "Refresh", "table_refresh", this, "refresh");
     toolBar.addButtonTitleIcon("table", "Export Records", "table_save", () -> exportRecords());
 
+    this.fieldSetsButton = toolBar.addButtonTitleIcon("table", "Field Sets", "fields_filter",
+      () -> actionShowFieldSetsMenu());
+
     final FieldFilterPanel fieldFilterPanel = new FieldFilterPanel(this, this.tableModel);
     toolBar.addComponent("search", fieldFilterPanel);
 
@@ -207,6 +217,28 @@ public class RecordLayerTablePanel extends TablePanel implements PropertyChangeL
         null);
     }
     Property.addListener(layer, this);
+  }
+
+  public void actionShowFieldSetsMenu() {
+    final JPopupMenu menu = new JPopupMenu();
+
+    final JMenuItem editMenuItem = InvokeMethodAction.createMenuItem("Edit Field Sets",
+      "fields_filter_edit", this.layer, "showProperties", "Field Sets");
+    menu.add(editMenuItem);
+
+    menu.addSeparator();
+
+    final AbstractRecordLayer layer = getLayer();
+    final String fieldSetName = layer.getFieldNamesSetName();
+    for (final String fieldSetName2 : layer.getFieldNamesSetNames()) {
+      final JCheckBoxMenuItem menuItem = InvokeMethodAction.createCheckBoxMenuItem(fieldSetName2,
+        layer, "setFieldNamesSetName", fieldSetName2);
+      if (fieldSetName2.equalsIgnoreCase(fieldSetName)) {
+        menuItem.setSelected(true);
+      }
+      menu.add(menuItem);
+    }
+    MenuFactory.showMenu(menu, this.fieldSetsButton, 10, 10);
   }
 
   protected JToggleButton addFieldFilterToggleButton(final ToolBar toolBar, final int index,

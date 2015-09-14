@@ -1,5 +1,7 @@
 package com.revolsys.swing.table.record.model;
 
+import java.util.Map;
+
 import javax.swing.JComponent;
 import javax.swing.table.JTableHeader;
 
@@ -17,39 +19,50 @@ public class SingleRecordTableModel extends AbstractSingleRecordTableModel {
     return table;
   }
 
-  private Record object;
+  private Record record;
 
   public SingleRecordTableModel(final Record object, final boolean editable) {
     super(object.getRecordDefinition(), editable);
-    this.object = object;
+    this.record = object;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <V extends Map<String, Object>> V getMap(final int columnIndex) {
+    if (columnIndex == 2) {
+      return (V)this.record;
+    } else {
+      return null;
+    }
   }
 
   public Record getObject() {
-    return this.object;
+    return this.record;
   }
 
   @Override
-  public Object getObjectValue(final int rowIndex) {
-    if (this.object == null) {
+  public Object getObjectValue(final int rowIndex, final int columnIndex) {
+    if (this.record == null) {
       return "\u2026";
     } else {
-      return this.object.getValue(rowIndex);
+      final String fieldName = getFieldName(rowIndex);
+      return this.record.getValue(fieldName);
     }
   }
 
   public void setObject(final Record object) {
-    if (object != this.object) {
+    if (object != this.record) {
       setRecordDefinition(object.getRecordDefinition());
-      this.object = object;
+      this.record = object;
       fireTableDataChanged();
     }
 
   }
 
   @Override
-  protected Object setObjectValue(final int rowIndex, final Object value) {
-    final Object oldValue = this.object.getValue(rowIndex);
-    this.object.setValue(rowIndex, value);
+  protected Object setObjectValue(final String fieldName, final Object value) {
+    final Object oldValue = this.record.getValue(fieldName);
+    this.record.setValue(fieldName, value);
     return oldValue;
   }
 

@@ -36,6 +36,7 @@ import java.util.TreeSet;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -137,6 +138,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   private final Map<String, List<String>> fieldErrors = new HashMap<>();
 
   private final Map<String, String> fieldInValidMessage = new HashMap<String, String>();
+
+  private ComboBox fieldNameSetNamesField;
 
   private final Map<String, Field> fields = new LinkedHashMap<String, Field>();
 
@@ -424,7 +427,24 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     }
     final TablePanel tablePanel = new TablePanel(table);
 
+    final List<String> fieldNamesSetNames = this.layer.getFieldNamesSetNames();
+    final DefaultComboBoxModel<String> fieldNamesSetNamesModel = ComboBox.model(fieldNamesSetNames);
+    this.fieldNameSetNamesField = new ComboBox("fieldNamesSetName", fieldNamesSetNamesModel);
+    int maxLength = 3;
+    for (final String name : fieldNamesSetNames) {
+      maxLength = Math.max(maxLength, name.length());
+    }
+    this.fieldNameSetNamesField
+      .setMaximumSize(new Dimension(Math.max(300, maxLength * 11 + 40), 22));
+    Property.addListener(this.fieldNameSetNamesField, "fieldNamesSetName", this);
+
+    final ToolBar toolBar = new ToolBar();
+    toolBar.addComponent("default", this.fieldNameSetNamesField);
+    toolBar.addButtonTitleIcon("default", "Edit Field Sets", "fields_filter_edit", this.layer,
+      "showProperties", "Field Sets");
+
     final JPanel panel = new JPanel(new BorderLayout());
+    panel.add(toolBar, BorderLayout.NORTH);
     panel.add(tablePanel, BorderLayout.CENTER);
     final JScrollPane scrollPane = addTab("All Fields", panel);
 
@@ -1172,6 +1192,18 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
           if (propertyName.equals("geometry")) {
             record.setGeometryValue((Geometry)event.getNewValue());
           }
+        } else if (propertyName.equals("fieldNamesSets")) {
+          final Object selectedItem = this.fieldNameSetNamesField.getSelectedItem();
+          final List<String> fieldNamesSetNames = this.layer.getFieldNamesSetNames();
+          final DefaultComboBoxModel<String> fieldNamesSetNamesModel = ComboBox
+            .model(fieldNamesSetNames);
+          this.fieldNameSetNamesField.setModel(fieldNamesSetNamesModel);
+          this.fieldNameSetNamesField.setSelectedItem(selectedItem);
+          final String fieldNamesSetName = (String)this.fieldNameSetNamesField.getSelectedItem();
+          this.allFields.setFieldNames(layer.getFieldNamesSet(fieldNamesSetName));
+        } else if (propertyName.equals("fieldNamesSetName")) {
+          final String fieldNamesSetName = (String)event.getNewValue();
+          this.allFields.setFieldNames(layer.getFieldNamesSet(fieldNamesSetName));
         } else if (source == layer) {
           if ("recordDeleted".equals(propertyName)) {
             if (record.isDeleted() || isSame(event.getNewValue())) {

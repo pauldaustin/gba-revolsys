@@ -47,7 +47,7 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
     this.tableCellEditor.addCellEditorListener(model);
     for (int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
       final TableColumn column = columnModel.getColumn(columnIndex);
-      if (columnIndex >= model.getAttributesOffset()) {
+      if (columnIndex >= model.getFieldsOffset()) {
         column.setCellEditor(this.tableCellEditor);
       }
       column.setCellRenderer(cellRenderer);
@@ -96,7 +96,7 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
     final RecordRowTableModel model = getTableModel();
     final RecordDefinition recordDefinition = model.getRecordDefinition();
     final int viewIndex = column.getModelIndex();
-    final int attributesOffset = model.getAttributesOffset();
+    final int attributesOffset = model.getFieldsOffset();
     if (viewIndex < attributesOffset) {
       final String fieldName = model.getFieldName(viewIndex - attributesOffset);
       final FieldDefinition attribute = recordDefinition.getField(fieldName);

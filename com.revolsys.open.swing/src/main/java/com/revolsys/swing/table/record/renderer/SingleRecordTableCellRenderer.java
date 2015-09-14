@@ -67,7 +67,7 @@ public class SingleRecordTableCellRenderer implements TableCellRenderer {
       }
       component = this.valueComponent;
     }
-    if (required && model.getObjectValue(rowIndex) == null) {
+    if (required && model.getObjectValue(rowIndex, columnIndex) == null) {
       component.setBackground(new Color(255, 0, 0, 100));
       component.setForeground(table.getForeground());
     }

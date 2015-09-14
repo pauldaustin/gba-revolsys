@@ -19,6 +19,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -76,6 +77,7 @@ import com.revolsys.swing.dnd.ClipboardUtil;
 import com.revolsys.swing.dnd.transferable.RecordReaderTransferable;
 import com.revolsys.swing.dnd.transferable.StringTransferable;
 import com.revolsys.swing.map.MapPanel;
+import com.revolsys.swing.map.form.FieldNamesSetPanel;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.form.SnapLayersPanel;
 import com.revolsys.swing.map.layer.AbstractLayer;
@@ -114,6 +116,8 @@ import com.vividsolutions.jts.geom.Point;
 
 public abstract class AbstractRecordLayer extends AbstractLayer
   implements RecordFactory, AddGeometryCompleteAction {
+
+  public static final String ALL = "All";
 
   public static final String FORM_FACTORY_EXPRESSION = "formFactoryExpression";
 
@@ -260,31 +264,37 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   private boolean canEditRecords = true;
 
-  private List<String> columnNameOrder = Collections.emptyList();
+  private final List<String> columnNameOrder = Collections.emptyList();
 
-  private List<String> columnNames;
-
-  private final List<LayerRecord> deletedRecords = new ArrayList<LayerRecord>();
+  private final List<LayerRecord> deletedRecords = new ArrayList<>();
 
   private Object editSync;
 
-  private final Map<Record, Component> forms = new HashMap<Record, Component>();
+  private List<String> fieldNames = Collections.emptyList();
 
-  private final Map<Record, Window> formWindows = new HashMap<Record, Window>();
+  private String fieldNamesSetName = ALL;
 
-  private final List<LayerRecord> highlightedRecords = new ArrayList<LayerRecord>();
+  private final List<String> fieldNamesSetNames = new ArrayList<>();
+
+  private final Map<String, List<String>> fieldNamesSets = new HashMap<>();
+
+  private final Map<Record, Component> forms = new HashMap<>();
+
+  private final Map<Record, Window> formWindows = new HashMap<>();
+
+  private final List<LayerRecord> highlightedRecords = new ArrayList<>();
 
   private RecordQuadTree index = new RecordQuadTree();
 
-  private final List<LayerRecord> modifiedRecords = new ArrayList<LayerRecord>();
+  private final List<LayerRecord> modifiedRecords = new ArrayList<>();
 
-  private final List<LayerRecord> newRecords = new ArrayList<LayerRecord>();
+  private final List<LayerRecord> newRecords = new ArrayList<>();
 
-  private Query query;
+  private Query query = new Query();
 
   private RecordDefinition recordDefinition;
 
-  private final List<LayerRecord> selectedRecords = new ArrayList<LayerRecord>();
+  private final List<LayerRecord> selectedRecords = new ArrayList<>();
 
   private RecordQuadTree selectedRecordsIndex;
 
@@ -292,7 +302,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   private boolean useFieldTitles = false;
 
-  private Set<String> userReadOnlyFieldNames = new LinkedHashSet<String>();
+  private Set<String> userReadOnlyFieldNames = new LinkedHashSet<>();
 
   public AbstractRecordLayer() {
     this("");
@@ -308,6 +318,9 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       renderer.setStyle(GeometryStyle.createStyle());
     }
     setProperties(properties);
+    if (this.fieldNamesSets.isEmpty()) {
+      setFieldNamesSets(null);
+    }
   }
 
   public AbstractRecordLayer(final RecordDefinition recordDefinition) {
@@ -325,6 +338,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   public AbstractRecordLayer(final String name, final GeometryFactory geometryFactory) {
     super(name);
+    setFieldNamesSets(null);
     setGeometryFactory(geometryFactory);
   }
 
@@ -372,8 +386,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   public void addNewRecord() {
     final RecordDefinition recordDefinition = getRecordDefinition();
-    final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
-    if (geometryAttribute == null) {
+    final FieldDefinition geometryField = recordDefinition.getGeometryField();
+    if (geometryField == null) {
       showAddForm(null);
     } else {
       final MapPanel map = MapPanel.get(this);
@@ -548,9 +562,15 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   public TabbedValuePanel createPropertiesPanel() {
     final TabbedValuePanel propertiesPanel = super.createPropertiesPanel();
     createPropertiesPanelFields(propertiesPanel);
+    createPropertiesPanelFieldNamesSet(propertiesPanel);
     createPropertiesPanelStyle(propertiesPanel);
     createPropertiesPanelSnapping(propertiesPanel);
     return propertiesPanel;
+  }
+
+  protected void createPropertiesPanelFieldNamesSet(final TabbedValuePanel propertiesPanel) {
+    final FieldNamesSetPanel panel = new FieldNamesSetPanel(this);
+    propertiesPanel.addTab("Field Sets", panel);
   }
 
   protected void createPropertiesPanelFields(final TabbedValuePanel propertiesPanel) {
@@ -587,7 +607,6 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   }
 
   public LayerRecord createRecord(final Map<String, Object> values) {
-
     if (!isReadOnly() && isEditable() && isCanAddRecords()) {
       final LayerRecord record = createRecord(getRecordDefinition());
       record.setState(RecordState.Initalizing);
@@ -650,7 +669,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
         }
       }
     }
-    this.columnNameOrder.clear();
+    this.fieldNamesSetNames.clear();
+    this.fieldNamesSets.clear();
     this.deletedRecords.clear();
     this.forms.clear();
     this.formWindows.clear();
@@ -913,17 +933,42 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   }
 
   public List<String> getFieldNames() {
-    synchronized (this) {
-      if (this.columnNames == null) {
-        final Set<String> columnNames = new LinkedHashSet<String>(this.columnNameOrder);
-        final RecordDefinition recordDefinition = getRecordDefinition();
-        final List<String> fieldNames = recordDefinition.getFieldNames();
-        columnNames.addAll(fieldNames);
-        this.columnNames = new ArrayList<String>(columnNames);
-        updateColumnNames();
+    return new ArrayList<>(this.fieldNames);
+  }
+
+  public List<String> getFieldNamesSet() {
+    return getFieldNamesSet(this.fieldNamesSetName);
+  }
+
+  public List<String> getFieldNamesSet(final String fieldNamesSetName) {
+    if (Property.hasValue(fieldNamesSetName)) {
+      List<String> fieldNames = this.fieldNamesSets.get(fieldNamesSetName.toUpperCase());
+      if (Property.hasValue(fieldNames)) {
+        fieldNames = new ArrayList<>(fieldNames);
+        if (Property.hasValue(this.fieldNames)) {
+          fieldNames.retainAll(this.fieldNames);
+        }
+        return fieldNames;
       }
     }
-    return this.columnNames;
+    return getFieldNames();
+  }
+
+  public String getFieldNamesSetName() {
+    return this.fieldNamesSetName;
+  }
+
+  public List<String> getFieldNamesSetNames() {
+    return new ArrayList<>(this.fieldNamesSetNames);
+  }
+
+  public Map<String, List<String>> getFieldNamesSets() {
+    final Map<String, List<String>> fieldNamesSets = new LinkedHashMap<>();
+    for (final String fieldNamesSetName : getFieldNamesSetNames()) {
+      final List<String> fieldNames = getFieldNamesSet(fieldNamesSetName);
+      fieldNamesSets.put(fieldNamesSetName, fieldNames);
+    }
+    return fieldNamesSets;
   }
 
   public String getFieldTitle(final String fieldName) {
@@ -948,11 +993,11 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     if (recordDefinition == null) {
       return null;
     } else {
-      final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
-      if (geometryAttribute == null) {
+      final FieldDefinition geometryField = recordDefinition.getGeometryField();
+      if (geometryField == null) {
         return null;
       } else {
-        return geometryAttribute.getType();
+        return geometryField.getType();
       }
     }
   }
@@ -1891,15 +1936,6 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     firePropertyChange("canEditRecords", !isCanEditRecords(), isCanEditRecords());
   }
 
-  public void setColumnNameOrder(final Collection<String> columnNameOrder) {
-    this.columnNameOrder = new ArrayList<String>(columnNameOrder);
-  }
-
-  public void setColumnNames(final Collection<String> columnNames) {
-    this.columnNames = new ArrayList<String>(columnNames);
-    updateColumnNames();
-  }
-
   @Override
   public void setEditable(final boolean editable) {
     if (SwingUtilities.isEventDispatchThread()) {
@@ -1933,6 +1969,58 @@ public abstract class AbstractRecordLayer extends AbstractLayer
         setCanEditRecords(this.canEditRecords);
       }
     }
+  }
+
+  public void setFieldNamesSetName(final String fieldNamesSetName) {
+    final String oldValue = this.fieldNamesSetName;
+    if (Property.hasValue(fieldNamesSetName)) {
+      this.fieldNamesSetName = fieldNamesSetName;
+    } else {
+      this.fieldNamesSetName = ALL;
+    }
+    firePropertyChange("fieldNamesSetName", oldValue, this.fieldNamesSetName);
+  }
+
+  public void setFieldNamesSets(final Map<String, List<String>> fieldNamesSets) {
+    final List<String> allFieldNames = this.fieldNames;
+    this.fieldNamesSetNames.clear();
+    this.fieldNamesSetNames.add("All");
+    this.fieldNamesSets.clear();
+    if (fieldNamesSets != null) {
+      for (final Entry<String, List<String>> entry : fieldNamesSets.entrySet()) {
+        final String name = entry.getKey();
+        if (Property.hasValue(name)) {
+          final String upperName = name.toUpperCase();
+          final Collection<String> names = entry.getValue();
+          if (Property.hasValue(names)) {
+            final Set<String> fieldNames = new LinkedHashSet<>(names);
+            if (ALL.equalsIgnoreCase(name)) {
+              if (Property.hasValue(allFieldNames)) {
+                fieldNames.addAll(allFieldNames);
+              }
+            } else {
+              boolean found = false;
+              for (final String name2 : this.fieldNamesSetNames) {
+                if (name.equalsIgnoreCase(name2)) {
+                  found = true;
+                  LoggerFactory.getLogger(getClass()).error(
+                    "Duplicate field set name " + name + "=" + name2 + " for layer " + getPath());
+                }
+              }
+              if (!found) {
+                this.fieldNamesSetNames.add(name);
+              }
+            }
+            if (Property.hasValue(allFieldNames)) {
+              fieldNames.retainAll(allFieldNames);
+            }
+            this.fieldNamesSets.put(upperName, new ArrayList<>(fieldNames));
+          }
+        }
+      }
+    }
+    getFieldNamesSet(ALL);
+    firePropertyChange("fieldNamesSets", null, this.fieldNamesSets);
   }
 
   @Override
@@ -2013,12 +2101,22 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       setGeometryFactory(geometryFactory);
       final Icon icon = RecordStoreTableTreeNode.getIcon(geometryType);
       setIcon(icon);
+      this.fieldNames = recordDefinition.getFieldNames();
+      List<String> allFieldNames = this.fieldNamesSets.get(ALL.toUpperCase());
+      if (Property.hasValue(allFieldNames)) {
+        final Set<String> mergedFieldNames = new LinkedHashSet<>(allFieldNames);
+        mergedFieldNames.addAll(this.fieldNames);
+        mergedFieldNames.retainAll(this.fieldNames);
+        allFieldNames = new ArrayList<>(mergedFieldNames);
+      } else {
+        allFieldNames = new ArrayList<>(this.fieldNames);
+      }
+      this.fieldNamesSets.put(ALL.toUpperCase(), allFieldNames);
       if (recordDefinition.getGeometryFieldIndex() == -1) {
         setVisible(false);
         setSelectSupported(false);
         setRenderer(null);
       }
-      updateColumnNames();
       if (this.query == null) {
         setQuery(null);
       }
@@ -2292,7 +2390,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       MapSerializerUtil.add(map, "canEditRecords", this.canEditRecords);
       MapSerializerUtil.add(map, "snapToAllLayers", this.snapToAllLayers);
     }
-    MapSerializerUtil.add(map, "columnNameOrder", this.columnNameOrder);
+    MapSerializerUtil.add(map, "fieldNamesSetName", this.fieldNamesSetName, ALL);
+    MapSerializerUtil.add(map, "fieldNamesSets", getFieldNamesSets());
     MapSerializerUtil.add(map, "useFieldTitles", this.useFieldTitles);
     map.remove("TableView");
     return map;
@@ -2338,13 +2437,6 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   public void unSelectRecords(final LayerRecord... records) {
     unSelectRecords(Arrays.asList(records));
-  }
-
-  protected void updateColumnNames() {
-    if (this.columnNames != null && this.recordDefinition != null) {
-      final List<String> fieldNames = this.recordDefinition.getFieldNames();
-      this.columnNames.retainAll(fieldNames);
-    }
   }
 
   protected void updateRecordState(final LayerRecord record) {

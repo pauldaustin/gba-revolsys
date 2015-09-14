@@ -4,6 +4,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 
 public class NullSelectionModel implements ListSelectionModel {
+
+  public static final NullSelectionModel INSTANCE = new NullSelectionModel();
+
   @Override
   public void addListSelectionListener(final ListSelectionListener lsl) {
   }

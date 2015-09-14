@@ -1,8 +1,5 @@
 package com.revolsys.swing.table.record.model;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -10,12 +7,14 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PreDestroy;
-import javax.swing.table.AbstractTableModel;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
 import com.revolsys.converter.string.StringConverterRegistry;
+import com.revolsys.identifier.Identifier;
 import com.revolsys.record.code.CodeTable;
 import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.swing.parallel.Invoke;
+import com.revolsys.swing.table.AbstractTableModel;
 import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
@@ -26,8 +25,6 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
   private static final long serialVersionUID = 1L;
 
   private boolean editable;
-
-  private final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   private Set<String> readOnlyFieldNames = new HashSet<String>();
 
@@ -41,33 +38,24 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
     this.recordDefinition = recordDefinition;
   }
 
-  public void addPropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
-    Property.addListener(this.propertyChangeSupport, propertyChangeListener);
+  public void addReadOnlyFieldNames(final Collection<String> fieldNames) {
+    if (fieldNames != null) {
+      this.readOnlyFieldNames.addAll(fieldNames);
+    }
   }
 
   public void addReadOnlyFieldNames(final String... readOnlyFieldNames) {
     if (readOnlyFieldNames != null) {
-      this.readOnlyFieldNames.addAll(Arrays.asList(readOnlyFieldNames));
+      final List<String> fieldNames = Arrays.asList(readOnlyFieldNames);
+      addReadOnlyFieldNames(fieldNames);
     }
   }
 
+  @Override
   @PreDestroy
   public void dispose() {
+    super.dispose();
     this.recordDefinition = null;
-  }
-
-  protected void firePropertyChange(final PropertyChangeEvent event) {
-    this.propertyChangeSupport.firePropertyChange(event);
-  }
-
-  protected void firePropertyChange(final String propertyName, final int index,
-    final Object oldValue, final Object newValue) {
-    this.propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
-  }
-
-  protected void firePropertyChange(final String propertyName, final Object oldValue,
-    final Object newValue) {
-    this.propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
   }
 
   public String getFieldName(final int attributeIndex) {
@@ -76,11 +64,6 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
   }
 
   public abstract String getFieldName(int rowIndex, int columnIndex);
-
-  @Override
-  public PropertyChangeSupport getPropertyChangeSupport() {
-    return this.propertyChangeSupport;
-  }
 
   public Set<String> getReadOnlyFieldNames() {
     return this.readOnlyFieldNames;
@@ -100,8 +83,11 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
 
   public abstract boolean isSelected(boolean selected, int rowIndex, int columnIndex);
 
-  public void removePropertyChangeListener(final PropertyChangeListener propertyChangeListener) {
-    Property.removeListener(this.propertyChangeSupport, propertyChangeListener);
+  public void loadCodeTable(final CodeTable codeTable) {
+    if (!codeTable.isLoaded()) {
+      codeTable.getCodes();
+      fireTableDataChanged();
+    }
   }
 
   public void setEditable(final boolean editable) {
@@ -129,7 +115,7 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
     final RecordDefinition recordDefinition = getRecordDefinition();
     final String idFieldName = recordDefinition.getIdFieldName();
     final String name = getFieldName(attributeIndex);
-    if (objectValue == null) {
+    if (objectValue == null || name == null) {
       if (name.equals(idFieldName)) {
         return "NEW";
       } else {
@@ -147,11 +133,18 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
       if (codeTable == null) {
         text = StringConverterRegistry.toString(objectValue);
       } else {
-        final List<Object> values = codeTable.getValues(objectValue);
-        if (values == null || values.isEmpty()) {
-          text = StringConverterRegistry.toString(objectValue);
+        if (codeTable.isLoaded()) {
+          final List<Object> values = codeTable.getValues(Identifier.create(objectValue));
+          if (values == null || values.isEmpty()) {
+            text = StringConverterRegistry.toString(objectValue);
+          } else {
+            text = CollectionUtil.toString(values);
+          }
         } else {
-          text = CollectionUtil.toString(values);
+          if (!codeTable.isLoading()) {
+            Invoke.background("Load " + codeTable, this, "loadCodeTable", codeTable);
+          }
+          text = "...";
         }
       }
       if (text.length() == 0) {
@@ -161,26 +154,24 @@ public abstract class AbstractRecordTableModel extends AbstractTableModel
     return text;
   }
 
-  public Object toObjectValue(final int attributeIndex, final Object displayValue) {
-    if (displayValue == null) {
+  public Object toObjectValue(final String fieldName, final Object displayValue) {
+    if (!Property.hasValue(displayValue)) {
       return null;
     }
-    if (displayValue instanceof String) {
-      final String string = (String)displayValue;
-      if (!Property.hasValue(string)) {
-        return null;
-      }
-    }
     final RecordDefinition recordDefinition = getRecordDefinition();
-    final String name = getFieldName(attributeIndex);
-    final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(name);
+    final CodeTable codeTable = recordDefinition.getCodeTableByFieldName(fieldName);
     if (codeTable == null) {
-      final Class<?> fieldClass = recordDefinition.getFieldClass(name);
+      final Class<?> fieldClass = recordDefinition.getFieldClass(fieldName);
       final Object objectValue = StringConverterRegistry.toObject(fieldClass, displayValue);
       return objectValue;
     } else {
-      final Object objectValue = codeTable.getIdValue(displayValue);
-      return objectValue;
+      if (displayValue instanceof Identifier) {
+        final Identifier identifier = (Identifier)displayValue;
+        return identifier;
+      } else {
+        final Object objectValue = codeTable.getIdentifier(displayValue);
+        return objectValue;
+      }
     }
   }
 

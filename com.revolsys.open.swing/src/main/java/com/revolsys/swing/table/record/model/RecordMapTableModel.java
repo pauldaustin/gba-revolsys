@@ -24,8 +24,18 @@ public class RecordMapTableModel extends AbstractSingleRecordTableModel {
     this.values = values;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public Object getObjectValue(final int attributeIndex) {
+  public <V extends Map<String, Object>> V getMap(final int columnIndex) {
+    if (columnIndex == 2) {
+      return (V)this.values;
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public Object getObjectValue(final int attributeIndex, final int columnIndex) {
     final String name = getFieldName(attributeIndex);
     return this.values.get(name);
   }
@@ -35,10 +45,9 @@ public class RecordMapTableModel extends AbstractSingleRecordTableModel {
   }
 
   @Override
-  protected Object setObjectValue(final int rowIndex, final Object value) {
-    final String name = getFieldName(rowIndex);
-    final Object oldValue = this.values.get(name);
-    this.values.put(name, value);
+  protected Object setObjectValue(final String fieldName, final Object value) {
+    final Object oldValue = this.values.get(fieldName);
+    this.values.put(fieldName, value);
     return oldValue;
   }
 

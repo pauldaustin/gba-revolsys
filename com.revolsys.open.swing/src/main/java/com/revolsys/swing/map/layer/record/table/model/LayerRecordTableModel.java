@@ -4,8 +4,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Map;
 
 import com.revolsys.equals.Equals;
+import com.revolsys.record.RecordState;
+import com.revolsys.record.schema.FieldDefinition;
 import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.swing.map.form.RecordLayerForm;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
@@ -29,6 +32,7 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
     this.form = new WeakReference<>(form);
     this.layer = form.getLayer();
     this.record = form.getRecord();
+    setFieldNames(this.layer.getFieldNamesSet());
     Property.addListener(this.layer, this);
   }
 
@@ -51,12 +55,23 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
     return this.layer.getFieldTitle(fieldName);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public Object getObjectValue(final int rowIndex) {
+  public <V extends Map<String, Object>> V getMap(final int columnIndex) {
+    if (columnIndex == 2) {
+      return (V)this.record;
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public Object getObjectValue(final int rowIndex, final int columnIndex) {
     if (this.record == null) {
       return null;
     } else {
-      return this.record.getValue(rowIndex);
+      final String fieldName = getFieldName(rowIndex);
+      return this.record.getValue(fieldName);
     }
   }
 
@@ -80,9 +95,21 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
   public boolean isCellEditable(final int rowIndex, final int columnIndex) {
     if (columnIndex == 2) {
       if (this.form.get().isEditable()) {
-        final String idFieldName = getRecordDefinition().getIdFieldName();
         final String fieldName = getFieldName(rowIndex);
-        if (fieldName.equals(idFieldName)) {
+        final RecordDefinition recordDefinition = getRecordDefinition();
+        final FieldDefinition idField = recordDefinition.getIdField();
+        if (idField != null) {
+          final String idFieldName = idField.getName();
+          if (fieldName.equals(idFieldName)) {
+            if (this.record != null && this.record.getState() == RecordState.New) {
+              if (!Number.class.isAssignableFrom(idField.getTypeClass())) {
+                return true;
+              }
+            }
+            return false;
+          }
+        }
+        if (recordDefinition.getGeometryFieldNames().contains(fieldName)) {
           return false;
         } else {
           return this.form.get().isEditable(fieldName);
@@ -123,13 +150,13 @@ public class LayerRecordTableModel extends AbstractSingleRecordTableModel
   }
 
   @Override
-  protected Object setObjectValue(final int rowIndex, final Object value) {
-    final Object oldValue = this.record.getValue(rowIndex);
-    this.record.setValue(rowIndex, value);
+  protected Object setObjectValue(final String fieldName, final Object value) {
+    final Object oldValue = this.record.getValue(fieldName);
+    this.record.setValue(fieldName, value);
     return oldValue;
   }
 
-  public void setRecord(final LayerRecord object) {
-    this.record = object;
+  public void setRecord(final LayerRecord record) {
+    this.record = record;
   }
 }
