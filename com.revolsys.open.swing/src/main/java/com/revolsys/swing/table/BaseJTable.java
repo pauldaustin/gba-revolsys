@@ -1,5 +1,6 @@
 package com.revolsys.swing.table;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -15,6 +16,7 @@ import javax.swing.table.TableModel;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
+import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.renderer.DefaultTableRenderer;
 import org.jdesktop.swingx.table.TableColumnExt;
 
@@ -32,7 +34,7 @@ public class BaseJTable extends JXTable {
     super(model);
     setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-    addHighlighter(new ColorHighlighter(HighlightPredicate.ODD, WebColors.LightSteelBlue,
+    addHighlighter(new ColorHighlighter(HighlightPredicate.ODD, new Color(223, 223, 223),
       WebColors.Black, WebColors.Navy, WebColors.White));
     addHighlighter(new ColorHighlighter(HighlightPredicate.EVEN, WebColors.White, WebColors.Black,
       WebColors.Blue, WebColors.White));
@@ -103,6 +105,12 @@ public class BaseJTable extends JXTable {
     return new BaseRowSorter(getModel());
   }
 
+  public void dispose() {
+    for (final Highlighter highlighter : getHighlighters()) {
+      removeHighlighter(highlighter);
+    }
+  }
+
   public void editCell(final int rowIndex, final int columnIndex) {
 
     if (rowIndex >= 0 && rowIndex < getRowCount() && columnIndex >= 0
@@ -164,6 +172,11 @@ public class BaseJTable extends JXTable {
   }
 
   @Override
+  public void initializeColumnWidths() {
+    super.initializeColumnWidths();
+  }
+
+  @Override
   public boolean isCellEditable(final int row, final int column) {
     try {
       return super.isCellEditable(row, column);
@@ -203,8 +216,8 @@ public class BaseJTable extends JXTable {
           }
         }
       }
-      column.setMinWidth(maxPreferedWidth + 5);
-      column.setPreferredWidth(maxPreferedWidth + 5);
+      column.setMinWidth(maxPreferedWidth + 25);
+      column.setPreferredWidth(maxPreferedWidth + 25);
     }
   }
 

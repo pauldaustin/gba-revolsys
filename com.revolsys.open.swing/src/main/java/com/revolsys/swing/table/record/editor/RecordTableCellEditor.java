@@ -16,6 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
@@ -29,7 +30,7 @@ import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.field.AbstractRecordQueryField;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.field.TextField;
-import com.revolsys.swing.listener.Listener;
+import com.revolsys.swing.listener.Listeners;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.menu.PopupMenu;
 import com.revolsys.swing.table.BaseJTable;
@@ -40,23 +41,23 @@ public class RecordTableCellEditor extends AbstractCellEditor
 
   private static final long serialVersionUID = 1L;
 
+  private int columnIndex;
+
+  private DataType dataType;
+
   private JComponent editorComponent;
 
   private String fieldName;
 
-  private final BaseJTable table;
-
-  private int rowIndex;
+  private MouseListener mouseListener;
 
   private Object oldValue;
 
-  private int columnIndex;
-
   private PopupMenu popupMenu = null;
 
-  private DataType dataType;
+  private int rowIndex;
 
-  private MouseListener mouseListener;
+  private BaseJTable table;
 
   public RecordTableCellEditor(final BaseJTable table) {
     this.table = table;
@@ -66,6 +67,16 @@ public class RecordTableCellEditor extends AbstractCellEditor
   public synchronized void addMouseListener(final MouseListener l) {
     if (l != null) {
       this.mouseListener = AWTEventMulticaster.add(this.mouseListener, l);
+    }
+  }
+
+  public void close() {
+    this.editorComponent = null;
+    this.mouseListener = null;
+    this.popupMenu = null;
+    this.table = null;
+    for (final CellEditorListener listener : getCellEditorListeners()) {
+      removeCellEditorListener(listener);
     }
   }
 
@@ -114,12 +125,12 @@ public class RecordTableCellEditor extends AbstractCellEditor
       columnIndex = jxTable.convertColumnIndexToModel(columnIndex);
     }
     this.oldValue = value;
-    final AbstractRecordTableModel model = (AbstractRecordTableModel)table.getModel();
+    final AbstractRecordTableModel model = getTableModel();
     this.fieldName = model.getFieldName(rowIndex, columnIndex);
     final RecordDefinition recordDefinition = model.getRecordDefinition();
     this.dataType = recordDefinition.getFieldType(this.fieldName);
-    this.editorComponent = (JComponent)SwingUtil.createField(recordDefinition, this.fieldName,
-      true);
+    final Field field = createField(this.fieldName);
+    this.editorComponent = (JComponent)field;
     if (this.editorComponent instanceof JTextField) {
       final JTextField textField = (JTextField)this.editorComponent;
       textField.setBorder(
@@ -179,6 +190,7 @@ public class RecordTableCellEditor extends AbstractCellEditor
   public void keyPressed(final KeyEvent event) {
     final int keyCode = event.getKeyCode();
     if (keyCode == KeyEvent.VK_ENTER) {
+      stopCellEditing();
       if (SwingUtil.isShiftDown(event)) {
         this.table.editCell(this.rowIndex - 1, this.columnIndex);
       } else {
@@ -186,6 +198,7 @@ public class RecordTableCellEditor extends AbstractCellEditor
       }
       event.consume();
     } else if (keyCode == KeyEvent.VK_TAB) {
+      stopCellEditing();
       if (SwingUtil.isShiftDown(event)) {
         this.table.editCell(this.rowIndex, this.columnIndex - 1);
       } else {
@@ -205,27 +218,27 @@ public class RecordTableCellEditor extends AbstractCellEditor
 
   @Override
   public void mouseClicked(final MouseEvent e) {
-    Listener.mouseEvent(this.mouseListener, e);
+    Listeners.mouseEvent(this.mouseListener, e);
   }
 
   @Override
   public void mouseEntered(final MouseEvent e) {
-    Listener.mouseEvent(this.mouseListener, e);
+    Listeners.mouseEvent(this.mouseListener, e);
   }
 
   @Override
   public void mouseExited(final MouseEvent e) {
-    Listener.mouseEvent(this.mouseListener, e);
+    Listeners.mouseEvent(this.mouseListener, e);
   }
 
   @Override
   public void mousePressed(final MouseEvent e) {
-    Listener.mouseEvent(this.mouseListener, e);
+    Listeners.mouseEvent(this.mouseListener, e);
   }
 
   @Override
   public void mouseReleased(final MouseEvent e) {
-    Listener.mouseEvent(this.mouseListener, e);
+    Listeners.mouseEvent(this.mouseListener, e);
   }
 
   public synchronized void removeMouseListener(final MouseListener l) {
@@ -256,7 +269,8 @@ public class RecordTableCellEditor extends AbstractCellEditor
       return true;
     } catch (final Throwable t) {
       final int result = JOptionPane.showConfirmDialog(this.editorComponent,
-        "<html><p><b>'" + getCellEditorValue() + "' is not a valid " + this.dataType
+        "<html><p><b>'" + getCellEditorValue() + "' is not a valid "
+          + this.dataType.getValidationName()
           + ".</b></p><p>Discard changes (Yes) or edit field (No).</p></html>",
         "Invalid value", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
       if (result == JOptionPane.YES_OPTION) {

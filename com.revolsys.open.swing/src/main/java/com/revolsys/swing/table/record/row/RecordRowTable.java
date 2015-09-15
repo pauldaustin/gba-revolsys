@@ -30,7 +30,9 @@ import com.vividsolutions.jts.geom.Geometry;
 public class RecordRowTable extends BaseJTable implements MouseListener {
   private static final long serialVersionUID = 1L;
 
-  private final RecordTableCellEditor tableCellEditor;
+  private TableCellRenderer cellRenderer;
+
+  private RecordTableCellEditor tableCellEditor;
 
   public RecordRowTable(final RecordRowTableModel model) {
     this(model, new RecordRowTableCellRenderer());
@@ -38,12 +40,13 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
 
   public RecordRowTable(final RecordRowTableModel model, final TableCellRenderer cellRenderer) {
     super(model);
+    this.cellRenderer = cellRenderer;
     setSortable(false);
 
     final JTableHeader tableHeader = getTableHeader();
 
     final TableColumnModel columnModel = getColumnModel();
-    this.tableCellEditor = new RecordTableCellEditor(this);
+    this.tableCellEditor = createTableCellEditor();
     this.tableCellEditor.addCellEditorListener(model);
     for (int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
       final TableColumn column = columnModel.getColumn(columnIndex);
@@ -57,7 +60,17 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
 
     ModifiedAttributePredicate.add(this);
     ErrorPredicate.add(this);
+  }
 
+  protected RecordTableCellEditor createTableCellEditor() {
+    return new RecordTableCellEditor(this);
+  }
+
+  @Override
+  public void dispose() {
+    super.dispose();
+    this.tableCellEditor = null;
+    this.cellRenderer = null;
   }
 
   public RecordDefinition getRecordDefinition() {
@@ -108,8 +121,9 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
           columnWidth = Math.min(columnWidth, 200);
           attribute.setProperty("tableColumnWidth", columnWidth);
         }
-        column.setMinWidth(columnName.length() * 7 + 15);
-        column.setPreferredWidth(columnWidth);
+        final int nameWidth = columnName.length() * 8 + 15;
+        column.setMinWidth(nameWidth);
+        column.setPreferredWidth(Math.max(nameWidth, columnWidth));
       }
     }
   }
@@ -150,6 +164,7 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
   public void tableChanged(final TableModelEvent event) {
     if (SwingUtil.isEventDispatchThread()) {
       final TableModel model = getModel();
+      int fieldsOffset = 0;
       if (model instanceof RecordLayerTableModel) {
         final RecordLayerTableModel layerModel = (RecordLayerTableModel)model;
         final String mode = layerModel.getFieldFilterMode();
@@ -159,10 +174,28 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
         } else {
           setSortable(false);
         }
+        fieldsOffset = layerModel.getFieldsOffset();
       }
+
       try {
         super.tableChanged(event);
       } catch (final Throwable t) {
+      }
+      final int type = event.getType();
+      final int eventColumn = event.getColumn();
+      final int row = event.getFirstRow();
+      if (type == TableModelEvent.UPDATE && eventColumn == TableModelEvent.ALL_COLUMNS
+        && row == TableModelEvent.HEADER_ROW) {
+        createDefaultColumnsFromModel();
+        final TableColumnModel columnModel = getColumnModel();
+        for (int columnIndex = 0; columnIndex < model.getColumnCount(); columnIndex++) {
+          final TableColumn column = columnModel.getColumn(columnIndex);
+          if (columnIndex >= fieldsOffset) {
+            column.setCellEditor(this.tableCellEditor);
+          }
+          column.setCellRenderer(this.cellRenderer);
+        }
+        initializeColumnWidths();
       }
       if (this.tableHeader != null) {
         this.tableHeader.resizeAndRepaint();
@@ -170,5 +203,10 @@ public class RecordRowTable extends BaseJTable implements MouseListener {
     } else {
       Invoke.later(this, "tableChanged", event);
     }
+  }
+
+  @Override
+  public String toString() {
+    return getRecordDefinition().getPath();
   }
 }
