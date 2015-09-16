@@ -1,6 +1,7 @@
 package com.revolsys.format.json;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,7 @@ import org.springframework.core.io.Resource;
 import com.revolsys.io.FileUtil;
 import com.revolsys.util.MathUtil;
 
-public class JsonParser implements Iterator<JsonParser.EventType>, AutoCloseable {
+public class JsonParser implements Iterator<JsonParser.EventType>, Closeable {
   public enum EventType {
     booleanValue, colon, comma, endArray, endDocument, endObject, nullValue, number, startArray, startDocument, startObject, string, unknown
   }

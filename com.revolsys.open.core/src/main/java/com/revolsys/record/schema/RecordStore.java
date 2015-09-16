@@ -1,5 +1,6 @@
 package com.revolsys.record.schema;
 
+import java.io.Closeable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface RecordStore extends RecordDefinitionFactory, AutoCloseable {
+public interface RecordStore extends RecordDefinitionFactory, Closeable {
   void addCodeTable(CodeTable codeTable);
 
   void addCodeTables(Collection<CodeTable> codeTables);
