@@ -221,7 +221,7 @@ public final class ShapefileGeometryUtil {
     if (polygons.size() == 1) {
       return polygons.get(0);
     } else {
-      return geometryFactory.createMultiPolygon(polygons);
+      return geometryFactory.multiPolygon(polygons);
     }
   }
 
@@ -489,7 +489,7 @@ public final class ShapefileGeometryUtil {
         final CoordinatesList points = readXYCoordinates(in, numCoords, numAxis);
         pointsList.add(points);
       }
-      return geometryFactory.createMultiLineString(pointsList);
+      return geometryFactory.multiLineString(pointsList);
     }
   }
 
@@ -524,7 +524,7 @@ public final class ShapefileGeometryUtil {
         final CoordinatesList points = pointsList.get(i);
         readCoordinates(in, points, points.size(), 3);
       }
-      return geometryFactory.createMultiLineString(pointsList);
+      return geometryFactory.multiLineString(pointsList);
     }
   }
 
@@ -559,7 +559,7 @@ public final class ShapefileGeometryUtil {
         final CoordinatesList points = pointsList.get(i);
         readCoordinates(in, points, points.size(), 2);
       }
-      return geometryFactory.createMultiLineString(pointsList);
+      return geometryFactory.multiLineString(pointsList);
     }
   }
 
@@ -601,7 +601,7 @@ public final class ShapefileGeometryUtil {
         final CoordinatesList points = pointsList.get(i);
         readCoordinates(in, points, points.size(), 3);
       }
-      return geometryFactory.createMultiLineString(pointsList);
+      return geometryFactory.multiLineString(pointsList);
     }
   }
 

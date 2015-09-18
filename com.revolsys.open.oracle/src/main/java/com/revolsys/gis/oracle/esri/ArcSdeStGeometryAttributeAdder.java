@@ -59,7 +59,7 @@ public class ArcSdeStGeometryAttributeAdder extends JdbcFieldAdder {
     final GeometryFactory geometryFactory = JdbcFieldAdder.getColumnProperty(schema, typePath,
       columnName, JdbcFieldAdder.GEOMETRY_FACTORY);
 
-    final FieldDefinition attribute = new ArcSdeStGeometryAttribute(dbName, name, dataType,
+    final FieldDefinition attribute = new ArcSdeStGeometryFieldDefinition(dbName, name, dataType,
       required, description, null, spatialReference, numAxis);
 
     recordDefinition.addField(attribute);

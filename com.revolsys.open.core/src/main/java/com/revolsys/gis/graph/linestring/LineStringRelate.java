@@ -124,7 +124,7 @@ public class LineStringRelate {
       intersections.add(points);
     }
     final GeometryFactory factory = GeometryFactory.getFactory(this.line1);
-    return factory.createMultiLineString(intersections);
+    return factory.multiLineString(intersections);
   }
 
   public LineString getRelateLine1() {

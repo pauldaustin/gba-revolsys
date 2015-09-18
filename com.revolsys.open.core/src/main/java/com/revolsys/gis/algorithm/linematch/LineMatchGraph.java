@@ -292,12 +292,12 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
       }
       createLine(lines, coordinates);
     }
-    return this.geometryFactory.createMultiLineString(lines);
+    return this.geometryFactory.multiLineString(lines);
   }
 
   public MultiLineString getMatchedLines(final int index1, final int index2) {
     final List<LineString> lines = getMatchedLinesList(index1, index2);
-    return this.geometryFactory.createMultiLineString(lines);
+    return this.geometryFactory.multiLineString(lines);
 
   }
 
@@ -395,7 +395,7 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
       }
       createLine(lines, coordinates);
     }
-    return this.geometryFactory.createMultiLineString(lines);
+    return this.geometryFactory.multiLineString(lines);
   }
 
   public MultiLineString getNonMatchedLines(final int index1, final int index2) {
@@ -430,7 +430,7 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
       }
       createLine(lines, coordinates);
     }
-    return this.geometryFactory.createMultiLineString(lines);
+    return this.geometryFactory.multiLineString(lines);
 
   }
 
@@ -483,7 +483,7 @@ public class LineMatchGraph<T> extends Graph<LineSegmentMatch> {
         currentNode = nextNode;
       }
     }
-    final MultiLineString lines = this.geometryFactory.createMultiLineString(overlappingLines);
+    final MultiLineString lines = this.geometryFactory.multiLineString(overlappingLines);
     return lines;
   }
 

@@ -328,7 +328,7 @@ public class GpxIterator implements RecordIterator {
         parseAttribute(record);
       }
     }
-    final MultiLineString lines = this.geometryFactory.createMultiLineString(segments);
+    final MultiLineString lines = this.geometryFactory.multiLineString(segments);
     record.setGeometryValue(lines);
     return record;
   }

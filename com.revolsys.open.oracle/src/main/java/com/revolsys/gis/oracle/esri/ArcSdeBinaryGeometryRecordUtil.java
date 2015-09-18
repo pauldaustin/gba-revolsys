@@ -284,7 +284,7 @@ public class ArcSdeBinaryGeometryRecordUtil {
           if (points.size() == 1) {
             return points.get(0);
           } else {
-            return geometryFactory.createMultiPoint(points);
+            return geometryFactory.multiPoint(points);
           }
         case SeShape.TYPE_MULTI_LINE:
         case SeShape.TYPE_LINE:
@@ -303,7 +303,7 @@ public class ArcSdeBinaryGeometryRecordUtil {
           if (lines.size() == 1) {
             return lines.get(0);
           } else {
-            return geometryFactory.createMultiLineString(lines);
+            return geometryFactory.multiLineString(lines);
           }
         case SeShape.TYPE_POLYGON:
         case SeShape.TYPE_MULTI_POLYGON:
@@ -324,7 +324,7 @@ public class ArcSdeBinaryGeometryRecordUtil {
           if (polygons.size() == 1) {
             return polygons.get(0);
           } else {
-            return geometryFactory.createMultiPolygon(polygons);
+            return geometryFactory.multiPolygon(polygons);
           }
 
         default:

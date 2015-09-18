@@ -226,7 +226,7 @@ public class LineStringGraph extends Graph<LineSegment> {
         }
       }
     }
-    return this.geometryFactory.createMultiPoint(intersectionPoints);
+    return this.geometryFactory.multiPoint(intersectionPoints);
   }
 
   /**

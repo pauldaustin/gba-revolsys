@@ -19,7 +19,7 @@ import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.WktCsParser;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
 import com.revolsys.gis.oracle.esri.ArcSdeBinaryGeometryRecordStoreExtension;
-import com.revolsys.gis.oracle.esri.ArcSdeStGeometryAttribute;
+import com.revolsys.gis.oracle.esri.ArcSdeStGeometryFieldDefinition;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryRecordStoreExtension;
 import com.revolsys.io.Path;
 import com.revolsys.jdbc.JdbcUtils;
@@ -108,7 +108,7 @@ public class OracleRecordStore extends AbstractJdbcRecordStore {
           final String where = " SDO_RELATE(" + geometryColumnName + ","
             + "MDSYS.SDO_GEOMETRY(2003,?,NULL,MDSYS.SDO_ELEM_INFO_ARRAY(1,1003,3),MDSYS.SDO_ORDINATE_ARRAY(?,?,?,?)),'mask=ANYINTERACT querytype=WINDOW') = 'TRUE'";
           query.and(new SqlCondition(where, geometryFactory.getSRID(), x1, y1, x2, y2));
-        } else if (geometryAttribute instanceof ArcSdeStGeometryAttribute) {
+        } else if (geometryAttribute instanceof ArcSdeStGeometryFieldDefinition) {
           final String where = " SDE.ST_ENVINTERSECTS(" + geometryColumnName + ", ?, ?, ?, ?) = 1";
           query.and(new SqlCondition(where, x1, y1, x2, y2));
         } else {

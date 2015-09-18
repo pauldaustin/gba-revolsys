@@ -313,7 +313,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
       }
     } while (this.in.getEvent() != EventType.endObject
       && this.in.getEvent() != EventType.endDocument);
-    return factory.createMultiLineString(lineStrings);
+    return factory.multiLineString(lineStrings);
   }
 
   private Geometry readMultiPoint() {
@@ -328,7 +328,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
       }
     } while (this.in.getEvent() != EventType.endObject
       && this.in.getEvent() != EventType.endDocument);
-    return factory.createMultiPoint(points);
+    return factory.multiPoint(points);
   }
 
   private Geometry readMultiPolygon(final boolean cogo) {
@@ -350,7 +350,7 @@ public class GeoJsonGeometryIterator extends AbstractIterator<Geometry>implement
         polygons.add(polygon);
       }
     }
-    return factory.createMultiPolygon(polygons);
+    return factory.multiPolygon(polygons);
   }
 
   private Point readPoint() {

@@ -187,7 +187,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry>implements Gm
       }
     }
     StaxUtils.skipToEndElement(this.in, MULTI_LINE_STRING);
-    return factory.createMultiLineString(lines);
+    return factory.multiLineString(lines);
   }
 
   private MultiPoint readMultiPoint(final GeometryFactory geometryFactory)
@@ -201,7 +201,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry>implements Gm
       }
     }
     StaxUtils.skipToEndElement(this.in, MULTI_POINT);
-    return factory.createMultiPoint(points);
+    return factory.multiPoint(points);
   }
 
   private MultiPolygon readMultiPolygon(final GeometryFactory geometryFactory)
@@ -215,7 +215,7 @@ public class GmlGeometryIterator extends AbstractIterator<Geometry>implements Gm
       }
     }
     StaxUtils.skipToEndElement(this.in, MULTI_POLYGON);
-    return factory.createMultiPolygon(polygons);
+    return factory.multiPolygon(polygons);
   }
 
   private Point readPoint(final GeometryFactory geometryFactory) throws XMLStreamException {

@@ -274,7 +274,7 @@ public class WktParserOld {
     } else {
       lines = parseParts(geometryFactory, text, numAxis);
     }
-    return geometryFactory.createMultiLineString(lines);
+    return geometryFactory.multiLineString(lines);
   }
 
   private MultiPoint parseMultiPoint(GeometryFactory geometryFactory,
@@ -295,7 +295,7 @@ public class WktParserOld {
     } else {
       pointsList = parseParts(geometryFactory, text, numAxis);
     }
-    return geometryFactory.createMultiPoint(pointsList);
+    return geometryFactory.multiPoint(pointsList);
   }
 
   private MultiPolygon parseMultiPolygon(GeometryFactory geometryFactory,
@@ -316,7 +316,7 @@ public class WktParserOld {
     } else {
       polygons = parsePartsList(geometryFactory, text, numAxis);
     }
-    return geometryFactory.createMultiPolygon(polygons);
+    return geometryFactory.multiPolygon(polygons);
   }
 
   private List<CoordinatesList> parseParts(final GeometryFactory geometryFactory,

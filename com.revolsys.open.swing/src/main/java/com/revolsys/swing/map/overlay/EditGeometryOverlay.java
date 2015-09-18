@@ -512,7 +512,7 @@ public class EditGeometryOverlay extends AbstractOverlay
         pointsList.add(createXorLine(geometryFactory, nextPoint, point));
       }
       if (!pointsList.isEmpty()) {
-        return geometryFactory.createMultiLineString(pointsList);
+        return geometryFactory.multiLineString(pointsList);
       }
     }
     return null;

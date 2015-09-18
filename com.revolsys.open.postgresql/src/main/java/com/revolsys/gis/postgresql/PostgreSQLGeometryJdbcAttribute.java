@@ -231,7 +231,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     if (points.size() == 1) {
       return points.get(0);
     } else {
-      return factory.createMultiPoint(points);
+      return factory.multiPoint(points);
     }
   }
 
@@ -245,7 +245,7 @@ public class PostgreSQLGeometryJdbcAttribute extends JdbcFieldDefinition {
     if (polygons.size() == 1) {
       return polygons.get(0);
     } else {
-      return factory.createMultiPolygon(polygons);
+      return factory.multiPolygon(polygons);
     }
   }
 

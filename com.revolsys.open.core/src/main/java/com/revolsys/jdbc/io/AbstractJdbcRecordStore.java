@@ -916,7 +916,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
       try {
         try (
           final Connection connection = getJdbcConnection()) {
-          final DatabaseMetaData databaseRecordDefinition = connection.getMetaData();
+          final DatabaseMetaData databaseMetaData = connection.getMetaData();
           final List<String> removedPaths = schema.getTypeNames();
           final Map<String, List<String>> idFieldNameMap = loadIdFieldNames(dbSchemaName);
           final Set<String> tableNames = tablePermissionsMap.keySet();
@@ -936,7 +936,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
             elementsByPath.put(typePath.toUpperCase(), recordDefinition);
           }
           try (
-            final ResultSet columnsRs = databaseRecordDefinition.getColumns(null, dbSchemaName, "%",
+            final ResultSet columnsRs = databaseMetaData.getColumns(null, dbSchemaName, "%",
               "%")) {
             while (columnsRs.next()) {
               final String tableName = columnsRs.getString("TABLE_NAME").toUpperCase();
