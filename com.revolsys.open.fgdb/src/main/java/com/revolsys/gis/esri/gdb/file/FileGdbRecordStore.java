@@ -68,6 +68,8 @@ import com.revolsys.io.Writer;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
+import com.revolsys.parallel.channel.Channel;
+import com.revolsys.parallel.channel.ClosedException;
 import com.revolsys.record.Record;
 import com.revolsys.record.RecordState;
 import com.revolsys.record.code.CodeTable;
@@ -119,7 +121,14 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     addFieldTypeConstructor(FieldType.esriFieldTypeGUID, GuidFieldDefinition.class);
     addFieldTypeConstructor(FieldType.esriFieldTypeXML, XmlFieldDefinition.class);
 
+    final Thread handler = new Thread(() -> createHandler(), "ESRI FGDB Create Thread");
+    handler.setDaemon(true);
+    handler.start();
   }
+
+  private static Channel<String> CREATE_CHANNEL_IN = new Channel<>();
+
+  private static Channel<Geodatabase> CREATE_CHANNEL_OUT = new Channel<>();
 
   private static void addFieldTypeConstructor(final FieldType fieldType,
     final Class<? extends AbstractFileGdbFieldDefinition> fieldClass) {
@@ -133,6 +142,23 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       LOG.error("No public constructor for ESRI type " + fieldType, e);
     }
 
+  }
+
+  private static void createHandler() {
+    while (true) {
+      try {
+        final String fileName = CREATE_CHANNEL_IN.read();
+        Geodatabase geodatabase = null;
+        try {
+          geodatabase = EsriFileGdb.createGeodatabase(fileName);
+        } finally {
+          CREATE_CHANNEL_OUT.write(geodatabase);
+        }
+      } catch (final ClosedException t) {
+        return;
+      } catch (final Throwable t) {
+      }
+    }
   }
 
   public static SpatialReference getSpatialReference(final GeometryFactory geometryFactory) {
@@ -508,10 +534,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   }
 
   private Geodatabase createGeodatabase() {
-    Geodatabase geodatabase;
-    synchronized (API_SYNC) {
-      geodatabase = EsriFileGdb.createGeodatabase(this.fileName);
-    }
+    CREATE_CHANNEL_IN.write(this.fileName);
+    final Geodatabase geodatabase = CREATE_CHANNEL_OUT.read();
     return geodatabase;
   }
 
@@ -770,7 +794,6 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   @Override
   public int delete(final Query query) {
     int i = 0;
-
     try (
       final Reader<Record> reader = query(query);
       FileGdbWriter writer = createWriter();) {
