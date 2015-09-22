@@ -38,16 +38,6 @@ public interface RecordStore extends RecordDefinitionFactory, Closeable {
 
   Record copy(Record record);
 
-  default Record create(final PathName typePath) {
-    return create(typePath.toString());
-  }
-
-  Record create(RecordDefinition recordDefinition);
-
-  Record create(String typePath);
-
-  Record create(String typePath, Map<String, ? extends Object> values);
-
   default Identifier createPrimaryIdValue(final PathName typePath) {
     final Object id = createPrimaryIdValue(typePath.toString());
     return Identifier.create(id);
@@ -149,6 +139,16 @@ public interface RecordStore extends RecordDefinitionFactory, Closeable {
   Record load(String typePath, Object... id);
 
   Record lock(String typePath, Object id);
+
+  default Record newRecord(final PathName typePath) {
+    return newRecord(typePath.toString());
+  }
+
+  Record newRecord(RecordDefinition recordDefinition);
+
+  Record newRecord(String typePath);
+
+  Record newRecord(String typePath, Map<String, ? extends Object> values);
 
   ResultPager<Record> page(Query query);
 
