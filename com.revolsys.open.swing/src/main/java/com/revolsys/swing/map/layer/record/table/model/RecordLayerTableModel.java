@@ -17,7 +17,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.RowFilter.ComparisonType;
 import javax.swing.SortOrder;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import com.revolsys.beans.PropertyChangeSupportProxy;
@@ -110,15 +109,15 @@ public class RecordLayerTableModel extends RecordRowTableModel
 
   private final AbstractRecordLayer layer;
 
-  private final Set<Integer> loadingPageNumbers = new LinkedHashSet<Integer>();
+  private final Set<Integer> loadingPageNumbers = new LinkedHashSet<>();
 
   private final LayerRecord loadingRecord;
 
   private SwingWorker<?, ?> loadObjectsWorker;
 
-  private Map<String, Boolean> orderBy = new LinkedHashMap<String, Boolean>();
+  private Map<String, Boolean> orderBy = new LinkedHashMap<>();
 
-  private Map<Integer, List<LayerRecord>> pageCache = new LruMap<Integer, List<LayerRecord>>(5);
+  private Map<Integer, List<LayerRecord>> pageCache = new LruMap<>(5);
 
   private final int pageSize = 40;
 
@@ -160,6 +159,24 @@ public class RecordLayerTableModel extends RecordRowTableModel
     Property.removeListener(this.layer, "hasSelectedRecords", this.selectionChangedListener);
     this.selectionChangedListener = null;
     super.dispose();
+  }
+
+  protected void doRefresh() {
+    synchronized (getSync()) {
+      this.refreshIndex++;
+      if (this.loadObjectsWorker != null) {
+        this.loadObjectsWorker.cancel(true);
+        this.loadObjectsWorker = null;
+      }
+      if (this.rowCountWorker != null) {
+        this.rowCountWorker.cancel(true);
+        this.rowCountWorker = null;
+      }
+      this.loadingPageNumbers.clear();
+      this.rowCount = 0;
+      this.pageCache = new LruMap<Integer, List<LayerRecord>>(5);
+      this.countLoaded = false;
+    }
   }
 
   public String getFieldFilterMode() {
@@ -431,11 +448,7 @@ public class RecordLayerTableModel extends RecordRowTableModel
   @Override
   public void propertyChange(final PropertyChangeEvent e) {
     final String propertyName = e.getPropertyName();
-    if (propertyName.equals("fieldNamesSetName")) {
-      final AbstractRecordLayer layer = getLayer();
-      final List<String> fieldNamesSet = layer.getFieldNamesSet();
-      setFieldNames(fieldNamesSet);
-    } else if (e.getSource() == this.layer) {
+    if (e.getSource() == this.layer) {
       if (Arrays.asList("filter", "query", "editable", "recordInserted", "recordsInserted",
         "recordDeleted", "recordsChanged").contains(propertyName)) {
         refresh();
@@ -449,28 +462,11 @@ public class RecordLayerTableModel extends RecordRowTableModel
     }
   }
 
-  public void refresh() {
-    if (SwingUtilities.isEventDispatchThread()) {
-      synchronized (getSync()) {
-        this.refreshIndex++;
-        if (this.loadObjectsWorker != null) {
-          this.loadObjectsWorker.cancel(true);
-          this.loadObjectsWorker = null;
-        }
-        if (this.rowCountWorker != null) {
-          this.rowCountWorker.cancel(true);
-          this.rowCountWorker = null;
-        }
-        this.loadingPageNumbers.clear();
-        this.rowCount = 0;
-        this.pageCache = new LruMap<Integer, List<LayerRecord>>(5);
-        this.countLoaded = false;
-
-      }
+  public final void refresh() {
+    Invoke.later(() -> {
+      doRefresh();
       fireTableDataChanged();
-    } else {
-      Invoke.later(this, "refresh");
-    }
+    });
   }
 
   protected void repaint() {
@@ -516,6 +512,12 @@ public class RecordLayerTableModel extends RecordRowTableModel
       fieldTitles.add(fieldTitle);
     }
     super.setFieldNamesAndTitles(fieldNames, fieldTitles);
+  }
+
+  public void setFieldNamesSetName(final String fieldNamesSetName) {
+    this.layer.setFieldNamesSetName(fieldNamesSetName);
+    final List<String> fieldNamesSet = this.layer.getFieldNamesSet();
+    setFieldNames(fieldNamesSet);
   }
 
   public boolean setFilter(final Condition filter) {

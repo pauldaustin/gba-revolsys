@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import javax.swing.ComboBoxEditor;
 import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
@@ -27,12 +26,17 @@ import com.revolsys.swing.undo.UndoManager;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Strings;
 
-public class ComboBox extends JComboBox implements Field, KeyListener {
+public class ComboBox<T> extends JComboBox<T>implements Field, KeyListener {
   private static final long serialVersionUID = 1L;
 
-  public static <V> DefaultComboBoxModel<V> model(final Collection<V> items) {
+  public static <V> ArrayListComboBoxModel<V> model(final Collection<V> items) {
     final Vector<V> vector = new Vector<V>(items);
-    return new DefaultComboBoxModel<>(vector);
+    return new ArrayListComboBoxModel<>(vector);
+  }
+
+  public static <V> ComboBox<V> newComboBox(final String fieldName, final Collection<V> items) {
+    final ArrayListComboBoxModel<V> model = model(items);
+    return new ComboBox<>(fieldName, model);
   }
 
   private final FieldSupport support;
@@ -41,21 +45,21 @@ public class ComboBox extends JComboBox implements Field, KeyListener {
     this("fieldValue");
   }
 
-  public ComboBox(final boolean editable, final Object... items) {
+  public ComboBox(final boolean editable, final T... items) {
     this(null, editable, items);
   }
 
-  public ComboBox(final Collection<?> items) {
+  public ComboBox(final Collection<T> items) {
     this(null, false, items);
   }
 
-  public ComboBox(final ComboBoxModel model) {
+  public ComboBox(final ComboBoxModel<T> model) {
     this("fieldValue", model);
   }
 
   public ComboBox(final ObjectToStringConverter converter, final boolean editable,
-    final Collection<?> items) {
-    super(new Vector<Object>(items));
+    final Collection<T> items) {
+    super(new Vector<T>(items));
     setEditable(editable);
     AutoCompleteDecorator.decorate(this, converter);
     if (converter instanceof ListCellRenderer) {
@@ -67,7 +71,7 @@ public class ComboBox extends JComboBox implements Field, KeyListener {
   }
 
   public ComboBox(final ObjectToStringConverter converter, final boolean editable,
-    final Object... items) {
+    final T... items) {
     this(converter, editable, Arrays.asList(items));
   }
 
@@ -102,8 +106,8 @@ public class ComboBox extends JComboBox implements Field, KeyListener {
     });
   }
 
-  public ComboBox(final String fieldName, final Object... items) {
-    this(fieldName, new DefaultComboBoxModel(items),
+  public ComboBox(final String fieldName, final T... items) {
+    this(fieldName, new ArrayListComboBoxModel<T>(items),
       ObjectToStringConverter.DEFAULT_IMPLEMENTATION);
   }
 
@@ -118,7 +122,7 @@ public class ComboBox extends JComboBox implements Field, KeyListener {
 
   @Override
   protected void finalize() throws Throwable {
-    final ComboBoxModel model = getModel();
+    final ComboBoxModel<T> model = getModel();
     if (model instanceof Closeable) {
       ((Closeable)model).close();
     }
@@ -129,6 +133,11 @@ public class ComboBox extends JComboBox implements Field, KeyListener {
   public void firePropertyChange(final String propertyName, final Object oldValue,
     final Object newValue) {
     super.firePropertyChange(propertyName, oldValue, newValue);
+  }
+
+  @SuppressWarnings("unchecked")
+  public <V extends ComboBoxModel<T>> V getComboBoxModel() {
+    return (V)super.getModel();
   }
 
   @Override
