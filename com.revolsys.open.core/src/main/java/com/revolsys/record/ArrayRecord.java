@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.revolsys.equals.EqualsInstance;
+import com.revolsys.identifier.SingleIdentifier;
 import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.util.Property;
 
 /**
  * The ArrayRecord is an implementation of {@link Record} which uses an
@@ -99,12 +101,23 @@ public class ArrayRecord extends BaseRecord {
   /**
    * Set the value of the field with the specified name.
    *
-   * @param index The index of the field. param value The field value.
+   * @param index The index of the field.
    * @param value The new value.
    */
   @Override
-  public void setValue(final int index, final Object value) {
+  public void setValue(final int index, Object value) {
     if (index >= 0) {
+      if (value instanceof String) {
+        final String string = (String)value;
+        if (Property.isEmpty(string)) {
+          value = null;
+        }
+      }
+      if (value instanceof SingleIdentifier) {
+        final SingleIdentifier identifier = (SingleIdentifier)value;
+        value = identifier.getValue(0);
+      }
+
       final Object oldValue = this.values[index];
       if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {
         updateState();

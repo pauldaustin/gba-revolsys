@@ -198,7 +198,7 @@ public class LayerRecord extends ArrayRecord {
       } else {
         if (layer.isCanEditRecords()) {
           final Object originalValue = getOriginalValue(fieldName);
-          if (Equals.equal(value, originalValue)) {
+          if (Equals.equal(originalValue, value)) {
             if (this.originalValues != null) {
               this.originalValues.remove(fieldName);
               if (this.originalValues.isEmpty()) {
