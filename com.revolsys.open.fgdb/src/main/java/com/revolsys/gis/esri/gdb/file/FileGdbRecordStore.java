@@ -102,6 +102,10 @@ import com.vividsolutions.jts.geom.Geometry;
 public class FileGdbRecordStore extends AbstractRecordStore {
   static final Object API_SYNC = new Object();
 
+  private static Channel<Callable<? extends Object>> TASK_CHANNEL_IN = new Channel<>();
+
+  private static Channel<Object> TASK_CHANNEL_OUT = new Channel<>();
+
   private static final Map<FieldType, Constructor<? extends AbstractFileGdbFieldDefinition>> ESRI_FIELD_TYPE_ATTRIBUTE_MAP = new HashMap<FieldType, Constructor<? extends AbstractFileGdbFieldDefinition>>();
 
   private static final Logger LOG = LoggerFactory.getLogger(FileGdbRecordStore.class);
@@ -122,14 +126,12 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     addFieldTypeConstructor(FieldType.esriFieldTypeGUID, GuidFieldDefinition.class);
     addFieldTypeConstructor(FieldType.esriFieldTypeXML, XmlFieldDefinition.class);
 
+    TASK_CHANNEL_IN.writeConnect();
+    TASK_CHANNEL_OUT.readConnect();
     final Thread handler = new Thread(FileGdbRecordStore::taskHandler, "ESRI FGDB Create Thread");
     handler.setDaemon(true);
     handler.start();
   }
-
-  private static Channel<Callable<? extends Object>> CREATE_CHANNEL_IN = new Channel<>();
-
-  private static Channel<Object> CREATE_CHANNEL_OUT = new Channel<>();
 
   private static void addFieldTypeConstructor(final FieldType fieldType,
     final Class<? extends AbstractFileGdbFieldDefinition> fieldClass) {
@@ -159,16 +161,18 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   }
 
   private static void taskHandler() {
+    TASK_CHANNEL_IN.readConnect();
+    TASK_CHANNEL_OUT.writeConnect();
     while (true) {
       try {
-        final Callable<? extends Object> callable = CREATE_CHANNEL_IN.read();
+        final Callable<? extends Object> callable = TASK_CHANNEL_IN.read();
         Object result = null;
         try {
           result = callable.call();
         } catch (final Throwable e) {
           ExceptionUtil.log(FileGdbRecordStore.class, "Unable to run" + callable, e);
         } finally {
-          CREATE_CHANNEL_OUT.write(result);
+          TASK_CHANNEL_OUT.write(result);
         }
       } catch (final ClosedException t) {
         return;
@@ -1117,8 +1121,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   @SuppressWarnings("unchecked")
   private <V> V getSingleThreadResult(final Callable<V> callable) {
     synchronized (API_SYNC) {
-      CREATE_CHANNEL_IN.write(callable);
-      final V result = (V)CREATE_CHANNEL_OUT.read();
+      TASK_CHANNEL_IN.write(callable);
+      final V result = (V)TASK_CHANNEL_OUT.read();
       return result;
     }
   }
