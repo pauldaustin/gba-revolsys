@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -121,14 +122,14 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     addFieldTypeConstructor(FieldType.esriFieldTypeGUID, GuidFieldDefinition.class);
     addFieldTypeConstructor(FieldType.esriFieldTypeXML, XmlFieldDefinition.class);
 
-    final Thread handler = new Thread(() -> createHandler(), "ESRI FGDB Create Thread");
+    final Thread handler = new Thread(FileGdbRecordStore::taskHandler, "ESRI FGDB Create Thread");
     handler.setDaemon(true);
     handler.start();
   }
 
-  private static Channel<String> CREATE_CHANNEL_IN = new Channel<>();
+  private static Channel<Callable<? extends Object>> CREATE_CHANNEL_IN = new Channel<>();
 
-  private static Channel<Geodatabase> CREATE_CHANNEL_OUT = new Channel<>();
+  private static Channel<Object> CREATE_CHANNEL_OUT = new Channel<>();
 
   private static void addFieldTypeConstructor(final FieldType fieldType,
     final Class<? extends AbstractFileGdbFieldDefinition> fieldClass) {
@@ -144,23 +145,6 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   }
 
-  private static void createHandler() {
-    while (true) {
-      try {
-        final String fileName = CREATE_CHANNEL_IN.read();
-        Geodatabase geodatabase = null;
-        try {
-          geodatabase = EsriFileGdb.createGeodatabase(fileName);
-        } finally {
-          CREATE_CHANNEL_OUT.write(geodatabase);
-        }
-      } catch (final ClosedException t) {
-        return;
-      } catch (final Throwable t) {
-      }
-    }
-  }
-
   public static SpatialReference getSpatialReference(final GeometryFactory geometryFactory) {
     if (geometryFactory == null || geometryFactory.getSrid() == 0) {
       return null;
@@ -171,6 +155,26 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       }
       final SpatialReference spatialReference = SpatialReference.get(geometryFactory, wkt);
       return spatialReference;
+    }
+  }
+
+  private static void taskHandler() {
+    while (true) {
+      try {
+        final Callable<? extends Object> callable = CREATE_CHANNEL_IN.read();
+        Object result = null;
+        try {
+          result = callable.call();
+        } catch (final Throwable e) {
+          ExceptionUtil.log(FileGdbRecordStore.class, "Unable to run" + callable, e);
+        } finally {
+          CREATE_CHANNEL_OUT.write(result);
+        }
+      } catch (final ClosedException t) {
+        return;
+      } catch (final Throwable e) {
+        ExceptionUtil.log(FileGdbRecordStore.class, "Error getting next task", e);
+      }
     }
   }
 
@@ -419,10 +423,12 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   private void closeGeodatabase(final Geodatabase geodatabase) {
     if (geodatabase != null) {
-      synchronized (API_SYNC) {
+      getSingleThreadResult(() -> {
         EsriFileGdb.CloseGeodatabase(geodatabase);
-      }
+        return null;
+      });
     }
+
   }
 
   protected void closeRow(final Row row) {
@@ -534,9 +540,9 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   }
 
   private Geodatabase createGeodatabase() {
-    CREATE_CHANNEL_IN.write(this.fileName);
-    final Geodatabase geodatabase = CREATE_CHANNEL_OUT.read();
-    return geodatabase;
+    return getSingleThreadResult(() -> {
+      return EsriFileGdb.createGeodatabase(this.fileName);
+    });
   }
 
   @Override
@@ -820,9 +826,10 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         doClose();
       } finally {
         if (new File(fileName).exists()) {
-          synchronized (API_SYNC) {
+          getSingleThreadResult(() -> {
             EsriFileGdb.DeleteGeodatabase(fileName);
-          }
+            return null;
+          });
         }
       }
     }
@@ -1107,6 +1114,15 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  private <V> V getSingleThreadResult(final Callable<V> callable) {
+    synchronized (API_SYNC) {
+      CREATE_CHANNEL_IN.write(callable);
+      final V result = (V)CREATE_CHANNEL_OUT.read();
+      return result;
+    }
+  }
+
   protected Table getTable(final String catalogPath) {
     synchronized (this.apiSync) {
       synchronized (API_SYNC) {
@@ -1223,7 +1239,9 @@ public class FileGdbRecordStore extends AbstractRecordStore {
                   throw new IllegalArgumentException(
                     FileUtil.getCanonicalPath(file) + " is not a valid ESRI File Geodatabase");
                 }
-                geodatabase = openGeodatabase();
+                geodatabase = getSingleThreadResult(() -> {
+                  return EsriFileGdb.openGeodatabase(this.fileName);
+                });
               } else {
                 throw new IllegalArgumentException(
                   FileUtil.getCanonicalPath(file) + " ESRI File Geodatabase must be a directory");
