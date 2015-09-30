@@ -28,7 +28,7 @@ import com.revolsys.util.Property;
 public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWriterFactory {
   public static Map<String, Object> toMap(final File file) {
     if (file == null) {
-      return new LinkedHashMap<String, Object>();
+      return new LinkedHashMap<>();
     } else {
       final FileSystemResource resource = new FileSystemResource(file);
       return toMap(resource);
@@ -37,21 +37,21 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWri
 
   public static Map<String, Object> toMap(final File directory, final String path) {
     if (directory == null || path == null) {
-      return new LinkedHashMap<String, Object>();
+      return new LinkedHashMap<>();
     } else {
       final File file = FileUtil.getFile(directory, path);
       if (file.exists() && !file.isDirectory()) {
         final FileSystemResource resource = new FileSystemResource(file);
         return toMap(resource);
       } else {
-        return new LinkedHashMap<String, Object>();
+        return new LinkedHashMap<>();
       }
     }
   }
 
   public static Map<String, Object> toMap(final InputStream in) {
     if (in == null) {
-      return new LinkedHashMap<String, Object>();
+      return new LinkedHashMap<>();
     } else {
       try {
         final java.io.Reader reader = FileUtil.createUtf8Reader(in);
@@ -78,7 +78,7 @@ public class JsonMapIoFactory extends AbstractMapReaderFactory implements MapWri
         throw new RuntimeException("Unable to open stream for " + resource, e);
       }
     } else {
-      return new LinkedHashMap<String, Object>();
+      return new LinkedHashMap<>();
     }
   }
 

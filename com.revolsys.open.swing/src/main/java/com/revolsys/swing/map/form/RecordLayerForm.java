@@ -997,7 +997,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   }
 
   public Map<String, Object> getValues() {
-    final Map<String, Object> values = new LinkedHashMap<String, Object>();
+    final Map<String, Object> values = new LinkedHashMap<>();
     if (this.record != null) {
       values.putAll(this.record);
     }

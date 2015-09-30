@@ -778,7 +778,7 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
       final String typePath = typeProperties.getKey();
       Map<String, Object> currentProperties = this.typeRecordDefinitionProperties.get(typePath);
       if (currentProperties == null) {
-        currentProperties = new LinkedHashMap<String, Object>();
+        currentProperties = new LinkedHashMap<>();
         this.typeRecordDefinitionProperties.put(typePath, currentProperties);
       }
       final List<RecordDefinitionProperty> properties = typeProperties.getValue();

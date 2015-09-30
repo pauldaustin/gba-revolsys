@@ -345,7 +345,7 @@ public class TextStyle implements MapSerializer, Cloneable {
 
   @Override
   public Map<String, Object> toMap() {
-    final Map<String, Object> map = new LinkedHashMap<String, Object>();
+    final Map<String, Object> map = new LinkedHashMap<>();
     for (final String name : PROPERTIES.keySet()) {
       Object value = Property.get(this, name);
       if (value instanceof Color) {

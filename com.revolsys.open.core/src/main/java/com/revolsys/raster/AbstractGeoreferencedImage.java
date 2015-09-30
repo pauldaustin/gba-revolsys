@@ -815,7 +815,7 @@ public abstract class AbstractGeoreferencedImage extends AbstractPropertyChangeO
 
   @Override
   public Map<String, Object> toMap() {
-    final Map<String, Object> map = new LinkedHashMap<String, Object>();
+    final Map<String, Object> map = new LinkedHashMap<>();
     map.put("type", "bufferedImage");
     final BoundingBox boundingBox = getBoundingBox();
     if (boundingBox != null) {

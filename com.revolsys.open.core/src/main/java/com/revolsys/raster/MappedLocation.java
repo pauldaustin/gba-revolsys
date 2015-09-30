@@ -160,7 +160,7 @@ public class MappedLocation extends AbstractPropertyChangeObject implements MapS
 
   @Override
   public Map<String, Object> toMap() {
-    final Map<String, Object> map = new LinkedHashMap<String, Object>();
+    final Map<String, Object> map = new LinkedHashMap<>();
     map.put("sourceX", this.sourcePixel.getX());
     map.put("sourceY", this.sourcePixel.getY());
     map.put("target", WktWriterOld.toString(this.targetPoint, true));

@@ -91,7 +91,7 @@ public class OS {
     if (file.exists()) {
       return JsonMapIoFactory.toMap(file);
     } else {
-      return new LinkedHashMap<String, Object>();
+      return new LinkedHashMap<>();
     }
   }
 

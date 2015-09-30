@@ -80,7 +80,7 @@ public class GeometryGraph extends Graph<LineSegment> {
 
   public void addGeometry(Geometry geometry) {
     geometry = getGeometryFactory().createGeometry(geometry);
-    final Map<String, Object> properties = new LinkedHashMap<String, Object>();
+    final Map<String, Object> properties = new LinkedHashMap<>();
 
     final int geometryIndex = this.geometries.size();
     properties.put("geometryIndex", geometryIndex);

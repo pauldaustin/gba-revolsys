@@ -1038,7 +1038,7 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   @Override
   public Map<String, Object> toMap() {
-    final Map<String, Object> map = new LinkedHashMap<String, Object>();
+    final Map<String, Object> map = new LinkedHashMap<>();
     map.put("type", "geometryFactory");
     map.put("srid", getSRID());
     map.put("numAxis", getNumAxis());
