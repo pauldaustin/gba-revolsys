@@ -69,8 +69,7 @@ import com.revolsys.io.Writer;
 import com.revolsys.jdbc.JdbcUtils;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.jts.geom.GeometryFactory;
-import com.revolsys.parallel.channel.Channel;
-import com.revolsys.parallel.channel.ClosedException;
+import com.revolsys.parallel.SingleThreadExecutor;
 import com.revolsys.record.Record;
 import com.revolsys.record.RecordState;
 import com.revolsys.record.code.CodeTable;
@@ -100,17 +99,16 @@ import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
 public class FileGdbRecordStore extends AbstractRecordStore {
-  static final Object API_SYNC = new Object();
-
-  private static Channel<Callable<? extends Object>> TASK_CHANNEL_IN = new Channel<>();
-
-  private static Channel<Object> TASK_CHANNEL_OUT = new Channel<>();
+  private static final Object API_SYNC = new Object();
 
   private static final Map<FieldType, Constructor<? extends AbstractFileGdbFieldDefinition>> ESRI_FIELD_TYPE_ATTRIBUTE_MAP = new HashMap<FieldType, Constructor<? extends AbstractFileGdbFieldDefinition>>();
 
   private static final Logger LOG = LoggerFactory.getLogger(FileGdbRecordStore.class);
 
   private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\?");
+
+  private static final SingleThreadExecutor TASK_EXECUTOR = new SingleThreadExecutor(
+    "ESRI FGDB Create Thread");
 
   static {
     addFieldTypeConstructor(FieldType.esriFieldTypeInteger, IntegerFieldDefinition.class);
@@ -125,12 +123,6 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     addFieldTypeConstructor(FieldType.esriFieldTypeGlobalID, GlobalIdFieldDefinition.class);
     addFieldTypeConstructor(FieldType.esriFieldTypeGUID, GuidFieldDefinition.class);
     addFieldTypeConstructor(FieldType.esriFieldTypeXML, XmlFieldDefinition.class);
-
-    TASK_CHANNEL_IN.writeConnect();
-    TASK_CHANNEL_OUT.readConnect();
-    final Thread handler = new Thread(FileGdbRecordStore::taskHandler, "ESRI FGDB Create Thread");
-    handler.setDaemon(true);
-    handler.start();
   }
 
   private static void addFieldTypeConstructor(final FieldType fieldType,
@@ -157,28 +149,6 @@ public class FileGdbRecordStore extends AbstractRecordStore {
       }
       final SpatialReference spatialReference = SpatialReference.get(geometryFactory, wkt);
       return spatialReference;
-    }
-  }
-
-  private static void taskHandler() {
-    TASK_CHANNEL_IN.readConnect();
-    TASK_CHANNEL_OUT.writeConnect();
-    while (true) {
-      try {
-        final Callable<? extends Object> callable = TASK_CHANNEL_IN.read();
-        Object result = null;
-        try {
-          result = callable.call();
-        } catch (final Throwable e) {
-          ExceptionUtil.log(FileGdbRecordStore.class, "Unable to run" + callable, e);
-        } finally {
-          TASK_CHANNEL_OUT.write(result);
-        }
-      } catch (final ClosedException t) {
-        return;
-      } catch (final Throwable e) {
-        ExceptionUtil.log(FileGdbRecordStore.class, "Error getting next task", e);
-      }
     }
   }
 
@@ -1118,12 +1088,9 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     }
   }
 
-  @SuppressWarnings("unchecked")
   private <V> V getSingleThreadResult(final Callable<V> callable) {
     synchronized (API_SYNC) {
-      TASK_CHANNEL_IN.write(callable);
-      final V result = (V)TASK_CHANNEL_OUT.read();
-      return result;
+      return TASK_EXECUTOR.call(callable);
     }
   }
 
