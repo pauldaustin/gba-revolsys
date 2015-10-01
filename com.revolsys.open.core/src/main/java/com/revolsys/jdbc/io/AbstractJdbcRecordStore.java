@@ -936,8 +936,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
             elementsByPath.put(typePath.toUpperCase(), recordDefinition);
           }
           try (
-            final ResultSet columnsRs = databaseMetaData.getColumns(null, dbSchemaName, "%",
-              "%")) {
+            final ResultSet columnsRs = databaseMetaData.getColumns(null, dbSchemaName, "%", "%")) {
             while (columnsRs.next()) {
               final String tableName = columnsRs.getString("TABLE_NAME").toUpperCase();
               final String typePath = Path.toPath(schemaName, tableName);

@@ -222,50 +222,6 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
     }
   }
 
-  @Override
-  public Record newRecord(final RecordDefinition objectRecordDefinition) {
-    final RecordDefinition recordDefinition = getRecordDefinition(objectRecordDefinition);
-    final RecordFactory recordFactory = this.recordFactory;
-    if (recordDefinition == null || recordFactory == null) {
-      return null;
-    } else {
-      final Record object = recordFactory.createRecord(recordDefinition);
-      return object;
-    }
-  }
-
-  @Override
-  public Record newRecord(final String typePath) {
-    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
-    if (recordDefinition == null) {
-      return null;
-    } else {
-      return newRecord(recordDefinition);
-    }
-  }
-
-  @Override
-  public Record newRecord(final String typePath, final Map<String, ? extends Object> values) {
-    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
-    if (recordDefinition == null) {
-      throw new IllegalArgumentException("Cannot find table " + typePath + " for " + this);
-    } else {
-      final Record record = newRecord(recordDefinition);
-      if (record != null) {
-        record.setValues(values);
-        final String idFieldName = recordDefinition.getIdFieldName();
-        if (Property.hasValue(idFieldName)) {
-          if (values.get(idFieldName) == null) {
-            final Object id = createPrimaryIdValue(typePath);
-            record.setIdValue(id);
-          }
-        }
-      }
-      return record;
-    }
-
-  }
-
   public AbstractIterator<Record> createIterator(final Query query,
     Map<String, Object> properties) {
     if (properties == null) {
@@ -598,6 +554,50 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
         return queryFirst(query);
       }
     }
+  }
+
+  @Override
+  public Record newRecord(final RecordDefinition objectRecordDefinition) {
+    final RecordDefinition recordDefinition = getRecordDefinition(objectRecordDefinition);
+    final RecordFactory recordFactory = this.recordFactory;
+    if (recordDefinition == null || recordFactory == null) {
+      return null;
+    } else {
+      final Record object = recordFactory.createRecord(recordDefinition);
+      return object;
+    }
+  }
+
+  @Override
+  public Record newRecord(final String typePath) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition == null) {
+      return null;
+    } else {
+      return newRecord(recordDefinition);
+    }
+  }
+
+  @Override
+  public Record newRecord(final String typePath, final Map<String, ? extends Object> values) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition == null) {
+      throw new IllegalArgumentException("Cannot find table " + typePath + " for " + this);
+    } else {
+      final Record record = newRecord(recordDefinition);
+      if (record != null) {
+        record.setValues(values);
+        final String idFieldName = recordDefinition.getIdFieldName();
+        if (Property.hasValue(idFieldName)) {
+          if (values.get(idFieldName) == null) {
+            final Object id = createPrimaryIdValue(typePath);
+            record.setIdValue(id);
+          }
+        }
+      }
+      return record;
+    }
+
   }
 
   protected void obtainConnected() {

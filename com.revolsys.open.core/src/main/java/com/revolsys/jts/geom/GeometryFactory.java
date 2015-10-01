@@ -694,18 +694,8 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
     return createLineString(Arrays.asList(points));
   }
 
-  public MultiLineString multiLineString(final Collection<?> lines) {
-    final LineString[] lineArray = getLineStringArray(lines);
-    return createMultiLineString(lineArray);
-  }
-
   public MultiLineString createMultiLineString(final Object... lines) {
     return multiLineString(Arrays.asList(lines));
-  }
-
-  public MultiPoint multiPoint(final Collection<?> points) {
-    final Point[] pointArray = getPointArray(points);
-    return createMultiPoint(pointArray);
   }
 
   public MultiPoint createMultiPoint(final CoordinatesList coordinatesList) {
@@ -723,11 +713,6 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
 
   public MultiPoint createMultiPoint(final Object... points) {
     return multiPoint(Arrays.asList(points));
-  }
-
-  public MultiPolygon multiPolygon(final Collection<?> polygons) {
-    final Polygon[] polygonArray = getPolygonArray(polygons);
-    return createMultiPolygon(polygonArray);
   }
 
   public MultiPolygon createMultiPolygon(final Object... polygons) {
@@ -1018,6 +1003,21 @@ public class GeometryFactory extends com.vividsolutions.jts.geom.GeometryFactory
   @Override
   public double makeZPrecise(final double value) {
     return this.coordinatesPrecisionModel.makeZPrecise(value);
+  }
+
+  public MultiLineString multiLineString(final Collection<?> lines) {
+    final LineString[] lineArray = getLineStringArray(lines);
+    return createMultiLineString(lineArray);
+  }
+
+  public MultiPoint multiPoint(final Collection<?> points) {
+    final Point[] pointArray = getPointArray(points);
+    return createMultiPoint(pointArray);
+  }
+
+  public MultiPolygon multiPolygon(final Collection<?> polygons) {
+    final Polygon[] polygonArray = getPolygonArray(polygons);
+    return createMultiPolygon(polygonArray);
   }
 
   public Point point(final double... coordinates) {

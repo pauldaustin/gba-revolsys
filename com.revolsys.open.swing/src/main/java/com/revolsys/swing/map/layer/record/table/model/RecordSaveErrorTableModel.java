@@ -117,6 +117,7 @@ public class RecordSaveErrorTableModel extends RecordListTableModel
     return false;
   }
 
+  @Override
   public boolean isEmpty() {
     return getRowCount() == 0;
   }

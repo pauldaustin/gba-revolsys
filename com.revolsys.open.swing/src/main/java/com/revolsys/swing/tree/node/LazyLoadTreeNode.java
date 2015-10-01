@@ -97,9 +97,7 @@ public abstract class LazyLoadTreeNode extends BaseTreeNode {
   }
 
   public final void refresh() {
-    Invoke.background("Refresh tree nodes " + this.getName(), () -> {
-      doRefresh();
-    });
+    Invoke.background("Refresh tree nodes " + this.getName(), this::doRefresh);
   }
 
   public final void removeNode(final BaseTreeNode node) {

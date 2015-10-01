@@ -397,12 +397,10 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   private void closeGeodatabase(final Geodatabase geodatabase) {
     if (geodatabase != null) {
-      getSingleThreadResult(() -> {
+      synchronized (API_SYNC) {
         EsriFileGdb.CloseGeodatabase(geodatabase);
-        return null;
-      });
+      }
     }
-
   }
 
   protected void closeRow(final Row row) {

@@ -170,7 +170,8 @@ public class CompareProcessor extends AbstractMergeProcess {
     final LineString sourceLine = sourceObject.getGeometry();
     final LineEqualIgnoreDirectionFilter lineEqualFilter = new LineEqualIgnoreDirectionFilter(
       sourceLine, 3);
-    final Predicate<Record> geometryFilter = new OldRecordGeometryFilter<LineString>(lineEqualFilter);
+    final Predicate<Record> geometryFilter = new OldRecordGeometryFilter<LineString>(
+      lineEqualFilter);
     final Predicate<Record> equalFilter = this.equalFilterFactory.apply(sourceObject);
     final Predicate<Record> filter = new AndPredicate<Record>(equalFilter, geometryFilter);
 

@@ -33,9 +33,10 @@ public class ArcSdeStGeometryFieldDefinition extends JdbcFieldDefinition {
 
   private final ArcSdeSpatialReference spatialReference;
 
-  public ArcSdeStGeometryFieldDefinition(final String dbName, final String name, final DataType type,
-    final boolean required, final String description, final Map<String, Object> properties,
-    final ArcSdeSpatialReference spatialReference, final int dimension) {
+  public ArcSdeStGeometryFieldDefinition(final String dbName, final String name,
+    final DataType type, final boolean required, final String description,
+    final Map<String, Object> properties, final ArcSdeSpatialReference spatialReference,
+    final int dimension) {
     super(dbName, name, type, -1, 0, 0, required, description, properties);
     this.spatialReference = spatialReference;
     final GeometryFactory factory = spatialReference.getGeometryFactory();
