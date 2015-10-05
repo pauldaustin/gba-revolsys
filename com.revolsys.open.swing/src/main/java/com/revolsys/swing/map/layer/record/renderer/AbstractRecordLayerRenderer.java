@@ -95,7 +95,9 @@ public abstract class AbstractRecordLayerRenderer
   public static AbstractRecordLayerRenderer getRenderer(final AbstractRecordLayer layer,
     final LayerRenderer<?> parent, final Map<String, Object> style) {
     final String type = (String)style.remove("type");
-    if ("geometryStyle".equals(type)) {
+    if ("mergedErrors".equals(type)) {
+      return null;
+    } else if ("geometryStyle".equals(type)) {
       return new GeometryStyleRenderer(layer, parent, style);
     } else if ("textStyle".equals(type)) {
       return new TextStyleRenderer(layer, parent, style);
