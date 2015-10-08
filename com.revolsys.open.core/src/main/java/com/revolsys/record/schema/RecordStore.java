@@ -22,9 +22,10 @@ import com.revolsys.record.io.RecordReader;
 import com.revolsys.record.query.Query;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
+import com.revolsys.transaction.Transactionable;
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface RecordStore extends RecordDefinitionFactory, Closeable {
+public interface RecordStore extends RecordDefinitionFactory, Transactionable, Closeable {
   void addCodeTable(CodeTable codeTable);
 
   void addCodeTables(Collection<CodeTable> codeTables);
@@ -47,7 +48,10 @@ public interface RecordStore extends RecordDefinitionFactory, Closeable {
 
   Query createQuery(final String typePath, String whereClause, final BoundingBox boundingBox);
 
-  Transaction createTransaction(Propagation propagation);
+  @Deprecated
+  default Transaction createTransaction(final Propagation propagation) {
+    return newTransaction(propagation);
+  }
 
   Record createWithId(RecordDefinition recordDefinition);
 
@@ -98,6 +102,7 @@ public interface RecordStore extends RecordDefinitionFactory, Closeable {
 
   Statistics getStatistics(String string);
 
+  @Override
   PlatformTransactionManager getTransactionManager();
 
   /**

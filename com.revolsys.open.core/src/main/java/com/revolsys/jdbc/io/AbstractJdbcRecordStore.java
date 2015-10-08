@@ -250,7 +250,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
     }
     final String sql = JdbcUtils.getDeleteSql(query);
     try (
-      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+      Transaction transaction = newTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
@@ -1061,7 +1061,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
 
   protected void write(final Record record, final RecordState state) {
     try (
-      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+      Transaction transaction = newTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.
@@ -1080,7 +1080,7 @@ public abstract class AbstractJdbcRecordStore extends AbstractRecordStore
 
   protected void writeAll(final Collection<Record> records, final RecordState state) {
     try (
-      Transaction transaction = createTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
+      Transaction transaction = newTransaction(com.revolsys.transaction.Propagation.REQUIRED)) {
       // It's important to have this in an inner try. Otherwise the exceptions
       // won't get caught on closing the writer and the transaction won't get
       // rolled back.

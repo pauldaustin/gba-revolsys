@@ -46,8 +46,6 @@ import com.revolsys.record.io.RecordStoreQueryReader;
 import com.revolsys.record.property.RecordDefinitionProperty;
 import com.revolsys.record.query.Q;
 import com.revolsys.record.query.Query;
-import com.revolsys.transaction.Propagation;
-import com.revolsys.transaction.Transaction;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
@@ -260,12 +258,6 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
   public RecordStoreQueryReader createReader() {
     final RecordStoreQueryReader reader = new RecordStoreQueryReader(this);
     return reader;
-  }
-
-  @Override
-  public Transaction createTransaction(final Propagation propagation) {
-    final PlatformTransactionManager transactionManager = getTransactionManager();
-    return new Transaction(transactionManager, propagation);
   }
 
   @Override
