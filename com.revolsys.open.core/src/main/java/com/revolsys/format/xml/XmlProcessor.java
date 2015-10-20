@@ -145,7 +145,6 @@ public abstract class XmlProcessor {
   private static final Map<Class<?>, Map<String, Method>> PROCESSOR_METHOD_CACHE = new HashMap<Class<?>, Map<String, Method>>();
 
   static {
-    registerEnumConverter(Enum.class);
   }
 
   /**
@@ -173,13 +172,6 @@ public abstract class XmlProcessor {
     return methodCache;
   }
 
-  public static void registerEnumConverter(final Class<? extends Enum> enumClass) {
-    final BeanUtilsBean beanUtilsBean = BeanUtilsBean.getInstance();
-    final ConvertUtilsBean convertUtils = beanUtilsBean.getConvertUtils();
-    final EnumConverter enumConverter = new EnumConverter();
-    convertUtils.register(enumConverter, enumClass);
-  }
-
   /** The context for processing of the XML Document. */
   private XmlProcessorContext context = new SimpleXmlProcessorContext();
 
@@ -199,10 +191,15 @@ public abstract class XmlProcessor {
    * @param namespaceUri The XML Namespace URI.
    */
   protected XmlProcessor(final String namespaceUri) {
+    initConverters();
     this.namespaceUri = namespaceUri;
     this.typePathConverterMap.put(XmlConstants.XS_SHORT, new ShortConverter());
     this.typePathConverterMap.put(XmlConstants.XS_INT, new IntegerConverter());
     this.methodCache = getMethodCache(getClass());
+  }
+
+  protected void initConverters() {
+    registerEnumConverter(Enum.class);
   }
 
   public XmlProcessor(final String namespaceUri, final Map<String, Class<?>> tagNameClassMap) {
@@ -403,6 +400,13 @@ public abstract class XmlProcessor {
         }
       }
     }
+  }
+
+  public void registerEnumConverter(final Class<? extends Enum> enumClass) {
+    final BeanUtilsBean beanUtilsBean = BeanUtilsBean.getInstance();
+    final ConvertUtilsBean convertUtils = beanUtilsBean.getConvertUtils();
+    final EnumConverter enumConverter = new EnumConverter();
+    convertUtils.register(enumConverter, enumClass);
   }
 
   /**

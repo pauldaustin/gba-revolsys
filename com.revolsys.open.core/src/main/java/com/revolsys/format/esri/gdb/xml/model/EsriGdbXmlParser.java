@@ -31,16 +31,6 @@ public class EsriGdbXmlParser extends XmlProcessor implements EsriGeodatabaseXml
   private static final Map<String, Class<?>> TAG_NAME_CLASS_MAP = new HashMap<String, Class<?>>();
 
   static {
-    registerEnumConverter(FieldType.class);
-    registerEnumConverter(MergePolicyType.class);
-    registerEnumConverter(RelCardinality.class);
-    registerEnumConverter(RelClassKey.class);
-    registerEnumConverter(RelKeyRole.class);
-    registerEnumConverter(RelKeyType.class);
-    registerEnumConverter(RelNotification.class);
-    registerEnumConverter(SplitPolicyType.class);
-    registerEnumConverter(WorkspaceType.class);
-    registerEnumConverter(GeometryType.class);
     TAG_NAME_CLASS_MAP.put(CHILDREN.getLocalPart(), ArrayList.class);
     TAG_NAME_CLASS_MAP.put(SUBTYPE.getLocalPart(), Subtype.class);
     TAG_NAME_CLASS_MAP.put(FIELD_INFOS.getLocalPart(), ArrayList.class);
@@ -101,6 +91,21 @@ public class EsriGdbXmlParser extends XmlProcessor implements EsriGeodatabaseXml
 
   public EsriGdbXmlParser() {
     super("http://www.esri.com/schemas/ArcGIS/10.1", TAG_NAME_CLASS_MAP);
+  }
+
+  @Override
+  protected void initConverters() {
+    super.initConverters();
+    registerEnumConverter(FieldType.class);
+    registerEnumConverter(MergePolicyType.class);
+    registerEnumConverter(RelCardinality.class);
+    registerEnumConverter(RelClassKey.class);
+    registerEnumConverter(RelKeyRole.class);
+    registerEnumConverter(RelKeyType.class);
+    registerEnumConverter(RelNotification.class);
+    registerEnumConverter(SplitPolicyType.class);
+    registerEnumConverter(WorkspaceType.class);
+    registerEnumConverter(GeometryType.class);
   }
 
   public List<ControllerMembership> processControllerMemberships(final XMLStreamReader parser)

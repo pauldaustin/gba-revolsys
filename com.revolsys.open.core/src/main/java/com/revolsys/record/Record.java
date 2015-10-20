@@ -600,13 +600,13 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
    * @param value The new value.
    */
 
-  default void setValue(final CharSequence name, final Object value) {
+  default boolean setValue(final CharSequence name, final Object value) {
+    boolean updated = false;
     final RecordDefinition recordDefinition = getRecordDefinition();
     final int index = recordDefinition.getFieldIndex(name);
     if (index >= 0) {
-      setValue(index, value);
+      return setValue(index, value);
     } else {
-
       final int dotIndex = name.toString().indexOf('.');
       if (dotIndex == -1) {
 
@@ -615,33 +615,36 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
         final CharSequence subKey = name.subSequence(dotIndex + 1, name.length());
         final Object objectValue = getValue(key);
         if (objectValue == null) {
-          final DataType attributeType = recordDefinition.getFieldType(key);
-          if (attributeType != null) {
-            if (attributeType.getJavaClass() == Record.class) {
-              final String typePath = attributeType.getName();
+          final DataType fieldType = recordDefinition.getFieldType(key);
+          if (fieldType != null) {
+            if (fieldType.getJavaClass() == Record.class) {
+              final String typePath = fieldType.getName();
               final RecordDefinitionFactory recordDefinitionFactory = recordDefinition
                 .getRecordDefinitionFactory();
               final RecordDefinition subRecordDefinition = recordDefinitionFactory
                 .getRecordDefinition(typePath);
               final RecordFactory recordFactory = subRecordDefinition.getRecordFactory();
-              final Record subObject = recordFactory.createRecord(subRecordDefinition);
-              subObject.setValue(subKey, value);
-              setValue(key, subObject);
+              final Record subRecord = recordFactory.createRecord(subRecordDefinition);
+              updated |= subRecord.setValue(subKey, value);
+              updated |= setValue(key, subRecord);
             }
           }
         } else {
           if (objectValue instanceof Geometry) {
             final Geometry geometry = (Geometry)objectValue;
             JtsGeometryUtil.setGeometryProperty(geometry, subKey, value);
+            updated = true;
           } else if (objectValue instanceof Record) {
-            final Record object = (Record)objectValue;
-            object.setValue(subKey, value);
+            final Record record = (Record)objectValue;
+            updated |= record.setValue(subKey, value);
           } else {
             JavaBeanUtil.setProperty(objectValue, subKey.toString(), value);
+            updated = true;
           }
         }
       }
     }
+    return updated;
   }
 
   /**
@@ -650,7 +653,7 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
    * @param index The index of the attribute. param value The attribute value.
    * @param value The new value;
    */
-  void setValue(int index, Object value);
+  boolean setValue(int index, Object value);
 
   @SuppressWarnings("rawtypes")
 

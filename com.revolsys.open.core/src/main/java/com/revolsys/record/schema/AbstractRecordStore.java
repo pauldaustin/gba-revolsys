@@ -731,7 +731,7 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
   }
 
   protected void setConnectionProperties(final Map<String, ? extends Object> connectionProperties) {
-    this.connectionProperties = Maps.createHashMap(connectionProperties);
+    this.connectionProperties = Maps.newHash(connectionProperties);
   }
 
   public void setGeometryFactory(final GeometryFactory geometryFactory) {

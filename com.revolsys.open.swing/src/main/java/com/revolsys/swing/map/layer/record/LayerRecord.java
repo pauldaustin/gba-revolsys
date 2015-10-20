@@ -179,12 +179,14 @@ public class LayerRecord extends ArrayRecord {
   }
 
   @Override
-  public void setValue(final int index, final Object value) {
+  public boolean setValue(final int index, final Object value) {
     final RecordDefinition recordDefinition = getRecordDefinition();
     final String fieldName = recordDefinition.getFieldName(index);
 
     final Object oldValue = getValue(index);
-    if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {
+    if (EqualsInstance.INSTANCE.equals(oldValue, value)) {
+      return false;
+    } else {
       final AbstractRecordLayer layer = getLayer();
       final RecordState state = getState();
       if (RecordState.Initalizing.equals(state)) {
@@ -216,11 +218,12 @@ public class LayerRecord extends ArrayRecord {
           throw new IllegalStateException("Editing objects is not supported for layer " + layer);
         }
       }
-      super.setValue(index, value);
+      final boolean updated = super.setValue(index, value);
       if (!RecordState.Initalizing.equals(state)) {
         firePropertyChange(fieldName, oldValue, value);
         layer.updateRecordState(this);
       }
+      return updated;
     }
   }
 }

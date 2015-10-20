@@ -105,7 +105,8 @@ public class ArrayRecord extends BaseRecord {
    * @param value The new value.
    */
   @Override
-  public void setValue(final int index, Object value) {
+  public boolean setValue(final int index, Object value) {
+    boolean updated = false;
     if (index >= 0) {
       if (value instanceof String) {
         final String string = (String)value;
@@ -120,9 +121,11 @@ public class ArrayRecord extends BaseRecord {
 
       final Object oldValue = this.values[index];
       if (!EqualsInstance.INSTANCE.equals(oldValue, value)) {
+        updated = true;
         updateState();
       }
       this.values[index] = value;
     }
+    return updated;
   }
 }
