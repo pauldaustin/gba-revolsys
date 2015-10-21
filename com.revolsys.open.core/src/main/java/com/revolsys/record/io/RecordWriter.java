@@ -15,16 +15,9 @@ import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.util.Property;
 
 public interface RecordWriter extends Writer<Record> {
+  @Deprecated
   static RecordWriter create(final RecordDefinition recordDefinition, final Object source) {
-    final Resource resource = com.revolsys.spring.resource.Resource.getResource(source);
-    final RecordWriterFactory writerFactory = IoFactory.factory(RecordWriterFactory.class,
-      resource);
-    if (writerFactory == null) {
-      return null;
-    } else {
-      final RecordWriter writer = writerFactory.createRecordWriter(recordDefinition, resource);
-      return writer;
-    }
+    return newRecordWriter(recordDefinition, source);
   }
 
   static boolean isWritable(final File file) {
@@ -39,6 +32,19 @@ public interface RecordWriter extends Writer<Record> {
   static boolean isWritable(final String fileNameExtension) {
     final IoFactoryRegistry ioFactoryRegistry = IoFactoryRegistry.getInstance();
     return ioFactoryRegistry.isFileExtensionSupported(RecordWriterFactory.class, fileNameExtension);
+  }
+
+  static RecordWriter newRecordWriter(final RecordDefinition recordDefinition,
+    final Object source) {
+    final Resource resource = com.revolsys.spring.resource.Resource.getResource(source);
+    final RecordWriterFactory writerFactory = IoFactory.factory(RecordWriterFactory.class,
+      resource);
+    if (writerFactory == null) {
+      return null;
+    } else {
+      final RecordWriter writer = writerFactory.createRecordWriter(recordDefinition, resource);
+      return writer;
+    }
   }
 
   default RecordDefinition getRecordDefinition() {

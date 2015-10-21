@@ -13,6 +13,20 @@ import com.revolsys.record.RecordFactory;
 import com.revolsys.record.schema.RecordDefinition;
 
 public interface RecordReader extends Reader<Record> {
+  @Deprecated
+  static RecordReader create(final Object source) {
+    return newRecordReader(source);
+  }
+
+  @Deprecated
+  static RecordReader create(final Object source, final RecordFactory recordFactory) {
+    return newRecordReader(source, recordFactory);
+  }
+
+  static boolean isReadable(final Object source) {
+    return IoFactoryRegistry.isAvailable(RecordReaderFactory.class, source);
+  }
+
   /**
    * Create a {@link RecordReader} for the given source. The source can be one of the following
    * classes.
@@ -26,9 +40,9 @@ public interface RecordReader extends Reader<Record> {
    * @return The reader.
    * @throws IllegalArgumentException If the source is not a supported class.
    */
-  static RecordReader create(final Object source) {
+  static RecordReader newRecordReader(final Object source) {
     final RecordFactory recordFactory = ArrayRecordFactory.INSTANCE;
-    return create(source, recordFactory);
+    return newRecordReader(source, recordFactory);
   }
 
   /**
@@ -45,7 +59,7 @@ public interface RecordReader extends Reader<Record> {
    * @return The reader.
    * @throws IllegalArgumentException If the source is not a supported class.
    */
-  static RecordReader create(final Object source, final RecordFactory recordFactory) {
+  static RecordReader newRecordReader(final Object source, final RecordFactory recordFactory) {
     final RecordReaderFactory readerFactory = IoFactory.factory(RecordReaderFactory.class, source);
     if (readerFactory == null) {
       return null;
@@ -53,10 +67,6 @@ public interface RecordReader extends Reader<Record> {
       final RecordReader reader = readerFactory.createRecordReader(source, recordFactory);
       return reader;
     }
-  }
-
-  static boolean isReadable(final Object source) {
-    return IoFactoryRegistry.isAvailable(RecordReaderFactory.class, source);
   }
 
   RecordDefinition getRecordDefinition();

@@ -1273,7 +1273,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   }
 
   public final void setFieldValid(final String fieldName) {
-    Invoke.later(() -> doSetFieldValid(fieldName));
+    Invoke.andWait(() -> doSetFieldValid(fieldName));
   }
 
   protected boolean setFieldValidationEnabled(final boolean fieldValidationEnabled) {
@@ -1436,7 +1436,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
   }
 
   protected final void updateErrors() {
-    Invoke.later(() -> doUpdateErrors());
+    Invoke.andWait(() -> doUpdateErrors());
   }
 
   public void updateFocussedField() {
