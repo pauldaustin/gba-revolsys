@@ -1,6 +1,7 @@
 package com.revolsys.spring;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
@@ -19,7 +20,7 @@ public class ClassLoaderFactoryBean extends AbstractFactoryBean<ClassLoader> {
 
   public static void addJars(final Collection<URL> urls, final File directory) {
     if (directory.exists() && directory.isDirectory()) {
-      final File[] libFiles = directory.listFiles(JAR_FILTER);
+      final File[] libFiles = directory.listFiles((FilenameFilter)JAR_FILTER);
       for (final File libFile : libFiles) {
         urls.add(FileUtil.toUrl(libFile));
       }

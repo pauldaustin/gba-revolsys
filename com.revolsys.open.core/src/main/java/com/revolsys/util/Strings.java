@@ -1,5 +1,8 @@
 package com.revolsys.util;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import com.revolsys.equals.Equals;
 
 public interface Strings {
@@ -220,6 +223,46 @@ public interface Strings {
     } else {
       return value.toString();
     }
+  }
+
+  /**
+   * Convert the collection to a string, using the separator between each value.
+   * Nulls will be the empty string "".
+   *
+   * @param separator The separator.
+   * @param values The values.
+   * @return The string.
+   */
+  static String toString(final String separator, final Collection<? extends Object> values) {
+    if (values == null) {
+      return null;
+    } else {
+      final StringBuilder string = new StringBuilder();
+      StringBuilders.append(string, values, separator);
+      return string.toString();
+    }
+  }
+
+  static String toString(final String separator, final int... values) {
+    if (values == null) {
+      return null;
+    } else {
+      final StringBuilder string = new StringBuilder();
+      boolean first = true;
+      for (final int value : values) {
+        if (first) {
+          first = false;
+        } else {
+          string.append(separator);
+        }
+        string.append(value);
+      }
+      return string.toString();
+    }
+  }
+
+  static String toString(final String separator, final Object... values) {
+    return toString(separator, Arrays.asList(values));
   }
 
   public static String trim(final String text) {

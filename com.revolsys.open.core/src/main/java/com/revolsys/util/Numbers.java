@@ -1,8 +1,7 @@
 package com.revolsys.util;
 
-public class Numbers {
-
-  public static boolean between(final int min, final int value, final int max) {
+public interface Numbers {
+  static boolean between(final int min, final int value, final int max) {
     if (min > max) {
       if (value < max) {
         return false;
@@ -22,7 +21,7 @@ public class Numbers {
     }
   }
 
-  public static byte digitCount(long value) {
+  static byte digitCount(long value) {
     if (value == 0) {
       return 1;
     } else if (value < 0) {
@@ -69,7 +68,67 @@ public class Numbers {
     }
   }
 
-  public static boolean greaterThan(final Integer number, final int min) {
+  static boolean equal(final Byte value1, final Byte value2) {
+    if (value1 == null) {
+      return value2 == null;
+    } else if (value2 == null) {
+      return false;
+    } else {
+      return value1.equals(value2);
+    }
+  }
+
+  static boolean equal(final Double value1, final Double value2) {
+    if (value1 == null) {
+      return value2 == null;
+    } else if (value2 == null) {
+      return false;
+    } else {
+      return value1.equals(value2);
+    }
+  }
+
+  static boolean equal(final Float value1, final Float value2) {
+    if (value1 == null) {
+      return value2 == null;
+    } else if (value2 == null) {
+      return false;
+    } else {
+      return value1.equals(value2);
+    }
+  }
+
+  static boolean equal(final Integer value1, final Integer value2) {
+    if (value1 == null) {
+      return value2 == null;
+    } else if (value2 == null) {
+      return false;
+    } else {
+      return value1.equals(value2);
+    }
+  }
+
+  static boolean equal(final Long value1, final Long value2) {
+    if (value1 == null) {
+      return value2 == null;
+    } else if (value2 == null) {
+      return false;
+    } else {
+      return value1.equals(value2);
+    }
+  }
+
+  static boolean equal(final Short value1, final Short value2) {
+    if (value1 == null) {
+      return value2 == null;
+    } else if (value2 == null) {
+      return false;
+    } else {
+      return value1.equals(value2);
+    }
+  }
+
+  static boolean greaterThan(final Integer number, final int min) {
     if (number == null) {
       return false;
     } else {
@@ -77,7 +136,7 @@ public class Numbers {
     }
   }
 
-  public static boolean isDigit(final char character) {
+  static boolean isDigit(final char character) {
     if (character >= '0' && character <= '9') {
       return true;
     } else {
@@ -85,7 +144,7 @@ public class Numbers {
     }
   }
 
-  public static boolean isDigit(final Character character) {
+  static boolean isDigit(final Character character) {
     if (character == null) {
       return false;
     } else {
@@ -93,19 +152,19 @@ public class Numbers {
     }
   }
 
-  public static boolean isEven(final int number) {
+  static boolean isEven(final int number) {
     return number % 2 == 0;
   }
 
-  public static boolean isLong(final String part) {
+  static boolean isLong(final String part) {
     return toLong(part) != null;
   }
 
-  public static boolean isOdd(final int number) {
+  static boolean isOdd(final int number) {
     return number % 2 == 1;
   }
 
-  public static boolean isPrimitive(final Object object) {
+  static boolean isPrimitive(final Object object) {
     if (object instanceof Integer) {
       return true;
     } else if (object instanceof Long) {
@@ -123,7 +182,7 @@ public class Numbers {
     }
   }
 
-  public static boolean isPrimitiveDecimal(final Object object) {
+  static boolean isPrimitiveDecimal(final Object object) {
     if (object instanceof Double) {
       return true;
     } else if (object instanceof Float) {
@@ -133,7 +192,7 @@ public class Numbers {
     }
   }
 
-  public static boolean isPrimitiveIntegral(final Object object) {
+  static boolean isPrimitiveIntegral(final Object object) {
     if (object instanceof Integer) {
       return true;
     } else if (object instanceof Long) {
@@ -147,7 +206,7 @@ public class Numbers {
     }
   }
 
-  public static Integer max(final Integer number1, final Integer number2) {
+  static Integer max(final Integer number1, final Integer number2) {
     if (number1 == null) {
       return number2;
     } else if (number2 == null) {
@@ -159,7 +218,7 @@ public class Numbers {
     }
   }
 
-  public static Integer min(final Integer number1, final Integer number2) {
+  static Integer min(final Integer number1, final Integer number2) {
     if (number1 == null) {
       return number2;
     } else if (number2 == null) {
@@ -171,7 +230,7 @@ public class Numbers {
     }
   }
 
-  public static boolean overlaps(final int min1, final int max1, final int min2, final int max2) {
+  static boolean overlaps(final int min1, final int max1, final int min2, final int max2) {
     if (min1 > max1) {
       return overlaps(max1, min1, min2, max2);
     } else if (min2 > max2) {
@@ -185,7 +244,7 @@ public class Numbers {
     }
   }
 
-  public static double ratio(final Number number, final Number from, final Number to) {
+  static double ratio(final Number number, final Number from, final Number to) {
     if (number == null) {
       return Double.MAX_VALUE;
     } else {
@@ -231,7 +290,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Byte toByte(final Object value) {
+  static Byte toByte(final Object value) {
     if (value == null) {
       return null;
     } else if (value instanceof Number) {
@@ -247,7 +306,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Byte toByte(final String string) {
+  static Byte toByte(final String string) {
     if (string == null) {
       return null;
     } else {
@@ -310,7 +369,7 @@ public class Numbers {
     }
   }
 
-  public static double[] toDoubleArray(final Number[] numbers) {
+  static double[] toDoubleArray(final Number[] numbers) {
     final int length = numbers.length;
     final double[] result = new double[length];
     for (int i = 0; i < length; i++) {
@@ -320,7 +379,7 @@ public class Numbers {
     return result;
   }
 
-  public static double[] toDoubleArray(final Number[] numbers, int offset, int length) {
+  static double[] toDoubleArray(final Number[] numbers, int offset, int length) {
     if (length > 0) {
       if (offset + length > numbers.length) {
         length = numbers.length - offset;
@@ -340,7 +399,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Integer toInt(final Object value) {
+  static Integer toInteger(final Object value) {
     if (value == null) {
       return null;
     } else if (value instanceof Number) {
@@ -348,7 +407,7 @@ public class Numbers {
       return number.intValue();
     } else {
       final String string = value.toString();
-      return toInt(string);
+      return toInteger(string);
     }
   }
 
@@ -356,7 +415,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Integer toInt(final String string) {
+  static Integer toInteger(final String string) {
     if (string == null) {
       return null;
     } else {
@@ -423,7 +482,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Long toLong(final Object value) {
+  static Long toLong(final Object value) {
     if (value == null) {
       return null;
     } else if (value instanceof Number) {
@@ -439,7 +498,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Long toLong(final String string) {
+  static Long toLong(final String string) {
     if (string == null) {
       return null;
     } else {
@@ -506,7 +565,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Short toShort(final Object value) {
+  static Short toShort(final Object value) {
     if (value == null) {
       return null;
     } else if (value instanceof Number) {
@@ -522,7 +581,7 @@ public class Numbers {
    * Convert the value to a Long. If the value cannot be converted to a number
    * null is returned instead of an exception.
    */
-  public static Short toShort(final String string) {
+  static Short toShort(final String string) {
     if (string == null) {
       return null;
     } else {
@@ -585,7 +644,7 @@ public class Numbers {
     }
   }
 
-  public static String toStringPadded(final long value, final int digitCount) {
+  static String toStringPadded(final long value, final int digitCount) {
     final String string = Long.toString(value);
     if (string.length() < digitCount) {
       final StringBuilder builder = new StringBuilder(digitCount);

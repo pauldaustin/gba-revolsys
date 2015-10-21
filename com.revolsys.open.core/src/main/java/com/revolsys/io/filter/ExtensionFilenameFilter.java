@@ -16,6 +16,7 @@
 package com.revolsys.io.filter;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,7 +31,7 @@ import java.util.Set;
  * @author Paul Austin
  */
 
-public class ExtensionFilenameFilter implements FilenameFilter {
+public class ExtensionFilenameFilter implements FilenameFilter, FileFilter {
   /** The list of extensions to match. */
   private final Set<String> extensions = new HashSet<String>();
 
@@ -82,6 +83,12 @@ public class ExtensionFilenameFilter implements FilenameFilter {
     this(Arrays.asList(extensions));
   }
 
+  @Override
+  public boolean accept(final File file) {
+    final String fileName = file.getName();
+    return accept(fileName);
+  }
+
   /**
    * Check to see if the file should be included in the list of matched files
    *
@@ -95,6 +102,15 @@ public class ExtensionFilenameFilter implements FilenameFilter {
     final int index = filename.lastIndexOf(".");
     if (index > -1) {
       extension = filename.substring(index + 1);
+    }
+    return this.extensions.contains(extension.toLowerCase());
+  }
+
+  public boolean accept(final String fileName) {
+    String extension = "";
+    final int index = fileName.lastIndexOf(".");
+    if (index > -1) {
+      extension = fileName.substring(index + 1);
     }
     return this.extensions.contains(extension.toLowerCase());
   }

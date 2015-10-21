@@ -761,8 +761,7 @@ public final class FileUtil {
     return getBaseName(fileName);
   }
 
-  public static List<String> getFileNames(final File directory,
-    final ExtensionFilenameFilter filter) {
+  public static List<String> getFileNames(final File directory, final FilenameFilter filter) {
     final List<String> names = new ArrayList<String>();
     final File[] files = directory.listFiles(filter);
     if (files != null) {
@@ -781,7 +780,7 @@ public final class FileUtil {
 
   public static List<File> getFiles(final File directory, final ExtensionFilenameFilter filter) {
     if (directory.isDirectory()) {
-      final File[] files = directory.listFiles(filter);
+      final File[] files = directory.listFiles((FilenameFilter)filter);
       if (files == null) {
         return Collections.emptyList();
       } else {

@@ -84,6 +84,13 @@ public class ProcessNetwork
     }
   }
 
+  public void addProcess(final Runnable runnable) {
+    if (runnable != null) {
+      final RunnableProcess process = new RunnableProcess(runnable);
+      addProcess(process);
+    }
+  }
+
   private void finishRunning() {
     synchronized (this.sync) {
       this.running = false;

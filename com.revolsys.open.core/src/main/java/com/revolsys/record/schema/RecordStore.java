@@ -61,6 +61,18 @@ public interface RecordStore extends RecordDefinitionFactory, Transactionable, C
 
   void delete(Record object);
 
+  default int delete(final String typePath, final Identifier identifier) {
+    final RecordDefinition recordDefinition = getRecordDefinition(typePath);
+    if (recordDefinition != null) {
+      final String idFieldName = recordDefinition.getIdFieldName();
+      if (idFieldName != null) {
+        final Query query = Query.equal(recordDefinition, idFieldName, identifier);
+        return delete(query);
+      }
+    }
+    return 0;
+  }
+
   void deleteAll(Collection<Record> objects);
 
   <V extends CodeTable> V getCodeTable(String typePath);
@@ -144,6 +156,11 @@ public interface RecordStore extends RecordDefinitionFactory, Transactionable, C
   Record load(String typePath, Object... id);
 
   Record lock(String typePath, Object id);
+
+  default Identifier newPrimaryIdentifier(final String typePath) {
+    final Object id = createPrimaryIdValue(typePath);
+    return Identifier.create(id);
+  }
 
   default Record newRecord(final PathName typePath) {
     return newRecord(typePath.toString());
