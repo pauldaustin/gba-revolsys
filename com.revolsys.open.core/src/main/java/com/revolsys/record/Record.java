@@ -306,6 +306,9 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
       if (value instanceof Number) {
         final Number number = (Number)value;
         return number.intValue();
+      } else if (value instanceof Identifier) {
+        final Identifier identifier = (Identifier)value;
+        return identifier.getInteger(0);
       } else {
         return Integer.valueOf(value.toString());
       }
@@ -458,7 +461,7 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
         } catch (final IllegalArgumentException e) {
           propertyValue = null;
 
-          LoggerFactory.getLogger(getClass()).error("Path does not exist " + path, e);
+          LoggerFactory.getLogger(getClass()).debug("Path does not exist " + path, e);
           return null;
         }
       }

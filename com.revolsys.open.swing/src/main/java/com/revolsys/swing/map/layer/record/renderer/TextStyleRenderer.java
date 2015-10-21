@@ -69,12 +69,13 @@ public class TextStyleRenderer extends AbstractRecordLayerRenderer {
       final Matcher matcher = Pattern.compile("\\[([\\w.]+)\\]").matcher(labelPattern);
       while (matcher.find()) {
         final String propertyName = matcher.group(1);
-        final Object value = object.getValueByPath(propertyName);
-        String text;
-        if (value == null) {
-          text = "";
-        } else {
-          text = StringConverterRegistry.toString(value);
+        String text = "";
+        try {
+          final Object value = object.getValueByPath(propertyName);
+          if (value != null) {
+            text = StringConverterRegistry.toString(value);
+          }
+        } catch (final IllegalArgumentException e) {
         }
         matcher.appendReplacement(label, text);
       }

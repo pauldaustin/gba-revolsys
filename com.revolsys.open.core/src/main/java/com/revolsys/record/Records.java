@@ -176,14 +176,7 @@ public final class Records {
     if (record == null) {
       return null;
     } else {
-      final Number value = record.getValue(fieldName);
-      if (value == null) {
-        return null;
-      } else if (value instanceof Integer) {
-        return (Integer)value;
-      } else {
-        return value.intValue();
-      }
+      return record.getInteger(fieldName);
     }
   }
 
@@ -192,25 +185,12 @@ public final class Records {
     if (record == null) {
       return null;
     } else {
-      final Number value = record.getValue(fieldName);
+      final Integer value = record.getInteger(fieldName);
       if (value == null) {
         return defaultValue;
-      } else if (value instanceof Integer) {
-        return (Integer)value;
       } else {
-        return value.intValue();
+        return value;
       }
-    }
-  }
-
-  public static Long getLong(final Record record, final String fieldName) {
-    final Number value = record.getValue(fieldName);
-    if (value == null) {
-      return null;
-    } else if (value instanceof Long) {
-      return (Long)value;
-    } else {
-      return value.longValue();
     }
   }
 

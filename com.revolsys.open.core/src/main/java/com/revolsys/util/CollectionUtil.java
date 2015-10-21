@@ -427,11 +427,13 @@ public final class CollectionUtil {
     final List<T> values = new ArrayList<T>();
     for (int i = 0; i < list.size(); i++) {
       final WeakReference<T> reference = list.get(i);
-      final T value = reference.get();
-      if (value == null) {
-        list.remove(i);
-      } else {
-        values.add(value);
+      if (reference != null) {
+        final T value = reference.get();
+        if (value == null) {
+          list.remove(i);
+        } else {
+          values.add(value);
+        }
       }
     }
     return values;

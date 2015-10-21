@@ -43,7 +43,7 @@ public abstract class QueryValue implements Cloneable {
     "/", "*", "=", "<>", "<", "<=", ">", ">=", "LIKE", "+", "-", "/", "*", "%", "MOD");
 
   public static <V extends QueryValue> List<V> cloneQueryValues(final List<V> values) {
-    final List<V> clonedValues = new ArrayList<V>();
+    final List<V> clonedValues = new ArrayList<>();
     for (final V value : values) {
       @SuppressWarnings("unchecked")
       final V clonedValue = (V)value.clone();
