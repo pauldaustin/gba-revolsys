@@ -803,7 +803,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   protected boolean doSaveChanges(final RecordSaveErrorTableModel errors,
     final LayerRecord record) {
-    return false;
+    return true;
   }
 
   @SuppressWarnings("unchecked")
