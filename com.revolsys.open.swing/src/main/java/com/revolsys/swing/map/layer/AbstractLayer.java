@@ -652,7 +652,7 @@ public abstract class AbstractLayer extends BaseObjectWithProperties
 
   @Override
   public final void refreshAll() {
-    Invoke.background("Refresh " + getName(), () -> {
+    Invoke.background("Refresh All" + getName(), () -> {
       try {
         doRefreshAll();
       } catch (final Throwable e) {
