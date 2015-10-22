@@ -60,23 +60,29 @@ public class FileGdbWriter extends AbstractRecordWriter {
       final RecordDefinition recordDefinition = record.getRecordDefinition();
       final String typePath = recordDefinition.getPath();
       final Table table = getTable(typePath);
-      final String whereClause = "OBJECTID=" + objectId;
-      final EnumRows rows = this.recordStore.search(typePath, table, "OBJECTID", whereClause,
-        false);
-      if (rows != null) {
-        try {
-          final Row row = this.recordStore.nextRow(rows);
-          if (row != null) {
+      if (table == null) {
+        throw new ObjectException(record, "Cannot find table: " + typePath);
+      } else {
+        synchronized (table) {
+          final String whereClause = "OBJECTID=" + objectId;
+          final EnumRows rows = this.recordStore.search(typePath, table, "OBJECTID", whereClause,
+            false);
+          if (rows != null) {
             try {
-              this.recordStore.deleteRow(typePath, table, row);
-              record.setState(RecordState.Deleted);
+              final Row row = this.recordStore.nextRow(rows);
+              if (row != null) {
+                try {
+                  this.recordStore.deleteRow(typePath, table, row);
+                  record.setState(RecordState.Deleted);
+                } finally {
+                  this.recordStore.closeRow(row);
+                  this.recordStore.addStatistic("Delete", record);
+                }
+              }
             } finally {
-              this.recordStore.closeRow(row);
-              this.recordStore.addStatistic("Delete", record);
+              this.recordStore.closeEnumRows(rows);
             }
           }
-        } finally {
-          this.recordStore.closeEnumRows(rows);
         }
       }
     }
@@ -111,45 +117,47 @@ public class FileGdbWriter extends AbstractRecordWriter {
     if (table == null) {
       throw new ObjectException(record, "Cannot find table: " + typePath);
     } else {
-      try {
-        final Row row = this.recordStore.createRowObject(table);
+      synchronized (table) {
         try {
-          final List<Object> values = new ArrayList<>();
-          for (final FieldDefinition field : recordDefinition.getFields()) {
-            final String name = field.getName();
-            try {
-              final Object value = record.getValue(name);
-              final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
-              final Object esriValue = esriField.setInsertValue(record, row, value);
-              values.add(esriValue);
-            } catch (final Throwable e) {
-              throw new ObjectPropertyException(record, name, e);
-            }
-          }
-          this.recordStore.insertRow(table, row);
-          if (sourceRecordDefinition == recordDefinition) {
+          final Row row = this.recordStore.createRowObject(table);
+          try {
+            final List<Object> values = new ArrayList<>();
             for (final FieldDefinition field : recordDefinition.getFields()) {
-              final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+              final String name = field.getName();
               try {
-                esriField.setPostInsertValue(record, row);
+                final Object value = record.getValue(name);
+                final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+                final Object esriValue = esriField.setInsertValue(record, row, value);
+                values.add(esriValue);
               } catch (final Throwable e) {
-                throw new ObjectPropertyException(record, field.getName(), e);
+                throw new ObjectPropertyException(record, name, e);
               }
             }
-            record.setState(RecordState.Persisted);
+            this.recordStore.insertRow(table, row);
+            if (sourceRecordDefinition == recordDefinition) {
+              for (final FieldDefinition field : recordDefinition.getFields()) {
+                final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+                try {
+                  esriField.setPostInsertValue(record, row);
+                } catch (final Throwable e) {
+                  throw new ObjectPropertyException(record, field.getName(), e);
+                }
+              }
+              record.setState(RecordState.Persisted);
+            }
+          } finally {
+            this.recordStore.closeRow(row);
+            this.recordStore.addStatistic("Insert", record);
           }
-        } finally {
-          this.recordStore.closeRow(row);
-          this.recordStore.addStatistic("Insert", record);
-        }
-      } catch (final ObjectException e) {
-        if (e.getObject() == record) {
-          throw e;
-        } else {
+        } catch (final ObjectException e) {
+          if (e.getObject() == record) {
+            throw e;
+          } else {
+            throw new ObjectException(record, e);
+          }
+        } catch (final Throwable e) {
           throw new ObjectException(record, e);
         }
-      } catch (final Throwable e) {
-        throw new ObjectException(record, e);
       }
     }
   }
@@ -171,44 +179,50 @@ public class FileGdbWriter extends AbstractRecordWriter {
 
       final String typePath = sourceRecordDefinition.getPath();
       final Table table = getTable(typePath);
-      final String whereClause = "OBJECTID=" + objectId;
-      final EnumRows rows = this.recordStore.search(typePath, table, "*", whereClause, true);
-      if (rows != null) {
-        try {
-          final Row row = this.recordStore.nextRow(rows);
-          if (row != null) {
+      if (table == null) {
+        throw new ObjectException(record, "Cannot find table: " + typePath);
+      } else {
+        synchronized (table) {
+          final String whereClause = "OBJECTID=" + objectId;
+          final EnumRows rows = this.recordStore.search(typePath, table, "*", whereClause, true);
+          if (rows != null) {
             try {
-              final List<Object> esriValues = new ArrayList<>();
-              try {
-                for (final FieldDefinition field : recordDefinition.getFields()) {
-                  final String name = field.getName();
+              final Row row = this.recordStore.nextRow(rows);
+              if (row != null) {
+                try {
+                  final List<Object> esriValues = new ArrayList<>();
                   try {
-                    final Object value = record.getValue(name);
-                    final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
-                    final Object esriValue = esriField.setUpdateValue(record, row, value);
-                    esriValues.add(esriValue);
-                  } catch (final Throwable e) {
-                    throw new ObjectPropertyException(record, name, e);
+                    for (final FieldDefinition field : recordDefinition.getFields()) {
+                      final String name = field.getName();
+                      try {
+                        final Object value = record.getValue(name);
+                        final AbstractFileGdbFieldDefinition esriField = (AbstractFileGdbFieldDefinition)field;
+                        final Object esriValue = esriField.setUpdateValue(record, row, value);
+                        esriValues.add(esriValue);
+                      } catch (final Throwable e) {
+                        throw new ObjectPropertyException(record, name, e);
+                      }
+                    }
+                    this.recordStore.updateRow(typePath, table, row);
+                  } finally {
+                    this.recordStore.addStatistic("Update", record);
                   }
+                } catch (final ObjectException e) {
+                  if (e.getObject() == record) {
+                    throw e;
+                  } else {
+                    throw new ObjectException(record, e);
+                  }
+                } catch (final Throwable e) {
+                  throw new ObjectException(record, e);
+                } finally {
+                  this.recordStore.closeRow(row);
                 }
-                this.recordStore.updateRow(typePath, table, row);
-              } finally {
-                this.recordStore.addStatistic("Update", record);
               }
-            } catch (final ObjectException e) {
-              if (e.getObject() == record) {
-                throw e;
-              } else {
-                throw new ObjectException(record, e);
-              }
-            } catch (final Throwable e) {
-              throw new ObjectException(record, e);
             } finally {
-              this.recordStore.closeRow(row);
+              this.recordStore.closeEnumRows(rows);
             }
           }
-        } finally {
-          this.recordStore.closeEnumRows(rows);
         }
       }
     }

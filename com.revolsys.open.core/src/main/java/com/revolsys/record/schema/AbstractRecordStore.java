@@ -76,6 +76,8 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
 
   private final Map<String, Map<String, Object>> typeRecordDefinitionProperties = new HashMap<String, Map<String, Object>>();
 
+  private boolean closed = false;
+
   public AbstractRecordStore() {
     this(new ArrayRecordFactory());
   }
@@ -186,6 +188,7 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
   @Override
   @PreDestroy
   public void close() {
+    this.closed = true;
     try {
       super.close();
       if (this.statistics != null) {
@@ -499,6 +502,11 @@ public abstract class AbstractRecordStore extends BaseObjectWithProperties imple
     for (final Record object : objects) {
       insert(object);
     }
+  }
+
+  @Override
+  public boolean isClosed() {
+    return this.closed;
   }
 
   @Override

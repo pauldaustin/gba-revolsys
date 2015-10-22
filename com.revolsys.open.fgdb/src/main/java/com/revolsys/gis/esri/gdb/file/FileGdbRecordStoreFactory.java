@@ -16,6 +16,7 @@ import com.revolsys.io.Paths;
 import com.revolsys.record.io.RecordStoreFactory;
 import com.revolsys.record.io.RecordStoreFactoryRegistry;
 import com.revolsys.record.io.RecordStoreRecordAndGeometryWriterFactory;
+import com.revolsys.record.schema.AbstractRecordStore;
 import com.revolsys.record.schema.RecordStore;
 
 public class FileGdbRecordStoreFactory implements RecordStoreFactory {
@@ -89,13 +90,13 @@ public class FileGdbRecordStoreFactory implements RecordStoreFactory {
   }
 
   @Override
-  public FileGdbRecordStore createRecordStore(
+  public AbstractRecordStore createRecordStore(
     final Map<String, ? extends Object> connectionProperties) {
     final Map<String, Object> properties = new LinkedHashMap<String, Object>(connectionProperties);
     final String url = (String)properties.remove("url");
     final File file = FileUtil.getUrlFile(url);
 
-    final FileGdbRecordStore recordStore = create(file);
+    final AbstractRecordStore recordStore = create(file);
     RecordStoreFactoryRegistry.setConnectionProperties(recordStore, properties);
     return recordStore;
   }

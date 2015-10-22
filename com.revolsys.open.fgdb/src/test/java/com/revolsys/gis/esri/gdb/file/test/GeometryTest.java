@@ -5,7 +5,6 @@ import java.io.File;
 import com.revolsys.datatype.DataType;
 import com.revolsys.datatype.DataTypes;
 import com.revolsys.equals.EqualsInstance;
-import com.revolsys.gis.esri.gdb.file.FileGdbRecordStore;
 import com.revolsys.gis.esri.gdb.file.FileGdbRecordStoreFactory;
 import com.revolsys.gis.model.coordinates.Coordinates;
 import com.revolsys.gis.model.coordinates.list.CoordinatesList;
@@ -16,6 +15,7 @@ import com.revolsys.jts.geom.GeometryFactory;
 import com.revolsys.record.ArrayRecord;
 import com.revolsys.record.Record;
 import com.revolsys.record.property.FieldProperties;
+import com.revolsys.record.schema.AbstractRecordStore;
 import com.revolsys.record.schema.FieldDefinition;
 import com.revolsys.record.schema.RecordDefinitionImpl;
 import com.vividsolutions.jts.geom.Geometry;
@@ -47,7 +47,7 @@ public class GeometryTest {
     geometryFieldDefinition.setProperty(FieldProperties.GEOMETRY_FACTORY, geometryFactory);
     recordDefinition.setIdFieldName("ID");
 
-    final FileGdbRecordStore recordStore = FileGdbRecordStoreFactory.create(file);
+    final AbstractRecordStore recordStore = FileGdbRecordStoreFactory.create(file);
     recordStore.initialize();
     recordDefinition = (RecordDefinitionImpl)recordStore.getRecordDefinition(recordDefinition);
     final Record object = new ArrayRecord(recordDefinition);

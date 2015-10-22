@@ -47,12 +47,13 @@ import com.revolsys.swing.map.layer.record.table.model.RecordSaveErrorTableModel
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
+import com.revolsys.transaction.Transactionable;
 import com.revolsys.util.Property;
 import com.revolsys.util.enableable.Enabled;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 
-public class RecordStoreLayer extends AbstractRecordLayer {
+public class RecordStoreLayer extends AbstractRecordLayer implements Transactionable {
 
   public static final String DATA_STORE = "dataStore";
 
@@ -291,7 +292,7 @@ public class RecordStoreLayer extends AbstractRecordLayer {
 
   @Override
   protected boolean doInitialize() {
-    RecordStore recordStore = this.recordStore;
+    RecordStore recordStore = getRecordStore();
     if (recordStore == null) {
       final Map<String, String> connectionProperties = getProperty("connection");
       if (connectionProperties == null) {
@@ -478,10 +479,8 @@ public class RecordStoreLayer extends AbstractRecordLayer {
     final boolean deleted = isDeleted(record);
 
     if (isExists()) {
-      final PlatformTransactionManager transactionManager = this.recordStore
-        .getTransactionManager();
       try (
-        Transaction transaction = new Transaction(transactionManager, Propagation.REQUIRES_NEW)) {
+        Transaction transaction = newTransaction(Propagation.REQUIRES_NEW)) {
         try {
           final RecordStore recordStore = getRecordStore();
           if (recordStore != null) {
@@ -700,6 +699,16 @@ public class RecordStoreLayer extends AbstractRecordLayer {
       }
     }
     return 0;
+  }
+
+  @Override
+  public PlatformTransactionManager getTransactionManager() {
+    final RecordStore recordStore = getRecordStore();
+    if (recordStore == null) {
+      return null;
+    } else {
+      return recordStore.getTransactionManager();
+    }
   }
 
   @Override

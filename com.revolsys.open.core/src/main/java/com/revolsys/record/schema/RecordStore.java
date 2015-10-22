@@ -143,6 +143,10 @@ public interface RecordStore extends RecordDefinitionFactory, Transactionable, C
 
   void insertAll(Collection<Record> objects);
 
+  default boolean isClosed() {
+    return false;
+  }
+
   boolean isEditable(String typePath);
 
   default Record load(final PathName typePath, final Identifier id) {

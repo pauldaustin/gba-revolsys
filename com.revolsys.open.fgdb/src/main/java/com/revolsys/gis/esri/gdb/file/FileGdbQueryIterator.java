@@ -169,7 +169,9 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
     } else {
       Row row = null;
       while (this.offset > 0 && this.count < this.offset) {
-        row = recordStore.nextRow(rows);
+        synchronized (this.table) {
+          row = recordStore.nextRow(rows);
+        }
         if (row == null) {
           throw new NoSuchElementException();
         } else {
@@ -183,38 +185,40 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
       if (this.count - this.offset >= this.limit) {
         throw new NoSuchElementException();
       }
-      row = recordStore.nextRow(rows);
-      this.count++;
-      if (row == null) {
-        throw new NoSuchElementException();
-      } else {
-        try {
-          final Record record = this.recordFactory.createRecord(this.recordDefinition);
-          if (this.statistics == null) {
-            recordStore.addStatistic("query", record);
-          } else {
-            this.statistics.add(record);
-          }
-          record.setState(RecordState.Initalizing);
-          for (final FieldDefinition field : this.recordDefinition.getFields()) {
-            final String name = field.getName();
-            final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
-            final Object value;
-            synchronized (recordStore) {
-              value = esriFieldDefinition.getValue(row);
+      synchronized (this.table) {
+        row = recordStore.nextRow(rows);
+        this.count++;
+        if (row == null) {
+          throw new NoSuchElementException();
+        } else {
+          try {
+            final Record record = this.recordFactory.createRecord(this.recordDefinition);
+            if (this.statistics == null) {
+              recordStore.addStatistic("query", record);
+            } else {
+              this.statistics.add(record);
             }
-            record.setValue(name, value);
+            record.setState(RecordState.Initalizing);
+            for (final FieldDefinition field : this.recordDefinition.getFields()) {
+              final String name = field.getName();
+              final AbstractFileGdbFieldDefinition esriFieldDefinition = (AbstractFileGdbFieldDefinition)field;
+              final Object value;
+              synchronized (recordStore) {
+                value = esriFieldDefinition.getValue(row);
+              }
+              record.setValue(name, value);
+              if (this.closed) {
+                throw new NoSuchElementException();
+              }
+            }
+            record.setState(RecordState.Persisted);
             if (this.closed) {
               throw new NoSuchElementException();
             }
+            return record;
+          } finally {
+            recordStore.closeRow(row);
           }
-          record.setState(RecordState.Persisted);
-          if (this.closed) {
-            throw new NoSuchElementException();
-          }
-          return record;
-        } finally {
-          recordStore.closeRow(row);
         }
       }
     }

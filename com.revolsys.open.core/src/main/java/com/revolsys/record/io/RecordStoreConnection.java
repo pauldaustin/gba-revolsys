@@ -60,7 +60,8 @@ public class RecordStoreConnection implements MapSerializer {
 
   public RecordStore getRecordStore() {
     synchronized (this) {
-      if (this.recordStore == null) {
+      if (this.recordStore == null || this.recordStore.isClosed()) {
+        this.recordStore = null;
         try {
           final Map<String, Object> connectionProperties = Maps.get(this.config, "connection",
             Collections.<String, Object> emptyMap());
