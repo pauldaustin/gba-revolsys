@@ -23,7 +23,7 @@ public class TablePanel extends JPanel implements MouseListener {
 
   private static int eventRow;
 
-  private static Reference<JTable> eventTable = new WeakReference<JTable>(null);
+  private static Reference<BaseJTable> eventTable = new WeakReference<>(null);
 
   private static Reference<MouseEvent> popupMouseEvent = new WeakReference<MouseEvent>(null);
 
@@ -46,10 +46,10 @@ public class TablePanel extends JPanel implements MouseListener {
     return popupMouseEvent.get();
   }
 
-  protected static void setEventRow(final JTable table, final MouseEvent e) {
+  protected static void setEventRow(final BaseJTable table, final MouseEvent e) {
     if (e.getSource() == table) {
       final Point point = e.getPoint();
-      eventTable = new WeakReference<JTable>(table);
+      eventTable = new WeakReference<>(table);
       eventRow = table.rowAtPoint(point);
       eventColumn = table.columnAtPoint(point);
       if (eventRow > -1) {
@@ -63,13 +63,13 @@ public class TablePanel extends JPanel implements MouseListener {
 
   private final MenuFactory menu = new MenuFactory();
 
-  private final JTable table;
+  private final BaseJTable table;
 
   private final ToolBar toolBar = new ToolBar();
 
   private final JScrollPane scrollPane;
 
-  public TablePanel(final JTable table) {
+  public TablePanel(final BaseJTable table) {
     super(new BorderLayout());
     this.table = table;
 

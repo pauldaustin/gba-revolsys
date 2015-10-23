@@ -44,6 +44,7 @@ import com.revolsys.swing.Icons;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.WindowManager;
 import com.revolsys.swing.action.InvokeMethodAction;
+import com.revolsys.swing.action.RunnableAction;
 import com.revolsys.swing.component.BaseFrame;
 import com.revolsys.swing.component.ButtonTabComponent;
 import com.revolsys.swing.listener.InvokeMethodPropertyChangeListener;
@@ -299,8 +300,8 @@ public class ProjectFrame extends BaseFrame {
     final int tabIndex = addTabIcon(this.bottomTabs, "time", "Background Tasks", panel, false);
 
     final SwingWorkerProgressBar progressBar = this.mapPanel.getProgressBar();
-    final JButton viewTasksAction = InvokeMethodAction.createButton(null, "View Running Tasks",
-      Icons.getIcon("time_go"), this.bottomTabs, "setSelectedIndex", tabIndex);
+    final JButton viewTasksAction = RunnableAction.createButton(null, "View Running Tasks",
+      Icons.getIcon("time_go"), () -> this.bottomTabs.setSelectedIndex(tabIndex));
     viewTasksAction.setBorderPainted(false);
     viewTasksAction.setBorder(null);
     progressBar.add(viewTasksAction, BorderLayout.EAST);

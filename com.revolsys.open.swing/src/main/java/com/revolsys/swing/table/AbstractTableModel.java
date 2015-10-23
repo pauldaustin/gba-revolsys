@@ -2,6 +2,8 @@ package com.revolsys.swing.table;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import javax.annotation.PreDestroy;
 import javax.swing.JComponent;
@@ -11,13 +13,10 @@ import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
+import com.revolsys.util.function.IntConsumer2;
 
 public abstract class AbstractTableModel extends javax.swing.table.AbstractTableModel
   implements PropertyChangeSupportProxy {
-
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
 
   private MenuFactory menu = new MenuFactory(getClass().getName());
@@ -25,6 +24,110 @@ public abstract class AbstractTableModel extends javax.swing.table.AbstractTable
   private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
   public AbstractTableModel() {
+  }
+
+  /**
+   * Add a menu item that will invoke the specific action with the {@link TablePanel#getEventRow()}
+   * and {@link TablePanel#getEventColumn()}.
+   *
+   * @param groupName
+   * @param index
+   * @param title
+   * @param iconName
+   * @param action
+   */
+  protected void addMenuItem(final String groupName, final int index, final String title,
+    final String iconName, final Consumer<BaseJTable> action) {
+    getMenu().addMenuItem(groupName, index, title, iconName, () -> {
+      final BaseJTable eventTable = TablePanel.getEventTable();
+      if (eventTable != null) {
+        action.accept(eventTable);
+      }
+    });
+  }
+
+  /**
+   * Add a menu item that will invoke the specific action with the {@link TablePanel#getEventRow()}.
+   *
+   * @param groupName
+   * @param index
+   * @param title
+   * @param iconName
+   * @param action
+   */
+  protected void addMenuItem(final String groupName, final int index, final String title,
+    final String iconName, final IntConsumer action) {
+    getMenu().addMenuItem(groupName, index, title, iconName, () -> {
+      final int eventRow = TablePanel.getEventRow();
+      final int eventColumn = TablePanel.getEventColumn();
+      if (eventRow > -1 && eventColumn > -1) {
+        action.accept(eventRow);
+      }
+    });
+  }
+
+  /**
+   * Add a menu item that will invoke the specific action with the {@link TablePanel#getEventRow()}
+   * and {@link TablePanel#getEventColumn()}.
+   *
+   * @param groupName
+   * @param index
+   * @param title
+   * @param iconName
+   * @param action
+   */
+  protected void addMenuItem(final String groupName, final int index, final String title,
+    final String iconName, final IntConsumer2 action) {
+    getMenu().addMenuItem(groupName, index, title, iconName, () -> {
+      final int eventRow = TablePanel.getEventRow();
+      final int eventColumn = TablePanel.getEventColumn();
+      if (eventRow > -1 && eventColumn > -1) {
+        action.accept(eventRow, eventColumn);
+      }
+    });
+  }
+
+  /**
+   * Add a menu item that will invoke the specific action with the {@link TablePanel#getEventTable()}.
+   *
+   * @param groupName
+   * @param index
+   * @param title
+   * @param iconName
+   * @param action
+   */
+  protected void addMenuItem(final String groupName, final String title, final String iconName,
+    final Consumer<BaseJTable> action) {
+    addMenuItem(groupName, -1, title, iconName, action);
+  }
+
+  /**
+   * Add a menu item that will invoke the specific action with the {@link TablePanel#getEventRow()}.
+   *
+   * @param groupName
+   * @param index
+   * @param title
+   * @param iconName
+   * @param action
+   */
+  protected void addMenuItem(final String groupName, final String title, final String iconName,
+    final IntConsumer action) {
+    addMenuItem(groupName, -1, title, iconName, action);
+  }
+
+  /**
+   * Add a menu item that will invoke the specific action with the {@link TablePanel#getEventRow()}
+   * and {@link TablePanel#getEventColumn()}.
+   *
+   * @param groupName
+   * @param index
+   * @param title
+   * @param iconName
+   * @param action
+   */
+  protected void addMenuItem(final String groupName, final String title, final String iconName,
+    final IntConsumer2 action) {
+    addMenuItem(groupName, -1, title, iconName, action);
   }
 
   @PreDestroy

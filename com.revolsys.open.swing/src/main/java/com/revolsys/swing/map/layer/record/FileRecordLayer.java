@@ -20,7 +20,7 @@ import com.revolsys.spring.resource.SpringUtil;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.ValueField;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
@@ -64,7 +64,7 @@ public class FileRecordLayer extends ListRecordLayer {
         SwingUtil.addReadOnlyTextField(panel, "File Type", factory.getName());
       }
     }
-    GroupLayoutUtil.makeColumns(panel, 2, true);
+    GroupLayouts.makeColumns(panel, 2, true);
     return panel;
   }
 

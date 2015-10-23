@@ -25,6 +25,7 @@ import com.revolsys.properties.BaseObjectWithProperties;
 import com.revolsys.swing.Icons;
 import com.revolsys.swing.action.AbstractAction;
 import com.revolsys.swing.action.InvokeMethodAction;
+import com.revolsys.swing.action.RunnableAction;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ComponentFactory;
 import com.revolsys.util.Property;
@@ -158,9 +159,12 @@ public class MenuFactory extends BaseObjectWithProperties implements ComponentFa
     factories.add(factory);
   }
 
-  public void addComponentFactory(final String groupName, final int index,
+  public void addComponentFactory(final String groupName, int index,
     final ComponentFactory<?> factory) {
     final List<ComponentFactory<?>> factories = getGroup(groupName);
+    if (index < 0) {
+      index = factories.size();
+    }
     factories.add(index, factory);
   }
 
@@ -240,6 +244,13 @@ public class MenuFactory extends BaseObjectWithProperties implements ComponentFa
     addComponentFactory(groupName, index, menuItem);
   }
 
+  public void addMenuItem(final String groupName, final int index, final String title,
+    final String iconName, final Runnable runnable) {
+    final ImageIcon icon = Icons.getIcon(iconName);
+    final RunnableAction menuItem = createMenuItem(title, title, icon, null, runnable);
+    addComponentFactory(groupName, index, menuItem);
+  }
+
   public void addMenuItem(final String groupName, final String name, final String title,
     final Icon icon, final EnableCheck enableCheck, final Object object, final String methodName,
     final Object... parameters) {
@@ -254,6 +265,20 @@ public class MenuFactory extends BaseObjectWithProperties implements ComponentFa
       parameters);
 
     addComponentFactory(groupName, action);
+  }
+
+  public void addMenuItem(final String groupName, final String title, final String iconName,
+    final Runnable runnable) {
+    final ImageIcon icon = Icons.getIcon(iconName);
+    final RunnableAction menuItem = createMenuItem(title, title, icon, null, runnable);
+    addComponentFactory(groupName, menuItem);
+  }
+
+  public void addMenuItem(final String groupName, final String title, final String toolTip,
+    final String iconName, final Runnable runnable) {
+    final ImageIcon icon = Icons.getIcon(iconName);
+    final RunnableAction menuItem = createMenuItem(title, toolTip, icon, null, runnable);
+    addComponentFactory(groupName, menuItem);
   }
 
   public void addMenuItems(final Class<?> clazz, final String... menuNames) {
@@ -376,6 +401,13 @@ public class MenuFactory extends BaseObjectWithProperties implements ComponentFa
       }
     }
     return menu;
+  }
+
+  public RunnableAction createMenuItem(final CharSequence name, final String toolTip,
+    final Icon icon, final EnableCheck enableCheck, final Runnable runnable) {
+    final RunnableAction action = new RunnableAction(name, toolTip, icon, runnable);
+    action.setEnableCheck(enableCheck);
+    return action;
   }
 
   public InvokeMethodAction createMenuItem(final String name, final String title, final Icon icon,

@@ -3,61 +3,70 @@ package com.revolsys.swing.parallel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.SwingWorker.StateValue;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.revolsys.beans.MethodInvoker;
+import com.revolsys.collection.list.Lists;
+import com.revolsys.collection.map.Maps;
 import com.revolsys.parallel.ThreadInterruptedException;
 import com.revolsys.parallel.process.InvokeMethodRunnable;
 import com.revolsys.transaction.Propagation;
 import com.revolsys.transaction.Transaction;
-import com.revolsys.util.CollectionUtil;
 import com.revolsys.util.ExceptionUtil;
+import com.revolsys.util.Property;
 
 public class Invoke {
+
   private static PropertyChangeListener PROPERTY_CHANGE_LISTENER = new PropertyChangeListener() {
     @Override
     public synchronized void propertyChange(final PropertyChangeEvent event) {
       final SwingWorker<?, ?> worker = (SwingWorker<?, ?>)event.getSource();
-      if (event.getPropertyName().equals("state")) {
-        if (event.getNewValue().equals(StateValue.STARTED)) {
-          final List<SwingWorker<?, ?>> oldRunningWorkers = getRunningWorkers();
-          if (!CollectionUtil.containsReference(RUNNING_WORKERS, worker)) {
-            RUNNING_WORKERS.add(new WeakReference<SwingWorker<?, ?>>(worker));
-          }
-          PROPERTY_CHANGE_SUPPORT.firePropertyChange("runningWorkers", oldRunningWorkers,
-            RUNNING_WORKERS);
-          return;
-        }
-      }
       if (worker.isCancelled() || worker.isDone()) {
         try {
-          final List<SwingWorker<?, ?>> oldRunningWorkers = getRunningWorkers();
-          CollectionUtil.removeReference(RUNNING_WORKERS, worker);
-          PROPERTY_CHANGE_SUPPORT.firePropertyChange("runningWorkers", oldRunningWorkers,
-            RUNNING_WORKERS);
-        } finally {
-          try {
-            final List<SwingWorker<?, ?>> oldWorkers = getWorkers();
-            synchronized (WORKERS) {
-              CollectionUtil.removeReference(WORKERS, worker);
+          final List<SwingWorker<?, ?>> oldWorkers;
+          List<SwingWorker<?, ?>> newWorkers;
+          synchronized (WORKERS) {
+            oldWorkers = getWorkers();
+            WORKERS.remove(worker);
+            if (worker instanceof MaxThreadsSwingWorker) {
+              final MaxThreadsSwingWorker maxThreadsWorker = (MaxThreadsSwingWorker)worker;
+              final String workerKey = maxThreadsWorker.getWorkerKey();
+              final int maxThreads = maxThreadsWorker.getMaxThreads();
+              int threads = Maps.decrementCount(WORKER_COUNTS, workerKey);
+              final List<SwingWorker<?, ?>> waitingWorkers = WAITING_WORKERS.get(workerKey);
+              while (Property.hasValue(waitingWorkers) && threads < maxThreads) {
+                final SwingWorker<?, ?> nextWorker = waitingWorkers.remove(0);
+                Maps.addCount(WORKER_COUNTS, workerKey);
+                nextWorker.execute();
+                threads++;
+              }
             }
-            PROPERTY_CHANGE_SUPPORT.firePropertyChange("workers", oldWorkers, WORKERS);
-          } finally {
-            worker.removePropertyChangeListener(this);
+            for (final Iterator<SwingWorker<?, ?>> iterator = WORKERS.iterator(); iterator
+              .hasNext();) {
+              final SwingWorker<?, ?> swingWorker = iterator.next();
+              if (swingWorker.isDone()) {
+                iterator.remove();
+              }
+            }
+            newWorkers = getWorkers();
           }
+          PROPERTY_CHANGE_SUPPORT.firePropertyChange("workers", oldWorkers, newWorkers);
+        } finally {
+          worker.removePropertyChangeListener(this);
         }
       }
     }
@@ -66,9 +75,11 @@ public class Invoke {
   private static final PropertyChangeSupport PROPERTY_CHANGE_SUPPORT = new PropertyChangeSupport(
     Invoke.class);
 
-  private static final List<WeakReference<SwingWorker<?, ?>>> RUNNING_WORKERS = new ArrayList<WeakReference<SwingWorker<?, ?>>>();
+  private static final List<SwingWorker<?, ?>> WORKERS = new LinkedList<>();
 
-  private static final List<WeakReference<SwingWorker<?, ?>>> WORKERS = new ArrayList<WeakReference<SwingWorker<?, ?>>>();
+  private static final Map<String, List<SwingWorker<?, ?>>> WAITING_WORKERS = new HashMap<>();
+
+  private static final Map<String, Integer> WORKER_COUNTS = new HashMap<>();
 
   public static void andWait(final Object object, final String methodName,
     final Object... parameters) {
@@ -130,29 +141,8 @@ public class Invoke {
     return PROPERTY_CHANGE_SUPPORT;
   }
 
-  public static List<SwingWorker<?, ?>> getRunningWorkers() {
-    return CollectionUtil.getReferences(WORKERS);
-  }
-
-  public static SwingWorker<?, ?> getWorker(final int i) {
-    final List<SwingWorker<?, ?>> workers = getWorkers();
-    if (i < workers.size()) {
-      return workers.get(i);
-    } else {
-      return null;
-    }
-  }
-
-  public static int getWorkerCount() {
-    return getWorkers().size();
-  }
-
   public static List<SwingWorker<?, ?>> getWorkers() {
-    return CollectionUtil.getReferences(WORKERS);
-  }
-
-  public static boolean isWorkerRunning(final SwingWorker<?, ?> worker) {
-    return CollectionUtil.containsReference(RUNNING_WORKERS, worker);
+    return Lists.array(WORKERS);
   }
 
   public static void later(final Object object, final Method method, final Object... parameters) {
@@ -199,15 +189,34 @@ public class Invoke {
   }
 
   public static void worker(final SwingWorker<? extends Object, ? extends Object> worker) {
+    boolean execute = true;
+    final List<SwingWorker<?, ?>> oldWorkers;
+    final List<SwingWorker<?, ?>> newWorkers;
     synchronized (WORKERS) {
-      final List<SwingWorker<?, ?>> oldWorkers = getWorkers();
-      if (!CollectionUtil.containsReference(WORKERS, worker)) {
-        WORKERS.add(new WeakReference<SwingWorker<?, ?>>(worker));
+      if (WORKERS.contains(worker)) {
+        return;
       }
-      PROPERTY_CHANGE_SUPPORT.firePropertyChange("workers", oldWorkers, WORKERS);
+      oldWorkers = getWorkers();
+      WORKERS.add(worker);
+      if (worker instanceof MaxThreadsSwingWorker) {
+        final MaxThreadsSwingWorker maxThreadsWorker = (MaxThreadsSwingWorker)worker;
+        final String workerKey = maxThreadsWorker.getWorkerKey();
+        final int maxThreads = maxThreadsWorker.getMaxThreads();
+        final int threads = Maps.getCount(WORKER_COUNTS, workerKey);
+        if (threads >= maxThreads) {
+          execute = false;
+          Maps.addToList(WAITING_WORKERS, workerKey, worker);
+        } else {
+          Maps.addCount(WORKER_COUNTS, workerKey);
+        }
+      }
+      newWorkers = getWorkers();
     }
     worker.addPropertyChangeListener(PROPERTY_CHANGE_LISTENER);
-    worker.execute();
+    PROPERTY_CHANGE_SUPPORT.firePropertyChange("workers", oldWorkers, newWorkers);
+    if (execute) {
+      worker.execute();
+    }
   }
 
   private Invoke() {

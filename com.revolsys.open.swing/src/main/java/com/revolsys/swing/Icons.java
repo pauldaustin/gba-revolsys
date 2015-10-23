@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,20 @@ public class Icons {
       }
     }
     return newImage;
+  }
+
+  public static ImageIcon getAnimatedIcon(final String imageFileName) {
+    final Class<?> clazz = Icons.class;
+    final String resourceName = RESOURCE_FOLDER + imageFileName;
+    URL url = clazz.getResource(resourceName);
+    if (url == null) {
+      final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+      url = classLoader.getResource("images/" + imageFileName);
+      if (url == null) {
+        url = classLoader.getResource("icons/" + imageFileName);
+      }
+    }
+    return new ImageIcon(url);
   }
 
   public static BufferedImage getBadgeImage(final String imageName) {

@@ -43,7 +43,7 @@ import com.revolsys.swing.field.FontChooserField;
 import com.revolsys.swing.field.InvokeMethodStringConverter;
 import com.revolsys.swing.field.LengthMeasureTextField;
 import com.revolsys.swing.field.TextField;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.component.MapScale;
 import com.revolsys.swing.map.component.MarkerField;
@@ -190,7 +190,7 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     addField(panel, geometryStyle, "lineCap");
     addField(panel, geometryStyle, "lineDashArray");
     addField(panel, geometryStyle, "lineDashOffset");
-    GroupLayoutUtil.makeColumns(panel, 2, true);
+    GroupLayouts.makeColumns(panel, 2, true);
     stylePanels.add(panel);
   }
 
@@ -210,7 +210,7 @@ public class BaseStylePanel extends ValueField implements PropertyChangeListener
     SwingUtil.setTitledBorder(panel, title);
 
     addFields(panel, object, fieldNames);
-    GroupLayoutUtil.makeColumns(panel, 2, true);
+    GroupLayouts.makeColumns(panel, 2, true);
     container.add(panel);
     return panel;
   }

@@ -16,7 +16,7 @@ import javax.swing.event.ChangeListener;
 
 import org.jdesktop.swingx.color.ColorUtil;
 
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 
 public class ColorAlphaPanel extends AbstractColorChooserPanel implements ChangeListener {
   private static final long serialVersionUID = 3533569797414988165L;
@@ -43,7 +43,7 @@ public class ColorAlphaPanel extends AbstractColorChooserPanel implements Change
     add(new JLabel("Alpha (Opacity)"));
 
     add(this.alphaSlider);
-    GroupLayoutUtil.makeColumns(this, 2, true);
+    GroupLayouts.makeColumns(this, 2, true);
   }
 
   @Override

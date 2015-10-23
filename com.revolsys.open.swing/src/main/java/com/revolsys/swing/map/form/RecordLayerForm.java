@@ -72,7 +72,7 @@ import com.revolsys.swing.field.ComboBox;
 import com.revolsys.swing.field.Field;
 import com.revolsys.swing.field.NumberTextField;
 import com.revolsys.swing.field.ObjectLabelField;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.swing.listener.WeakFocusListener;
 import com.revolsys.swing.map.ProjectFrame;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
@@ -333,7 +333,7 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
       addLabelledField(panel, fieldName);
     }
 
-    GroupLayoutUtil.makeColumns(panel, 2, true);
+    GroupLayouts.makeColumns(panel, 2, true);
   }
 
   public void addReadOnlyFieldNames(final Collection<String> readOnlyFieldNames) {

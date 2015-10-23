@@ -48,7 +48,7 @@ import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.TabbedValuePanel;
 import com.revolsys.swing.component.ValueField;
 import com.revolsys.swing.field.Field;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.swing.listener.BeanPropertyListener;
 import com.revolsys.swing.map.MapPanel;
 import com.revolsys.swing.map.ProjectFrame;
@@ -160,7 +160,7 @@ public abstract class AbstractLayer extends BaseObjectWithProperties
           + boundingBox.getMinimumY() + "</td><td>&nbsp;</td></tr><tr>" + "</tr></table></html>"));
 
       }
-      GroupLayoutUtil.makeColumns(extentPanel, 1, true);
+      GroupLayouts.makeColumns(extentPanel, 1, true);
       panel.add(extentPanel);
 
       final JPanel coordinateSystemPanel = new JPanel();
@@ -198,7 +198,7 @@ public abstract class AbstractLayer extends BaseObjectWithProperties
         wktTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
         coordinateSystemPanel.add(wktTextArea);
 
-        GroupLayoutUtil.makeColumns(coordinateSystemPanel, 2, true);
+        GroupLayouts.makeColumns(coordinateSystemPanel, 2, true);
       }
       panel.add(new JScrollPane(coordinateSystemPanel));
 
@@ -230,7 +230,7 @@ public abstract class AbstractLayer extends BaseObjectWithProperties
     final Field typeField = (Field)SwingUtil.addObjectField(panel, this, "type");
     typeField.setEnabled(false);
 
-    GroupLayoutUtil.makeColumns(panel, 2, true);
+    GroupLayouts.makeColumns(panel, 2, true);
 
     parent.add(panel);
     return panel;

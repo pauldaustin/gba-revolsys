@@ -10,7 +10,7 @@ import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.LayoutStyle;
 
-public class GroupLayoutUtil {
+public class GroupLayouts {
   public static GroupLayout getLayout(final Container container, final boolean containerGaps) {
     LayoutManager layout = container.getLayout();
     if (!(layout instanceof GroupLayout)) {

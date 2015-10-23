@@ -23,7 +23,7 @@ import com.revolsys.record.schema.RecordStore;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.component.ValueField;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeNodeRunnable;
 import com.revolsys.swing.tree.node.BaseTreeNode;
@@ -84,7 +84,7 @@ public class PathRecordStoreTreeNode extends PathTreeNode
 
     panel.add(registryField);
 
-    GroupLayoutUtil.makeColumns(panel, 2, true);
+    GroupLayouts.makeColumns(panel, 2, true);
     panel.showDialog();
     if (panel.isSaved()) {
       final RecordStoreConnectionRegistry registry = (RecordStoreConnectionRegistry)registryField

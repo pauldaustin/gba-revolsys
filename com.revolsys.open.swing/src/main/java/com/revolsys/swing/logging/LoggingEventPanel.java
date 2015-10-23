@@ -22,10 +22,10 @@ import org.apache.log4j.spi.LoggingEvent;
 
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.swing.SwingUtil;
-import com.revolsys.swing.action.InvokeMethodAction;
+import com.revolsys.swing.action.RunnableAction;
 import com.revolsys.swing.field.TextArea;
 import com.revolsys.swing.field.TextField;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.util.CaseConverter;
 import com.revolsys.util.Property;
 
@@ -52,7 +52,7 @@ public class LoggingEventPanel extends JPanel {
     dialog.setLayout(new BorderLayout());
     dialog.add(new LoggingEventPanel(event), BorderLayout.CENTER);
     final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    buttons.add(InvokeMethodAction.createButton("OK", dialog, "setVisible", false));
+    buttons.add(RunnableAction.createButton("OK", () -> dialog.setVisible(false)));
     dialog.add(buttons, BorderLayout.SOUTH);
     dialog.pack();
     dialog.setVisible(true);
@@ -73,7 +73,7 @@ public class LoggingEventPanel extends JPanel {
     addLabel("Stack Trace");
     final String[] stack = event.getThrowableStrRep();
     if (stack != null) {
-      final TextArea textArea = SwingUtil.createTextArea(Math.min(20, stack.length), 80);
+      final TextArea textArea = SwingUtil.newTextArea(Math.min(20, stack.length), 80);
       textArea.setEditable(false);
       for (final String trace : stack) {
         textArea.append(trace);
@@ -82,28 +82,27 @@ public class LoggingEventPanel extends JPanel {
       add(new JScrollPane(textArea));
       textArea.setCaretPosition(0);
     }
-    GroupLayoutUtil.makeColumns(this, 2, true);
+    GroupLayouts.makeColumns(this, 2, true);
   }
 
-  private void addField(final String fieldName, final Object value) {
+  private void addField(final String fieldName, Object value) {
     addLabel(fieldName);
 
     String stringValue = StringConverterRegistry.toString(value);
-
-    if (fieldName.equals("message")) {
-      if (stringValue == null) {
-        stringValue = "";
+    if (!Property.hasValue(stringValue)) {
+      stringValue = "-";
+    }
+    if ("message".equals(fieldName)) {
+      if (!Property.hasValue(value)) {
+        value = "";
       }
       final TextArea textArea = SwingUtil
-        .createTextArea(Math.min(20, stringValue.split("\n").length), 80);
+        .newTextArea(Math.min(20, value.toString().split("\n").length), 80);
       textArea.setEditable(false);
-      textArea.append(stringValue);
+      textArea.append(value.toString());
       add(textArea);
     } else {
-      if (!Property.hasValue(stringValue)) {
-        stringValue = "-";
-      }
-      final TextField field = SwingUtil.createTextField(Math.min(80, stringValue.length()));
+      final TextField field = SwingUtil.newTextField(Math.min(80, stringValue.length()));
       field.setEditable(false);
       field.setText(stringValue);
       add(field);

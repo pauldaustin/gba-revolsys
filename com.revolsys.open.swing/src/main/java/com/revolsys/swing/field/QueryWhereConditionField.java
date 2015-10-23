@@ -87,7 +87,7 @@ import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.component.BasePanel;
 import com.revolsys.swing.component.ValueField;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.swing.map.layer.record.AbstractRecordLayer;
 import com.revolsys.swing.map.layer.record.component.AttributeTitleStringConveter;
 import com.revolsys.swing.map.layer.record.component.RecordLayerFields;
@@ -172,7 +172,7 @@ public class QueryWhereConditionField extends ValueField
     this.fieldNamesList.addMouseListener(this);
 
     final BasePanel fieldNamePanel = new BasePanel(this.fieldNamesList);
-    GroupLayoutUtil.makeColumns(fieldNamePanel, 1, false);
+    GroupLayouts.makeColumns(fieldNamePanel, 1, false);
 
     this.binaryConditionOperator = new ComboBox("operator", "=", "<>", "<", "<=", ">", ">=");
     final JButton binaryConditionAddButton = InvokeMethodAction.createButton("",
@@ -186,14 +186,14 @@ public class QueryWhereConditionField extends ValueField
       "Add Unary Condition", ICON, this, "actionAddRightUnaryCondition");
     final BasePanel rightUnaryConditionPanel = new BasePanel(this.rightUnaryConditionOperator,
       rightUnaryConditionAddButton);
-    GroupLayoutUtil.makeColumns(rightUnaryConditionPanel, false);
+    GroupLayouts.makeColumns(rightUnaryConditionPanel, false);
 
     final JButton likeConditionAddButton = InvokeMethodAction.createButton("",
       "Add Unary Condition", ICON, this, "actionAddLikeCondition");
     this.likeConditionField = new TextField(20);
     this.likePanel = new BasePanel(SwingUtil.createLabel("LIKE"), new JLabel(" '%"),
       this.likeConditionField, new JLabel("%' "), likeConditionAddButton);
-    GroupLayoutUtil.makeColumns(this.likePanel, false);
+    GroupLayouts.makeColumns(this.likePanel, false);
 
     final JButton inConditionAddButton = InvokeMethodAction.createButton("", "Add Unary Condition",
       ICON, this, "actionAddInCondition");
@@ -206,7 +206,7 @@ public class QueryWhereConditionField extends ValueField
       rightUnaryConditionPanel, this.likePanel, this.inConditionPanel);
 
     final BasePanel fieldConditions = new BasePanel(fieldNamePanel, operatorPanel);
-    GroupLayoutUtil.makeColumns(fieldConditions, 2, false);
+    GroupLayouts.makeColumns(fieldConditions, 2, false);
 
     final ToolBar buttonsPanel = new ToolBar();
     buttonsPanel.setBorderPainted(true);
@@ -622,7 +622,7 @@ public class QueryWhereConditionField extends ValueField
       field = new TextField(20);
     }
     this.binaryConditionPanel.add(field, 1);
-    GroupLayoutUtil.makeColumns(this.binaryConditionPanel, false);
+    GroupLayouts.makeColumns(this.binaryConditionPanel, false);
     this.binaryConditionField = field;
   }
 
@@ -642,7 +642,7 @@ public class QueryWhereConditionField extends ValueField
     }
 
     this.inConditionPanel.add(field, 1);
-    GroupLayoutUtil.makeColumns(this.inConditionPanel, false);
+    GroupLayouts.makeColumns(this.inConditionPanel, false);
     this.inConditionField = field;
   }
 

@@ -324,7 +324,7 @@ public class SwingUtil {
           field = new ObjectLabelField(fieldName, columns, codeTable);
         }
       } else if (!editable) {
-        final TextField textField = createTextField(fieldName, columns);
+        final TextField textField = newTextField(fieldName, columns);
         textField.setEditable(false);
         field = textField;
       } else if (Number.class.isAssignableFrom(javaClass)) {
@@ -339,7 +339,7 @@ public class SwingUtil {
       } else if (Geometry.class.isAssignableFrom(javaClass)) {
         field = new ObjectLabelField(fieldName);
       } else {
-        field = createTextField(fieldName, columns);
+        field = newTextField(fieldName, columns);
       }
     }
     if (field instanceof JTextField) {
@@ -388,22 +388,22 @@ public class SwingUtil {
     return label;
   }
 
-  public static TextArea createTextArea(final int rows, final int columns) {
+  public static TextArea newTextArea(final int rows, final int columns) {
     final TextArea textField = new TextArea(rows, columns);
     return textField;
   }
 
-  public static TextArea createTextArea(final String fieldName, final int rows, final int columns) {
+  public static TextArea newTextArea(final String fieldName, final int rows, final int columns) {
     final TextArea textField = new TextArea(fieldName, rows, columns);
     return textField;
   }
 
-  public static TextField createTextField(final int columns) {
+  public static TextField newTextField(final int columns) {
     final TextField textField = new TextField(columns);
     return textField;
   }
 
-  public static TextField createTextField(final String fieldName, final int columns) {
+  public static TextField newTextField(final String fieldName, final int columns) {
     final TextField textField = new TextField(fieldName, columns);
     return textField;
   }

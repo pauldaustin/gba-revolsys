@@ -40,7 +40,7 @@ import com.revolsys.swing.action.InvokeMethodAction;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
 import com.revolsys.swing.action.enablecheck.EnableCheck;
 import com.revolsys.swing.component.ValueField;
-import com.revolsys.swing.layout.GroupLayoutUtil;
+import com.revolsys.swing.layout.GroupLayouts;
 import com.revolsys.swing.map.layer.Project;
 import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.tree.TreeNodePropertyEnableCheck;
@@ -258,7 +258,7 @@ public class PathTreeNode extends LazyLoadTreeNode implements UrlProxy {
 
       panel.add(registryField);
 
-      GroupLayoutUtil.makeColumns(panel, 2, true);
+      GroupLayouts.makeColumns(panel, 2, true);
       panel.showDialog();
       if (panel.isSaved()) {
         final FolderConnectionRegistry registry = (FolderConnectionRegistry)registryField
