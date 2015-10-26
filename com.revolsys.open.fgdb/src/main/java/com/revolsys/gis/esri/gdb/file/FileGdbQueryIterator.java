@@ -98,7 +98,8 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
   @Override
   protected void doClose() {
     boolean close = true;
-    if (this.closed || this.recordStore == null) {
+    FileGdbRecordStore recordStore = this.recordStore;
+    if (this.closed || recordStore == null) {
       close = false;
     } else {
       this.closed = true;
@@ -109,9 +110,9 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
           this.recordDefinition = null;
           try {
             try {
-              this.recordStore.closeEnumRows(this.rows);
+              recordStore.closeEnumRows(this.rows);
             } finally {
-              this.recordStore.releaseTable(this.catalogPath);
+              recordStore.releaseTable(this.catalogPath);
             }
           } catch (final Throwable e) {
             ExceptionUtil.log(getClass(), "Error closing query: " + this.catalogPath, e);

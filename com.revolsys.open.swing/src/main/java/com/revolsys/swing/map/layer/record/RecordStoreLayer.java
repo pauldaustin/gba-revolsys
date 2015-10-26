@@ -213,7 +213,7 @@ public class RecordStoreLayer extends AbstractRecordLayer implements Transaction
   protected void cleanCachedRecords() {
     synchronized (this.cachedRecords) {
       final Set<String> ids = getIdsToCache();
-      final Map<String, LayerRecord> cachedRecords = new HashMap<String, LayerRecord>();
+      final Map<String, LayerRecord> cachedRecords = new HashMap<>();
       for (final String id : ids) {
         final LayerRecord record = this.cachedRecords.get(id);
         if (record != null) {
@@ -261,7 +261,7 @@ public class RecordStoreLayer extends AbstractRecordLayer implements Transaction
     }
     final SwingWorker<RecordQuadTree, Void> loadingWorker = this.loadingWorker;
     this.boundingBox = new BoundingBox();
-    this.cachedRecords = new HashMap<String, LayerRecord>();
+    this.cachedRecords = new HashMap<>();
     this.loadingBoundingBox = new BoundingBox();
     this.loadingWorker = null;
     this.typePath = null;
@@ -535,7 +535,6 @@ public class RecordStoreLayer extends AbstractRecordLayer implements Transaction
     synchronized (this.cachedRecords) {
       final List<V> cachedRecords = new ArrayList(this.cachedRecords.values());
       return cachedRecords;
-
     }
   }
 

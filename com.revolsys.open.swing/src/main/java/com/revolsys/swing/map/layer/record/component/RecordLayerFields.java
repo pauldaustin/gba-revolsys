@@ -19,16 +19,20 @@ import com.revolsys.util.WrappedException;
 public class RecordLayerFields {
   public static <T extends Field> T createCompactField(final AbstractRecordLayer layer,
     final String fieldName, final boolean editable) {
-    T field = createField((ObjectWithProperties)layer, "fieldFactories", fieldName, editable);
-    if (field == null) {
-      final RecordDefinition recordDefinition = layer.getRecordDefinition();
-      field = createField(recordDefinition, "fieldFactories", fieldName, editable);
+    if (layer == null) {
+      return null;
+    } else {
+      T field = createField((ObjectWithProperties)layer, "fieldFactories", fieldName, editable);
       if (field == null) {
-        field = SwingUtil.createField(recordDefinition, fieldName, editable);
+        final RecordDefinition recordDefinition = layer.getRecordDefinition();
+        field = createField(recordDefinition, "fieldFactories", fieldName, editable);
+        if (field == null) {
+          field = SwingUtil.createField(recordDefinition, fieldName, editable);
+        }
       }
+      field.setEditable(editable);
+      return field;
     }
-    field.setEditable(editable);
-    return field;
   }
 
   @SuppressWarnings("unchecked")
@@ -44,16 +48,20 @@ public class RecordLayerFields {
 
   public static <T extends Field> T createFormField(final AbstractRecordLayer layer,
     final String fieldName, final boolean editable) {
-    T field = createField((ObjectWithProperties)layer, "formFieldFactories", fieldName, editable);
-    if (field == null) {
-      final RecordDefinition recordDefinition = layer.getRecordDefinition();
-      field = createField(recordDefinition, "formFieldFactories", fieldName, editable);
+    if (layer == null) {
+      return null;
+    } else {
+      T field = createField((ObjectWithProperties)layer, "formFieldFactories", fieldName, editable);
       if (field == null) {
-        field = createCompactField(layer, fieldName, editable);
+        final RecordDefinition recordDefinition = layer.getRecordDefinition();
+        field = createField(recordDefinition, "formFieldFactories", fieldName, editable);
+        if (field == null) {
+          field = createCompactField(layer, fieldName, editable);
+        }
       }
+      field.setEditable(editable);
+      return field;
     }
-    field.setEditable(editable);
-    return field;
   }
 
   @SuppressWarnings("unchecked")

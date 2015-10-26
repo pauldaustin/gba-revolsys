@@ -646,27 +646,29 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     this.fieldWarnings.remove(fieldName);
     final boolean valid = isFieldValid(fieldName);
     final Field field = getField(fieldName);
-    field.setFieldValid();
-    if (this.record.isModified(fieldName)) {
-      final Object originalValue = this.record.getOriginalValue(fieldName);
-      String originalString;
-      if (originalValue == null) {
-        originalString = "-";
+    if (field != null) {
+      field.setFieldValid();
+      if (this.record.isModified(fieldName)) {
+        final Object originalValue = this.record.getOriginalValue(fieldName);
+        String originalString;
+        if (originalValue == null) {
+          originalString = "-";
+        } else {
+          originalString = StringConverterRegistry.toString(originalValue);
+        }
+        field.setFieldToolTip(originalString);
+        field.setFieldBackgroundColor(new Color(0, 255, 0, 31));
       } else {
-        originalString = StringConverterRegistry.toString(originalValue);
+        field.setFieldToolTip("");
       }
-      field.setFieldToolTip(originalString);
-      field.setFieldBackgroundColor(new Color(0, 255, 0, 31));
-    } else {
-      field.setFieldToolTip("");
-    }
-    if (!valid) {
-      this.invalidFieldNames.remove(fieldName);
-      this.fieldInValidMessage.remove(fieldName);
-      final int tabIndex = getTabIndex(fieldName);
-      Maps.removeFromSet(this.tabInvalidFieldMap, tabIndex, fieldName);
-      updateTabValid(tabIndex);
-      updateInvalidFields(true);
+      if (!valid) {
+        this.invalidFieldNames.remove(fieldName);
+        this.fieldInValidMessage.remove(fieldName);
+        final int tabIndex = getTabIndex(fieldName);
+        Maps.removeFromSet(this.tabInvalidFieldMap, tabIndex, fieldName);
+        updateTabValid(tabIndex);
+        updateInvalidFields(true);
+      }
     }
   }
 
