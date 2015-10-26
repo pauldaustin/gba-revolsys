@@ -1197,7 +1197,8 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
             if ("qaMessagesUpdated".equals(propertyName)) {
               updateErrors();
             } else if (recordDefinition.hasField(propertyName)) {
-              setFieldValue(propertyName, value, isFieldValidationEnabled());
+              final boolean fieldValidationEnabled = isFieldValidationEnabled();
+              setFieldValue(propertyName, value, fieldValidationEnabled);
             }
             final boolean modifiedOrDeleted = isModifiedOrDeleted();
             if (this.propertyChangeSupport != null) {
@@ -1312,14 +1313,12 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
       }
     }
     SwingUtil.setFieldValue(field, value);
-    if (changed) {
-      if (validate) {
-        validateFields(fieldName);
-      } else {
-        final Set<String> fieldsToValidate = this.fieldsToValidate.get();
-        if (fieldsToValidate != null) {
-          fieldsToValidate.add(fieldName);
-        }
+    if (validate) {
+      validateFields(fieldName);
+    } else {
+      final Set<String> fieldsToValidate = this.fieldsToValidate.get();
+      if (fieldsToValidate != null) {
+        fieldsToValidate.add(fieldName);
       }
     }
   }
