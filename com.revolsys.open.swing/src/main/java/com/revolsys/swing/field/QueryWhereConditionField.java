@@ -104,12 +104,14 @@ public class QueryWhereConditionField extends ValueField
 
   public static JComponent createSearchField(final AbstractRecordLayer layer,
     final FieldDefinition fieldDefinition, final CodeTable codeTable) {
+    JComponent field;
     if (fieldDefinition == null) {
-      return new TextField(20);
+      field = new TextField(20);
     } else {
       final String fieldName = fieldDefinition.getName();
-      return RecordLayerFields.createCompactField(layer, fieldName, true);
+      field = RecordLayerFields.createCompactField(layer, fieldName, true);
     }
+    return field;
   }
 
   private JComponent binaryConditionField;
@@ -268,7 +270,7 @@ public class QueryWhereConditionField extends ValueField
 
     add(topBottom, BorderLayout.CENTER);
 
-    setPreferredSize(new Dimension(800, 500));
+    setPreferredSize(new Dimension(850, 500));
 
     setFieldValue(filter);
     if (filter != null) {
@@ -522,21 +524,19 @@ public class QueryWhereConditionField extends ValueField
         this.codeTable = this.recordDefinition.getCodeTableByFieldName(name);
         final JComponent binaryConditionField = createSearchField(this.layer, field,
           this.codeTable);
-        if (binaryConditionField instanceof AbstractRecordQueryField) {
-          final JComponent inConditionField = createSearchField(this.layer, field, this.codeTable);
+        setBinaryConditionField(binaryConditionField);
+        final JComponent inConditionField = createSearchField(this.layer, field, this.codeTable);
 
-          if (this.codeTable == null) {
-            if (binaryConditionField instanceof DateField) {
-              this.likePanel.setVisible(false);
-            } else {
-              this.likePanel.setVisible(true);
-            }
-          } else {
+        if (this.codeTable == null) {
+          if (binaryConditionField instanceof DateField) {
             this.likePanel.setVisible(false);
+          } else {
+            this.likePanel.setVisible(true);
           }
-          setBinaryConditionField(binaryConditionField);
-          setInConditionField(inConditionField);
+        } else {
+          this.likePanel.setVisible(false);
         }
+        setInConditionField(inConditionField);
       }
     }
   }
