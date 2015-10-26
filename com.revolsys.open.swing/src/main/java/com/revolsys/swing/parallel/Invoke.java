@@ -81,12 +81,6 @@ public class Invoke {
 
   private static final Map<String, Integer> WORKER_COUNTS = new HashMap<>();
 
-  public static void andWait(final Object object, final String methodName,
-    final Object... parameters) {
-    final InvokeMethodRunnable runnable = new InvokeMethodRunnable(object, methodName, parameters);
-    andWait(runnable);
-  }
-
   public static void andWait(final Runnable runnable) {
     if (SwingUtilities.isEventDispatchThread()) {
       runnable.run();
