@@ -560,10 +560,10 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
    * @param geometry The primary geometry.
    */
 
-  default void setGeometryValue(final Geometry geometry) {
+  default boolean setGeometryValue(final Geometry geometry) {
     final RecordDefinition recordDefinition = getRecordDefinition();
     final int index = recordDefinition.getGeometryFieldIndex();
-    setValue(index, geometry);
+    return setValue(index, geometry);
   }
 
   default void setIdentifier(final Identifier identifier) {
