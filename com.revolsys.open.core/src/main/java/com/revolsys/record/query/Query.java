@@ -279,6 +279,9 @@ public class Query extends BaseObjectWithProperties implements Cloneable {
   }
 
   public void setOffset(final int offset) {
+    if (offset < 0) {
+      throw new IllegalArgumentException("offset must be >= 0");
+    }
     this.offset = offset;
   }
 

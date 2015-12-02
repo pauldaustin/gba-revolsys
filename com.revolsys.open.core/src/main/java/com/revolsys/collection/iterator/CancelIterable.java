@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import com.revolsys.util.Cancellable;
 
 public class CancelIterable<T> extends AbstractIterator<T> {
-
   public static <V> Iterable<V> i(final Cancellable cancellable, final Iterable<V> iterable) {
     if (cancellable == null) {
       return iterable;
@@ -64,4 +63,12 @@ public class CancelIterable<T> extends AbstractIterator<T> {
     this.iterator.remove();
   }
 
+  @Override
+  public String toString() {
+    if (this.iterator == null) {
+      return super.toString();
+    } else {
+      return this.iterator.toString();
+    }
+  }
 }

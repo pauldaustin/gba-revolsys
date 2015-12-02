@@ -223,4 +223,13 @@ public class JdbcQueryIterator extends AbstractIterator<Record>implements Record
     this.query = query;
   }
 
+  @Override
+  public String toString() {
+    if (this.query == null) {
+      return super.toString();
+    } else {
+      return this.query.toString();
+    }
+  }
+
 }
