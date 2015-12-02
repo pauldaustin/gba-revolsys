@@ -78,12 +78,12 @@ public class PostgreSQLRecordStore extends AbstractJdbcRecordStore {
   protected JdbcFieldDefinition addField(final RecordDefinitionImpl recordDefinition,
     final String dbColumnName, final String name, final String dataType, final int sqlType,
     final int length, final int scale, final boolean required, final String description) {
-    final JdbcFieldDefinition attribute = super.addField(recordDefinition, dbColumnName, name,
+    final JdbcFieldDefinition fieldDefinition = super.addField(recordDefinition, dbColumnName, name,
       dataType, sqlType, length, scale, required, description);
     if (!dbColumnName.matches("[a-z_]")) {
-      attribute.setQuoteName(true);
+      fieldDefinition.setQuoteName(true);
     }
-    return attribute;
+    return fieldDefinition;
   }
 
   @Override

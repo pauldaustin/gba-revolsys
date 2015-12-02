@@ -22,21 +22,17 @@ public class OracleJdbcQueryIterator extends JdbcQueryIterator {
 
     final int offset = query.getOffset();
     final int limit = query.getLimit();
-    if (offset < 1 && limit < 0) {
-      return sql;
+    if (!(offset < 1 && limit == Integer.MAX_VALUE)) {
+      final int startRowNum = offset + 1;
+      final int endRowNum = offset + limit;
+      sql = "SELECT * FROM (" //
+        + "SELECT V.*,ROWNUM \"RNUM\" FROM ("//
+        + sql + //
+        ") V  "//
+        + "WHERE ROWNUM <=  " + endRowNum + ")"//
+        + "WHERE RNUM >= " + startRowNum;
     }
-    sql = "SELECT * FROM (SELECT V.*,ROWNUM \"ROWN\" FROM (" + sql + ") V ) WHERE ROWN ";
-    final int startRowNum = offset + 1;
-    final int endRowNum = offset + limit;
-    if (offset > 0) {
-      if (limit < 0) {
-        return sql + " >= " + startRowNum;
-      } else {
-        return sql + " BETWEEN " + startRowNum + " AND " + endRowNum;
-      }
-    } else {
-      return sql + " <= " + endRowNum;
-    }
+    return sql;
   }
 
 }
