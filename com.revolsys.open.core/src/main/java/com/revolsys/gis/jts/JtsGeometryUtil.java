@@ -33,6 +33,7 @@ import com.vividsolutions.jts.algorithm.Angle;
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.algorithm.RobustLineIntersector;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateArrays;
 import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.CoordinateSequenceFilter;
 import com.vividsolutions.jts.geom.Dimension;
@@ -311,24 +312,41 @@ public final class JtsGeometryUtil {
       return geometry2 == null;
     } else if (geometry2 == null) {
       return false;
-    } else if (geometry1 instanceof LineString && geometry2 instanceof LineString) {
-      final LineString line1 = (LineString)geometry1;
-      final LineString line2 = (LineString)geometry2;
-      return equalsExact3D(line1, line2);
-    } else if (geometry1 instanceof Point && geometry2 instanceof Point) {
-      final Point point1 = (Point)geometry1;
-      final Point point2 = (Point)geometry2;
-      return equalsExact3D(point1, point2);
-    } else if (geometry1 instanceof MultiPoint && geometry2 instanceof MultiPoint) {
-      final MultiPoint multiPoint1 = (MultiPoint)geometry1;
-      final MultiPoint multiPoint2 = (MultiPoint)geometry2;
-      return equalsExact3D(multiPoint1, multiPoint2);
-    } else if (geometry1 instanceof Polygon && geometry2 instanceof Polygon) {
-      final Polygon polygon1 = (Polygon)geometry1;
-      final Polygon polygon2 = (Polygon)geometry2;
-      return equalsExact3D(polygon1, polygon2);
     } else {
-      return false;
+      if (geometry1 instanceof GeometryCollection || geometry2 instanceof GeometryCollection) {
+        final int geometryCount1 = geometry1.getNumGeometries();
+        final int geometryCount2 = geometry1.getNumGeometries();
+        if (geometryCount1 == geometryCount2) {
+          for (int i = 0; i < geometryCount1; i++) {
+            final Geometry part1 = geometry1.getGeometryN(i);
+            final Geometry part2 = geometry2.getGeometryN(i);
+            if (!equalsExact3D(part1, part2)) {
+              return false;
+            }
+          }
+          return true;
+        } else {
+          return false;
+        }
+      } else if (geometry1 instanceof LineString && geometry2 instanceof LineString) {
+        final LineString line1 = (LineString)geometry1;
+        final LineString line2 = (LineString)geometry2;
+        return equalsExact3D(line1, line2);
+      } else if (geometry1 instanceof Point && geometry2 instanceof Point) {
+        final Point point1 = (Point)geometry1;
+        final Point point2 = (Point)geometry2;
+        return equalsExact3D(point1, point2);
+      } else if (geometry1 instanceof MultiPoint && geometry2 instanceof MultiPoint) {
+        final MultiPoint multiPoint1 = (MultiPoint)geometry1;
+        final MultiPoint multiPoint2 = (MultiPoint)geometry2;
+        return equalsExact3D(multiPoint1, multiPoint2);
+      } else if (geometry1 instanceof Polygon && geometry2 instanceof Polygon) {
+        final Polygon polygon1 = (Polygon)geometry1;
+        final Polygon polygon2 = (Polygon)geometry2;
+        return equalsExact3D(polygon1, polygon2);
+      } else {
+        return false;
+      }
     }
   }
 
@@ -1200,6 +1218,74 @@ public final class JtsGeometryUtil {
     final T newGeometry = (T)geometry.clone();
     makePrecise(precisionModel, newGeometry);
     return newGeometry;
+  }
+
+  public static Geometry normalize(final Geometry geometry) {
+    if (geometry == null || geometry.isEmpty()) {
+      return geometry;
+    } else if (geometry instanceof Polygon) {
+      final Polygon polygon = (Polygon)geometry;
+      return normalize(polygon);
+    } else if (geometry instanceof GeometryCollection) {
+      final GeometryCollection geometryCollection = (GeometryCollection)geometry;
+      return normalize(geometryCollection);
+    } else {
+      return geometry.norm();
+    }
+  }
+
+  public static Geometry normalize(final GeometryCollection geometryCollection) {
+    if (geometryCollection == null || geometryCollection.isEmpty()) {
+      return geometryCollection;
+    } else {
+      final int geometryCount = geometryCollection.getNumGeometries();
+      final List<Geometry> geometries = new ArrayList<>();
+      for (int i = 0; i < geometryCount; i++) {
+        final Geometry part = geometryCollection.getGeometryN(i);
+        final Geometry newPart = normalize(part);
+        geometries.add(newPart);
+      }
+      // Collections.sort(geometries);
+      return geometryCollection.getFactory().buildGeometry(geometries);
+    }
+  }
+
+  public static LinearRing normalize(final LinearRing ring, final boolean clockwise) {
+    if (ring.isEmpty()) {
+      return ring;
+    } else {
+      final Coordinate[] uniqueCoordinates = new Coordinate[ring.getCoordinates().length - 1];
+      for (int i = 0; i < uniqueCoordinates.length; i++) {
+        uniqueCoordinates[i] = (Coordinate)ring.getCoordinateN(i).clone();
+      }
+      final Coordinate minCoordinate = CoordinateArrays.minCoordinate(ring.getCoordinates());
+      CoordinateArrays.scroll(uniqueCoordinates, minCoordinate);
+      final Coordinate[] ringCoordinates = new Coordinate[ring.getCoordinates().length];
+      System.arraycopy(uniqueCoordinates, 0, ringCoordinates, 0, uniqueCoordinates.length);
+      ringCoordinates[uniqueCoordinates.length] = uniqueCoordinates[0];
+      if (CGAlgorithms.isCCW(ringCoordinates) == clockwise) {
+        CoordinateArrays.reverse(ringCoordinates);
+      }
+      return ring.getFactory().createLinearRing(ringCoordinates);
+    }
+  }
+
+  public static Polygon normalize(final Polygon polygon) {
+    if (polygon == null || polygon.isEmpty()) {
+      return polygon;
+    } else {
+      final LinearRing shell = (LinearRing)polygon.getExteriorRing();
+      final LinearRing newShell = normalize(shell, true);
+      final int ringCount = polygon.getNumInteriorRing();
+      final LinearRing[] newHoles = new LinearRing[ringCount];
+      for (int i = 0; i < ringCount; i++) {
+        final LinearRing ring = (LinearRing)polygon.getInteriorRingN(i);
+        final LinearRing newRing = normalize(ring, false);
+        newHoles[i] = newRing;
+      }
+      Arrays.sort(newHoles);
+      return polygon.getFactory().createPolygon(newShell, newHoles);
+    }
   }
 
   public static Coordinate offset(final Coordinate coordinate, final double angle,
