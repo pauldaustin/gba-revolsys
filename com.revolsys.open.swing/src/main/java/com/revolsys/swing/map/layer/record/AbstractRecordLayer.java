@@ -1401,7 +1401,14 @@ public abstract class AbstractRecordLayer extends AbstractLayer
         if (isCanDeleteRecords()) {
           final DataType geometryType = getGeometryType();
           if (DataTypes.LINE_STRING.equals(geometryType)) {
-            if (getMergeableSelectedRecords().size() > 1) {
+            int count = 0;
+            final List<LayerRecord> selectedRecords = getSelectedRecords();
+            for (final LayerRecord record : selectedRecords) {
+              if (!record.isDeleted()) {
+                count++;
+              }
+            }
+            if (count > 1) {
               return true;
             }
           } // TODO allow merging other type
