@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -30,13 +29,14 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.TreePath;
 
+import com.revolsys.io.FileUtil;
 import com.revolsys.io.file.FolderConnectionManager;
 import com.revolsys.io.map.MapObjectFactoryRegistry;
 import com.revolsys.jts.geom.BoundingBox;
 import com.revolsys.net.urlcache.FileResponseCache;
+import com.revolsys.process.JavaProcess;
 import com.revolsys.record.io.RecordStoreConnectionManager;
 import com.revolsys.record.io.RecordStoreConnectionRegistry;
 import com.revolsys.spring.resource.FileSystemResource;
@@ -65,6 +65,7 @@ import com.revolsys.swing.menu.MenuFactory;
 import com.revolsys.swing.parallel.Invoke;
 import com.revolsys.swing.parallel.SwingWorkerProgressBar;
 import com.revolsys.swing.preferences.PreferencesDialog;
+import com.revolsys.swing.scripting.ScriptRunner;
 import com.revolsys.swing.table.worker.SwingWorkerTableModel;
 import com.revolsys.swing.tree.BaseTree;
 import com.revolsys.swing.tree.node.BaseTreeNode;
@@ -74,13 +75,8 @@ import com.revolsys.swing.tree.node.file.FolderConnectionsTreeNode;
 import com.revolsys.swing.tree.node.file.PathTreeNode;
 import com.revolsys.swing.tree.node.layer.ProjectTreeNode;
 import com.revolsys.swing.tree.node.record.RecordStoreConnectionsTreeNode;
-import com.revolsys.util.ExceptionUtil;
 import com.revolsys.util.OS;
-import com.revolsys.util.PreferencesUtil;
 import com.revolsys.util.Property;
-
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
 
 public class ProjectFrame extends BaseFrame {
   // public void expandConnectionManagers(final PropertyChangeEvent event) {
@@ -336,8 +332,11 @@ public class ProjectFrame extends BaseFrame {
   protected MenuFactory createMenuTools() {
     final MenuFactory tools = new MenuFactory("Tools");
 
-    tools.addMenuItem("script", "Run Script...", "Run Script", Icons.getIcon("script_go"), this,
-      "runScript");
+    tools.addMenuItem("script", "Run Script...", "script_go", () -> {
+      final File logDirectory = getLogDirectory();
+      final JavaProcess javaProcess = newJavaProcess();
+      ScriptRunner.runScriptProcess(this, logDirectory, javaProcess);
+    });
     return tools;
   }
 
@@ -427,6 +426,10 @@ public class ProjectFrame extends BaseFrame {
     return this.leftTabs;
   }
 
+  public File getLogDirectory() {
+    return FileUtil.getDirectory("log");
+  }
+
   public MapPanel getMapPanel() {
     return this.mapPanel;
   }
@@ -513,6 +516,10 @@ public class ProjectFrame extends BaseFrame {
     getMapPanel().getViewport().setInitialized(true);
   }
 
+  public JavaProcess newJavaProcess() {
+    return new JavaProcess();
+  }
+
   public void removeBottomTab(final ProjectFramePanel panel) {
     final JTabbedPane tabs = getBottomTabs();
     final Object property = panel.getProperty("bottomTab");
@@ -523,30 +530,6 @@ public class ProjectFrame extends BaseFrame {
           tabs.remove(component);
         }
         panel.setProperty("bottomTab", null);
-      }
-    }
-  }
-
-  public void runScript() {
-    final JFileChooser fileChooser = SwingUtil.createFileChooser("Select Script",
-      "com.revolsys.swing.tools.script", "directory");
-    final FileNameExtensionFilter groovyFilter = new FileNameExtensionFilter("Groovy Script",
-      "groovy");
-    fileChooser.addChoosableFileFilter(groovyFilter);
-    fileChooser.setMultiSelectionEnabled(false);
-    final int returnVal = fileChooser.showOpenDialog(this);
-    if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-      final Binding binding = new Binding();
-      final GroovyShell shell = new GroovyShell(binding);
-      final File scriptFile = fileChooser.getSelectedFile();
-      final String[] args = new String[0];
-      try {
-        PreferencesUtil.setUserString("com.revolsys.swing.tools.script", "directory",
-          scriptFile.getParent());
-        shell.run(scriptFile, args);
-      } catch (final Throwable e) {
-        ExceptionUtil.log(getClass(), "Unable to run script:" + scriptFile, e);
       }
     }
   }
