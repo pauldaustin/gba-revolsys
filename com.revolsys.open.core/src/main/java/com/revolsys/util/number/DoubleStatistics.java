@@ -1,11 +1,10 @@
 package com.revolsys.util.number;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import com.revolsys.collection.list.DoubleList;
 import com.revolsys.collection.map.Maps;
 
 public class DoubleStatistics {
@@ -19,7 +18,7 @@ public class DoubleStatistics {
     return () -> new DoubleStatistics();
   }
 
-  private final List<Double> values = new ArrayList<>();
+  private final DoubleList values = new DoubleList();
 
   private boolean updated = false;
 
@@ -34,7 +33,7 @@ public class DoubleStatistics {
   private double sum = 0;
 
   public synchronized void addValue(final double value) {
-    this.values.add(value);
+    this.values.addDouble(value);
     this.sum += value;
     if (value < this.min) {
       this.min = value;
@@ -66,11 +65,11 @@ public class DoubleStatistics {
         final int count = getCount();
         if (count % 2 == 0) {
           final int index = count / 2;
-          final double value1 = this.values.get(index);
-          final double value2 = this.values.get(index + 1);
+          final double value1 = this.values.getDouble(index);
+          final double value2 = this.values.getDouble(index + 1);
           this.median = (value1 + value2) / 2;
         } else {
-          this.median = this.values.get((count + 1) / 2);
+          this.median = this.values.getDouble((count + 1) / 2);
         }
       }
     }
