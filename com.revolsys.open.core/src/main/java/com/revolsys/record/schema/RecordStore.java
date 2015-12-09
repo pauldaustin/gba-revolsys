@@ -41,7 +41,7 @@ public interface RecordStore extends RecordDefinitionFactory, Transactionable, C
 
   default Identifier createPrimaryIdValue(final PathName typePath) {
     final Object id = createPrimaryIdValue(typePath.toString());
-    return Identifier.create(id);
+    return Identifier.newIdentifier(id);
   }
 
   <T> T createPrimaryIdValue(String typePath);
@@ -163,7 +163,7 @@ public interface RecordStore extends RecordDefinitionFactory, Transactionable, C
 
   default Identifier newPrimaryIdentifier(final String typePath) {
     final Object id = createPrimaryIdValue(typePath);
-    return Identifier.create(id);
+    return Identifier.newIdentifier(id);
   }
 
   default Record newRecord(final PathName typePath) {

@@ -220,7 +220,7 @@ public abstract class AbstractSingleRecordTableModel extends AbstractRecordTable
       if (codeTable == null) {
         text = StringConverterRegistry.toString(objectValue);
       } else {
-        final List<Object> values = codeTable.getValues(Identifier.create(objectValue));
+        final List<Object> values = codeTable.getValues(Identifier.newIdentifier(objectValue));
         if (values == null || values.isEmpty()) {
           return null;
         } else {

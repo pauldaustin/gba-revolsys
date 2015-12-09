@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 import org.springframework.core.io.Resource;
 
@@ -14,6 +15,7 @@ import com.revolsys.format.csv.CsvRecordWriter;
 import com.revolsys.io.FileUtil;
 import com.revolsys.io.MapWriter;
 import com.revolsys.io.MapWriterFactory;
+import com.revolsys.io.file.Paths;
 import com.revolsys.record.RecordFactory;
 import com.revolsys.record.io.AbstractRecordAndGeometryIoFactory;
 import com.revolsys.record.io.RecordIteratorReader;
@@ -40,6 +42,11 @@ public class Tsv extends AbstractRecordAndGeometryIoFactory implements MapWriter
       final Writer writer = FileUtil.createUtf8Writer(file);
       return plainWriter(writer);
     }
+  }
+
+  public static TsvWriter plainWriter(final Path path) {
+    final Writer writer = Paths.newWriter(path);
+    return plainWriter(writer);
   }
 
   public static TsvWriter plainWriter(final Writer writer) {

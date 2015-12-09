@@ -31,7 +31,7 @@ public interface Identifier {
     };
   }
 
-  static Identifier create(final Object value) {
+  static Identifier newIdentifier(final Object value) {
     if (value == null) {
       return null;
     } else if (value instanceof Long) {

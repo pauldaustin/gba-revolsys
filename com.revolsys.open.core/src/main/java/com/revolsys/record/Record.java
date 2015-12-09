@@ -220,7 +220,7 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
       if (idValue == null) {
         return null;
       } else {
-        return Identifier.create(idValue);
+        return Identifier.newIdentifier(idValue);
       }
     } else {
       boolean notNull = false;
@@ -251,7 +251,7 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
       if (idValue == null) {
         return null;
       } else {
-        return Identifier.create(idValue);
+        return Identifier.newIdentifier(idValue);
       }
     } else {
       boolean notNull = false;

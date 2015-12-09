@@ -27,8 +27,8 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
     } else if (value2 == null) {
       return -1;
     } else {
-      final Object codeValue1 = getValue(Identifier.create(value1));
-      final Object codeValue2 = getValue(Identifier.create(value2));
+      final Object codeValue1 = getValue(Identifier.newIdentifier(value1));
+      final Object codeValue2 = getValue(Identifier.newIdentifier(value2));
       return CompareUtil.compare(codeValue1, codeValue2);
     }
   }
@@ -106,7 +106,7 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
   }
 
   default Map<String, ? extends Object> getMap(final Object id) {
-    final Identifier identifier = Identifier.create(id);
+    final Identifier identifier = Identifier.newIdentifier(id);
     return getMap(identifier);
   }
 
@@ -125,7 +125,7 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
   }
 
   default <V> V getValue(final Object id) {
-    final Identifier identifier = Identifier.create(id);
+    final Identifier identifier = Identifier.newIdentifier(id);
     return getValue(identifier);
   }
 
@@ -136,7 +136,7 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
   List<Object> getValues(Identifier id);
 
   default List<Object> getValues(final Object id) {
-    final Identifier identifier = Identifier.create(id);
+    final Identifier identifier = Identifier.newIdentifier(id);
     return getValues(identifier);
   }
 
@@ -149,5 +149,9 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
   }
 
   default void refresh() {
+    refresh();
+  }
+
+  default void refreshIfNeeded() {
   }
 }

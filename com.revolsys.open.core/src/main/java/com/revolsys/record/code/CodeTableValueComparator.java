@@ -14,8 +14,8 @@ public class CodeTableValueComparator implements Comparator<Object> {
 
   @Override
   public int compare(final Object object1, final Object object2) {
-    final Identifier identifier1 = Identifier.create(object1);
-    final Identifier identifier2 = Identifier.create(object2);
+    final Identifier identifier1 = Identifier.newIdentifier(object1);
+    final Identifier identifier2 = Identifier.newIdentifier(object2);
     if (identifier1 == null) {
       if (identifier2 == null) {
         return 0;

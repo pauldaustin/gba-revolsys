@@ -224,7 +224,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
       final List list = (List)id;
       return getValue(new ListIdentifier(list));
     } else {
-      return getValue(Identifier.create(id));
+      return getValue(Identifier.newIdentifier(id));
     }
   }
 
@@ -366,7 +366,8 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
     }
   }
 
-  public void refreshIfNeeded() {
+  @Override
+  public synchronized void refreshIfNeeded() {
     if (!isLoaded()) {
       loadAll();
     }

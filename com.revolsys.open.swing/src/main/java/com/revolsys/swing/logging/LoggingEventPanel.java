@@ -3,6 +3,7 @@ package com.revolsys.swing.logging;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog.ModalityType;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
@@ -72,6 +73,25 @@ public class LoggingEventPanel extends JPanel {
     showDialog(parent, "Application Log Details", panel);
   }
 
+  private static void showDialog(final Component parent, final String title, final JPanel panel) {
+    final Window window;
+    if (parent == null) {
+      window = SwingUtil.getActiveWindow();
+    } else {
+      window = SwingUtilities.getWindowAncestor(parent);
+    }
+    final JDialog dialog = new JDialog(window, title, ModalityType.APPLICATION_MODAL);
+    dialog.setLayout(new BorderLayout());
+    dialog.add(panel, BorderLayout.CENTER);
+    final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    buttons.add(RunnableAction.createButton("OK", () -> dialog.setVisible(false)));
+    dialog.add(buttons, BorderLayout.SOUTH);
+    dialog.setMaximumSize(new Dimension(1000, 700));
+
+    dialog.pack();
+    dialog.setVisible(true);
+  }
+
   public static void showDialog(final Component parent, final String title, final String message,
     final Throwable e) {
     final JPanel panel = new JPanel();
@@ -88,23 +108,6 @@ public class LoggingEventPanel extends JPanel {
 
   public static void showDialog(final Component parent, final String message, final Throwable e) {
     showDialog(parent, "Error", message, e);
-  }
-
-  private static void showDialog(final Component parent, final String title, final JPanel panel) {
-    final Window window;
-    if (parent == null) {
-      window = SwingUtil.getActiveWindow();
-    } else {
-      window = SwingUtilities.getWindowAncestor(parent);
-    }
-    final JDialog dialog = new JDialog(window, title, ModalityType.APPLICATION_MODAL);
-    dialog.setLayout(new BorderLayout());
-    dialog.add(panel, BorderLayout.CENTER);
-    final JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    buttons.add(RunnableAction.createButton("OK", () -> dialog.setVisible(false)));
-    dialog.add(buttons, BorderLayout.SOUTH);
-    dialog.pack();
-    dialog.setVisible(true);
   }
 
   public LoggingEventPanel(final LoggingEvent event) {

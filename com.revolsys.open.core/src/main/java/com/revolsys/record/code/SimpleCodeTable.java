@@ -15,7 +15,7 @@ public class SimpleCodeTable extends AbstractCodeTable {
     try (
       final RecordReader reader = RecordReader.create(resource)) {
       for (final Record record : reader) {
-        final Identifier id = Identifier.create(record.getValue(0));
+        final Identifier id = Identifier.newIdentifier(record.getValue(0));
         final List<Object> values = new ArrayList<>();
         final int fieldCount = record.getRecordDefinition().getFieldCount();
         for (int i = 1; i < fieldCount; i++) {
@@ -38,7 +38,7 @@ public class SimpleCodeTable extends AbstractCodeTable {
   }
 
   public void addValue(final Object id, final Object... values) {
-    super.addValue(Identifier.create(id), values);
+    super.addValue(Identifier.newIdentifier(id), values);
   }
 
   @Override

@@ -14,11 +14,11 @@ public class TypedIdentifier extends AbstractIdentifier {
       final int colonIndex = string.indexOf(':');
       if (colonIndex != -1) {
         final String type = string.substring(0, colonIndex);
-        final Identifier identifier = Identifier.create(string.substring(colonIndex + 1));
+        final Identifier identifier = Identifier.newIdentifier(string.substring(colonIndex + 1));
         return new TypedIdentifier(type, identifier);
       }
     }
-    return Identifier.create(id);
+    return Identifier.newIdentifier(id);
   }
 
   public static TypedIdentifier create(final String type, Object id) {
@@ -45,7 +45,7 @@ public class TypedIdentifier extends AbstractIdentifier {
       }
     }
     if (Property.hasValue(id)) {
-      final Identifier identifier = Identifier.create(id);
+      final Identifier identifier = Identifier.newIdentifier(id);
       return new TypedIdentifier(type, identifier);
     } else {
       return null;
