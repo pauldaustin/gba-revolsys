@@ -285,6 +285,7 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
           this.loading = false;
           this.loaded = true;
           this.threadLoading.set(null);
+          notifyAll();
         }
       }
     }
@@ -362,13 +363,6 @@ public class CodeTableProperty extends AbstractCodeTable implements RecordDefini
     super.refresh();
     if (isLoadAll()) {
       this.loaded = false;
-      loadAll();
-    }
-  }
-
-  @Override
-  public synchronized void refreshIfNeeded() {
-    if (!isLoaded()) {
       loadAll();
     }
   }

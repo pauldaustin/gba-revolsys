@@ -1,10 +1,8 @@
 package com.revolsys.util.number;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import com.revolsys.collection.list.DoubleList;
 import com.revolsys.collection.map.Maps;
 
 public class DoubleStatistics {
@@ -18,13 +16,7 @@ public class DoubleStatistics {
     return () -> new DoubleStatistics();
   }
 
-  private final DoubleList values = new DoubleList();
-
-  private boolean updated = false;
-
   private double mean;
-
-  private double median;
 
   private double min = Double.MAX_VALUE;
 
@@ -32,8 +24,10 @@ public class DoubleStatistics {
 
   private double sum = 0;
 
+  private int count = 0;
+
   public synchronized void addValue(final double value) {
-    this.values.addDouble(value);
+    this.count++;
     this.sum += value;
     if (value < this.min) {
       this.min = value;
@@ -41,11 +35,11 @@ public class DoubleStatistics {
     if (value > this.max) {
       this.max = value;
     }
-    this.updated = true;
+    this.mean = this.sum / this.count;
   }
 
   public int getCount() {
-    return this.values.size();
+    return this.count;
   }
 
   public double getMax() {
@@ -53,27 +47,7 @@ public class DoubleStatistics {
   }
 
   public double getMean() {
-    if (this.updated) {
-      this.mean = this.sum / this.values.size();
-    }
     return this.mean;
-  }
-
-  public double getMedian() {
-    synchronized (this) {
-      if (sort()) {
-        final int count = getCount();
-        if (count % 2 == 0) {
-          final int index = count / 2;
-          final double value1 = this.values.getDouble(index);
-          final double value2 = this.values.getDouble(index + 1);
-          this.median = (value1 + value2) / 2;
-        } else {
-          this.median = this.values.getDouble((count + 1) / 2);
-        }
-      }
-    }
-    return this.median;
   }
 
   public synchronized double getMin() {
@@ -86,15 +60,5 @@ public class DoubleStatistics {
 
   public double getSum() {
     return this.sum;
-  }
-
-  private synchronized boolean sort() {
-    if (this.updated) {
-      this.updated = false;
-      Collections.sort(this.values);
-      return true;
-    } else {
-      return false;
-    }
   }
 }

@@ -133,6 +133,15 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
     return Arrays.asList("VALUE");
   }
 
+  default <V> List<V> getValues() {
+    final List<V> values = new ArrayList<>();
+    for (final Identifier identifier : getIdentifiers()) {
+      final V value = getValue(identifier);
+      values.add(value);
+    }
+    return values;
+  }
+
   List<Object> getValues(Identifier id);
 
   default List<Object> getValues(final Object id) {
@@ -149,9 +158,13 @@ public interface CodeTable extends Emptyable, Cloneable, Comparator<Object> {
   }
 
   default void refresh() {
-    refresh();
   }
 
   default void refreshIfNeeded() {
+    synchronized (this) {
+      if (!isLoaded()) {
+        refresh();
+      }
+    }
   }
 }
