@@ -1118,7 +1118,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
           final String string = ClipboardUtil.getContents(DataFlavor.stringFlavor);
           if (Property.hasValue(string)) {
             final Resource resource = new ByteArrayResource("t.csv", string);
-            reader = RecordReader.create(resource);
+            reader = RecordReader.newRecordReader(resource);
           } else {
             return null;
           }
@@ -1570,47 +1570,44 @@ public abstract class AbstractRecordLayer extends AbstractLayer
         if (Property.hasValue(string)) {
           if (string.contains("\t")) {
             final Resource tsvResource = new ByteArrayResource("t.tsv", string);
-            reader = RecordReader.create(tsvResource);
+            reader = RecordReader.newRecordReader(tsvResource);
           } else {
             final Resource resource = new ByteArrayResource("t.csv", string);
-            reader = RecordReader.create(resource);
+            reader = RecordReader.newRecordReader(resource);
           }
         }
       }
-      final List<Record> regectedRecords = new ArrayList<>();
+      final List<Record> rejectedRecords = new ArrayList<>();
       if (reader != null) {
         final RecordDefinition recordDefinition = getRecordDefinition();
-        final FieldDefinition geometryAttribute = recordDefinition.getGeometryField();
+        final FieldDefinition geometryFieldDefinition = recordDefinition.getGeometryField();
         DataType geometryDataType = null;
         Class<?> layerGeometryClass = null;
         final GeometryFactory geometryFactory = getGeometryFactory();
-        if (geometryAttribute != null) {
-          geometryDataType = geometryAttribute.getType();
+        if (geometryFieldDefinition != null) {
+          geometryDataType = geometryFieldDefinition.getType();
           layerGeometryClass = geometryDataType.getJavaClass();
         }
-        Collection<String> ignorePasteFields = getProperty("ignorePasteFields");
-        if (ignorePasteFields == null) {
-          ignorePasteFields = Collections.emptySet();
+
+        Collection<String> ignorePasteFieldNames = getProperty("ignorePasteFields");
+        if (ignorePasteFieldNames == null) {
+          ignorePasteFieldNames = Collections.emptySet();
         }
         for (final Record sourceRecord : reader) {
-          final Map<String, Object> newValues = new LinkedHashMap<String, Object>(sourceRecord);
-
-          Geometry sourceGeometry = sourceRecord.getGeometry();
-          for (final Iterator<String> iterator = newValues.keySet().iterator(); iterator
-            .hasNext();) {
-            final String fieldName = iterator.next();
-            final FieldDefinition attribute = recordDefinition.getField(fieldName);
-            if (attribute == null) {
-              iterator.remove();
-            } else if (ignorePasteFields != null) {
-              if (ignorePasteFields.contains(attribute.getName())) {
-                iterator.remove();
+          final Map<String, Object> newValues = new LinkedHashMap<>();
+          for (final String fieldName : recordDefinition.getFieldNames()) {
+            if (!ignorePasteFieldNames.contains(fieldName)) {
+              final Object value = sourceRecord.getValue(fieldName);
+              if (value != null) {
+                newValues.put(fieldName, value);
               }
             }
           }
           if (geometryDataType != null) {
+            Geometry sourceGeometry = sourceRecord.getGeometry();
+            final String geometryFieldName = geometryFieldDefinition.getName();
             if (sourceGeometry == null) {
-              final Object value = sourceRecord.getValue(geometryAttribute.getName());
+              final Object value = sourceRecord.getValue(geometryFieldName);
               sourceGeometry = StringConverterRegistry.toObject(Geometry.class, value);
             }
             final Geometry geometry = geometryFactory.createGeometry(layerGeometryClass,
@@ -1618,18 +1615,17 @@ public abstract class AbstractRecordLayer extends AbstractLayer
             if (geometry == null) {
               newValues.clear();
             } else {
-              final String geometryFieldName = geometryAttribute.getName();
               newValues.put(geometryFieldName, geometry);
             }
           }
           LayerRecord newRecord = null;
           if (newValues.isEmpty()) {
-            regectedRecords.add(sourceRecord);
+            rejectedRecords.add(sourceRecord);
           } else {
             newRecord = createRecord(newValues);
           }
           if (newRecord == null) {
-            regectedRecords.add(sourceRecord);
+            rejectedRecords.add(sourceRecord);
           } else {
             newRecords.add(newRecord);
           }
