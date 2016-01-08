@@ -27,11 +27,13 @@ import com.revolsys.record.query.Value;
 import com.revolsys.record.schema.FieldDefinition;
 import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.record.schema.RecordDefinitionFactory;
+import com.revolsys.record.schema.RecordDefinitionProxy;
 import com.revolsys.util.JavaBeanUtil;
 import com.revolsys.util.Property;
 import com.vividsolutions.jts.geom.Geometry;
 
-public interface Record extends Map<String, Object>, Comparable<Record>, Identifiable {
+public interface Record
+  extends Map<String, Object>, Comparable<Record>, Identifiable, RecordDefinitionProxy {
   /**
    * Create a clone of the data record.
    *
@@ -155,29 +157,8 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     }
   }
 
-  /**
-   * Get the factory which created the instance.
-   *
-   * @return The factory.
-   */
-
   default RecordFactory getFactory() {
-    final RecordDefinition recordDefinition = getRecordDefinition();
-    if (recordDefinition == null) {
-      return null;
-    } else {
-      return recordDefinition.getRecordFactory();
-    }
-  }
-
-  default FieldDefinition getFieldDefinition(final int fieldIndex) {
-    final RecordDefinition recordDefinition = getRecordDefinition();
-    return recordDefinition.getField(fieldIndex);
-  }
-
-  default String getFieldTitle(final String name) {
-    final RecordDefinition recordDefinition = getRecordDefinition();
-    return recordDefinition.getFieldTitle(name);
+    return getRecordFactory();
   }
 
   default Float getFloat(final CharSequence name) {
@@ -339,13 +320,6 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     }
   }
 
-  /**
-   * Get the meta data describing the record and it's attributes.
-   *
-   * @return The meta data.
-   */
-  RecordDefinition getRecordDefinition();
-
   default Short getShort(final CharSequence name) {
     final Object value = getValue(name);
     if (Property.hasValue(value)) {
@@ -384,6 +358,7 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
     return getRecordDefinition().getPath();
   }
 
+  @Override
   default PathName getTypePathName() {
     return getRecordDefinition().getPathName();
   }
@@ -487,19 +462,6 @@ public interface Record extends Map<String, Object>, Comparable<Record>, Identif
       values.add(value);
     }
     return values;
-  }
-
-  /**
-   * Checks to see if the definition for this record has a field with the
-   * specified name.
-   *
-   * @param name The name of the field.
-   * @return True if the record has field with the specified name.
-   */
-
-  default boolean hasField(final CharSequence name) {
-    final RecordDefinition recordDefinition = getRecordDefinition();
-    return recordDefinition.hasField(name);
   }
 
   default boolean hasValue(final CharSequence name) {

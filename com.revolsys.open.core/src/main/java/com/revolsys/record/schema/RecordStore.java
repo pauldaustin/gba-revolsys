@@ -104,6 +104,10 @@ public interface RecordStore extends RecordDefinitionFactory, Transactionable, C
 
   RecordFactory getRecordFactory();
 
+  default RecordReader getRecords(final RecordDefinition recordDefinition) {
+    return query(recordDefinition.getPath());
+  }
+
   RecordStoreSchema getRootSchema();
 
   int getRowCount(Query query);

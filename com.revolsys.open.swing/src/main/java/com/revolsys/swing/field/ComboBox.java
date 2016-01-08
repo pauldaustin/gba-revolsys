@@ -152,8 +152,8 @@ public class ComboBox<T> extends JComboBox<T>implements Field, KeyListener {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> T getFieldValue() {
-    return (T)getSelectedItem();
+  public <V> V getFieldValue() {
+    return (V)getSelectedItem();
   }
 
   @Override
@@ -235,7 +235,9 @@ public class ComboBox<T> extends JComboBox<T>implements Field, KeyListener {
 
   @Override
   public synchronized void setFieldValue(final Object value) {
-    if (!Equals.equal(getSelectedItem(), value)) {
+    final Object selectedItem = getSelectedItem();
+    if (!Equals.equal(selectedItem, value)) {
+
       setSelectedItem(value);
     }
     this.support.setValue(value);
