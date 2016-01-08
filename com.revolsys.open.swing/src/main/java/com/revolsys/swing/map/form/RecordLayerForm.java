@@ -1123,10 +1123,10 @@ public class RecordLayerForm extends JPanel implements PropertyChangeListener, C
     final AbstractRecordLayer layer = getLayer();
     if (layer != null) {
       final Map<String, Object> newValues = new LinkedHashMap<>(map);
-      final Collection<String> ignorePasteFields = layer.getProperty("ignorePasteFields");
+      final Collection<String> ignorePasteFieldsNames = layer.getIgnorePasteFieldNames();
       final Set<String> keySet = newValues.keySet();
-      if (ignorePasteFields != null) {
-        keySet.removeAll(ignorePasteFields);
+      if (ignorePasteFieldsNames != null) {
+        keySet.removeAll(ignorePasteFieldsNames);
       }
       final Set<String> readOnlyFieldNames = getReadOnlyFieldNames();
       keySet.removeAll(readOnlyFieldNames);
