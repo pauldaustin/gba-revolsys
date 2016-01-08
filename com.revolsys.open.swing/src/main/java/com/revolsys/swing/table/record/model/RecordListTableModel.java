@@ -193,12 +193,12 @@ public class RecordListTableModel extends RecordRowTableModel implements Reorder
 
   @Override
   public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
-    final Record object = getRecord(rowIndex);
-    if (object != null) {
-      final String name = getColumnName(columnIndex);
-      final Object oldValue = object.getValueByPath(name);
-      object.setValue(name, value);
-      final PropertyChangeEvent event = new PropertyChangeEvent(object, name, oldValue, value);
+    final Record record = getRecord(rowIndex);
+    if (record != null) {
+      final String name = getFieldName(columnIndex);
+      final Object oldValue = record.getValueByPath(name);
+      record.setValue(name, value);
+      final PropertyChangeEvent event = new PropertyChangeEvent(record, name, oldValue, value);
       getPropertyChangeSupport().firePropertyChange(event);
     }
   }
