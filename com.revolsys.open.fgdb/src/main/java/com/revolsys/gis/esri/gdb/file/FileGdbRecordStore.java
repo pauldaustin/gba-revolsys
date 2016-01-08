@@ -184,8 +184,8 @@ public class FileGdbRecordStore extends AbstractRecordStore {
 
   private final Map<String, Integer> tableWriteLockCountsByCatalogPath = new HashMap<>();
 
-  protected FileGdbRecordStore(final File file) {
-    this.fileName = file.getAbsolutePath();
+  FileGdbRecordStore(final File file) {
+    this.fileName = FileUtil.getCanonicalPath(file);
     setConnectionProperties(Collections.singletonMap("url", FileUtil.toUrl(file).toString()));
     this.catalogPathByPath.put("/", "\\");
   }
@@ -354,7 +354,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
   @Override
   @PreDestroy
   public void close() {
-    if (!FileGdbRecordStoreFactory.release(this.fileName)) {
+    if (FileGdbRecordStoreFactory.release(this)) {
       doClose();
     }
   }
@@ -891,7 +891,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
     return this.domainFieldNames;
   }
 
-  public String getFileName() {
+  public final String getFileName() {
     return this.fileName;
   }
 
