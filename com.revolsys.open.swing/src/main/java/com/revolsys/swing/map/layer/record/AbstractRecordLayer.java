@@ -40,6 +40,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.revolsys.beans.InvokeMethodCallable;
+import com.revolsys.collection.set.Sets;
 import com.revolsys.converter.string.StringConverterRegistry;
 import com.revolsys.datatype.DataType;
 import com.revolsys.datatype.DataTypes;
@@ -65,6 +66,7 @@ import com.revolsys.record.query.Condition;
 import com.revolsys.record.query.Query;
 import com.revolsys.record.schema.FieldDefinition;
 import com.revolsys.record.schema.RecordDefinition;
+import com.revolsys.record.schema.RecordDefinitionProxy;
 import com.revolsys.record.schema.RecordStore;
 import com.revolsys.spring.resource.ByteArrayResource;
 import com.revolsys.swing.SwingUtil;
@@ -95,6 +97,7 @@ import com.revolsys.swing.map.layer.record.table.RecordLayerTablePanel;
 import com.revolsys.swing.map.layer.record.table.model.RecordDefinitionTableModel;
 import com.revolsys.swing.map.layer.record.table.model.RecordLayerTableModel;
 import com.revolsys.swing.map.layer.record.table.model.RecordSaveErrorTableModel;
+import com.revolsys.swing.map.layer.record.table.model.RecordValidationDialog;
 import com.revolsys.swing.map.overlay.AbstractOverlay;
 import com.revolsys.swing.map.overlay.AddGeometryCompleteAction;
 import com.revolsys.swing.map.overlay.CloseLocation;
@@ -115,7 +118,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 public abstract class AbstractRecordLayer extends AbstractLayer
-  implements RecordFactory, AddGeometryCompleteAction {
+  implements RecordFactory, AddGeometryCompleteAction, RecordDefinitionProxy {
 
   public static final String ALL = "All";
 
@@ -932,6 +935,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     return this.editSync;
   }
 
+  @Override
   public List<String> getFieldNames() {
     return new ArrayList<>(this.fieldNames);
   }
@@ -971,22 +975,6 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     return fieldNamesSets;
   }
 
-  public String getFieldTitle(final String fieldName) {
-    if (isUseFieldTitles()) {
-      final RecordDefinition recordDefinition = getRecordDefinition();
-      return recordDefinition.getFieldTitle(fieldName);
-    } else {
-      return fieldName;
-    }
-  }
-
-  public String getGeometryFieldName() {
-    if (this.recordDefinition == null) {
-      return "";
-    } else {
-      return getRecordDefinition().getGeometryFieldName();
-    }
-  }
 
   public DataType getGeometryType() {
     final RecordDefinition recordDefinition = getRecordDefinition();
@@ -1024,6 +1012,14 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   public String getIdFieldName() {
     return getRecordDefinition().getIdFieldName();
+  }
+
+  @SuppressWarnings("unchecked")
+  public Set<String> getIgnorePasteFieldNames() {
+    final Set<String> ignoreFieldNames = Sets
+      .newHash((Collection<String>)getProperty("ignorePasteFields"));
+    ignoreFieldNames.add(getIdFieldName());
+    return ignoreFieldNames;
   }
 
   public RecordQuadTree getIndex() {
@@ -1105,6 +1101,45 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     synchronized (this.newRecords) {
       return new ArrayList<LayerRecord>(this.newRecords);
     }
+  }
+
+  public Map<String, Object> getPasteNewValues(final Record sourceRecord) {
+    final RecordDefinition recordDefinition = getRecordDefinition();
+    final Set<String> ignoreFieldNames = getIgnorePasteFieldNames();
+    final Map<String, Object> newValues = new LinkedHashMap<>();
+    for (final String fieldName : recordDefinition.getFieldNames()) {
+      if (!ignoreFieldNames.contains(fieldName)) {
+        final Object value = sourceRecord.getValue(fieldName);
+        if (value != null) {
+          newValues.put(fieldName, value);
+        }
+      }
+    }
+    final FieldDefinition geometryFieldDefinition = recordDefinition.getGeometryField();
+    DataType geometryDataType = null;
+    Class<?> layerGeometryClass = null;
+    final GeometryFactory geometryFactory = getGeometryFactory();
+    if (geometryFieldDefinition != null) {
+      geometryDataType = geometryFieldDefinition.getType();
+      layerGeometryClass = geometryDataType.getJavaClass();
+    }
+    if (geometryDataType != null) {
+      Geometry sourceGeometry = sourceRecord.getGeometry();
+      final String geometryFieldName = geometryFieldDefinition.getName();
+      if (sourceGeometry == null) {
+        final Object value = sourceRecord.getValue(geometryFieldName);
+        sourceGeometry = StringConverterRegistry.toObject(layerGeometryClass, value);
+      }
+      final Geometry geometry = geometryFactory.createGeometry(layerGeometryClass, sourceGeometry);
+      if (geometry == null) {
+        if (sourceGeometry != null) {
+          newValues.put(geometryFieldName, sourceGeometry);
+        }
+      } else {
+        newValues.put(geometryFieldName, geometry);
+      }
+    }
+    return newValues;
   }
 
   protected Geometry getPasteRecordGeometry(final LayerRecord record, final boolean alert) {
@@ -1206,16 +1241,13 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     return null;
   }
 
+  @Override
   public RecordDefinition getRecordDefinition() {
     return this.recordDefinition;
   }
 
   public List<LayerRecord> getRecords() {
     throw new UnsupportedOperationException();
-  }
-
-  public RecordStore getRecordStore() {
-    return getRecordDefinition().getRecordStore();
   }
 
   public int getRowCount() {
@@ -1269,15 +1301,6 @@ public abstract class AbstractRecordLayer extends AbstractLayer
 
   public Collection<String> getSnapLayerPaths() {
     return getProperty("snapLayers", Collections.<String> emptyList());
-  }
-
-  public String getTypePath() {
-    final RecordDefinition recordDefinition = getRecordDefinition();
-    if (recordDefinition == null) {
-      return null;
-    } else {
-      return recordDefinition.getPath();
-    }
   }
 
   public Collection<String> getUserReadOnlyFieldNames() {
@@ -1577,68 +1600,39 @@ public abstract class AbstractRecordLayer extends AbstractLayer
           }
         }
       }
-      final List<Record> rejectedRecords = new ArrayList<>();
       if (reader != null) {
-        final RecordDefinition recordDefinition = getRecordDefinition();
-        final FieldDefinition geometryFieldDefinition = recordDefinition.getGeometryField();
-        DataType geometryDataType = null;
-        Class<?> layerGeometryClass = null;
-        final GeometryFactory geometryFactory = getGeometryFactory();
-        if (geometryFieldDefinition != null) {
-          geometryDataType = geometryFieldDefinition.getType();
-          layerGeometryClass = geometryDataType.getJavaClass();
-        }
-
-        Collection<String> ignorePasteFieldNames = getProperty("ignorePasteFields");
-        if (ignorePasteFieldNames == null) {
-          ignorePasteFieldNames = Collections.emptySet();
-        }
         for (final Record sourceRecord : reader) {
-          final Map<String, Object> newValues = new LinkedHashMap<>();
-          for (final String fieldName : recordDefinition.getFieldNames()) {
-            if (!ignorePasteFieldNames.contains(fieldName)) {
-              final Object value = sourceRecord.getValue(fieldName);
-              if (value != null) {
-                newValues.put(fieldName, value);
-              }
+          final Map<String, Object> newValues = getPasteNewValues(sourceRecord);
+
+          if (!newValues.isEmpty()) {
+            final LayerRecord newRecord = createRecord(newValues);
+            if (newRecord != null) {
+              newRecords.add(newRecord);
             }
-          }
-          if (geometryDataType != null) {
-            Geometry sourceGeometry = sourceRecord.getGeometry();
-            final String geometryFieldName = geometryFieldDefinition.getName();
-            if (sourceGeometry == null) {
-              final Object value = sourceRecord.getValue(geometryFieldName);
-              sourceGeometry = StringConverterRegistry.toObject(Geometry.class, value);
-            }
-            final Geometry geometry = geometryFactory.createGeometry(layerGeometryClass,
-              sourceGeometry);
-            if (geometry == null) {
-              newValues.clear();
-            } else {
-              newValues.put(geometryFieldName, geometry);
-            }
-          }
-          LayerRecord newRecord = null;
-          if (newValues.isEmpty()) {
-            rejectedRecords.add(sourceRecord);
-          } else {
-            newRecord = createRecord(newValues);
-          }
-          if (newRecord == null) {
-            rejectedRecords.add(sourceRecord);
-          } else {
-            newRecords.add(newRecord);
           }
         }
-      }
-      saveChanges(newRecords);
-      if (!newRecords.isEmpty()) {
-        zoomToRecords(newRecords);
-        showRecordsTable(RecordLayerTableModel.MODE_SELECTED);
       }
     }
-    firePropertyChange("recordsInserted", null, newRecords);
-    addSelectedRecords(newRecords);
+    RecordValidationDialog.validateRecords(this, newRecords, (validator) -> {
+      // Success
+      // Save the valid records
+      final List<LayerRecord> validRecords = validator.getValidRecords();
+      if (!validRecords.isEmpty()) {
+        saveChanges(validRecords);
+        zoomToRecords(validRecords);
+        showRecordsTable(RecordLayerTableModel.MODE_SELECTED);
+        firePropertyChange("recordsInserted", null, validRecords);
+        addSelectedRecords(validRecords);
+      }
+      // Delete any invalid records
+      final List<LayerRecord> invalidRecords = validator.getInvalidRecords();
+      if (invalidRecords != null) {
+        deleteRecords(invalidRecords);
+      }
+    } , (validator) -> {
+      // Cancel, delete all the records
+      deleteRecords(newRecords);
+    });
   }
 
   protected void postSaveChanges(final RecordState originalState, final LayerRecord record) {
