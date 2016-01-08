@@ -13,7 +13,6 @@ import com.revolsys.gis.esri.gdb.file.capi.swig.EnumRows;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Row;
 import com.revolsys.gis.esri.gdb.file.capi.swig.Table;
 import com.revolsys.gis.esri.gdb.file.capi.type.AbstractFileGdbFieldDefinition;
-import com.revolsys.gis.esri.gdb.file.capi.type.OidFieldDefinition;
 import com.revolsys.io.AbstractRecordWriter;
 import com.revolsys.record.Record;
 import com.revolsys.record.RecordState;
@@ -233,7 +232,7 @@ public class FileGdbWriter extends AbstractRecordWriter {
       final String name = field.getName();
       if (field.isRequired()) {
         final Object value = record.getValue(name);
-        if (value == null && !(field instanceof OidFieldDefinition)) {
+        if (value == null && !((AbstractFileGdbFieldDefinition)field).isAutoCalculated()) {
           throw new ObjectPropertyException(record, name, "Value required");
         }
       }

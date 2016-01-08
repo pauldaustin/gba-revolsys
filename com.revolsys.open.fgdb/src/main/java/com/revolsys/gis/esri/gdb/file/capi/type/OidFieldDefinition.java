@@ -32,6 +32,11 @@ public class OidFieldDefinition extends AbstractFileGdbFieldDefinition {
   }
 
   @Override
+  public boolean isAutoCalculated() {
+    return true;
+  }
+
+  @Override
   public void setPostInsertValue(final Record record, final Row row) {
     synchronized (getSync()) {
       final int oid = row.getOid();
@@ -50,4 +55,12 @@ public class OidFieldDefinition extends AbstractFileGdbFieldDefinition {
     return null;
   }
 
+  @Override
+  public void validate(final Object value) {
+  }
+
+  @Override
+  public Object validate(final Record record, final Object value) {
+    return value;
+  }
 }
