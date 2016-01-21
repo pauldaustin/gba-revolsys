@@ -67,7 +67,6 @@ import com.revolsys.record.query.Query;
 import com.revolsys.record.schema.FieldDefinition;
 import com.revolsys.record.schema.RecordDefinition;
 import com.revolsys.record.schema.RecordDefinitionProxy;
-import com.revolsys.record.schema.RecordStore;
 import com.revolsys.spring.resource.ByteArrayResource;
 import com.revolsys.swing.SwingUtil;
 import com.revolsys.swing.action.enablecheck.AndEnableCheck;
@@ -975,7 +974,6 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     return fieldNamesSets;
   }
 
-
   public DataType getGeometryType() {
     final RecordDefinition recordDefinition = getRecordDefinition();
     if (recordDefinition == null) {
@@ -1613,7 +1611,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
         }
       }
     }
-    RecordValidationDialog.validateRecords("Pasting Records", this, newRecords , (validator) -> {
+    RecordValidationDialog.validateRecords("Pasting Records", this, newRecords, (validator) -> {
       // Success
       // Save the valid records
       final List<LayerRecord> validRecords = validator.getValidRecords();
@@ -1626,10 +1624,10 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       }
       // Delete any invalid records
       final List<LayerRecord> invalidRecords = validator.getInvalidRecords();
-      if (invalidRecords != null) {
+      if (!invalidRecords.isEmpty()) {
         deleteRecords(invalidRecords);
       }
-    }, (validator) -> {
+    } , (validator) -> {
       // Cancel, delete all the records
       deleteRecords(newRecords);
     });
