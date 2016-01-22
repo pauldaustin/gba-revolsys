@@ -149,7 +149,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     final EnableCheck canAdd = new MenuSourcePropertyEnableCheck("canAddRecords");
     final EnableCheck canDelete = new MenuSourcePropertyEnableCheck("canDeleteRecords");
     final EnableCheck canMergeRecords = new MenuSourcePropertyEnableCheck("canMergeRecords");
-    final EnableCheck canPaste = new MenuSourcePropertyEnableCheck("canPaste");
+    final EnableCheck canPaste = new MenuSourcePropertyEnableCheck("canPasteRecords");
 
     menu.addCheckboxMenuItem("edit",
       MenuSourceRunnable.createAction("Editable", "pencil", readonly, "toggleEditable"), editable);
@@ -305,6 +305,8 @@ public abstract class AbstractRecordLayer extends AbstractLayer
   private boolean useFieldTitles = false;
 
   private Set<String> userReadOnlyFieldNames = new LinkedHashSet<>();
+
+  private boolean canPasteRecords = true;
 
   public AbstractRecordLayer() {
     this("");
@@ -1439,9 +1441,21 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     return false;
   }
 
-  public boolean isCanPaste() {
-    return ClipboardUtil.isDataFlavorAvailable(RecordReaderTransferable.DATA_OBJECT_READER_FLAVOR)
-      || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
+  public boolean isCanPasteRecords() {
+    if (isExists()) {
+      if (!this.canPasteRecords) {
+        return false;
+      } else if (super.isReadOnly()) {
+        return false;
+      } else if (!super.isEditable()) {
+        return false;
+      } else {
+        return ClipboardUtil
+          .isDataFlavorAvailable(RecordReaderTransferable.DATA_OBJECT_READER_FLAVOR)
+          || ClipboardUtil.isDataFlavorAvailable(DataFlavor.stringFlavor);
+      }
+    }
+    return false;
   }
 
   public boolean isDeleted(final LayerRecord record) {
@@ -1931,6 +1945,10 @@ public abstract class AbstractRecordLayer extends AbstractLayer
     firePropertyChange("canEditRecords", !isCanEditRecords(), isCanEditRecords());
   }
 
+  public void setCanPasteRecords(final boolean canPasteRecords) {
+    this.canPasteRecords = canPasteRecords;
+  }
+
   @Override
   public void setEditable(final boolean editable) {
     if (SwingUtilities.isEventDispatchThread()) {
@@ -2383,6 +2401,7 @@ public abstract class AbstractRecordLayer extends AbstractLayer
       MapSerializerUtil.add(map, "canAddRecords", this.canAddRecords);
       MapSerializerUtil.add(map, "canDeleteRecords", this.canDeleteRecords);
       MapSerializerUtil.add(map, "canEditRecords", this.canEditRecords);
+      MapSerializerUtil.add(map, "canPasteRecords", this.canPasteRecords);
       MapSerializerUtil.add(map, "snapToAllLayers", this.snapToAllLayers);
     }
     MapSerializerUtil.add(map, "fieldNamesSetName", this.fieldNamesSetName, ALL);

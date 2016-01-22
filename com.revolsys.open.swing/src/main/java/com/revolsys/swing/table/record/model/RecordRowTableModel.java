@@ -219,17 +219,22 @@ public abstract class RecordRowTableModel extends AbstractRecordTableModel
     if (isEditable()) {
       final Record record = getRecord(rowIndex);
       if (record != null) {
-        final RecordState state = record.getState();
-        if (state != RecordState.Initalizing && state != RecordState.Deleted) {
-          final String fieldName = getFieldName(rowIndex, columnIndex);
-          if (fieldName != null) {
-            if (!isReadOnly(fieldName)) {
-              final RecordDefinition recordDefinition = getRecordDefinition();
-              final Class<?> fieldClass = recordDefinition.getFieldClass(fieldName);
-              if (!Geometry.class.isAssignableFrom(fieldClass)) {
-                return true;
-              }
-            }
+        return isCellEditable(rowIndex, columnIndex, record);
+      }
+    }
+    return false;
+  }
+
+  protected boolean isCellEditable(final int rowIndex, final int columnIndex, final Record record) {
+    final RecordState state = record.getState();
+    if (state != RecordState.Initalizing && state != RecordState.Deleted) {
+      final String fieldName = getFieldName(rowIndex, columnIndex);
+      if (fieldName != null) {
+        if (!isReadOnly(fieldName)) {
+          final RecordDefinition recordDefinition = getRecordDefinition();
+          final Class<?> fieldClass = recordDefinition.getFieldClass(fieldName);
+          if (!Geometry.class.isAssignableFrom(fieldClass)) {
+            return true;
           }
         }
       }

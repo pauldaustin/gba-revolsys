@@ -382,6 +382,16 @@ public class RecordLayerTableModel extends RecordRowTableModel
   }
 
   @Override
+  protected boolean isCellEditable(final int rowIndex, final int columnIndex, final Record record) {
+    final AbstractRecordLayer layer = getLayer();
+    if (layer.isCanEditRecords() || layer.isNew((LayerRecord)record) && layer.isCanAddRecords()) {
+      return super.isCellEditable(rowIndex, columnIndex, record);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
   public boolean isEditable() {
     return super.isEditable() && this.layer.isEditable();
   }
