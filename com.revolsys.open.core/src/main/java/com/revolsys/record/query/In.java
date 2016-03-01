@@ -11,7 +11,6 @@ import com.revolsys.equals.Equals;
 import com.revolsys.record.schema.FieldDefinition;
 
 public class In extends Condition {
-
   private QueryValue left;
 
   private CollectionValue values;
@@ -100,6 +99,11 @@ public class In extends Condition {
 
   public CollectionValue getValues() {
     return this.values;
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return this.values.isEmpty();
   }
 
   @Override

@@ -98,7 +98,7 @@ public class FileGdbQueryIterator extends AbstractIterator<Record> {
   @Override
   protected void doClose() {
     boolean close = true;
-    FileGdbRecordStore recordStore = this.recordStore;
+    final FileGdbRecordStore recordStore = this.recordStore;
     if (this.closed || recordStore == null) {
       close = false;
     } else {

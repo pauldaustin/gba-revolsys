@@ -148,6 +148,10 @@ public class CollectionValue extends QueryValue {
     return values;
   }
 
+  public boolean isEmpty() {
+    return this.queryValues.isEmpty();
+  }
+
   public void setField(final FieldDefinition field) {
     this.field = field;
     if (field == null) {

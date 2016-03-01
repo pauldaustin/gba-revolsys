@@ -79,6 +79,7 @@ import com.revolsys.record.query.CollectionValue;
 import com.revolsys.record.query.Column;
 import com.revolsys.record.query.Condition;
 import com.revolsys.record.query.ILike;
+import com.revolsys.record.query.In;
 import com.revolsys.record.query.LeftUnaryCondition;
 import com.revolsys.record.query.Like;
 import com.revolsys.record.query.Query;
@@ -329,7 +330,18 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         }
         matcher.appendTail(buffer);
       }
-
+    } else if (condition instanceof In) {
+      final In in = (In)condition;
+      if (in.isEmpty()) {
+        buffer.append("1 == 0");
+      } else {
+        final QueryValue left = in.getLeft();
+        appendQueryValue(buffer, left);
+        buffer.append(" IN (");
+        final QueryValue queryValues = in.getValues();
+        appendQueryValue(buffer, queryValues);
+        buffer.append(")");
+      }
     } else {
       condition.appendSql(buffer);
     }
@@ -1019,60 +1031,54 @@ public class FileGdbRecordStore extends AbstractRecordStore {
             }
             final StringBuffer whereClause = getWhereClause(query);
             final BoundingBox boundingBox = query.getBoundingBox();
-
-            if (boundingBox == null) {
-              final StringBuffer sql = new StringBuffer();
-              sql.append("SELECT OBJECTID FROM ");
-              sql.append(JdbcUtils.getTableName(typePath));
-              if (whereClause.length() > 0) {
-                sql.append(" WHERE ");
-                sql.append(whereClause);
-              }
-
-              final EnumRows rows = query(sql.toString(), false);
-              if (rows == null) {
-                return 0;
-              } else {
-                try {
-                  int count = 0;
-                  for (Row row = rows.next(); row != null; row = rows.next()) {
-                    count++;
-                    row.delete();
-                  }
-                  return count;
-                } finally {
-                  closeEnumRows(rows);
-                }
-              }
-            } else {
-              final GeometryFieldDefinition geometryField = (GeometryFieldDefinition)recordDefinition
-                .getGeometryField();
-              if (geometryField == null || boundingBox.isEmpty()) {
-                return 0;
-              } else {
-                final StringBuffer sql = new StringBuffer();
-                sql.append("SELECT " + geometryField.getName() + " FROM ");
-                sql.append(JdbcUtils.getTableName(typePath));
-                if (whereClause.length() > 0) {
-                  sql.append(" WHERE ");
-                  sql.append(whereClause);
-                }
-
-                final EnumRows rows = query(sql.toString(), false);
-                try {
-                  int count = 0;
-                  for (Row row = rows.next(); row != null; row = rows.next()) {
-                    final Geometry geometry = (Geometry)geometryField.getValue(row);
-                    final BoundingBox geometryBoundingBox = BoundingBox.getBoundingBox(geometry);
-                    if (geometryBoundingBox.intersects(boundingBox)) {
-                      count++;
+            final String catalogPath = getCatalogPath(typePath);
+            final Table table = getTable(catalogPath);
+            if (table != null) {
+              try {
+                if (boundingBox == null) {
+                  final EnumRows rows = search(catalogPath, table, "OBJECTID",
+                    whereClause.toString(), false);
+                  if (rows == null) {
+                    return 0;
+                  } else {
+                    try {
+                      int count = 0;
+                      for (Row row = rows.next(); row != null; row = rows.next()) {
+                        count++;
+                        row.delete();
+                      }
+                      return count;
+                    } finally {
+                      closeEnumRows(rows);
                     }
-                    row.delete();
                   }
-                  return count;
-                } finally {
-                  closeEnumRows(rows);
+                } else {
+                  final GeometryFieldDefinition geometryField = (GeometryFieldDefinition)recordDefinition
+                    .getGeometryField();
+                  if (geometryField == null || boundingBox.isEmpty()) {
+                    return 0;
+                  } else {
+                    final EnumRows rows = search(catalogPath, table, geometryField.getName(),
+                      whereClause.toString(), false);
+                    try {
+                      int count = 0;
+                      for (Row row = rows.next(); row != null; row = rows.next()) {
+                        final Geometry geometry = (Geometry)geometryField.getValue(row);
+                        final BoundingBox geometryBoundingBox = BoundingBox
+                          .getBoundingBox(geometry);
+                        if (geometryBoundingBox.intersects(boundingBox)) {
+                          count++;
+                        }
+                        row.delete();
+                      }
+                      return count;
+                    } finally {
+                      closeEnumRows(rows);
+                    }
+                  }
                 }
+              } finally {
+                releaseTable(catalogPath);
               }
             }
           } finally {
@@ -1081,6 +1087,7 @@ public class FileGdbRecordStore extends AbstractRecordStore {
         }
       }
     }
+    return 0;
   }
 
   private <V> V getSingleThreadResult(final Callable<V> callable) {
