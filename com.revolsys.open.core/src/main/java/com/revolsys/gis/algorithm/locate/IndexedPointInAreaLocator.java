@@ -9,14 +9,15 @@ import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.Polygonal;
 
 public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
 
   private static class IntervalIndexedGeometry {
     private final SortedPackedIntervalRTree<LineSegment> index = new SortedPackedIntervalRTree<LineSegment>();
 
-    public IntervalIndexedGeometry(final Polygon geom) {
-      init(geom);
+    public IntervalIndexedGeometry(final Polygonal geom) {
+      init((Geometry)geom);
     }
 
     private void addLine(final CoordinateSequence points) {
@@ -35,11 +36,14 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
       }
     }
 
-    private void init(final Polygon polygon) {
-      addLine(polygon.getExteriorRing().getCoordinateSequence());
-      for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
-        final LineString ring = polygon.getInteriorRingN(i);
-        addLine(ring.getCoordinateSequence());
+    private void init(final Geometry polygons) {
+      for (int j = 0; j < polygons.getNumGeometries(); j++) {
+        final Polygon polygon = (Polygon)polygons.getGeometryN(j);
+        addLine(polygon.getExteriorRing().getCoordinateSequence());
+        for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
+          final LineString ring = polygon.getInteriorRingN(i);
+          addLine(ring.getCoordinateSequence());
+        }
       }
     }
 
@@ -48,7 +52,7 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
     }
   }
 
-  private final Polygon geometry;
+  private final Geometry geometry;
 
   private final IntervalIndexedGeometry index;
 
@@ -57,13 +61,9 @@ public class IndexedPointInAreaLocator implements PointOnGeometryLocator {
    *
    * @param geometry the Geometry to locate in
    */
-  public IndexedPointInAreaLocator(final Polygon geometry) {
-    this.geometry = geometry;
+  public IndexedPointInAreaLocator(final Polygonal geometry) {
+    this.geometry = (Geometry)geometry;
     this.index = new IntervalIndexedGeometry(geometry);
-  }
-
-  public Polygon getGeometry() {
-    return this.geometry;
   }
 
   public GeometryFactory getGeometryFactory() {
