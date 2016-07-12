@@ -18,7 +18,6 @@ import com.revolsys.datatype.DataTypes;
 import com.revolsys.gis.cs.CoordinateSystem;
 import com.revolsys.gis.cs.WktCsParser;
 import com.revolsys.gis.cs.epsg.EpsgCoordinateSystems;
-import com.revolsys.gis.oracle.esri.ArcSdeBinaryGeometryRecordStoreExtension;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryFieldDefinition;
 import com.revolsys.gis.oracle.esri.ArcSdeStGeometryRecordStoreExtension;
 import com.revolsys.io.Path;
@@ -252,7 +251,6 @@ public class OracleRecordStore extends AbstractJdbcRecordStore {
           + "select user \"SCHEMA_NAME\", t.table_name, 'ALL', comments from user_tables t join user_tab_comments c on (t.table_name = c.table_name) and c.table_type in ('TABLE', 'VIEW')");
 
       addRecordStoreExtension(new ArcSdeStGeometryRecordStoreExtension());
-      addRecordStoreExtension(new ArcSdeBinaryGeometryRecordStoreExtension());
     }
   }
 
