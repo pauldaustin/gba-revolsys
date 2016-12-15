@@ -9,7 +9,7 @@
   <artifactId>com.revolsys.open.parent</artifactId>
   <packaging>pom</packaging>
   <name>Revolution Systems Open Library</name>
-  <version>GBA-SNAPSHOT</version>
+  <version>0.20161215.134048-GBA_2_0_5-RC5</version>
   <description>The parent module of the Revolution Systems Open Library.</description>
   <url>http://revolsys.github.com/com.revolsys.open/</url>
 

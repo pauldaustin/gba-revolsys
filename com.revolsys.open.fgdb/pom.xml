@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.revolsys.open</groupId>
     <artifactId>com.revolsys.open.parent</artifactId>
-    <version>GBA-SNAPSHOT</version>
+    <version>0.20161215.134048-GBA_2_0_5-RC5</version>
   </parent>
   <artifactId>com.revolsys.open.fgdb</artifactId>
   <packaging>jar</packaging>
