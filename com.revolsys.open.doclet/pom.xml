@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>com.revolsys.open.parent</artifactId>
 		<groupId>com.revolsys.open</groupId>
-		<version>GBA-SNAPSHOT</version>
+		<version>0.20161216.171156-GBA_2_0_7-RELEASE</version>
 	</parent>
 	<artifactId>com.revolsys.open.doclet</artifactId>
 	<name>RS Doclet</name>
