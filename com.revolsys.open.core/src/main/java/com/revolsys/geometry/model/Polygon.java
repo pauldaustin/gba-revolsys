@@ -469,46 +469,35 @@ public interface Polygon extends Polygonal {
       final GeometryFactory geometryFactory = getGeometryFactory();
       return geometryFactory.point();
     } else {
-      if (isValid()) {
-        final Point centroid = getCentroid();
-        boolean within = false;
-        try {
-          within = centroid.within(this);
-        } catch (final TopologyException e) {
-        }
-        if (within) {
+      Point centroid = null;
+      try {
+        centroid = getCentroid();
+        if (centroid.within(this)) {
           return centroid;
-        } else {
-          final BoundingBox boundingBox = getBoundingBox();
-          final double x1 = centroid.getX();
-          final double y1 = centroid.getY();
-          for (final double x2 : new double[] {
-            boundingBox.getMinX(), boundingBox.getMaxX()
-          }) {
-            for (final double y2 : new double[] {
-              boundingBox.getMinY(), boundingBox.getMaxY()
-            }) {
-              final LineSegment line = new LineSegmentDouble(2, x1, y1, x2, y2);
-              try {
-                final Geometry intersection = intersection(line);
-                if (!intersection.isEmpty()) {
-                  return intersection.getPointWithin();
-                }
-              } catch (final TopologyException e) {
-
-              }
-            }
-          }
-          return getPoint();
         }
-      } else {
-        final Geometry validGeometry = newValidGeometry();
-        if (validGeometry == this) {
-          return getPoint();
-        } else {
-          return validGeometry.getPointWithin();
+      } catch (final TopologyException e) {
+      }
+      final BoundingBox boundingBox = getBoundingBox();
+      final double x1 = centroid.getX();
+      final double y1 = centroid.getY();
+      for (final double x2 : new double[] {
+        boundingBox.getMinX(), boundingBox.getMaxX()
+      }) {
+        for (final double y2 : new double[] {
+          boundingBox.getMinY(), boundingBox.getMaxY()
+        }) {
+          final LineSegment line = new LineSegmentDouble(2, x1, y1, x2, y2);
+          try {
+            final Geometry intersection = intersection(line);
+            if (!intersection.isEmpty()) {
+              return intersection.getPointWithin();
+            }
+          } catch (final TopologyException e) {
+
+          }
         }
       }
+      return getPoint();
     }
   }
 
