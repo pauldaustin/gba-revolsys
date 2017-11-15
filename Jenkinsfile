@@ -16,12 +16,14 @@ node ('master') {
         userRemoteConfigs: [[url: 'ssh://git@github.com/revolsys/com.revolsys.open.git']]
       ])
       withMaven(jdk: 'jdk', maven: 'm3') {
+        sh 'mvn versions:set -DnewVersion="${version}" -DgenerateBackupPoms=false'
+      }
         sh '''
-mvn versions:set -DnewVersion="${version}" -DgenerateBackupPoms=false
+git config --global user.email "paul.austin@revolsys.com"
+git config --global user.name "Paul Austin"
 git commit -a -m "Version ${version}"
 git tag -f -a ${version} -m "Version ${version}"
         '''
-      }
     }
   }
   
