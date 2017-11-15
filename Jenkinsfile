@@ -12,8 +12,7 @@ node ('master') {
         doGenerateSubmoduleConfigurations: false,
         extensions: [],
         gitTool: 'Default',
-        submoduleCfg: [],
-        userRemoteConfigs: scm.userRemoteConfigs
+        submoduleCfg: []
       ])
       withMaven(jdk: 'jdk', maven: 'm3') {
         sh '''
