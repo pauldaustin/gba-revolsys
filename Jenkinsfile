@@ -1,5 +1,4 @@
 node ('master') {
-  def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
   def server = Artifactory.server 'revolsys'
   def rtMaven = Artifactory.newMavenBuild()
   def buildInfo
@@ -14,7 +13,7 @@ node ('master') {
         extensions: [],
         gitTool: 'Default',
         submoduleCfg: [],
-        userRemoteConfigs: [[url: scmUrl]]
+        userRemoteConfigs: scm.userRemoteConfigs
       ])
       withMaven(jdk: 'jdk', maven: 'm3') {
         sh '''
