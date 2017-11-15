@@ -12,7 +12,8 @@ node ('master') {
         doGenerateSubmoduleConfigurations: false,
         extensions: [],
         gitTool: 'Default',
-        submoduleCfg: []
+        submoduleCfg: [],
+        userRemoteConfigs: [[url: 'ssh://git@github.com/revolsys/com.revolsys.open.git']]
       ])
       withMaven(jdk: 'jdk', maven: 'm3') {
         sh '''
