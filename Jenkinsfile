@@ -17,7 +17,11 @@ node ('master') {
         userRemoteConfigs: [[url: scmUrl]]
       ])
       withMaven(jdk: 'jdk', maven: 'm3') {
-        sh 'mvn versions:set -DnewVersion="${mvnTag}"'
+        sh '''
+mvn versions:set -DnewVersion="${version}" -DgenerateBackupPoms=false
+git commit -a -m "Version ${version}"
+git tag -f -a ${version} -m "Version ${version}"
+        '''
       }
     }
   }
@@ -34,7 +38,7 @@ node ('master') {
 
   stage ('Maven Install') {
     dir('source') {
-      rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
+      rtMaven.run pom: 'pom.xml', goals: 'clean install -DskipTests=true', buildInfo: buildInfo
     }
   }
   
