@@ -1,6 +1,6 @@
 node ('master') {
   def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
-  def server = Artifactory.server 'prod'
+  def server = Artifactory.server 'revolsys'
   def rtMaven = Artifactory.newMavenBuild()
   def buildInfo
 
