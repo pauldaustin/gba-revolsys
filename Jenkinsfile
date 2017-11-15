@@ -1,0 +1,52 @@
+node ('master') {
+  def scmUrl = scm.getUserRemoteConfigs()[0].getUrl()
+  def server = Artifactory.server 'prod'
+  def rtMaven = Artifactory.newMavenBuild()
+  def buildInfo
+
+  stage ('SCM prepare') {
+    dir('source') {
+      deleteDir()
+      checkout([
+        $class: 'GitSCM',
+        branches: [[name: '${gitBranch}']],
+        doGenerateSubmoduleConfigurations: false,
+        extensions: [],
+        gitTool: 'Default',
+        submoduleCfg: [],
+        userRemoteConfigs: [[url: scmUrl]]
+      ])
+      withMaven(jdk: 'jdk', maven: 'm3') {
+        sh 'mvn versions:set -DnewVersion="${mvnTag}"'
+      }
+    }
+  }
+  
+  stage ('Artifactory configuration') {
+    dir('source') {
+      rtMaven.tool = 'm3'
+      rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
+      rtMaven.resolver releaseRepo: 'repo', snapshotRepo: 'repo', server: server
+      rtMaven.deployer.deployArtifacts = false 
+      buildInfo = Artifactory.newBuildInfo()
+    }
+  }
+
+  stage ('Maven Install') {
+    dir('source') {
+      rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
+    }
+  }
+  
+  stage ('Artifactory Deploy') {
+    dir('source') {
+      rtMaven.deployer.deployArtifacts buildInfo
+    }
+  }
+  
+  stage ('Artifactory Publish build info') {
+    dir('source') {
+      server.publishBuildInfo buildInfo
+    }
+  }
+}
