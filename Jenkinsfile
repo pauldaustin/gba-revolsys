@@ -1,11 +1,11 @@
 node ('master'){
   def gitProjectUrl = 'https://github.com/revolsys/com.revolsys.open.git'
-  /*
-def server = Artifactory.server 'prod'
-  def rtMaven = Artifactory.newMavenBuild()
+
+  def artifactoryServer = Artifactory.server 'prod'
+  def mavenRuntime = Artifactory.newMavenBuild()
   def buildInfo
-*/
-  stage ('SCM prepare'){
+
+  stage ('SCM prepare') {
     dir (path: 'scm-checkout') {
       deleteDir()
       checkout([
@@ -20,32 +20,25 @@ def server = Artifactory.server 'prod'
     }
   }
 
-  stage ('Artifactory configuration'){
-/*
-    rtMaven.tool = 'm3' // Tool name from Jenkins configuration
-    rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
-    rtMaven.resolver releaseRepo: 'repo', snapshotRepo: 'repo', server: server
-    rtMaven.deployer.deployArtifacts = false // Disable artifacts deployment during Maven run
+  stage ('Artifactory configuration') {
+    mavenRuntime.tool = 'm3' 
+    mavenRuntime.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: artifactoryServer
+    mavenRuntime.resolver releaseRepo: 'repo', snapshotRepo: 'repo', server: artifactoryServer
+    mavenRuntime.deployer.deployArtifacts = false
     buildInfo = Artifactory.newBuildInfo()
-*/
   }
 
-  stage ('Maven Install'){
-/*
-    rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
-*/
+  stage ('Maven Install') {
+    dir (path: 'scm-checkout') {
+      mavenRuntime.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
+    }
   }
 
-  stage ('Artifactory Deploy'){
-/*
-    rtMaven.deployer.deployArtifacts buildInfo
-*/
-  }
-
-  stage ('Artifactory Publish build info'){
-/*
-    server.publishBuildInfo buildInfo
-*/
+  stage ('Artifactory Deploy') {
+    dir (path: 'scm-checkout') {
+      mavenRuntime.deployer.deployArtifacts buildInfo
+      artifactoryServer.publishBuildInfo buildInfo
+    }
   }
 }
 
