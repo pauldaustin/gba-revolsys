@@ -1,9 +1,10 @@
 node ('master'){
   def gitProjectUrl = 'https://github.com/revolsys/com.revolsys.open.git'
-  def server = Artifactory.server 'prod'
+  /*
+def server = Artifactory.server 'prod'
   def rtMaven = Artifactory.newMavenBuild()
   def buildInfo
-
+*/
   stage ('SCM prepare'){
     dir (path: 'scm-checkout') {
       deleteDir()
