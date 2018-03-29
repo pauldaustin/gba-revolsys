@@ -1,9 +1,16 @@
 node ('master') {
-  def server = Artifactory.server 'revolsys'
   def rtMaven = Artifactory.newMavenBuild()
   def buildInfo
 
-  stage ('SCM prepare') {
+  stage ('SCM globals') {
+     sh '''
+git checkout -B version-${version}
+git config --global user.email "paul.austin@revolsys.com"
+git config --global user.name "Paul Austin"
+     '''
+  }
+
+  stage ('Tag') {
     dir('source') {
       deleteDir()
       checkout([
@@ -15,44 +22,25 @@ node ('master') {
         submoduleCfg: [],
         userRemoteConfigs: [[url: 'ssh://git@github.com/revolsys/com.revolsys.open.git']]
       ])
-      withMaven(jdk: 'jdk', maven: 'm3') {
-        sh 'mvn versions:set -DnewVersion="${version}" -DgenerateBackupPoms=false'
-      }
-        sh '''
-git config --global user.email "paul.austin@revolsys.com"
-git config --global user.name "Paul Austin"
-git commit -a -m "Version ${version}"
-git tag -f -a ${version} -m "Version ${version}"
-git push origin ${version}
-        '''
-    }
-  }
-  
-  stage ('Artifactory configuration') {
-    dir('source') {
-      rtMaven.tool = 'm3'
-      rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
-      rtMaven.resolver releaseRepo: 'repo', snapshotRepo: 'repo', server: server
-      rtMaven.deployer.deployArtifacts = false 
-      buildInfo = Artifactory.newBuildInfo()
     }
   }
 
-  stage ('Maven Install') {
+  stage ('Set Version') {
     dir('source') {
-      rtMaven.run pom: 'pom.xml', goals: 'clean install -DskipTests=true', buildInfo: buildInfo
+      sh 'git checkout -B version-${version}'
+      withMaven(jdk: 'jdk', maven: 'm3') {
+        sh 'mvn versions:set -DnewVersion="${version}" -DgenerateBackupPoms=false'
+      }
     }
   }
-  
-  stage ('Artifactory Deploy') {
+
+  stage ('Tag') {
     dir('source') {
-      rtMaven.deployer.deployArtifacts buildInfo
-    }
-  }
-  
-  stage ('Artifactory Publish build info') {
-    dir('source') {
-      server.publishBuildInfo buildInfo
+      sh '''
+git commit -a -m "Version ${version}"
+git tag -f -a ${version} -m "Version ${version}"
+git push origin ${version}
+      '''
     }
   }
 }
