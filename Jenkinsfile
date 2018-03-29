@@ -4,7 +4,6 @@ node ('master') {
 
   stage ('SCM globals') {
      sh '''
-git checkout -B version-${version}
 git config --global user.email "paul.austin@revolsys.com"
 git config --global user.name "Paul Austin"
      '''
@@ -27,9 +26,9 @@ git config --global user.name "Paul Austin"
 
   stage ('Set Version') {
     dir('source') {
-      sh 'git checkout -B version-${version}'
+      sh 'git checkout -B version-${gitTag}'
       withMaven(jdk: 'jdk', maven: 'm3') {
-        sh 'mvn versions:set -DnewVersion="${version}" -DgenerateBackupPoms=false'
+        sh 'mvn versions:set -DnewVersion="${gitTag}" -DgenerateBackupPoms=false'
       }
     }
   }
@@ -37,9 +36,9 @@ git config --global user.name "Paul Austin"
   stage ('Tag') {
     dir('source') {
       sh '''
-git commit -a -m "Version ${version}"
-git tag -f -a ${version} -m "Version ${version}"
-git push origin ${version}
+git commit -a -m "Version ${gitTag}"
+git tag -f -a ${gitTag} -m "Version ${gitTag}"
+git push origin ${gitTag}
       '''
     }
   }
