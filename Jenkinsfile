@@ -9,7 +9,7 @@ git config --global user.name "Paul Austin"
      '''
   }
 
-  stage ('Tag') {
+  stage ('Checkout') {
     dir('source') {
       deleteDir()
       checkout([
